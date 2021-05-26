@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { Provide } from '@midwayjs/decorator'
 import {
   IMidwayWebContext,
@@ -31,6 +32,7 @@ export async function tracerMiddleware(
   next: IMidwayWebNext,
 ): Promise<unknown> {
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (ctx.tracerManager) {
     return next()
   }
@@ -92,17 +94,19 @@ function finishSpan(ctx: IMidwayWebContext<JsonResp | string>) {
   if (tracerConfig.isLogginInputQuery) {
     if (ctx.method === 'GET') {
       const { query } = ctx.request
-      if (typeof query === 'string' && query
-        || typeof query === 'object' && Object.keys(query).length
-      ) {
+      if (typeof query === 'object' && Object.keys(query).length) {
+        tracerManager.setSpanTag(TracerTag.reqQuery, query)
+      }
+      else if (typeof query === 'string') {
         tracerManager.setSpanTag(TracerTag.reqQuery, query)
       }
     }
     else if (ctx.method === 'POST' && ctx.request.type === 'application/json') {
       const { query: body } = ctx.request
-      if (typeof body === 'string' && body
-        || typeof body === 'object' && Object.keys(body).length
-      ) {
+      if (typeof body === 'object' && Object.keys(body).length) {
+        tracerManager.setSpanTag(TracerTag.reqBody, body)
+      }
+      else if (typeof body === 'string') {
         tracerManager.setSpanTag(TracerTag.reqBody, body)
       }
     }
