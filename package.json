@@ -1,0 +1,96 @@
+{
+  "name": "midway-components",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "devDependencies": {
+    "@commitlint/cli": "12",
+    "@commitlint/config-conventional": "12",
+    "@midwayjs/cli": "^1.2.68",
+    "@midwayjs/egg-ts-helper": "1",
+    "@rollup/plugin-commonjs": "19",
+    "@rollup/plugin-node-resolve": "13",
+    "@types/jest": "26",
+    "@types/node": "15",
+    "@types/power-assert": "1",
+    "@types/rewire": "2",
+    "@types/rimraf": "3",
+    "@types/yargs": "16",
+    "@waiting/eslint-config": "^6.8.0",
+    "coveralls": "3",
+    "debug": "^4.1.0",
+    "eslint": "7",
+    "kmore-cli": "5",
+    "lerna": "^4.0.0",
+    "power-assert": "1",
+    "rewire": "5",
+    "rimraf": "3",
+    "rollup-plugin-terser": "7",
+    "rxjs": "7",
+    "rxrunscript": "6",
+    "ts-jest": "26",
+    "ts-node": "10",
+    "tsconfig-paths": "3",
+    "typescript": "4",
+    "yargs": "17"
+  },
+  "engines": {
+    "node": ">=14.15.0"
+  },
+  "scripts": {
+    "add:docs": "sh .scripts/add-docs.sh",
+    "add:svc": "sh .scripts/add-service.sh",
+    "bp:sync": "git fetch --all -v && git merge bp/master -m \"Merge remote-tracking branch 'bp/master'\"",
+    "bootstrap": "lerna bootstrap --loglevel notice",
+    "build": "sh .scripts/build.sh",
+    "ci": "npm run cov",
+    "clean": "lerna clean --loglevel error --yes & lerna run clean",
+    "cov": "sh .scripts/cov.sh",
+    "doc": "node .githooks/doc.js",
+    "lint": "sh .scripts/lint.sh",
+    "lint:nofix": "sh .scripts/lint-no-fix.sh",
+    "lint:s": "sh .scripts/lint-no-fix-s.sh",
+    "postbuild": "rm -rf packages/*/dist/.mwcc-cache",
+    "postinstall": "npm run repo:init",
+    "pub": "sh .scripts/publish.sh --conventional-commits --create-release gitlab",
+    "pub:canary": "sh .scripts/publish.sh --canary",
+    "pub:beta": "sh .scripts/publish.sh --dist-tag beta --force-publish=* --conventional-commits --create-release gitlab",
+    "pub:next": "sh .scripts/publish.sh --dist-tag next --conventional-commits --create-release gitlab",
+    "prepack": "sh .scripts/ci/ci-prepack.sh",
+    "preversion": "lerna run clean:lock",
+    "purge": "npm run clean & lerna run purge & rm node_modules -rf & rm package-lock.json -f",
+    "repo:init": "sh .githooks/init-repo.sh",
+    "refresh": "npm run bootstrap && npm run build",
+    "tar": "sh .scripts/tar.sh",
+    "test": "lerna run test",
+    "ptest": "sh .scripts/test.sh"
+  },
+  "nyc": {
+    "include": [
+      "packages/*/src/*.ts",
+      "packages/*/src/**/*.ts"
+    ],
+    "exclude": [
+      ".githooks",
+      "node_modules*",
+      "**/src/bin",
+      "**/src/domain.ts",
+      "**/src/interface.ts",
+      "**/dist",
+      "**/node_modules*",
+      "**/test",
+      "**/test*",
+      "**/*.d.ts",
+      "**/*.js"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "reporter": [
+      "html",
+      "json",
+      "text-summary"
+    ],
+    "all": true
+  }
+}
