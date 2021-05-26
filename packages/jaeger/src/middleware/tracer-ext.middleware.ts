@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { Provide } from '@midwayjs/decorator'
 import {
   IMidwayWebContext,
@@ -28,8 +29,11 @@ async function tracerMiddleware(
   ctx: IMidwayWebContext,
   next: IMidwayWebNext,
 ): Promise<unknown> {
+
   const { tracerManager } = ctx
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (! tracerManager) {
+    ctx.logger.warn('tracerManager invalid')
     return next()
   }
   // 白名单内的路由不会被追踪

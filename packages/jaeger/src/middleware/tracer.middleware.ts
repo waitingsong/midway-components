@@ -34,6 +34,7 @@ export async function tracerMiddleware(
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (ctx.tracerManager) {
+    ctx.logger.warn('tracerManager invalid')
     return next()
   }
 
