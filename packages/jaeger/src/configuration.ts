@@ -44,7 +44,8 @@ export function registerMiddleware(
     appMiddleware.push('tracerExtMiddleware')
   }
   else {
-    throw new TypeError('appMiddleware is not valid Array')
+    app.logger.warn('appMiddleware is not valid Array')
+    // throw new TypeError('appMiddleware is not valid Array')
   }
 
   /**
