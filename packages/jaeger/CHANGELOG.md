@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.2.0 (2021-05-27)
+
+
+### Features
+
+* **jaeger:** set component namespace: jaeger ([096ee5a](https://github.com/waitingsong/midway-components/commit/096ee5a5ca7c8a60f17f2acf8e7b3d1eb7bfe2b2))
+
+
+
+
+
 ## 0.1.1 (2021-05-26)
 
 **Note:** Version bump only for package @waiting/midway-component-jaeger
