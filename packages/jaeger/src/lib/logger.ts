@@ -5,6 +5,7 @@ import {
   Provide,
 } from '@midwayjs/decorator'
 import { ILogger } from '@midwayjs/logger'
+import { genISO8601String } from '@waiting/shared-core'
 
 import { TracerManager } from './tracer'
 
@@ -72,7 +73,10 @@ interface LogOptions {
 function tracerLogger(options: LogOptions): void {
   const { tracerManager, ctxLogger, level, msg, args } = options
   ctxLogger[level](msg, ...args)
-  tracerManager.spanLog({ [level]: [msg, ...args] })
+  tracerManager.spanLog({
+    [level]: [msg, ...args],
+    time: genISO8601String(),
+  })
 }
 
 // interface ILogger extends IMidwayLogger {
