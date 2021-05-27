@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.4.0 (2021-05-27)
+
+
+### Features
+
+* **jaeger:** log with time via genISO8601String() ([513d50f](https://github.com/waitingsong/midway-components/commit/513d50f87dfe86bf45a341dfdae93ffc973e7500))
+
+
+
+
+
 # 0.3.0 (2021-05-27)
 
 
