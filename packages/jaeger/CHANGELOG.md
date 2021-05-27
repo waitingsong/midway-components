@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.3.0 (2021-05-27)
+
+
+### Bug Fixes
+
+* **jaeger:** Logger ([373bf7d](https://github.com/waitingsong/midway-components/commit/373bf7d8e650053775609085ff4c97d5ba708628))
+
+
+
+
+
 # 0.2.0 (2021-05-27)
 
 
