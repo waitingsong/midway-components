@@ -1,4 +1,5 @@
 import { IMidwayWebContext } from '@midwayjs/web'
+import { genISO8601String } from '@waiting/shared-core'
 import { NpmPkg } from '@waiting/shared-types'
 import { Tags } from 'opentracing'
 
@@ -37,6 +38,8 @@ export function updateSpan(ctx: IMidwayWebContext): void {
 export function logError(trm: TracerManager, err: Error): void {
   const input: SpanLogInput = {
     event: TracerLog.error,
+    time: genISO8601String(),
+    [TracerLog.svcMemoryUsage]: process.memoryUsage(),
   }
 
   // ctx._internalError in error-handler.middleware.ts
