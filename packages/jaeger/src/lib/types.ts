@@ -84,6 +84,8 @@ export enum TracerLog {
   resMsg = 'res.msg',
   errMsg = 'err.msg',
   errStack = 'err.stack',
+
+  svcMemoryUsage = 'svc.memory-usage',
 }
 
 export interface SpanHeaderInit {

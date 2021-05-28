@@ -1,12 +1,13 @@
 {
-  "name": "@waiting/midway-component-jaeger",
+  "name": "midway-component-jaeger",
   "author": "waiting",
-  "version": "0.0.0",
+  "version": "0.4.0",
   "description": "midway component for jaeger",
   "keywords": [
     "midway",
     "IoC",
     "plugin",
+    "apm",
     "jaeger",
     "ts"
   ],
@@ -24,6 +25,7 @@
   "license": "MIT",
   "dependencies": {
     "@types/jaeger-client": "^3.18.0",
+    "@waiting/shared-core": "10",
     "@waiting/shared-types": "10",
     "jaeger-client": "^3.18.1",
     "opentracing": "^0.14.5"
@@ -41,10 +43,8 @@
     "node": ">=14.16.0"
   },
   "files": [
-    "tsconfig.json",
     "bin/*.js",
-    "dist/**/*.js",
-    "dist/**/*.d.ts"
+    "dist"
   ],
   "publishConfig": {
     "access": "public"

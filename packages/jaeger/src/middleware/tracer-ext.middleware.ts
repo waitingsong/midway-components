@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { Provide } from '@midwayjs/decorator'
 import {
   IMidwayWebContext,
@@ -5,6 +6,7 @@ import {
   IWebMiddleware,
   MidwayWebMiddleware,
 } from '@midwayjs/web'
+import { genISO8601String } from '@waiting/shared-core'
 import { Tags } from 'opentracing'
 
 import { TracerLog } from '../lib/types'
@@ -28,8 +30,11 @@ async function tracerMiddleware(
   ctx: IMidwayWebContext,
   next: IMidwayWebNext,
 ): Promise<unknown> {
+
   const { tracerManager } = ctx
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (! tracerManager) {
+    ctx.logger.warn('tracerManager invalid')
     return next()
   }
   // 白名单内的路由不会被追踪
@@ -39,12 +44,19 @@ async function tracerMiddleware(
 
   updateSpan(ctx)
 
-  tracerManager.spanLog({ event: TracerLog.preProcessFinish })
+  tracerManager.spanLog({
+    event: TracerLog.preProcessFinish,
+    [TracerLog.svcMemoryUsage]: process.memoryUsage(),
+  })
 
   if (ctx.app.config.tracer.enableCatchError) {
     try {
       await next()
-      tracerManager.spanLog({ event: TracerLog.postProcessBegin })
+      tracerManager.spanLog({
+        event: TracerLog.postProcessBegin,
+        time: genISO8601String(),
+        [TracerLog.svcMemoryUsage]: process.memoryUsage(),
+      })
     }
     catch (ex) {
       tracerManager.setSpanTag(Tags.ERROR, true)
@@ -54,7 +66,11 @@ async function tracerMiddleware(
   }
   else {
     await next()
-    tracerManager.spanLog({ event: TracerLog.postProcessBegin })
+    tracerManager.spanLog({
+      event: TracerLog.postProcessBegin,
+      time: genISO8601String(),
+      [TracerLog.svcMemoryUsage]: process.memoryUsage(),
+    })
   }
 }
 

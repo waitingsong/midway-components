@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { Provide } from '@midwayjs/decorator'
 import {
   IMidwayWebContext,
@@ -5,6 +6,7 @@ import {
   IWebMiddleware,
   MidwayWebMiddleware,
 } from '@midwayjs/web'
+import { genISO8601String } from '@waiting/shared-core'
 import { JsonResp } from '@waiting/shared-types'
 import { globalTracer, Tags, FORMAT_HTTP_HEADERS } from 'opentracing'
 
@@ -31,7 +33,9 @@ export async function tracerMiddleware(
   next: IMidwayWebNext,
 ): Promise<unknown> {
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (ctx.tracerManager) {
+    ctx.logger.warn('tracerManager invalid')
     return next()
   }
 
@@ -54,7 +58,11 @@ function startSpan(ctx: IMidwayWebContext<JsonResp | string>): void {
     = globalTracer().extract(FORMAT_HTTP_HEADERS, ctx.headers) ?? undefined
 
   tracerManager.startSpan(ctx.path, requestSpanCtx)
-  tracerManager.spanLog({ event: TracerLog.requestBegin })
+  tracerManager.spanLog({
+    event: TracerLog.requestBegin,
+    time: genISO8601String(),
+    [TracerLog.svcMemoryUsage]: process.memoryUsage(),
+  })
 
   ctx.tracerManager = tracerManager
 }
@@ -92,28 +100,35 @@ function finishSpan(ctx: IMidwayWebContext<JsonResp | string>) {
   if (tracerConfig.isLogginInputQuery) {
     if (ctx.method === 'GET') {
       const { query } = ctx.request
-      if (typeof query === 'string' && query
-        || typeof query === 'object' && Object.keys(query).length
-      ) {
+      if (typeof query === 'object' && Object.keys(query).length) {
+        tracerManager.setSpanTag(TracerTag.reqQuery, query)
+      }
+      else if (typeof query === 'string') {
         tracerManager.setSpanTag(TracerTag.reqQuery, query)
       }
     }
     else if (ctx.method === 'POST' && ctx.request.type === 'application/json') {
       const { query: body } = ctx.request
-      if (typeof body === 'string' && body
-        || typeof body === 'object' && Object.keys(body).length
-      ) {
+      if (typeof body === 'object' && Object.keys(body).length) {
+        tracerManager.setSpanTag(TracerTag.reqBody, body)
+      }
+      else if (typeof body === 'string') {
         tracerManager.setSpanTag(TracerTag.reqBody, body)
       }
     }
   }
+
   if (tracerConfig.isLoggingOutputBody) {
     tracerManager.setSpanTag(TracerTag.respBody, ctx.body)
   }
-  // [Tag] HTTP状态码
+
   tracerManager.setSpanTag(Tags.HTTP_STATUS_CODE, status)
-  // 结束span
-  tracerManager.spanLog({ event: TracerLog.requestEnd })
+  tracerManager.spanLog({
+    event: TracerLog.requestEnd,
+    time: genISO8601String(),
+    [TracerLog.svcMemoryUsage]: process.memoryUsage(),
+  })
+
   tracerManager.finishSpan()
 }
 
@@ -149,9 +164,13 @@ function processPriority(options: ProcessPriorityOpts): number | undefined {
     return
   }
 
-  const cost = new Date().getTime() - starttime
+  const cost = Date.now() - starttime
   if (cost >= throttleMs) {
     trm.setSpanTag(Tags.SAMPLING_PRIORITY, 11)
+    trm.spanLog({
+      time: genISO8601String(),
+      [TracerLog.svcMemoryUsage]: process.memoryUsage(),
+    })
   }
   return cost
 }

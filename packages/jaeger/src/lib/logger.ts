@@ -1,8 +1,13 @@
 import { Context } from '@midwayjs/core'
-import { Inject, Provide } from '@midwayjs/decorator'
+import {
+  Inject,
+  Logger as _Logger,
+  Provide,
+} from '@midwayjs/decorator'
+import { ILogger } from '@midwayjs/logger'
+import { genISO8601String } from '@waiting/shared-core'
 
 import { TracerManager } from './tracer'
-
 
 
 /**
@@ -15,12 +20,12 @@ import { TracerManager } from './tracer'
 export class Logger implements ILogger {
   @Inject() protected readonly ctx: Context
 
-  @Inject() protected readonly ctxLogger: ILogger
+  @_Logger() protected readonly logger: ILogger
 
   debug(msg: unknown, ...args: unknown[]): void {
     tracerLogger({
       tracerManager: this.ctx.tracerManager,
-      ctxLogger: this.ctxLogger,
+      ctxLogger: this.logger,
       level: 'debug',
       msg,
       args,
@@ -30,7 +35,7 @@ export class Logger implements ILogger {
   info(msg: unknown, ...args: unknown[]): void {
     tracerLogger({
       tracerManager: this.ctx.tracerManager,
-      ctxLogger: this.ctxLogger,
+      ctxLogger: this.logger,
       level: 'info',
       msg,
       args,
@@ -40,7 +45,7 @@ export class Logger implements ILogger {
   warn(msg: unknown, ...args: unknown[]): void {
     tracerLogger({
       tracerManager: this.ctx.tracerManager,
-      ctxLogger: this.ctxLogger,
+      ctxLogger: this.logger,
       level: 'warn',
       msg,
       args,
@@ -50,7 +55,7 @@ export class Logger implements ILogger {
   error(msg: unknown, ...args: unknown[]): void {
     tracerLogger({
       tracerManager: this.ctx.tracerManager,
-      ctxLogger: this.ctxLogger,
+      ctxLogger: this.logger,
       level: 'error',
       msg,
       args,
@@ -68,12 +73,15 @@ interface LogOptions {
 function tracerLogger(options: LogOptions): void {
   const { tracerManager, ctxLogger, level, msg, args } = options
   ctxLogger[level](msg, ...args)
-  tracerManager.spanLog({ [level]: [msg, ...args] })
+  tracerManager.spanLog({
+    [level]: [msg, ...args],
+    time: genISO8601String(),
+  })
 }
 
-interface ILogger {
-  info(msg: unknown, ...args: unknown[]): void
-  debug(msg: unknown, ...args: unknown[]): void
-  error(msg: unknown, ...args: unknown[]): void
-  warn(msg: unknown, ...args: unknown[]): void
-}
+// interface ILogger extends IMidwayLogger {
+//   info(msg: unknown, ...args: unknown[]): void
+//   debug(msg: unknown, ...args: unknown[]): void
+//   error(msg: unknown, ...args: unknown[]): void
+//   warn(msg: unknown, ...args: unknown[]): void
+// }
