@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 1.0.0 (2021-05-28)
+
+
+### Features
+
+* **jaeger:** sample process.memoryUsage() ([6e358f0](https://github.com/waitingsong/midway-components/commit/6e358f0cddbf968caeddaaa7b06588f8d94dafea))
+
+
+
+
+
 # 0.4.0 (2021-05-27)
 
 
