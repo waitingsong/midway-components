@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 1.1.0 (2021-05-28)
+
+
+### Features
+
+* **jaeger:** memoryUsage via humanMemoryUsage() ([3a6ce13](https://github.com/waitingsong/midway-components/commit/3a6ce13ca032a58a8cc99b448c1b0f8c8f7cb3a4))
+
+
+
+
+
 ## 1.0.1 (2021-05-28)
 
 **Note:** Version bump only for package midway-component-jaeger
