@@ -6,7 +6,7 @@ import {
   IWebMiddleware,
   MidwayWebMiddleware,
 } from '@midwayjs/web'
-import { genISO8601String } from '@waiting/shared-core'
+import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
 import { JsonResp } from '@waiting/shared-types'
 import { globalTracer, Tags, FORMAT_HTTP_HEADERS } from 'opentracing'
 
@@ -61,7 +61,7 @@ function startSpan(ctx: IMidwayWebContext<JsonResp | string>): void {
   tracerManager.spanLog({
     event: TracerLog.requestBegin,
     time: genISO8601String(),
-    [TracerLog.svcMemoryUsage]: process.memoryUsage(),
+    [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
   })
 
   ctx.tracerManager = tracerManager
@@ -126,7 +126,7 @@ function finishSpan(ctx: IMidwayWebContext<JsonResp | string>) {
   tracerManager.spanLog({
     event: TracerLog.requestEnd,
     time: genISO8601String(),
-    [TracerLog.svcMemoryUsage]: process.memoryUsage(),
+    [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
   })
 
   tracerManager.finishSpan()
@@ -169,7 +169,7 @@ function processPriority(options: ProcessPriorityOpts): number | undefined {
     trm.setSpanTag(Tags.SAMPLING_PRIORITY, 11)
     trm.spanLog({
       time: genISO8601String(),
-      [TracerLog.svcMemoryUsage]: process.memoryUsage(),
+      [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
     })
   }
   return cost

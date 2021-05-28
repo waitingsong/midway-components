@@ -6,7 +6,7 @@ import {
   IWebMiddleware,
   MidwayWebMiddleware,
 } from '@midwayjs/web'
-import { genISO8601String } from '@waiting/shared-core'
+import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
 import { Tags } from 'opentracing'
 
 import { TracerLog } from '../lib/types'
@@ -46,7 +46,7 @@ async function tracerMiddleware(
 
   tracerManager.spanLog({
     event: TracerLog.preProcessFinish,
-    [TracerLog.svcMemoryUsage]: process.memoryUsage(),
+    [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
   })
 
   if (ctx.app.config.tracer.enableCatchError) {
@@ -55,7 +55,7 @@ async function tracerMiddleware(
       tracerManager.spanLog({
         event: TracerLog.postProcessBegin,
         time: genISO8601String(),
-        [TracerLog.svcMemoryUsage]: process.memoryUsage(),
+        [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
       })
     }
     catch (ex) {
@@ -69,7 +69,7 @@ async function tracerMiddleware(
     tracerManager.spanLog({
       event: TracerLog.postProcessBegin,
       time: genISO8601String(),
-      [TracerLog.svcMemoryUsage]: process.memoryUsage(),
+      [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
     })
   }
 }
