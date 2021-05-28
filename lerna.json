@@ -3,26 +3,42 @@
   "packages": [
     "packages/*"
   ],
+  "ignore": [
+    "demo",
+    "@mw-components/demo",
+    "@mw-components/share"
+  ],
   "command": {
     "publish": {
       "ignoreChanges": [
         "*.md",
-        "package-lock.json"
-      ]
+        ".githooks",
+        ".scripts",
+        ".vscode",
+        "package-lock.json",
+        "packages/demo",
+        "packages/mw-demo"
+      ],
+      "verifyAccess": false
     },
     "bootstrap": {
       "hoist": true,
       "noCi": true,
       "nohoist": [
-        "cross-env"
+        "cross-env",
+        "egg"
       ],
       "npmClientArgs": [
-        "--no-package-lock"
+        "--no-audit"
       ]
     },
     "version": {
       "conventionalCommits": true,
-      "allowBranch": ["master", "release"],
+      "allowBranch": [
+        "main", 
+        "release",
+        "fix"
+      ],
       "registry": "https://registry.npmjs.org/"
     }
   },
