@@ -72,6 +72,11 @@ export class TracerManager {
   }
 
   @RunIfEnabled
+  addTags(tags: SpanLogInput): void {
+    this.currentSpan()?.addTags(tags)
+  }
+
+  @RunIfEnabled
   setSpanTag(key: string, value: unknown): void {
     this.currentSpan()?.setTag(key, value)
   }
