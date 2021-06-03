@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 2.2.0 (2021-06-03)
+
+
+### Features
+
+* **jaeger:** change LogInfo['level'] optional ([d16f460](https://github.com/waitingsong/midway-components/commit/d16f460f33cc8c170da2e554ad95a16c3db8d337))
+
+
+
+
+
 # 2.1.0 (2021-06-03)
 
 
