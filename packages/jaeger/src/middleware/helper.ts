@@ -12,26 +12,31 @@ const netInfo = retrieveExternalNetWorkInfo()
 
 export function updateSpan(ctx: IMidwayWebContext): void {
   const { tracerManager } = ctx
-
-  ctx.reqId && tracerManager.setSpanTag(TracerTag.reqId, ctx.reqId)
-  tracerManager.setSpanTag(Tags.HTTP_METHOD, ctx.req.method ?? 'n/a')
-
   const pkg = ctx.app.getConfig('pkg') as NpmPkg
-  tracerManager.setSpanTag(TracerTag.svcName, pkg.name)
+  const tags: SpanLogInput = {
+    [Tags.HTTP_METHOD]: ctx.req.method ?? 'n/a',
+    [TracerTag.svcName]: pkg.name,
+  }
+
   if (pkg.version) {
-    tracerManager.setSpanTag(TracerTag.svcVer, pkg.version)
+    tags[TracerTag.svcVer] = pkg.version
+  }
+  if (ctx.reqId) {
+    tags[TracerTag.reqId] = ctx.reqId
   }
 
   netInfo.forEach((ipInfo) => {
     if (ipInfo.family === 'IPv4') {
-      tracerManager.setSpanTag(TracerTag.svcIp4, ipInfo.cidr)
+      tags[TracerTag.svcIp4] = ipInfo.cidr
     }
-    // else {
-    //   tracerManager.setSpanTag(TracerTag.svcIp6, ipInfo.cidr)
-    // }
+    else {
+      tags[TracerTag.svcIp6] = ipInfo.cidr
+    }
   })
 
-  tracerManager.setSpanTag(Tags.PEER_HOST_IPV4, ctx.request.ip)
+  tags[Tags.PEER_HOST_IPV4] = ctx.request.ip
+
+  tracerManager.addTags(tags)
 }
 
 

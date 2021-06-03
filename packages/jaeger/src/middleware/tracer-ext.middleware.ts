@@ -9,7 +9,7 @@ import {
 import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
 import { Tags } from 'opentracing'
 
-import { TracerLog } from '../lib/types'
+import { TracerLog, TracerTag } from '../lib/types'
 import { pathMatched } from '../util/common'
 
 import { logError, updateSpan } from './helper'
@@ -59,7 +59,11 @@ async function tracerMiddleware(
       })
     }
     catch (ex) {
-      tracerManager.setSpanTag(Tags.ERROR, true)
+      tracerManager.addTags({
+        [Tags.ERROR]: true,
+        [TracerTag.logLevel]: 'error',
+      })
+
       logError(tracerManager, ex as Error)
       throw ex
     }
