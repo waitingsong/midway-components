@@ -23,7 +23,7 @@ export class Logger implements ILogger {
   @_Logger() protected readonly logger: ILogger
 
   debug(msg: unknown, ...args: unknown[]): void {
-    this.tracerLogger({
+    this.log({
       level: 'debug',
       msg,
       args,
@@ -31,7 +31,7 @@ export class Logger implements ILogger {
   }
 
   info(msg: unknown, ...args: unknown[]): void {
-    this.tracerLogger({
+    this.log({
       level: 'info',
       msg,
       args,
@@ -39,7 +39,7 @@ export class Logger implements ILogger {
   }
 
   warn(msg: unknown, ...args: unknown[]): void {
-    this.tracerLogger({
+    this.log({
       level: 'warn',
       msg,
       args,
@@ -47,33 +47,38 @@ export class Logger implements ILogger {
   }
 
   error(msg: unknown, ...args: unknown[]): void {
-    this.tracerLogger({
+    this.log({
       level: 'error',
       msg,
       args,
     })
   }
 
-  tracerLogger(info: SpanLogInput | LogInfo, span?: Span): void {
-    const { msg, args } = info
-    const level = (info.level ? info.level : 'info') as LogInfo['level']
+  log(info: SpanLogInput | LogInfo, span?: Span): void {
+    const currSpan = span ? span : this.ctx.tracerManager.currentSpan()
+    tracerLogger(this.logger, info, currSpan)
+  }
+}
 
-    if (span) {
-      span.log(info)
-    }
-    else {
-      this.ctx.tracerManager.spanLog(info)
-    }
+function tracerLogger(
+  logger: ILogger,
+  info: SpanLogInput | LogInfo,
+  span?: Span,
+): void {
 
-    if (typeof msg === 'undefined') {
-      this.logger[level](info)
-    }
-    else if (Array.isArray(args)) {
-      this.logger[level](msg, ...args)
-    }
-    else {
-      this.logger[level](msg)
-    }
+  const { msg, args } = info
+  const level = (info.level ? info.level : 'info') as LogInfo['level']
+
+  span?.log(info)
+
+  if (typeof msg === 'undefined') {
+    logger[level](info)
+  }
+  else if (Array.isArray(args)) {
+    logger[level](msg, ...args)
+  }
+  else {
+    logger[level](msg)
   }
 }
 
