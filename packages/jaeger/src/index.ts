@@ -1,30 +1,26 @@
+import type { Context } from 'egg'
 
-import {
-  Config,
-  ConfigKey,
-  MiddlewareConfig,
-  SpanLogInput,
-} from './lib/index'
+import { TracerManager } from './lib/tracer'
+import { TracerConfig } from './lib/types'
 
 
 export { AutoConfiguration as Configuration } from './configuration'
-export * from './lib/index'
 export { TracerMiddleware } from './middleware/tracer.middleware'
 export { TracerExtMiddleware } from './middleware/tracer-ext.middleware'
-export {
-  globalTracer, Span,
-} from 'opentracing'
+export { Logger } from './lib/logger'
+export type { TracerManager }
+export * from './lib/types'
 
 
-// @ts-ignore
-declare module '@midwayjs/core/dist/interface' {
-  interface MidwayConfig {
-    [ConfigKey.config]: Partial<Config>
-    [ConfigKey.middlewareConfig]: Partial<MiddlewareConfig>
-  }
-
+declare module '@midwayjs/core' {
   interface Context {
-    tracerTags: SpanLogInput
+    tracerManager: TracerManager
   }
 }
+declare module 'egg' {
+  interface EggAppConfig {
+    tracer: TracerConfig
+  }
+}
+declare const dummy: Context
 

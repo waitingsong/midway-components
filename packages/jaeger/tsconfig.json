@@ -2,45 +2,30 @@
   "compilerOptions": {
     "baseUrl": ".",
     "declaration": true,
-    "declarationMap": true,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
-    "exactOptionalPropertyTypes": true,
     "experimentalDecorators": true,
-    "forceConsistentCasingInFileNames": true,
     "incremental": true,
     "module": "commonjs",
     "moduleResolution": "node",
     "newLine": "lf",
     "noFallthroughCasesInSwitch": true,
-    "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "outDir": "dist",
     "paths": {
-      "~/*": ["./src/*"],
-      "@/*": ["./test/*"]
+      "~/*": ["./src/*"]
     },
-    "preserveConstEnums": true,
     "pretty": true,
-    "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
     "strictPropertyInitialization": false,
     "stripInternal": true,
-    "target": "ES2022",
+    "target": "ES2020",
     "tsBuildInfoFile": ".vscode/.tsbuildinfo",
-    "types" : ["mocha", "node"]
-  },
-  "ts-node": {
-    "esm": true,
-    "experimentalResolver": true,
-    "experimentalSpecifierResolution": "node",
-    "preferTsExts": true,
-    "transpileOnly": false
+    "types" : ["jest", "node"]
   },
   "include": [
     "src/**/*.ts"

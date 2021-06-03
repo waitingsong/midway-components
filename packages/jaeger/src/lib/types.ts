@@ -1,19 +1,22 @@
-import type { IncomingHttpHeaders } from 'http'
-
 import type { ILogger } from '@midwayjs/logger'
-import { MiddlewareConfig as MWConfig, KnownKeys } from '@waiting/shared-types'
 import { TracingConfig } from 'jaeger-client'
 
-import { Context } from '../interface'
 
-
-export interface Config {
+export interface TracerConfig {
+  /** 请求路径忽略名单 */
+  whiteList: (string | RegExp)[]
   /**
-   * 强制采样请求处理时间（毫秒）阈值，
+   * 强制采样请求处理时间（毫秒）阈值
    * 负数不采样
    */
   reqThrottleMsForPriority: number
   tracingConfig: TracingConfig
+  /**
+   * Use integrated tracer middleware,
+   * set to false if custom tracer middleware enabled
+   * @default true
+   */
+  enableMiddleWare: boolean
   /**
    * Catch and sample error,
    * set to false if other tracer middleware log the error
@@ -23,34 +26,14 @@ export interface Config {
   /**
    * - GET: request.query
    * - POST: request.body (only when content-type: 'application/json')
-   * @default true
+   * @default false
    */
-  logginInputQuery: boolean
+  isLogginInputQuery: boolean
   /**
    * @default false
    */
-  loggingOutputBody: boolean
-  /**
-   * @default ['authorization', 'host', 'user-agent']
-   */
-  loggingReqHeaders: (string | KnownKeys<IncomingHttpHeaders>)[]
-  /**
-   * @default pkg.name
-   * @description \@ 字符将会被删除，/ 替换为 - ,便于（ali）日志服务能正常分类
-   */
-  serviceName?: string
-  /**
-   * Callback to process custom failure
-   * @default helper.ts/processCustomFailure()
-   */
-  processCustomFailure?: (ctx: Context) => Promise<void>
+  isLoggingOutputBody: boolean
 }
-
-/** Authentication options for middleware */
-export interface MiddlewareOptions {
-  debug: boolean
-}
-export type MiddlewareConfig = MWConfig<MiddlewareOptions>
 
 export enum HeadersKey {
   /**
@@ -61,9 +44,6 @@ export enum HeadersKey {
 }
 
 export enum TracerTag {
-  reqStartTime = 'req-start-time',
-  reqEndTime = 'req-end-time',
-
   logLevel = 'log.level',
   dbName = 'db',
   dbClient = 'db.client',
@@ -73,17 +53,10 @@ export enum TracerTag {
   dbUser = 'db.user',
   dbCommand = 'db.command',
   callerClass = 'caller.class',
-
-  httpUserAgent = 'http.user-agent',
-  httpAuthorization = 'http.authorization',
-  httpProtocol = 'http.protocol',
   reqId = 'reqId',
   svcIp4 = 'svc.ipv4',
   svcIp6 = 'svc.ipv6',
-  svcException = 'svc.exception',
   svcName = 'svc.name',
-  svcPid = 'svc.pid',
-  svcPpid = 'svc.ppid',
   svcVer = 'svc.ver',
   resCode = 'res.code',
   message = 'message',
@@ -93,10 +66,6 @@ export enum TracerTag {
 }
 
 export enum TracerLog {
-  logThrottleMs = 'log.throttle',
-  exIsTraced = '__isTraced',
-  topException = 'top-exp',
-
   error = 'error',
   requestBegin = 'tracer-request-begin',
   requestEnd = 'tracer-request-end',
@@ -105,7 +74,6 @@ export enum TracerLog {
 
   fetchStart = 'fetch-start',
   fetchFinish = 'fetch-finish',
-  fetchException = 'fetch-exception',
 
   queryResponse = 'query-response',
   queryError = 'error',
@@ -121,12 +89,6 @@ export enum TracerLog {
   errStack = 'err.stack',
 
   svcMemoryUsage = 'svc.memory-usage',
-  svcCpuUsage = 'svc.cpu-usage',
-
-  procCpuinfo = 'proc.cpuinfo',
-  ProcDiskstats = 'proc.diskstats',
-  procMeminfo = 'proc.meminfo',
-  procStat = 'proc.stat'
 }
 
 export interface SpanHeaderInit {
@@ -144,29 +106,4 @@ export interface LogInfo {
   msg: unknown
   args?: unknown[]
   [key: string]: unknown
-}
-
-export interface TracerError extends Error {
-  __isTraced: boolean
-}
-
-
-export interface SpanRawLog {
-  timestamp: number
-  fields: SpanRawLogField[]
-}
-export interface SpanRawLogField {
-  key: string
-  value: unknown
-}
-export interface SpanRawTag {
-  key: string
-  value: unknown
-}
-export interface TestSpanInfo {
-  startTime: number
-  logs: SpanRawLog[]
-  tags: SpanRawTag[]
-  headerInit: SpanHeaderInit | undefined
-  isTraceEnabled: boolean
 }

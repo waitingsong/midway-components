@@ -1,14 +1,12 @@
+import { Context } from '@midwayjs/core'
 import {
   Inject,
   Logger as _Logger,
   Provide,
-  Scope,
-  ScopeEnum,
 } from '@midwayjs/decorator'
 import { ILogger } from '@midwayjs/logger'
 import type { Span } from 'opentracing'
 
-import { TracerManager } from './tracer'
 import { LogInfo, SpanLogInput } from './types'
 
 
@@ -19,10 +17,8 @@ import { LogInfo, SpanLogInput } from './types'
  * - 生产环境应设置合理采样率避免过多的日志随链路上报
  */
 @Provide()
-@Scope(ScopeEnum.Request, { allowDowngrade: true })
 export class Logger implements ILogger {
-
-  @Inject() protected readonly tracerManager: TracerManager
+  @Inject() protected readonly ctx: Context
 
   @_Logger() protected readonly logger: ILogger
 
@@ -59,9 +55,7 @@ export class Logger implements ILogger {
   }
 
   log(info: SpanLogInput | LogInfo, span?: Span): void {
-    const currSpan = span
-      ? span
-      : this.tracerManager.currentSpan()
+    const currSpan = span ? span : this.ctx.tracerManager.currentSpan()
     tracerLogger(this.logger, info, currSpan)
   }
 }
@@ -81,7 +75,6 @@ function tracerLogger(
     logger[level](info)
   }
   else if (Array.isArray(args)) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     logger[level](msg, ...args)
   }
   else {

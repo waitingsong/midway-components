@@ -1,85 +1,58 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
+/* eslint-disable node/no-extraneous-import */
 /* eslint-disable @typescript-eslint/no-extraneous-class */
-import 'tsconfig-paths/register'
-
 import { join } from 'path'
 
-import { MidwayInformationService } from '@midwayjs/core'
 import { App, Config, Configuration } from '@midwayjs/decorator'
-import { NpmPkg } from '@waiting/shared-types'
+import { IMidwayWebApplication } from '@midwayjs/web'
+import { JaegerTracer } from 'jaeger-client'
 
-import {
-  ConfigKey,
-  MiddlewareConfig,
-  TracerComponent,
-} from './lib/index'
-import {
-  TracerExtMiddleware,
-  TracerMiddleware,
-} from './middleware/index.middleware'
+import { initTracer } from './lib/tracer'
+import { TracerConfig } from './lib/types'
+import { tracerMiddleware } from './middleware/tracer.middleware'
 
-import type { Application, IMidwayContainer } from '~/interface'
 
+const namespace = 'jaeger'
 
 @Configuration({
-  namespace: ConfigKey.namespace,
+  namespace,
   importConfigs: [join(__dirname, 'config')],
 })
 export class AutoConfiguration {
+  @App() readonly app: IMidwayWebApplication
 
-  @App() readonly app: Application
+  @Config('tracer') readonly tracerConfig: TracerConfig
 
-  @Config(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
-
-  // @Inject() readonly informationService: MidwayInformationService
+  private tracer: JaegerTracer
 
   async onReady(): Promise<void> {
-    if (! this.app) {
-      throw new TypeError('this.app invalid')
-    }
-
-    const pkgNow = this.app.getConfig('pkg') as unknown
-    if (! pkgNow) {
-      try {
-        const informationService = await this.app.getApplicationContext().getAsync(MidwayInformationService)
-        if (informationService) {
-          const pkg = informationService.getPkg() as NpmPkg
-          this.app.addConfigObject({
-            pkg,
-          })
-        }
-      }
-      catch (ex) {
-        console.error(ex)
-      }
-    }
-
-    await this.app.getApplicationContext().getAsync(TracerComponent)
-
-    if (this.mwConfig.enableMiddleware) {
-      registerMiddleware(this.app)
-    }
+    this.tracer = initTracer(this.app)
+    registerMiddleware(this.app, this.tracerConfig)
   }
 
-  async onServerReady(): Promise<void> {
-    if (this.mwConfig.enableMiddleware) {
-      // @ts-expect-error
-      this.app.getMiddleware().insertFirst(TracerMiddleware)
-      void 0
-    }
-  }
-
-  async onStop(container: IMidwayContainer): Promise<void> {
-    const inst = await container.getAsync(TracerComponent)
-    inst.close()
+  async onStop(): Promise<void> {
+    this.tracer.close()
   }
 }
 
 export function registerMiddleware(
-  app: Application,
+  app: IMidwayWebApplication,
+  tracerConfig: TracerConfig,
 ): void {
 
-  // @ts-expect-error
-  app.getMiddleware().insertLast(TracerExtMiddleware)
-}
+  const { enableMiddleWare } = tracerConfig
+  if (! enableMiddleWare) { return }
 
+  const appMiddleware = app.getConfig('middleware') as string[]
+  if (Array.isArray(appMiddleware)) {
+    appMiddleware.push(namespace + ':tracerExtMiddleware')
+  }
+  else {
+    app.logger.warn('appMiddleware is not valid Array')
+    // throw new TypeError('appMiddleware is not valid Array')
+  }
+
+  /**
+   * 应于所有中间件之前，以便追踪覆盖更大范围
+   */
+  app.use(tracerMiddleware)
+}

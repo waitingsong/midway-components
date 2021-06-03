@@ -1,29 +1,23 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import { Middleware } from '@midwayjs/decorator'
-import { humanMemoryUsage } from '@waiting/shared-core'
+/* eslint-disable import/no-extraneous-dependencies */
+import { Provide } from '@midwayjs/decorator'
+import {
+  IMidwayWebContext,
+  IMidwayWebNext,
+  IWebMiddleware,
+  MidwayWebMiddleware,
+} from '@midwayjs/web'
+import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
+import { Tags } from 'opentracing'
 
-import { Context, IMiddleware, NextFunction } from '../interface'
-import { ConfigKey } from '../lib/config'
-import { TracerManager, handleAppExceptionAndNext, processRequestQuery } from '../lib/tracer'
 import { TracerLog } from '../lib/types'
-import { getComponentConfig, matchFunc } from '../util/common'
+import { pathMatched } from '../util/common'
 
+import { logError, updateSpan } from './helper'
 
-
-@Middleware()
-export class TracerExtMiddleware implements IMiddleware<Context, NextFunction> {
-  static getName(): string {
-    const name = ConfigKey.extMiddlewareName
-    return name
-  }
-
-  match(ctx?: Context) {
-    const flag = matchFunc(ctx)
-    return flag
-  }
-
-  resolve() {
-    return extMiddleware
+@Provide()
+export class TracerExtMiddleware implements IWebMiddleware {
+  resolve(): MidwayWebMiddleware {
+    return tracerMiddleware
   }
 }
 
@@ -32,27 +26,52 @@ export class TracerExtMiddleware implements IMiddleware<Context, NextFunction> {
  * - 对不在白名单内的路由进行追踪
  * - 对异常链路进行上报
  */
-async function extMiddleware(
-  ctx: Context,
-  next: NextFunction,
-): Promise<void> {
+async function tracerMiddleware(
+  ctx: IMidwayWebContext,
+  next: IMidwayWebNext,
+): Promise<unknown> {
 
-  const tracerManager = await ctx.requestContext.getAsync(TracerManager)
+  const { tracerManager } = ctx
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (! tracerManager) {
     ctx.logger.warn('tracerManager invalid')
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return next()
+  }
+  // 白名单内的路由不会被追踪
+  else if (pathMatched(ctx.path, ctx.app.config.tracer.whiteList)) {
     return next()
   }
 
-  processRequestQuery(ctx)
+  updateSpan(ctx)
 
   tracerManager.spanLog({
     event: TracerLog.preProcessFinish,
-    [TracerLog.svcCpuUsage]: process.cpuUsage(),
     [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
   })
 
-  const config = getComponentConfig(ctx.app)
-  return handleAppExceptionAndNext(config, tracerManager, next)
+  if (ctx.app.config.tracer.enableCatchError) {
+    try {
+      await next()
+      tracerManager.spanLog({
+        event: TracerLog.postProcessBegin,
+        time: genISO8601String(),
+        [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
+      })
+    }
+    catch (ex) {
+      tracerManager.setSpanTag(Tags.ERROR, true)
+      logError(tracerManager, ex as Error)
+      throw ex
+    }
+  }
+  else {
+    await next()
+    tracerManager.spanLog({
+      event: TracerLog.postProcessBegin,
+      time: genISO8601String(),
+      [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
+    })
+  }
 }
+
 

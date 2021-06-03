@@ -1,15 +1,8 @@
-extends: '@waiting/eslint-config'
+extends: '@waiting/eslint-config/recommended'
 parserOptions:
   project: 'tsconfig.eslint.json'
 
 rules:
-  "@typescript-eslint/no-unused-vars": 0
-  "@typescript-eslint/prefer-ts-expect-error": 0
-  "import/no-extraneous-dependencies":
-    - 2
-    - packageDir:
-      - ./
-      - ../base/
+  '@typescript-eslint/no-unused-vars': 0
+  'import/no-extraneous-dependencies': 0
 
-ignorePatterns:
-  - fixtures

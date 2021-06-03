@@ -5,8 +5,7 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "incremental": true,
-    "module": "ESNext",
-    "moduleResolution": "node",
+    "module": "commonjs",
     "newLine": "lf",
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
@@ -15,13 +14,12 @@
     "outDir": "dist",
     "pretty": true,
     "skipLibCheck": true,
-    "sourceMap": false,
     "strict": true,
-    "strictPropertyInitialization": false,
     "stripInternal": true,
-    "target": "ES2021",
+    "strictPropertyInitialization": false,
+    "target": "ES2020",
     "tsBuildInfoFile": ".vscode/.tsbuildinfo",
-    "types" : ["mocha", "node"]
+    "types" : ["jest", "node", "mocha"]
   },
   "include": [
     "src/**/*.ts",
