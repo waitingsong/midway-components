@@ -6,8 +6,9 @@ import {
 } from '@midwayjs/decorator'
 import { ILogger } from '@midwayjs/logger'
 import { genISO8601String } from '@waiting/shared-core'
+import type { Span } from 'opentracing'
 
-import { TracerManager } from './tracer'
+import { SpanLogInput } from './types'
 
 
 /**
@@ -23,9 +24,7 @@ export class Logger implements ILogger {
   @_Logger() protected readonly logger: ILogger
 
   debug(msg: unknown, ...args: unknown[]): void {
-    tracerLogger({
-      tracerManager: this.ctx.tracerManager,
-      ctxLogger: this.logger,
+    this.tracerLogger({
       level: 'debug',
       msg,
       args,
@@ -33,9 +32,7 @@ export class Logger implements ILogger {
   }
 
   info(msg: unknown, ...args: unknown[]): void {
-    tracerLogger({
-      tracerManager: this.ctx.tracerManager,
-      ctxLogger: this.logger,
+    this.tracerLogger({
       level: 'info',
       msg,
       args,
@@ -43,9 +40,7 @@ export class Logger implements ILogger {
   }
 
   warn(msg: unknown, ...args: unknown[]): void {
-    tracerLogger({
-      tracerManager: this.ctx.tracerManager,
-      ctxLogger: this.logger,
+    this.tracerLogger({
       level: 'warn',
       msg,
       args,
@@ -53,30 +48,46 @@ export class Logger implements ILogger {
   }
 
   error(msg: unknown, ...args: unknown[]): void {
-    tracerLogger({
-      tracerManager: this.ctx.tracerManager,
-      ctxLogger: this.logger,
+    this.tracerLogger({
       level: 'error',
       msg,
       args,
     })
   }
+
+  tracerLogger(options: LogOptions): void {
+    const { tracerManager } = this.ctx
+    const { span, level, msg, args } = options
+
+    if (span) {
+      const input: SpanLogInput = {
+        level,
+        time: genISO8601String(),
+      }
+      if (typeof msg !== 'undefined') {
+        input.msg = msg
+      }
+      if (typeof args !== 'undefined') {
+        input.args = args
+      }
+      span.log(input)
+    }
+    else {
+      tracerManager.spanLog({
+        [level]: [msg, ...args],
+        time: genISO8601String(),
+      })
+    }
+
+    this.logger[level](msg, ...args)
+  }
 }
 
 interface LogOptions {
-  tracerManager: TracerManager
-  ctxLogger: ILogger
   level: keyof ILogger
   msg: unknown
   args: unknown[]
-}
-function tracerLogger(options: LogOptions): void {
-  const { tracerManager, ctxLogger, level, msg, args } = options
-  ctxLogger[level](msg, ...args)
-  tracerManager.spanLog({
-    [level]: [msg, ...args],
-    time: genISO8601String(),
-  })
+  span?: Span
 }
 
 // interface ILogger extends IMidwayLogger {
