@@ -200,7 +200,10 @@ function processPriority(options: ProcessPriorityOpts): number | undefined {
       [TracerTag.logLevel]: 'warn',
     })
     trm.spanLog({
+      level: 'warn',
       time: genISO8601String(),
+      cost,
+      [TracerLog.logThrottleMs]: throttleMs,
       [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
     })
   }
