@@ -66,6 +66,8 @@ export enum TracerTag {
 }
 
 export enum TracerLog {
+  logThrottleMs = 'log.throttle',
+
   error = 'error',
   requestBegin = 'tracer-request-begin',
   requestEnd = 'tracer-request-end',
