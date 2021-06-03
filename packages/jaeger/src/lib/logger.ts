@@ -5,10 +5,7 @@ import {
   Provide,
 } from '@midwayjs/decorator'
 import { ILogger } from '@midwayjs/logger'
-import { genISO8601String } from '@waiting/shared-core'
 import type { Span } from 'opentracing'
-
-import { SpanLogInput } from './types'
 
 
 /**
@@ -55,39 +52,30 @@ export class Logger implements ILogger {
     })
   }
 
-  tracerLogger(options: LogOptions): void {
-    const { tracerManager } = this.ctx
-    const { span, level, msg, args } = options
+  tracerLogger(info: LogInfo, span?: Span): void {
+    const { level, msg, args } = info
 
     if (span) {
-      const input: SpanLogInput = {
-        level,
-        time: genISO8601String(),
-      }
-      if (typeof msg !== 'undefined') {
-        input.msg = msg
-      }
-      if (typeof args !== 'undefined') {
-        input.args = args
-      }
-      span.log(input)
+      span.log(info)
     }
     else {
-      tracerManager.spanLog({
-        [level]: [msg, ...args],
-        time: genISO8601String(),
-      })
+      this.ctx.tracerManager.spanLog(info)
     }
 
-    this.logger[level](msg, ...args)
+    if (args) {
+      this.logger[level](msg, ...args)
+    }
+    else {
+      this.logger[level](msg)
+    }
   }
 }
 
-interface LogOptions {
+interface LogInfo {
   level: keyof ILogger
   msg: unknown
   args?: unknown[]
-  span?: Span
+  [key: string]: unknown
 }
 
 // interface ILogger extends IMidwayLogger {
