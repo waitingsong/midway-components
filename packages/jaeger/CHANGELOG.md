@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 1.3.0 (2021-06-03)
+
+
+### Features
+
+* **jaeger:** refactor tracerLogger() with optional parameter span ([c2b35f2](https://github.com/waitingsong/midway-components/commit/c2b35f20f60dd49ba3165a76dfd68479d2535021))
+
+
+
+
+
 # 1.2.0 (2021-06-03)
 
 
