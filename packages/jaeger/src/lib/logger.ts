@@ -7,6 +7,8 @@ import {
 import { ILogger } from '@midwayjs/logger'
 import type { Span } from 'opentracing'
 
+import { SpanLogInput } from './types'
+
 
 /**
  * 自定义 Context Logger
@@ -52,9 +54,9 @@ export class Logger implements ILogger {
     })
   }
 
-  tracerLogger(info: LogInfo, span?: Span): void {
+  tracerLogger(info: SpanLogInput | LogInfo, span?: Span): void {
     const { msg, args } = info
-    const level = info.level ? info.level : 'info'
+    const level = (info.level ? info.level : 'info') as LogInfo['level']
 
     if (span) {
       span.log(info)
@@ -63,7 +65,7 @@ export class Logger implements ILogger {
       this.ctx.tracerManager.spanLog(info)
     }
 
-    if (args) {
+    if (args && Array.isArray(args)) {
       this.logger[level](msg, ...args)
     }
     else {
@@ -73,8 +75,11 @@ export class Logger implements ILogger {
 }
 
 interface LogInfo {
-  level?: 'debug' | 'info' | 'warn' | 'error'
-  msg?: unknown
+  /**
+   * debug | info | warn | error
+   */
+  level: keyof ILogger
+  msg: unknown
   args?: unknown[]
   [key: string]: unknown
 }
