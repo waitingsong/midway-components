@@ -1,3 +1,4 @@
+import type { ILogger } from '@midwayjs/logger'
 import { TracingConfig } from 'jaeger-client'
 
 
@@ -94,5 +95,15 @@ export interface SpanHeaderInit {
   [HeadersKey.traceId]: string
 }
 export interface SpanLogInput {
+  [key: string]: unknown
+}
+
+export interface LogInfo {
+  /**
+   * debug | info | warn | error
+   */
+  level: keyof ILogger
+  msg: unknown
+  args?: unknown[]
   [key: string]: unknown
 }

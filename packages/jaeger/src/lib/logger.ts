@@ -7,7 +7,7 @@ import {
 import { ILogger } from '@midwayjs/logger'
 import type { Span } from 'opentracing'
 
-import { SpanLogInput } from './types'
+import { LogInfo, SpanLogInput } from './types'
 
 
 /**
@@ -77,15 +77,6 @@ export class Logger implements ILogger {
   }
 }
 
-interface LogInfo {
-  /**
-   * debug | info | warn | error
-   */
-  level: keyof ILogger
-  msg: unknown
-  args?: unknown[]
-  [key: string]: unknown
-}
 
 // interface ILogger extends IMidwayLogger {
 //   info(msg: unknown, ...args: unknown[]): void
