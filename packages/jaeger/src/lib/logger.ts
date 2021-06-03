@@ -86,7 +86,7 @@ export class Logger implements ILogger {
 interface LogOptions {
   level: keyof ILogger
   msg: unknown
-  args: unknown[]
+  args?: unknown[]
   span?: Span
 }
 
