@@ -11,7 +11,7 @@ import { JsonResp } from '@waiting/shared-types'
 import { globalTracer, Tags, FORMAT_HTTP_HEADERS } from 'opentracing'
 
 import { TracerManager } from '../lib/tracer'
-import { TracerConfig, TracerLog, TracerTag } from '../lib/types'
+import { SpanLogInput, TracerConfig, TracerLog, TracerTag } from '../lib/types'
 import { pathMatched } from '../util/common'
 
 import { logError } from './helper'
@@ -69,22 +69,45 @@ function startSpan(ctx: IMidwayWebContext<JsonResp | string>): void {
 
 function finishSpan(ctx: IMidwayWebContext<JsonResp | string>) {
   const { tracerManager } = ctx
+
+  processHTTPStatus(ctx)
+  processResponseData(ctx)
+
+  tracerManager.spanLog({
+    event: TracerLog.requestEnd,
+    time: genISO8601String(),
+    [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
+  })
+
+  tracerManager.finishSpan()
+}
+
+
+function processHTTPStatus(
+  ctx: IMidwayWebContext<JsonResp | string>,
+): void {
+
+  const { tracerManager } = ctx
   const { status } = ctx.response
   const tracerConfig = ctx.app.config.tracer
+  const tags: SpanLogInput = {
+    [Tags.HTTP_STATUS_CODE]: status,
+  }
 
   if (status >= 400) {
     if (status === 404) {
-      tracerManager.setSpanTag(Tags.SAMPLING_PRIORITY, 1)
+      tags[Tags.SAMPLING_PRIORITY] = 1
     }
     else {
-      tracerManager.setSpanTag(Tags.SAMPLING_PRIORITY, 90)
+      tags[Tags.SAMPLING_PRIORITY] = 90
     }
 
-    tracerManager.setSpanTag(Tags.ERROR, true)
+    tags[Tags.ERROR] = true
+    tracerManager.addTags(tags)
+
     if (! tracerConfig.enableCatchError && ctx._internalError) {
       logError(tracerManager, ctx._internalError)
     }
-
   }
   else {
     processCustomFailure(ctx, tracerManager)
@@ -95,42 +118,46 @@ function finishSpan(ctx: IMidwayWebContext<JsonResp | string>) {
     }
     processPriority(opts)
   }
+}
+
+function processResponseData(
+  ctx: IMidwayWebContext<JsonResp | string>,
+): void {
+
+  const { tracerManager } = ctx
+  const tracerConfig = ctx.app.config.tracer
+  const tags: SpanLogInput = {}
+
 
   // [Tag] 请求参数和响应数据
   if (tracerConfig.isLogginInputQuery) {
     if (ctx.method === 'GET') {
       const { query } = ctx.request
       if (typeof query === 'object' && Object.keys(query).length) {
-        tracerManager.setSpanTag(TracerTag.reqQuery, query)
+        tags[TracerTag.reqQuery] = query
       }
       else if (typeof query === 'string') {
-        tracerManager.setSpanTag(TracerTag.reqQuery, query)
+        tags[TracerTag.reqQuery] = query // same as above
       }
     }
     else if (ctx.method === 'POST' && ctx.request.type === 'application/json') {
       const { query: body } = ctx.request
       if (typeof body === 'object' && Object.keys(body).length) {
-        tracerManager.setSpanTag(TracerTag.reqBody, body)
+        tags[TracerTag.reqBody] = body
       }
       else if (typeof body === 'string') {
-        tracerManager.setSpanTag(TracerTag.reqBody, body)
+        tags[TracerTag.reqBody] = body // same as above
       }
     }
   }
 
   if (tracerConfig.isLoggingOutputBody) {
-    tracerManager.setSpanTag(TracerTag.respBody, ctx.body)
+    tags[TracerTag.respBody] = ctx.body
   }
 
-  tracerManager.setSpanTag(Tags.HTTP_STATUS_CODE, status)
-  tracerManager.spanLog({
-    event: TracerLog.requestEnd,
-    time: genISO8601String(),
-    [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
-  })
-
-  tracerManager.finishSpan()
+  tracerManager.addTags(tags)
 }
+
 
 function processCustomFailure(
   ctx: IMidwayWebContext<JsonResp | string>,
@@ -142,8 +169,10 @@ function processCustomFailure(
 
   if (typeof body === 'object') {
     if (typeof body.code !== 'undefined' && body.code !== 0) {
-      trm.setSpanTag(Tags.SAMPLING_PRIORITY, 30)
-      trm.setSpanTag(TracerTag.resCode, body.code)
+      trm.addTags({
+        [Tags.SAMPLING_PRIORITY]: 30,
+        [TracerTag.resCode]: body.code,
+      })
       if (! tracerConfig.enableCatchError && ctx._internalError) {
         logError(trm, ctx._internalError)
       }
@@ -166,7 +195,10 @@ function processPriority(options: ProcessPriorityOpts): number | undefined {
 
   const cost = Date.now() - starttime
   if (cost >= throttleMs) {
-    trm.setSpanTag(Tags.SAMPLING_PRIORITY, 11)
+    trm.addTags({
+      [Tags.SAMPLING_PRIORITY]: 11,
+      [TracerTag.logLevel]: 'warn',
+    })
     trm.spanLog({
       time: genISO8601String(),
       [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
