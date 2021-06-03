@@ -53,7 +53,8 @@ export class Logger implements ILogger {
   }
 
   tracerLogger(info: LogInfo, span?: Span): void {
-    const { level, msg, args } = info
+    const { msg, args } = info
+    const level = info.level ? info.level : 'info'
 
     if (span) {
       span.log(info)
@@ -72,7 +73,7 @@ export class Logger implements ILogger {
 }
 
 interface LogInfo {
-  level: 'debug' | 'info' | 'warn' | 'error'
+  level?: 'debug' | 'info' | 'warn' | 'error'
   msg?: unknown
   args?: unknown[]
   [key: string]: unknown
