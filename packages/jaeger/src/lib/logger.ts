@@ -72,8 +72,8 @@ export class Logger implements ILogger {
 }
 
 interface LogInfo {
-  level: keyof ILogger
-  msg: unknown
+  level: 'debug' | 'info' | 'warn' | 'error'
+  msg?: unknown
   args?: unknown[]
   [key: string]: unknown
 }
