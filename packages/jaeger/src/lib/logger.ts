@@ -65,7 +65,10 @@ export class Logger implements ILogger {
       this.ctx.tracerManager.spanLog(info)
     }
 
-    if (args && Array.isArray(args)) {
+    if (typeof msg === 'undefined') {
+      this.logger[level](info)
+    }
+    else if (Array.isArray(args)) {
       this.logger[level](msg, ...args)
     }
     else {
