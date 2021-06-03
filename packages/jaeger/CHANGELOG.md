@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 2.3.0 (2021-06-03)
+
+
+### Features
+
+* **jaeger:** info of tracerLogger() accept SpanLogInput ([0da7932](https://github.com/waitingsong/midway-components/commit/0da7932b70a9ae658ae346c11a85c4b732425d18))
+
+
+
+
+
 # 2.2.0 (2021-06-03)
 
 
