@@ -43,6 +43,7 @@ export enum HeadersKey {
 }
 
 export enum TracerTag {
+  logLevel = 'log.level',
   dbName = 'db',
   dbClient = 'db.client',
   dbHost = 'db.host',
