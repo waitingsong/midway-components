@@ -80,6 +80,7 @@ export enum TracerLog {
   queryRowCount = 'row-count',
   queryCost = 'query-cost',
   queryCostThottleInSec = 'query-cost-thottle-in-sec',
+  queryCostThottleInMS = 'query-cost-thottle-in-ms',
 
   resMsg = 'res.msg',
   errMsg = 'err.msg',
