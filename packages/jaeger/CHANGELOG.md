@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 3.1.0 (2021-06-04)
+
+
+### Features
+
+* **jaeger:** sample request user-agent ([e239a64](https://github.com/waitingsong/midway-components/commit/e239a64e8ca8ea66ba6a77040d221bf06e62f435))
+
+
+
+
+
 ## 3.0.1 (2021-06-03)
 
 **Note:** Version bump only for package midway-component-jaeger
