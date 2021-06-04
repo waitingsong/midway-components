@@ -10,6 +10,7 @@ export { TracerExtMiddleware } from './middleware/tracer-ext.middleware'
 export { Logger } from './lib/logger'
 export type { TracerManager }
 export * from './lib/types'
+export { procInfo } from './util/stat'
 
 
 declare module '@midwayjs/core' {

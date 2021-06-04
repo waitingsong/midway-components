@@ -3,12 +3,11 @@ import {
   genISO8601String,
   humanMemoryUsage,
 } from '@waiting/shared-core'
-import { NpmPkg } from '@waiting/shared-types'
+import { NpmPkg, JsonResp } from '@waiting/shared-types'
 import { Tags } from 'opentracing'
 
-
 import { TracerManager } from '../lib/tracer'
-import { SpanLogInput, TracerLog, TracerTag } from '../lib/types'
+import { SpanLogInput, TracerConfig, TracerLog, TracerTag } from '../lib/types'
 import { retrieveExternalNetWorkInfo } from '../util/common'
 import { procInfo } from '../util/stat'
 
@@ -74,3 +73,132 @@ export async function logError(trm: TracerManager, err: Error): Promise<void> {
 }
 
 
+export async function processHTTPStatus(
+  ctx: IMidwayWebContext<JsonResp | string>,
+): Promise<void> {
+
+  const { tracerManager } = ctx
+  const { status } = ctx.response
+  const tracerConfig = ctx.app.config.tracer
+  const tags: SpanLogInput = {
+    [Tags.HTTP_STATUS_CODE]: status,
+  }
+
+  if (status >= 400) {
+    if (status === 404) {
+      tags[Tags.SAMPLING_PRIORITY] = 1
+    }
+    else {
+      tags[Tags.SAMPLING_PRIORITY] = 90
+    }
+
+    tags[Tags.ERROR] = true
+    tracerManager.addTags(tags)
+
+    if (! tracerConfig.enableCatchError && ctx._internalError) {
+      await logError(tracerManager, ctx._internalError)
+    }
+  }
+  else {
+    await processCustomFailure(ctx, tracerManager)
+    const opts: ProcessPriorityOpts = {
+      starttime: ctx.starttime,
+      trm: tracerManager,
+      tracerConfig,
+    }
+    await processPriority(opts)
+  }
+}
+
+export function processResponseData(
+  ctx: IMidwayWebContext<JsonResp | string>,
+): void {
+
+  const { tracerManager } = ctx
+  const tracerConfig = ctx.app.config.tracer
+  const tags: SpanLogInput = {}
+
+
+  // [Tag] 请求参数和响应数据
+  if (tracerConfig.isLogginInputQuery) {
+    if (ctx.method === 'GET') {
+      const { query } = ctx.request
+      if (typeof query === 'object' && Object.keys(query).length) {
+        tags[TracerTag.reqQuery] = query
+      }
+      else if (typeof query === 'string') {
+        tags[TracerTag.reqQuery] = query // same as above
+      }
+    }
+    else if (ctx.method === 'POST' && ctx.request.type === 'application/json') {
+      const { query: body } = ctx.request
+      if (typeof body === 'object' && Object.keys(body).length) {
+        tags[TracerTag.reqBody] = body
+      }
+      else if (typeof body === 'string') {
+        tags[TracerTag.reqBody] = body // same as above
+      }
+    }
+  }
+
+  if (tracerConfig.isLoggingOutputBody) {
+    tags[TracerTag.respBody] = ctx.body
+  }
+
+  tracerManager.addTags(tags)
+}
+
+
+async function processCustomFailure(
+  ctx: IMidwayWebContext<JsonResp | string>,
+  trm: TracerManager,
+): Promise<void> {
+
+  const { body } = ctx
+  const tracerConfig = ctx.app.config.tracer
+
+  if (typeof body === 'object') {
+    if (typeof body.code !== 'undefined' && body.code !== 0) {
+      trm.addTags({
+        [Tags.SAMPLING_PRIORITY]: 30,
+        [TracerTag.resCode]: body.code,
+      })
+      if (! tracerConfig.enableCatchError && ctx._internalError) {
+        await logError(trm, ctx._internalError)
+      }
+    }
+  }
+}
+
+export interface ProcessPriorityOpts {
+  starttime: number
+  trm: TracerManager
+  tracerConfig: TracerConfig
+}
+async function processPriority(options: ProcessPriorityOpts): Promise<number | undefined> {
+  const { starttime, trm } = options
+  const { reqThrottleMsForPriority: throttleMs } = options.tracerConfig
+
+  if (throttleMs < 0) {
+    return
+  }
+
+  const cost = Date.now() - starttime
+  if (cost >= throttleMs) {
+    trm.addTags({
+      [Tags.SAMPLING_PRIORITY]: 11,
+      [TracerTag.logLevel]: 'warn',
+    })
+
+    const info = await procInfo()
+    trm.spanLog({
+      level: 'warn',
+      time: genISO8601String(),
+      cost,
+      [TracerLog.logThrottleMs]: throttleMs,
+      [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
+      ...info,
+    })
+  }
+  return cost
+}
