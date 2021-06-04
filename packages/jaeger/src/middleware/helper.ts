@@ -1,3 +1,5 @@
+import { readFile } from 'fs/promises'
+
 import { IMidwayWebContext } from '@midwayjs/web'
 import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
 import { NpmPkg } from '@waiting/shared-types'
@@ -64,3 +66,44 @@ export function logError(trm: TracerManager, err: Error): void {
 
   trm.spanLog(input)
 }
+
+export interface ProcInfo {
+  cpuinfo: Record<string, string>
+  meminfo: Record<string, string>
+  stat: Record<string, string>
+}
+
+export async function retrieveSysinfo(): Promise<ProcInfo> {
+  const ret: ProcInfo = {
+    cpuinfo: {},
+    meminfo: {},
+    stat: {},
+  }
+  if (process.platform === 'linux') {
+    return ret
+  }
+
+  const arr: (keyof ProcInfo)[] = ['cpuinfo', 'meminfo', 'stat']
+  for (const name of arr) {
+    try {
+      const str = await readFile(`/proc/${name}`, 'utf-8')
+
+      const item = ret[name]
+      str.split('\n').forEach((line) => {
+        const parts = line.split(':')
+        if (parts.length === 2) {
+          const [key, value] = parts
+          if (! key || ! value) { return }
+          const val = value.trim().split(' ', 1)[0]
+          item[key] = val ? val : ''
+        }
+      })
+    }
+    catch (ex) {
+      console.warn(ex)
+    }
+  }
+
+  return ret
+}
+
