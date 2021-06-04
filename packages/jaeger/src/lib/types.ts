@@ -53,6 +53,8 @@ export enum TracerTag {
   dbUser = 'db.user',
   dbCommand = 'db.command',
   callerClass = 'caller.class',
+
+  httpUserAgent = 'http.user-agent',
   reqId = 'reqId',
   svcIp4 = 'svc.ipv4',
   svcIp6 = 'svc.ipv6',
