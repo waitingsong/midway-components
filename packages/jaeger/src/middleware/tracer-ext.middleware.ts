@@ -64,7 +64,7 @@ async function tracerMiddleware(
         [TracerTag.logLevel]: 'error',
       })
 
-      logError(tracerManager, ex as Error)
+      await logError(tracerManager, ex as Error)
       throw ex
     }
   }

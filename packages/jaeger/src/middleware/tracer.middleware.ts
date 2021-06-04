@@ -10,11 +10,14 @@ import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
 import { JsonResp } from '@waiting/shared-types'
 import { globalTracer, Tags, FORMAT_HTTP_HEADERS } from 'opentracing'
 
+
 import { TracerManager } from '../lib/tracer'
 import { SpanLogInput, TracerConfig, TracerLog, TracerTag } from '../lib/types'
 import { pathMatched } from '../util/common'
+import { procInfo } from '../util/stat'
 
 import { logError } from './helper'
+
 
 @Provide()
 export class TracerMiddleware implements IWebMiddleware {
@@ -46,7 +49,11 @@ export async function tracerMiddleware(
   }
   startSpan(ctx)
   // 设置异常链路一定会采样
-  ctx.res.once('finish', () => finishSpan(ctx))
+  ctx.res.once('finish', () => {
+    finishSpan(ctx).catch((ex) => {
+      ctx.logger.error(ex)
+    })
+  })
 
   return next()
 }
@@ -67,10 +74,10 @@ function startSpan(ctx: IMidwayWebContext<JsonResp | string>): void {
   ctx.tracerManager = tracerManager
 }
 
-function finishSpan(ctx: IMidwayWebContext<JsonResp | string>) {
+async function finishSpan(ctx: IMidwayWebContext<JsonResp | string>): Promise<void> {
   const { tracerManager } = ctx
 
-  processHTTPStatus(ctx)
+  await processHTTPStatus(ctx)
   processResponseData(ctx)
 
   tracerManager.spanLog({
@@ -83,9 +90,9 @@ function finishSpan(ctx: IMidwayWebContext<JsonResp | string>) {
 }
 
 
-function processHTTPStatus(
+async function processHTTPStatus(
   ctx: IMidwayWebContext<JsonResp | string>,
-): void {
+): Promise<void> {
 
   const { tracerManager } = ctx
   const { status } = ctx.response
@@ -106,17 +113,17 @@ function processHTTPStatus(
     tracerManager.addTags(tags)
 
     if (! tracerConfig.enableCatchError && ctx._internalError) {
-      logError(tracerManager, ctx._internalError)
+      await logError(tracerManager, ctx._internalError)
     }
   }
   else {
-    processCustomFailure(ctx, tracerManager)
+    await processCustomFailure(ctx, tracerManager)
     const opts: ProcessPriorityOpts = {
       starttime: ctx.starttime,
       trm: tracerManager,
       tracerConfig,
     }
-    processPriority(opts)
+    await processPriority(opts)
   }
 }
 
@@ -159,10 +166,10 @@ function processResponseData(
 }
 
 
-function processCustomFailure(
+async function processCustomFailure(
   ctx: IMidwayWebContext<JsonResp | string>,
   trm: TracerManager,
-): void {
+): Promise<void> {
 
   const { body } = ctx
   const tracerConfig = ctx.app.config.tracer
@@ -174,7 +181,7 @@ function processCustomFailure(
         [TracerTag.resCode]: body.code,
       })
       if (! tracerConfig.enableCatchError && ctx._internalError) {
-        logError(trm, ctx._internalError)
+        await logError(trm, ctx._internalError)
       }
     }
   }
@@ -185,7 +192,7 @@ export interface ProcessPriorityOpts {
   trm: TracerManager
   tracerConfig: TracerConfig
 }
-function processPriority(options: ProcessPriorityOpts): number | undefined {
+async function processPriority(options: ProcessPriorityOpts): Promise<number | undefined> {
   const { starttime, trm } = options
   const { reqThrottleMsForPriority: throttleMs } = options.tracerConfig
 
@@ -199,12 +206,15 @@ function processPriority(options: ProcessPriorityOpts): number | undefined {
       [Tags.SAMPLING_PRIORITY]: 11,
       [TracerTag.logLevel]: 'warn',
     })
+
+    const info = await procInfo()
     trm.spanLog({
       level: 'warn',
       time: genISO8601String(),
       cost,
       [TracerLog.logThrottleMs]: throttleMs,
       [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
+      ...info,
     })
   }
   return cost

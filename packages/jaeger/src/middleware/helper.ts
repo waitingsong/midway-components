@@ -1,13 +1,16 @@
-import { readFile } from 'fs/promises'
-
 import { IMidwayWebContext } from '@midwayjs/web'
-import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
+import {
+  genISO8601String,
+  humanMemoryUsage,
+} from '@waiting/shared-core'
 import { NpmPkg } from '@waiting/shared-types'
 import { Tags } from 'opentracing'
+
 
 import { TracerManager } from '../lib/tracer'
 import { SpanLogInput, TracerLog, TracerTag } from '../lib/types'
 import { retrieveExternalNetWorkInfo } from '../util/common'
+import { procInfo } from '../util/stat'
 
 
 const netInfo = retrieveExternalNetWorkInfo()
@@ -46,16 +49,19 @@ export function updateSpan(ctx: IMidwayWebContext): void {
 }
 
 
-export function logError(trm: TracerManager, err: Error): void {
+export async function logError(trm: TracerManager, err: Error): Promise<void> {
+  const info = await procInfo()
   const input: SpanLogInput = {
     event: TracerLog.error,
     time: genISO8601String(),
     [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
+    ...info,
   }
 
   // ctx._internalError in error-handler.middleware.ts
   if (err instanceof Error) {
     input[TracerLog.resMsg] = err.message
+
     const { stack } = err
     if (stack) {
       // udp limit 65k
@@ -67,43 +73,4 @@ export function logError(trm: TracerManager, err: Error): void {
   trm.spanLog(input)
 }
 
-export interface ProcInfo {
-  cpuinfo: Record<string, string>
-  meminfo: Record<string, string>
-  stat: Record<string, string>
-}
-
-export async function retrieveSysinfo(): Promise<ProcInfo> {
-  const ret: ProcInfo = {
-    cpuinfo: {},
-    meminfo: {},
-    stat: {},
-  }
-  if (process.platform === 'linux') {
-    return ret
-  }
-
-  const arr: (keyof ProcInfo)[] = ['cpuinfo', 'meminfo', 'stat']
-  for (const name of arr) {
-    try {
-      const str = await readFile(`/proc/${name}`, 'utf-8')
-
-      const item = ret[name]
-      str.split('\n').forEach((line) => {
-        const parts = line.split(':')
-        if (parts.length === 2) {
-          const [key, value] = parts
-          if (! key || ! value) { return }
-          const val = value.trim().split(' ', 1)[0]
-          item[key] = val ? val : ''
-        }
-      })
-    }
-    catch (ex) {
-      console.warn(ex)
-    }
-  }
-
-  return ret
-}
 

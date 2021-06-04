@@ -93,6 +93,10 @@ export enum TracerLog {
   errStack = 'err.stack',
 
   svcMemoryUsage = 'svc.memory-usage',
+
+  procCpuinfo = 'proc.cpuinfo',
+  procMeminfo = 'proc.meminfo',
+  procStat = 'proc.stat'
 }
 
 export interface SpanHeaderInit {
