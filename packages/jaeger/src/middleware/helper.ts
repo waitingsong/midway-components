@@ -18,6 +18,10 @@ export function updateSpan(ctx: IMidwayWebContext): void {
     [TracerTag.svcName]: pkg.name,
   }
 
+  if (ctx.request.headers['user-agent']) {
+    tags[TracerTag.httpUserAgent] = ctx.request.headers['user-agent']
+  }
+
   if (pkg.version) {
     tags[TracerTag.svcVer] = pkg.version
   }
