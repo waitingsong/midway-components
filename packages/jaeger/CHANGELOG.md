@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 3.4.0 (2021-06-07)
+
+
+### Features
+
+* **jaeger:** headerOfCurrentSpan() accept optional current span ([4e3d769](https://github.com/waitingsong/midway-components/commit/4e3d76996d3aaf3b61a7be86e471b4bba86ad694))
+
+
+
+
+
 # 3.3.0 (2021-06-04)
 
 **Note:** Version bump only for package midway-component-jaeger
