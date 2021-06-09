@@ -1,3 +1,5 @@
+import type { IncomingHttpHeaders } from 'http'
+
 import { IMidwayWebContext } from '@midwayjs/web'
 import {
   genISO8601String,
@@ -22,9 +24,9 @@ export function updateSpan(ctx: IMidwayWebContext): void {
     [TracerTag.svcName]: pkg.name,
   }
 
-  if (ctx.request.headers['user-agent']) {
-    tags[TracerTag.httpUserAgent] = ctx.request.headers['user-agent']
-  }
+  // if (ctx.request.headers['user-agent']) {
+  //   tags[TracerTag.httpUserAgent] = ctx.request.headers['user-agent']
+  // }
 
   if (pkg.version) {
     tags[TracerTag.svcVer] = pkg.version
@@ -43,6 +45,17 @@ export function updateSpan(ctx: IMidwayWebContext): void {
   })
 
   tags[Tags.PEER_HOST_IPV4] = ctx.request.ip
+
+  const config = ctx.app.config.tracer as TracerConfig
+
+  if (Array.isArray(config.loggingReqHeaders)) {
+    config.loggingReqHeaders.forEach((name) => {
+      const val = retrieveHeadersItem(ctx.request.headers, name)
+      if (val) {
+        tags[`req.headers.${name}`] = val
+      }
+    })
+  }
 
   tracerManager.addTags(tags)
 }
@@ -202,3 +215,27 @@ async function processPriority(options: ProcessPriorityOpts): Promise<number | u
   }
   return cost
 }
+
+function retrieveHeadersItem(
+  headers: IncomingHttpHeaders | HeadersInit | undefined,
+  name: string,
+): string | null | undefined {
+
+  if (! headers) {
+    return ''
+  }
+
+  if (typeof (headers as Headers).get === 'function') {
+    return (headers as Headers).get(name)
+  }
+  else if (Array.isArray(headers)) {
+    console.warn('Not supported param type Array, only support Record or Headers Map')
+  }
+  else if (typeof headers === 'object' && Object.keys(headers).length) {
+    // @ts-expect-error
+    return headers[name] as string | undefined
+  }
+
+  return ''
+}
+

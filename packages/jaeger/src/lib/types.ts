@@ -1,4 +1,7 @@
+import { IncomingHttpHeaders } from 'http'
+
 import type { ILogger } from '@midwayjs/logger'
+import { KnownKeys } from '@waiting/shared-types'
 import { TracingConfig } from 'jaeger-client'
 
 
@@ -33,6 +36,10 @@ export interface TracerConfig {
    * @default false
    */
   isLoggingOutputBody: boolean
+  /**
+   * @example ['authorization', 'user-agent']
+   */
+  loggingReqHeaders: string[] | KnownKeys<IncomingHttpHeaders>[]
 }
 
 export enum HeadersKey {

@@ -8,6 +8,10 @@ export const tracer: TracerConfig = {
   enableCatchError: true,
   isLogginInputQuery: false,
   isLoggingOutputBody: false,
+  loggingReqHeaders: [
+    'authorization',
+    'user-agent',
+  ],
   tracingConfig: {
     sampler: {
       type: 'probabilistic',
