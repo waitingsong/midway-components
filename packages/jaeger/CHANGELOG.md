@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 3.5.0 (2021-06-09)
+
+
+### Features
+
+* **jaeger:** remove type declaration of egg.EggAppConfig ([d1c88d5](https://github.com/waitingsong/midway-components/commit/d1c88d59e54c0dbac37da48bd4dbcf8ec1d2e9cd))
+
+
+
+
+
 ## 3.4.1 (2021-06-09)
 
 **Note:** Version bump only for package midway-component-jaeger
