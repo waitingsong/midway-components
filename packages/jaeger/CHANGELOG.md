@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 3.6.0 (2021-06-09)
+
+
+### Features
+
+* **jaeger:** add TracerTag.httpAuthorization ([eef6bae](https://github.com/waitingsong/midway-components/commit/eef6bae59152276df3575be7e3cb88002ee6f711))
+
+
+
+
+
 # 3.5.0 (2021-06-09)
 
 
