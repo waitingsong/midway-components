@@ -9,7 +9,7 @@ import {
 import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
 import { Tags } from 'opentracing'
 
-import { TracerLog, TracerTag } from '../lib/types'
+import { TracerConfig, TracerLog, TracerTag } from '../lib/types'
 import { pathMatched } from '../util/common'
 
 import { logError, updateSpan } from './helper'
@@ -32,13 +32,15 @@ async function tracerMiddleware(
 ): Promise<unknown> {
 
   const { tracerManager } = ctx
+  const config = ctx.app.config.tracer as TracerConfig
+
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (! tracerManager) {
     ctx.logger.warn('tracerManager invalid')
     return next()
   }
   // 白名单内的路由不会被追踪
-  else if (pathMatched(ctx.path, ctx.app.config.tracer.whiteList)) {
+  else if (pathMatched(ctx.path, config.whiteList)) {
     return next()
   }
 
@@ -49,7 +51,7 @@ async function tracerMiddleware(
     [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
   })
 
-  if (ctx.app.config.tracer.enableCatchError) {
+  if (config.enableCatchError) {
     try {
       await next()
       tracerManager.spanLog({

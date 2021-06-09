@@ -11,7 +11,7 @@ import { JsonResp } from '@waiting/shared-types'
 import { globalTracer, FORMAT_HTTP_HEADERS } from 'opentracing'
 
 import { TracerManager } from '../lib/tracer'
-import { TracerLog } from '../lib/types'
+import { TracerConfig, TracerLog } from '../lib/types'
 import { pathMatched } from '../util/common'
 
 import { processHTTPStatus, processResponseData } from './helper'
@@ -40,8 +40,10 @@ export async function tracerMiddleware(
     return next()
   }
 
+  const config = ctx.app.config.tracer as TracerConfig
+
   // 白名单内的路由不会被追踪
-  if (pathMatched(ctx.path, ctx.app.config.tracer.whiteList)) {
+  if (pathMatched(ctx.path, config.whiteList)) {
     ctx.tracerManager = new TracerManager(false)
     return next()
   }

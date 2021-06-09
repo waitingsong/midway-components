@@ -36,8 +36,7 @@
     "@midwayjs/koa": "^2.10.18",
     "@midwayjs/mock": "^2.10.18",
     "@midwayjs/web": "^2.10.18",
-    "cross-env": "7",
-    "egg": "^2.29.0"
+    "cross-env": "7"
   },
   "engines": {
     "node": ">=14.16.0"

@@ -79,7 +79,7 @@ export async function processHTTPStatus(
 
   const { tracerManager } = ctx
   const { status } = ctx.response
-  const tracerConfig = ctx.app.config.tracer
+  const tracerConfig = ctx.app.config.tracer as TracerConfig
   const tags: SpanLogInput = {
     [Tags.HTTP_STATUS_CODE]: status,
   }
@@ -115,7 +115,7 @@ export function processResponseData(
 ): void {
 
   const { tracerManager } = ctx
-  const tracerConfig = ctx.app.config.tracer
+  const tracerConfig = ctx.app.config.tracer as TracerConfig
   const tags: SpanLogInput = {}
 
 
@@ -155,7 +155,7 @@ async function processCustomFailure(
 ): Promise<void> {
 
   const { body } = ctx
-  const tracerConfig = ctx.app.config.tracer
+  const tracerConfig = ctx.app.config.tracer as TracerConfig
 
   if (typeof body === 'object') {
     if (typeof body.code !== 'undefined' && body.code !== 0) {
