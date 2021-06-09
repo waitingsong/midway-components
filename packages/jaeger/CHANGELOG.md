@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 4.0.0 (2021-06-09)
+
+
+### Features
+
+* **jaeger:** logging specify headers with TracerConfig['loggingReqHeaders'] ([a51acd9](https://github.com/waitingsong/midway-components/commit/a51acd9b813c9634de9ad746f5b498599fe328db))
+
+
+
+
+
 # 3.6.0 (2021-06-09)
 
 
