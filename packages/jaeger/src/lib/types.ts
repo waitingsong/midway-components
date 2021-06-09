@@ -55,6 +55,7 @@ export enum TracerTag {
   callerClass = 'caller.class',
 
   httpUserAgent = 'http.user-agent',
+  httpAuthorization = 'http.authorization',
   reqId = 'reqId',
   svcIp4 = 'svc.ipv4',
   svcIp6 = 'svc.ipv6',
