@@ -47,10 +47,12 @@ async function tracerMiddleware(
   updateSpan(ctx)
   processRequestQuery(ctx)
 
+  // preProcessFinish,
   tracerManager.spanLog({
     event: TracerLog.preProcessFinish,
     [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
   })
+
 
   if (config.enableCatchError) {
     try {
