@@ -10,6 +10,7 @@ export const defaultTracerConfig: Omit<TracerConfig, 'tracingConfig'> = {
   loggingOutputBody: false,
   loggingReqHeaders: [
     'authorization',
+    'host',
     'user-agent',
   ],
 }
