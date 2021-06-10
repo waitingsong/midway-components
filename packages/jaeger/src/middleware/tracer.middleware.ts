@@ -61,7 +61,7 @@ export async function tracerMiddleware(
   return next()
 }
 
-function startSpan(ctx: IMidwayWebContext<JsonResp | string>): void {
+function startSpan(ctx: IMidwayWebContext<JsonResp | string>): TracerManager {
   // 开启第一个span并入栈
   const tracerManager = new TracerManager(true)
   const requestSpanCtx
@@ -75,6 +75,8 @@ function startSpan(ctx: IMidwayWebContext<JsonResp | string>): void {
     time: genISO8601String(),
     [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
   })
+
+  return tracerManager
 }
 
 async function finishSpan(ctx: IMidwayWebContext<JsonResp | string>): Promise<void> {
