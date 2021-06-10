@@ -14,7 +14,10 @@ import { TracerManager } from '../lib/tracer'
 import { TracerConfig, TracerLog } from '../lib/types'
 import { pathMatched } from '../util/common'
 
-import { processHTTPStatus, processResponseData } from './helper'
+import {
+  processHTTPStatus,
+  processResponseData,
+} from './helper'
 
 
 @Provide()
@@ -64,14 +67,14 @@ function startSpan(ctx: IMidwayWebContext<JsonResp | string>): void {
   const requestSpanCtx
     = globalTracer().extract(FORMAT_HTTP_HEADERS, ctx.headers) ?? undefined
 
+  ctx.tracerManager = tracerManager
+
   tracerManager.startSpan(ctx.path, requestSpanCtx)
   tracerManager.spanLog({
     event: TracerLog.requestBegin,
     time: genISO8601String(),
     [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
   })
-
-  ctx.tracerManager = tracerManager
 }
 
 async function finishSpan(ctx: IMidwayWebContext<JsonResp | string>): Promise<void> {

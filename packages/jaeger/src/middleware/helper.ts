@@ -16,7 +16,10 @@ import { procInfo } from '../util/stat'
 
 const netInfo = retrieveExternalNetWorkInfo()
 
-export function updateSpan(ctx: IMidwayWebContext): void {
+export function updateSpan(
+  ctx: IMidwayWebContext,
+): void {
+
   const { tracerManager } = ctx
   const pkg = ctx.app.getConfig('pkg') as NpmPkg
   const tags: SpanLogInput = {
@@ -123,14 +126,14 @@ export async function processHTTPStatus(
   }
 }
 
-export function processResponseData(
-  ctx: IMidwayWebContext<JsonResp | string>,
+
+export function processRequestQuery(
+  ctx: IMidwayWebContext,
 ): void {
 
   const { tracerManager } = ctx
   const tracerConfig = ctx.app.config.tracer as TracerConfig
   const tags: SpanLogInput = {}
-
 
   // [Tag] 请求参数和响应数据
   if (tracerConfig.logginInputQuery) {
@@ -153,6 +156,17 @@ export function processResponseData(
       }
     }
   }
+
+  tracerManager.addTags(tags)
+}
+
+export function processResponseData(
+  ctx: IMidwayWebContext<JsonResp | string>,
+): void {
+
+  const { tracerManager } = ctx
+  const tracerConfig = ctx.app.config.tracer as TracerConfig
+  const tags: SpanLogInput = {}
 
   if (tracerConfig.loggingOutputBody) {
     tags[TracerTag.respBody] = ctx.body

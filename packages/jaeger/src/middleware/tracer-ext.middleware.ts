@@ -12,7 +12,7 @@ import { Tags } from 'opentracing'
 import { TracerConfig, TracerLog, TracerTag } from '../lib/types'
 import { pathMatched } from '../util/common'
 
-import { logError, updateSpan } from './helper'
+import { logError, processRequestQuery, updateSpan } from './helper'
 
 @Provide()
 export class TracerExtMiddleware implements IWebMiddleware {
@@ -27,7 +27,7 @@ export class TracerExtMiddleware implements IWebMiddleware {
  * - 对异常链路进行上报
  */
 async function tracerMiddleware(
-  ctx: IMidwayWebContext,
+  ctx: IMidwayWebContext<unknown>,
   next: IMidwayWebNext,
 ): Promise<unknown> {
 
@@ -45,6 +45,7 @@ async function tracerMiddleware(
   }
 
   updateSpan(ctx)
+  processRequestQuery(ctx)
 
   tracerManager.spanLog({
     event: TracerLog.preProcessFinish,
