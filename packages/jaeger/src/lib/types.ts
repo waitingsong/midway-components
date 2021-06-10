@@ -32,7 +32,7 @@ export interface TracerConfig {
   /**
    * - GET: request.query
    * - POST: request.body (only when content-type: 'application/json')
-   * @default false
+   * @default true
    */
   logginInputQuery: boolean
   /**
