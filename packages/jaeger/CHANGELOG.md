@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.1.0 (2021-06-10)
+
+
+### Features
+
+* **jaeger:** export defaultTracerConfig ([2f54e1f](https://github.com/waitingsong/midway-components/commit/2f54e1f83b3566de3245f086ecfdf12ba0f5e976))
+
+
+
+
+
 # 6.0.0 (2021-06-10)
 
 
