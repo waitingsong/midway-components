@@ -133,7 +133,7 @@ export function processResponseData(
 
 
   // [Tag] 请求参数和响应数据
-  if (tracerConfig.isLogginInputQuery) {
+  if (tracerConfig.logginInputQuery) {
     if (ctx.method === 'GET') {
       const { query } = ctx.request
       if (typeof query === 'object' && Object.keys(query).length) {
@@ -154,7 +154,7 @@ export function processResponseData(
     }
   }
 
-  if (tracerConfig.isLoggingOutputBody) {
+  if (tracerConfig.loggingOutputBody) {
     tags[TracerTag.respBody] = ctx.body
   }
 

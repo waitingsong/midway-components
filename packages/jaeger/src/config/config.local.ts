@@ -6,8 +6,8 @@ export const tracer: TracerConfig = {
   reqThrottleMsForPriority: 10,
   enableMiddleWare: true,
   enableCatchError: true,
-  isLogginInputQuery: true,
-  isLoggingOutputBody: true,
+  logginInputQuery: true,
+  loggingOutputBody: true,
   loggingReqHeaders: [
     'authorization',
     'user-agent',

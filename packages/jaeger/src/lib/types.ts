@@ -6,10 +6,13 @@ import { TracingConfig } from 'jaeger-client'
 
 
 export interface TracerConfig {
-  /** 请求路径忽略名单 */
+  /**
+   * 请求路径忽略名单
+   * @default ['/favicon.ico', '/favicon.png']
+   */
   whiteList: (string | RegExp)[]
   /**
-   * 强制采样请求处理时间（毫秒）阈值
+   * 强制采样请求处理时间（毫秒）阈值，
    * 负数不采样
    */
   reqThrottleMsForPriority: number
@@ -31,13 +34,13 @@ export interface TracerConfig {
    * - POST: request.body (only when content-type: 'application/json')
    * @default false
    */
-  isLogginInputQuery: boolean
+  logginInputQuery: boolean
   /**
    * @default false
    */
-  isLoggingOutputBody: boolean
+  loggingOutputBody: boolean
   /**
-   * @example ['authorization', 'user-agent']
+   * @default ['authorization', 'user-agent']
    */
   loggingReqHeaders: string[] | KnownKeys<IncomingHttpHeaders>[]
 }
