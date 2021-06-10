@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.3.0 (2021-06-10)
+
+
+### Features
+
+* **jaeger:** update defaultTracerConfig.loggingReqHeaders with 'host' ([ec5150e](https://github.com/waitingsong/midway-components/commit/ec5150ed526ee74b32dedc2a508ca1e76082a773))
+
+
+
+
+
 # 6.2.0 (2021-06-10)
 
 
