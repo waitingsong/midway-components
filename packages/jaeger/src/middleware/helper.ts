@@ -27,10 +27,6 @@ export function updateSpan(
     [TracerTag.svcName]: pkg.name,
   }
 
-  // if (ctx.request.headers['user-agent']) {
-  //   tags[TracerTag.httpUserAgent] = ctx.request.headers['user-agent']
-  // }
-
   if (pkg.version) {
     tags[TracerTag.svcVer] = pkg.version
   }
@@ -65,10 +61,39 @@ export function updateSpan(
 
 
 /**
- * Catch and sample exception,
- * throw or not throw catched ex
+ * Catch and sample top exception if __isTraced is false or undefined,
+ * ex will NOT be thrown again
  */
-export async function processHandleExceptionAndNext(
+export async function handleTopExceptionAndNext(
+  tracerManager: TracerManager,
+  next: IMidwayWebNext,
+): Promise<void> {
+
+  try {
+    await next()
+  }
+  catch (ex) {
+    const err = ex as unknown
+
+    // @ts-expect-error
+    if (err[TracerLog.exIsTraced]) {
+      return
+    }
+
+    await logError(
+      tracerManager,
+      err as Error,
+      TracerLog.topException,
+    )
+  }
+}
+
+
+/**
+ * Catch and sample exception,
+ * throw catched ex
+ */
+export async function handleAppExceptionAndNext(
   config: TracerConfig,
   tracerManager: TracerManager,
   next: IMidwayWebNext,
@@ -84,11 +109,6 @@ export async function processHandleExceptionAndNext(
       })
     }
     catch (ex) {
-      tracerManager.addTags({
-        [Tags.ERROR]: true,
-        [TracerTag.logLevel]: 'error',
-      })
-
       await logError(tracerManager, ex as Error)
       throw ex
     }
@@ -103,16 +123,25 @@ export async function processHandleExceptionAndNext(
   }
 }
 
-async function logError(trm: TracerManager, err: Error): Promise<void> {
+async function logError(
+  trm: TracerManager,
+  err: Error,
+  event = TracerLog.error,
+): Promise<void> {
+
+  trm.addTags({
+    [Tags.ERROR]: true,
+    [TracerTag.logLevel]: 'error',
+  })
+
   const info = await procInfo()
   const input: SpanLogInput = {
-    event: TracerLog.error,
+    event,
     time: genISO8601String(),
     [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
     ...info,
   }
 
-  // ctx._internalError in error-handler.middleware.ts
   if (err instanceof Error) {
     input[TracerLog.errMsg] = err.message
 
@@ -125,6 +154,12 @@ async function logError(trm: TracerManager, err: Error): Promise<void> {
   }
 
   trm.spanLog(input)
+  Object.defineProperty(err, TracerLog.exIsTraced, {
+    configurable: true,
+    enumerable: false,
+    writable: true,
+    value: true,
+  })
 }
 
 
@@ -149,10 +184,6 @@ export async function processHTTPStatus(
 
     tags[Tags.ERROR] = true
     tracerManager.addTags(tags)
-
-    if (! tracerConfig.enableCatchError && ctx._internalError) {
-      await logError(tracerManager, ctx._internalError)
-    }
   }
   else {
     await processCustomFailure(ctx, tracerManager)
@@ -221,7 +252,6 @@ async function processCustomFailure(
 ): Promise<void> {
 
   const { body } = ctx
-  const tracerConfig = ctx.app.config.tracer as TracerConfig
 
   if (typeof body === 'object') {
     if (typeof body.code !== 'undefined' && body.code !== 0) {
@@ -229,9 +259,6 @@ async function processCustomFailure(
         [Tags.SAMPLING_PRIORITY]: 30,
         [TracerTag.resCode]: body.code,
       })
-      if (! tracerConfig.enableCatchError && ctx._internalError) {
-        await logError(trm, ctx._internalError)
-      }
     }
   }
 }

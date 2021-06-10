@@ -15,6 +15,7 @@ import { TracerConfig, TracerLog } from '../lib/types'
 import { pathMatched } from '../util/common'
 
 import {
+  handleTopExceptionAndNext,
   processHTTPStatus,
   processResponseData,
 } from './helper'
@@ -50,7 +51,7 @@ export async function tracerMiddleware(
     ctx.tracerManager = new TracerManager(false)
     return next()
   }
-  startSpan(ctx)
+  const trm = startSpan(ctx)
   // 设置异常链路一定会采样
   ctx.res.once('finish', () => {
     finishSpan(ctx).catch((ex) => {
@@ -58,7 +59,8 @@ export async function tracerMiddleware(
     })
   })
 
-  return next()
+  // return next()
+  return handleTopExceptionAndNext(trm, next)
 }
 
 function startSpan(ctx: IMidwayWebContext<JsonResp | string>): TracerManager {

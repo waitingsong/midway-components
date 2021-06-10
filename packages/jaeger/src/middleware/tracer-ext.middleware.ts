@@ -12,7 +12,7 @@ import { TracerConfig, TracerLog } from '../lib/types'
 import { pathMatched } from '../util/common'
 
 import {
-  processHandleExceptionAndNext,
+  handleAppExceptionAndNext,
   processRequestQuery,
   updateSpan,
 } from './helper'
@@ -56,7 +56,7 @@ async function tracerMiddleware(
     [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
   })
 
-  return processHandleExceptionAndNext(config, tracerManager, next)
+  return handleAppExceptionAndNext(config, tracerManager, next)
 }
 
 

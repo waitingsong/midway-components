@@ -80,6 +80,8 @@ export enum TracerTag {
 
 export enum TracerLog {
   logThrottleMs = 'log.throttle',
+  exIsTraced = '__isTraced',
+  topException = 'top-exp',
 
   error = 'error',
   requestBegin = 'tracer-request-begin',
