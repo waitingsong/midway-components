@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.0.0 (2021-06-10)
+
+
+### Features
+
+* **jaeger:** catch exception at two stages ([316cbfc](https://github.com/waitingsong/midway-components/commit/316cbfc78d4bc8b455b949cbcdf01ca823ae7acb))
+
+
+
+
+
 # 5.1.0 (2021-06-10)
 
 
