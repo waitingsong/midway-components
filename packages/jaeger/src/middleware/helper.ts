@@ -75,7 +75,7 @@ export async function logError(trm: TracerManager, err: Error): Promise<void> {
 
   // ctx._internalError in error-handler.middleware.ts
   if (err instanceof Error) {
-    input[TracerLog.resMsg] = err.message
+    input[TracerLog.errMsg] = err.message
 
     const { stack } = err
     if (stack) {
