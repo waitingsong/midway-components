@@ -45,6 +45,9 @@ export function updateSpan(
 
   tags[Tags.PEER_HOST_IPV4] = ctx.request.ip
 
+  tags[Tags.HTTP_URL] = ctx.path
+  tags[TracerTag.httpProtocol] = ctx.protocol
+
   const config = ctx.app.config.tracer as TracerConfig
 
   if (Array.isArray(config.loggingReqHeaders)) {
