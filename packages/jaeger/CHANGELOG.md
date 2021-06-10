@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.2.0 (2021-06-10)
+
+
+### Features
+
+* **jaeger:** sample request path and protocol ([cf83e9d](https://github.com/waitingsong/midway-components/commit/cf83e9d9b1db7910323f6191f31810fd65fc7c5f))
+
+
+
+
+
 # 6.1.0 (2021-06-10)
 
 
