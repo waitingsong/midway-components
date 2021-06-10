@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 5.1.0 (2021-06-10)
+
+
+### Features
+
+* **jaeger:** call processRequestQuery() in tracer-ext.middleware ([7d4538b](https://github.com/waitingsong/midway-components/commit/7d4538bddf77e944f23babecf39832ee5e241ff2))
+
+
+
+
+
 # 5.0.0 (2021-06-10)
 
 **Note:** Version bump only for package midway-component-jaeger
