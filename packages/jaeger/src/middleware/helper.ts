@@ -1,6 +1,6 @@
 import type { IncomingHttpHeaders } from 'http'
 
-import { IMidwayWebContext } from '@midwayjs/web'
+import { IMidwayWebContext, IMidwayWebNext } from '@midwayjs/web'
 import {
   genISO8601String,
   humanMemoryUsage,
@@ -64,7 +64,46 @@ export function updateSpan(
 }
 
 
-export async function logError(trm: TracerManager, err: Error): Promise<void> {
+/**
+ * Catch and sample exception,
+ * throw or not throw catched ex
+ */
+export async function processHandleExceptionAndNext(
+  config: TracerConfig,
+  tracerManager: TracerManager,
+  next: IMidwayWebNext,
+): Promise<void> {
+
+  if (config.enableCatchError) {
+    try {
+      await next()
+      tracerManager.spanLog({
+        event: TracerLog.postProcessBegin,
+        time: genISO8601String(),
+        [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
+      })
+    }
+    catch (ex) {
+      tracerManager.addTags({
+        [Tags.ERROR]: true,
+        [TracerTag.logLevel]: 'error',
+      })
+
+      await logError(tracerManager, ex as Error)
+      throw ex
+    }
+  }
+  else {
+    await next()
+    tracerManager.spanLog({
+      event: TracerLog.postProcessBegin,
+      time: genISO8601String(),
+      [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
+    })
+  }
+}
+
+async function logError(trm: TracerManager, err: Error): Promise<void> {
   const info = await procInfo()
   const input: SpanLogInput = {
     event: TracerLog.error,

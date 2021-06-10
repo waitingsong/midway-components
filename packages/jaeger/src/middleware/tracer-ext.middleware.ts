@@ -6,13 +6,16 @@ import {
   IWebMiddleware,
   MidwayWebMiddleware,
 } from '@midwayjs/web'
-import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
-import { Tags } from 'opentracing'
+import { humanMemoryUsage } from '@waiting/shared-core'
 
-import { TracerConfig, TracerLog, TracerTag } from '../lib/types'
+import { TracerConfig, TracerLog } from '../lib/types'
 import { pathMatched } from '../util/common'
 
-import { logError, processRequestQuery, updateSpan } from './helper'
+import {
+  processHandleExceptionAndNext,
+  processRequestQuery,
+  updateSpan,
+} from './helper'
 
 @Provide()
 export class TracerExtMiddleware implements IWebMiddleware {
@@ -53,34 +56,7 @@ async function tracerMiddleware(
     [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
   })
 
-
-  if (config.enableCatchError) {
-    try {
-      await next()
-      tracerManager.spanLog({
-        event: TracerLog.postProcessBegin,
-        time: genISO8601String(),
-        [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
-      })
-    }
-    catch (ex) {
-      tracerManager.addTags({
-        [Tags.ERROR]: true,
-        [TracerTag.logLevel]: 'error',
-      })
-
-      await logError(tracerManager, ex as Error)
-      throw ex
-    }
-  }
-  else {
-    await next()
-    tracerManager.spanLog({
-      event: TracerLog.postProcessBegin,
-      time: genISO8601String(),
-      [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
-    })
-  }
+  return processHandleExceptionAndNext(config, tracerManager, next)
 }
 
 
