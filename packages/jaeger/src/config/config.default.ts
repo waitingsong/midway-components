@@ -6,8 +6,12 @@ export const tracer: TracerConfig = {
   reqThrottleMsForPriority: 150,
   enableMiddleWare: true,
   enableCatchError: true,
-  isLogginInputQuery: false,
-  isLoggingOutputBody: false,
+  logginInputQuery: false,
+  loggingOutputBody: false,
+  loggingReqHeaders: [
+    'authorization',
+    'user-agent',
+  ],
   tracingConfig: {
     sampler: {
       type: 'probabilistic',

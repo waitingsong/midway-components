@@ -8,13 +8,18 @@ import {
 } from '@midwayjs/web'
 import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
 import { JsonResp } from '@waiting/shared-types'
-import { globalTracer, Tags, FORMAT_HTTP_HEADERS } from 'opentracing'
+import { globalTracer, FORMAT_HTTP_HEADERS } from 'opentracing'
 
 import { TracerManager } from '../lib/tracer'
-import { TracerConfig, TracerLog, TracerTag } from '../lib/types'
+import { TracerConfig, TracerLog } from '../lib/types'
 import { pathMatched } from '../util/common'
 
-import { logError } from './helper'
+import {
+  handleTopExceptionAndNext,
+  processHTTPStatus,
+  processResponseData,
+} from './helper'
+
 
 @Provide()
 export class TracerMiddleware implements IWebMiddleware {
@@ -39,23 +44,32 @@ export async function tracerMiddleware(
     return next()
   }
 
+  const config = ctx.app.config.tracer as TracerConfig
+
   // 白名单内的路由不会被追踪
-  if (pathMatched(ctx.path, ctx.app.config.tracer.whiteList)) {
+  if (pathMatched(ctx.path, config.whiteList)) {
     ctx.tracerManager = new TracerManager(false)
     return next()
   }
-  startSpan(ctx)
+  const trm = startSpan(ctx)
   // 设置异常链路一定会采样
-  ctx.res.once('finish', () => finishSpan(ctx))
+  ctx.res.once('finish', () => {
+    finishSpan(ctx).catch((ex) => {
+      ctx.logger.error(ex)
+    })
+  })
 
-  return next()
+  // return next()
+  return handleTopExceptionAndNext(trm, next)
 }
 
-function startSpan(ctx: IMidwayWebContext<JsonResp | string>): void {
+function startSpan(ctx: IMidwayWebContext<JsonResp | string>): TracerManager {
   // 开启第一个span并入栈
   const tracerManager = new TracerManager(true)
   const requestSpanCtx
     = globalTracer().extract(FORMAT_HTTP_HEADERS, ctx.headers) ?? undefined
+
+  ctx.tracerManager = tracerManager
 
   tracerManager.startSpan(ctx.path, requestSpanCtx)
   tracerManager.spanLog({
@@ -64,65 +78,15 @@ function startSpan(ctx: IMidwayWebContext<JsonResp | string>): void {
     [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
   })
 
-  ctx.tracerManager = tracerManager
+  return tracerManager
 }
 
-function finishSpan(ctx: IMidwayWebContext<JsonResp | string>) {
+async function finishSpan(ctx: IMidwayWebContext<JsonResp | string>): Promise<void> {
   const { tracerManager } = ctx
-  const { status } = ctx.response
-  const tracerConfig = ctx.app.config.tracer
 
-  if (status >= 400) {
-    if (status === 404) {
-      tracerManager.setSpanTag(Tags.SAMPLING_PRIORITY, 1)
-    }
-    else {
-      tracerManager.setSpanTag(Tags.SAMPLING_PRIORITY, 90)
-    }
+  await processHTTPStatus(ctx)
+  processResponseData(ctx)
 
-    tracerManager.setSpanTag(Tags.ERROR, true)
-    if (! tracerConfig.enableCatchError && ctx._internalError) {
-      logError(tracerManager, ctx._internalError)
-    }
-
-  }
-  else {
-    processCustomFailure(ctx, tracerManager)
-    const opts: ProcessPriorityOpts = {
-      starttime: ctx.starttime,
-      trm: tracerManager,
-      tracerConfig,
-    }
-    processPriority(opts)
-  }
-
-  // [Tag] 请求参数和响应数据
-  if (tracerConfig.isLogginInputQuery) {
-    if (ctx.method === 'GET') {
-      const { query } = ctx.request
-      if (typeof query === 'object' && Object.keys(query).length) {
-        tracerManager.setSpanTag(TracerTag.reqQuery, query)
-      }
-      else if (typeof query === 'string') {
-        tracerManager.setSpanTag(TracerTag.reqQuery, query)
-      }
-    }
-    else if (ctx.method === 'POST' && ctx.request.type === 'application/json') {
-      const { query: body } = ctx.request
-      if (typeof body === 'object' && Object.keys(body).length) {
-        tracerManager.setSpanTag(TracerTag.reqBody, body)
-      }
-      else if (typeof body === 'string') {
-        tracerManager.setSpanTag(TracerTag.reqBody, body)
-      }
-    }
-  }
-
-  if (tracerConfig.isLoggingOutputBody) {
-    tracerManager.setSpanTag(TracerTag.respBody, ctx.body)
-  }
-
-  tracerManager.setSpanTag(Tags.HTTP_STATUS_CODE, status)
   tracerManager.spanLog({
     event: TracerLog.requestEnd,
     time: genISO8601String(),
@@ -131,47 +95,3 @@ function finishSpan(ctx: IMidwayWebContext<JsonResp | string>) {
 
   tracerManager.finishSpan()
 }
-
-function processCustomFailure(
-  ctx: IMidwayWebContext<JsonResp | string>,
-  trm: TracerManager,
-): void {
-
-  const { body } = ctx
-  const tracerConfig = ctx.app.config.tracer
-
-  if (typeof body === 'object') {
-    if (typeof body.code !== 'undefined' && body.code !== 0) {
-      trm.setSpanTag(Tags.SAMPLING_PRIORITY, 30)
-      trm.setSpanTag(TracerTag.resCode, body.code)
-      if (! tracerConfig.enableCatchError && ctx._internalError) {
-        logError(trm, ctx._internalError)
-      }
-    }
-  }
-}
-
-export interface ProcessPriorityOpts {
-  starttime: number
-  trm: TracerManager
-  tracerConfig: TracerConfig
-}
-function processPriority(options: ProcessPriorityOpts): number | undefined {
-  const { starttime, trm } = options
-  const { reqThrottleMsForPriority: throttleMs } = options.tracerConfig
-
-  if (throttleMs < 0) {
-    return
-  }
-
-  const cost = Date.now() - starttime
-  if (cost >= throttleMs) {
-    trm.setSpanTag(Tags.SAMPLING_PRIORITY, 11)
-    trm.spanLog({
-      time: genISO8601String(),
-      [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
-    })
-  }
-  return cost
-}
-

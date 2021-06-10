@@ -72,12 +72,17 @@ export class TracerManager {
   }
 
   @RunIfEnabled
+  addTags(tags: SpanLogInput): void {
+    this.currentSpan()?.addTags(tags)
+  }
+
+  @RunIfEnabled
   setSpanTag(key: string, value: unknown): void {
     this.currentSpan()?.setTag(key, value)
   }
 
-  headerOfCurrentSpan(): SpanHeaderInit | undefined {
-    const currentSpan = this.currentSpan()
+  headerOfCurrentSpan(currSpan?: Span): SpanHeaderInit | undefined {
+    const currentSpan = currSpan ? currSpan : this.currentSpan()
     if (currentSpan) {
       const headerInit = {} as SpanHeaderInit
       globalTracer().inject(currentSpan, FORMAT_HTTP_HEADERS, headerInit)
