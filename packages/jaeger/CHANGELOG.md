@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.4.0 (2021-06-13)
+
+
+### Features
+
+* **jaeger:** add tags pid and ppid after start span ([728ef94](https://github.com/waitingsong/midway-components/commit/728ef94cc628ca7be9d5bd56b206e7162c7ddaf2))
+
+
+
+
+
 # 6.3.0 (2021-06-10)
 
 
