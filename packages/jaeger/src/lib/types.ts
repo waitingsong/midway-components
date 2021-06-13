@@ -71,6 +71,8 @@ export enum TracerTag {
   svcIp4 = 'svc.ipv4',
   svcIp6 = 'svc.ipv6',
   svcName = 'svc.name',
+  svcPid = 'svc.pid',
+  svcPpid = 'svc.ppid',
   svcVer = 'svc.ver',
   resCode = 'res.code',
   message = 'message',
