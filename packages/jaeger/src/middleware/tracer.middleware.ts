@@ -11,7 +11,7 @@ import { JsonResp } from '@waiting/shared-types'
 import { globalTracer, FORMAT_HTTP_HEADERS } from 'opentracing'
 
 import { TracerManager } from '../lib/tracer'
-import { TracerConfig, TracerLog } from '../lib/types'
+import { TracerConfig, TracerLog, TracerTag } from '../lib/types'
 import { pathMatched } from '../util/common'
 
 import {
@@ -52,7 +52,6 @@ export async function tracerMiddleware(
     return next()
   }
   const trm = startSpan(ctx)
-  // 设置异常链路一定会采样
   ctx.res.once('finish', () => {
     finishSpan(ctx).catch((ex) => {
       ctx.logger.error(ex)
@@ -72,6 +71,10 @@ function startSpan(ctx: IMidwayWebContext<JsonResp | string>): TracerManager {
   ctx.tracerManager = tracerManager
 
   tracerManager.startSpan(ctx.path, requestSpanCtx)
+  tracerManager.addTags({
+    [TracerTag.svcPid]: process.pid,
+    [TracerTag.svcPpid]: process.ppid,
+  })
   tracerManager.spanLog({
     event: TracerLog.requestBegin,
     time: genISO8601String(),
