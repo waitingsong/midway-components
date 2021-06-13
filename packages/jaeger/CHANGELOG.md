@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.5.0 (2021-06-13)
+
+
+### Features
+
+* **jaeger:** add TracerConfig['processCustomFailure'] for defaultTracerConfig ([2e80b48](https://github.com/waitingsong/midway-components/commit/2e80b48582b3bfcf600c5348813a32f166dcf2ea))
+
+
+
+
+
 # 6.4.0 (2021-06-13)
 
 
