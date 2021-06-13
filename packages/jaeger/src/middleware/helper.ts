@@ -189,7 +189,9 @@ export async function processHTTPStatus(
     tracerManager.addTags(tags)
   }
   else {
-    await processCustomFailure(ctx, tracerManager)
+    if (typeof tracerConfig.processCustomFailure === 'function') {
+      await tracerConfig.processCustomFailure(ctx, tracerManager)
+    }
     const opts: ProcessPriorityOpts = {
       starttime: ctx.starttime,
       trm: tracerManager,
@@ -249,7 +251,7 @@ export function processResponseData(
 }
 
 
-async function processCustomFailure(
+export async function processCustomFailure(
   ctx: IMidwayWebContext<JsonResp | string>,
   trm: TracerManager,
 ): Promise<void> {

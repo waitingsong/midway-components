@@ -1,8 +1,11 @@
-import { IncomingHttpHeaders } from 'http'
+import type { IncomingHttpHeaders } from 'http'
 
 import type { ILogger } from '@midwayjs/logger'
+import { IMidwayWebContext } from '@midwayjs/web'
 import { KnownKeys } from '@waiting/shared-types'
 import { TracingConfig } from 'jaeger-client'
+
+import { TracerManager } from './tracer'
 
 
 export interface TracerConfig {
@@ -43,6 +46,14 @@ export interface TracerConfig {
    * @default ['authorization', 'user-agent']
    */
   loggingReqHeaders: string[] | KnownKeys<IncomingHttpHeaders>[]
+  /**
+	 * Callback to process custom failure
+	 * @default helper.ts/processCustomFailure()
+	 */
+  processCustomFailure?: (
+    ctx: IMidwayWebContext<any>,
+    trm: TracerManager,
+  ) => Promise<void>
 }
 
 export enum HeadersKey {

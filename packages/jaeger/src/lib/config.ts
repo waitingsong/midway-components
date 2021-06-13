@@ -1,3 +1,5 @@
+import { processCustomFailure } from '../middleware/helper'
+
 import { TracerConfig } from './types'
 
 
@@ -13,4 +15,5 @@ export const defaultTracerConfig: Omit<TracerConfig, 'tracingConfig'> = {
     'host',
     'user-agent',
   ],
+  processCustomFailure,
 }
