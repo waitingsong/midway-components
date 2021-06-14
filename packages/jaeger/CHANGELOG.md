@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.7.0 (2021-06-14)
+
+
+### Features
+
+* **jaeger:** increase default reqThrottleMsForPriority to 500(ms) ([3f59666](https://github.com/waitingsong/midway-components/commit/3f59666a6a5ad14477de62ab63a9be1960793945))
+
+
+
+
+
 # 6.6.0 (2021-06-14)
 
 
