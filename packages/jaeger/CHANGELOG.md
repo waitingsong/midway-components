@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.8.0 (2021-06-14)
+
+
+### Features
+
+* **jaeger:** procInfo() accept parameter of ProcInfoItem[] ([13d8b00](https://github.com/waitingsong/midway-components/commit/13d8b00875372642665b9f33ca566495e6695d48))
+
+
+
+
+
 # 6.7.0 (2021-06-14)
 
 
