@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.9.0 (2021-06-14)
+
+
+### Features
+
+* **jaeger:** not sample cpuinfo within processPriority() ([d3495ae](https://github.com/waitingsong/midway-components/commit/d3495ae80c03417133122da93ee2bb3756d673df))
+
+
+
+
+
 # 6.8.0 (2021-06-14)
 
 
