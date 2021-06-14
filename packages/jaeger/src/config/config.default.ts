@@ -4,7 +4,6 @@ import { TracerConfig } from '../lib/types'
 
 export const tracer: TracerConfig = {
   ...defaultTracerConfig,
-  reqThrottleMsForPriority: 200,
   tracingConfig: {
     sampler: {
       type: 'probabilistic',
