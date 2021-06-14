@@ -286,7 +286,7 @@ async function processPriority(options: ProcessPriorityOpts): Promise<number | u
       [TracerTag.logLevel]: 'warn',
     })
 
-    const info = await procInfo()
+    const info = await procInfo(['diskstats', 'meminfo', 'stat'])
     trm.spanLog({
       level: 'warn',
       time: genISO8601String(),
