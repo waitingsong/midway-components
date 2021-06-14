@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.6.0 (2021-06-14)
+
+
+### Features
+
+* **jaeger:** declare interface TracerError ([2b5a4bd](https://github.com/waitingsong/midway-components/commit/2b5a4bda1aed47cc3cfdfe5f0851d8721b7b0e8b))
+
+
+
+
+
 ## 6.5.1 (2021-06-13)
 
 **Note:** Version bump only for package midway-component-jaeger
