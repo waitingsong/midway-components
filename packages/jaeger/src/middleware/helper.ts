@@ -2,6 +2,7 @@ import type { IncomingHttpHeaders } from 'http'
 
 import { IMidwayWebContext, IMidwayWebNext } from '@midwayjs/web'
 import {
+  defaultPropDescriptor,
   genISO8601String,
   humanMemoryUsage,
 } from '@waiting/shared-core'
@@ -9,7 +10,7 @@ import { NpmPkg, JsonResp } from '@waiting/shared-types'
 import { Tags } from 'opentracing'
 
 import { TracerManager } from '../lib/tracer'
-import { SpanLogInput, TracerConfig, TracerLog, TracerTag } from '../lib/types'
+import { SpanLogInput, TracerConfig, TracerError, TracerLog, TracerTag } from '../lib/types'
 import { retrieveExternalNetWorkInfo } from '../util/common'
 import { procInfo } from '../util/stat'
 
@@ -76,16 +77,14 @@ export async function handleTopExceptionAndNext(
     await next()
   }
   catch (ex) {
-    const err = ex as unknown
-
-    // @ts-expect-error
+    const err = ex as TracerError
     if (err[TracerLog.exIsTraced]) {
       return
     }
 
     await logError(
       tracerManager,
-      err as Error,
+      err,
       TracerLog.topException,
     )
   }
@@ -112,7 +111,7 @@ export async function handleAppExceptionAndNext(
       })
     }
     catch (ex) {
-      await logError(tracerManager, ex as Error)
+      await logError(tracerManager, ex as TracerError)
       throw ex
     }
   }
@@ -128,7 +127,7 @@ export async function handleAppExceptionAndNext(
 
 async function logError(
   trm: TracerManager,
-  err: Error,
+  err: TracerError,
   event = TracerLog.error,
 ): Promise<void> {
 
@@ -158,9 +157,8 @@ async function logError(
 
   trm.spanLog(input)
   Object.defineProperty(err, TracerLog.exIsTraced, {
-    configurable: true,
+    ...defaultPropDescriptor,
     enumerable: false,
-    writable: true,
     value: true,
   })
 }

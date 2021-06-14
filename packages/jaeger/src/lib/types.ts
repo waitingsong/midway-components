@@ -142,3 +142,8 @@ export interface LogInfo {
   args?: unknown[]
   [key: string]: unknown
 }
+
+export interface TracerError extends Error {
+  __isTraced: boolean
+}
+
