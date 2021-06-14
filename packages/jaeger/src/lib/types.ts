@@ -122,6 +122,7 @@ export enum TracerLog {
   svcMemoryUsage = 'svc.memory-usage',
 
   procCpuinfo = 'proc.cpuinfo',
+  ProcDiskstats = 'proc.diskstats',
   procMeminfo = 'proc.meminfo',
   procStat = 'proc.stat'
 }
