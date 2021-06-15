@@ -105,6 +105,7 @@ export enum TracerLog {
 
   fetchStart = 'fetch-start',
   fetchFinish = 'fetch-finish',
+  fetchException = 'fetch-exception',
 
   queryResponse = 'query-response',
   queryError = 'error',
