@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.11.2 (2021-06-15)
+
+**Note:** Version bump only for package midway-component-jaeger
+
+
+
+
+
 ## 6.11.1 (2021-06-15)
 
 
