@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.11.0 (2021-06-15)
+
+
+### Features
+
+* **jaeger:** add TracerTag.svcException ([4754310](https://github.com/waitingsong/midway-components/commit/475431035dd2b7886033932c89e0404ae42992f6))
+
+
+
+
+
 # 6.10.0 (2021-06-15)
 
 
