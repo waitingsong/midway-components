@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.10.0 (2021-06-15)
+
+
+### Features
+
+* **jaeger:** add TracerLog.fetchException ([09d1358](https://github.com/waitingsong/midway-components/commit/09d1358f60412cb2efac3212e167eccefd683ea3))
+
+
+
+
+
 # 6.9.0 (2021-06-14)
 
 
