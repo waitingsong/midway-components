@@ -59,9 +59,11 @@ export async function procInfo(
     }
   }
 
-  stat.intr = 'stripped'
-  if (info.stat && Object.keys(info.stat)) {
-    ret[TracerLog.procStat] = stat
+  if (stat) {
+    stat.intr = 'stripped'
+    if (info.stat && Object.keys(info.stat)) {
+      ret[TracerLog.procStat] = stat
+    }
   }
 
   return ret
