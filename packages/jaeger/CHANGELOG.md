@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.11.1 (2021-06-15)
+
+
+### Bug Fixes
+
+* **jaeger:** variable stat may undefined within procInfo() ([6cc3d7f](https://github.com/waitingsong/midway-components/commit/6cc3d7fa4fe24fd81d86073ea0c08c9056ae8070))
+
+
+
+
+
 # 6.11.0 (2021-06-15)
 
 
