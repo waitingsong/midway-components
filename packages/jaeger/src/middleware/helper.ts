@@ -220,12 +220,20 @@ export function processRequestQuery(
       }
     }
     else if (ctx.method === 'POST' && ctx.request.type === 'application/json') {
-      const { query: body } = ctx.request
-      if (typeof body === 'object' && Object.keys(body).length) {
-        tags[TracerTag.reqBody] = body
+      const { query } = ctx.request
+      if (typeof query === 'object' && Object.keys(query).length) {
+        tags[TracerTag.reqQuery] = query
       }
-      else if (typeof body === 'string') {
-        tags[TracerTag.reqBody] = body // same as above
+      else if (typeof query === 'string' && query) {
+        tags[TracerTag.reqQuery] = query // same as above
+      }
+
+      const bdy = ctx.request.body as Record<string, unknown> | string
+      if (typeof bdy === 'object' && Object.keys(bdy).length) {
+        tags[TracerTag.reqBody] = bdy
+      }
+      else if (typeof bdy === 'string' && bdy) {
+        tags[TracerTag.reqBody] = bdy // same as above
       }
     }
   }
