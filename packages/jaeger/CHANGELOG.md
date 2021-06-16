@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.12.0 (2021-06-16)
+
+
+### Features
+
+* **jaeger:** sample request body ([e1025d8](https://github.com/waitingsong/midway-components/commit/e1025d8a6a53d1bd374f5e43d7099aade00076f7))
+
+
+
+
+
 ## 6.11.2 (2021-06-15)
 
 **Note:** Version bump only for package midway-component-jaeger
