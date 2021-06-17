@@ -9,7 +9,7 @@ export const defaultTracerConfig: Omit<TracerConfig, 'tracingConfig'> = {
   enableMiddleWare: true,
   enableCatchError: true,
   logginInputQuery: true,
-  loggingOutputBody: false,
+  loggingOutputBody: true,
   loggingReqHeaders: [
     'authorization',
     'host',
