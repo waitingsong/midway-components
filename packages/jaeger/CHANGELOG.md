@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.13.0 (2021-06-17)
+
+
+### Features
+
+* **jaeger:** change defaultTracerConfig.loggingOutputBody to true ([5fd21df](https://github.com/waitingsong/midway-components/commit/5fd21df5e1ef37e9f2799b8cecb535a72f15bb27))
+
+
+
+
+
 # 6.12.0 (2021-06-16)
 
 
