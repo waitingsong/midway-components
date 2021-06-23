@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.15.0 (2021-06-23)
+
+
+### Features
+
+* **jaeger:** logging process.cpuUsage() with TracerLog.svcCpuUsage ([e918083](https://github.com/waitingsong/midway-components/commit/e91808361e7028b52584a55878f729f6323629b4))
+
+
+
+
+
 ## 6.14.1 (2021-06-21)
 
 **Note:** Version bump only for package @mw-components/jaeger
