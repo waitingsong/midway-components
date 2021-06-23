@@ -53,6 +53,7 @@ async function tracerMiddleware(
   // preProcessFinish,
   tracerManager.spanLog({
     event: TracerLog.preProcessFinish,
+    [TracerLog.svcCpuUsage]: process.cpuUsage(),
     [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
   })
 

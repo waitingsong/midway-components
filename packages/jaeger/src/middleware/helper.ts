@@ -107,6 +107,7 @@ export async function handleAppExceptionAndNext(
       tracerManager.spanLog({
         event: TracerLog.postProcessBegin,
         time: genISO8601String(),
+        [TracerLog.svcCpuUsage]: process.cpuUsage(),
         [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
       })
     }
@@ -120,6 +121,7 @@ export async function handleAppExceptionAndNext(
     tracerManager.spanLog({
       event: TracerLog.postProcessBegin,
       time: genISO8601String(),
+      [TracerLog.svcCpuUsage]: process.cpuUsage(),
       [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
     })
   }
@@ -140,6 +142,7 @@ async function logError(
   const input: SpanLogInput = {
     event,
     time: genISO8601String(),
+    [TracerLog.svcCpuUsage]: process.cpuUsage(),
     [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
     ...info,
   }
@@ -300,6 +303,7 @@ async function processPriority(options: ProcessPriorityOpts): Promise<number | u
       time: genISO8601String(),
       cost,
       [TracerLog.logThrottleMs]: throttleMs,
+      [TracerLog.svcCpuUsage]: process.cpuUsage(),
       [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
       ...info,
     })

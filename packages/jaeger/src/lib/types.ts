@@ -122,6 +122,7 @@ export enum TracerLog {
   errStack = 'err.stack',
 
   svcMemoryUsage = 'svc.memory-usage',
+  svcCpuUsage = 'svc.cpu-usage',
 
   procCpuinfo = 'proc.cpuinfo',
   ProcDiskstats = 'proc.diskstats',

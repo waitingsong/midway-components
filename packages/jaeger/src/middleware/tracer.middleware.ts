@@ -78,6 +78,7 @@ function startSpan(ctx: IMidwayWebContext<JsonResp | string>): TracerManager {
   tracerManager.spanLog({
     event: TracerLog.requestBegin,
     time: genISO8601String(),
+    [TracerLog.svcCpuUsage]: process.cpuUsage(),
     [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
   })
 
@@ -93,6 +94,7 @@ async function finishSpan(ctx: IMidwayWebContext<JsonResp | string>): Promise<vo
   tracerManager.spanLog({
     event: TracerLog.requestEnd,
     time: genISO8601String(),
+    [TracerLog.svcCpuUsage]: process.cpuUsage(),
     [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
   })
 
