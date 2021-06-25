@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.16.0 (2021-06-25)
+
+
+### Features
+
+* **jaeger:** change scope TracerManager.spans from private to protected ([cecc3d3](https://github.com/waitingsong/midway-components/commit/cecc3d34808f00b1a4d2085355c02f8596fc1f4d))
+
+
+
+
+
 ## 6.15.1 (2021-06-25)
 
 
