@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.15.1 (2021-06-25)
+
+
+### Bug Fixes
+
+* **jaeger:** this.ctx may undefined when unittest ([5143a53](https://github.com/waitingsong/midway-components/commit/5143a53f452b76ee5ff82039792483277498bd20))
+
+
+
+
+
 # 6.15.0 (2021-06-23)
 
 
