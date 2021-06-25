@@ -55,7 +55,9 @@ export class Logger implements ILogger {
   }
 
   log(info: SpanLogInput | LogInfo, span?: Span): void {
-    const currSpan = span ? span : this.ctx.tracerManager.currentSpan()
+    const currSpan = span
+      ? span
+      : this?.ctx?.tracerManager?.currentSpan()
     tracerLogger(this.logger, info, currSpan)
   }
 }
