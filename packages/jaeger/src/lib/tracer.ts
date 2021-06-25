@@ -37,7 +37,7 @@ export class TracerManager {
   readonly instanceId = Symbol(new Date().getTime().toString())
   readonly isTraceEnabled: boolean
 
-  private readonly spans: Span[]
+  protected readonly spans: Span[]
 
   constructor(isTraceEnabled: boolean) {
     this.isTraceEnabled = isTraceEnabled
