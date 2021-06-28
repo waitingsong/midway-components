@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.20.1 (2021-06-28)
+
+
+### Bug Fixes
+
+* **taskman:** TaskAgentService run once ([cfdd818](https://github.com/waitingsong/midway-components/commit/cfdd8183413903caef301d11a8fd4fd31ec81a32))
+
+
+
+
+
 # 6.20.0 (2021-06-28)
 
 
