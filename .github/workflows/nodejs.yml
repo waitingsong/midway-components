@@ -7,14 +7,23 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ${{ matrix.os }}
+    container: node:14.17-buster
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
 
     strategy:
       matrix:
-        node: [14, 16]
+        node: [14]
         os: [ubuntu-latest]
 
     steps:
+      - name: Prepare
+        run: |
+          npm -v && node -v
+          git --version
+          uname -a
+          apt-get update -qq --yes > /dev/null
+          apt-get install -qq --yes --no-install-recommends postgresql-client jq
+          uname -a
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node }}
         uses: actions/setup-node@v2
@@ -28,7 +37,6 @@ jobs:
         with:
           path: |
             node_modules
-            */*/node_modules
           key: ${{ runner.OS }}-build-${{ env.cache-name }}-${{ github.ref }}-${{ hashFiles('**/lockfiles') }}
 
       - name: npm build
@@ -44,9 +52,31 @@ jobs:
         run: |
           # lint must after build
           npm run lint:s
+          sh .github/workflows/ci-init-db.sh
           npm run ci
         env:
           CI: true
+          # use `localhost` if running the job on the VM
+          # use `postgres` if running the job on a container
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
+          POSTGRES_DB: db_ci_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          PGPASSWORD: postgres
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
+
+    services:
+      postgres:
+        image: postgres:alpine
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: db_ci_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
 
