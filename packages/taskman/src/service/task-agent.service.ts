@@ -29,23 +29,29 @@ export class TaskAgentService {
 
   @Inject() protected readonly queueSvc: TaskQueueService
 
-  isRunning = false
-
   protected readonly intv$ = interval(10000)
   protected subscription: Subscription | undefined
 
+  get isRunning(): boolean {
+    const flag = this.subscription && ! this.subscription.closed
+      ? true
+      : false
+    return flag
+  }
+
   run(): void {
+    if (this.isRunning) {
+      return
+    }
     const stream$ = this.pickTasksWaitToRun().pipe(
       mergeMap(rows => ofrom(rows)),
       mergeMap(task => this.sendTaskToRun(task), 2),
     )
     this.subscription = stream$.subscribe()
-    this.isRunning = true
   }
 
   stop(): void {
     this.subscription && this.subscription.unsubscribe()
-    this.isRunning = false
   }
 
   private pickTasksWaitToRun(): Observable<TaskDTO[]> {
