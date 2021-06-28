@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.3.0 (2021-06-28)
+
+
+### Features
+
+* **taskman:** breaking change return type of TaskAgentService.run() to Promise<void> ([7b8f28c](https://github.com/waitingsong/midway-components/commit/7b8f28cd9b9adf5e2dbb9a878580aec1f659355e))
+
+
+
+
+
 # 0.2.0 (2021-06-28)
 
 
