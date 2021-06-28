@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.19.1 (2021-06-28)
+
+
+### Bug Fixes
+
+* **taskman:** transaction missing commit/rollback ([583e6ae](https://github.com/waitingsong/midway-components/commit/583e6aed6e314d846dff060cd0d8a5b6cb685187))
+
+
+
+
+
 # 6.19.0 (2021-06-28)
 
 
