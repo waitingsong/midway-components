@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.18.0 (2021-06-28)
+
+
+### Features
+
+* **jaeger:** change TracerManager.spans scope to public ([03c6692](https://github.com/waitingsong/midway-components/commit/03c669272ddb62d8e9d5a3dafaa0df77b02fea05))
+
+
+
+
+
 ## 6.17.1 (2021-06-28)
 
 **Note:** Version bump only for package @mw-components/jaeger
