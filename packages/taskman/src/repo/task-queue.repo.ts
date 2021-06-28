@@ -346,6 +346,7 @@ export class TaskQueueRepository {
       .orderBy('task_id', options.ord)
 
     if (! tasks.length) {
+      await trx.rollback() // !
       return []
     }
 
