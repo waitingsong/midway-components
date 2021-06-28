@@ -10,10 +10,7 @@ import * as jaeger from '@mw-components/jaeger'
 import * as db from '@mw-components/kmore'
 
 
-const namespace = 'taskman'
-
 @Configuration({
-  namespace,
   imports: [
     jaeger,
     fetch,
