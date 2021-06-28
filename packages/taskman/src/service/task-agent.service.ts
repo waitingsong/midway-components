@@ -5,10 +5,11 @@ import {
 import { FetchComponent } from '@mw-components/fetch'
 import { Logger } from '@mw-components/jaeger'
 import {
-  interval,
+  timer,
   from as ofrom,
   Observable,
   Subscription,
+  firstValueFrom,
 } from 'rxjs'
 import {
   concatMap,
@@ -29,7 +30,7 @@ export class TaskAgentService {
 
   @Inject() protected readonly queueSvc: TaskQueueService
 
-  protected readonly intv$ = interval(10000)
+  protected readonly intv$ = timer(300, 10000)
   protected subscription: Subscription | undefined
 
   get isRunning(): boolean {
@@ -39,15 +40,13 @@ export class TaskAgentService {
     return flag
   }
 
-  run(): void {
-    if (this.isRunning) {
-      return
-    }
+  async run(): Promise<void> {
     const stream$ = this.pickTasksWaitToRun().pipe(
       mergeMap(rows => ofrom(rows)),
       mergeMap(task => this.sendTaskToRun(task), 2),
     )
     this.subscription = stream$.subscribe()
+    return firstValueFrom(stream$).then(() => void 0)
   }
 
   stop(): void {

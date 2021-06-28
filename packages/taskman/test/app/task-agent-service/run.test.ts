@@ -14,8 +14,8 @@ describe.skip(filename, () => {
   describe('should run() work', () => {
     it('normal', (done) => {
       const { agent, svc, repo } = testConfig
-      createTasks(svc, repo, 20).then(() => {
-        agent.run()
+      createTasks(svc, repo, 20).then(async () => {
+        await agent.run()
         setTimeout(() => {
           agent.stop()
           assert(agent.isRunning === true)
