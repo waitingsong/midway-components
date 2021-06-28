@@ -71,7 +71,7 @@ npm run bootstrap
 npm run build
 
 echo -e ">>> lerna publishing..."
-sh "$scriptDir/pre-publish-valiate.sh"
+#sh "$scriptDir/pre-publish-valiate.sh"
 
 echo $*
 if [ -z "$NPM_VERSION_REGISTRY" ]; then
