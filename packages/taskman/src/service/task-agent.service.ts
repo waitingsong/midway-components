@@ -41,6 +41,9 @@ export class TaskAgentService {
   }
 
   async run(): Promise<void> {
+    if (this.isRunning) {
+      return
+    }
     const stream$ = this.pickTasksWaitToRun().pipe(
       mergeMap(rows => ofrom(rows)),
       mergeMap(task => this.sendTaskToRun(task), 2),
