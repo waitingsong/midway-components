@@ -9,7 +9,6 @@ import {
   from as ofrom,
   Observable,
   Subscription,
-  firstValueFrom,
 } from 'rxjs'
 import {
   concatMap,
@@ -19,6 +18,9 @@ import {
 import { CallTaskOptions, TaskDTO, TaskState } from '../lib/index'
 
 import { TaskQueueService } from './task-queue.service'
+
+
+let globalRunning = 0
 
 
 @Provide()
@@ -41,7 +43,7 @@ export class TaskAgentService {
   }
 
   async run(): Promise<void> {
-    if (this.isRunning) {
+    if (globalRunning >= 1) {
       return
     }
     const stream$ = this.pickTasksWaitToRun().pipe(
@@ -49,7 +51,7 @@ export class TaskAgentService {
       mergeMap(task => this.sendTaskToRun(task), 2),
     )
     this.subscription = stream$.subscribe()
-    return firstValueFrom(stream$).then(() => void 0)
+    globalRunning += 1
   }
 
   stop(): void {
