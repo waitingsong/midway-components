@@ -54,9 +54,9 @@ export enum ServerMethod {
  */
 export interface CreateTaskOptions {
   /**
-   * 创建任务参数
+   * 任务参数
    */
-  data: CreateTaskDTO
+  createTaskDTO: CreateTaskDTO
   /**
    * TM服务器地址
    * @example http://localhost:7001

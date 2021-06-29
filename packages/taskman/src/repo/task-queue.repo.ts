@@ -52,6 +52,7 @@ export class TaskQueueRepository {
   async init(): Promise<void> {
     const kmoreConfig = genKmoreComponentConfig(this.serverConfig, initDbConfig)
     this._dbManager = await this.ctx.requestContext.getAsync(DbManager)
+    // @ts-ignore for DecoratorManager not single
     this._dbManager.create(kmoreConfig, this.ctx.tracerManager, this.logger)
     const db = this._dbManager.getInstance<DbModel>(DbReplica.taskMaster)
     if (! db) {
