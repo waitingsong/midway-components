@@ -2,7 +2,7 @@
 CREATE TABLE tb_task (
   task_id int8 NOT NULL DEFAULT nextval('tb_task_task_id_seq'),
   task_state type_op_state NOT NULL DEFAULT 'init',
-  will_start TIMESTAMP(3) NOT NULL,
+  will_start TIMESTAMP(3) NOT NULL DEFAULT now(),
   started_at TIMESTAMP(6),
   is_timeout boolean NOT NULL DEFAULT false,
   timeout_intv interval NOT NULL DEFAULT '2h',
