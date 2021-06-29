@@ -25,17 +25,17 @@ export function genKmoreComponentConfig(
       client: 'pg',
       connection: {
         ...defaultDbConfig.connection,
-        ...serverConfig.database.connection,
+        ...serverConfig.dbConfigs.connection,
       },
-      acquireConnectionTimeout: serverConfig.database.acquireConnectionTimeout
-        ? serverConfig.database.acquireConnectionTimeout
+      acquireConnectionTimeout: serverConfig.dbConfigs.acquireConnectionTimeout
+        ? serverConfig.dbConfigs.acquireConnectionTimeout
         : defaultDbConfig.acquireConnectionTimeout,
       postProcessResponse,
       wrapIdentifier,
     },
     dict: dbDict,
-    enableTracing: serverConfig.database.enableTracing ?? defaultDbConfig.enableTracing,
-    sampleThrottleMs: serverConfig.database.sampleThrottleMs ?? defaultDbConfig.sampleThrottleMs,
+    enableTracing: serverConfig.dbConfigs.enableTracing ?? defaultDbConfig.enableTracing,
+    sampleThrottleMs: serverConfig.dbConfigs.sampleThrottleMs ?? defaultDbConfig.sampleThrottleMs,
   }
   const kmoreConfig: KmoreComponentConfig = {
     database: {

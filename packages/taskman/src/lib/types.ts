@@ -72,7 +72,7 @@ export interface CallTaskOptions {
  */
 export interface TaskManServerConfig {
   expInterval: TaskDTO['timeoutIntv']
-  database: DbConfig
+  dbConfigs: DbConfig
 }
 
 export interface DbConfig {
@@ -145,3 +145,4 @@ export interface PickInitTaskOptions {
    */
   earlierThanTimeIntv: string
 }
+

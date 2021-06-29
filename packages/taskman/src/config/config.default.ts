@@ -10,7 +10,7 @@ import {
  */
 export const taskManServerConfig: TaskManServerConfig = {
   expInterval: '30min',
-  database: {
+  dbConfigs: {
     connection: {
       host: process.env.POSTGRES_HOST ? process.env.POSTGRES_HOST : 'localhost',
       port: process.env.POSTGRES_PORT ? +process.env.POSTGRES_PORT : 5432,

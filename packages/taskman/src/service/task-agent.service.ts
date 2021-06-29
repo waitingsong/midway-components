@@ -2,7 +2,7 @@ import {
   Inject,
   Provide,
 } from '@midwayjs/decorator'
-import { FetchComponent } from '@mw-components/fetch'
+import { FetchComponent, Node_Headers, Options as FetchOptions } from '@mw-components/fetch'
 import { Logger } from '@mw-components/jaeger'
 import {
   timer,
@@ -13,6 +13,7 @@ import {
 import {
   concatMap,
   mergeMap,
+  tap,
 } from 'rxjs/operators'
 
 import { CallTaskOptions, TaskDTO, TaskState } from '../lib/index'
@@ -20,7 +21,7 @@ import { CallTaskOptions, TaskDTO, TaskState } from '../lib/index'
 import { TaskQueueService } from './task-queue.service'
 
 
-let globalRunning = 0
+let globalAgentRunning = 0
 
 
 @Provide()
@@ -32,7 +33,7 @@ export class TaskAgentService {
 
   @Inject() protected readonly queueSvc: TaskQueueService
 
-  protected readonly intv$ = timer(300, 10000)
+  protected readonly intv$ = timer(1000, 15000)
   protected subscription: Subscription | undefined
 
   get isRunning(): boolean {
@@ -43,24 +44,32 @@ export class TaskAgentService {
   }
 
   async run(): Promise<void> {
-    if (globalRunning >= 1) {
+    if (globalAgentRunning >= 1) {
       return
     }
-    const stream$ = this.pickTasksWaitToRun().pipe(
+    const intv$ = this.intv$.pipe(
+      tap((idx) => {
+        if (idx > 5000) {
+          this.stop()
+        }
+      }),
+    )
+    const stream$ = this.pickTasksWaitToRun(intv$).pipe(
       mergeMap(rows => ofrom(rows)),
-      mergeMap(task => this.sendTaskToRun(task), 2),
+      mergeMap(task => this.sendTaskToRun(task), 1),
     )
     this.subscription = stream$.subscribe()
-    globalRunning += 1
+    globalAgentRunning += 1
   }
 
   stop(): void {
     this.subscription && this.subscription.unsubscribe()
+    globalAgentRunning = 0
   }
 
-  private pickTasksWaitToRun(): Observable<TaskDTO[]> {
-    const stream$ = this.intv$.pipe(
-      concatMap(() => this.queueSvc.pickTasksWaitToRun({ maxRows: 5 })),
+  private pickTasksWaitToRun(intv$: Observable<number>): Observable<TaskDTO[]> {
+    const stream$ = intv$.pipe(
+      concatMap(() => this.queueSvc.pickTasksWaitToRun({ maxRows: 1 })),
     )
     return stream$
   }
@@ -77,7 +86,7 @@ export class TaskAgentService {
 
     const res = this.httpCall(payload.json)
       .catch(async (ex) => {
-        await this.queueSvc.setState(taskId, TaskState.suspended)
+        await this.queueSvc.setState(taskId, TaskState.init)
           .catch(ex2 => this.logger.error(ex2))
         this.logger.error(ex)
       })
@@ -85,7 +94,12 @@ export class TaskAgentService {
   }
 
   private async httpCall(options: CallTaskOptions): Promise<unknown> {
-    const ret = this.fetch.fetch(options)
+    const opts: FetchOptions = {
+      ...options,
+    }
+    const headers = new Node_Headers(opts.headers)
+    opts.headers = headers
+    const ret = this.fetch.fetch(opts)
     // .then((res) => {
     //   console.info(res)
     //   return res
