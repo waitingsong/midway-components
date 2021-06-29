@@ -46,12 +46,12 @@ export class TaskQueueService {
   }
 
   async getInfo(id: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
-    const ret = this.repo.getInfo(id)
+    const ret = await this.repo.getInfo(id)
     return ret
   }
 
   async getFullInfo(id: TaskDTO['taskId']): Promise<TaskFullDTO | undefined> {
-    const ret = this.repo.getFullInfo(id)
+    const ret = await this.repo.getFullInfo(id)
     return ret
   }
 
@@ -104,7 +104,7 @@ export class TaskQueueService {
     id: TaskDTO['taskId'],
   ): Promise<TaskDTO | undefined> {
 
-    const ret = this.repo.setRunning(id)
+    const ret = await this.repo.setRunning(id)
     await this.repo.initProgress(id)
     return ret
   }
@@ -116,7 +116,7 @@ export class TaskQueueService {
     id: TaskDTO['taskId'],
   ): Promise<TaskDTO | undefined> {
 
-    const ret = this.repo.setFailed(id)
+    const ret = await this.repo.setFailed(id)
     return ret
   }
 
@@ -127,7 +127,7 @@ export class TaskQueueService {
     id: TaskDTO['taskId'],
   ): Promise<TaskDTO | undefined> {
 
-    const ret = this.repo.setCancelled(id)
+    const ret = await this.repo.setCancelled(id)
     return ret
   }
 
@@ -138,7 +138,7 @@ export class TaskQueueService {
     id: TaskDTO['taskId'],
   ): Promise<TaskDTO | undefined> {
 
-    const ret = this.repo.setSucceeded(id)
+    const ret = await this.repo.setSucceeded(id)
     return ret
   }
 
@@ -146,7 +146,7 @@ export class TaskQueueService {
     options: SetProgressDTO,
   ): Promise<TaskProgressDTO | undefined> {
 
-    const ret = this.repo.setProgress(options)
+    const ret = await this.repo.setProgress(options)
     return ret
   }
 
