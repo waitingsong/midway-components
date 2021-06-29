@@ -58,14 +58,10 @@ export interface CreateTaskOptions {
    */
   createTaskDTO: CreateTaskDTO
   /**
-   * TM服务器地址
+   * TM服务器地址, 采用 POST 提交
    * @example http://localhost:7001
    */
   host?: TaskManClientConfig['host']
-  /**
-   * 向TM服务器发送 HTTP 请求方法
-   */
-  method?: FetchOptions['method']
   /**
    * 向TM服务器发送 HTTP 请求时附带请求头数据
    */

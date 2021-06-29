@@ -49,7 +49,11 @@ export class TaskManComponent {
 
     const opts: FetchOptions = {
       ...this.initFetchOptions,
-      data: input2,
+      method: 'POST',
+      data: input2.createTaskDTO,
+    }
+    if (input2.host) {
+      opts.url = input2.host
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.create}`
     const ret = await this.fetch.fetch<TaskDTO>(opts)
@@ -106,7 +110,6 @@ export class TaskManComponent {
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.getProgress}`
     const ret = await this.fetch.fetch<TaskProgressDTO | undefined>(opts)
-    decreaseRunningTaskCount()
     return ret
   }
 
