@@ -76,6 +76,9 @@ export class TaskQueueRepository {
     return ret as unknown as TaskDTO
   }
 
+  /**
+   * insert into tb_task_payload
+   */
   async addTaskPayload(input: TaskPayloadDTO): Promise<TaskPayloadDTO> {
     const { db } = this
     const ret = await db.refTables.ref_tb_task_payload()
@@ -121,6 +124,7 @@ export class TaskQueueRepository {
     const { db } = this
     const ret = await db.refTables.ref_tb_task()
       .update('task_state', taskState)
+      .update('mtime', 'now()')
       .where('task_id', id)
       .returning('*')
       .then(arr => arr[0])
@@ -173,6 +177,7 @@ export class TaskQueueRepository {
     const { db } = this
     const ret = await db.refTables.ref_tb_task()
       .update('task_state', TaskState.running)
+      .update('mtime', 'now()')
       .where('task_id', id)
       .whereIn('task_state', [TaskState.pending, TaskState.init])
       .returning('*')
@@ -196,6 +201,7 @@ export class TaskQueueRepository {
     ]
     const ret = await db.refTables.ref_tb_task()
       .update('task_state', TaskState.failed)
+      .update('mtime', 'now()')
       .where('task_id', id)
       .whereNotIn('task_state', whereState)
       .returning('*')
@@ -223,6 +229,7 @@ export class TaskQueueRepository {
     ]
     const ret = await db.refTables.ref_tb_task()
       .update('task_state', TaskState.cancelled)
+      .update('mtime', 'now()')
       .where('task_id', id)
       .whereIn('task_state', whereState)
       .returning('*')
@@ -247,12 +254,14 @@ export class TaskQueueRepository {
       .transacting(trx)
       .forUpdate()
       .update('task_progress', 100)
+      .update('mtime', 'now()')
       .where('task_id', id)
 
     const ret = await db.refTables.ref_tb_task()
       .transacting(trx)
       .forUpdate()
       .update('task_state', TaskState.succeeded)
+      .update('mtime', 'now()')
       .where('task_id', id)
       .where('task_state', TaskState.running)
       .returning('*')
@@ -276,6 +285,7 @@ export class TaskQueueRepository {
     const { taskId, taskProgress } = options
     const ret = await db.refTables.ref_tb_task_progress()
       .update('task_progress', taskProgress)
+      .update('mtime', 'now()')
       .where('task_id', taskId)
       .where('task_progress', '<=', taskProgress)
       .limit(1)
@@ -355,6 +365,7 @@ export class TaskQueueRepository {
       .transacting(trx)
       .update('task_state', TaskState.pending)
       .update('started_at', 'now()')
+      .update('mtime', 'now()')
       .where('task_state', TaskState.init)
       .whereRaw(`will_start BETWEEN now() - interval '${options.earlierThanTimeIntv}' AND now()`)
       .whereIn('task_id', ids)
