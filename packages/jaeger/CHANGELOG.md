@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.22.0 (2021-06-29)
+
+
+### Features
+
+* **taskman:** add getProgress() ([1a88ce6](https://github.com/waitingsong/midway-components/commit/1a88ce63c07eb3b1cd9c63437d76a9aeb589299b))
+
+
+
+
+
 # 6.21.0 (2021-06-29)
 
 
