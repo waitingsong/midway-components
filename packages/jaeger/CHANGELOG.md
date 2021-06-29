@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.24.0 (2021-06-29)
+
+
+### Features
+
+* **taskman:** create() by POST ([5e159ca](https://github.com/waitingsong/midway-components/commit/5e159ca5731d8f253cd154dc439ca3e336f7b03d))
+
+
+
+
+
 # 6.23.0 (2021-06-29)
 
 **Note:** Version bump only for package @mw-components/jaeger
