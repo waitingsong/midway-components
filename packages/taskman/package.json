@@ -23,9 +23,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@mw-components/fetch": "^12.6.2",
+    "@mw-components/fetch": "^12.6.3",
     "@mw-components/jaeger": "^6.20.2",
-    "@mw-components/kmore": "^10.3.0",
+    "@mw-components/kmore": "^11.0.0",
     "@waiting/shared-core": "^14.4.0",
     "@waiting/shared-types": "^14.4.0",
     "pg": "^8.2.1",

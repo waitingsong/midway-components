@@ -37,8 +37,9 @@ export function genKmoreComponentConfig(
     enableTracing: serverConfig.dbConfigs.enableTracing ?? defaultDbConfig.enableTracing,
     sampleThrottleMs: serverConfig.dbConfigs.sampleThrottleMs ?? defaultDbConfig.sampleThrottleMs,
   }
+
   const kmoreConfig: KmoreComponentConfig = {
-    database: {
+    dbConfigs: {
       [DbReplica.taskMaster]: master,
     },
   }

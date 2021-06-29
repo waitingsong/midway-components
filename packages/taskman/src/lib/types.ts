@@ -30,12 +30,12 @@ export enum ServerAgent {
   create = 'create',
   hello = 'hello',
   stats = 'stats',
-  setProgress = 'setProgress',
-  setRunning = 'setRunning',
-  setFailed = 'setFailed',
-  setCancelled = 'setCancelled',
-  setSucceeded = 'setSucceeded',
-  getProgress = 'getProgress',
+  setProgress = 'set_progress',
+  setRunning = 'set_running',
+  setFailed = 'set_failed',
+  setCancelled = 'set_cancelled',
+  setSucceeded = 'set_succeeded',
+  getProgress = 'get_progress',
 }
 export enum ServerMethod {
   create = 'create',

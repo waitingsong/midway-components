@@ -6,10 +6,10 @@ import 'tsconfig-paths/register'
 import { createApp, close } from '@midwayjs/mock'
 import { Framework } from '@midwayjs/web'
 
-import { testConfig } from './test-config'
+import { TaskQueueRepository } from '../src/repo/index.repo'
+import { TaskAgentService, TaskQueueService } from '../src/service/index.service'
 
-import { TaskQueueRepository } from '~/repo/index.repo'
-import { TaskAgentService, TaskQueueService } from '~/service/index.service'
+import { testConfig } from './test-config'
 
 
 /**

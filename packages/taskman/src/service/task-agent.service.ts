@@ -17,7 +17,7 @@ import {
   tap,
 } from 'rxjs/operators'
 
-import { CallTaskOptions, TaskDTO, TaskManServerConfig, TaskState } from '../lib/index'
+import { CallTaskOptions, ServerAgent, TaskDTO, TaskManServerConfig, TaskState } from '../lib/index'
 
 import { TaskQueueService } from './task-queue.service'
 
@@ -73,25 +73,34 @@ export class TaskAgentService {
   private pickTasksWaitToRun(intv$: Observable<number>): Observable<TaskDTO[]> {
     const stream$ = intv$.pipe(
       concatMap(() => this.queueSvc.pickTasksWaitToRun({ maxRows: 1 })),
+      // tap((rows) => {
+      //   console.info(rows)
+      // }),
     )
     return stream$
   }
 
-  private async sendTaskToRun(task: TaskDTO | undefined): Promise<unknown> {
+  private async sendTaskToRun(task: TaskDTO | undefined): Promise<TaskDTO['taskId']> {
     if (! task) {
-      return
+      return ''
     }
     const { taskId } = task
     const payload = await this.queueSvc.getPayload(taskId)
     if (! payload) {
-      return
+      return ''
     }
 
+    await this.queueSvc.setRunning(taskId)
+
     const res = this.httpCall(payload.json)
+      .then(() => task.taskId)
       .catch(async (ex) => {
         await this.queueSvc.setState(taskId, TaskState.init)
-          .catch(ex2 => this.logger.error(ex2))
-        this.logger.error(ex)
+          .catch((ex2) => {
+            this.logger.warn(ex2)
+          })
+        this.logger.warn(ex)
+        return ''
       })
     return res
   }
@@ -101,14 +110,19 @@ export class TaskAgentService {
       ...options,
     }
     const headers = new Node_Headers(opts.headers)
-    const key = this.config.headerKey ? this.config.headerKey : 'x-task-agent'
+    const key: string = this.config.headerKey ? this.config.headerKey : 'x-task-agent'
     headers.set(key, '1')
     opts.headers = headers
-    const ret = this.fetch.fetch(opts)
-    // .then((res) => {
-    //   console.info(res)
-    //   return res
-    // })
+
+    if (opts.url.includes(`${ServerAgent.base}/${ServerAgent.hello}`)) {
+      opts.dataType = 'text'
+    }
+
+    const ret = await this.fetch.fetch(opts)
+      .then((res) => {
+        // console.info(res)
+        return res
+      })
     return ret
   }
 }
