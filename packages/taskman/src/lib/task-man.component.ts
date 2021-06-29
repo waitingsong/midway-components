@@ -99,6 +99,18 @@ export class TaskManComponent {
     return ret
   }
 
+  async [ServerMethod.getProgress](id: TaskDTO['taskId']): Promise<TaskProgressDTO | undefined> {
+    const opts: FetchOptions = {
+      ...this.initFetchOptions,
+      data: { id },
+    }
+    opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.getProgress}`
+    const ret = await this.fetch.fetch<TaskProgressDTO | undefined>(opts)
+    decreaseRunningTaskCount()
+    return ret
+  }
+
+
   async setProgress(
     taskId: TaskDTO['taskId'],
     taskProgress: TaskProgressDTO['taskProgress'],
