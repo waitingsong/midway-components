@@ -49,10 +49,26 @@ export enum ServerMethod {
   getProgress = 'getProgress',
 }
 
+/**
+ * 调用创建任务接口参数
+ */
 export interface CreateTaskOptions {
+  /**
+   * 创建任务参数
+   */
   data: CreateTaskDTO
+  /**
+   * TM服务器地址
+   * @example http://localhost:7001
+   */
   host?: TaskManClientConfig['host']
+  /**
+   * 向TM服务器发送 HTTP 请求方法
+   */
   method?: FetchOptions['method']
+  /**
+   * 向TM服务器发送 HTTP 请求时附带请求头数据
+   */
   headers?: FetchOptions['headers']
 }
 
