@@ -1,4 +1,5 @@
 import {
+  Config,
   Inject,
   Provide,
 } from '@midwayjs/decorator'
@@ -16,7 +17,7 @@ import {
   tap,
 } from 'rxjs/operators'
 
-import { CallTaskOptions, TaskDTO, TaskState } from '../lib/index'
+import { CallTaskOptions, TaskDTO, TaskManServerConfig, TaskState } from '../lib/index'
 
 import { TaskQueueService } from './task-queue.service'
 
@@ -32,6 +33,8 @@ export class TaskAgentService {
   @Inject() readonly fetch: FetchComponent
 
   @Inject() protected readonly queueSvc: TaskQueueService
+
+  @Config('taskManServerConfig') protected readonly config: TaskManServerConfig
 
   protected readonly intv$ = timer(1000, 15000)
   protected subscription: Subscription | undefined
@@ -98,6 +101,8 @@ export class TaskAgentService {
       ...options,
     }
     const headers = new Node_Headers(opts.headers)
+    const key = this.config.headerKey ? this.config.headerKey : 'x-task-agent'
+    headers.set(key, '1')
     opts.headers = headers
     const ret = this.fetch.fetch(opts)
     // .then((res) => {

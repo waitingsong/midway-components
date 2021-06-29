@@ -71,6 +71,7 @@ export class TaskManComponent {
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setCancelled}`
     const ret = await this.fetch.fetch<TaskDTO | undefined>(opts)
+    this.waitingComingTask()
     return ret
   }
 
@@ -81,6 +82,18 @@ export class TaskManComponent {
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setFailed}`
     const ret = await this.fetch.fetch<TaskDTO | undefined>(opts)
+    this.waitingComingTask()
+    return ret
+  }
+
+  async [ServerMethod.setSucceeded](id: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
+    const opts: FetchOptions = {
+      ...this.initFetchOptions,
+      data: { id },
+    }
+    opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setSucceeded}`
+    const ret = await this.fetch.fetch<TaskDTO | undefined>(opts)
+    this.waitingComingTask()
     return ret
   }
 
@@ -107,6 +120,19 @@ export class TaskManComponent {
       method: (this.ctx.request.method ?? 'GET') as 'GET' | 'POST',
     }
     return opts
+  }
+
+  protected waitingComingTask(): void {
+    if (typeof this.ctx._taskRunning === 'number') {
+      this.ctx._taskRunning -= 1
+    }
+    else {
+      this.ctx._taskRunning = 0
+    }
+
+    if (this.ctx._taskRunning < 0) {
+      this.ctx._taskRunning = 0
+    }
   }
 
 }

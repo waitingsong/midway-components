@@ -73,6 +73,11 @@ export interface CallTaskOptions {
 export interface TaskManServerConfig {
   expInterval: TaskDTO['timeoutIntv']
   dbConfigs: DbConfig
+  /**
+   * Indicate request from task-agent
+   * @default x-task-agent
+   */
+  headerKey?: string
 }
 
 export interface DbConfig {

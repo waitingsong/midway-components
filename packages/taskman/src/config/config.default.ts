@@ -19,6 +19,7 @@ export const taskManServerConfig: TaskManServerConfig = {
       password: process.env.POSTGRES_PASSWORD ? process.env.POSTGRES_PASSWORD : 'postgres',
     },
   },
+  headerKey: 'x-task-agent',
 }
 
 export const taskManClientConfig: TaskManClientConfig = {
