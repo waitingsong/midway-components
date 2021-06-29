@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.5.0 (2021-06-29)
+
+
+### Features
+
+* **taskman:** control number of task running with middleware ([963a872](https://github.com/waitingsong/midway-components/commit/963a872d5d0a7fd776fb8ac777c1fdc63838176c))
+
+
+
+
+
 ## 0.4.2 (2021-06-29)
 
 **Note:** Version bump only for package @mw-components/taskman
