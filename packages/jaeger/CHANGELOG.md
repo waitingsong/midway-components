@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.27.0 (2021-06-30)
+
+
+### Features
+
+* **taskman:** api get_result ([c05dfb7](https://github.com/waitingsong/midway-components/commit/c05dfb771d330497f424bded02afaf3285ceb50b))
+
+
+
+
+
 # 6.26.0 (2021-06-30)
 
 
