@@ -1,5 +1,6 @@
+import { relative } from 'path'
+
 import {
-  basename,
   bigIntMax,
   bigIntMin,
 } from '@waiting/shared-core'
@@ -13,7 +14,7 @@ import { CreateTaskDTO, TaskState } from '~/lib/index'
 import assert = require('power-assert')
 
 
-const filename = basename(__filename)
+const filename = relative(process.cwd(), __filename)
 
 describe(filename, () => {
 

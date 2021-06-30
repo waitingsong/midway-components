@@ -1,4 +1,5 @@
-import { basename } from '@waiting/shared-core'
+import { relative } from 'path'
+
 import { testConfig } from 'test/test-config'
 
 import { createOneTask } from '../helper'
@@ -12,7 +13,7 @@ import {
 import assert = require('power-assert')
 
 
-const filename = basename(__filename)
+const filename = relative(process.cwd(), __filename)
 
 describe(filename, () => {
 
