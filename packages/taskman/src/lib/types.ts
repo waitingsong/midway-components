@@ -48,6 +48,11 @@ export enum ServerMethod {
   setCancelled = 'setCancelled',
   setSucceeded = 'setSucceeded',
   getProgress = 'getProgress',
+  notifyProgress = 'notifyProgress',
+  notifyRunning = 'notifyRunning',
+  notifyFailed = 'notifyFailed',
+  notifyCancelled = 'notifyCancelled',
+  notifySucceeded = 'notifySucceeded',
 }
 
 /**

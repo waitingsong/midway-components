@@ -28,11 +28,10 @@ export async function createTasks(
   return ret
 }
 
-export async function createOneTask(
-  svc: TaskQueueService,
-  repo: TaskQueueRepository,
+
+export function genCreateTaskDTO(
   input?: Partial<CreateTaskDTO>,
-): Promise<TaskDTO> {
+): CreateTaskDTO {
 
   const data: CreateTaskDTO = {
     json: {
@@ -45,6 +44,16 @@ export async function createOneTask(
     },
     ...input,
   }
+  return data
+}
+
+export async function createOneTask(
+  svc: TaskQueueService,
+  repo: TaskQueueRepository,
+  input?: Partial<CreateTaskDTO>,
+): Promise<TaskDTO> {
+
+  const data = genCreateTaskDTO(input)
   const task = await svc.create(data)
   valiateTask(task)
 

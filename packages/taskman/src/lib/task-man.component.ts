@@ -10,6 +10,7 @@ import { retrieveHeadersItem } from '@waiting/shared-core'
 import { Context } from '../interface'
 
 import { decreaseRunningTaskCount } from './helper'
+import { Task } from './task'
 
 import {
   CreateTaskOptions,
@@ -28,13 +29,13 @@ export class TaskManComponent {
 
   @Inject() protected readonly ctx: Context
 
-  @Inject('jaeger:logger') protected readonly logger: Logger
+  @Inject('jaeger:logger') readonly logger: Logger
 
   @Inject() protected readonly fetch: FetchComponent
 
   @Config('taskManClientConfig') protected readonly config: TaskManClientConfig
 
-  async [ServerMethod.create](input: CreateTaskOptions): Promise<TaskDTO> {
+  async [ServerMethod.create](input: CreateTaskOptions): Promise<Task> {
     const input2 = {
       ...input,
     }
@@ -58,8 +59,10 @@ export class TaskManComponent {
       opts.url = input2.host
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.create}`
-    const ret = await this.fetch.fetch<TaskDTO>(opts)
-    return ret
+    const taskInfo = await this.fetch.fetch<TaskDTO>(opts)
+
+    const task = new Task(taskInfo, this)
+    return task
   }
 
   async [ServerMethod.setRunning](

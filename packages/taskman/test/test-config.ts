@@ -1,5 +1,6 @@
 import { IMidwayWebApplication } from '@midwayjs/web'
 
+import { TaskManComponent } from '~/lib'
 import {
   TaskLogRepository,
   TaskQueueRepository,
@@ -15,6 +16,7 @@ export interface TestConfig {
   repo: TaskQueueRepository
   logRepo: TaskLogRepository
   retRepo: TaskResultRepository
+  tm: TaskManComponent
 }
 export const testConfig = {
 } as TestConfig

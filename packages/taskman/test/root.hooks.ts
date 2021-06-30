@@ -11,6 +11,8 @@ import { TaskAgentService, TaskQueueService } from '../src/service/index.service
 
 import { testConfig } from './test-config'
 
+import { TaskManComponent } from '~/lib'
+
 
 /**
  * @see https://mochajs.org/#root-hook-plugins
@@ -38,6 +40,7 @@ export const mochaHooks = async () => {
       testConfig.logRepo = await ctx.requestContext.getAsync(TaskLogRepository)
       testConfig.retRepo = await ctx.requestContext.getAsync(TaskResultRepository)
       testConfig.agent = await ctx.requestContext.getAsync(TaskAgentService)
+      testConfig.tm = await ctx.requestContext.getAsync(TaskManComponent)
     },
 
     beforeEach: async () => {

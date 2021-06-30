@@ -1,4 +1,5 @@
 
+export * from './task'
 export * from './config'
 export * from './config.types'
 export * from './database.do'
