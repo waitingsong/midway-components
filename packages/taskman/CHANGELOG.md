@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.10.0 (2021-06-30)
+
+
+### Features
+
+* **taskman:** update progress ([d0d0ee3](https://github.com/waitingsong/midway-components/commit/d0d0ee35d38dcc46773dd44ae7c9707cd877ad3c))
+
+
+
+
+
 # 0.9.0 (2021-06-30)
 
 
