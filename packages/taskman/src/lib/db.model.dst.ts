@@ -5,6 +5,7 @@ import {
   TbTaskDO,
   TbTaskPayloadDO,
   TbTaskProgressDO,
+  TbTaskLogDO,
   ViTaskDO,
 } from './database.do'
 
@@ -14,6 +15,7 @@ export interface DbModel {
   tb_task_payload: TbTaskPayloadDO
   tb_task_progress: TbTaskProgressDO
   tb_task_archive: TbTaskArchiveDO
+  tb_task_log: TbTaskLogDO
   vi_task: ViTaskDO
 }
 
@@ -24,6 +26,7 @@ export const dbDict: DbDict<DbModel> = {
     tb_task_payload: 'tb_task_payload',
     tb_task_progress: 'tb_task_progress',
     tb_task_archive: 'tb_task_archive',
+    tb_task_log: 'tb_task_log',
     vi_task: 'vi_task',
   },
   columns: {
@@ -58,6 +61,12 @@ export const dbDict: DbDict<DbModel> = {
       timeout_intv: 'timeout_intv',
       ctime: 'ctime',
       mtime: 'mtime',
+    },
+    tb_task_log: {
+      task_log_id: 'task_log_id',
+      task_id: 'task_id',
+      task_log_content: 'task_log_content',
+      ctime: 'ctime',
     },
     vi_task: {
       task_id: 'task_id',
@@ -102,6 +111,12 @@ export const dbDict: DbDict<DbModel> = {
       timeout_intv: 'tb_task_archive.timeout_intv',
       ctime: 'tb_task_archive.ctime',
       mtime: 'tb_task_archive.mtime',
+    },
+    tb_task_log: {
+      task_log_id: 'tb_task_log.task_log_id',
+      task_id: 'tb_task_log.task_id',
+      task_log_content: 'tb_task_log.task_log_content',
+      ctime: 'tb_task_log.ctime',
     },
     vi_task: {
       task_id: 'vi_task.task_id',
@@ -193,6 +208,20 @@ export const dbDict: DbDict<DbModel> = {
       },
       mtime: {
         tbTaskArchiveMtime: 'tb_task_archive.mtime',
+      },
+    },
+    tb_task_log: {
+      task_log_id: {
+        tbTaskLogTaskLogId: 'tb_task_log.task_log_id',
+      },
+      task_id: {
+        tbTaskLogTaskId: 'tb_task_log.task_id',
+      },
+      task_log_content: {
+        tbTaskLogTaskLogContent: 'tb_task_log.task_log_content',
+      },
+      ctime: {
+        tbTaskLogCtime: 'tb_task_log.ctime',
       },
     },
     vi_task: {
@@ -301,6 +330,20 @@ export const dbDict: DbDict<DbModel> = {
       },
       mtime: {
         mtime: 'tb_task_archive.mtime',
+      },
+    },
+    tb_task_log: {
+      task_log_id: {
+        taskLogId: 'tb_task_log.task_log_id',
+      },
+      task_id: {
+        taskId: 'tb_task_log.task_id',
+      },
+      task_log_content: {
+        taskLogContent: 'tb_task_log.task_log_content',
+      },
+      ctime: {
+        ctime: 'tb_task_log.ctime',
       },
     },
     vi_task: {

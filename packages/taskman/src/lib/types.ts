@@ -39,6 +39,7 @@ export enum ServerAgent {
 }
 export enum ServerMethod {
   create = 'create',
+  read = 'read',
   hello = 'hello',
   stats = 'stats',
   setProgress = 'setProgress',

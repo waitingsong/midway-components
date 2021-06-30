@@ -7,12 +7,14 @@ import {
   TbTaskDO as DO,
   TbTaskPayloadDO,
   TbTaskProgressDO,
+  TbTaskLogDO,
 } from './database.do'
 
 
 export type TaskDTO = RecusiveCamelKeys<DO>
 export type TaskProgressDTO = RecusiveCamelKeys<TbTaskProgressDO>
 export type TaskPayloadDTO = RecusiveCamelKeys<TbTaskPayloadDO>
+export type TaskLogDTO = RecusiveCamelKeys<TbTaskLogDO>
 
 export type TaskFullDTO = TaskDTO & {
   taskProgress: TbTaskProgressDO['task_progress'] | null,
@@ -21,6 +23,7 @@ export type TaskFullDTO = TaskDTO & {
 
 export type InitTaskDTO = Omit<TaskDTO, 'taskId'>
 export type InitTaskPayloadDTO = Omit<TaskPayloadDTO, 'taskId' | 'json'>
+export type InitTaskLogDTO = Omit<TaskLogDTO, 'taskLogId'>
 
 export class CreateTaskDTO {
   /**

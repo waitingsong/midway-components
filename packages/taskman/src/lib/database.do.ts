@@ -50,3 +50,12 @@ export class TbTaskProgressDO {
 
 export class ViTaskDO extends TbTaskDO {}
 
+export class TbTaskLogDO {
+  /** bigInt string */
+  task_log_id: string
+  /** bigInt string */
+  task_id: string
+  task_log_content: string
+  ctime: Date | 'now()'
+}
+

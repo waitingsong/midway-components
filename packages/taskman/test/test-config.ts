@@ -1,6 +1,6 @@
 import { IMidwayWebApplication } from '@midwayjs/web'
 
-import { TaskQueueRepository } from '~/repo/index.repo'
+import { TaskLogRepository, TaskQueueRepository } from '~/repo/index.repo'
 import { TaskAgentService, TaskQueueService } from '~/service/index.service'
 
 
@@ -9,6 +9,7 @@ export interface TestConfig {
   agent: TaskAgentService
   svc: TaskQueueService
   repo: TaskQueueRepository
+  logRepo: TaskLogRepository
 }
 export const testConfig = {
 } as TestConfig
