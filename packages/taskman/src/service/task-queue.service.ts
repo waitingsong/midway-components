@@ -20,8 +20,12 @@ import {
   TaskStatistics,
   SetProgressDTO,
   ServerMethod,
+  TaskLogDTO,
 } from '../lib/index'
-import { TaskQueueRepository } from '../repo/index.repo'
+import {
+  TaskLogRepository,
+  TaskQueueRepository,
+} from '../repo/index.repo'
 
 
 @Provide()
@@ -30,6 +34,7 @@ export class TaskQueueService {
   @Inject('jaeger:logger') protected readonly logger: Logger
 
   @Inject() protected readonly repo: TaskQueueRepository
+  @Inject() protected readonly logRepo: TaskLogRepository
 
   async [ServerMethod.create](input: CreateTaskDTO): Promise<TaskDTO> {
     const data: InitTaskDTO = mergeDoWithInitData(initTaskDTO, input)
@@ -42,6 +47,7 @@ export class TaskQueueService {
       json: input.json,
     }
     await this.repo.addTaskPayload(payload)
+    await this.createLog(ret?.taskId, 'create')
     return ret
   }
 
@@ -70,6 +76,7 @@ export class TaskQueueService {
   async setState(
     id: TaskDTO['taskId'],
     taskState: TaskDTO['taskState'],
+    msg?: TaskLogDTO['taskLogContent'],
   ): Promise<TaskDTO | undefined> {
 
     const ret = await this.repo.setState(id, taskState)
@@ -93,6 +100,7 @@ export class TaskQueueService {
       //   break
       // }
     }
+    await this.createLog(ret.taskId, msg)
 
     return ret
   }
@@ -102,10 +110,15 @@ export class TaskQueueService {
    */
   async [ServerMethod.setRunning](
     id: TaskDTO['taskId'],
+    msg?: TaskLogDTO['taskLogContent'],
   ): Promise<TaskDTO | undefined> {
 
     const ret = await this.repo.setRunning(id)
+    if (! ret) {
+      return
+    }
     await this.repo.initProgress(id)
+    await this.createLog(id, msg)
     return ret
   }
 
@@ -114,9 +127,11 @@ export class TaskQueueService {
    */
   async [ServerMethod.setFailed](
     id: TaskDTO['taskId'],
+    msg?: TaskLogDTO['taskLogContent'],
   ): Promise<TaskDTO | undefined> {
 
     const ret = await this.repo.setFailed(id)
+    await this.createLog(ret?.taskId, msg)
     return ret
   }
 
@@ -125,9 +140,11 @@ export class TaskQueueService {
    */
   async [ServerMethod.setCancelled](
     id: TaskDTO['taskId'],
+    msg?: TaskLogDTO['taskLogContent'],
   ): Promise<TaskDTO | undefined> {
 
     const ret = await this.repo.setCancelled(id)
+    await this.createLog(ret?.taskId, msg)
     return ret
   }
 
@@ -136,17 +153,21 @@ export class TaskQueueService {
    */
   async [ServerMethod.setSucceeded](
     id: TaskDTO['taskId'],
+    msg?: TaskLogDTO['taskLogContent'],
   ): Promise<TaskDTO | undefined> {
 
     const ret = await this.repo.setSucceeded(id)
+    await this.createLog(ret?.taskId, msg)
     return ret
   }
 
   async [ServerMethod.setProgress](
     options: SetProgressDTO,
+    msg?: TaskLogDTO['taskLogContent'],
   ): Promise<TaskProgressDTO | undefined> {
 
     const ret = await this.repo.setProgress(options)
+    await this.createLog(ret?.taskId, msg)
     return ret
   }
 
@@ -165,6 +186,21 @@ export class TaskQueueService {
 
   async [ServerMethod.stats](): Promise<TaskStatistics> {
     return this.repo.stats()
+  }
+
+  async createLog(
+    id?: TaskDTO['taskId'],
+    msg?: TaskLogDTO['taskLogContent'],
+  ): Promise<TaskLogDTO | undefined> {
+
+    if (id && msg) {
+      return this.logRepo.create({
+        taskId: id,
+        taskLogContent: msg.trim(),
+        ctime: 'now()',
+      })
+    }
+    return
   }
 
 }

@@ -16,6 +16,7 @@ import {
   ServerAgent,
   ServerMethod,
   TaskDTO,
+  TaskLogDTO,
   TaskManClientConfig,
   TaskProgressDTO,
 } from './index'
@@ -60,20 +61,28 @@ export class TaskManComponent {
     return ret
   }
 
-  async [ServerMethod.setRunning](id: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
+  async [ServerMethod.setRunning](
+    id: TaskDTO['taskId'],
+    msg?: TaskLogDTO['taskLogContent'],
+  ): Promise<TaskDTO | undefined> {
+
     const opts: FetchOptions = {
       ...this.initFetchOptions,
-      data: { id },
+      data: { id, msg },
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setRunning}`
     const ret = await this.fetch.fetch<TaskDTO | undefined>(opts)
     return ret
   }
 
-  async [ServerMethod.setCancelled](id: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
+  async [ServerMethod.setCancelled](
+    id: TaskDTO['taskId'],
+    msg?: TaskLogDTO['taskLogContent'],
+  ): Promise<TaskDTO | undefined> {
+
     const opts: FetchOptions = {
       ...this.initFetchOptions,
-      data: { id },
+      data: { id, msg },
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setCancelled}`
     const ret = await this.fetch.fetch<TaskDTO | undefined>(opts)
@@ -81,10 +90,14 @@ export class TaskManComponent {
     return ret
   }
 
-  async [ServerMethod.setFailed](id: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
+  async [ServerMethod.setFailed](
+    id: TaskDTO['taskId'],
+    msg?: TaskLogDTO['taskLogContent'],
+  ): Promise<TaskDTO | undefined> {
+
     const opts: FetchOptions = {
       ...this.initFetchOptions,
-      data: { id },
+      data: { id, msg },
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setFailed}`
     const ret = await this.fetch.fetch<TaskDTO | undefined>(opts)
@@ -92,10 +105,14 @@ export class TaskManComponent {
     return ret
   }
 
-  async [ServerMethod.setSucceeded](id: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
+  async [ServerMethod.setSucceeded](
+    id: TaskDTO['taskId'],
+    msg?: TaskLogDTO['taskLogContent'],
+  ): Promise<TaskDTO | undefined> {
+
     const opts: FetchOptions = {
       ...this.initFetchOptions,
-      data: { id },
+      data: { id, msg },
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setSucceeded}`
     const ret = await this.fetch.fetch<TaskDTO | undefined>(opts)
@@ -117,6 +134,7 @@ export class TaskManComponent {
   async setProgress(
     taskId: TaskDTO['taskId'],
     taskProgress: TaskProgressDTO['taskProgress'],
+    msg?: TaskLogDTO['taskLogContent'],
   ): Promise<TaskDTO> {
 
     const opts: FetchOptions = {
@@ -124,6 +142,7 @@ export class TaskManComponent {
       data: {
         taskId,
         taskProgress,
+        msg,
       },
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setRunning}`

@@ -16,6 +16,7 @@ import {
   ServerMethod,
   SetProgressDTO,
   TaskDTO,
+  TaskLogDTO,
   TaskProgressDTO,
   TaskStatistics,
 } from '../lib/index'
@@ -47,26 +48,42 @@ export class TaskAgentController {
   }
 
   @Get('/' + ServerAgent.setRunning)
-  async [ServerMethod.setRunning](@Query() id: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
-    const ret = await this.queueSvc.setRunning(id)
+  async [ServerMethod.setRunning](
+    @Query() id: TaskDTO['taskId'],
+      @Query() msg?: TaskLogDTO['taskLogContent'],
+  ): Promise<TaskDTO | undefined> {
+
+    const ret = await this.queueSvc.setRunning(id, msg)
     return ret
   }
 
   @Get('/' + ServerAgent.setCancelled)
-  async [ServerMethod.setCancelled](@Query() id: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
-    const ret = this.queueSvc.setCancelled(id)
+  async [ServerMethod.setCancelled](
+    @Query() id: TaskDTO['taskId'],
+      @Query() msg?: TaskLogDTO['taskLogContent'],
+  ): Promise<TaskDTO | undefined> {
+
+    const ret = this.queueSvc.setCancelled(id, msg)
     return ret
   }
 
   @Get('/' + ServerAgent.setFailed)
-  async [ServerMethod.setFailed](@Query() id: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
-    const ret = await this.queueSvc.setFailed(id)
+  async [ServerMethod.setFailed](
+    @Query() id: TaskDTO['taskId'],
+      @Query() msg?: TaskLogDTO['taskLogContent'],
+  ): Promise<TaskDTO | undefined> {
+
+    const ret = await this.queueSvc.setFailed(id, msg)
     return ret
   }
 
   @Get('/' + ServerAgent.setSucceeded)
-  async [ServerMethod.setSucceeded](@Query() id: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
-    const ret = await this.queueSvc.setSucceeded(id)
+  async [ServerMethod.setSucceeded](
+    @Query() id: TaskDTO['taskId'],
+      @Query() msg?: TaskLogDTO['taskLogContent'],
+  ): Promise<TaskDTO | undefined> {
+
+    const ret = await this.queueSvc.setSucceeded(id, msg)
     return ret
   }
 
@@ -74,8 +91,12 @@ export class TaskAgentController {
    * @description task must in state pending
    */
   @Get('/' + ServerAgent.setProgress)
-  async [ServerMethod.setProgress](@Query(ALL) input: SetProgressDTO): Promise<TaskProgressDTO | undefined> {
-    const ret = await this.queueSvc.setProgress(input)
+  async [ServerMethod.setProgress](
+    @Query(ALL) input: SetProgressDTO,
+      @Query() msg?: TaskLogDTO['taskLogContent'],
+  ): Promise<TaskProgressDTO | undefined> {
+
+    const ret = await this.queueSvc.setProgress(input, msg)
     return ret
   }
 
