@@ -6,7 +6,7 @@ import 'tsconfig-paths/register'
 import { createApp, close } from '@midwayjs/mock'
 import { Framework } from '@midwayjs/web'
 
-import { TaskLogRepository, TaskQueueRepository } from '../src/repo/index.repo'
+import { TaskLogRepository, TaskQueueRepository, TaskResultRepository } from '../src/repo/index.repo'
 import { TaskAgentService, TaskQueueService } from '../src/service/index.service'
 
 import { testConfig } from './test-config'
@@ -36,6 +36,7 @@ export const mochaHooks = async () => {
       testConfig.svc = await ctx.requestContext.getAsync(TaskQueueService)
       testConfig.repo = await ctx.requestContext.getAsync(TaskQueueRepository)
       testConfig.logRepo = await ctx.requestContext.getAsync(TaskLogRepository)
+      testConfig.retRepo = await ctx.requestContext.getAsync(TaskResultRepository)
       testConfig.agent = await ctx.requestContext.getAsync(TaskAgentService)
     },
 

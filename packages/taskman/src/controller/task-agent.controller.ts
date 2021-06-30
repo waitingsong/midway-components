@@ -18,6 +18,7 @@ import {
   TaskDTO,
   TaskLogDTO,
   TaskProgressDTO,
+  TaskResultDTO,
   TaskStatistics,
 } from '../lib/index'
 import { TaskQueueService } from '../service/index.service'
@@ -80,10 +81,10 @@ export class TaskAgentController {
   @Get('/' + ServerAgent.setSucceeded)
   async [ServerMethod.setSucceeded](
     @Query() id: TaskDTO['taskId'],
-      @Query() msg?: TaskLogDTO['taskLogContent'],
+      @Query() result?: TaskResultDTO['json'],
   ): Promise<TaskDTO | undefined> {
 
-    const ret = await this.queueSvc.setSucceeded(id, msg)
+    const ret = await this.queueSvc.setSucceeded(id, result)
     return ret
   }
 

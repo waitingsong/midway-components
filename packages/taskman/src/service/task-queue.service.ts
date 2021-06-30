@@ -21,10 +21,12 @@ import {
   SetProgressDTO,
   ServerMethod,
   TaskLogDTO,
+  TaskResultDTO,
 } from '../lib/index'
 import {
   TaskLogRepository,
   TaskQueueRepository,
+  TaskResultRepository,
 } from '../repo/index.repo'
 
 
@@ -35,6 +37,7 @@ export class TaskQueueService {
 
   @Inject() protected readonly repo: TaskQueueRepository
   @Inject() protected readonly logRepo: TaskLogRepository
+  @Inject() protected readonly retRepo: TaskResultRepository
 
   async [ServerMethod.create](input: CreateTaskDTO): Promise<TaskDTO> {
     const data: InitTaskDTO = mergeDoWithInitData(initTaskDTO, input)
@@ -153,11 +156,11 @@ export class TaskQueueService {
    */
   async [ServerMethod.setSucceeded](
     id: TaskDTO['taskId'],
-    msg?: TaskLogDTO['taskLogContent'],
+    result?: TaskResultDTO['json'],
   ): Promise<TaskDTO | undefined> {
 
     const ret = await this.repo.setSucceeded(id)
-    await this.createLog(ret?.taskId, msg)
+    await this.createResult(ret?.taskId, result)
     return ret
   }
 
@@ -197,6 +200,21 @@ export class TaskQueueService {
       return this.logRepo.create({
         taskId: id,
         taskLogContent: msg.trim(),
+        ctime: 'now()',
+      })
+    }
+    return
+  }
+
+  async createResult(
+    id?: TaskDTO['taskId'],
+    result?: TaskResultDTO['json'],
+  ): Promise<TaskResultDTO | undefined> {
+
+    if (id && result) {
+      return this.retRepo.create({
+        taskId: id,
+        json: result,
         ctime: 'now()',
       })
     }

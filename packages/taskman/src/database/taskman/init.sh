@@ -11,6 +11,7 @@ psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U$POSTGRES_USER -d $POSTGRES_DB -bq \
   -f ddl/tb_task_payload.sql \
   -f ddl/tb_task_progress.sql \
   -f ddl/tb_task_archive.sql \
+  -f ddl/tb_task_result.sql \
 
 #psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U$POSTGRES_USER -d $POSTGRES_DB -bq -1 \
 #  -f dml/init.sql \

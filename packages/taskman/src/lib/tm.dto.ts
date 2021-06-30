@@ -7,6 +7,7 @@ import {
   TbTaskDO as DO,
   TbTaskPayloadDO,
   TbTaskProgressDO,
+  TbTaskResultDO,
   TbTaskLogDO,
 } from './database.do'
 
@@ -14,6 +15,7 @@ import {
 export type TaskDTO = RecusiveCamelKeys<DO>
 export type TaskProgressDTO = RecusiveCamelKeys<TbTaskProgressDO>
 export type TaskPayloadDTO = RecusiveCamelKeys<TbTaskPayloadDO>
+export type TaskResultDTO = RecusiveCamelKeys<TbTaskResultDO>
 export type TaskLogDTO = RecusiveCamelKeys<TbTaskLogDO>
 
 export type TaskFullDTO = TaskDTO & {

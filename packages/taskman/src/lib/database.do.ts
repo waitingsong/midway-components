@@ -1,3 +1,5 @@
+import { JsonType } from '@waiting/shared-types'
+
 import { IPostgresInterval } from '../interface'
 
 import { CallTaskOptions, TaskState } from './types'
@@ -47,8 +49,12 @@ export class TbTaskProgressDO {
   mtime: Date | null
 }
 
-
-export class ViTaskDO extends TbTaskDO {}
+export class TbTaskResultDO {
+  /** bigInt string */
+  task_id: string
+  json: JsonType
+  ctime: Date | 'now()'
+}
 
 export class TbTaskLogDO {
   /** bigInt string */
@@ -58,4 +64,6 @@ export class TbTaskLogDO {
   task_log_content: string
   ctime: Date | 'now()'
 }
+
+export class ViTaskDO extends TbTaskDO {}
 

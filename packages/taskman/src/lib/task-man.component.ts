@@ -19,6 +19,7 @@ import {
   TaskLogDTO,
   TaskManClientConfig,
   TaskProgressDTO,
+  TaskResultDTO,
 } from './index'
 
 
@@ -107,12 +108,12 @@ export class TaskManComponent {
 
   async [ServerMethod.setSucceeded](
     id: TaskDTO['taskId'],
-    msg?: TaskLogDTO['taskLogContent'],
+    result?: TaskResultDTO['json'],
   ): Promise<TaskDTO | undefined> {
 
     const opts: FetchOptions = {
       ...this.initFetchOptions,
-      data: { id, msg },
+      data: { id, result },
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setSucceeded}`
     const ret = await this.fetch.fetch<TaskDTO | undefined>(opts)
