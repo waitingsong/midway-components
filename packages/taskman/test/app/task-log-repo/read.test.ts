@@ -33,8 +33,9 @@ describe(filename, () => {
 
     it('FK task_id', async () => {
       const { logRepo } = testConfig
+      const taskId = Math.round(Math.random() * 1000).toString()
       const input: InitTaskLogDTO = {
-        taskId: '9999999',
+        taskId,
         taskLogContent: Math.random().toString(),
         ctime: 'now()',
       }

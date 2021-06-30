@@ -26,8 +26,9 @@ describe(filename, () => {
     it('FK task_id', async () => {
       const { svc, repo } = testConfig
       await createOneTask(svc, repo)
+      const taskId = Math.round(Math.random() * 1000).toString()
       try {
-        await repo.initProgress('99999999')
+        await repo.initProgress(taskId)
       }
       catch (ex) {
         assert((ex as Error).message.includes('violates foreign key constraint'))

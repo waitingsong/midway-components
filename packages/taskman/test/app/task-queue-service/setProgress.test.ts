@@ -38,7 +38,8 @@ describe(filename, () => {
 
     it('empty', async () => {
       const { svc } = testConfig
-      const info = await svc.setProgress({ taskId: '99999999', taskProgress: 0 })
+      const taskId = Math.round(Math.random() * 1000).toString()
+      const info = await svc.setProgress({ taskId, taskProgress: 0 })
       assert(! info) // must setRunning() first
     })
 
