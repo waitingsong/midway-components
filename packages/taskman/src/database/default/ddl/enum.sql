@@ -38,7 +38,7 @@ CREATE TYPE type_op_state AS ENUM (
   'completed'
 );
 
-COMMENT ON TYPE type_op_state IS '通用操作执行状态（结果）';
+COMMENT ON TYPE type_op_state IS '通用操作执行状态';
 
 --
 
