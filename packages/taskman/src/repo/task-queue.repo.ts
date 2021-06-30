@@ -29,6 +29,7 @@ import {
   initTaskStatistics,
   SetProgressDTO,
   ServerMethod,
+  TaskProgressDetailDTO,
 } from '../lib/index'
 
 import { genKmoreComponentConfig } from './helper'
@@ -107,14 +108,30 @@ export class TaskQueueRepository {
     return ret as unknown as TaskDTO
   }
 
-  async [ServerMethod.getProgress](id: TaskDTO['taskId']): Promise<TaskProgressDTO | undefined> {
+  async [ServerMethod.getProgress](
+    id: TaskDTO['taskId'],
+  ): Promise<TaskProgressDetailDTO | undefined> {
+
     const { db } = this
-    const ret = await db.refTables.ref_tb_task_progress()
+    const task = await db.refTables.ref_tb_task()
+      .select('task_state')
       .where('task_id', id)
       .limit(1)
       .then(arr => arr[0])
+    if (! task) { return }
 
-    return ret as unknown as TaskProgressDTO
+    const prog = await db.refTables.ref_tb_task_progress()
+      .where('task_id', id)
+      .limit(1)
+      .then(arr => arr[0])
+    if (! prog) { return }
+
+    const ret: TaskProgressDetailDTO = {
+      ...(prog as unknown as TaskProgressDTO),
+      taskState: task.task_state,
+    }
+
+    return ret
   }
 
   async setState(

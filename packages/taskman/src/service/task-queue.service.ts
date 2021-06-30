@@ -13,7 +13,6 @@ import {
   InitTaskDTO,
   TaskPayloadDTO,
   TaskProgressDTO,
-  TaskState,
   TaskFullDTO,
   PickInitTaskOptions,
   initPickInitTasksOptions,
@@ -22,6 +21,7 @@ import {
   ServerMethod,
   TaskLogDTO,
   TaskResultDTO,
+  TaskProgressDetailDTO,
 } from '../lib/index'
 import {
   TaskLogRepository,
@@ -71,7 +71,7 @@ export class TaskQueueService {
 
   async [ServerMethod.getProgress](
     id: TaskDTO['taskId'],
-  ): Promise<TaskProgressDTO | undefined> {
+  ): Promise<TaskProgressDetailDTO | undefined> {
 
     return this.repo.getProgress(id)
   }
@@ -87,22 +87,22 @@ export class TaskQueueService {
       return
     }
 
-    switch (taskState) {
-      case TaskState.succeeded: {
-        await this.repo.removeProgress([id])
-        break
-      }
-      // case TaskState.running: {
-      //   const { taskId } = ret
-      //   const progess = await this.getProgress(taskId)
-      //     .then(row => row?.taskProgress)
+    // switch (taskState) {
+    // case TaskState.succeeded: {
+    //   await this.repo.removeProgress([id])
+    //   break
+    // }
+    // case TaskState.running: {
+    //   const { taskId } = ret
+    //   const progess = await this.getProgress(taskId)
+    //     .then(row => row?.taskProgress)
 
-      //   if (! progess) {
-      //     await this.setProgress({ taskId, taskProgress: 0 })
-      //   }
-      //   break
-      // }
-    }
+    //   if (! progess) {
+    //     await this.setProgress({ taskId, taskProgress: 0 })
+    //   }
+    //   break
+    // }
+    // }
     await this.createLog(ret.taskId, msg)
 
     return ret
