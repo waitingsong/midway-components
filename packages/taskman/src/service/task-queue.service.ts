@@ -76,6 +76,14 @@ export class TaskQueueService {
     return this.repo.getProgress(id)
   }
 
+  async [ServerMethod.getResult](
+    id: TaskDTO['taskId'],
+  ): Promise<TaskResultDTO | undefined> {
+
+    return this.retRepo.read(id)
+  }
+
+
   async setState(
     id: TaskDTO['taskId'],
     taskState: TaskDTO['taskState'],

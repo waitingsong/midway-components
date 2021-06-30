@@ -107,5 +107,11 @@ export class TaskAgentController {
     return ret
   }
 
+  @Get('/' + ServerAgent.getResult)
+  async [ServerMethod.getResult](@Query() id: TaskDTO['taskId']): Promise<TaskResultDTO | undefined> {
+    const ret = await this.queueSvc.getResult(id)
+    return ret
+  }
+
 }
 

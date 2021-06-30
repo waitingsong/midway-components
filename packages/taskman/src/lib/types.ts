@@ -36,6 +36,7 @@ export enum ServerAgent {
   setCancelled = 'set_cancelled',
   setSucceeded = 'set_succeeded',
   getProgress = 'get_progress',
+  getResult = 'get_result',
 }
 export enum ServerMethod {
   create = 'create',
@@ -47,7 +48,10 @@ export enum ServerMethod {
   setFailed = 'setFailed',
   setCancelled = 'setCancelled',
   setSucceeded = 'setSucceeded',
+
   getProgress = 'getProgress',
+  getResult = 'getResult',
+
   notifyProgress = 'notifyProgress',
   notifyRunning = 'notifyRunning',
   notifyFailed = 'notifyFailed',
