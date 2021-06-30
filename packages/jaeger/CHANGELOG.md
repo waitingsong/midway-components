@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.25.0 (2021-06-30)
+
+
+### Features
+
+* **taskman:** task class ([3a59496](https://github.com/waitingsong/midway-components/commit/3a59496f2415d65bc88bb86c804a0f6e3e804e09))
+
+
+
+
+
 # 6.24.0 (2021-06-29)
 
 
