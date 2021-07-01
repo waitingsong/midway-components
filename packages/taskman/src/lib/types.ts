@@ -75,6 +75,7 @@ export enum ServerMethod {
 export interface CreateTaskOptions {
   /**
    * 任务参数
+   * @description 若 json 空则提取平级 headers 赋值到 json.headers
    */
   createTaskDTO: CreateTaskDTO
   /**
