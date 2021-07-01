@@ -98,7 +98,7 @@ export class TaskAgentService {
     const res = this.httpCall(taskId, payload.json)
       .then(() => task.taskId)
       .catch(async (ex) => {
-        await this.queueSvc.setState(taskId, TaskState.init)
+        await this.queueSvc.setState(taskId, TaskState.init, (ex as Error).message)
           .catch((ex2) => {
             this.logger.warn(ex2)
           })
