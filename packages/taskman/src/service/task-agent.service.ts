@@ -80,6 +80,9 @@ export class TaskAgentService {
     return stream$
   }
 
+  /**
+   * 发送任务信息给任务执行接口（服务）
+   */
   private async sendTaskToRun(task: TaskDTO | undefined): Promise<TaskDTO['taskId']> {
     if (! task) {
       return ''
@@ -90,7 +93,7 @@ export class TaskAgentService {
       return ''
     }
 
-    await this.queueSvc.setRunning(taskId)
+    // await this.queueSvc.setRunning(taskId)
 
     const res = this.httpCall(taskId, payload.json)
       .then(() => task.taskId)
