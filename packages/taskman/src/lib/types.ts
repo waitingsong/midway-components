@@ -2,7 +2,7 @@ import type { Options as FetchOptions } from '@mw-components/fetch'
 
 import { JsonObject } from '../interface'
 
-import { CreateTaskDTO, TaskDTO } from './tm.dto'
+import { CreateTaskDTO, TaskDTO, TaskLogDTO, TaskProgressDTO } from './tm.dto'
 
 
 /**
@@ -188,3 +188,12 @@ export interface PickInitTaskOptions {
   earlierThanTimeIntv: string
 }
 
+
+
+export interface CommonSetMethodInputData {
+  id: TaskDTO['taskId']
+  msg?: TaskLogDTO['taskLogContent']
+}
+export interface SetProgressInputData extends CommonSetMethodInputData {
+  progress: TaskProgressDTO['taskProgress']
+}

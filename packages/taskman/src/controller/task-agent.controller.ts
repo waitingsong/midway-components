@@ -11,12 +11,13 @@ import {
 
 import { decreaseRunningTaskCount } from '../lib/helper'
 import {
+  CommonSetMethodInputData,
   CreateTaskDTO,
+  SetProgressInputData,
   ServerAgent,
   ServerMethod,
   SetProgressDTO,
   TaskDTO,
-  TaskLogDTO,
   TaskProgressDetailDTO,
   TaskProgressDTO,
   TaskResultDTO,
@@ -67,7 +68,7 @@ export class TaskAgentController {
 
   @Post('/' + ServerAgent.setCancelled)
   async [ServerMethod.setCancelled](
-    @Query(ALL) input: CommonSetMethodInputData,
+    @Body(ALL) input: CommonSetMethodInputData,
   ): Promise<TaskDTO | undefined> {
 
     const { id, msg } = input
@@ -77,7 +78,7 @@ export class TaskAgentController {
 
   @Post('/' + ServerAgent.setFailed)
   async [ServerMethod.setFailed](
-    @Query(ALL) input: CommonSetMethodInputData,
+    @Body(ALL) input: CommonSetMethodInputData,
   ): Promise<TaskDTO | undefined> {
 
     const { id, msg } = input
@@ -87,7 +88,7 @@ export class TaskAgentController {
 
   @Post('/' + ServerAgent.setSucceeded)
   async [ServerMethod.setSucceeded](
-    @Query(ALL) input: CommonSetMethodInputData,
+    @Body(ALL) input: CommonSetMethodInputData,
   ): Promise<TaskDTO | undefined> {
 
     const { id, msg: result } = input
@@ -100,7 +101,7 @@ export class TaskAgentController {
    */
   @Post('/' + ServerAgent.setProgress)
   async [ServerMethod.setProgress](
-    @Query(ALL) input: SetProgressInputData,
+    @Body(ALL) input: SetProgressInputData,
   ): Promise<TaskProgressDTO | undefined> {
 
     const info: SetProgressDTO = {
@@ -126,13 +127,4 @@ export class TaskAgentController {
     return ret
   }
 
-}
-
-
-export interface CommonSetMethodInputData {
-  id: TaskDTO['taskId']
-  msg?: TaskLogDTO['taskLogContent']
-}
-export interface SetProgressInputData extends CommonSetMethodInputData {
-  progress: TaskProgressDTO['taskProgress']
 }

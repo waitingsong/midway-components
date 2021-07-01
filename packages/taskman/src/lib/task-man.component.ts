@@ -14,6 +14,7 @@ import { Task, taskFactory } from './task'
 
 import {
   CreateTaskOptions,
+  SetProgressInputData,
   ServerAgent,
   ServerMethod,
   TaskDTO,
@@ -238,21 +239,22 @@ export class TaskManComponent {
   }
 
   async setProgress(
-    taskId: TaskDTO['taskId'],
-    taskProgress: TaskProgressDTO['taskProgress'],
+    id: TaskDTO['taskId'],
+    progress: TaskProgressDTO['taskProgress'],
     msg?: TaskLogDTO['taskLogContent'],
   ): Promise<TaskDTO | undefined> {
 
+    const data: SetProgressInputData = {
+      id,
+      progress,
+      msg,
+    }
     const opts: FetchOptions = {
       ...this.initFetchOptions,
       method: 'POST',
-      data: {
-        taskId,
-        taskProgress,
-        msg,
-      },
+      data,
     }
-    opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setRunning}`
+    opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setProgress}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO>>(opts)
     if (res.code) {
       return
