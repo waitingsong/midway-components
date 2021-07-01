@@ -92,7 +92,7 @@ export class TaskAgentService {
 
     await this.queueSvc.setRunning(taskId)
 
-    const res = this.httpCall(payload.json)
+    const res = this.httpCall(taskId, payload.json)
       .then(() => task.taskId)
       .catch(async (ex) => {
         await this.queueSvc.setState(taskId, TaskState.init)
@@ -105,13 +105,19 @@ export class TaskAgentService {
     return res
   }
 
-  private async httpCall(options: CallTaskOptions): Promise<unknown> {
+  private async httpCall(
+    taskId: TaskDTO['taskId'],
+    options: CallTaskOptions,
+  ): Promise<unknown> {
+
     const opts: FetchOptions = {
       ...options,
     }
     const headers = new Node_Headers(opts.headers)
     const key: string = this.config.headerKey ? this.config.headerKey : 'x-task-agent'
     headers.set(key, '1')
+    const taskIdKey = this.config.headerKeyTaskId ? this.config.headerKeyTaskId : 'x-task-id'
+    headers.set(taskIdKey, taskId)
     opts.headers = headers
 
     if (opts.url.includes(`${ServerAgent.base}/${ServerAgent.hello}`)) {

@@ -100,6 +100,10 @@ export interface TaskManServerConfig {
    * @default x-task-agent
    */
   headerKey?: string
+  /**
+   * @default x-task-id
+   */
+  headerKeyTaskId?: string
 }
 
 export interface DbConfig {

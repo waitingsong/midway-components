@@ -20,6 +20,7 @@ export const taskManServerConfig: TaskManServerConfig = {
     },
   },
   headerKey: 'x-task-agent',
+  headerKeyTaskId: 'x-task-id',
 }
 
 export const taskManClientConfig: TaskManClientConfig = {
