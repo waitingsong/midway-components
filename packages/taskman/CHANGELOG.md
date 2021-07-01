@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.12.0 (2021-07-01)
+
+
+### Features
+
+* **taskman:** retrieveTask() accept input taskId ([bd1a610](https://github.com/waitingsong/midway-components/commit/bd1a610375c1ffbf90005dd8b9096f34757ac603))
+
+
+
+
+
 ## 0.11.1 (2021-06-30)
 
 **Note:** Version bump only for package @mw-components/taskman
