@@ -1,4 +1,5 @@
 import {
+  App,
   Config,
   Init,
   Inject,
@@ -23,11 +24,13 @@ import {
 
 import { genKmoreComponentConfig } from './helper'
 
-import { Context } from '~/interface'
+import { Application, Context } from '~/interface'
 
 
 @Provide()
 export class TaskResultRepository {
+
+  @App() protected readonly app: Application
 
   @Inject() protected readonly ctx: Context
 
@@ -41,7 +44,9 @@ export class TaskResultRepository {
   @Init()
   async init(): Promise<void> {
     const kmoreConfig = genKmoreComponentConfig(this.serverConfig, initDbConfig)
-    this._dbManager = await this.ctx.requestContext.getAsync(DbManager)
+    // this._dbManager = await this.ctx.requestContext.getAsync(DbManager)
+    const container = this.app.getApplicationContext()
+    this._dbManager = await container.getAsync(DbManager)
     // @ts-ignore for DecoratorManager not single
     this._dbManager.create(kmoreConfig, this.ctx.tracerManager, this.logger)
     const db = this._dbManager.getInstance<DbModel>(DbReplica.taskMaster)
