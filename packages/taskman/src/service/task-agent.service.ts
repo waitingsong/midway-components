@@ -111,6 +111,7 @@ export class TaskAgentService {
   ): Promise<unknown> {
 
     const opts: FetchOptions = {
+      ...this.initFetchOptions,
       ...options,
     }
     const headers = new Node_Headers(opts.headers)
@@ -130,6 +131,15 @@ export class TaskAgentService {
         return res
       })
     return ret
+  }
+
+  get initFetchOptions(): FetchOptions {
+    const opts: FetchOptions = {
+      url: '',
+      method: 'GET',
+      contentType: 'application/json; charset=utf-8',
+    }
+    return opts
   }
 }
 
