@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.12.3 (2021-07-01)
+
+
+### Bug Fixes
+
+* **taskman:** set default fetch options within httpCall() ([8abf3e3](https://github.com/waitingsong/midway-components/commit/8abf3e31f2faf56e0a0beae9843341dabb555b65))
+
+
+
+
+
 ## 0.12.2 (2021-07-01)
 
 
