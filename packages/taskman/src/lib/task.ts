@@ -105,3 +105,10 @@ export class Task {
 
 }
 
+
+export function taskFactory(
+  taskInfo: TaskDTO,
+  taskMan: TaskManComponent,
+): Task {
+  return new Task(taskInfo, taskMan)
+}

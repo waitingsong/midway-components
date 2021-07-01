@@ -10,7 +10,7 @@ import { retrieveHeadersItem } from '@waiting/shared-core'
 import { Context } from '../interface'
 
 import { decreaseRunningTaskCount } from './helper'
-import { Task } from './task'
+import { Task, taskFactory } from './task'
 
 import {
   CreateTaskOptions,
@@ -62,7 +62,7 @@ export class TaskManComponent {
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.create}`
     const taskInfo = await this.fetch.fetch<TaskDTO>(opts)
 
-    const task = new Task(taskInfo, this)
+    const task = taskFactory(taskInfo, this)
     return task
   }
 
