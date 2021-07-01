@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.28.1 (2021-07-01)
+
+
+### Bug Fixes
+
+* **taskman:** retrieve DbManager from app instead of ctx ([a3216af](https://github.com/waitingsong/midway-components/commit/a3216afd1bb9a7da43c8ccf9e303524e4bfb980b))
+
+
+
+
+
 # 6.28.0 (2021-07-01)
 
 
