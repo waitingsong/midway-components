@@ -192,7 +192,7 @@ export class TaskManComponent {
     const opts: FetchOptions = {
       ...this.initFetchOptions,
       method: 'POST',
-      data: { id, result },
+      data: { id, msg: result },
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setSucceeded}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)

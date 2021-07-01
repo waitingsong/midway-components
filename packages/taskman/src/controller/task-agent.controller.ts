@@ -55,42 +55,42 @@ export class TaskAgentController {
     return ret
   }
 
-  @Get('/' + ServerAgent.setRunning)
+  @Post('/' + ServerAgent.setRunning)
   async [ServerMethod.setRunning](
-    @Query() id: TaskDTO['taskId'],
-      @Query() msg?: TaskLogDTO['taskLogContent'],
+    @Body(ALL) input: CommonSetMethodInputData,
   ): Promise<TaskDTO | undefined> {
 
+    const { id, msg } = input
     const ret = await this.queueSvc.setRunning(id, msg)
     return ret
   }
 
   @Post('/' + ServerAgent.setCancelled)
   async [ServerMethod.setCancelled](
-    @Query() id: TaskDTO['taskId'],
-      @Query() msg?: TaskLogDTO['taskLogContent'],
+    @Query(ALL) input: CommonSetMethodInputData,
   ): Promise<TaskDTO | undefined> {
 
+    const { id, msg } = input
     const ret = this.queueSvc.setCancelled(id, msg)
     return ret
   }
 
   @Post('/' + ServerAgent.setFailed)
   async [ServerMethod.setFailed](
-    @Query() id: TaskDTO['taskId'],
-      @Query() msg?: TaskLogDTO['taskLogContent'],
+    @Query(ALL) input: CommonSetMethodInputData,
   ): Promise<TaskDTO | undefined> {
 
+    const { id, msg } = input
     const ret = await this.queueSvc.setFailed(id, msg)
     return ret
   }
 
   @Post('/' + ServerAgent.setSucceeded)
   async [ServerMethod.setSucceeded](
-    @Query() id: TaskDTO['taskId'],
-      @Query() result?: TaskResultDTO['json'],
+    @Query(ALL) input: CommonSetMethodInputData,
   ): Promise<TaskDTO | undefined> {
 
+    const { id, msg: result } = input
     const ret = await this.queueSvc.setSucceeded(id, result)
     return ret
   }
@@ -100,11 +100,14 @@ export class TaskAgentController {
    */
   @Post('/' + ServerAgent.setProgress)
   async [ServerMethod.setProgress](
-    @Query(ALL) input: SetProgressDTO,
-      @Query() msg?: TaskLogDTO['taskLogContent'],
+    @Query(ALL) input: SetProgressInputData,
   ): Promise<TaskProgressDTO | undefined> {
 
-    const ret = await this.queueSvc.setProgress(input, msg)
+    const info: SetProgressDTO = {
+      taskId: input.id,
+      taskProgress: input.progress,
+    }
+    const ret = await this.queueSvc.setProgress(info, input.msg)
     return ret
   }
 
@@ -125,3 +128,11 @@ export class TaskAgentController {
 
 }
 
+
+export interface CommonSetMethodInputData {
+  id: TaskDTO['taskId']
+  msg?: TaskLogDTO['taskLogContent']
+}
+export interface SetProgressInputData extends CommonSetMethodInputData {
+  progress: TaskProgressDTO['taskProgress']
+}

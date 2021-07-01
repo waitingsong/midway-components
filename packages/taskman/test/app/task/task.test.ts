@@ -21,7 +21,7 @@ describe.skip(filename, () => {
 
   describe('should create() work', () => {
     it('normal', async () => {
-      const { svc, repo, tm } = testConfig
+      const { tm } = testConfig
       const createTaskDTO = genCreateTaskDTO()
       const opts: CreateTaskOptions = {
         headers: {
@@ -31,7 +31,10 @@ describe.skip(filename, () => {
       }
       const task = await tm.create(opts)
 
-      assert(task)
+      if (! task) {
+        assert(false)
+        return
+      }
       if (typeof task.taskInfo.timeoutIntv === 'object') {
         assert(
           task.taskInfo.timeoutIntv.hours === Number.parseInt(initTaskDTO.timeoutIntv as string),
@@ -56,6 +59,10 @@ describe.skip(filename, () => {
       }
       const task = await tm.create(opts)
 
+      if (! task) {
+        assert(false)
+        return
+      }
       task.notifyRunning()
       await sleep(500)
       const prog = await task.getProgress()
