@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 0.14.3 (2021-07-01)
+
+
+### Bug Fixes
+
+* **taskman:** api method ([0b7af16](https://github.com/waitingsong/midway-components/commit/0b7af16f790d7b34b3a80a69893ff2cd6d37a405))
+
+
+
+
+
 ## 0.14.2 (2021-07-01)
 
 
