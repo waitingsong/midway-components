@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.30.2 (2021-07-01)
+
+
+### Bug Fixes
+
+* **task-man:** save req header as payload headers if undefined when create task ([20beaf4](https://github.com/waitingsong/midway-components/commit/20beaf400b966d29224c4da01446c657a7cc12ef))
+
+
+
+
+
 ## 6.30.1 (2021-07-01)
 
 
