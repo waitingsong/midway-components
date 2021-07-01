@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.14.0 (2021-07-01)
+
+
+### Features
+
+* **taskman:** log more info when sendTaskToRun fail ([3da788f](https://github.com/waitingsong/midway-components/commit/3da788feddd42f004fa319e25ff23a79241e9b5f))
+
+
+
+
+
 # 0.13.0 (2021-07-01)
 
 
