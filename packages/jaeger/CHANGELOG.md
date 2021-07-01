@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.31.1 (2021-07-01)
+
+
+### Bug Fixes
+
+* **taskman:** api method and input data ([c65f7e8](https://github.com/waitingsong/midway-components/commit/c65f7e82e839a7e2bcddfc36ce34f1eadd76e048))
+
+
+
+
+
 # 6.31.0 (2021-07-01)
 
 
