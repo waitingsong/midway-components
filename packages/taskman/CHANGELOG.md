@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.15.0 (2021-07-01)
+
+
+### Features
+
+* **taskman:** cache Task in TaskManComponent ([a807aea](https://github.com/waitingsong/midway-components/commit/a807aea7c762b4f5fd1640337c381c8df234d418))
+
+
+
+
+
 ## 0.14.3 (2021-07-01)
 
 
