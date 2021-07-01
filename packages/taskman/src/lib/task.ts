@@ -82,7 +82,7 @@ export class Task {
   async setProgress(
     progress: TaskProgressDTO['taskProgress'],
     msg?: TaskLogDTO['taskLogContent'],
-  ): Promise<TaskDTO> {
+  ): Promise<TaskDTO | undefined> {
 
     const { taskId } = this.taskInfo
     const ret = await this.taskMan.setProgress(taskId, progress, msg)
