@@ -37,6 +37,8 @@ export class TaskManComponent {
 
   @Config('taskManClientConfig') protected readonly config: TaskManClientConfig
 
+  protected readonly taskInstMap = new Map<TaskDTO['taskId'], Task>()
+
   async [ServerMethod.create](input: CreateTaskOptions): Promise<Task> {
     const input2 = {
       ...input,
@@ -76,6 +78,7 @@ export class TaskManComponent {
     const taskInfo = await this.fetch.fetch<TaskDTO>(opts)
 
     const task = taskFactory(taskInfo, this)
+    this.writeTaskCache(task)
     return task
   }
 
@@ -94,11 +97,18 @@ export class TaskManComponent {
     if (! id) {
       return
     }
+
+    const cachedTask = this.readTaskFromCache(id)
+    if (cachedTask) {
+      return cachedTask
+    }
+
     const taskInfo = await this.getInfo(id)
     if (! taskInfo) {
       return
     }
     const task = taskFactory(taskInfo, this)
+    this.writeTaskCache(task)
     return task
   }
 
@@ -233,6 +243,25 @@ export class TaskManComponent {
     return opts
   }
 
+  /**
+   * Clean cache if id not passed
+   */
+  deleteTaskFromCache(id?: TaskDTO['taskId']): void {
+    if (id) {
+      this.taskInstMap.delete(id)
+    }
+    else {
+      this.taskInstMap.clear()
+    }
+  }
+
+  protected writeTaskCache(task: Task): void {
+    this.taskInstMap.set(task.taskInfo.taskId, task)
+  }
+
+  protected readTaskFromCache(id: TaskDTO['taskId']): Task | undefined {
+    return this.taskInstMap.get(id)
+  }
 
 }
 
