@@ -67,15 +67,19 @@ export class TaskManComponent {
   }
 
   /** Retrieve the task, taskId from request header */
-  async [ServerMethod.retrieveTask](): Promise<Task | undefined> {
-    // const headers = new Node_Headers(this.ctx.request.headers)
-    const key = this.config.headerKeyTaskId ? this.config.headerKeyTaskId : 'x-task-id'
-    const id = this.ctx.request.headers[key]
+  async [ServerMethod.retrieveTask](taskId?: string): Promise<Task | undefined> {
+    let id = taskId
+    if (! id) {
+      // const headers = new Node_Headers(this.ctx.request.headers)
+      const key = this.config.headerKeyTaskId ? this.config.headerKeyTaskId : 'x-task-id'
+      const val = this.ctx.request.headers[key]
+      if (typeof val !== 'string') {
+        throw new TypeError('x-task-id not valid taskId string')
+      }
+      id = val
+    }
     if (! id) {
       return
-    }
-    if (typeof id !== 'string') {
-      throw new TypeError('x-task-id not valid taskId string')
     }
     const taskInfo = await this.getInfo(id)
     if (! taskInfo) {
