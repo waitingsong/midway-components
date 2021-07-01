@@ -20,6 +20,10 @@ export interface TaskManClientConfig {
    * @example ['authorization', 'user-agent']
    */
   transferHeaders: string[]
+  /**
+   * @default x-task-id
+   */
+  headerKeyTaskId?: string
 }
 
 /**
@@ -54,6 +58,9 @@ export enum ServerMethod {
   getInfo = 'getInfo',
   getProgress = 'getProgress',
   getResult = 'getResult',
+
+  /** Retrieve task, taskId from request header */
+  retrieveTask = 'retrieveTask',
 
   notifyProgress = 'notifyProgress',
   notifyRunning = 'notifyRunning',

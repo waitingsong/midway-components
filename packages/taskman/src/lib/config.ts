@@ -93,6 +93,7 @@ export const initTaskManClientConfig: TaskManClientConfig = {
   /** TaskMan Server host */
   host: 'http://localhost:7001',
   transferHeaders: ['authorization'],
+  headerKeyTaskId: 'x-task-id',
 }
 
 export const initTaskStatistics: TaskStatistics = {

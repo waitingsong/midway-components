@@ -66,6 +66,35 @@ export class TaskManComponent {
     return task
   }
 
+  /** Retrieve the task, taskId from request header */
+  async [ServerMethod.retrieveTask](): Promise<Task | undefined> {
+    // const headers = new Node_Headers(this.ctx.request.headers)
+    const key = this.config.headerKeyTaskId ? this.config.headerKeyTaskId : 'x-task-id'
+    const id = this.ctx.request.headers[key]
+    if (! id) {
+      return
+    }
+    if (typeof id !== 'string') {
+      throw new TypeError('x-task-id not valid taskId string')
+    }
+    const taskInfo = await this.getInfo(id)
+    if (! taskInfo) {
+      return
+    }
+    const task = taskFactory(taskInfo, this)
+    return task
+  }
+
+  async [ServerMethod.getInfo](id: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
+    const opts: FetchOptions = {
+      ...this.initFetchOptions,
+      data: { id },
+    }
+    opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.getInfo}`
+    const taskInfo = await this.fetch.fetch<TaskDTO>(opts)
+    return taskInfo
+  }
+
   async [ServerMethod.setRunning](
     id: TaskDTO['taskId'],
     msg?: TaskLogDTO['taskLogContent'],
