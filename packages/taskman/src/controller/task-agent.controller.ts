@@ -17,6 +17,7 @@ import {
   SetProgressDTO,
   TaskDTO,
   TaskLogDTO,
+  TaskProgressDetailDTO,
   TaskProgressDTO,
   TaskResultDTO,
   TaskStatistics,
@@ -102,7 +103,10 @@ export class TaskAgentController {
   }
 
   @Get('/' + ServerAgent.getProgress)
-  async [ServerMethod.getProgress](@Query() id: TaskDTO['taskId']): Promise<TaskProgressDTO | undefined> {
+  async [ServerMethod.getProgress](
+    @Query() id: TaskDTO['taskId'],
+  ): Promise<TaskProgressDetailDTO | undefined> {
+
     const ret = await this.queueSvc.getProgress(id)
     return ret
   }
