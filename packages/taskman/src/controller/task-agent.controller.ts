@@ -65,7 +65,7 @@ export class TaskAgentController {
     return ret
   }
 
-  @Get('/' + ServerAgent.setCancelled)
+  @Post('/' + ServerAgent.setCancelled)
   async [ServerMethod.setCancelled](
     @Query() id: TaskDTO['taskId'],
       @Query() msg?: TaskLogDTO['taskLogContent'],
@@ -75,7 +75,7 @@ export class TaskAgentController {
     return ret
   }
 
-  @Get('/' + ServerAgent.setFailed)
+  @Post('/' + ServerAgent.setFailed)
   async [ServerMethod.setFailed](
     @Query() id: TaskDTO['taskId'],
       @Query() msg?: TaskLogDTO['taskLogContent'],
@@ -85,7 +85,7 @@ export class TaskAgentController {
     return ret
   }
 
-  @Get('/' + ServerAgent.setSucceeded)
+  @Post('/' + ServerAgent.setSucceeded)
   async [ServerMethod.setSucceeded](
     @Query() id: TaskDTO['taskId'],
       @Query() result?: TaskResultDTO['json'],
@@ -98,7 +98,7 @@ export class TaskAgentController {
   /**
    * @description task must in state pending
    */
-  @Get('/' + ServerAgent.setProgress)
+  @Post('/' + ServerAgent.setProgress)
   async [ServerMethod.setProgress](
     @Query(ALL) input: SetProgressDTO,
       @Query() msg?: TaskLogDTO['taskLogContent'],

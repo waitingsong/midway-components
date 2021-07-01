@@ -105,6 +105,7 @@ export class TaskManComponent {
   async [ServerMethod.getInfo](id: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
     const opts: FetchOptions = {
       ...this.initFetchOptions,
+      method: 'GET',
       data: { id },
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.getInfo}`
@@ -119,6 +120,7 @@ export class TaskManComponent {
 
     const opts: FetchOptions = {
       ...this.initFetchOptions,
+      method: 'POST',
       data: { id, msg },
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setRunning}`
@@ -133,6 +135,7 @@ export class TaskManComponent {
 
     const opts: FetchOptions = {
       ...this.initFetchOptions,
+      method: 'POST',
       data: { id, msg },
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setCancelled}`
@@ -148,6 +151,7 @@ export class TaskManComponent {
 
     const opts: FetchOptions = {
       ...this.initFetchOptions,
+      method: 'POST',
       data: { id, msg },
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setFailed}`
@@ -163,6 +167,7 @@ export class TaskManComponent {
 
     const opts: FetchOptions = {
       ...this.initFetchOptions,
+      method: 'POST',
       data: { id, result },
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setSucceeded}`
@@ -177,6 +182,7 @@ export class TaskManComponent {
 
     const opts: FetchOptions = {
       ...this.initFetchOptions,
+      method: 'GET',
       data: { id },
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.getProgress}`
@@ -190,6 +196,7 @@ export class TaskManComponent {
 
     const opts: FetchOptions = {
       ...this.initFetchOptions,
+      method: 'GET',
       data: { id },
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.getResult}`
@@ -205,6 +212,7 @@ export class TaskManComponent {
 
     const opts: FetchOptions = {
       ...this.initFetchOptions,
+      method: 'POST',
       data: {
         taskId,
         taskProgress,
