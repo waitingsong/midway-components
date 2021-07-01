@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.32.0 (2021-07-01)
+
+
+### Features
+
+* **taskman:** set failed if httpCall() failed ([b839696](https://github.com/waitingsong/midway-components/commit/b839696970546b13b3139c82a3acf45c1c4362f8))
+
+
+
+
+
 ## 6.31.2 (2021-07-01)
 
 
