@@ -22,6 +22,7 @@ import {
   TaskProgressDTO,
   TaskProgressDetailDTO,
   TaskResultDTO,
+  initTaskManClientConfig,
 } from './index'
 
 
@@ -42,7 +43,11 @@ export class TaskManComponent {
     }
     if (! input2.headers) {
       const headers = new Node_Headers()
-      this.config.transferHeaders.forEach((key) => {
+      const arr = this.config.transferHeaders && this.config.transferHeaders.length
+        ? this.config.transferHeaders
+        : initTaskManClientConfig.transferHeaders
+
+      arr.forEach((key) => {
         const val = retrieveHeadersItem(this.ctx.request.headers, key)
         if (val) {
           headers.set(key, val)
