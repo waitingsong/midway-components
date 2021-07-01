@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.30.1 (2021-07-01)
+
+
+### Bug Fixes
+
+* **task-man:** header when create task ([c8af3c0](https://github.com/waitingsong/midway-components/commit/c8af3c043013d69d3b04cad6b3b87bbe4b9efdc5))
+
+
+
+
+
 # 6.30.0 (2021-07-01)
 
 
