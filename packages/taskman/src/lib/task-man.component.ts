@@ -56,6 +56,13 @@ export class TaskManComponent {
       input2.headers = headers
     }
 
+    if (! input2.createTaskDTO.json.headers) {
+      const payloadHeaders = {
+        ...input2.headers,
+      }
+      input2.createTaskDTO.json.headers = payloadHeaders
+    }
+
     const opts: FetchOptions = {
       ...this.initFetchOptions,
       headers: input2.headers,
