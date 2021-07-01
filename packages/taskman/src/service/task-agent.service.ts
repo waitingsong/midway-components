@@ -103,7 +103,7 @@ export class TaskAgentService {
           options: payload.json,
           errMessage: (ex as Error).message,
         }
-        await this.queueSvc.setState(taskId, TaskState.init, JSON.stringify(msg))
+        await this.queueSvc.setState(taskId, TaskState.failed, JSON.stringify(msg))
           .catch((ex2) => {
             this.logger.warn(ex2)
           })
