@@ -43,6 +43,12 @@ export class TaskAgentController {
     return ret
   }
 
+  @Get('/' + ServerAgent.getInfo)
+  async [ServerMethod.getInfo](@Query() id: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
+    const ret = await this.queueSvc.getInfo(id)
+    return ret
+  }
+
   @Get('/' + ServerAgent.stats)
   async [ServerMethod.stats](): Promise<TaskStatistics> {
     const ret = await this.queueSvc.stats()

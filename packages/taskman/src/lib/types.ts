@@ -35,10 +35,12 @@ export enum ServerAgent {
   setFailed = 'set_failed',
   setCancelled = 'set_cancelled',
   setSucceeded = 'set_succeeded',
+  getInfo = 'get_info',
   getProgress = 'get_progress',
   getResult = 'get_result',
 }
 export enum ServerMethod {
+  /** Create a task recored */
   create = 'create',
   read = 'read',
   hello = 'hello',
@@ -49,6 +51,7 @@ export enum ServerMethod {
   setCancelled = 'setCancelled',
   setSucceeded = 'setSucceeded',
 
+  getInfo = 'getInfo',
   getProgress = 'getProgress',
   getResult = 'getResult',
 

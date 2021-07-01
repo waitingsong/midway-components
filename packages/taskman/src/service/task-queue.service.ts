@@ -54,7 +54,7 @@ export class TaskQueueService {
     return ret
   }
 
-  async getInfo(id: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
+  async [ServerMethod.getInfo](id: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
     const ret = await this.repo.getInfo(id)
     return ret
   }
