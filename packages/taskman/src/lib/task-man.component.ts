@@ -58,6 +58,7 @@ export class TaskManComponent {
 
     const opts: FetchOptions = {
       ...this.initFetchOptions,
+      headers: input2.headers,
       method: 'POST',
       data: input2.createTaskDTO,
     }
