@@ -207,6 +207,7 @@ export class TaskManComponent {
     const opts: FetchOptions = {
       url: this.config.host,
       method: (this.ctx.request.method ?? 'GET') as 'GET' | 'POST',
+      contentType: 'application/json; charset=utf-8',
     }
     return opts
   }
