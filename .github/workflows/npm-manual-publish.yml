@@ -24,11 +24,12 @@ jobs:
     steps:
       - name: Prepare
         run: |
-          npm -v && node -v
-          git --version
           uname -a
           apt-get update -qq --yes > /dev/null
-          apt-get install -qq --yes --no-install-recommends bash postgresql-client jq
+          apt-get upgrade -qq --yes > /dev/null
+          apt-get install -qq --yes --no-install-recommends bash git postgresql-client jq
+          npm -v && node -v
+          git --version
           uname -a
       - uses: actions/checkout@v2
         with:
