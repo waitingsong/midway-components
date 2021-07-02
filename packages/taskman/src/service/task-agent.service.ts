@@ -83,7 +83,7 @@ export class TaskAgentService {
   /**
    * 发送任务信息给任务执行接口（服务）
    */
-  private async sendTaskToRun(task: TaskDTO | undefined): Promise<TaskDTO['taskId']> {
+  private async sendTaskToRun(task: TaskDTO | undefined): Promise<TaskDTO['taskId'] | undefined> {
     if (! task) {
       return ''
     }
@@ -96,27 +96,13 @@ export class TaskAgentService {
     // await this.queueSvc.setRunning(taskId)
 
     const res = this.httpCall(taskId, payload.json)
-      .then(() => task.taskId)
-      .catch(async (ex) => {
-        const msg = {
-          taskId,
-          options: payload.json,
-          errMessage: (ex as Error).message,
-        }
-        await this.queueSvc.setState(taskId, TaskState.failed, JSON.stringify(msg))
-          .catch((ex2) => {
-            this.logger.warn(ex2)
-          })
-        this.logger.warn(ex)
-        return ''
-      })
     return res
   }
 
   private async httpCall(
     taskId: TaskDTO['taskId'],
     options: CallTaskOptions,
-  ): Promise<unknown> {
+  ): Promise<TaskDTO['taskId'] | undefined> {
 
     const opts: FetchOptions = {
       ...this.initFetchOptions,
@@ -133,12 +119,33 @@ export class TaskAgentService {
       opts.dataType = 'text'
     }
 
-    const ret = await this.fetch.fetch(opts)
+    const ret = await this.fetch.fetch<TaskDTO['taskId']>(opts)
+      .catch((err) => {
+        return this.processHttpCallExp(taskId, opts, err as Error)
+      })
       .then((res) => {
         // console.info(res)
-        return res
+        return res ? taskId : void 0
       })
     return ret
+  }
+
+  private async processHttpCallExp(
+    taskId: TaskDTO['taskId'],
+    options: FetchOptions,
+    err: Error,
+  ): Promise<void> {
+
+    const msg = {
+      taskId,
+      options,
+      errMessage: err.message,
+    }
+    await this.queueSvc.setState(taskId, TaskState.failed, JSON.stringify(msg))
+      .catch((ex) => {
+        this.logger.error(ex)
+      })
+    this.logger.error(err)
   }
 
   get initFetchOptions(): FetchOptions {
