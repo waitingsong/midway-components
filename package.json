@@ -25,7 +25,6 @@
     "intelli-espower-loader": "1",
     "jest": "^26.4.0",
     "kmore-cli": "10",
-    "lerna": "^4.0.0",
     "lerna-relinker": "^1.4.0",
     "mocha": "9",
     "mocha-lcov-reporter": "1",
@@ -64,7 +63,7 @@
     "pub:next": "sh .scripts/publish.sh --dist-tag next",
     "purge": "npm run clean & lerna run purge & rm node_modules -rf & rm package-lock.json -f",
     "postpurge": "npm run refresh",
-    "repo:init": "sh .githooks/init-repo.sh",
+    "repo:init": "bash .githooks/init-repo.sh",
     "refresh": "npm run bootstrap && npm run build",
     "test": "lerna run test",
     "ptest": "sh .scripts/test.sh"

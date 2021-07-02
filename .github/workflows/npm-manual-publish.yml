@@ -28,9 +28,15 @@ jobs:
           git --version
           uname -a
           apt-get update -qq --yes > /dev/null
-          apt-get install -qq --yes --no-install-recommends postgresql-client jq
+          apt-get install -qq --yes --no-install-recommends bash postgresql-client jq
           uname -a
       - uses: actions/checkout@v2
+        with:
+          # pulls all commits (needed for lerna / semantic release to correctly version)
+          fetch-depth: "0"
+      - name: Fix for semantic release
+        # pulls all tags (needed for lerna / semantic release to correctly version)
+        run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - name: Use Node.js ${{ matrix.node }}
         uses: actions/setup-node@v2
         with:
