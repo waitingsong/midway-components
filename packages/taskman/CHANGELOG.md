@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@0.16.2...@mw-components/taskman@1.0.0) (2021-07-05)
+
+
+### Features
+
+* **taskman:** breaking change rename field will_start to expect_start ([330f47b](https://github.com/waitingsong/midway-components/commit/330f47b4cbf692c852c2d716317c83ed9cfc8f50))
+
+
+
+
+
 ## [0.16.2](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@0.16.1...@mw-components/taskman@0.16.2) (2021-07-05)
 
 **Note:** Version bump only for package @mw-components/taskman
