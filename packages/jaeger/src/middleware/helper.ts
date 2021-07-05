@@ -267,7 +267,7 @@ export async function processCustomFailure(
 
   const { body } = ctx
 
-  if (typeof body === 'object') {
+  if (typeof body === 'object' && body) {
     if (typeof body.code !== 'undefined' && body.code !== 0) {
       trm.addTags({
         [Tags.SAMPLING_PRIORITY]: 30,
