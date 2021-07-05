@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.32.1 (2021-07-05)
+
+
+### Bug Fixes
+
+* **jaeger:** body may null ([ca07e17](https://github.com/waitingsong/midway-components/commit/ca07e170d4f2413af9d30a9230fcbfe43e335176))
+
+
+
+
+
 # 6.32.0 (2021-07-01)
 
 
