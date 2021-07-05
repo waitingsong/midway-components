@@ -23,7 +23,10 @@ describe(filename, () => {
 
       await svc.setRunning(taskId) // insert tb_task_progress
 
-      const taskProgress = Math.round(Math.random() * 100)
+      let taskProgress = Math.round(Math.random() * 100)
+      if (taskProgress === 0) {
+        taskProgress = 1
+      }
       await svc.setProgress({ taskId, taskProgress })
       const info2 = await svc.getProgress(task.taskId)
       assert(info2)
