@@ -2,6 +2,7 @@ import type { IncomingHttpHeaders } from 'http'
 
 import { IMidwayWebContext, IMidwayWebNext } from '@midwayjs/web'
 import {
+  defaultPropDescriptor,
   genISO8601String,
   humanMemoryUsage,
 } from '@waiting/shared-core'
@@ -9,7 +10,7 @@ import { NpmPkg, JsonResp } from '@waiting/shared-types'
 import { Tags } from 'opentracing'
 
 import { TracerManager } from '../lib/tracer'
-import { SpanLogInput, TracerConfig, TracerLog, TracerTag } from '../lib/types'
+import { SpanLogInput, TracerConfig, TracerError, TracerLog, TracerTag } from '../lib/types'
 import { retrieveExternalNetWorkInfo } from '../util/common'
 import { procInfo } from '../util/stat'
 
@@ -45,6 +46,9 @@ export function updateSpan(
 
   tags[Tags.PEER_HOST_IPV4] = ctx.request.ip
 
+  tags[Tags.HTTP_URL] = ctx.path
+  tags[TracerTag.httpProtocol] = ctx.protocol
+
   const config = ctx.app.config.tracer as TracerConfig
 
   if (Array.isArray(config.loggingReqHeaders)) {
@@ -73,16 +77,14 @@ export async function handleTopExceptionAndNext(
     await next()
   }
   catch (ex) {
-    const err = ex as unknown
-
-    // @ts-expect-error
+    const err = ex as TracerError
     if (err[TracerLog.exIsTraced]) {
       return
     }
 
     await logError(
       tracerManager,
-      err as Error,
+      err,
       TracerLog.topException,
     )
   }
@@ -105,11 +107,12 @@ export async function handleAppExceptionAndNext(
       tracerManager.spanLog({
         event: TracerLog.postProcessBegin,
         time: genISO8601String(),
+        [TracerLog.svcCpuUsage]: process.cpuUsage(),
         [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
       })
     }
     catch (ex) {
-      await logError(tracerManager, ex as Error)
+      await logError(tracerManager, ex as TracerError)
       throw ex
     }
   }
@@ -118,6 +121,7 @@ export async function handleAppExceptionAndNext(
     tracerManager.spanLog({
       event: TracerLog.postProcessBegin,
       time: genISO8601String(),
+      [TracerLog.svcCpuUsage]: process.cpuUsage(),
       [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
     })
   }
@@ -125,7 +129,7 @@ export async function handleAppExceptionAndNext(
 
 async function logError(
   trm: TracerManager,
-  err: Error,
+  err: TracerError,
   event = TracerLog.error,
 ): Promise<void> {
 
@@ -138,6 +142,7 @@ async function logError(
   const input: SpanLogInput = {
     event,
     time: genISO8601String(),
+    [TracerLog.svcCpuUsage]: process.cpuUsage(),
     [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
     ...info,
   }
@@ -155,9 +160,8 @@ async function logError(
 
   trm.spanLog(input)
   Object.defineProperty(err, TracerLog.exIsTraced, {
-    configurable: true,
+    ...defaultPropDescriptor,
     enumerable: false,
-    writable: true,
     value: true,
   })
 }
@@ -186,7 +190,9 @@ export async function processHTTPStatus(
     tracerManager.addTags(tags)
   }
   else {
-    await processCustomFailure(ctx, tracerManager)
+    if (typeof tracerConfig.processCustomFailure === 'function') {
+      await tracerConfig.processCustomFailure(ctx, tracerManager)
+    }
     const opts: ProcessPriorityOpts = {
       starttime: ctx.starttime,
       trm: tracerManager,
@@ -217,12 +223,20 @@ export function processRequestQuery(
       }
     }
     else if (ctx.method === 'POST' && ctx.request.type === 'application/json') {
-      const { query: body } = ctx.request
-      if (typeof body === 'object' && Object.keys(body).length) {
-        tags[TracerTag.reqBody] = body
+      const { query } = ctx.request
+      if (typeof query === 'object' && Object.keys(query).length) {
+        tags[TracerTag.reqQuery] = query
       }
-      else if (typeof body === 'string') {
-        tags[TracerTag.reqBody] = body // same as above
+      else if (typeof query === 'string' && query) {
+        tags[TracerTag.reqQuery] = query // same as above
+      }
+
+      const bdy = ctx.request.body as Record<string, unknown> | string
+      if (typeof bdy === 'object' && Object.keys(bdy).length) {
+        tags[TracerTag.reqBody] = bdy
+      }
+      else if (typeof bdy === 'string' && bdy) {
+        tags[TracerTag.reqBody] = bdy // same as above
       }
     }
   }
@@ -246,14 +260,14 @@ export function processResponseData(
 }
 
 
-async function processCustomFailure(
+export async function processCustomFailure(
   ctx: IMidwayWebContext<JsonResp | string>,
   trm: TracerManager,
 ): Promise<void> {
 
   const { body } = ctx
 
-  if (typeof body === 'object') {
+  if (typeof body === 'object' && body) {
     if (typeof body.code !== 'undefined' && body.code !== 0) {
       trm.addTags({
         [Tags.SAMPLING_PRIORITY]: 30,
@@ -283,12 +297,13 @@ async function processPriority(options: ProcessPriorityOpts): Promise<number | u
       [TracerTag.logLevel]: 'warn',
     })
 
-    const info = await procInfo()
+    const info = await procInfo(['diskstats', 'meminfo', 'stat'])
     trm.spanLog({
       level: 'warn',
       time: genISO8601String(),
       cost,
       [TracerLog.logThrottleMs]: throttleMs,
+      [TracerLog.svcCpuUsage]: process.cpuUsage(),
       [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
       ...info,
     })

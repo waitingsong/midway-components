@@ -1,8 +1,11 @@
-import { IncomingHttpHeaders } from 'http'
+import type { IncomingHttpHeaders } from 'http'
 
 import type { ILogger } from '@midwayjs/logger'
+import { IMidwayWebContext } from '@midwayjs/web'
 import { KnownKeys } from '@waiting/shared-types'
 import { TracingConfig } from 'jaeger-client'
+
+import { TracerManager } from './tracer'
 
 
 export interface TracerConfig {
@@ -32,7 +35,7 @@ export interface TracerConfig {
   /**
    * - GET: request.query
    * - POST: request.body (only when content-type: 'application/json')
-   * @default false
+   * @default true
    */
   logginInputQuery: boolean
   /**
@@ -43,6 +46,14 @@ export interface TracerConfig {
    * @default ['authorization', 'user-agent']
    */
   loggingReqHeaders: string[] | KnownKeys<IncomingHttpHeaders>[]
+  /**
+	 * Callback to process custom failure
+	 * @default helper.ts/processCustomFailure()
+	 */
+  processCustomFailure?: (
+    ctx: IMidwayWebContext<any>,
+    trm: TracerManager,
+  ) => Promise<void>
 }
 
 export enum HeadersKey {
@@ -66,10 +77,14 @@ export enum TracerTag {
 
   httpUserAgent = 'http.user-agent',
   httpAuthorization = 'http.authorization',
+  httpProtocol = 'http.protocol',
   reqId = 'reqId',
   svcIp4 = 'svc.ipv4',
   svcIp6 = 'svc.ipv6',
+  svcException = 'svc.exception',
   svcName = 'svc.name',
+  svcPid = 'svc.pid',
+  svcPpid = 'svc.ppid',
   svcVer = 'svc.ver',
   resCode = 'res.code',
   message = 'message',
@@ -91,6 +106,7 @@ export enum TracerLog {
 
   fetchStart = 'fetch-start',
   fetchFinish = 'fetch-finish',
+  fetchException = 'fetch-exception',
 
   queryResponse = 'query-response',
   queryError = 'error',
@@ -106,8 +122,10 @@ export enum TracerLog {
   errStack = 'err.stack',
 
   svcMemoryUsage = 'svc.memory-usage',
+  svcCpuUsage = 'svc.cpu-usage',
 
   procCpuinfo = 'proc.cpuinfo',
+  ProcDiskstats = 'proc.diskstats',
   procMeminfo = 'proc.meminfo',
   procStat = 'proc.stat'
 }
@@ -128,3 +146,8 @@ export interface LogInfo {
   args?: unknown[]
   [key: string]: unknown
 }
+
+export interface TracerError extends Error {
+  __isTraced: boolean
+}
+

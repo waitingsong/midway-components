@@ -12,6 +12,7 @@ import { tracerMiddleware } from './middleware/tracer.middleware'
 
 
 const namespace = 'jaeger'
+const compName = `${namespace}Component`
 
 @Configuration({
   namespace,
@@ -47,7 +48,7 @@ export function registerMiddleware(
     appMiddleware.push(namespace + ':tracerExtMiddleware')
   }
   else {
-    app.logger.warn('appMiddleware is not valid Array')
+    app.logger.warn(`${compName} appMiddleware is not valid Array`)
     // throw new TypeError('appMiddleware is not valid Array')
   }
 

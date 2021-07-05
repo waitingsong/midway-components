@@ -1,17 +1,9 @@
+import { defaultTracerConfig } from '../lib/config'
 import { TracerConfig } from '../lib/types'
 
 
 export const tracer: TracerConfig = {
-  whiteList: ['/favicon.ico', '/favicon.png'],
-  reqThrottleMsForPriority: 10,
-  enableMiddleWare: true,
-  enableCatchError: true,
-  logginInputQuery: true,
-  loggingOutputBody: true,
-  loggingReqHeaders: [
-    'authorization',
-    'user-agent',
-  ],
+  ...defaultTracerConfig,
   tracingConfig: {
     sampler: {
       type: 'probabilistic',

@@ -1,4 +1,4 @@
-import { TracerManager } from './lib/tracer'
+import { TracerManager } from './lib/index'
 
 
 export { AutoConfiguration as Configuration } from './configuration'
