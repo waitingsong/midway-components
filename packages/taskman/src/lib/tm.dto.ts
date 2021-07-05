@@ -39,7 +39,7 @@ export class CreateTaskDTO {
    * @default now
    */
   @Rule(taskManValidSchemas.date)
-  willStart?: TaskDTO['willStart']
+  expectStart?: TaskDTO['expectStart']
 
   /**
    * Expiry interval

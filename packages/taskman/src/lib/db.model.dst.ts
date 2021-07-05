@@ -36,7 +36,7 @@ export const dbDict: DbDict<DbModel> = {
     tb_task: {
       task_id: 'task_id',
       task_state: 'task_state',
-      will_start: 'will_start',
+      expect_start: 'expect_start',
       started_at: 'started_at',
       is_timeout: 'is_timeout',
       timeout_intv: 'timeout_intv',
@@ -58,7 +58,7 @@ export const dbDict: DbDict<DbModel> = {
     tb_task_archive: {
       task_id: 'task_id',
       task_state: 'task_state',
-      will_start: 'will_start',
+      expect_start: 'expect_start',
       started_at: 'started_at',
       is_timeout: 'is_timeout',
       timeout_intv: 'timeout_intv',
@@ -79,7 +79,7 @@ export const dbDict: DbDict<DbModel> = {
     vi_task: {
       task_id: 'task_id',
       task_state: 'task_state',
-      will_start: 'will_start',
+      expect_start: 'expect_start',
       started_at: 'started_at',
       is_timeout: 'is_timeout',
       timeout_intv: 'timeout_intv',
@@ -91,7 +91,7 @@ export const dbDict: DbDict<DbModel> = {
     tb_task: {
       task_id: 'tb_task.task_id',
       task_state: 'tb_task.task_state',
-      will_start: 'tb_task.will_start',
+      expect_start: 'tb_task.expect_start',
       started_at: 'tb_task.started_at',
       is_timeout: 'tb_task.is_timeout',
       timeout_intv: 'tb_task.timeout_intv',
@@ -113,7 +113,7 @@ export const dbDict: DbDict<DbModel> = {
     tb_task_archive: {
       task_id: 'tb_task_archive.task_id',
       task_state: 'tb_task_archive.task_state',
-      will_start: 'tb_task_archive.will_start',
+      expect_start: 'tb_task_archive.expect_start',
       started_at: 'tb_task_archive.started_at',
       is_timeout: 'tb_task_archive.is_timeout',
       timeout_intv: 'tb_task_archive.timeout_intv',
@@ -134,7 +134,7 @@ export const dbDict: DbDict<DbModel> = {
     vi_task: {
       task_id: 'vi_task.task_id',
       task_state: 'vi_task.task_state',
-      will_start: 'vi_task.will_start',
+      expect_start: 'vi_task.expect_start',
       started_at: 'vi_task.started_at',
       is_timeout: 'vi_task.is_timeout',
       timeout_intv: 'vi_task.timeout_intv',
@@ -150,8 +150,8 @@ export const dbDict: DbDict<DbModel> = {
       task_state: {
         tbTaskTaskState: 'tb_task.task_state',
       },
-      will_start: {
-        tbTaskWillStart: 'tb_task.will_start',
+      expect_start: {
+        tbTaskExpectStart: 'tb_task.expect_start',
       },
       started_at: {
         tbTaskStartedAt: 'tb_task.started_at',
@@ -204,8 +204,8 @@ export const dbDict: DbDict<DbModel> = {
       task_state: {
         tbTaskArchiveTaskState: 'tb_task_archive.task_state',
       },
-      will_start: {
-        tbTaskArchiveWillStart: 'tb_task_archive.will_start',
+      expect_start: {
+        tbTaskArchiveExpectStart: 'tb_task_archive.expect_start',
       },
       started_at: {
         tbTaskArchiveStartedAt: 'tb_task_archive.started_at',
@@ -255,8 +255,8 @@ export const dbDict: DbDict<DbModel> = {
       task_state: {
         viTaskTaskState: 'vi_task.task_state',
       },
-      will_start: {
-        viTaskWillStart: 'vi_task.will_start',
+      expect_start: {
+        viTaskExpectStart: 'vi_task.expect_start',
       },
       started_at: {
         viTaskStartedAt: 'vi_task.started_at',
@@ -283,8 +283,8 @@ export const dbDict: DbDict<DbModel> = {
       task_state: {
         taskState: 'tb_task.task_state',
       },
-      will_start: {
-        willStart: 'tb_task.will_start',
+      expect_start: {
+        expectStart: 'tb_task.expect_start',
       },
       started_at: {
         startedAt: 'tb_task.started_at',
@@ -337,8 +337,8 @@ export const dbDict: DbDict<DbModel> = {
       task_state: {
         taskState: 'tb_task_archive.task_state',
       },
-      will_start: {
-        willStart: 'tb_task_archive.will_start',
+      expect_start: {
+        expectStart: 'tb_task_archive.expect_start',
       },
       started_at: {
         startedAt: 'tb_task_archive.started_at',
@@ -388,8 +388,8 @@ export const dbDict: DbDict<DbModel> = {
       task_state: {
         taskState: 'vi_task.task_state',
       },
-      will_start: {
-        willStart: 'vi_task.will_start',
+      expect_start: {
+        expectStart: 'vi_task.expect_start',
       },
       started_at: {
         startedAt: 'vi_task.started_at',

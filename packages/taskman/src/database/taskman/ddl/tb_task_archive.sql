@@ -2,7 +2,7 @@
 CREATE TABLE tb_task_archive (
   task_id int8 NOT NULL,
   task_state type_op_state NOT NULL,
-  will_start TIMESTAMP(0) NOT NULL,
+  expect_start TIMESTAMP(0) NOT NULL,
   started_at TIMESTAMP(6),
   is_timeout boolean NOT NULL,
   timeout_intv interval NOT NULL,

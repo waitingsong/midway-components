@@ -38,7 +38,7 @@ describe(filename, () => {
     it('with will_start later', async () => {
       const { svc, repo } = testConfig
       const data: Partial<CreateTaskDTO> = {
-        willStart: new Date('3000-01-01'),
+        expectStart: new Date('3000-01-01'),
       }
       await createOneTask(svc, repo, data)
       const queues = await svc.pickTasksWaitToRun()

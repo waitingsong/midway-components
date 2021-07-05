@@ -36,7 +36,7 @@ describe(filename, () => {
     it('custome', async () => {
       const { svc, repo } = testConfig
       const data: CreateTaskDTO = {
-        willStart: new Date(),
+        expectStart: new Date(),
         timeoutIntv: '3min',
         json: {
           url: '/foo',

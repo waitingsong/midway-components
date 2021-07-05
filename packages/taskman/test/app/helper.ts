@@ -80,7 +80,7 @@ export function valiateTask(task: TaskDTO): void {
   assert(task.taskState === initTaskDTO.taskState)
   assert(task.isTimeout === false, JSON.stringify(task))
   assert(task.startedAt === null, JSON.stringify(task))
-  assert(task.willStart instanceof Date, JSON.stringify(task))
+  assert(task.expectStart instanceof Date, JSON.stringify(task))
   assert(task.ctime instanceof Date, JSON.stringify(task))
   assert(task.mtime === null, JSON.stringify(task))
 }

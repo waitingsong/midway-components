@@ -9,7 +9,7 @@ export class TbTaskDO {
   /** bigInt string */
   task_id: string
   task_state: TaskState
-  will_start: Date
+  expect_start: Date
   started_at: Date | null
   is_timeout: boolean
   /**

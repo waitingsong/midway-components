@@ -14,7 +14,7 @@ import {
 
 export const initTaskDTO: InitTaskDTO = {
   taskState: TaskState.init,
-  willStart: new Date(),
+  expectStart: new Date(),
   startedAt: null,
   isTimeout: false,
   /**
@@ -41,7 +41,7 @@ export const initTaskPayloadDTO: InitTaskPayloadDTO = {
 //   /** bigInt string */
 //   // task_id: '',
 //   task_state: TaskState.init,
-//   will_start: new Date(),
+//   expect_start: new Date(),
 //   started_at: null,
 //   is_timeout: false,
 //   /**

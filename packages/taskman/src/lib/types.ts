@@ -183,7 +183,7 @@ export interface PickInitTaskOptions {
   /**
    * @default '1 week'
    * @description search range
-   * `will_start BETWEERN now() - INTERVAL ${earlierThanTimeIntv} AND now()`
+   * `expect_start BETWEERN now() - INTERVAL ${earlierThanTimeIntv} AND now()`
    */
   earlierThanTimeIntv: string
 }

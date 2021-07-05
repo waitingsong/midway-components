@@ -373,7 +373,7 @@ export class TaskQueueRepository {
       .forUpdate()
       .select('task_id')
       .where('task_state', TaskState.init)
-      .whereRaw(`will_start BETWEEN now() - interval '${options.earlierThanTimeIntv}' AND now()`)
+      .whereRaw(`expect_start BETWEEN now() - interval '${options.earlierThanTimeIntv}' AND now()`)
       .limit(options.maxRows)
       .orderBy('ctime', options.ord)
       .orderBy('task_id', options.ord)
@@ -390,7 +390,7 @@ export class TaskQueueRepository {
       .update('started_at', 'now()')
       .update('mtime', 'now()')
       .where('task_state', TaskState.init)
-      .whereRaw(`will_start BETWEEN now() - interval '${options.earlierThanTimeIntv}' AND now()`)
+      .whereRaw(`expect_start BETWEEN now() - interval '${options.earlierThanTimeIntv}' AND now()`)
       .whereIn('task_id', ids)
       .returning('*')
       .then(async (rows) => {
