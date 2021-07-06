@@ -9,8 +9,9 @@ import { retrieveHeadersItem } from '@waiting/shared-core'
 
 import { Context } from '../interface'
 
-import { decreaseRunningTaskCount } from './helper'
+import { decreaseRunningTaskCount, processJsonHeaders } from './helper'
 import { Task, taskFactory } from './task'
+import { CreateTaskDTO } from './tm.dto'
 
 import {
   CreateTaskOptions,
@@ -41,40 +42,23 @@ export class TaskManComponent {
   protected readonly taskInstMap = new Map<TaskDTO['taskId'], Task>()
 
   async [ServerMethod.create](input: CreateTaskOptions): Promise<Task | undefined> {
-    const input2 = {
-      ...input,
+    const headers = this.processPostHeaders(input)
+    const pdata: CreateTaskDTO = {
+      ...input.createTaskDTO,
     }
-
-    const headers = new Node_Headers()
-
-    if (! input2.headers) {
-      const arr = this.config.transferHeaders && this.config.transferHeaders.length
-        ? this.config.transferHeaders
-        : initTaskManClientConfig.transferHeaders
-
-      arr.forEach((key) => {
-        const val = retrieveHeadersItem(this.ctx.request.headers, key)
-        if (val) {
-          headers.set(key, val)
-        }
-      })
-      input2.headers = headers
-    }
-
-    if (! input2.createTaskDTO.json.headers) {
-      input2.createTaskDTO.json.headers = headers
-    }
+    pdata.json.headers = processJsonHeaders(pdata.json.headers, headers)
 
     const opts: FetchOptions = {
       ...this.initFetchOptions,
-      headers: input2.headers,
+      headers,
       method: 'POST',
-      data: input2.createTaskDTO,
+      data: pdata,
     }
-    if (input2.host) {
-      opts.url = input2.host
+    if (input.host) {
+      opts.url = input.host
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.create}`
+
     const res = await this.fetch.fetch<JsonResp<TaskDTO>>(opts)
     if (res.code) {
       return
@@ -288,6 +272,23 @@ export class TaskManComponent {
 
   protected readTaskFromCache(id: TaskDTO['taskId']): Task | undefined {
     return this.taskInstMap.get(id)
+  }
+
+  protected processPostHeaders(input: CreateTaskOptions): Headers {
+    const headers = new Node_Headers(input.headers)
+    if (! input.headers) {
+      const arr = this.config.transferHeaders && this.config.transferHeaders.length
+        ? this.config.transferHeaders
+        : initTaskManClientConfig.transferHeaders
+
+      arr.forEach((key) => {
+        const val = retrieveHeadersItem(this.ctx.request.headers, key)
+        if (val) {
+          headers.set(key, val)
+        }
+      })
+    }
+    return headers
   }
 
 }
