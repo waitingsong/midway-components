@@ -1,7 +1,7 @@
 {
   "name": "@mw-components/taskman",
   "author": "waiting",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "midway component managing task",
   "keywords": [
     "midway",

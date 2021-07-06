@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@1.0.1...@mw-components/taskman@1.1.0) (2021-07-06)
+
+
+### Bug Fixes
+
+* **taskman:** post json.headers when create task ([a3bef8d](https://github.com/waitingsong/midway-components/commit/a3bef8d70fe66554c325c47b7ecfe3124b959535))
+
+
+### Features
+
+* **taskman:** add config types DbConfig['pool'] ([d5c8197](https://github.com/waitingsong/midway-components/commit/d5c819726874d0ceaba5b83ac6847025d19da9cc))
+
+
+
+
+
 ## [1.0.1](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@1.0.0...@mw-components/taskman@1.0.1) (2021-07-06)
 
 
