@@ -138,6 +138,10 @@ export interface DbConfig {
    * @default 300(ms)
    */
   sampleThrottleMs?: number
+  pool?: {
+    min: number,
+    max: number,
+  }
 }
 
 
