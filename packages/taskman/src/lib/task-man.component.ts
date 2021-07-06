@@ -44,8 +44,10 @@ export class TaskManComponent {
     const input2 = {
       ...input,
     }
+
+    const headers = new Node_Headers()
+
     if (! input2.headers) {
-      const headers = new Node_Headers()
       const arr = this.config.transferHeaders && this.config.transferHeaders.length
         ? this.config.transferHeaders
         : initTaskManClientConfig.transferHeaders
@@ -60,10 +62,7 @@ export class TaskManComponent {
     }
 
     if (! input2.createTaskDTO.json.headers) {
-      const payloadHeaders = {
-        ...input2.headers,
-      }
-      input2.createTaskDTO.json.headers = payloadHeaders
+      input2.createTaskDTO.json.headers = headers
     }
 
     const opts: FetchOptions = {
