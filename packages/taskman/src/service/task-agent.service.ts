@@ -36,7 +36,7 @@ export class TaskAgentService {
 
   @Config('taskManServerConfig') protected readonly config: TaskManServerConfig
 
-  protected readonly intv$ = timer(1000, 15000)
+  protected readonly intv$ = timer(1000, 10000)
   protected subscription: Subscription | undefined
 
   get isRunning(): boolean {
