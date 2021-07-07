@@ -41,6 +41,9 @@ export class TaskManComponent {
 
   protected readonly taskInstMap = new Map<TaskDTO['taskId'], Task>()
 
+  /** 请求 taskAgent 接口所需 headers */
+  protected readonly taskReqHeadersMap = new Map<TaskDTO['taskId'], Headers>()
+
   async [ServerMethod.create](input: CreateTaskOptions): Promise<Task | undefined> {
     const headers = this.processPostHeaders(input)
     const pdata: CreateTaskDTO = {
@@ -49,7 +52,7 @@ export class TaskManComponent {
     pdata.json.headers = processJsonHeaders(pdata.json.headers, headers)
 
     const opts: FetchOptions = {
-      ...this.initFetchOptions,
+      ...this.initFetchOptions(),
       headers,
       method: 'POST',
       data: pdata,
@@ -65,6 +68,7 @@ export class TaskManComponent {
     }
     const task = taskFactory(res.data, this)
     this.writeTaskCache(task)
+    this.writeReqHeaders(task.taskInfo.taskId, headers)
     return task
   }
 
@@ -89,21 +93,30 @@ export class TaskManComponent {
       return cachedTask
     }
 
-    const taskInfo = await this.getInfo(id)
+    const headers = this.retrieveHeadersFromContext()
+    const taskInfo = await this.getInfo(id, headers)
     if (! taskInfo) {
       return
     }
     const task = taskFactory(taskInfo, this)
     this.writeTaskCache(task)
+    this.writeReqHeaders(task.taskInfo.taskId, headers)
     return task
   }
 
-  async [ServerMethod.getInfo](id: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
+  async [ServerMethod.getInfo](
+    id: TaskDTO['taskId'],
+    headers?: Headers,
+  ): Promise<TaskDTO | undefined> {
     const opts: FetchOptions = {
-      ...this.initFetchOptions,
+      ...this.initFetchOptions(id),
       method: 'GET',
       data: { id },
     }
+    if (headers) {
+      opts.headers = headers
+    }
+
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.getInfo}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO>>(opts)
     if (res.code) {
@@ -118,10 +131,11 @@ export class TaskManComponent {
   ): Promise<TaskDTO | undefined> {
 
     const opts: FetchOptions = {
-      ...this.initFetchOptions,
+      ...this.initFetchOptions(id),
       method: 'POST',
       data: { id, msg },
     }
+
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setRunning}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
     if (res.code) {
@@ -136,10 +150,11 @@ export class TaskManComponent {
   ): Promise<TaskDTO | undefined> {
 
     const opts: FetchOptions = {
-      ...this.initFetchOptions,
+      ...this.initFetchOptions(id),
       method: 'POST',
       data: { id, msg },
     }
+
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setCancelled}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
     if (res.code) {
@@ -155,7 +170,7 @@ export class TaskManComponent {
   ): Promise<TaskDTO | undefined> {
 
     const opts: FetchOptions = {
-      ...this.initFetchOptions,
+      ...this.initFetchOptions(id),
       method: 'POST',
       data: { id, msg },
     }
@@ -174,7 +189,7 @@ export class TaskManComponent {
   ): Promise<TaskDTO | undefined> {
 
     const opts: FetchOptions = {
-      ...this.initFetchOptions,
+      ...this.initFetchOptions(id),
       method: 'POST',
       data: { id, msg: result },
     }
@@ -192,7 +207,7 @@ export class TaskManComponent {
   ): Promise<TaskProgressDetailDTO | undefined> {
 
     const opts: FetchOptions = {
-      ...this.initFetchOptions,
+      ...this.initFetchOptions(id),
       method: 'GET',
       data: { id },
     }
@@ -209,7 +224,7 @@ export class TaskManComponent {
   ): Promise<TaskResultDTO | undefined> {
 
     const opts: FetchOptions = {
-      ...this.initFetchOptions,
+      ...this.initFetchOptions(id),
       method: 'GET',
       data: { id },
     }
@@ -233,7 +248,7 @@ export class TaskManComponent {
       msg,
     }
     const opts: FetchOptions = {
-      ...this.initFetchOptions,
+      ...this.initFetchOptions(id),
       method: 'POST',
       data,
     }
@@ -245,12 +260,21 @@ export class TaskManComponent {
     return res.data
   }
 
-  get initFetchOptions(): FetchOptions {
+  initFetchOptions(id?: TaskDTO['taskId']): FetchOptions {
+    const headers = this.retrieveHeadersFromContext()
+    const reqHeaders = this.readReqHeaders(id)
+    if (reqHeaders) {
+      reqHeaders.forEach((value, key) => {
+        headers.set(key, value)
+      })
+    }
+
     const opts: FetchOptions = {
       url: this.config.host,
       method: (this.ctx.request.method ?? 'GET') as 'GET' | 'POST',
       contentType: 'application/json; charset=utf-8',
       timeout: 60000,
+      headers,
     }
     return opts
   }
@@ -275,6 +299,14 @@ export class TaskManComponent {
     return this.taskInstMap.get(id)
   }
 
+  protected writeReqHeaders(id: TaskDTO['taskId'], headers: Headers): void {
+    this.taskReqHeadersMap.set(id, headers)
+  }
+
+  protected readReqHeaders(id?: TaskDTO['taskId']): Headers | undefined {
+    return id ? this.taskReqHeadersMap.get(id) : void 0
+  }
+
   protected processPostHeaders(input: CreateTaskOptions): Headers {
     const headers = new Node_Headers(input.headers)
     if (! input.headers) {
@@ -289,6 +321,21 @@ export class TaskManComponent {
         }
       })
     }
+    return headers
+  }
+
+  protected retrieveHeadersFromContext(): Headers {
+    const headers = new Node_Headers()
+    const arr = this.config.transferHeaders && this.config.transferHeaders.length
+      ? this.config.transferHeaders
+      : initTaskManClientConfig.transferHeaders
+
+    arr.forEach((key) => {
+      const val = retrieveHeadersItem(this.ctx.request.headers, key)
+      if (val) {
+        headers.set(key, val)
+      }
+    })
     return headers
   }
 
