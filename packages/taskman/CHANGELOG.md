@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@1.1.0...@mw-components/taskman@1.2.0) (2021-07-07)
+
+
+### Features
+
+* **taskman:** append headers when request to taskAgent api ([a326ff0](https://github.com/waitingsong/midway-components/commit/a326ff0d59cad2ec514a6396dee24b2577ea24bb))
+* **taskman:** set global fetch timeout to 60(s) ([41317c4](https://github.com/waitingsong/midway-components/commit/41317c4f4fe851cba41af34c2356d74cfe6d8240))
+
+
+
+
+
 # [1.1.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@1.0.1...@mw-components/taskman@1.1.0) (2021-07-06)
 
 
