@@ -5,7 +5,6 @@ import {
   Inject,
   Provide,
 } from '@midwayjs/decorator'
-import { Logger } from '@mw-components/jaeger'
 import {
   DbManager,
   Kmore,
@@ -45,8 +44,6 @@ export class TaskQueueRepository {
 
   @Inject() protected readonly ctx: Context
 
-  @Inject('jaeger:logger') protected readonly logger: Logger
-
   @Config('taskManServerConfig') protected readonly serverConfig: TaskManServerConfig
 
   db: Kmore<DbModel>
@@ -58,8 +55,7 @@ export class TaskQueueRepository {
     // this._dbManager = await this.ctx.requestContext.getAsync(DbManager)
     const container = this.app.getApplicationContext()
     this._dbManager = await container.getAsync(DbManager)
-    // @ts-ignore for DecoratorManager not single
-    this._dbManager.create(kmoreConfig, this.ctx.tracerManager, this.logger)
+    this._dbManager.create(this.ctx, kmoreConfig)
     const db = this._dbManager.getInstance<DbModel>(DbReplica.taskMaster)
     if (! db) {
       throw new Error(`Create db instance failed with DbId: "${DbReplica.taskMaster}"`)

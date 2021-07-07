@@ -47,8 +47,7 @@ export class TaskResultRepository {
     // this._dbManager = await this.ctx.requestContext.getAsync(DbManager)
     const container = this.app.getApplicationContext()
     this._dbManager = await container.getAsync(DbManager)
-    // @ts-ignore for DecoratorManager not single
-    this._dbManager.create(kmoreConfig, this.ctx.tracerManager, this.logger)
+    this._dbManager.create(this.ctx, kmoreConfig)
     const db = this._dbManager.getInstance<DbModel>(DbReplica.taskMaster)
     if (! db) {
       throw new Error(`Create db instance failed with DbId: "${DbReplica.taskMaster}"`)
