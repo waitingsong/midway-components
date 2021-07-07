@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@1.2.0...@mw-components/taskman@1.3.0) (2021-07-07)
+
+
+### Features
+
+* **taskman:** tracing query response with DbConfig['tracingResponse'] ([911468d](https://github.com/waitingsong/midway-components/commit/911468dbf2c1853a55760dd8cdd18c0f21145224))
+
+
+
+
+
 # [1.2.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@1.1.0...@mw-components/taskman@1.2.0) (2021-07-07)
 
 
