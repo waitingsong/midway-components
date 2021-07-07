@@ -250,6 +250,7 @@ export class TaskManComponent {
       url: this.config.host,
       method: (this.ctx.request.method ?? 'GET') as 'GET' | 'POST',
       contentType: 'application/json; charset=utf-8',
+      timeout: 60000,
     }
     return opts
   }
