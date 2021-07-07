@@ -82,6 +82,7 @@ export const initDbConfig: Required<DbConfig> = {
     max: 10,
   },
   enableTracing: true,
+  tracingResponse: true,
   sampleThrottleMs: 1000,
 }
 

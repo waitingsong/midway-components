@@ -135,6 +135,10 @@ export interface DbConfig {
    */
   enableTracing?: boolean
   /**
+   * @default true
+   */
+  tracingResponse?: boolean
+  /**
    * @default 300(ms)
    */
   sampleThrottleMs?: number

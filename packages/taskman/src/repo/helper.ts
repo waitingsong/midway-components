@@ -35,6 +35,7 @@ export function genKmoreComponentConfig(
     },
     dict: dbDict,
     enableTracing: serverConfig.dbConfigs.enableTracing ?? defaultDbConfig.enableTracing,
+    tracingResponse: true,
     sampleThrottleMs: serverConfig.dbConfigs.sampleThrottleMs ?? defaultDbConfig.sampleThrottleMs,
   }
 
