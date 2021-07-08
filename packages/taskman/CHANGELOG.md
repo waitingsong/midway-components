@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@1.4.0...@mw-components/taskman@1.5.0) (2021-07-08)
+
+
+### Features
+
+* **taskman:** add destroy() for servier and repo ([26d0f11](https://github.com/waitingsong/midway-components/commit/26d0f11934bf5e6d0a68a9891e081c05da734b5e))
+
+
+
+
+
 # [1.4.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@1.3.2...@mw-components/taskman@1.4.0) (2021-07-07)
 
 
