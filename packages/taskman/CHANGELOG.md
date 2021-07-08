@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@2.0.0...@mw-components/taskman@2.1.0) (2021-07-08)
+
+
+### Features
+
+* **taskman:** add TaskManClientConfig properties ([1e2901f](https://github.com/waitingsong/midway-components/commit/1e2901f6b7ea8d001b20be18f090725257c6dff9))
+
+
+
+
+
 # [2.0.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@1.5.0...@mw-components/taskman@2.0.0) (2021-07-08)
 
 **Note:** Version bump only for package @mw-components/taskman
