@@ -7,7 +7,8 @@ import {
 } from '@midwayjs/decorator'
 import {
   DbManager,
-  Kmore,
+  KmoreComponent,
+  TracerKmoreComponent,
 } from '@mw-components/kmore'
 
 import {
@@ -46,7 +47,7 @@ export class TaskQueueRepository {
 
   @Config('taskManServerConfig') protected readonly serverConfig: TaskManServerConfig
 
-  db: Kmore<DbModel>
+  db: KmoreComponent<DbModel> | TracerKmoreComponent<DbModel>
   protected _dbManager: DbManager<DbReplicaKeys>
 
   @Init()
@@ -55,12 +56,19 @@ export class TaskQueueRepository {
     // this._dbManager = await this.ctx.requestContext.getAsync(DbManager)
     const container = this.app.getApplicationContext()
     this._dbManager = await container.getAsync(DbManager)
-    await this._dbManager.create(this.ctx, kmoreConfig)
+    await this._dbManager.create(this.ctx, kmoreConfig, false)
     const db = this._dbManager.getInstance<DbModel>(DbReplica.taskMaster)
     if (! db) {
       throw new Error(`Create db instance failed with DbId: "${DbReplica.taskMaster}"`)
     }
     this.db = db
+  }
+
+  [ServerMethod.destroy](): void {
+    if (this.db instanceof TracerKmoreComponent) {
+      this.db.unsubscribeEvent()
+    }
+    this.db.unsubscribe()
   }
 
   async [ServerMethod.create](input: InitTaskDTO): Promise<TaskDTO> {

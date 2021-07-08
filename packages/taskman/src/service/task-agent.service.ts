@@ -52,7 +52,7 @@ export class TaskAgentService {
     }
     const intv$ = this.intv$.pipe(
       tap((idx) => {
-        if (idx > 5000) {
+        if (idx > 100) {
           this.stop()
         }
       }),
@@ -67,6 +67,7 @@ export class TaskAgentService {
 
   stop(): void {
     this.subscription && this.subscription.unsubscribe()
+    this.queueSvc.destroy()
     globalAgentRunning = 0
   }
 

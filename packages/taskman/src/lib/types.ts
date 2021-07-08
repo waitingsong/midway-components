@@ -47,6 +47,7 @@ export enum ServerMethod {
   /** Create a task recored */
   create = 'create',
   read = 'read',
+  destroy = 'destroy',
   hello = 'hello',
   stats = 'stats',
   setProgress = 'setProgress',
