@@ -8,11 +8,11 @@ import {
 import { Logger } from '@mw-components/jaeger'
 import {
   DbManager,
-  Kmore,
+  KmoreComponent,
+  TracerKmoreComponent,
 } from '@mw-components/kmore'
 
 import {
-  initDbConfig,
   DbModel,
   DbReplica,
   DbReplicaKeys,
@@ -21,8 +21,6 @@ import {
   ServerMethod,
   TaskLogDTO,
 } from '../lib/index'
-
-import { genKmoreComponentConfig } from './helper'
 
 import { Application, Context } from '~/interface'
 
@@ -38,22 +36,22 @@ export class TaskLogRepository {
 
   @Config('taskManServerConfig') protected readonly serverConfig: TaskManServerConfig
 
-  db: Kmore<DbModel>
+  db: KmoreComponent<DbModel> | TracerKmoreComponent<DbModel>
   protected _dbManager: DbManager<DbReplicaKeys>
 
   @Init()
   async init(): Promise<void> {
-    const kmoreConfig = genKmoreComponentConfig(this.serverConfig, initDbConfig)
-    // this._dbManager = await this.ctx.requestContext.getAsync(DbManager)
     const container = this.app.getApplicationContext()
     this._dbManager = await container.getAsync(DbManager)
-    // @ts-ignore for DecoratorManager not single
-    this._dbManager.create(kmoreConfig, this.ctx.tracerManager, this.logger)
-    const db = this._dbManager.getInstance<DbModel>(DbReplica.taskMaster)
-    if (! db) {
-      throw new Error(`Create db instance failed with DbId: "${DbReplica.taskMaster}"`)
-    }
+    const db = await this._dbManager.create<DbModel>(this.ctx, DbReplica.taskMaster, false)
     this.db = db
+  }
+
+  [ServerMethod.destroy](): void {
+    if (this.db instanceof TracerKmoreComponent) {
+      this.db.unsubscribeEvent()
+    }
+    this.db.unsubscribe()
   }
 
   async [ServerMethod.create](input: InitTaskLogDTO): Promise<TaskLogDTO> {

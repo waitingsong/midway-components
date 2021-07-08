@@ -47,6 +47,7 @@ export enum ServerMethod {
   /** Create a task recored */
   create = 'create',
   read = 'read',
+  destroy = 'destroy',
   hello = 'hello',
   stats = 'stats',
   setProgress = 'setProgress',
@@ -135,9 +136,17 @@ export interface DbConfig {
    */
   enableTracing?: boolean
   /**
+   * @default true
+   */
+  tracingResponse?: boolean
+  /**
    * @default 300(ms)
    */
   sampleThrottleMs?: number
+  pool?: {
+    min: number,
+    max: number,
+  }
 }
 
 

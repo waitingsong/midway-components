@@ -30,13 +30,13 @@ export class TaskAgentService {
 
   @Inject('jaeger:logger') protected readonly logger: Logger
 
-  @Inject() readonly fetch: FetchComponent
+  @Inject('fetch:fetchComponent') readonly fetch: FetchComponent
 
   @Inject() protected readonly queueSvc: TaskQueueService
 
   @Config('taskManServerConfig') protected readonly config: TaskManServerConfig
 
-  protected readonly intv$ = timer(1000, 15000)
+  protected readonly intv$ = timer(1000, 10000)
   protected subscription: Subscription | undefined
 
   get isRunning(): boolean {
@@ -52,7 +52,7 @@ export class TaskAgentService {
     }
     const intv$ = this.intv$.pipe(
       tap((idx) => {
-        if (idx > 5000) {
+        if (idx > 100) {
           this.stop()
         }
       }),
@@ -67,6 +67,7 @@ export class TaskAgentService {
 
   stop(): void {
     this.subscription && this.subscription.unsubscribe()
+    this.queueSvc.destroy()
     globalAgentRunning = 0
   }
 

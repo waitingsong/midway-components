@@ -1,4 +1,4 @@
-import { DbDict } from '@mw-components/kmore'
+import type { DbDict } from 'kmore-types'
 
 import {
   TbTaskArchiveDO,

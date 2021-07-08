@@ -77,7 +77,12 @@ export const initDbConfig: Required<DbConfig> = {
     user: process.env.POSTGRES_USER ? process.env.POSTGRES_USER : 'postgres',
     password: process.env.POSTGRES_PASSWORD ? process.env.POSTGRES_PASSWORD : 'postgres',
   },
+  pool: {
+    min: 2,
+    max: 10,
+  },
   enableTracing: true,
+  tracingResponse: true,
   sampleThrottleMs: 1000,
 }
 
