@@ -1,5 +1,6 @@
 import {
   Config,
+  Init,
   Inject,
   Provide,
 } from '@midwayjs/decorator'
@@ -17,7 +18,7 @@ import {
   tap,
 } from 'rxjs/operators'
 
-import { CallTaskOptions, ServerAgent, TaskDTO, TaskManServerConfig, TaskState } from '../lib/index'
+import { CallTaskOptions, initTaskManClientConfig, ServerAgent, TaskDTO, TaskManClientConfig, TaskManServerConfig, TaskState } from '../lib/index'
 
 import { TaskQueueService } from './task-queue.service'
 
@@ -35,9 +36,20 @@ export class TaskAgentService {
   @Inject() protected readonly queueSvc: TaskQueueService
 
   @Config('taskManServerConfig') protected readonly config: TaskManServerConfig
+  @Config('taskManClientConfig') protected readonly clientConfig: TaskManClientConfig
 
-  protected readonly intv$ = timer(1000, 10000)
+  protected intv$: Observable<number>
   protected subscription: Subscription | undefined
+
+  @Init()
+  async init(): Promise<void> {
+
+    const pickTaskTimer = this.clientConfig.pickTaskTimer > 0
+      ? this.clientConfig.pickTaskTimer
+      : initTaskManClientConfig.pickTaskTimer
+
+    this.intv$ = timer(500, pickTaskTimer)
+  }
 
   get isRunning(): boolean {
     const flag = this.subscription && ! this.subscription.closed
@@ -50,9 +62,13 @@ export class TaskAgentService {
     if (globalAgentRunning >= 1) {
       return
     }
+    const maxPickTaskCount = this.clientConfig.maxPickTaskCount > 0
+      ? this.clientConfig.maxPickTaskCount
+      : initTaskManClientConfig.maxPickTaskCount
+
     const intv$ = this.intv$.pipe(
       tap((idx) => {
-        if (idx > 100) {
+        if (idx > maxPickTaskCount) {
           this.stop()
         }
       }),
