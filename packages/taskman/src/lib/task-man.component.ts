@@ -35,7 +35,7 @@ export class TaskManComponent {
 
   @Inject('jaeger:logger') readonly logger: Logger
 
-  @Inject() protected readonly fetch: FetchComponent
+  @Inject('fetch:fetchComponent') protected readonly fetch: FetchComponent
 
   @Config('taskManClientConfig') protected readonly config: TaskManClientConfig
 

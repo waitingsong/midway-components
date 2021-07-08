@@ -30,7 +30,7 @@ export class TaskAgentService {
 
   @Inject('jaeger:logger') protected readonly logger: Logger
 
-  @Inject() readonly fetch: FetchComponent
+  @Inject('fetch:fetchComponent') readonly fetch: FetchComponent
 
   @Inject() protected readonly queueSvc: TaskQueueService
 

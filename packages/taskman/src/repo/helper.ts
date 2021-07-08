@@ -1,6 +1,5 @@
 import {
   DbConfig as KmoreDbConfig,
-  KmoreComponentConfig,
   postProcessResponse,
   wrapIdentifier,
 } from '@mw-components/kmore'
@@ -9,15 +8,14 @@ import {
   dbDict,
   DbConfig,
   DbModel,
-  DbReplica,
   TaskManServerConfig,
 } from '../lib/index'
 
 
-export function genKmoreComponentConfig(
+export function genKmoreDbConfig(
   serverConfig: TaskManServerConfig,
   defaultDbConfig: Required<DbConfig>,
-): KmoreComponentConfig {
+): KmoreDbConfig<DbModel> {
 
   const master: KmoreDbConfig<DbModel> = {
     autoConnect: true,
@@ -39,12 +37,6 @@ export function genKmoreComponentConfig(
     sampleThrottleMs: serverConfig.dbConfigs.sampleThrottleMs ?? defaultDbConfig.sampleThrottleMs,
   }
 
-  const kmoreConfig: KmoreComponentConfig = {
-    dbConfigs: {
-      [DbReplica.taskMaster]: master,
-    },
-  }
-
-  return kmoreConfig
+  return master
 }
 
