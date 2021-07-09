@@ -58,6 +58,7 @@ export class TaskAgentService {
     return flag
   }
 
+  /** 获取待执行任务记录，发送到任务执行服务供其执行 */
   async run(): Promise<void> {
     if (globalAgentRunning >= 1) {
       return
