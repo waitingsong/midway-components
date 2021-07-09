@@ -374,7 +374,7 @@ export class TaskQueueRepository {
       .orderBy('task_id', options.ord)
 
     if (! tasks.length) {
-      await trx.rollback() // !
+      await trx.commit() // !
       return []
     }
 
