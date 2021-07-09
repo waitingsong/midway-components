@@ -59,7 +59,7 @@ export class TaskQueueRepository {
     if (this.db instanceof TracerKmoreComponent) {
       this.db.unsubscribeEvent()
     }
-    this.db.unsubscribe()
+    // this.db.unsubscribe()
   }
 
   async [ServerMethod.create](input: InitTaskDTO): Promise<TaskDTO> {

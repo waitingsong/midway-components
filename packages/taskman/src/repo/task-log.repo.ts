@@ -51,7 +51,7 @@ export class TaskLogRepository {
     if (this.db instanceof TracerKmoreComponent) {
       this.db.unsubscribeEvent()
     }
-    this.db.unsubscribe()
+    // this.db.unsubscribe()
   }
 
   async [ServerMethod.create](input: InitTaskLogDTO): Promise<TaskLogDTO> {
