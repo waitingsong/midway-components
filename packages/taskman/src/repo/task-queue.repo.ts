@@ -117,7 +117,7 @@ export class TaskQueueRepository {
       .select('task_state')
       .where('task_id', id)
       .limit(1)
-      .then(arr => arr[0])
+      .then(arr => arr[0]) as TaskDTO | undefined
     if (! task) { return }
 
     const prog = await db.refTables.ref_tb_task_progress()
@@ -128,7 +128,7 @@ export class TaskQueueRepository {
 
     const ret: TaskProgressDetailDTO = {
       ...(prog as unknown as TaskProgressDTO),
-      taskState: task.task_state,
+      taskState: task.taskState,
     }
 
     return ret
