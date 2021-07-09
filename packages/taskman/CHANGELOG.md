@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.2](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@2.1.1...@mw-components/taskman@2.1.2) (2021-07-09)
+
+
+### Bug Fixes
+
+* **taskman:** field name converted to taskState ([c72bde2](https://github.com/waitingsong/midway-components/commit/c72bde2f8031bf72739b0a36203912dabb739faa))
+
+
+
+
+
 ## [2.1.1](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@2.1.0...@mw-components/taskman@2.1.1) (2021-07-09)
 
 **Note:** Version bump only for package @mw-components/taskman
