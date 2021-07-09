@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.2.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@2.1.2...@mw-components/taskman@2.2.0) (2021-07-09)
+
+
+### Features
+
+* **taskman:** do not call this.db.unsubscribe() with repo.destroy() ([e2c4fe4](https://github.com/waitingsong/midway-components/commit/e2c4fe4de6d95412eefd4073333b6ff6a304dde3))
+* **taskman:** log reqId within processHttpCallExp() ([a03ed55](https://github.com/waitingsong/midway-components/commit/a03ed55144eddb1f3ce3f77e26346900578ccac5))
+
+
+
+
+
 ## [2.1.2](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@2.1.1...@mw-components/taskman@2.1.2) (2021-07-09)
 
 
