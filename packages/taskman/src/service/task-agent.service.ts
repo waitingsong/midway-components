@@ -18,16 +18,27 @@ import {
   tap,
 } from 'rxjs/operators'
 
-import { CallTaskOptions, initTaskManClientConfig, ServerAgent, TaskDTO, TaskManClientConfig, TaskManServerConfig, TaskState } from '../lib/index'
+import {
+  CallTaskOptions,
+  initTaskManClientConfig,
+  ServerAgent,
+  TaskDTO,
+  TaskManClientConfig,
+  TaskManServerConfig,
+  TaskState,
+} from '../lib/index'
 
 import { TaskQueueService } from './task-queue.service'
+
+import { Context } from '~/interface'
 
 
 let globalAgentRunning = 0
 
-
 @Provide()
 export class TaskAgentService {
+
+  @Inject() protected readonly ctx: Context
 
   @Inject('jaeger:logger') protected readonly logger: Logger
 
@@ -154,7 +165,10 @@ export class TaskAgentService {
     err: Error,
   ): Promise<void> {
 
+    const rid = this.ctx.reqId as string
+
     const msg = {
+      reqId: rid,
       taskId,
       options,
       errMessage: err.message,
