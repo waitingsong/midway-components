@@ -24,6 +24,14 @@ export interface TaskManClientConfig {
    * @default x-task-id
    */
   headerKeyTaskId?: string
+  /**
+   * @default 2000(ms)
+   */
+  pickTaskTimer: number
+  /**
+   * @default 100 (times not tasks)
+   */
+  maxPickTaskCount: number
 }
 
 /**

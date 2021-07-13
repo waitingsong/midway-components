@@ -99,6 +99,8 @@ export const initTaskManClientConfig: TaskManClientConfig = {
   host: 'http://localhost:7001',
   transferHeaders: ['authorization', 'user-agent'],
   headerKeyTaskId: 'x-task-id',
+  pickTaskTimer: 2000,
+  maxPickTaskCount: 100,
 }
 
 export const initTaskStatistics: TaskStatistics = {

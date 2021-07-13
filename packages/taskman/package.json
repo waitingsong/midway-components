@@ -1,7 +1,7 @@
 {
   "name": "@mw-components/taskman",
   "author": "waiting",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "midway component task manager",
   "keywords": [
     "midway",
@@ -25,7 +25,7 @@
   "dependencies": {
     "@mw-components/fetch": "^13.0.0",
     "@mw-components/jaeger": "^6.32.2",
-    "@mw-components/kmore": "^20.0.0",
+    "@mw-components/kmore": "^21.0.1",
     "@waiting/shared-core": "^14.4.1",
     "@waiting/shared-types": "^14.4.1",
     "pg": "^8.6.0",
@@ -39,7 +39,7 @@
     "@midwayjs/mock": "^2.11.0",
     "@midwayjs/web": "^2.11.0",
     "cross-env": "7",
-    "kmore-types": "^20.0.0"
+    "kmore-types": "^21.0.0"
   },
   "engines": {
     "node": ">=14.16.0"

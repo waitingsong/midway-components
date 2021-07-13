@@ -1,5 +1,6 @@
 import {
   Config,
+  Init,
   Inject,
   Provide,
 } from '@midwayjs/decorator'
@@ -17,16 +18,27 @@ import {
   tap,
 } from 'rxjs/operators'
 
-import { CallTaskOptions, ServerAgent, TaskDTO, TaskManServerConfig, TaskState } from '../lib/index'
+import {
+  CallTaskOptions,
+  initTaskManClientConfig,
+  ServerAgent,
+  TaskDTO,
+  TaskManClientConfig,
+  TaskManServerConfig,
+  TaskState,
+} from '../lib/index'
 
 import { TaskQueueService } from './task-queue.service'
+
+import { Context } from '~/interface'
 
 
 let globalAgentRunning = 0
 
-
 @Provide()
 export class TaskAgentService {
+
+  @Inject() protected readonly ctx: Context
 
   @Inject('jaeger:logger') protected readonly logger: Logger
 
@@ -35,9 +47,20 @@ export class TaskAgentService {
   @Inject() protected readonly queueSvc: TaskQueueService
 
   @Config('taskManServerConfig') protected readonly config: TaskManServerConfig
+  @Config('taskManClientConfig') protected readonly clientConfig: TaskManClientConfig
 
-  protected readonly intv$ = timer(1000, 10000)
+  protected intv$: Observable<number>
   protected subscription: Subscription | undefined
+
+  @Init()
+  async init(): Promise<void> {
+
+    const pickTaskTimer = this.clientConfig.pickTaskTimer > 0
+      ? this.clientConfig.pickTaskTimer
+      : initTaskManClientConfig.pickTaskTimer
+
+    this.intv$ = timer(500, pickTaskTimer)
+  }
 
   get isRunning(): boolean {
     const flag = this.subscription && ! this.subscription.closed
@@ -46,13 +69,18 @@ export class TaskAgentService {
     return flag
   }
 
+  /** 获取待执行任务记录，发送到任务执行服务供其执行 */
   async run(): Promise<void> {
     if (globalAgentRunning >= 1) {
       return
     }
+    const maxPickTaskCount = this.clientConfig.maxPickTaskCount > 0
+      ? this.clientConfig.maxPickTaskCount
+      : initTaskManClientConfig.maxPickTaskCount
+
     const intv$ = this.intv$.pipe(
       tap((idx) => {
-        if (idx > 100) {
+        if (idx > maxPickTaskCount) {
           this.stop()
         }
       }),
@@ -137,7 +165,10 @@ export class TaskAgentService {
     err: Error,
   ): Promise<void> {
 
+    const rid = this.ctx.reqId as string
+
     const msg = {
+      reqId: rid,
       taskId,
       options,
       errMessage: err.message,
