@@ -36,14 +36,13 @@ export class TaskResultRepository {
 
   @Config('taskManServerConfig') protected readonly serverConfig: TaskManServerConfig
 
-  db: KmoreComponent<DbModel> | TracerKmoreComponent<DbModel>
-  protected _dbManager: DbManager<DbReplicaKeys>
+  public db: KmoreComponent<DbModel> | TracerKmoreComponent<DbModel>
 
   @Init()
   async init(): Promise<void> {
     const container = this.app.getApplicationContext()
-    this._dbManager = await container.getAsync(DbManager)
-    const db = await this._dbManager.create<DbModel>(this.ctx, DbReplica.taskMaster, false)
+    const dbManager: DbManager<DbReplicaKeys> = await container.getAsync(DbManager)
+    const db = await dbManager.create<DbModel>(this.ctx, DbReplica.taskMaster, false)
     this.db = db
   }
 
