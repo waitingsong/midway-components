@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.1.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@3.0.0...@mw-components/taskman@3.1.0) (2021-07-13)
+
+
+### Features
+
+* **taskman:** not assign repo._dbManager ([b164018](https://github.com/waitingsong/midway-components/commit/b164018f32f75983329f1abf04bf025379c0f05b))
+
+
+
+
+
 # [3.0.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@2.2.0...@mw-components/taskman@3.0.0) (2021-07-13)
 
 
