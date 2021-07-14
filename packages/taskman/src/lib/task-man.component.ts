@@ -44,6 +44,7 @@ export class TaskManComponent {
   /** 请求 taskAgent 接口所需 headers */
   protected readonly taskReqHeadersMap = new Map<TaskDTO['taskId'], Headers>()
 
+
   async [ServerMethod.create](input: CreateTaskOptions): Promise<Task | undefined> {
     const headers = this.processPostHeaders(input)
     const pdata: CreateTaskDTO = {
