@@ -25,7 +25,7 @@
   "dependencies": {
     "@mw-components/fetch": "^13.0.0",
     "@mw-components/jaeger": "^6.32.3",
-    "@mw-components/kmore": "^22.0.1",
+    "@mw-components/kmore": "^22.1.1",
     "@waiting/shared-core": "^14.4.1",
     "@waiting/shared-types": "^14.4.1",
     "pg": "^8.6.0",
