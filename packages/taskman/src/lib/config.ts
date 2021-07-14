@@ -113,3 +113,8 @@ export const initTaskStatistics: TaskStatistics = {
   cancelled: 0,
 }
 
+export const agentConcurrentConfig = {
+  max: 1,
+  count: 0,
+}
+

@@ -6,6 +6,7 @@ import { CreateTaskOptions } from './types'
 
 export const taskRunningState = {
   count: 0,
+  max: 1,
 }
 
 export function increaseRunningTaskCount(): void {
@@ -16,7 +17,7 @@ export function increaseRunningTaskCount(): void {
 }
 
 export function decreaseRunningTaskCount(): void {
-  if (taskRunningState.count >= 1) {
+  if (taskRunningState.count >= taskRunningState.max) {
     taskRunningState.count -= 1
   }
 }
