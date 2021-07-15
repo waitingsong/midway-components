@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.3.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@3.2.2...@mw-components/taskman@3.3.0) (2021-07-15)
+
+
+### Features
+
+* **taskman:** change DbConfig['pool'] required and set propagateCreateError default value ([3ef5b85](https://github.com/waitingsong/midway-components/commit/3ef5b8516f133fb5b7804429b89850b792ee907e))
+
+
+
+
+
 ## [3.2.2](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@3.2.1...@mw-components/taskman@3.2.2) (2021-07-14)
 
 **Note:** Version bump only for package @mw-components/taskman
