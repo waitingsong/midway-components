@@ -79,7 +79,11 @@ export const initDbConfig: Required<DbConfig> = {
   },
   pool: {
     min: 2,
-    max: 10,
+    max: 30,
+    /**
+     * @link https://stackoverflow.com/a/67621567
+     */
+    propagateCreateError: false,
   },
   enableTracing: true,
   tracingResponse: true,

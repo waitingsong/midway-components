@@ -6,7 +6,7 @@ import {
 } from '@midwayjs/decorator'
 import {
   FetchComponent,
-  Node_Headers, Options as FetchOptions,
+  Node_Headers,
 } from '@mw-components/fetch'
 import { Logger } from '@mw-components/jaeger'
 import {
@@ -34,7 +34,7 @@ import {
 
 import { TaskQueueService } from './task-queue.service'
 
-import { Context } from '~/interface'
+import { Context, FetchOptions } from '~/interface'
 
 
 @Provide()
