@@ -3,11 +3,11 @@ import {
   Inject,
   Provide,
 } from '@midwayjs/decorator'
-import { FetchComponent, JsonResp, Node_Headers, Options as FetchOptions } from '@mw-components/fetch'
+import { FetchComponent, JsonResp, Node_Headers } from '@mw-components/fetch'
 import { Logger } from '@mw-components/jaeger'
 import { retrieveHeadersItem } from '@waiting/shared-core'
 
-import { Context } from '../interface'
+import { Context, FetchOptions } from '../interface'
 
 import { decreaseRunningTaskCount, processJsonHeaders } from './helper'
 import { Task, taskFactory } from './task'
