@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 7.0.0 (2021-07-19)
+
+
+### Features
+
+* **jaeger:** normalize serviceName ([8761a27](https://github.com/waitingsong/midway-components/commit/8761a2767ccec8085e4d410a7f44910dea100241))
+
+
+
+
+
 ## 6.32.3 (2021-07-14)
 
 **Note:** Version bump only for package @mw-components/jaeger
