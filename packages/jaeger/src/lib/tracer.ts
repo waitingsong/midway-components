@@ -21,9 +21,16 @@ import { SpanHeaderInit, SpanLogInput, TracerConfig } from './types'
 export function initTracer(app: IMidwayApplication): JaegerTracer {
   const tconf = app.getConfig('tracer') as TracerConfig
   const pconf = app.getConfig('pkg') as NpmPkg
+
+  let name = tconf.tracingConfig.serviceName ?? pconf.name
+  name = name.replace(/@/ug, '').replace(/\//ug, '-')
+  if (! name) {
+    throw new Error('service name empty')
+  }
+
   const config: TracingConfig = {
-    serviceName: pconf.name,
     ...tconf.tracingConfig,
+    serviceName: name,
   }
   const tracer = initJaegerTracer(config, {})
   initGlobalTracer(tracer)
