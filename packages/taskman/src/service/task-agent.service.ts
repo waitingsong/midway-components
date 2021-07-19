@@ -4,7 +4,10 @@ import {
   Inject,
   Provide,
 } from '@midwayjs/decorator'
-import { FetchComponent, Node_Headers, Options as FetchOptions } from '@mw-components/fetch'
+import {
+  FetchComponent,
+  Node_Headers,
+} from '@mw-components/fetch'
 import { Logger } from '@mw-components/jaeger'
 import {
   timer,
@@ -20,20 +23,19 @@ import {
 
 import {
   CallTaskOptions,
-  initTaskManClientConfig,
   ServerAgent,
   TaskDTO,
   TaskManClientConfig,
   TaskManServerConfig,
   TaskState,
+  agentConcurrentConfig,
+  initTaskManClientConfig,
 } from '../lib/index'
 
 import { TaskQueueService } from './task-queue.service'
 
-import { Context } from '~/interface'
+import { Context, FetchOptions } from '~/interface'
 
-
-let globalAgentRunning = 0
 
 @Provide()
 export class TaskAgentService {
@@ -70,9 +72,9 @@ export class TaskAgentService {
   }
 
   /** 获取待执行任务记录，发送到任务执行服务供其执行 */
-  async run(): Promise<void> {
-    if (globalAgentRunning >= 1) {
-      return
+  async run(): Promise<boolean> {
+    if (agentConcurrentConfig.count >= agentConcurrentConfig.max) {
+      return false
     }
     const maxPickTaskCount = this.clientConfig.maxPickTaskCount > 0
       ? this.clientConfig.maxPickTaskCount
@@ -90,13 +92,14 @@ export class TaskAgentService {
       mergeMap(task => this.sendTaskToRun(task), 1),
     )
     this.subscription = stream$.subscribe()
-    globalAgentRunning += 1
+    agentConcurrentConfig.count += 1
+    return true
   }
 
   stop(): void {
     this.subscription && this.subscription.unsubscribe()
     this.queueSvc.destroy()
-    globalAgentRunning = 0
+    agentConcurrentConfig.count = 0
   }
 
   private pickTasksWaitToRun(intv$: Observable<number>): Observable<TaskDTO[]> {

@@ -1,7 +1,7 @@
 {
   "name": "@mw-components/jaeger",
   "author": "waiting",
-  "version": "6.32.2",
+  "version": "7.0.0",
   "description": "midway component for jaeger",
   "keywords": [
     "midway",
@@ -43,8 +43,7 @@
   },
   "files": [
     "bin/*.js",
-    "dist/**/*.js",
-    "dist/**/*.d.ts"
+    "dist"
   ],
   "publishConfig": {
     "access": "public"

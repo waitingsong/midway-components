@@ -47,6 +47,11 @@ export interface TracerConfig {
    */
   loggingReqHeaders: string[] | KnownKeys<IncomingHttpHeaders>[]
   /**
+   * @default pkg.name
+   * @description \@ 字符将会被删除，/ 替换为 - ,便于（ali）日志服务能正常分类
+   */
+  serviceName?: string
+  /**
 	 * Callback to process custom failure
 	 * @default helper.ts/processCustomFailure()
 	 */

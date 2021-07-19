@@ -8,7 +8,9 @@ import {
 } from '@midwayjs/web'
 
 import { increaseRunningTaskCount, taskRunningState } from '../lib/helper'
+import { agentConcurrentConfig } from '../lib/index'
 import { TaskAgentService } from '../service/task-agent.service'
+
 
 
 @Provide()
@@ -29,8 +31,7 @@ export async function taskAgentMiddleware(
 
   const { headers } = ctx.request
   if (headers['x-task-agent']) {
-
-    if (taskRunningState.count >= 1) {
+    if (taskRunningState.count >= taskRunningState.max) {
       ctx.status = 429
       const { reqId } = ctx
       ctx.body = {
@@ -44,8 +45,10 @@ export async function taskAgentMiddleware(
     increaseRunningTaskCount()
   }
 
-  const taskAgent = await ctx.requestContext.getAsync(TaskAgentService)
-  await taskAgent.run()
+  if (agentConcurrentConfig.count < agentConcurrentConfig.max) {
+    const taskAgent = await ctx.requestContext.getAsync(TaskAgentService)
+    await taskAgent.run()
+  }
 
   return next()
 }

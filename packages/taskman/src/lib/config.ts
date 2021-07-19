@@ -79,7 +79,11 @@ export const initDbConfig: Required<DbConfig> = {
   },
   pool: {
     min: 2,
-    max: 10,
+    max: 30,
+    /**
+     * @link https://stackoverflow.com/a/67621567
+     */
+    propagateCreateError: false,
   },
   enableTracing: true,
   tracingResponse: true,
@@ -111,5 +115,10 @@ export const initTaskStatistics: TaskStatistics = {
   suspended: 0,
   succeeded: 0,
   cancelled: 0,
+}
+
+export const agentConcurrentConfig = {
+  max: 1,
+  count: 0,
 }
 

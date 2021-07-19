@@ -44,14 +44,13 @@ export class TaskQueueRepository {
 
   @Config('taskManServerConfig') protected readonly serverConfig: TaskManServerConfig
 
-  db: KmoreComponent<DbModel> | TracerKmoreComponent<DbModel>
-  protected _dbManager: DbManager<DbReplicaKeys>
+  public db: KmoreComponent<DbModel> | TracerKmoreComponent<DbModel>
 
   @Init()
   async init(): Promise<void> {
     const container = this.app.getApplicationContext()
-    this._dbManager = await container.getAsync(DbManager)
-    const db = await this._dbManager.create<DbModel>(this.ctx, DbReplica.taskMaster, false)
+    const dbManager: DbManager<DbReplicaKeys> = await container.getAsync(DbManager)
+    const db = await dbManager.create<DbModel>(this.ctx, DbReplica.taskMaster, false)
     this.db = db
   }
 
@@ -165,6 +164,10 @@ export class TaskQueueRepository {
       .forUpdate()
       .where('task_id', id)
       .del()
+      .catch(async (ex) => {
+        await trx.rollback()
+        throw ex
+      })
 
     const data: TaskProgressDTO = {
       ...initTaskProgressDTO,
@@ -180,6 +183,10 @@ export class TaskQueueRepository {
       .then(async (rows) => {
         await trx.commit()
         return rows.length ? rows[0] : void 0
+      })
+      .catch(async (ex) => {
+        await trx.rollback()
+        throw ex
       })
 
     return ins as unknown as TaskProgressDTO
@@ -274,6 +281,10 @@ export class TaskQueueRepository {
       .update('task_progress', 100)
       .update('mtime', 'now()')
       .where('task_id', id)
+      .catch(async (ex) => {
+        await trx.rollback()
+        throw ex
+      })
 
     const ret = await db.refTables.ref_tb_task()
       .transacting(trx)
@@ -286,6 +297,10 @@ export class TaskQueueRepository {
       .then(async (rows) => {
         await trx.commit()
         return rows.length ? rows[0] : void 0
+      })
+      .catch(async (ex) => {
+        await trx.rollback()
+        throw ex
       })
 
     return ret as unknown as TaskDTO
@@ -372,9 +387,13 @@ export class TaskQueueRepository {
       .limit(options.maxRows)
       .orderBy('ctime', options.ord)
       .orderBy('task_id', options.ord)
+      .catch(async (ex) => {
+        await trx.rollback()
+        throw ex
+      })
 
     if (! tasks.length) {
-      await trx.commit() // !
+      await trx.rollback() // !
       return []
     }
 
@@ -391,6 +410,10 @@ export class TaskQueueRepository {
       .then(async (rows) => {
         await trx.commit()
         return rows
+      })
+      .catch(async (ex) => {
+        await trx.rollback()
+        throw ex
       })
       // .toQuery()
 

@@ -1,6 +1,6 @@
-import type { Options as FetchOptions } from '@mw-components/fetch'
+import { KnexConfig } from '@mw-components/kmore'
 
-import { JsonObject } from '../interface'
+import { JsonObject, FetchOptions } from '../interface'
 
 import { CreateTaskDTO, TaskDTO, TaskLogDTO, TaskProgressDTO } from './tm.dto'
 
@@ -134,6 +134,7 @@ export interface DbConfig {
     user: string,
     password: string,
   }
+  pool: KnexConfig['pool']
   acquireConnectionTimeout?: number
   /**
    * @default true
@@ -151,10 +152,6 @@ export interface DbConfig {
    * @default 300(ms)
    */
   sampleThrottleMs?: number
-  pool?: {
-    min: number,
-    max: number,
-  }
 }
 
 

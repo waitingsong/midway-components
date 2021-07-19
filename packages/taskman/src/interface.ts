@@ -12,6 +12,7 @@ export {
 } from '@midwayjs/web'
 
 export { NpmPkg } from '@waiting/shared-types'
+export type { Options as FetchOptions } from '@mw-components/fetch'
 
 export { IPostgresInterval } from 'postgres-interval'
 
