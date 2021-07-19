@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@4.0.0...@mw-components/taskman@4.1.0) (2021-07-19)
+
+
+### Features
+
+* **taskman:** add FK task_id of tb_task_payload.sql ([f81f98a](https://github.com/waitingsong/midway-components/commit/f81f98ac14fbe98ed8e7d77bdc3d09da871d0eb2))
+
+
+
+
+
 # [4.0.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@3.3.1...@mw-components/taskman@4.0.0) (2021-07-19)
 
 **Note:** Version bump only for package @mw-components/taskman
