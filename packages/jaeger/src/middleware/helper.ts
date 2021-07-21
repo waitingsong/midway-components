@@ -327,7 +327,7 @@ function retrieveHeadersItem(
     console.warn('Not supported param type Array, only support Record or Headers Map')
   }
   else if (typeof headers === 'object' && Object.keys(headers).length) {
-    // @ts-expect-error
+    // @ts-ignore
     return headers[name] as string | undefined
   }
 

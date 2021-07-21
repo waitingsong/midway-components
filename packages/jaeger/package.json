@@ -54,13 +54,12 @@
     "clean": "npm run clean:lock & npm run clean:cache & rm -rf dist/* -rf",
     "clean:cache": "rm -rf .eslintcache .vscode/.tsbuildinfo .vscode/.tsbuildinfo.*",
     "clean:lock": "rm package-lock.json -f",
-    "cov": "",
-    "dev": "cross-env TS_NODE_TYPE_CHECK=false TS_NODE_TRANSPILE_ONLY=true NODE_ENV=local ../../node_modules/.bin/midway-bin dev --ts --port=7001",
+    "cov": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json nyc mocha --parallel=false",
     "lint": "eslint --fix --cache {src,test}/**/*.ts",
     "lint:nofix": "eslint --cache {src,test}/**/*.ts",
     "purge": "npm run clean && rm node_modules -rf",
-    "test": "cross-env TS_NODE_PROJECT=test/tsconfig.json mocha --parallel=false",
-    "test:local": "cross-env TS_NODE_PROJECT=test/tsconfig.json ../../node_modules/.bin/mocha --parallel=false",
+    "test": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json mocha --parallel=false",
+    "test:local": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json ../../node_modules/.bin/mocha --parallel=false",
     "tsc": "tsc -p tsconfig.json"
   },
   "nyc": {
