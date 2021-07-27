@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.1.0](https://github.com/waitingsong/midway-components/compare/@mw-components/jaeger@7.0.1...@mw-components/jaeger@7.1.0) (2021-07-27)
+
+
+### Features
+
+* not pop root span ([0247001](https://github.com/waitingsong/midway-components/commit/02470018be555bf46b4f647fa61fc7ac5f88ebff))
+
+
+
+
+
 ## [7.0.1](https://github.com/waitingsong/midway-components/compare/@mw-components/jaeger@7.0.0...@mw-components/jaeger@7.0.1) (2021-07-19)
 
 **Note:** Version bump only for package @mw-components/jaeger
