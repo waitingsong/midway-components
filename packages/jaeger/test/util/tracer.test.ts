@@ -25,7 +25,8 @@ describe(filename, () => {
     tracerManager.startSpan('mySpan')
     assert(tracerManager.currentSpan())
     tracerManager.finishSpan()
-    assert(tracerManager.currentSpan() === undefined)
+    // 保留根 span
+    assert(tracerManager.currentSpan())
   })
   it('new span should be child of preceding span', async () => {
     const tracerManager = new TracerManager(true)
