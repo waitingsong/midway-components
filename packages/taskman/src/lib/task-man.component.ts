@@ -4,7 +4,7 @@ import {
   Provide,
 } from '@midwayjs/decorator'
 import { FetchComponent, JsonResp, Node_Headers } from '@mw-components/fetch'
-import { Logger } from '@mw-components/jaeger'
+import { HeadersKey, Logger } from '@mw-components/jaeger'
 import { retrieveHeadersItem } from '@waiting/shared-core'
 
 import { Context, FetchOptions } from '../interface'
@@ -47,6 +47,8 @@ export class TaskManComponent {
 
   async [ServerMethod.create](input: CreateTaskOptions): Promise<Task | undefined> {
     const headers = this.processPostHeaders(input)
+    const spanHeader = this.ctx.tracerManager.headerOfCurrentSpan()?.[HeadersKey.traceId] as string
+    headers.set(HeadersKey.traceId, spanHeader)
     const pdata: CreateTaskDTO = {
       ...input.createTaskDTO,
     }
