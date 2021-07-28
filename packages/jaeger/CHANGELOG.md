@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 7.1.1 (2021-07-28)
+
+**Note:** Version bump only for package @mw-components/jaeger
+
+
+
+
+
 # [7.1.0](https://github.com/waitingsong/midway-components/compare/@mw-components/jaeger@7.0.1...@mw-components/jaeger@7.1.0) (2021-07-27)
 
 
