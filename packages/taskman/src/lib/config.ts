@@ -1,3 +1,5 @@
+import { HeadersKey } from '@mw-components/jaeger'
+
 import {
   InitTaskDTO,
   InitTaskPayloadDTO,
@@ -101,7 +103,7 @@ export const initPickInitTasksOptions: PickInitTaskOptions = {
 export const initTaskManClientConfig: TaskManClientConfig = {
   /** TaskMan Server host */
   host: 'http://localhost:7001',
-  transferHeaders: ['authorization', 'user-agent'],
+  transferHeaders: ['authorization', 'user-agent', HeadersKey.traceId, HeadersKey.reqId],
   headerKeyTaskId: 'x-task-id',
   pickTaskTimer: 2000,
   maxPickTaskCount: 100,
