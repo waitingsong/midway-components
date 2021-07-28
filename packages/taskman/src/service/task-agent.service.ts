@@ -8,7 +8,8 @@ import {
   FetchComponent,
   Node_Headers,
 } from '@mw-components/fetch'
-import { Logger, globalTracer, Span } from '@mw-components/jaeger'
+import { Logger } from '@mw-components/jaeger'
+import { globalTracer, Span } from 'opentracing'
 import {
   timer,
   from as ofrom,
