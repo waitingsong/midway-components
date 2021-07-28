@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@4.1.1...@mw-components/taskman@4.2.0) (2021-07-28)
+
+
+### Features
+
+* 创建任务添加默认header ([5b338fd](https://github.com/waitingsong/midway-components/commit/5b338fd053fcf42bd07665035383766e6415d2dd))
+
+
+
+
+
 ## [4.1.1](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@4.1.0...@mw-components/taskman@4.1.1) (2021-07-27)
 
 **Note:** Version bump only for package @mw-components/taskman
