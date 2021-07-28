@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.4.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@4.3.0...@mw-components/taskman@4.4.0) (2021-07-28)
+
+
+### Features
+
+* **jaeger:** 任务分发器span ([00f7892](https://github.com/waitingsong/midway-components/commit/00f7892ec244cd30a957b13b34afdb84dbe2e044))
+* 创建任务添加默认header ([5b338fd](https://github.com/waitingsong/midway-components/commit/5b338fd053fcf42bd07665035383766e6415d2dd))
+
+
+
+
+
 # [4.3.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@4.2.1...@mw-components/taskman@4.3.0) (2021-07-28)
 
 

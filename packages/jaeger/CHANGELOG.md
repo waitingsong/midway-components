@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.2.0](https://github.com/waitingsong/midway-components/compare/@mw-components/jaeger@7.1.0...@mw-components/jaeger@7.2.0) (2021-07-28)
+
+
+### Features
+
+* **jaeger:** 任务分发器span ([00f7892](https://github.com/waitingsong/midway-components/commit/00f7892ec244cd30a957b13b34afdb84dbe2e044))
+
+
+
+
+
 ## 7.1.1 (2021-07-28)
 
 **Note:** Version bump only for package @mw-components/jaeger
