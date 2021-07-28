@@ -8,7 +8,7 @@ import {
   FetchComponent,
   Node_Headers,
 } from '@mw-components/fetch'
-import { Logger } from '@mw-components/jaeger'
+import { Logger, globalTracer, Span } from '@mw-components/jaeger'
 import {
   timer,
   from as ofrom,
@@ -53,6 +53,7 @@ export class TaskAgentService {
 
   protected intv$: Observable<number>
   protected subscription: Subscription | undefined
+  private orphanSpan: Span
 
   @Init()
   async init(): Promise<void> {
@@ -62,6 +63,7 @@ export class TaskAgentService {
       : initTaskManClientConfig.pickTaskTimer
 
     this.intv$ = timer(500, pickTaskTimer)
+    this.orphanSpan = globalTracer().startSpan('TaskAgent')
   }
 
   get isRunning(): boolean {
@@ -100,6 +102,7 @@ export class TaskAgentService {
     this.subscription && this.subscription.unsubscribe()
     this.queueSvc.destroy()
     agentConcurrentConfig.count = 0
+    this.orphanSpan.finish()
   }
 
   private pickTasksWaitToRun(intv$: Observable<number>): Observable<TaskDTO[]> {
