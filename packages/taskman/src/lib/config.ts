@@ -1,5 +1,3 @@
-import { HeadersKey } from '@mw-components/jaeger'
-
 import {
   InitTaskDTO,
   InitTaskPayloadDTO,
