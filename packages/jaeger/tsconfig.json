@@ -23,7 +23,7 @@
     "strict": true,
     "strictPropertyInitialization": false,
     "stripInternal": true,
-    "target": "ES2020",
+    "target": "ES2019",
     "tsBuildInfoFile": ".vscode/.tsbuildinfo",
     "types" : ["node", "mocha"]
   },
