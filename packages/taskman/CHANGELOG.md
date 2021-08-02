@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.6.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@4.5.0...@mw-components/taskman@4.6.0) (2021-08-02)
+
+
+### Features
+
+* **taskman:** decrease initTaskManClientConfig.maxPickTaskCount to 10 ([6d9275a](https://github.com/waitingsong/midway-components/commit/6d9275a4c6bdfb0215af8df39c9f57b5491e0e77))
+
+
+
+
+
 # [4.5.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@4.4.0...@mw-components/taskman@4.5.0) (2021-07-30)
 
 
