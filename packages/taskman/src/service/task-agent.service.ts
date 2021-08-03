@@ -187,7 +187,7 @@ export class TaskAgentService {
     }
 
     if (! opts.url.startsWith('http')) {
-      throw new Error(`opts.url invalid: "${opts.url}"`)
+      throw new Error(`opts.url invalid: "${opts.url}", opts: ${JSON.stringify(opts)}`)
     }
 
     const ret = await this.fetch.fetch<TaskDTO['taskId']>(opts)
