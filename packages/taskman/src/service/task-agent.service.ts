@@ -172,10 +172,10 @@ export class TaskAgentService {
 
   private async httpCall(
     taskId: TaskDTO['taskId'],
-    options: CallTaskOptions,
+    options?: CallTaskOptions,
   ): Promise<TaskDTO['taskId'] | undefined> {
 
-    if (! options.url) {
+    if (! options || ! options.url) {
       const input: SpanLogInput = {
         [TracerTag.logLevel]: 'error',
         taskId,
