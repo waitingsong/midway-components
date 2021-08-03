@@ -63,6 +63,9 @@ export class TaskManComponent {
     if (input.host) {
       opts.url = input.host
     }
+    if (! opts.url) {
+      throw new Error('host of opts.url empty')
+    }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.create}`
 
     const res = await this.fetch.fetch<JsonResp<TaskDTO>>(opts)

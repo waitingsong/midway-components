@@ -186,6 +186,10 @@ export class TaskAgentService {
       opts.dataType = 'text'
     }
 
+    if (! opts.url.startsWith('http')) {
+      throw new Error(`opts.url invalid: "${opts.url}"`)
+    }
+
     const ret = await this.fetch.fetch<TaskDTO['taskId']>(opts)
       .catch((err) => {
         return this.processHttpCallExp(taskId, opts, err as Error)
