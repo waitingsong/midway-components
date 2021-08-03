@@ -10,11 +10,16 @@ import { CreateTaskDTO, TaskDTO, TaskLogDTO, TaskProgressDTO } from './tm.dto'
  */
 export interface TaskManClientConfig {
   /**
-   * host url
+   * server host url
    * @default http://localhost:7001
    * @example http://192.168.0.2
    */
   host: string
+  // /**
+  //  * task runner url
+  //  * @default http://localhost:7001
+  //  */
+  // clientHost: string
   /**
    * @default ['authorization']
    * @example ['authorization', 'user-agent']
@@ -50,6 +55,9 @@ export enum ServerAgent {
   getInfo = 'get_info',
   getProgress = 'get_progress',
   getResult = 'get_result',
+  pickTasksWaitToRun = 'pick_tasks',
+  getPayload = 'get_payload',
+  setState = 'set_state',
 }
 export enum ServerMethod {
   /** Create a task recored */
@@ -76,6 +84,10 @@ export enum ServerMethod {
   notifyFailed = 'notifyFailed',
   notifyCancelled = 'notifyCancelled',
   notifySucceeded = 'notifySucceeded',
+
+  pickTasksWaitToRun = 'pickTasksWaitToRun ',
+  getPayload = 'getPayload',
+  setState = 'setState',
 }
 
 /**
@@ -210,4 +222,7 @@ export interface CommonSetMethodInputData {
 }
 export interface SetProgressInputData extends CommonSetMethodInputData {
   progress: TaskProgressDTO['taskProgress']
+}
+export interface SetStateInputData extends CommonSetMethodInputData {
+  state: TaskDTO['taskState']
 }

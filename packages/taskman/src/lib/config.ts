@@ -101,6 +101,7 @@ export const initPickInitTasksOptions: PickInitTaskOptions = {
 export const initTaskManClientConfig: TaskManClientConfig = {
   /** TaskMan Server host */
   host: 'http://localhost:7001',
+  // clientHost: 'http://localhost:7001',
   transferHeaders: ['authorization', 'user-agent'],
   headerKeyTaskId: 'x-task-id',
   pickTaskTimer: 2000,
