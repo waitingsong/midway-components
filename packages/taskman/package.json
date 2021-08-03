@@ -25,10 +25,10 @@
   "dependencies": {
     "@mw-components/fetch": "^13.2.0",
     "@mw-components/jaeger": "^7.2.0",
-    "@mw-components/kmore": "^22.1.1",
+    "@mw-components/kmore": "^22.5.0",
     "@waiting/shared-core": "^14.4.1",
     "@waiting/shared-types": "^14.4.1",
-    "pg": "^8.6.0",
+    "pg": "^8.7.1",
     "postgres-interval": "^3.0.0",
     "tsconfig-paths": "3"
   },
