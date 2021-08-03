@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.6.2](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@4.6.1...@mw-components/taskman@4.6.2) (2021-08-03)
+
+
+### Bug Fixes
+
+* **taskman:** process msg ([8b0ba73](https://github.com/waitingsong/midway-components/commit/8b0ba7307162c3e97c42276e5c55e31f880ee2ee))
+
+
+
+
+
 ## [4.6.1](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@4.6.0...@mw-components/taskman@4.6.1) (2021-08-03)
 
 **Note:** Version bump only for package @mw-components/taskman
