@@ -38,7 +38,7 @@ export async function taskAgentMiddleware(
         code: 429,
         reqId: reqId && typeof reqId === 'string' ? reqId : '',
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        msg: `Task running limit: ${taskRunningState.count}`,
+        msg: `Task running limit: ${taskRunningState.max}, now: ${taskRunningState.count}`,
       }
       return
     }
