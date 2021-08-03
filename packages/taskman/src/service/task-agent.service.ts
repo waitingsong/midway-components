@@ -9,7 +9,8 @@ import {
   JsonResp,
   Node_Headers,
 } from '@mw-components/fetch'
-import { Logger } from '@mw-components/jaeger'
+import { Logger, SpanLogInput, TracerTag } from '@mw-components/jaeger'
+import { genISO8601String } from '@waiting/shared-core'
 import {
   timer,
   from as ofrom,
@@ -86,8 +87,11 @@ export class TaskAgentService {
       tap((idx) => {
         if (idx > maxPickTaskCount) {
           this.stop()
-          const input = {
+
+          const input: SpanLogInput = {
+            [TracerTag.logLevel]: 'info',
             message: `taskAgent stopped at ${idx} of ${maxPickTaskCount}`,
+            time: genISO8601String(),
           }
           this.logger.log(input)
         }
@@ -122,7 +126,7 @@ export class TaskAgentService {
 
         const res = this.fetch.fetch<TaskDTO[] | JsonResp<TaskDTO[]>>(opts)
         return res
-      }, 2),
+      }, 1),
       map((res) => {
         if (Array.isArray(res)) {
           return res
@@ -171,6 +175,18 @@ export class TaskAgentService {
     options: CallTaskOptions,
   ): Promise<TaskDTO['taskId'] | undefined> {
 
+    if (! options.url) {
+      const input: SpanLogInput = {
+        [TracerTag.logLevel]: 'error',
+        taskId,
+        message: 'invalid fetch options',
+        options,
+        time: genISO8601String(),
+      }
+      this.logger.error(input)
+      return
+    }
+
     const opts: FetchOptions = {
       ...this.initFetchOptions,
       ...options,
@@ -187,7 +203,15 @@ export class TaskAgentService {
     }
 
     if (! opts.url.startsWith('http')) {
-      throw new Error(`opts.url invalid: "${opts.url}", opts: ${JSON.stringify(opts)}`)
+      const input: SpanLogInput = {
+        [TracerTag.logLevel]: 'error',
+        taskId,
+        message: 'invalid fetch options',
+        opts,
+        time: genISO8601String(),
+      }
+      this.logger.error(input)
+      return
     }
 
     const ret = await this.fetch.fetch<TaskDTO['taskId']>(opts)
