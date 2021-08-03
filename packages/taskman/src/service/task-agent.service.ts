@@ -84,6 +84,10 @@ export class TaskAgentService {
       tap((idx) => {
         if (idx > maxPickTaskCount) {
           this.stop()
+          const input = {
+            message: `taskAgent stopped at ${idx} of ${maxPickTaskCount}`,
+          }
+          this.logger.log(input)
         }
       }),
     )
