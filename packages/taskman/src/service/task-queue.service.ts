@@ -211,7 +211,7 @@ export class TaskQueueService {
     msg?: TaskLogDTO['taskLogContent'],
   ): Promise<TaskLogDTO | undefined> {
 
-    if (id && msg) {
+    if (id && msg && typeof msg === 'string') {
       return this.logRepo.create({
         taskId: id,
         taskLogContent: msg.trim(),

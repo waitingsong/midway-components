@@ -222,7 +222,7 @@ export class TaskAgentService {
       data: {
         id: taskId,
         state: TaskState.failed,
-        msg,
+        msg: JSON.stringify(msg),
       },
     }
     const headers = new Node_Headers(opts.headers)
