@@ -161,7 +161,22 @@ export class TaskAgentService {
     opts.headers = headers
 
     // const payload = await this.queueSvc.getPayload(taskId)
-    const payload = await this.fetch.fetch<TaskPayloadDTO | undefined>(opts)
+    const info = await this.fetch.fetch<TaskPayloadDTO | undefined | JsonResp<TaskPayloadDTO | undefined>>(opts)
+    if (! info) {
+      return ''
+    }
+
+    let payload: TaskPayloadDTO | undefined
+    if (typeof (info as TaskPayloadDTO).taskId === 'string') {
+      payload = info as TaskPayloadDTO
+    }
+    else if (typeof (info as JsonResp<TaskPayloadDTO>).data === 'object') {
+      payload = (info as JsonResp<TaskPayloadDTO>).data
+    }
+    else {
+      return ''
+    }
+
     if (! payload) {
       return ''
     }
