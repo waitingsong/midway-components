@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.7.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@4.6.7...@mw-components/taskman@4.7.0) (2021-08-06)
+
+
+### Features
+
+* **taskman:** export variable taskRunningState ([35fe986](https://github.com/waitingsong/midway-components/commit/35fe9866ffd0f3b98e1e614c7fa6e6aa7d6e8e64))
+
+
+
+
+
 ## [4.6.7](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@4.6.6...@mw-components/taskman@4.6.7) (2021-08-03)
 
 
