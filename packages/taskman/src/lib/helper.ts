@@ -6,7 +6,7 @@ import { CreateTaskOptions } from './types'
 
 export const taskRunningState = {
   count: 0,
-  max: 1,
+  max: 2,
 }
 
 export function increaseRunningTaskCount(): void {

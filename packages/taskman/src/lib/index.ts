@@ -6,5 +6,6 @@ export * from './database.do'
 export * from './db.model'
 export * from './tm.dto'
 export * from './types'
+export { taskRunningState } from './helper'
 export { TaskManComponent } from './task-man.component'
 
