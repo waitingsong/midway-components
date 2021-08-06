@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.8.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@4.7.0...@mw-components/taskman@4.8.0) (2021-08-06)
+
+
+### Features
+
+* **taskman:** increase taskRunningState.max to 4 ([0d5e9ff](https://github.com/waitingsong/midway-components/commit/0d5e9ff81de99f4eca43e9958be90caf8c176a5e))
+
+
+
+
+
 # [4.7.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@4.6.7...@mw-components/taskman@4.7.0) (2021-08-06)
 
 
