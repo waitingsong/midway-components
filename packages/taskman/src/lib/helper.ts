@@ -1,27 +1,22 @@
 import { Node_Headers } from '@mw-components/fetch'
 import { defaultPropDescriptor } from '@waiting/shared-core'
 
+import { taskRunnerState } from './config'
 import { CreateTaskOptions } from './types'
 
 
-export const taskRunningState = {
-  count: 0,
-  max: 4,
-}
-
 export function increaseRunningTaskCount(): void {
-  if (taskRunningState.count < 0) {
-    taskRunningState.count = 0
+  if (taskRunnerState.count < 0) {
+    taskRunnerState.count = 0
   }
-  taskRunningState.count += 1
+  taskRunnerState.count += 1
 }
 
 export function decreaseRunningTaskCount(): void {
-  if (taskRunningState.count >= taskRunningState.max) {
-    taskRunningState.count -= 1
+  if (taskRunnerState.count >= taskRunnerState.max) {
+    taskRunnerState.count -= 1
   }
 }
-
 
 
 export function processJsonHeaders(

@@ -6,11 +6,13 @@ import {
   IWebMiddleware,
   MidwayWebMiddleware,
 } from '@midwayjs/web'
+import { SpanLogInput, TracerTag } from '@mw-components/jaeger'
+import { genISO8601String } from '@waiting/shared-core'
 
-import { increaseRunningTaskCount, taskRunningState } from '../lib/helper'
+import { taskRunnerState } from '../lib/config'
+import { increaseRunningTaskCount } from '../lib/helper'
 import { agentConcurrentConfig } from '../lib/index'
 import { TaskAgentService } from '../service/task-agent.service'
-
 
 
 @Provide()
@@ -29,16 +31,27 @@ export async function taskAgentMiddleware(
   next: IMidwayWebNext,
 ): Promise<unknown> {
 
+  const tm = ctx.tracerManager
+
   const { headers } = ctx.request
-  if (headers['x-task-agent']) {
-    if (taskRunningState.count >= taskRunningState.max) {
+  if (headers['x-task-agent']) { // task distribution
+    const inputLog: SpanLogInput = {
+      [TracerTag.logLevel]: 'debug',
+      'x-task-agent': headers['x-task-agent'],
+      taskRunnerState,
+      agentConcurrentConfig,
+      time: genISO8601String(),
+    }
+    tm && tm.spanLog(inputLog)
+
+    if (taskRunnerState.count >= taskRunnerState.max) {
       ctx.status = 429
       const { reqId } = ctx
       ctx.body = {
         code: 429,
         reqId: reqId && typeof reqId === 'string' ? reqId : '',
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        msg: `Task running limit: ${taskRunningState.max}, now: ${taskRunningState.count}`,
+        msg: `Task running limit: ${taskRunnerState.max}, now: ${taskRunnerState.count}`,
       }
       return
     }

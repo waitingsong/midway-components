@@ -37,6 +37,10 @@ export interface TaskManClientConfig {
    * @default 100 (times not tasks)
    */
   maxPickTaskCount: number
+  /**
+   * @default 4
+   */
+  maxRunner: number
 }
 
 /**
@@ -226,3 +230,9 @@ export interface SetProgressInputData extends CommonSetMethodInputData {
 export interface SetStateInputData extends CommonSetMethodInputData {
   state: TaskDTO['taskState']
 }
+
+export interface TaskRunnerState {
+  count: number
+  max: number
+}
+
