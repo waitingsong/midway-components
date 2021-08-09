@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@4.8.0...@mw-components/taskman@5.0.0) (2021-08-09)
+
+
+### Bug Fixes
+
+* **taskman:** calling order of decreaseRunningTaskCount() ([bcd0146](https://github.com/waitingsong/midway-components/commit/bcd01464c1d2bf9b5428c45f7b742a4eb1db88c5))
+
+
+### Features
+
+* **taskman:** add TaskManClientConfig['maxRunner'] ([2e25e54](https://github.com/waitingsong/midway-components/commit/2e25e54c1f70ebe53e468bcd794e7e7d0d9ad3c7))
+* **taskman:** catch task exception ([fbfbace](https://github.com/waitingsong/midway-components/commit/fbfbace168c078dfd14a99f13ca09560a7354aaf))
+* **taskman:** export increaseTaskRunnerCount(), decreaseTaskRunnerCount() ([38ff988](https://github.com/waitingsong/midway-components/commit/38ff9888e982b13249ec69af4ae7e3cece04225f))
+
+
+
+
+
 # [4.8.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@4.7.0...@mw-components/taskman@4.8.0) (2021-08-06)
 
 
