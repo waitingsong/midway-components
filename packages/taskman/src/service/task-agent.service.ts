@@ -128,10 +128,8 @@ export class TaskAgentService {
         return res
       }, 1),
       map((res) => {
-        if (Array.isArray(res)) {
-          return res
-        }
-        return res.data
+        const data = unwrapResp<TaskDTO[]>(res)
+        return data
       }),
       // tap((rows) => {
       //   console.info(rows)
@@ -162,21 +160,7 @@ export class TaskAgentService {
 
     // const payload = await this.queueSvc.getPayload(taskId)
     const info = await this.fetch.fetch<TaskPayloadDTO | undefined | JsonResp<TaskPayloadDTO | undefined>>(opts)
-    if (! info) {
-      return ''
-    }
-
-    let payload: TaskPayloadDTO | undefined
-    if (typeof (info as TaskPayloadDTO).taskId === 'string') {
-      payload = info as TaskPayloadDTO
-    }
-    else if (typeof (info as JsonResp<TaskPayloadDTO>).data === 'object') {
-      payload = (info as JsonResp<TaskPayloadDTO>).data
-    }
-    else {
-      return ''
-    }
-
+    const payload = unwrapResp<TaskPayloadDTO | undefined>(info)
     if (! payload) {
       return ''
     }
@@ -229,13 +213,14 @@ export class TaskAgentService {
       return
     }
 
-    const ret = await this.fetch.fetch<TaskDTO['taskId']>(opts)
+    const ret = await this.fetch.fetch<TaskDTO['taskId'] | JsonResp<TaskDTO['taskId']>>(opts)
       .catch((err) => {
         return this.processHttpCallExp(taskId, opts, err as Error)
       })
       .then((res) => {
+        const data = unwrapResp(res)
         // console.info(res)
-        return res ? taskId : void 0
+        return data ? taskId : void 0
       })
     return ret
   }
@@ -287,5 +272,17 @@ export class TaskAgentService {
     }
     return opts
   }
+}
+
+
+function unwrapResp<T>(input: T | JsonResp<T>): T {
+  if (typeof input === 'undefined') {
+    return input
+  }
+  if (typeof (input as JsonResp<T>).code === 'number') {
+    const ret = (input as JsonResp<T>).data as T
+    return ret
+  }
+  return input as T
 }
 

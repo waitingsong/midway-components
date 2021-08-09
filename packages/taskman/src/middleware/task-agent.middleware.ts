@@ -6,7 +6,7 @@ import {
   IWebMiddleware,
   MidwayWebMiddleware,
 } from '@midwayjs/web'
-import { HeadersKey, SpanLogInput } from '@mw-components/jaeger'
+import { SpanLogInput } from '@mw-components/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
 
 import { taskRunnerState } from '../lib/config'
@@ -82,4 +82,5 @@ export async function taskAgentMiddleware(
     throw ex
   }
 }
+
 
