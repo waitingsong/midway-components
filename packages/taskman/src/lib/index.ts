@@ -7,4 +7,8 @@ export * from './db.model'
 export * from './tm.dto'
 export * from './types'
 export { TaskManComponent } from './task-man.component'
+export {
+  increaseTaskRunnerCount,
+  decreaseTaskRunnerCount,
+} from './helper'
 
