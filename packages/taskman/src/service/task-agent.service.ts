@@ -213,6 +213,12 @@ export class TaskAgentService {
         return this.processTaskDist(taskId, res)
       })
       .catch((err) => {
+        const { message } = err as Error
+        if (message && message.includes('429')
+          && message.includes('Task')
+          && message.includes(taskId)) {
+          return this.resetTaskToInitDueTo429(taskId, message)
+        }
         return this.processHttpCallExp(taskId, opts, err as Error)
       })
   }
@@ -268,32 +274,43 @@ export class TaskAgentService {
   ): Promise<void> {
 
     if (input && input.code === 429) {
-      const rid = this.ctx.reqId as string
-      const msg = {
-        reqId: rid,
-        taskId,
-        errMessage: `set taskState to "${TaskState.init}" due to httpCode=429`,
-      }
-      const opts: FetchOptions = {
-        ...this.initFetchOptions,
-        method: 'POST',
-        url: `${this.clientConfig.host}${ServerAgent.base}/${ServerAgent.setState}`,
-        data: {
-          id: taskId,
-          state: TaskState.init,
-          msg: JSON.stringify(msg),
-        },
-      }
-      const headers = new Node_Headers(opts.headers)
-      opts.headers = headers
-
-      await this.fetch.fetch(opts)
-        .catch((ex) => {
-          this.logger.error({ opts, ex: ex as Error })
-        })
-
+      await this.resetTaskToInitDueTo429(taskId)
     }
-    return
+  }
+
+  private async resetTaskToInitDueTo429(
+    taskId: TaskDTO['taskId'],
+    message?: string,
+  ): Promise<void> {
+
+    const rid = this.ctx.reqId as string
+    const msg = {
+      reqId: rid,
+      taskId,
+      errMessage: `reset taskState to "${TaskState.init}" due to httpCode=429`,
+    }
+    if (message) {
+      msg.errMessage += `\n${message}`
+    }
+
+    const opts: FetchOptions = {
+      ...this.initFetchOptions,
+      method: 'POST',
+      url: `${this.clientConfig.host}${ServerAgent.base}/${ServerAgent.setState}`,
+      data: {
+        id: taskId,
+        state: TaskState.init,
+        msg: JSON.stringify(msg),
+      },
+    }
+    const headers = new Node_Headers(opts.headers)
+    opts.headers = headers
+
+    await this.fetch.fetch(opts)
+      .catch((ex) => {
+        this.logger.error({ opts, ex: ex as Error })
+      })
+
   }
 
 }
