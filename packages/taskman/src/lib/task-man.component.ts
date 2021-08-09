@@ -9,7 +9,7 @@ import { retrieveHeadersItem } from '@waiting/shared-core'
 
 import { Context, FetchOptions } from '../interface'
 
-import { decreaseRunningTaskCount, processJsonHeaders } from './helper'
+import { decreaseTaskRunnerCount, processJsonHeaders } from './helper'
 import { Task, taskFactory } from './task'
 import { CreateTaskDTO } from './tm.dto'
 
@@ -163,7 +163,7 @@ export class TaskManComponent {
 
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setCancelled}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
-    decreaseRunningTaskCount()
+    decreaseTaskRunnerCount()
     if (res.code) {
       return
     }
@@ -182,7 +182,7 @@ export class TaskManComponent {
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setFailed}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
-    decreaseRunningTaskCount()
+    decreaseTaskRunnerCount()
     if (res.code) {
       return
     }
@@ -201,7 +201,7 @@ export class TaskManComponent {
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setSucceeded}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
-    decreaseRunningTaskCount()
+    decreaseTaskRunnerCount()
     if (res.code) {
       return
     }

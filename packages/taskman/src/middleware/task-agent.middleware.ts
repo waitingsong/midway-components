@@ -10,7 +10,7 @@ import { SpanLogInput, TracerTag } from '@mw-components/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
 
 import { taskRunnerState } from '../lib/config'
-import { decreaseRunningTaskCount, increaseTaskRunnerCount } from '../lib/helper'
+import { decreaseTaskRunnerCount, increaseTaskRunnerCount } from '../lib/helper'
 import { agentConcurrentConfig } from '../lib/index'
 import { TaskAgentService } from '../service/task-agent.service'
 
@@ -71,7 +71,7 @@ export async function taskAgentMiddleware(
   }
   catch (ex) {
     if (isTaskRunning) {
-      decreaseRunningTaskCount()
+      decreaseTaskRunnerCount()
     }
     throw ex
   }
