@@ -3,6 +3,7 @@ import { TaskManComponent } from './task-man.component'
 import {
   TaskDTO,
   TaskLogDTO,
+  TaskProgressDetailDTO,
   TaskProgressDTO,
   TaskResultDTO,
 } from './index'
@@ -97,7 +98,7 @@ export class Task {
     this.setProgress(progress, msg).catch(ex => this.taskMan.logger.error(ex))
   }
 
-  async getProgress(): Promise<TaskProgressDTO | undefined> {
+  async getProgress(): Promise<TaskProgressDetailDTO | undefined> {
     const { taskId } = this.taskInfo
     const ret = await this.taskMan.getProgress(taskId)
     return ret
