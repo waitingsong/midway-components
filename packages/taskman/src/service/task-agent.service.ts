@@ -214,13 +214,13 @@ export class TaskAgentService {
     }
 
     const ret = await this.fetch.fetch<TaskDTO['taskId'] | JsonResp<TaskDTO['taskId']>>(opts)
+      .then(res => unwrapResp(res))
       .catch((err) => {
         return this.processHttpCallExp(taskId, opts, err as Error)
       })
       .then((res) => {
-        const data = unwrapResp(res)
         // console.info(res)
-        return data ? taskId : void 0
+        return res ? taskId : void 0
       })
     return ret
   }
