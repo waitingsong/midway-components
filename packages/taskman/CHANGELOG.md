@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.0.1](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@8.0.0...@mw-components/taskman@8.0.1) (2021-08-09)
+
+
+### Bug Fixes
+
+* **taskman:** handle httpCode 429 from exception by resetTaskToInitDueTo429() ([38ae396](https://github.com/waitingsong/midway-components/commit/38ae39630c78be76d0ad24105d8c92a786bcf565))
+
+
+
+
+
 # [8.0.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@7.0.5...@mw-components/taskman@8.0.0) (2021-08-09)
 
 
