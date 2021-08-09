@@ -31,20 +31,21 @@ export async function taskAgentMiddleware(
   next: IMidwayWebNext,
 ): Promise<unknown> {
 
-  const tm = ctx.tracerManager
   let isTaskRunning = false
 
   const { headers } = ctx.request
-  if (headers['x-task-agent']) { // task distribution
-    const inputLog: SpanLogInput = {
-      [TracerTag.logLevel]: 'debug',
-      'x-task-agent': headers['x-task-agent'],
-      agentConcurrentConfig,
-      taskRunnerState,
-      time: genISO8601String(),
-    }
-    tm && tm.spanLog(inputLog)
+  const tm = ctx.tracerManager
+  const inputLog: SpanLogInput = {
+    [TracerTag.logLevel]: 'debug',
+    'x-task-agent': headers['x-task-agent'],
+    'x-task-id': headers['x-task-id'],
+    agentConcurrentConfig,
+    taskRunnerState,
+    time: genISO8601String(),
+  }
+  tm && tm.spanLog(inputLog)
 
+  if (headers['x-task-agent']) { // task distribution
     if (taskRunnerState.count >= taskRunnerState.max) {
       ctx.status = 429
       const { reqId } = ctx
