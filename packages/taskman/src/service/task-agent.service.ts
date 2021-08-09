@@ -29,10 +29,10 @@ import {
   TaskDTO,
   TaskManClientConfig,
   TaskManServerConfig,
+  TaskPayloadDTO,
   TaskState,
   agentConcurrentConfig,
   initTaskManClientConfig,
-  TaskPayloadDTO,
 } from '../lib/index'
 
 // import { TaskQueueService } from './task-queue.service'
