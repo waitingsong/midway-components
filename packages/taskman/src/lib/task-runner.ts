@@ -107,7 +107,7 @@ export class TaskRunner {
 }
 
 
-export function taskFactory(
+export function taskRunnerFactory(
   taskInfo: TaskDTO,
   taskMan: TaskManComponent,
 ): TaskRunner {

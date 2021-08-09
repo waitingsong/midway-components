@@ -10,7 +10,7 @@ import { retrieveHeadersItem } from '@waiting/shared-core'
 import { Context, FetchOptions } from '../interface'
 
 import { decreaseTaskRunnerCount, processJsonHeaders } from './helper'
-import { TaskRunner, taskFactory } from './task-runner'
+import { TaskRunner, taskRunnerFactory } from './task-runner'
 import { CreateTaskDTO } from './tm.dto'
 
 import {
@@ -72,10 +72,10 @@ export class TaskManComponent {
     if (res.code) {
       return
     }
-    const task = taskFactory(res.data, this)
-    this.writeTaskCache(task)
-    this.writeReqHeaders(task.taskInfo.taskId, headers)
-    return task
+    const taskRunner = taskRunnerFactory(res.data, this)
+    this.writeTaskCache(taskRunner)
+    this.writeReqHeaders(taskRunner.taskInfo.taskId, headers)
+    return taskRunner
   }
 
   /** Retrieve the task, taskId from request header */
@@ -104,10 +104,10 @@ export class TaskManComponent {
     if (! taskInfo) {
       return
     }
-    const task = taskFactory(taskInfo, this)
-    this.writeTaskCache(task)
-    this.writeReqHeaders(task.taskInfo.taskId, headers)
-    return task
+    const taskRunner = taskRunnerFactory(taskInfo, this)
+    this.writeTaskCache(taskRunner)
+    this.writeReqHeaders(taskRunner.taskInfo.taskId, headers)
+    return taskRunner
   }
 
   async [ServerMethod.getInfo](
