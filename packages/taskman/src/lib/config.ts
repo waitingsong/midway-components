@@ -7,6 +7,7 @@ import {
   DbConfig,
   PickInitTaskOptions,
   TaskManClientConfig,
+  TaskRunnerState,
   TaskState,
   TaskStatistics,
 } from './types'
@@ -101,10 +102,12 @@ export const initPickInitTasksOptions: PickInitTaskOptions = {
 export const initTaskManClientConfig: TaskManClientConfig = {
   /** TaskMan Server host */
   host: 'http://localhost:7001',
+  // clientHost: 'http://localhost:7001',
   transferHeaders: ['authorization', 'user-agent'],
   headerKeyTaskId: 'x-task-id',
   pickTaskTimer: 2000,
-  maxPickTaskCount: 100,
+  maxPickTaskCount: 10,
+  maxRunner: 4,
 }
 
 export const initTaskStatistics: TaskStatistics = {
@@ -120,5 +123,11 @@ export const initTaskStatistics: TaskStatistics = {
 export const agentConcurrentConfig = {
   max: 1,
   count: 0,
+}
+
+
+export const taskRunnerState: TaskRunnerState = {
+  count: 0,
+  max: initTaskManClientConfig.maxRunner,
 }
 

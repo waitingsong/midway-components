@@ -11,7 +11,13 @@ import * as jaeger from '@mw-components/jaeger'
 import * as db from '@mw-components/kmore'
 import { DbManager } from '@mw-components/kmore'
 
-import { TaskManServerConfig, initDbConfig, DbReplica, DbReplicaKeys } from './lib/index'
+import { taskRunnerState } from './lib/config'
+import {
+  TaskManServerConfig,
+  initDbConfig,
+  DbReplica,
+  DbReplicaKeys, TaskManClientConfig,
+} from './lib/index'
 import { taskAgentMiddleware } from './middleware/task-agent.middleware'
 import { genKmoreDbConfig } from './repo/helper'
 
@@ -32,12 +38,17 @@ export class AutoConfiguration {
   @App() readonly app: IMidwayWebApplication
 
   @Config('taskManServerConfig') protected readonly serverConfig: TaskManServerConfig
+  @Config('taskManClientConfig') protected readonly clientConfig: TaskManClientConfig
 
   async onReady(): Promise<void> {
     const dbConfig = genKmoreDbConfig(this.serverConfig, initDbConfig)
     const container = this.app.getApplicationContext()
     const dbManager = await container.getAsync(DbManager) as DbManager<DbReplicaKeys>
     await dbManager.connect(DbReplica.taskMaster, dbConfig)
+
+    if (this.clientConfig.maxRunner > 0) {
+      taskRunnerState.max = this.clientConfig.maxRunner
+    }
 
     registerMiddleware(this.app)
   }

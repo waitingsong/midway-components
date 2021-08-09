@@ -6,9 +6,11 @@ import {
 } from '@midwayjs/decorator'
 import {
   FetchComponent,
+  JsonResp,
   Node_Headers,
 } from '@mw-components/fetch'
-import { Logger } from '@mw-components/jaeger'
+import { Logger, SpanLogInput, TracerTag } from '@mw-components/jaeger'
+import { genISO8601String } from '@waiting/shared-core'
 import {
   timer,
   from as ofrom,
@@ -16,7 +18,7 @@ import {
   Subscription,
 } from 'rxjs'
 import {
-  concatMap,
+  map,
   mergeMap,
   tap,
 } from 'rxjs/operators'
@@ -30,9 +32,10 @@ import {
   TaskState,
   agentConcurrentConfig,
   initTaskManClientConfig,
+  TaskPayloadDTO,
 } from '../lib/index'
 
-import { TaskQueueService } from './task-queue.service'
+// import { TaskQueueService } from './task-queue.service'
 
 import { Context, FetchOptions } from '~/interface'
 
@@ -46,7 +49,7 @@ export class TaskAgentService {
 
   @Inject('fetch:fetchComponent') readonly fetch: FetchComponent
 
-  @Inject() protected readonly queueSvc: TaskQueueService
+  // @Inject() protected readonly queueSvc: TaskQueueService
 
   @Config('taskManServerConfig') protected readonly config: TaskManServerConfig
   @Config('taskManClientConfig') protected readonly clientConfig: TaskManClientConfig
@@ -84,6 +87,13 @@ export class TaskAgentService {
       tap((idx) => {
         if (idx > maxPickTaskCount) {
           this.stop()
+
+          const input: SpanLogInput = {
+            [TracerTag.logLevel]: 'info',
+            message: `taskAgent stopped at ${idx} of ${maxPickTaskCount}`,
+            time: genISO8601String(),
+          }
+          this.logger.log(input)
         }
       }),
     )
@@ -98,13 +108,31 @@ export class TaskAgentService {
 
   stop(): void {
     this.subscription && this.subscription.unsubscribe()
-    this.queueSvc.destroy()
+    // this.queueSvc.destroy()
     agentConcurrentConfig.count = 0
   }
 
   private pickTasksWaitToRun(intv$: Observable<number>): Observable<TaskDTO[]> {
     const stream$ = intv$.pipe(
-      concatMap(() => this.queueSvc.pickTasksWaitToRun({ maxRows: 1 })),
+      // concatMap(() => this.queueSvc.pickTasksWaitToRun({ maxRows: 1 })),
+      mergeMap(() => {
+        const opts: FetchOptions = {
+          ...this.initFetchOptions,
+          method: 'GET',
+          url: `${this.clientConfig.host}${ServerAgent.base}/${ServerAgent.pickTasksWaitToRun}`,
+        }
+        const headers = new Node_Headers(opts.headers)
+        opts.headers = headers
+
+        const res = this.fetch.fetch<TaskDTO[] | JsonResp<TaskDTO[]>>(opts)
+        return res
+      }, 1),
+      map((res) => {
+        if (Array.isArray(res)) {
+          return res
+        }
+        return res.data
+      }),
       // tap((rows) => {
       //   console.info(rows)
       // }),
@@ -120,12 +148,38 @@ export class TaskAgentService {
       return ''
     }
     const { taskId } = task
-    const payload = await this.queueSvc.getPayload(taskId)
-    if (! payload) {
+
+    const opts: FetchOptions = {
+      ...this.initFetchOptions,
+      method: 'GET',
+      url: `${this.clientConfig.host}${ServerAgent.base}/${ServerAgent.getPayload}`,
+      data: {
+        id: taskId,
+      },
+    }
+    const headers = new Node_Headers(opts.headers)
+    opts.headers = headers
+
+    // const payload = await this.queueSvc.getPayload(taskId)
+    const info = await this.fetch.fetch<TaskPayloadDTO | undefined | JsonResp<TaskPayloadDTO | undefined>>(opts)
+    if (! info) {
       return ''
     }
 
-    // await this.queueSvc.setRunning(taskId)
+    let payload: TaskPayloadDTO | undefined
+    if (typeof (info as TaskPayloadDTO).taskId === 'string') {
+      payload = info as TaskPayloadDTO
+    }
+    else if (typeof (info as JsonResp<TaskPayloadDTO>).data === 'object') {
+      payload = (info as JsonResp<TaskPayloadDTO>).data
+    }
+    else {
+      return ''
+    }
+
+    if (! payload) {
+      return ''
+    }
 
     const res = this.httpCall(taskId, payload.json)
     return res
@@ -133,8 +187,20 @@ export class TaskAgentService {
 
   private async httpCall(
     taskId: TaskDTO['taskId'],
-    options: CallTaskOptions,
+    options?: CallTaskOptions,
   ): Promise<TaskDTO['taskId'] | undefined> {
+
+    if (! options || ! options.url) {
+      const input: SpanLogInput = {
+        [TracerTag.logLevel]: 'error',
+        taskId,
+        message: 'invalid fetch options',
+        options,
+        time: genISO8601String(),
+      }
+      this.logger.error(input)
+      return
+    }
 
     const opts: FetchOptions = {
       ...this.initFetchOptions,
@@ -149,6 +215,18 @@ export class TaskAgentService {
 
     if (opts.url.includes(`${ServerAgent.base}/${ServerAgent.hello}`)) {
       opts.dataType = 'text'
+    }
+
+    if (! opts.url.startsWith('http')) {
+      const input: SpanLogInput = {
+        [TracerTag.logLevel]: 'error',
+        taskId,
+        message: 'invalid fetch options',
+        opts,
+        time: genISO8601String(),
+      }
+      this.logger.error(input)
+      return
     }
 
     const ret = await this.fetch.fetch<TaskDTO['taskId']>(opts)
@@ -176,10 +254,28 @@ export class TaskAgentService {
       options,
       errMessage: err.message,
     }
-    await this.queueSvc.setState(taskId, TaskState.failed, JSON.stringify(msg))
+    // await this.queueSvc.setState(taskId, TaskState.failed, JSON.stringify(msg))
+    //   .catch((ex) => {
+    //     this.logger.error(ex)
+    //   })
+    const opts: FetchOptions = {
+      ...this.initFetchOptions,
+      method: 'POST',
+      url: `${this.clientConfig.host}${ServerAgent.base}/${ServerAgent.setState}`,
+      data: {
+        id: taskId,
+        state: TaskState.failed,
+        msg: JSON.stringify(msg),
+      },
+    }
+    const headers = new Node_Headers(opts.headers)
+    opts.headers = headers
+
+    await this.fetch.fetch(opts)
       .catch((ex) => {
         this.logger.error(ex)
       })
+
     this.logger.error(err)
   }
 

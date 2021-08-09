@@ -4,12 +4,12 @@ import {
   Provide,
 } from '@midwayjs/decorator'
 import { FetchComponent, JsonResp, Node_Headers } from '@mw-components/fetch'
-import { Logger } from '@mw-components/jaeger'
+import { HeadersKey, Logger } from '@mw-components/jaeger'
 import { retrieveHeadersItem } from '@waiting/shared-core'
 
 import { Context, FetchOptions } from '../interface'
 
-import { decreaseRunningTaskCount, processJsonHeaders } from './helper'
+import { decreaseTaskRunnerCount, processJsonHeaders } from './helper'
 import { Task, taskFactory } from './task'
 import { CreateTaskDTO } from './tm.dto'
 
@@ -47,6 +47,8 @@ export class TaskManComponent {
 
   async [ServerMethod.create](input: CreateTaskOptions): Promise<Task | undefined> {
     const headers = this.processPostHeaders(input)
+    const spanHeader = this.ctx.tracerManager.headerOfCurrentSpan()?.[HeadersKey.traceId] as string
+    headers.set(HeadersKey.traceId, spanHeader)
     const pdata: CreateTaskDTO = {
       ...input.createTaskDTO,
     }
@@ -60,6 +62,9 @@ export class TaskManComponent {
     }
     if (input.host) {
       opts.url = input.host
+    }
+    if (! opts.url) {
+      throw new Error('host of opts.url empty')
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.create}`
 
@@ -158,10 +163,10 @@ export class TaskManComponent {
 
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setCancelled}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
+    decreaseTaskRunnerCount()
     if (res.code) {
       return
     }
-    decreaseRunningTaskCount()
     return res.data
   }
 
@@ -177,10 +182,10 @@ export class TaskManComponent {
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setFailed}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
+    decreaseTaskRunnerCount()
     if (res.code) {
       return
     }
-    decreaseRunningTaskCount()
     return res.data
   }
 
@@ -196,10 +201,10 @@ export class TaskManComponent {
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setSucceeded}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
+    decreaseTaskRunnerCount()
     if (res.code) {
       return
     }
-    decreaseRunningTaskCount()
     return res.data
   }
 

@@ -9,7 +9,6 @@ import {
   Query,
 } from '@midwayjs/decorator'
 
-import { decreaseRunningTaskCount } from '../lib/helper'
 import {
   CommonSetMethodInputData,
   CreateTaskDTO,
@@ -22,6 +21,8 @@ import {
   TaskProgressDTO,
   TaskResultDTO,
   TaskStatistics,
+  TaskPayloadDTO,
+  SetStateInputData,
 } from '../lib/index'
 import { TaskQueueService } from '../service/index.service'
 
@@ -34,7 +35,6 @@ export class TaskAgentController {
 
   @Get('/' + ServerAgent.hello)
   [ServerMethod.hello](): string {
-    decreaseRunningTaskCount()
     return 'OK'
   }
 
@@ -127,4 +127,30 @@ export class TaskAgentController {
     return ret
   }
 
+  @Get('/' + ServerAgent.pickTasksWaitToRun)
+  async [ServerMethod.pickTasksWaitToRun](): Promise<TaskDTO[]> {
+    const ret = await this.queueSvc.pickTasksWaitToRun({ maxRows: 1 })
+    return ret
+  }
+
+  @Get('/' + ServerAgent.getPayload)
+  async [ServerMethod.getPayload](
+    @Query() id: TaskDTO['taskId'],
+  ): Promise<TaskPayloadDTO | undefined> {
+
+    const ret = await this.queueSvc.getPayload(id)
+    return ret
+  }
+
+  @Post('/' + ServerAgent.setState)
+  async [ServerMethod.setState](
+    @Body(ALL) input: SetStateInputData,
+  ): Promise<TaskDTO | undefined> {
+
+    const { id, state, msg } = input
+    const ret = await this.queueSvc.setState(id, state, msg)
+    return ret
+  }
+
 }
+

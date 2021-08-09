@@ -9,6 +9,7 @@ import {
   DbManager,
   KmoreComponent,
   TracerKmoreComponent,
+  unsubscribeEventFuncOnResFinish,
 } from '@mw-components/kmore'
 
 import {
@@ -50,7 +51,7 @@ export class TaskQueueRepository {
   async init(): Promise<void> {
     const container = this.app.getApplicationContext()
     const dbManager: DbManager<DbReplicaKeys> = await container.getAsync(DbManager)
-    const db = await dbManager.create<DbModel>(this.ctx, DbReplica.taskMaster, false)
+    const db = await dbManager.create<DbModel>(this.ctx, DbReplica.taskMaster, unsubscribeEventFuncOnResFinish)
     this.db = db
   }
 

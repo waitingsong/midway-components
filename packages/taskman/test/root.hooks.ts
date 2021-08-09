@@ -45,18 +45,12 @@ export const mochaHooks = async () => {
 
     beforeEach: async () => {
       const { repo } = testConfig
-      await Promise.all([
-        repo.db.refTables.ref_tb_task().del(),
-        repo.db.refTables.ref_tb_task_payload().del(),
-      ])
+      await Promise.all([repo.db.refTables.ref_tb_task().del()])
     },
 
     afterEach: async () => {
       const { repo } = testConfig
-      await Promise.all([
-        repo.db.refTables.ref_tb_task().del(),
-        repo.db.refTables.ref_tb_task_payload().del(),
-      ])
+      await Promise.all([repo.db.refTables.ref_tb_task().del()])
     },
 
     afterAll: async () => {

@@ -70,7 +70,15 @@ export class TracerManager {
 
   @RunIfEnabled
   finishSpan(): void {
-    this.spans.pop()?.finish()
+    const currentSpan = this.currentSpan()
+    if (! currentSpan) {
+      return
+    }
+    currentSpan.finish()
+    // 保留请求根 span 在栈中
+    if (this.spans.length > 1) {
+      this.spans.pop()
+    }
   }
 
   @RunIfEnabled

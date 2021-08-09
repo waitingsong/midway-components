@@ -1,7 +1,7 @@
 {
   "name": "@mw-components/taskman",
   "author": "waiting",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "midway component task manager",
   "keywords": [
     "midway",
@@ -23,12 +23,12 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@mw-components/fetch": "^13.0.0",
-    "@mw-components/jaeger": "^7.0.0",
-    "@mw-components/kmore": "^22.1.1",
+    "@mw-components/fetch": "^13.2.0",
+    "@mw-components/jaeger": "^7.2.0",
+    "@mw-components/kmore": "^22.5.0",
     "@waiting/shared-core": "^14.4.1",
     "@waiting/shared-types": "^14.4.1",
-    "pg": "^8.6.0",
+    "pg": "^8.7.1",
     "postgres-interval": "^3.0.0",
     "tsconfig-paths": "3"
   },
@@ -52,7 +52,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "npm run tsc",
+    "build": "npm run tsc && cp -af src/database dist/",
     "clean": "npm run clean:lock & npm run clean:cache & rm -rf dist/* -rf",
     "clean:cache": "rm -rf .eslintcache .vscode/.tsbuildinfo .vscode/.tsbuildinfo.*",
     "clean:lock": "rm package-lock.json -f",

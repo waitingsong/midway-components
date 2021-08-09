@@ -1,7 +1,7 @@
 {
   "name": "@mw-components/jaeger",
   "author": "waiting",
-  "version": "7.0.0",
+  "version": "7.2.0",
   "description": "midway component for jaeger",
   "keywords": [
     "midway",
@@ -28,7 +28,8 @@
     "@waiting/shared-core": "^14.4.1",
     "@waiting/shared-types": "^14.4.1",
     "jaeger-client": "^3.18.1",
-    "opentracing": "^0.14.5"
+    "opentracing": "^0.14.5",
+    "tsconfig-paths": "3"
   },
   "devDependencies": {
     "@midwayjs/core": "^2.11.0",
@@ -53,11 +54,12 @@
     "clean": "npm run clean:lock & npm run clean:cache & rm -rf dist/* -rf",
     "clean:cache": "rm -rf .eslintcache .vscode/.tsbuildinfo .vscode/.tsbuildinfo.*",
     "clean:lock": "rm package-lock.json -f",
-    "cov": "",
+    "cov": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json nyc mocha --parallel=false",
     "lint": "eslint --fix --cache {src,test}/**/*.ts",
     "lint:nofix": "eslint --cache {src,test}/**/*.ts",
     "purge": "npm run clean && rm node_modules -rf",
-    "test": "",
+    "test": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json mocha --parallel=false",
+    "test:local": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json ../../node_modules/.bin/mocha --parallel=false",
     "tsc": "tsc -p tsconfig.json"
   },
   "nyc": {
