@@ -9,7 +9,7 @@ import {
 } from './index'
 
 
-export class Task {
+export class TaskRunner {
 
   constructor(
     readonly taskInfo: TaskDTO,
@@ -110,6 +110,6 @@ export class Task {
 export function taskFactory(
   taskInfo: TaskDTO,
   taskMan: TaskManComponent,
-): Task {
-  return new Task(taskInfo, taskMan)
+): TaskRunner {
+  return new TaskRunner(taskInfo, taskMan)
 }
