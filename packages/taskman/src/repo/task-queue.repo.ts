@@ -123,14 +123,19 @@ export class TaskQueueRepository {
     const prog = await db.refTables.ref_tb_task_progress()
       .where('task_id', id)
       .limit(1)
-      .then(arr => arr[0])
-    if (! prog) { return }
+      .then(arr => arr[0]) as TaskProgressDTO | undefined
 
+    if (prog) {
+      const ret: TaskProgressDetailDTO = {
+        ...prog,
+        taskState: task.taskState,
+      }
+      return ret
+    }
     const ret: TaskProgressDetailDTO = {
-      ...(prog as unknown as TaskProgressDTO),
+      taskId: id,
       taskState: task.taskState,
     }
-
     return ret
   }
 

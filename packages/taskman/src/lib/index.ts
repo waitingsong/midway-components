@@ -1,5 +1,5 @@
 
-export * from './task'
+export * from './task-runner'
 export * from './config'
 export * from './config.types'
 export * from './database.do'

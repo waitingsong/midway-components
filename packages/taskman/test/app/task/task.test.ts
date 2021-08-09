@@ -57,15 +57,15 @@ describe.skip(filename, () => {
         },
         createTaskDTO,
       }
-      const task = await tm.create(opts)
+      const taskRunner = await tm.create(opts)
 
-      if (! task) {
+      if (! taskRunner) {
         assert(false)
         return
       }
-      task.notifyRunning()
+      taskRunner.notifyRunning()
       await sleep(500)
-      const prog = await task.getProgress()
+      const prog = await taskRunner.getProgress()
       assert(prog && prog.taskProgress === 0)
     })
   })

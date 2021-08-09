@@ -24,7 +24,7 @@ describe(filename, () => {
       assert(info && info.taskState === state)
     })
 
-    it('set progress to zero when set state to runing', async () => {
+    it('set progress to zero when set state to running', async () => {
       const { svc, repo } = testConfig
       const task = await createOneTask(svc, repo)
       const progress = await svc.getProgress(task.taskId)

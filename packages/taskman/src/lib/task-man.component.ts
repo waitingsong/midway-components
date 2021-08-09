@@ -10,7 +10,7 @@ import { retrieveHeadersItem } from '@waiting/shared-core'
 import { Context, FetchOptions } from '../interface'
 
 import { decreaseTaskRunnerCount, processJsonHeaders } from './helper'
-import { Task, taskFactory } from './task'
+import { TaskRunner, taskFactory } from './task-runner'
 import { CreateTaskDTO } from './tm.dto'
 
 import {
@@ -39,13 +39,13 @@ export class TaskManComponent {
 
   @Config('taskManClientConfig') protected readonly config: TaskManClientConfig
 
-  protected readonly taskInstMap = new Map<TaskDTO['taskId'], Task>()
+  protected readonly taskRunnerMap = new Map<TaskDTO['taskId'], TaskRunner>()
 
   /** 请求 taskAgent 接口所需 headers */
   protected readonly taskReqHeadersMap = new Map<TaskDTO['taskId'], Headers>()
 
 
-  async [ServerMethod.create](input: CreateTaskOptions): Promise<Task | undefined> {
+  async [ServerMethod.create](input: CreateTaskOptions): Promise<TaskRunner | undefined> {
     const headers = this.processPostHeaders(input)
     const spanHeader = this.ctx.tracerManager.headerOfCurrentSpan()?.[HeadersKey.traceId] as string
     headers.set(HeadersKey.traceId, spanHeader)
@@ -79,7 +79,7 @@ export class TaskManComponent {
   }
 
   /** Retrieve the task, taskId from request header */
-  async [ServerMethod.retrieveTask](taskId?: string): Promise<Task | undefined> {
+  async [ServerMethod.retrieveTask](taskId?: string): Promise<TaskRunner | undefined> {
     let id = taskId
     if (! id) {
       // const headers = new Node_Headers(this.ctx.request.headers)
@@ -290,19 +290,19 @@ export class TaskManComponent {
    */
   deleteTaskFromCache(id?: TaskDTO['taskId']): void {
     if (id) {
-      this.taskInstMap.delete(id)
+      this.taskRunnerMap.delete(id)
     }
     else {
-      this.taskInstMap.clear()
+      this.taskRunnerMap.clear()
     }
   }
 
-  protected writeTaskCache(task: Task): void {
-    this.taskInstMap.set(task.taskInfo.taskId, task)
+  protected writeTaskCache(task: TaskRunner): void {
+    this.taskRunnerMap.set(task.taskInfo.taskId, task)
   }
 
-  protected readTaskFromCache(id: TaskDTO['taskId']): Task | undefined {
-    return this.taskInstMap.get(id)
+  protected readTaskFromCache(id: TaskDTO['taskId']): TaskRunner | undefined {
+    return this.taskRunnerMap.get(id)
   }
 
   protected writeReqHeaders(id: TaskDTO['taskId'], headers: Headers): void {

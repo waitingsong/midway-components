@@ -4,6 +4,8 @@ import { testConfig } from 'test/test-config'
 
 import { createOneTask } from '../helper'
 
+import { TaskState } from '~/lib'
+
 // eslint-disable-next-line import/order
 import assert = require('power-assert')
 
@@ -19,7 +21,7 @@ describe(filename, () => {
 
       const { taskId } = task
       const info = await svc.getProgress(task.taskId)
-      assert(! info)
+      assert(info && info.taskState === TaskState.init)
 
       await svc.setRunning(taskId) // insert tb_task_progress
 

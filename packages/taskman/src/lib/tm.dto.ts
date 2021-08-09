@@ -17,7 +17,7 @@ export type TaskProgressDTO = RecusiveCamelKeys<TbTaskProgressDO>
 export type TaskPayloadDTO = RecusiveCamelKeys<TbTaskPayloadDO>
 export type TaskResultDTO = RecusiveCamelKeys<TbTaskResultDO>
 export type TaskLogDTO = RecusiveCamelKeys<TbTaskLogDO>
-export type TaskProgressDetailDTO = TaskProgressDTO & Pick<TaskDTO, 'taskState'>
+export type TaskProgressDetailDTO = Partial<TaskProgressDTO> & Pick<TaskDTO, 'taskState' | 'taskId'>
 
 export type TaskFullDTO = TaskDTO & {
   taskProgress: TbTaskProgressDO['task_progress'] | null,
