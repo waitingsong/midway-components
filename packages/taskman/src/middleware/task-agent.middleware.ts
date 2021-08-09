@@ -6,7 +6,7 @@ import {
   IWebMiddleware,
   MidwayWebMiddleware,
 } from '@midwayjs/web'
-import { SpanLogInput, TracerTag } from '@mw-components/jaeger'
+import { SpanLogInput } from '@mw-components/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
 
 import { taskRunnerState } from '../lib/config'
@@ -36,7 +36,7 @@ export async function taskAgentMiddleware(
   const { headers } = ctx.request
   const tm = ctx.tracerManager
   const inputLog: SpanLogInput = {
-    [TracerTag.logLevel]: 'debug',
+    event: 'TaskMan',
     'x-task-agent': headers['x-task-agent'],
     'x-task-id': headers['x-task-id'],
     agentConcurrentConfig,
@@ -73,6 +73,7 @@ export async function taskAgentMiddleware(
   catch (ex) {
     if (isTaskRunning) {
       decreaseTaskRunnerCount()
+      isTaskRunning = false
     }
     throw ex
   }
