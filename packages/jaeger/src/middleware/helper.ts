@@ -178,7 +178,7 @@ export async function processHTTPStatus(
     [Tags.HTTP_STATUS_CODE]: status,
   }
 
-  if (status >= 400) {
+  if (status >= 400 && status !== 429) {
     if (status === 404) {
       tags[Tags.SAMPLING_PRIORITY] = 1
     }

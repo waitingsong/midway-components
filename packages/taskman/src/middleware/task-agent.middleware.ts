@@ -6,7 +6,7 @@ import {
   IWebMiddleware,
   MidwayWebMiddleware,
 } from '@midwayjs/web'
-import { SpanLogInput, TracerTag } from '@mw-components/jaeger'
+import { SpanLogInput } from '@mw-components/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
 
 import { taskRunnerState } from '../lib/config'
@@ -34,14 +34,16 @@ export async function taskAgentMiddleware(
   let isTaskRunning = false
 
   const { headers } = ctx.request
+  const taskId = headers['x-task-id']
   const tm = ctx.tracerManager
   const inputLog: SpanLogInput = {
-    [TracerTag.logLevel]: 'debug',
-    'x-task-agent': headers['x-task-agent'],
-    'x-task-id': headers['x-task-id'],
+    event: 'TaskMan-entry',
     agentConcurrentConfig,
-    taskRunnerState,
+    taskId,
+    pid: process.pid,
     time: genISO8601String(),
+    runnerCount: taskRunnerState.count,
+    runnerMax: taskRunnerState.max,
   }
   tm && tm.spanLog(inputLog)
 
@@ -53,8 +55,10 @@ export async function taskAgentMiddleware(
         code: 429,
         reqId: reqId && typeof reqId === 'string' ? reqId : '',
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        msg: `Task running limit: ${taskRunnerState.max}, now: ${taskRunnerState.count}`,
+        msg: `Task running limit: ${taskRunnerState.max}, now: ${taskRunnerState.count}, taskId: ${taskId}`,
       }
+      inputLog.message = ctx.body
+      tm && tm.spanLog(inputLog)
       return
     }
     isTaskRunning = true
@@ -73,8 +77,10 @@ export async function taskAgentMiddleware(
   catch (ex) {
     if (isTaskRunning) {
       decreaseTaskRunnerCount()
+      isTaskRunning = false
     }
     throw ex
   }
 }
+
 
