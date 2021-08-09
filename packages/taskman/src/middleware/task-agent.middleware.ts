@@ -55,6 +55,8 @@ export async function taskAgentMiddleware(
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         msg: `Task running limit: ${taskRunnerState.max}, now: ${taskRunnerState.count}`,
       }
+      inputLog.message = ctx.body
+      tm && tm.spanLog(inputLog)
       return
     }
     isTaskRunning = true
