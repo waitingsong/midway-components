@@ -53,7 +53,7 @@
   },
   "scripts": {
     "build": "npm run tsc && cp -af src/database dist/",
-    "clean": "npm run clean:lock & npm run clean:cache & rm -rf dist/* -rf",
+    "clean": "npm run clean:cache & rm -rf dist/* -rf",
     "clean:cache": "rm -rf .eslintcache .vscode/.tsbuildinfo .vscode/.tsbuildinfo.*",
     "clean:lock": "rm package-lock.json -f",
     "cov": "cross-env TS_NODE_PROJECT=test/tsconfig.json nyc mocha --parallel=false",
