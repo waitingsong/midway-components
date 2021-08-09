@@ -163,10 +163,10 @@ export class TaskManComponent {
 
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setCancelled}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
+    decreaseRunningTaskCount()
     if (res.code) {
       return
     }
-    decreaseRunningTaskCount()
     return res.data
   }
 
@@ -182,10 +182,10 @@ export class TaskManComponent {
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setFailed}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
+    decreaseRunningTaskCount()
     if (res.code) {
       return
     }
-    decreaseRunningTaskCount()
     return res.data
   }
 
@@ -201,10 +201,10 @@ export class TaskManComponent {
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setSucceeded}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
+    decreaseRunningTaskCount()
     if (res.code) {
       return
     }
-    decreaseRunningTaskCount()
     return res.data
   }
 
