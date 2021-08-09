@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@7.0.5...@mw-components/taskman@8.0.0) (2021-08-09)
+
+
+### Features
+
+* **taskman:** set taskState to init if TaskRunner return httpCode 429 ([c260e55](https://github.com/waitingsong/midway-components/commit/c260e55b6fcde03801ae76c87c2d9fdc9f2c21f1))
+
+
+
+
+
 ## [7.0.5](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@7.0.4...@mw-components/taskman@7.0.5) (2021-08-09)
 
 **Note:** Version bump only for package @mw-components/taskman

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 8.0.0 (2021-08-09)
+
+
+### Features
+
+* **jaeger:** exclude code 429 within processHTTPStatus() ([195e0fe](https://github.com/waitingsong/midway-components/commit/195e0fe36fb2cb92d2cb517cb501cb035dec4d6a))
+
+
+
+
+
 # [7.2.0](https://github.com/waitingsong/midway-components/compare/@mw-components/jaeger@7.1.0...@mw-components/jaeger@7.2.0) (2021-07-28)
 
 
