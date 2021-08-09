@@ -40,8 +40,10 @@ export async function taskAgentMiddleware(
     'x-task-agent': headers['x-task-agent'],
     'x-task-id': headers['x-task-id'],
     agentConcurrentConfig,
-    taskRunnerState,
+    pid: process.pid,
     time: genISO8601String(),
+    runnerCount: taskRunnerState.count,
+    runnerMax: taskRunnerState.max,
   }
   tm && tm.spanLog(inputLog)
 
