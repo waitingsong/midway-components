@@ -5,7 +5,7 @@ import { taskRunnerState } from './config'
 import { CreateTaskOptions } from './types'
 
 
-export function increaseRunningTaskCount(): void {
+export function increaseTaskRunnerCount(): void {
   if (taskRunnerState.count < 0) {
     taskRunnerState.count = 0
   }

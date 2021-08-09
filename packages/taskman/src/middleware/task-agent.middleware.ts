@@ -10,7 +10,7 @@ import { SpanLogInput, TracerTag } from '@mw-components/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
 
 import { taskRunnerState } from '../lib/config'
-import { decreaseRunningTaskCount, increaseRunningTaskCount } from '../lib/helper'
+import { decreaseRunningTaskCount, increaseTaskRunnerCount } from '../lib/helper'
 import { agentConcurrentConfig } from '../lib/index'
 import { TaskAgentService } from '../service/task-agent.service'
 
@@ -57,7 +57,7 @@ export async function taskAgentMiddleware(
       return
     }
     isTaskRunning = true
-    increaseRunningTaskCount() // decreaseRunningTaskCount() 在 TaskManComponent 中任务完成后调用
+    increaseTaskRunnerCount() // decreaseRunningTaskCount() 在 TaskManComponent 中任务完成后调用
   }
 
   if (agentConcurrentConfig.count < agentConcurrentConfig.max) {
