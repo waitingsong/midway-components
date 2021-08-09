@@ -10,7 +10,7 @@ import { SpanLogInput, TracerTag } from '@mw-components/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
 
 import { taskRunnerState } from '../lib/config'
-import { increaseRunningTaskCount } from '../lib/helper'
+import { decreaseRunningTaskCount, increaseRunningTaskCount } from '../lib/helper'
 import { agentConcurrentConfig } from '../lib/index'
 import { TaskAgentService } from '../service/task-agent.service'
 
@@ -32,14 +32,15 @@ export async function taskAgentMiddleware(
 ): Promise<unknown> {
 
   const tm = ctx.tracerManager
+  let isTaskRunning = false
 
   const { headers } = ctx.request
   if (headers['x-task-agent']) { // task distribution
     const inputLog: SpanLogInput = {
       [TracerTag.logLevel]: 'debug',
       'x-task-agent': headers['x-task-agent'],
-      taskRunnerState,
       agentConcurrentConfig,
+      taskRunnerState,
       time: genISO8601String(),
     }
     tm && tm.spanLog(inputLog)
@@ -55,7 +56,8 @@ export async function taskAgentMiddleware(
       }
       return
     }
-    increaseRunningTaskCount()
+    isTaskRunning = true
+    increaseRunningTaskCount() // decreaseRunningTaskCount() 在 TaskManComponent 中任务完成后调用
   }
 
   if (agentConcurrentConfig.count < agentConcurrentConfig.max) {
@@ -63,6 +65,15 @@ export async function taskAgentMiddleware(
     await taskAgent.run()
   }
 
-  return next()
+
+  try {
+    await next()
+  }
+  catch (ex) {
+    if (isTaskRunning) {
+      decreaseRunningTaskCount()
+    }
+    throw ex
+  }
 }
 
