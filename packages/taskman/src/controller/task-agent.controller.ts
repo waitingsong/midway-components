@@ -9,7 +9,6 @@ import {
   Query,
 } from '@midwayjs/decorator'
 
-import { decreaseRunningTaskCount } from '../lib/helper'
 import {
   CommonSetMethodInputData,
   CreateTaskDTO,
@@ -36,7 +35,6 @@ export class TaskAgentController {
 
   @Get('/' + ServerAgent.hello)
   [ServerMethod.hello](): string {
-    decreaseRunningTaskCount()
     return 'OK'
   }
 
