@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@5.0.0...@mw-components/taskman@6.0.0) (2021-08-09)
+
+
+### Features
+
+* **taskman:** change type TaskProgressDetailDTO ([990a815](https://github.com/waitingsong/midway-components/commit/990a815b3d254008299c0a91937350880b42cf12))
+
+
+
+
+
 # [5.0.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@4.8.0...@mw-components/taskman@5.0.0) (2021-08-09)
 
 
