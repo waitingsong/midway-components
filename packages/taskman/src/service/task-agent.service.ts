@@ -49,8 +49,6 @@ export class TaskAgentService {
 
   @Inject('fetch:fetchComponent') readonly fetch: FetchComponent
 
-  // @Inject() protected readonly queueSvc: TaskQueueService
-
   @Config('taskManServerConfig') protected readonly config: TaskManServerConfig
   @Config('taskManClientConfig') protected readonly clientConfig: TaskManClientConfig
 
@@ -108,13 +106,11 @@ export class TaskAgentService {
 
   stop(): void {
     this.subscription && this.subscription.unsubscribe()
-    // this.queueSvc.destroy()
     agentConcurrentConfig.count = 0
   }
 
   private pickTasksWaitToRun(intv$: Observable<number>): Observable<TaskDTO[]> {
     const stream$ = intv$.pipe(
-      // concatMap(() => this.queueSvc.pickTasksWaitToRun({ maxRows: 1 })),
       mergeMap(() => {
         const opts: FetchOptions = {
           ...this.initFetchOptions,
@@ -158,21 +154,20 @@ export class TaskAgentService {
     const headers = new Node_Headers(opts.headers)
     opts.headers = headers
 
-    // const payload = await this.queueSvc.getPayload(taskId)
     const info = await this.fetch.fetch<TaskPayloadDTO | undefined | JsonResp<TaskPayloadDTO | undefined>>(opts)
     const payload = unwrapResp<TaskPayloadDTO | undefined>(info)
     if (! payload) {
       return ''
     }
 
-    const res = this.httpCall(taskId, payload.json)
-    return res
+    await this.httpCall(taskId, payload.json)
+    return taskId
   }
 
   private async httpCall(
     taskId: TaskDTO['taskId'],
     options?: CallTaskOptions,
-  ): Promise<TaskDTO['taskId'] | undefined> {
+  ): Promise<undefined> {
 
     if (! options || ! options.url) {
       const input: SpanLogInput = {
@@ -213,16 +208,13 @@ export class TaskAgentService {
       return
     }
 
-    const ret = await this.fetch.fetch<TaskDTO['taskId'] | JsonResp<TaskDTO['taskId']>>(opts)
-      .then(res => unwrapResp(res))
+    await this.fetch.fetch<void | JsonResp<void>>(opts)
+      .then((res) => {
+        return this.processTaskDist(taskId, res)
+      })
       .catch((err) => {
         return this.processHttpCallExp(taskId, opts, err as Error)
       })
-      .then((res) => {
-        // console.info(res)
-        return res ? taskId : void 0
-      })
-    return ret
   }
 
   private async processHttpCallExp(
@@ -239,10 +231,6 @@ export class TaskAgentService {
       options,
       errMessage: err.message,
     }
-    // await this.queueSvc.setState(taskId, TaskState.failed, JSON.stringify(msg))
-    //   .catch((ex) => {
-    //     this.logger.error(ex)
-    //   })
     const opts: FetchOptions = {
       ...this.initFetchOptions,
       method: 'POST',
@@ -272,6 +260,42 @@ export class TaskAgentService {
     }
     return opts
   }
+
+
+  private async processTaskDist(
+    taskId: TaskDTO['taskId'],
+    input: void | JsonResp<void>,
+  ): Promise<void> {
+
+    if (input && input.code === 429) {
+      const rid = this.ctx.reqId as string
+      const msg = {
+        reqId: rid,
+        taskId,
+        errMessage: `set taskState to "${TaskState.init}" due to httpCode=429`,
+      }
+      const opts: FetchOptions = {
+        ...this.initFetchOptions,
+        method: 'POST',
+        url: `${this.clientConfig.host}${ServerAgent.base}/${ServerAgent.setState}`,
+        data: {
+          id: taskId,
+          state: TaskState.init,
+          msg: JSON.stringify(msg),
+        },
+      }
+      const headers = new Node_Headers(opts.headers)
+      opts.headers = headers
+
+      await this.fetch.fetch(opts)
+        .catch((ex) => {
+          this.logger.error({ opts, ex: ex as Error })
+        })
+
+    }
+    return
+  }
+
 }
 
 
