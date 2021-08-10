@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.0.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@8.0.2...@mw-components/taskman@9.0.0) (2021-08-10)
+
+
+### Features
+
+* **taskman:** add TaskManClientConfig['minPickTaskCount'] ([63a39ca](https://github.com/waitingsong/midway-components/commit/63a39cafead892320cf30a0ed103af0ab10ed7ea))
+
+
+
+
+
 ## [8.0.2](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@8.0.1...@mw-components/taskman@8.0.2) (2021-08-09)
 
 
