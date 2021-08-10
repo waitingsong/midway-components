@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.0.3](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@9.0.2...@mw-components/taskman@9.0.3) (2021-08-10)
+
+
+### Bug Fixes
+
+* **taskman:** takeWhile operator ([39e89c6](https://github.com/waitingsong/midway-components/commit/39e89c6a731c29307193d25eb6787262d76c9ae5))
+
+
+
+
+
 ## [9.0.2](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@9.0.1...@mw-components/taskman@9.0.2) (2021-08-10)
 
 
