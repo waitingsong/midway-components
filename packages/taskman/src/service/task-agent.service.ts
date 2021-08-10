@@ -20,7 +20,7 @@ import {
 import {
   map,
   mergeMap,
-  tap,
+  takeWhile,
 } from 'rxjs/operators'
 
 import {
@@ -85,31 +85,33 @@ export class TaskAgentService {
       : initTaskManClientConfig.minPickTaskCount
 
     const intv$ = this.intv$.pipe(
-      tap((idx) => {
-        if (idx > maxPickTaskCount) {
-          this.stop()
-
+      takeWhile((idx) => {
+        if (idx >= maxPickTaskCount) {
           const input: SpanLogInput = {
             [TracerTag.logLevel]: 'info',
+            pid: process.pid,
             message: `taskAgent stopped at ${idx} of ${maxPickTaskCount}`,
             time: genISO8601String(),
           }
           this.logger.log(input)
+          return true
         }
+        return false
       }),
     )
     const stream$ = this.pickTasksWaitToRun(intv$).pipe(
-      tap(({ rows, idx }) => {
+      takeWhile(({ rows, idx }) => {
         if ((! rows || ! rows.length) && idx >= minPickTaskCount) {
-          this.stop()
-
           const input: SpanLogInput = {
             [TracerTag.logLevel]: 'info',
+            pid: process.pid,
             message: `taskAgent stopped at index: ${idx} of ${minPickTaskCount}`,
             time: genISO8601String(),
           }
           this.logger.log(input)
+          return true
         }
+        return false
       }),
       mergeMap(({ rows }) => ofrom(rows)),
       mergeMap(task => this.sendTaskToRun(task), 1),
