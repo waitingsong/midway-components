@@ -106,6 +106,7 @@ export const initTaskManClientConfig: TaskManClientConfig = {
   transferHeaders: ['authorization', 'user-agent'],
   headerKeyTaskId: 'x-task-id',
   pickTaskTimer: 2000,
+  minPickTaskCount: 5,
   maxPickTaskCount: 1000,
   maxRunner: 4,
 }

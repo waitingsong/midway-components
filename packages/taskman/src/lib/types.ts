@@ -34,8 +34,13 @@ export interface TaskManClientConfig {
    */
   pickTaskTimer: number
   /**
+   * Mininum loop times until no 'init' task
+   * @default 5
+   */
+  minPickTaskCount: number
+  /**
    * Max loop times until no 'init' task
-   * @default 100 (loop times, not tasks number)
+   * @default 1000 (loop times, not tasks number)
    */
   maxPickTaskCount: number
   /**

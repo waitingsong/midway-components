@@ -80,6 +80,9 @@ export class TaskAgentService {
     const maxPickTaskCount = this.clientConfig.maxPickTaskCount > 0
       ? this.clientConfig.maxPickTaskCount
       : initTaskManClientConfig.maxPickTaskCount
+    const minPickTaskCount = this.clientConfig.minPickTaskCount > 0
+      ? this.clientConfig.minPickTaskCount
+      : initTaskManClientConfig.minPickTaskCount
 
     const intv$ = this.intv$.pipe(
       tap((idx) => {
@@ -96,7 +99,19 @@ export class TaskAgentService {
       }),
     )
     const stream$ = this.pickTasksWaitToRun(intv$).pipe(
-      mergeMap(rows => ofrom(rows)),
+      tap(({ rows, idx }) => {
+        if ((! rows || ! rows.length) && idx >= minPickTaskCount) {
+          this.stop()
+
+          const input: SpanLogInput = {
+            [TracerTag.logLevel]: 'info',
+            message: `taskAgent stopped at index: ${idx} of ${minPickTaskCount}`,
+            time: genISO8601String(),
+          }
+          this.logger.log(input)
+        }
+      }),
+      mergeMap(({ rows }) => ofrom(rows)),
       mergeMap(task => this.sendTaskToRun(task), 1),
     )
     this.subscription = stream$.subscribe()
@@ -109,7 +124,7 @@ export class TaskAgentService {
     agentConcurrentConfig.count = 0
   }
 
-  private pickTasksWaitToRun(intv$: Observable<number>): Observable<TaskDTO[]> {
+  private pickTasksWaitToRun(intv$: Observable<number>): Observable<{ rows: TaskDTO[], idx: number }> {
     const stream$ = intv$.pipe(
       mergeMap(() => {
         const opts: FetchOptions = {
@@ -123,9 +138,9 @@ export class TaskAgentService {
         const res = this.fetch.fetch<TaskDTO[] | JsonResp<TaskDTO[]>>(opts)
         return res
       }, 1),
-      map((res) => {
-        const data = unwrapResp<TaskDTO[]>(res)
-        return data
+      map((res, idx) => {
+        const rows = unwrapResp<TaskDTO[]>(res)
+        return { rows, idx }
       }),
       // tap((rows) => {
       //   console.info(rows)
