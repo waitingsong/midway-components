@@ -66,9 +66,9 @@ export class TaskAgentService {
   }
 
   get isRunning(): boolean {
-    const flag = this.subscription && ! this.subscription.closed
-      ? true
-      : false
+    const flag = this.subscription && this.subscription.closed
+      ? false
+      : true
     return flag
   }
 
@@ -96,22 +96,24 @@ export class TaskAgentService {
           time: genISO8601String(),
         }
         this.logger.log(input)
+        agentConcurrentConfig.count -= 1
         return false
       }),
     )
     const stream$ = this.pickTasksWaitToRun(intv$).pipe(
       takeWhile(({ rows, idx }) => {
-        if ((rows && rows.length) || idx < minPickTaskCount) {
-          return true
+        if ((! rows || ! rows.length) && idx >= minPickTaskCount) {
+          const input: SpanLogInput = {
+            [TracerTag.logLevel]: 'info',
+            pid: process.pid,
+            message: `taskAgent stopped at index: ${idx} of ${minPickTaskCount}`,
+            time: genISO8601String(),
+          }
+          this.logger.log(input)
+          agentConcurrentConfig.count -= 1
+          return false
         }
-        const input: SpanLogInput = {
-          [TracerTag.logLevel]: 'info',
-          pid: process.pid,
-          message: `taskAgent stopped at index: ${idx} of ${minPickTaskCount}`,
-          time: genISO8601String(),
-        }
-        this.logger.log(input)
-        return false
+        return true
       }),
       mergeMap(({ rows }) => ofrom(rows)),
       mergeMap(task => this.sendTaskToRun(task), 1),
