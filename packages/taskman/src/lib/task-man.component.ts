@@ -5,7 +5,7 @@ import {
 } from '@midwayjs/decorator'
 import { FetchComponent, JsonResp, Node_Headers } from '@mw-components/fetch'
 import { HeadersKey, Logger } from '@mw-components/jaeger'
-import { genISO8601String, retrieveHeadersItem } from '@waiting/shared-core'
+import { retrieveHeadersItem } from '@waiting/shared-core'
 
 import { Context, FetchOptions } from '../interface'
 
@@ -25,7 +25,6 @@ import {
   TaskProgressDetailDTO,
   TaskResultDTO,
   initTaskManClientConfig,
-  taskRunnerState,
 } from './index'
 
 
@@ -145,13 +144,6 @@ export class TaskManComponent {
 
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setRunning}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
-    this.logger.log({
-      event: 'TaskMan:setRunning',
-      pid: process.pid,
-      time: genISO8601String(),
-      runnerCount: taskRunnerState.count,
-      runnerMax: taskRunnerState.max,
-    })
     if (res.code) {
       return
     }
@@ -172,13 +164,6 @@ export class TaskManComponent {
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setCancelled}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
     decreaseTaskRunnerCount()
-    this.logger.log({
-      event: 'TaskMan:setCancelled',
-      pid: process.pid,
-      time: genISO8601String(),
-      runnerCount: taskRunnerState.count,
-      runnerMax: taskRunnerState.max,
-    })
     if (res.code) {
       return
     }
@@ -198,14 +183,6 @@ export class TaskManComponent {
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setFailed}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
     decreaseTaskRunnerCount()
-    this.logger.log({
-      event: 'TaskMan:setFailed',
-      pid: process.pid,
-      time: genISO8601String(),
-      runnerCount: taskRunnerState.count,
-      runnerMax: taskRunnerState.max,
-    })
-
     if (res.code) {
       return
     }
@@ -217,14 +194,6 @@ export class TaskManComponent {
     result?: TaskResultDTO['json'],
   ): Promise<TaskDTO | undefined> {
 
-    this.logger.log({
-      event: 'TaskMan:setSucceeded-before-fetch',
-      pid: process.pid,
-      time: genISO8601String(),
-      runnerCount: taskRunnerState.count,
-      runnerMax: taskRunnerState.max,
-    })
-
     const opts: FetchOptions = {
       ...this.initFetchOptions(id),
       method: 'POST',
@@ -233,13 +202,6 @@ export class TaskManComponent {
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setSucceeded}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
     decreaseTaskRunnerCount()
-    this.logger.log({
-      event: 'TaskMan:setSucceeded-after-fetch',
-      pid: process.pid,
-      time: genISO8601String(),
-      runnerCount: taskRunnerState.count,
-      runnerMax: taskRunnerState.max,
-    })
     if (res.code) {
       return
     }

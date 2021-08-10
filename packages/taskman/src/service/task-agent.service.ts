@@ -103,13 +103,13 @@ export class TaskAgentService {
     const stream$ = this.pickTasksWaitToRun(intv$).pipe(
       takeWhile(({ rows, idx }) => {
         if ((! rows || ! rows.length) && idx >= minPickTaskCount) {
-          const input: SpanLogInput = {
-            [TracerTag.logLevel]: 'info',
-            pid: process.pid,
-            message: `taskAgent stopped at index: ${idx} of ${minPickTaskCount}`,
-            time: genISO8601String(),
-          }
-          this.logger.log(input)
+          // const input: SpanLogInput = {
+          //   [TracerTag.logLevel]: 'info',
+          //   pid: process.pid,
+          //   message: `taskAgent stopped at index: ${idx} of ${minPickTaskCount}`,
+          //   time: genISO8601String(),
+          // }
+          // this.logger.log(input)
           agentConcurrentConfig.count -= 1
           return false
         }
