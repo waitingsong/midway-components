@@ -86,31 +86,31 @@ export class TaskAgentService {
 
     const intv$ = this.intv$.pipe(
       takeWhile((idx) => {
-        if (idx >= maxPickTaskCount) {
-          const input: SpanLogInput = {
-            [TracerTag.logLevel]: 'info',
-            pid: process.pid,
-            message: `taskAgent stopped at ${idx} of ${maxPickTaskCount}`,
-            time: genISO8601String(),
-          }
-          this.logger.log(input)
+        if (idx < maxPickTaskCount) {
           return true
         }
+        const input: SpanLogInput = {
+          [TracerTag.logLevel]: 'info',
+          pid: process.pid,
+          message: `taskAgent stopped at ${idx} of ${maxPickTaskCount}`,
+          time: genISO8601String(),
+        }
+        this.logger.log(input)
         return false
       }),
     )
     const stream$ = this.pickTasksWaitToRun(intv$).pipe(
       takeWhile(({ rows, idx }) => {
-        if ((! rows || ! rows.length) && idx >= minPickTaskCount) {
-          const input: SpanLogInput = {
-            [TracerTag.logLevel]: 'info',
-            pid: process.pid,
-            message: `taskAgent stopped at index: ${idx} of ${minPickTaskCount}`,
-            time: genISO8601String(),
-          }
-          this.logger.log(input)
+        if ((rows && rows.length) || idx < minPickTaskCount) {
           return true
         }
+        const input: SpanLogInput = {
+          [TracerTag.logLevel]: 'info',
+          pid: process.pid,
+          message: `taskAgent stopped at index: ${idx} of ${minPickTaskCount}`,
+          time: genISO8601String(),
+        }
+        this.logger.log(input)
         return false
       }),
       mergeMap(({ rows }) => ofrom(rows)),
