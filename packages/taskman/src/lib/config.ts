@@ -69,7 +69,7 @@ export const initTaskProgressDTO: Omit<TaskProgressDTO, 'taskId'> = {
 
 
 export const initDbConfig: Required<DbConfig> = {
-  acquireConnectionTimeout: 10000,
+  acquireConnectionTimeout: 60000,
   autoConnect: true,
   connection: {
     host: process.env.POSTGRES_HOST ? process.env.POSTGRES_HOST : 'localhost',
@@ -79,8 +79,8 @@ export const initDbConfig: Required<DbConfig> = {
     password: process.env.POSTGRES_PASSWORD ? process.env.POSTGRES_PASSWORD : 'postgres',
   },
   pool: {
-    min: 2,
-    max: 30,
+    min: 0,
+    max: 50,
     /**
      * @link https://stackoverflow.com/a/67621567
      */
