@@ -80,10 +80,8 @@ export const initDbConfig: Required<DbConfig> = {
   },
   pool: {
     min: 0,
-    max: 50,
-    /**
-     * @link https://stackoverflow.com/a/67621567
-     */
+    max: 10,
+    /** @link https://stackoverflow.com/a/67621567 */
     propagateCreateError: false,
   },
   enableTracing: true,
