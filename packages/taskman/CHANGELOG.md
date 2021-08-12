@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.1.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@9.0.5...@mw-components/taskman@9.1.0) (2021-08-12)
+
+
+### Features
+
+* **taskman:** decrease initDbConfig.pool.max to 10 ([f650c83](https://github.com/waitingsong/midway-components/commit/f650c833617eb81c7b21f54ba55e54dc1a4fa908))
+
+
+
+
+
 ## [9.0.5](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@9.0.4...@mw-components/taskman@9.0.5) (2021-08-12)
 
 **Note:** Version bump only for package @mw-components/taskman
