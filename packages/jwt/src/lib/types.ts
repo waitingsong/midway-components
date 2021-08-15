@@ -1,0 +1,128 @@
+import { JsonObject, JsonType } from '@waiting/shared-types'
+import {
+  DecodeOptions,
+  JwtHeader,
+  SignOptions,
+  Secret,
+  VerifyOptions,
+} from 'jsonwebtoken'
+
+
+// eslint-disable-next-line import/no-extraneous-dependencies
+export {
+  IMidwayWebApplication as Application,
+  IMidwayWebContext as Context,
+} from '@midwayjs/web'
+
+
+export interface JwtComponentConfig {
+  options: JwtOptions
+
+  /** Switch of middleware works for egg.js, Default: false */
+  enable: boolean
+  /**
+   * match and ignore are exclusive exists
+   * Note:
+   *   - `/` will match all,
+   *   - `/^\/$/` matches only root !
+   */
+  ignore?: MiddlewarePathPattern
+}
+
+export interface JwtEggConfig {
+  /**
+   * The position of config.appMiddleware[] to add.
+   * Default: 0 (first)
+   */
+  appMiddlewareIndex?: number
+  /**
+   * Switch for app works, Default: true.
+   */
+  appWork?: boolean
+  /**
+   * Switch for agent, Default: false.
+   */
+  agent?: boolean
+  client: JwtOptions
+  /** Switch of middleware works for egg.js, Default: false */
+  enable: boolean
+  /**
+   * match and ignore are exclusive exists
+   * Default: undefined for matching all routings
+   * Caution: '/' will match all, /^\/$/ matches only root !
+   * @see https://github.com/eggjs/egg-path-matching
+   */
+  match?: MiddlewarePathPattern
+  /**
+   * match and ignore are exclusive exists
+   * Caution: '/' will match all, /^\/$/ matches only root !
+   */
+  ignore?: MiddlewarePathPattern
+}
+
+export interface JwtOptions {
+  /** Authentication options for middleware */
+  authOpts?: AuthenticateOpts
+  /** Ignored if authOpts.passthrought true */
+  debug?: boolean
+  decodeOpts?: DecodeOptions
+  /**
+   * For signing and verifying if without passing secret param,
+   * Note: the type of VerifySecret without object
+   */
+  secret: Secret
+  signOpts?: SignOptions
+  verifySecret?: VerifySecret | VerifySecret[] | false
+  verifyOpts?: VerifyOpts
+}
+
+/** Authentication options for middleware */
+export interface AuthenticateOpts {
+  /**
+   * Retrieving the token from the name of cookie, instead of from HTTP header (Authorization),
+   * Default: false
+   */
+  cookie: string | false
+  /**
+   * This lets downstream middleware make decisions based on whether ctx.jwtState.user is set.
+   * You can still handle errors using ctx.jwtState.jwtOriginalError.
+   * Default: user
+   */
+  // key: 'user' | string
+  /**
+   * - false (Default): throw error
+   * - true: always yield next, even if no valid Authorization header was found,
+   *    and ignore value of JwtOptions.debug
+   * - <RedirectURL>: redirect and without yield next
+   */
+  passthrough: boolean | RedirectURL | passthroughCallback
+}
+
+export type JwtToken = string
+export type JwtPayload = string | Buffer | JsonObject
+export type JwtDecodedPayload<T extends string | JsonType = JsonType> = T
+export interface JwtComplete<T extends string | JsonType = JsonType> {
+  header: JwtHeader
+  payload: JwtDecodedPayload<T>
+  signature: string
+}
+
+export type VerifySecret = string | Buffer
+export type VerifyOpts = Omit<VerifyOptions, 'maxAge'>
+
+export type MiddlewarePathPattern = (string | RegExp | PathPatternFunc)[]
+export type PathPatternFunc = (ctx: Context) => boolean
+export type RedirectURL = string
+export type passthroughCallback = (ctx: Context) => Promise<boolean | RedirectURL>
+
+export type EggMiddleware = (ctx: Context, next: () => Promise<void>) => Promise<void>
+
+/** Bind on Context.jwtState */
+export interface JwtState {
+  jwtOriginalError: Error
+  secret: unknown
+  /** Result */
+  user: JsonType
+}
+
+
