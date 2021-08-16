@@ -1,5 +1,4 @@
 import {
-  AuthenticateOpts,
   JwtMiddlewareConfig,
   JwtOptions,
 } from './types'
@@ -11,14 +10,12 @@ export const initialJwtMiddlewareConfig: Readonly<JwtMiddlewareConfig> = {
     '/metrics',
     '/ping',
   ],
+  cookie: false,
+  passthrough: false,
 }
 export const initialJwtOptions: Readonly<JwtOptions> = {
   debug: false,
   secret: '',
-}
-export const initialAuthOpts: Readonly<AuthenticateOpts> = {
-  cookie: false,
-  passthrough: false,
 }
 
 export const schemePrefix = 'Bearer'

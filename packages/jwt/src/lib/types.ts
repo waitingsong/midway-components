@@ -14,7 +14,7 @@ import {
 // eslint-disable-next-line import/no-extraneous-dependencies
 
 
-export interface JwtMiddlewareConfig {
+export interface JwtMiddlewareConfig extends JwtAuthenticateOptions {
   /**
    * @default true
    */
@@ -33,7 +33,7 @@ export interface JwtMiddlewareConfig {
 
 export interface JwtOptions {
   /** Authentication options for middleware */
-  authOpts?: AuthenticateOpts
+  authOpts?: JwtAuthenticateOptions
   /** Ignored if authOpts.passthrought true */
   debug?: boolean
   decodeOpts?: DecodeOptions
@@ -48,7 +48,7 @@ export interface JwtOptions {
 }
 
 /** Authentication options for middleware */
-export interface AuthenticateOpts {
+export interface JwtAuthenticateOptions {
   /**
    * Retrieving the token from the name of cookie, instead of from HTTP header (Authorization),
    * @default false

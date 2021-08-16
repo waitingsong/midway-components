@@ -4,7 +4,7 @@
 import { Context } from 'egg'
 
 import { schemePrefix } from './config'
-import { JwtToken, AuthenticateOpts } from './types'
+import { JwtToken, JwtAuthenticateOptions } from './types'
 
 
 /**
@@ -13,7 +13,7 @@ import { JwtToken, AuthenticateOpts } from './types'
  * according to node.js security since v10.19, v12.15
  * @link https://nodejs.org/en/blog/vulnerability/february-2020-security-releases/
  */
-export function retrieveToken(ctx: Context, options?: AuthenticateOpts): JwtToken {
+export function retrieveToken(ctx: Context, options?: JwtAuthenticateOptions): JwtToken {
   let token = resolveFromCookies(ctx.cookies, options ? options.cookie : false)
 
   if (token) {
@@ -70,7 +70,7 @@ export function resolveFromAuthorizationHeader(authorization: string): JwtToken 
  */
 export function resolveFromCookies(
   cookies: Context['cookies'],
-  cookieKey?: AuthenticateOpts['cookie'],
+  cookieKey?: JwtAuthenticateOptions['cookie'],
 ): JwtToken | undefined {
 
   const token = cookieKey && cookieKey.length > 0
