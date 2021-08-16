@@ -2,7 +2,7 @@ import assert from 'assert'
 
 import {
   initialAuthOpts,
-  initialEggConfig,
+  initialJwtMiddlewareConfig,
   initialJwtOptions,
   JwtMsg,
 } from './config'
@@ -17,9 +17,9 @@ import {
 /** Generate jwtConfig with input and default value */
 export function parseConfig(input: JwtEggConfig): JwtEggConfig {
   const config = {
-    agent: initialEggConfig.agent,
+    agent: initialJwtMiddlewareConfig.agent,
     client: parseOptions(input.client),
-    enable: initialEggConfig.enable,
+    enable: initialJwtMiddlewareConfig.enable,
   } as JwtEggConfig
 
   /* istanbul ignore else */
@@ -44,11 +44,11 @@ export function parseConfig(input: JwtEggConfig): JwtEggConfig {
 
   config.appWork = typeof input.appWork === 'boolean'
     ? input.appWork
-    : initialEggConfig.appWork
+    : initialJwtMiddlewareConfig.appWork
 
   config.appMiddlewareIndex = typeof input.appMiddlewareIndex === 'number'
     ? input.appMiddlewareIndex
-    : initialEggConfig.appMiddlewareIndex
+    : initialJwtMiddlewareConfig.appMiddlewareIndex
 
   return config
 }

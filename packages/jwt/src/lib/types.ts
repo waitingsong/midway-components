@@ -1,3 +1,7 @@
+import {
+  // IMidwayWebApplication as Application,
+  IMidwayWebContext as Context,
+} from '@midwayjs/web'
 import { JsonObject, JsonType } from '@waiting/shared-types'
 import {
   DecodeOptions,
@@ -7,55 +11,22 @@ import {
   VerifyOptions,
 } from 'jsonwebtoken'
 
-
 // eslint-disable-next-line import/no-extraneous-dependencies
-export {
-  IMidwayWebApplication as Application,
-  IMidwayWebContext as Context,
-} from '@midwayjs/web'
 
 
-export interface JwtComponentConfig {
-  options: JwtOptions
-
-  /** Switch of middleware works for egg.js, Default: false */
-  enable: boolean
+export interface JwtMiddlewareConfig {
+  /**
+   * @default true
+   */
+  enableMiddleware: boolean
   /**
    * match and ignore are exclusive exists
+   * @default
+   *   - '/metrics'
+   *   - '/ping'
    * Note:
-   *   - `/` will match all,
-   *   - `/^\/$/` matches only root !
-   */
-  ignore?: MiddlewarePathPattern
-}
-
-export interface JwtEggConfig {
-  /**
-   * The position of config.appMiddleware[] to add.
-   * Default: 0 (first)
-   */
-  appMiddlewareIndex?: number
-  /**
-   * Switch for app works, Default: true.
-   */
-  appWork?: boolean
-  /**
-   * Switch for agent, Default: false.
-   */
-  agent?: boolean
-  client: JwtOptions
-  /** Switch of middleware works for egg.js, Default: false */
-  enable: boolean
-  /**
-   * match and ignore are exclusive exists
-   * Default: undefined for matching all routings
-   * Caution: '/' will match all, /^\/$/ matches only root !
-   * @see https://github.com/eggjs/egg-path-matching
-   */
-  match?: MiddlewarePathPattern
-  /**
-   * match and ignore are exclusive exists
-   * Caution: '/' will match all, /^\/$/ matches only root !
+   *   - `/` match root only
+   *   - `/^\/$/` match root only
    */
   ignore?: MiddlewarePathPattern
 }
@@ -80,7 +51,7 @@ export interface JwtOptions {
 export interface AuthenticateOpts {
   /**
    * Retrieving the token from the name of cookie, instead of from HTTP header (Authorization),
-   * Default: false
+   * @default false
    */
   cookie: string | false
   /**
@@ -94,9 +65,11 @@ export interface AuthenticateOpts {
    * - true: always yield next, even if no valid Authorization header was found,
    *    and ignore value of JwtOptions.debug
    * - <RedirectURL>: redirect and without yield next
+   * @default false
    */
   passthrough: boolean | RedirectURL | passthroughCallback
 }
+
 
 export type JwtToken = string
 export type JwtPayload = string | Buffer | JsonObject
@@ -115,13 +88,13 @@ export type PathPatternFunc = (ctx: Context) => boolean
 export type RedirectURL = string
 export type passthroughCallback = (ctx: Context) => Promise<boolean | RedirectURL>
 
-export type EggMiddleware = (ctx: Context, next: () => Promise<void>) => Promise<void>
+// export type Middleware = (ctx: Context, next: () => Promise<void>) => Promise<void>
 
 /** Bind on Context.jwtState */
 export interface JwtState {
   jwtOriginalError: Error
   secret: unknown
-  /** Result */
+  /** Decode Result */
   user: JsonType
 }
 

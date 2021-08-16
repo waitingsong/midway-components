@@ -1,25 +1,27 @@
-import { AuthenticateOpts, JwtEggConfig, JwtOptions } from './types'
+import {
+  AuthenticateOpts,
+  JwtMiddlewareConfig,
+  JwtOptions,
+} from './types'
 
 
 export const pluginName = 'jwt'
 export const middlewareName = 'jwt'
 
-export const initialAuthOpts: Readonly<AuthenticateOpts> = {
-  cookie: false,
-  passthrough: false,
+export const initialJwtMiddlewareConfig: Readonly<JwtMiddlewareConfig> = {
+  enableMiddleware: true,
+  ignore: [
+    '/metrics',
+    '/ping',
+  ],
 }
 export const initialJwtOptions: Readonly<JwtOptions> = {
-  // authOpts: { ...initialAuthOpts },
   debug: false,
   secret: '',
 }
-
-export const initialEggConfig: Readonly<JwtEggConfig> = {
-  appMiddlewareIndex: 0,
-  appWork: true,
-  agent: false,
-  client: { debug: false, secret: '' },
-  enable: false,
+export const initialAuthOpts: Readonly<AuthenticateOpts> = {
+  cookie: false,
+  passthrough: false,
 }
 
 export const schemePrefix = 'Bearer'

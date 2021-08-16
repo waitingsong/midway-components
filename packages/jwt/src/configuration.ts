@@ -18,7 +18,7 @@ export class AutoConfiguration {
 
   @App() readonly app: IMidwayWebApplication
 
-  @Config('taskManServerConfig') protected readonly serverConfig: TaskManServerConfig
+  @Config('taskManServerConfig') protected readonly config: TaskManServerConfig
 
   async onReady(): Promise<void> {
 
