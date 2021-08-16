@@ -1,17 +1,25 @@
 import {
+  JwtAuthenticateOptions,
   JwtMiddlewareConfig,
   JwtOptions,
 } from './types'
 
 
-export const initialJwtMiddlewareConfig: Readonly<JwtMiddlewareConfig> = {
-  enableMiddleware: true,
-  ignore: [
-    '/metrics',
-    '/ping',
-  ],
+export const initialAuthOpts: Readonly<JwtAuthenticateOptions> = {
   cookie: false,
   passthrough: false,
+}
+export const initialJwtMiddlewareConfig: Readonly<JwtMiddlewareConfig> = {
+  ...initialAuthOpts,
+  enableMiddleware: true,
+  ignore: [
+    '/',
+    '/login',
+    '/metrics',
+    '/ping',
+    '/favicon.ico',
+    '/favicon.png',
+  ],
 }
 export const initialJwtOptions: Readonly<JwtOptions> = {
   debug: false,

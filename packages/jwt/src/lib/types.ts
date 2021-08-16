@@ -22,8 +22,12 @@ export interface JwtMiddlewareConfig extends JwtAuthenticateOptions {
   /**
    * match and ignore are exclusive exists
    * @default
-   *   - '/metrics'
-   *   - '/ping'
+   *   - /
+   *   - /login
+   *   - /metrics
+   *   - /ping
+   *   - /favicon.ico
+   *   - /favicon.png
    * Note:
    *   - `/` match root only
    *   - `/^\/$/` match root only
@@ -33,7 +37,7 @@ export interface JwtMiddlewareConfig extends JwtAuthenticateOptions {
 
 export interface JwtOptions {
   /** Authentication options for middleware */
-  authOpts?: JwtAuthenticateOptions
+  // authOpts?: JwtAuthenticateOptions
   /** Ignored if authOpts.passthrought true */
   debug?: boolean
   decodeOpts?: DecodeOptions

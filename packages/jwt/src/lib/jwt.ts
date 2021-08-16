@@ -1,15 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  Config,
+  Provide,
+  Scope,
+  ScopeEnum,
+} from '@midwayjs/decorator'
 import { JsonType } from '@waiting/shared-types'
-import * as jwt from 'jsonwebtoken'
+import {
+  decode,
+  sign,
+  verify,
+  DecodeOptions,
+  SignOptions,
+  Secret,
+} from 'jsonwebtoken'
 
 import {
   JwtOptions,
-  DecodeOpts,
   JwtPayload,
   JwtToken,
   JwtDecodedPayload,
-  SignSecret,
-  SignOpts,
   VerifySecret,
   VerifyOpts,
   JwtComplete,
@@ -23,28 +33,31 @@ import {
 } from './util'
 
 
+@Provide()
+@Scope(ScopeEnum.Singleton)
 export class Jwt {
 
-  private readonly config: JwtOptions
+  @Config('jwtOptions') private readonly config: JwtOptions
 
-  constructor(config: JwtOptions) {
-    this.config = parseOptions(config)
-  }
+
+  // constructor(config: JwtOptions) {
+  //   this.config = parseOptions(config)
+  // }
 
 
   /**
    * @description using app.config.jwt.secret if secretOrPrivateKey is undefined or false
    */
-  public sign(
+  sign(
     payload: JwtPayload,
-    secretOrPrivateKey?: SignSecret | false,
-    options?: SignOpts,
+    secretOrPrivateKey?: Secret | false,
+    options?: SignOptions,
   ): JwtToken {
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (! this) { throw new TypeError('Should call with class name, such as jwt.foo()') }
 
-    const opts: SignOpts = options
+    const opts: SignOptions = options
       ? { ...this.config.signOpts, ...options }
       : { ...this.config.signOpts }
 
@@ -55,7 +68,7 @@ export class Jwt {
     validatePayload(payload)
     validateSignSecret(secret)
 
-    const ret = jwt.sign(payload, secret, opts)
+    const ret = sign(payload, secret, opts)
     return ret
   }
 
@@ -63,7 +76,7 @@ export class Jwt {
   /**
    * @description using app.config.jwt.secret if secretOrPrivateKey is undefined or false
    */
-  public verify<T extends string | JsonType = JsonType>(
+  verify<T extends string | JsonType = JsonType>(
     token: JwtToken,
     secretOrPrivateKey?: VerifySecret | false,
     options?: VerifyOpts,
@@ -83,7 +96,7 @@ export class Jwt {
     validateTokenString(token)
     validateVerifySecret(secret)
 
-    const ret = jwt.verify(token, secret, opts)
+    const ret = verify(token, secret, opts)
     return ret as JwtDecodedPayload<T>
   }
 
@@ -94,21 +107,21 @@ export class Jwt {
    *
    * @param options value of complete always be TRUE
    */
-  public decode<T extends string | JsonType = JsonType>(
+  decode<T extends string | JsonType = JsonType>(
     token: JwtToken,
   ): JwtComplete<T> {
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (! this) { throw new TypeError('Should call with class name, such as jwt.foo()') }
 
-    let opts: DecodeOpts = { complete: true }
+    let opts: DecodeOptions = { complete: true }
 
     /* istanbul ignore else */
     if (this.config.decodeOpts && Object.keys(this.config.decodeOpts).length) {
       opts = { ...this.config.decodeOpts }
     }
 
-    const ret = jwt.decode(token, opts)
+    const ret = decode(token, opts)
     return ret as JwtComplete<T>
   }
 
