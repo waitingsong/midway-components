@@ -28,7 +28,7 @@ export interface JwtMiddlewareConfig extends JwtAuthenticateOptions {
    *   - /ping
    *   - /favicon.ico
    *   - /favicon.png
-   * Note:
+   * @description
    *   - `/` match root only
    *   - `/^\/$/` match root only
    */
