@@ -7,6 +7,8 @@ import { join } from 'path'
 import { App, Config, Configuration } from '@midwayjs/decorator'
 import { IMidwayWebApplication } from '@midwayjs/web'
 
+import { JwtMiddlewareConfig } from './lib/index'
+
 
 const namespace = 'jwt'
 
@@ -18,11 +20,12 @@ export class AutoConfiguration {
 
   @App() readonly app: IMidwayWebApplication
 
-  @Config('JwtMiddlewareConfig') protected readonly config: TaskManServerConfig
+  @Config('JwtMiddlewareConfig') protected readonly config: JwtMiddlewareConfig
 
   async onReady(): Promise<void> {
-
-    registerMiddleware(this.app)
+    if (this.config.enableMiddleware) {
+      registerMiddleware(this.app)
+    }
   }
 
 }
@@ -33,10 +36,10 @@ export function registerMiddleware(
 
   const appMiddleware = app.getConfig('middleware') as string[]
   if (Array.isArray(appMiddleware)) {
-    appMiddleware.push(namespace + ':taskAgentMiddleware')
+    appMiddleware.push(namespace + ':jwtMiddleware')
   }
   else {
-    app.logger.info('TaskAgent appMiddleware is not valid Array, register via app.use(taskAgentMiddleware)')
+    app.logger.info('Jwt: appMiddleware is not valid Array, register via app.use(Middleware)')
     app.use(taskAgentMiddleware)
   }
 }

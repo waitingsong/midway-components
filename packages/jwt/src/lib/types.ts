@@ -1,7 +1,3 @@
-import {
-  // IMidwayWebApplication as Application,
-  IMidwayWebContext as Context,
-} from '@midwayjs/web'
 import { JsonObject, JsonType } from '@waiting/shared-types'
 import {
   DecodeOptions,
@@ -11,7 +7,7 @@ import {
   VerifyOptions,
 } from 'jsonwebtoken'
 
-// eslint-disable-next-line import/no-extraneous-dependencies
+import { Context } from '~/interface'
 
 
 export interface JwtMiddlewareConfig extends JwtAuthenticateOptions {

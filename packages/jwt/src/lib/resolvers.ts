@@ -1,15 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { Context } from 'egg'
-
 import { schemePrefix } from './config'
 import { JwtToken, JwtAuthenticateOptions } from './types'
+
+import { Context } from '~/interface'
 
 
 /**
  *
- * Note: trim trailing white space from cookies/header
+ * Note: trim trailing white space from cookies/header,
  * according to node.js security since v10.19, v12.15
  * @link https://nodejs.org/en/blog/vulnerability/february-2020-security-releases/
  */
@@ -56,7 +53,7 @@ export function resolveFromAuthorizationHeader(authorization: string): JwtToken 
     const [scheme, credentials] = parts
 
     if (scheme && scheme === schemePrefix) {
-      return credentials
+      return credentials ? credentials : ''
     }
   }
 
