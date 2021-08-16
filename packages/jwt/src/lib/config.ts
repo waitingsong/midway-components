@@ -5,9 +5,6 @@ import {
 } from './types'
 
 
-export const pluginName = 'jwt'
-export const middlewareName = 'jwt'
-
 export const initialJwtMiddlewareConfig: Readonly<JwtMiddlewareConfig> = {
   enableMiddleware: true,
   ignore: [
