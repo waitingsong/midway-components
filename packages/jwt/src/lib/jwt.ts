@@ -45,9 +45,9 @@ export class Jwt {
 
   @App() private readonly app: Application
 
-  @Config('jwtConfig') private config: JwtConfig
+  @Config('jwtConfig') protected config: JwtConfig
 
-  private verifySecretSet: Set<VerifySecret>
+  protected verifySecretSet: Set<VerifySecret>
 
   @Init()
   async init(): Promise<void> {
