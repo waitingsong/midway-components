@@ -169,11 +169,10 @@ export class Jwt {
     })
 
     /* istanbul ignore else */
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (ret === null) {
-      throw new Error(JwtMsg.TokenValidFailed + ':\n' + msgs.join('\n'))
+    if (ret) {
+      return ret as JwtDecodedPayload
     }
-    return ret as JwtDecodedPayload
+    throw new Error(JwtMsg.TokenValidFailed + ':\n' + msgs.join('\n'))
   }
 
   /**
