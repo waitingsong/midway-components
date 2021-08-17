@@ -47,10 +47,16 @@ export class Jwt {
 
   @Config('jwtConfig') private config: JwtConfig
 
+  private verifySecretSet: Set<VerifySecret>
+
   @Init()
   async init(): Promise<void> {
     const pconfig = this.app.getConfig('jwtConfig') as Partial<JwtConfig>
     this.config = genJwtConfig(pconfig)
+
+    const signSet = processSecret(this.config.secret)
+    const verifySet = processSecret(this.config.verifySecret)
+    this.verifySecretSet = new Set([...verifySet, ...signSet])
   }
 
   /**
@@ -187,19 +193,18 @@ export class Jwt {
     if ((typeof ctxSecret === 'string' || Buffer.isBuffer(ctxSecret)) && ctxSecret) {
       return new Set([ctxSecret])
     }
-
-    const signSet = processSecret(this.config.secret)
-    const verifySet = processSecret(this.config.verifySecret)
-    const ret = new Set([...verifySet, ...signSet])
-
-    return ret
+    const cs = processSecret(ctxSecret)
+    if (cs.size) {
+      return cs
+    }
+    return this.verifySecretSet
   }
 
 
 }
 
 
-function processSecret(input?: JwtConfig['secret'] | JwtConfig['verifySecret']): Set<VerifySecret> {
+function processSecret(input?: unknown): Set<VerifySecret> {
   const ret = new Set<VerifySecret>()
 
   /* istanbul ignore else */
