@@ -1,19 +1,21 @@
 
 import { Provide } from '@midwayjs/decorator'
+import { Secret } from 'jsonwebtoken'
 
-import { JwtMsg } from '../../lib/config'
-import { Jwt } from '../../lib/jwt'
+import { JwtMsg } from '../lib/config'
+import { Jwt } from '../lib/jwt'
 import { retrieveToken } from '../lib/resolvers'
 import {
   JwtAuthenticateOptions,
   JwtToken,
   JwtDecodedPayload,
-  Secret,
   VerifySecret,
   RedirectURL,
   JwtState,
   JwtMiddlewareConfig,
+  JwtOptions,
 } from '../lib/types'
+
 
 import {
   Context,
@@ -35,17 +37,12 @@ export async function jwtMiddleware(
   next: IMidwayWebNext,
 ): Promise<void> {
 
-  const opts: JwtMiddlewareConfig
+  const mdConfig = ctx.app.getConfig('jwtMiddlewareConfig') as JwtMiddlewareConfig
+  const options = ctx.app.getConfig('jwtOptions') as JwtOptions
 
-
-  // async function authenticate(
-  //   ctx: Context,
-  //   next: () => Promise<void>,
-  //   options: ClientOptions,
-  // ): Promise<void> {
 
   const { debug } = options
-  const { passthrough } = options.authOpts as JwtAuthenticateOptions
+  const { passthrough } = mdConfig
 
   if (! ctx.jwtState) {
     ctx.jwtState = { } as JwtState
@@ -55,7 +52,7 @@ export async function jwtMiddleware(
   }
 
   try {
-    const token = retrieveToken(ctx, options.authOpts)
+    const token = retrieveToken(ctx, mdConfig)
 
     /* istanbul ignore else */
     if (! token) {
@@ -70,7 +67,10 @@ export async function jwtMiddleware(
       ctx.jwtState.secret ? ctx.jwtState.secret : ctx.state && ctx.state ? ctx.state.secret : void 0,
     )
 
-    const decoded = validateToken(ctx.app.jwt, token, secretSet, options)
+    const container = ctx.app.getApplicationContext()
+    const jwt = await container.getAsync(Jwt)
+
+    const decoded = validateToken(jwt, token, secretSet, options)
     ctx.jwtState.user = decoded
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     ctx.state.user = decoded
@@ -104,7 +104,7 @@ export async function jwtMiddleware(
  */
 function genVerifySecretSet(
   signSecret: Secret,
-  verifySecret?: ClientOptions['verifySecret'],
+  verifySecret?: JwtOptions['verifySecret'],
   ctxSecret?: unknown,
 ): Set<VerifySecret> {
 
@@ -120,7 +120,7 @@ function genVerifySecretSet(
   return ret
 }
 
-function parseSecret(input?: ClientOptions['secret'] | ClientOptions['verifySecret']): Set<VerifySecret> {
+function parseSecret(input?: JwtOptions['secret'] | JwtOptions['verifySecret']): Set<VerifySecret> {
   const ret: Set<VerifySecret> = new Set()
 
   /* istanbul ignore else */
@@ -144,7 +144,7 @@ function validateToken(
   jwtImpl: Jwt,
   token: JwtToken,
   secretSet: Set<VerifySecret>,
-  config: ClientOptions,
+  options: JwtOptions,
 ): JwtDecodedPayload {
 
   /* istanbul ignore next */
@@ -162,7 +162,7 @@ function validateToken(
   const msgs: string[] = []
   Array.from(secretSet).some((secret) => {
     try {
-      const decoded = jwtImpl.verify(token, secret, config.verifyOpts)
+      const decoded = jwtImpl.verify(token, secret, options.verifyOpts)
       ret = decoded
       return true
     }
@@ -204,13 +204,6 @@ async function parseByPassthrough(
 
     default:
       return false
-  }
-}
-
-// only for npm run cov
-declare module 'egg' {
-  interface Application {
-    jwt: Jwt
   }
 }
 

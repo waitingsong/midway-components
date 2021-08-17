@@ -8,6 +8,7 @@ import { App, Config, Configuration } from '@midwayjs/decorator'
 import { IMidwayWebApplication } from '@midwayjs/web'
 
 import { JwtMiddlewareConfig } from './lib/index'
+import { jwtMiddleware } from './middleware/jwt.middleware'
 
 
 const namespace = 'jwt'
@@ -20,10 +21,10 @@ export class AutoConfiguration {
 
   @App() readonly app: IMidwayWebApplication
 
-  @Config('JwtMiddlewareConfig') protected readonly config: JwtMiddlewareConfig
+  @Config('JwtMiddlewareConfig') protected readonly mdConfig: JwtMiddlewareConfig
 
   async onReady(): Promise<void> {
-    if (this.config.enableMiddleware) {
+    if (this.mdConfig.enableMiddleware) {
       registerMiddleware(this.app)
     }
   }
@@ -40,7 +41,7 @@ export function registerMiddleware(
   }
   else {
     app.logger.info('Jwt: appMiddleware is not valid Array, register via app.use(Middleware)')
-    app.use(taskAgentMiddleware)
+    app.use(jwtMiddleware)
   }
 }
 
