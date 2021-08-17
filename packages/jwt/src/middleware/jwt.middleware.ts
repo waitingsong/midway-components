@@ -1,9 +1,5 @@
-
 import { Provide } from '@midwayjs/decorator'
-import { Secret } from 'jsonwebtoken'
 
-import { JwtMsg } from '../lib/config'
-import { Jwt } from '../lib/jwt'
 import { retrieveToken } from '../lib/resolvers'
 import {
   JwtAuthenticateOptions,
@@ -11,9 +7,7 @@ import {
   RedirectURL,
   JwtState,
   JwtMiddlewareConfig,
-  JwtConfig,
 } from '../lib/types'
-
 
 import {
   Context,
@@ -21,7 +15,11 @@ import {
   IWebMiddleware,
   MidwayWebMiddleware,
 } from '~/interface'
-import { genJwtMiddlewareConfig } from '~/lib'
+import {
+  genJwtMiddlewareConfig,
+  Jwt,
+  JwtMsg,
+} from '~/lib/index'
 
 
 @Provide()
@@ -36,7 +34,6 @@ export async function jwtMiddleware(
   next: IMidwayWebNext,
 ): Promise<void> {
 
-  const config = ctx.app.getConfig('jwtOptions') as JwtConfig
   const pmwConfig = ctx.app.getConfig('jwtMiddlewareConfig') as JwtMiddlewareConfig
   const mwConfig = genJwtMiddlewareConfig(pmwConfig)
 
@@ -57,16 +54,14 @@ export async function jwtMiddleware(
       ctx.throw(401, JwtMsg.TokenNotFound)
     }
 
-    const secretSet: Set<VerifySecret> = genVerifySecretSet(
-      config.secret,
-      config.verifySecret,
+    const container = ctx.app.getApplicationContext()
+    const jwt = await container.getAsync(Jwt)
+
+    const secretSet: Set<VerifySecret> = jwt.genVerifySecretSet(
       // ctx.jwtState.secret ?? ctx.state?.secret,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       ctx.jwtState.secret ? ctx.jwtState.secret : ctx.state && ctx.state ? ctx.state.secret : void 0,
     )
-
-    const container = ctx.app.getApplicationContext()
-    const jwt = await container.getAsync(Jwt)
 
     const decoded = jwt.validateToken(token, secretSet)
     ctx.jwtState.user = decoded
@@ -92,48 +87,6 @@ export async function jwtMiddleware(
   }
 
   return next()
-}
-
-
-/**
- * Generate secrets for verify,
- * Note: use ctxSecret only if available
- */
-function genVerifySecretSet(
-  signSecret: Secret,
-  verifySecret?: JwtConfig['verifySecret'],
-  ctxSecret?: unknown,
-): Set<VerifySecret> {
-
-  /* istanbul ignore else */
-  if ((typeof ctxSecret === 'string' || Buffer.isBuffer(ctxSecret)) && ctxSecret) {
-    return new Set([ctxSecret])
-  }
-
-  const signSet = parseSecret(signSecret)
-  const verifySet = parseSecret(verifySecret)
-  const ret = new Set([...verifySet, ...signSet])
-
-  return ret
-}
-
-function parseSecret(input?: JwtConfig['secret'] | JwtConfig['verifySecret']): Set<VerifySecret> {
-  const ret: Set<VerifySecret> = new Set()
-
-  /* istanbul ignore else */
-  if (typeof input === 'string') {
-    ret.add(input)
-  }
-  else if (Buffer.isBuffer(input)) {
-    ret.add(input)
-  }
-  else if (Array.isArray(input)) {
-    input.forEach((secret) => {
-      ret.add(secret)
-    })
-  }
-
-  return ret
 }
 
 

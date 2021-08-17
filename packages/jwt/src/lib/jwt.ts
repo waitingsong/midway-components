@@ -176,6 +176,46 @@ export class Jwt {
     return ret as JwtDecodedPayload
   }
 
+  /**
+   * Generate secrets for verify,
+   * Note: use ctxSecret only if available
+   */
+  genVerifySecretSet(
+    ctxSecret?: unknown,
+  ): Set<VerifySecret> {
 
+    /* istanbul ignore else */
+    if ((typeof ctxSecret === 'string' || Buffer.isBuffer(ctxSecret)) && ctxSecret) {
+      return new Set([ctxSecret])
+    }
+
+    const signSet = parseSecret(this.config.secret)
+    const verifySet = parseSecret(this.config.verifySecret)
+    const ret = new Set([...verifySet, ...signSet])
+
+    return ret
+  }
+
+
+}
+
+
+function parseSecret(input?: JwtConfig['secret'] | JwtConfig['verifySecret']): Set<VerifySecret> {
+  const ret: Set<VerifySecret> = new Set()
+
+  /* istanbul ignore else */
+  if (typeof input === 'string') {
+    ret.add(input)
+  }
+  else if (Buffer.isBuffer(input)) {
+    ret.add(input)
+  }
+  else if (Array.isArray(input)) {
+    input.forEach((secret) => {
+      ret.add(secret)
+    })
+  }
+
+  return ret
 }
 
