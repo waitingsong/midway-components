@@ -62,7 +62,6 @@ export async function jwtMiddleware(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       ctx.jwtState.secret ? ctx.jwtState.secret : ctx.state && ctx.state ? ctx.state.secret : void 0,
     )
-
     const decoded = jwt.validateToken(token, secretSet)
     ctx.jwtState.user = decoded
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
