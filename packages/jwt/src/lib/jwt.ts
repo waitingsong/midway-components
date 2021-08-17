@@ -43,7 +43,7 @@ import { Application } from '~/interface'
 @Scope(ScopeEnum.Singleton)
 export class Jwt {
 
-  @App() readonly app: Application
+  @App() private readonly app: Application
 
   @Config('jwtConfig') private config: JwtConfig
 
