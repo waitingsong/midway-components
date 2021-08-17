@@ -200,7 +200,7 @@ export class Jwt {
 
 
 function processSecret(input?: JwtConfig['secret'] | JwtConfig['verifySecret']): Set<VerifySecret> {
-  const ret: Set<VerifySecret> = new Set()
+  const ret = new Set<VerifySecret>()
 
   /* istanbul ignore else */
   if (typeof input === 'string') {
