@@ -129,7 +129,6 @@ export class Jwt {
   validateToken(
     token: JwtToken,
     secretSet: Set<VerifySecret>,
-    options: JwtConfig,
   ): JwtDecodedPayload {
 
     /* istanbul ignore next */
@@ -147,7 +146,7 @@ export class Jwt {
     const msgs: string[] = []
     Array.from(secretSet).some((secret) => {
       try {
-        const decoded = this.verify(token, secret, options.verifyOpts)
+        const decoded = this.verify(token, secret, this.config.verifyOpts)
         ret = decoded
         return true
       }

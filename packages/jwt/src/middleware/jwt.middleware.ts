@@ -37,11 +37,10 @@ export async function jwtMiddleware(
   next: IMidwayWebNext,
 ): Promise<void> {
 
+  const config = ctx.app.getConfig('jwtOptions') as JwtConfig
   const mdConfig = ctx.app.getConfig('jwtMiddlewareConfig') as JwtMiddlewareConfig
-  const options = ctx.app.getConfig('jwtOptions') as JwtConfig
 
-
-  const { debug } = options
+  const { debug } = config
   const { passthrough } = mdConfig
 
   if (! ctx.jwtState) {
@@ -60,8 +59,8 @@ export async function jwtMiddleware(
     }
 
     const secretSet: Set<VerifySecret> = genVerifySecretSet(
-      options.secret,
-      options.verifySecret,
+      config.secret,
+      config.verifySecret,
       // ctx.jwtState.secret ?? ctx.state?.secret,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       ctx.jwtState.secret ? ctx.jwtState.secret : ctx.state && ctx.state ? ctx.state.secret : void 0,
@@ -70,7 +69,7 @@ export async function jwtMiddleware(
     const container = ctx.app.getApplicationContext()
     const jwt = await container.getAsync(Jwt)
 
-    const decoded = jwt.validateToken(token, secretSet, options)
+    const decoded = jwt.validateToken(token, secretSet)
     ctx.jwtState.user = decoded
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     ctx.state.user = decoded
