@@ -7,8 +7,6 @@ import { Jwt } from '../lib/jwt'
 import { retrieveToken } from '../lib/resolvers'
 import {
   JwtAuthenticateOptions,
-  JwtToken,
-  JwtDecodedPayload,
   VerifySecret,
   RedirectURL,
   JwtState,
@@ -87,7 +85,6 @@ export async function jwtMiddleware(
       return
     }
     else {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const msg = debug === true ? (ex as Error).message : JwtMsg.AuthFailed
       ctx.throw(401, msg, { originalError: ex as unknown })
     }
