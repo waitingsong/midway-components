@@ -142,15 +142,7 @@ export class Jwt {
   ): JwtDecodedPayload {
 
     /* istanbul ignore next */
-    if (! secretSet.size) {
-      throw new Error(JwtMsg.VSceretInvalid)
-    }
-
-    /* istanbul ignore next */
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    if (typeof this.verify !== 'function') {
-      throw new TypeError(JwtMsg.VerifyNotFunc)
-    }
+    if (! secretSet.size) { throw new Error(JwtMsg.VSceretInvalid) }
 
     let ret: JwtDecodedPayload | null = null
     const msgs: string[] = []
