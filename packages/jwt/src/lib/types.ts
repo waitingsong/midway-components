@@ -29,13 +29,16 @@ export interface JwtMiddlewareConfig extends JwtAuthenticateOptions {
    *   - `/^\/$/` match root only
    */
   ignore?: MiddlewarePathPattern
+  /**
+   * Ignored if authOpts.passthrought true
+   * @default false
+   */
+  debug: boolean
 }
 
 export interface JwtConfig {
   /** Authentication options for middleware */
   // authOpts?: JwtAuthenticateOptions
-  /** Ignored if authOpts.passthrought true */
-  debug?: boolean
   decodeOpts?: DecodeOptions
   /**
    * For signing and verifying if without passing secret param,

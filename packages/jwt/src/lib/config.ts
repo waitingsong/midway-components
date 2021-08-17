@@ -20,9 +20,9 @@ export const initialJwtMiddlewareConfig: Readonly<JwtMiddlewareConfig> = {
     '/favicon.ico',
     '/favicon.png',
   ],
+  debug: false,
 }
 export const initialJwtConfig: Readonly<JwtConfig> = {
-  debug: false,
   secret: '',
 }
 

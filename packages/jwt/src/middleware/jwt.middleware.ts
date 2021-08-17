@@ -21,6 +21,7 @@ import {
   IWebMiddleware,
   MidwayWebMiddleware,
 } from '~/interface'
+import { genJwtMiddlewareConfig } from '~/lib'
 
 
 @Provide()
@@ -36,10 +37,10 @@ export async function jwtMiddleware(
 ): Promise<void> {
 
   const config = ctx.app.getConfig('jwtOptions') as JwtConfig
-  const mwConfig = ctx.app.getConfig('jwtMiddlewareConfig') as JwtMiddlewareConfig
+  const pmwConfig = ctx.app.getConfig('jwtMiddlewareConfig') as JwtMiddlewareConfig
+  const mwConfig = genJwtMiddlewareConfig(pmwConfig)
 
-  const { debug } = config
-  const { passthrough } = mwConfig
+  const { debug, passthrough } = mwConfig
 
   if (! ctx.jwtState) {
     ctx.jwtState = { } as JwtState
