@@ -79,11 +79,8 @@ export function validateSignSecret(input: JwtConfig['secret']): void {
 }
 
 
-export function validateVerifySecret(input: JwtConfig['verifySecret']): void {
-  if (input === false) {
-    return
-  }
-  else if (typeof input === 'string') {
+export function validateVerifySecret(input: unknown): void {
+  if (typeof input === 'string') {
     assert(input.length > 0, JwtMsg.InvalidInputString)
   }
   else if (Buffer.isBuffer(input)) {

@@ -46,7 +46,7 @@ export interface JwtConfig {
    */
   secret: Secret
   signOpts?: SignOptions
-  verifySecret?: VerifySecret | VerifySecret[] | false
+  verifySecret?: VerifySecret | VerifySecret[]
   verifyOpts?: VerifyOpts
 }
 

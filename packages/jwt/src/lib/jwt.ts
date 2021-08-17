@@ -86,7 +86,7 @@ export class Jwt {
    */
   verify<T extends string | JsonType = JsonType>(
     token: JwtToken,
-    secretOrPrivateKey?: VerifySecret | false,
+    secretOrPrivateKey?: VerifySecret,
     options?: VerifyOpts,
   ): JwtDecodedPayload<T> {
 
@@ -97,9 +97,9 @@ export class Jwt {
       ? { ...this.config.verifyOpts, ...options }
       : { ...this.config.verifyOpts }
 
-    const secret = typeof secretOrPrivateKey === 'undefined' || secretOrPrivateKey === false
-      ? this.config.secret as VerifySecret
-      : secretOrPrivateKey
+    const secret = secretOrPrivateKey
+      ? secretOrPrivateKey
+      : this.config.secret
 
     validateTokenString(token)
     validateVerifySecret(secret)
