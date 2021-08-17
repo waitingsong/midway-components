@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  App,
   Config,
+  Init,
   Provide,
   Scope,
   ScopeEnum,
@@ -14,6 +16,7 @@ import {
   SignOptions,
   Secret,
 } from 'jsonwebtoken'
+
 
 import { JwtMsg } from './config'
 import {
@@ -31,20 +34,25 @@ import {
   validateVerifySecret,
   validateTokenString,
   validatePayload,
+  genJwtConfig,
 } from './util'
+
+import { Application } from '~/interface'
 
 
 @Provide()
 @Scope(ScopeEnum.Singleton)
 export class Jwt {
 
-  @Config('jwtConfig') private readonly config: JwtConfig
+  @App() readonly app: Application
 
+  @Config('jwtConfig') private config: JwtConfig
 
-  // constructor(config: JwtOptions) {
-  //   this.config = parseOptions(config)
-  // }
-
+  @Init()
+  async init(): Promise<void> {
+    const pconfig = this.app.getConfig('jwtConfig') as Partial<JwtConfig>
+    this.config = genJwtConfig(pconfig)
+  }
 
   /**
    * @description using app.config.jwt.secret if secretOrPrivateKey is undefined or false

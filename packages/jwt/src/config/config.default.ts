@@ -9,7 +9,7 @@ export const jwtConfig = {
   ...initialJwtConfig,
 }
 
-export const JwtMiddlewareConfig = {
+export const jwtMiddlewareConfig = {
   ...initialJwtMiddlewareConfig,
 }
 
