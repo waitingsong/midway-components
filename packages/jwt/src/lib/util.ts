@@ -3,29 +3,24 @@ import assert from 'assert'
 import {
   initialAuthOpts,
   initialJwtMiddlewareConfig,
-  initialJwtOptions,
+  initialJwtConfig,
   JwtMsg,
 } from './config'
 import {
-  JwtEggConfig,
-  JwtOptions,
+  JwtConfig,
   JwtPayload,
   JwtToken,
 } from './types'
 
 
 /** Generate jwtConfig with input and default value */
-export function parseConfig(input: JwtEggConfig): JwtEggConfig {
+export function parseConfig(input: JwtConfig): JwtConfig {
   const config = {
     agent: initialJwtMiddlewareConfig.agent,
     client: parseOptions(input.client),
     enable: initialJwtMiddlewareConfig.enable,
-  } as JwtEggConfig
+  } as JwtConfig
 
-  /* istanbul ignore else */
-  if (typeof input.agent === 'boolean') {
-    config.agent = input.agent
-  }
 
   /* istanbul ignore else */
   if (typeof input.enable === 'boolean') {
@@ -54,8 +49,8 @@ export function parseConfig(input: JwtEggConfig): JwtEggConfig {
 }
 
 /** Generate jwtOptions with input and default value */
-export function parseOptions(client?: JwtOptions): JwtOptions {
-  const opts = {} as JwtOptions
+export function parseOptions(client?: JwtConfig): JwtConfig {
+  const opts = {} as JwtConfig
 
   if (client) {
     const {
@@ -79,8 +74,8 @@ export function parseOptions(client?: JwtOptions): JwtOptions {
     opts.verifySecret = typeof verifySecret === 'undefined' ? void 0 : verifySecret
   }
   else {
-    opts.debug = initialJwtOptions.debug
-    opts.secret = initialJwtOptions.secret
+    opts.debug = initialJwtConfig.debug
+    opts.secret = initialJwtConfig.secret
     opts.authOpts = { ...initialAuthOpts }
   }
 
@@ -116,7 +111,7 @@ export function validatePayload(input: JwtPayload): void {
 }
 
 
-export function validateSignSecret(input: JwtOptions['secret']): void {
+export function validateSignSecret(input: JwtConfig['secret']): void {
   if (typeof input === 'string') {
     assert(input.length > 0, JwtMsg.InvalidInputString)
     return
@@ -135,7 +130,7 @@ export function validateSignSecret(input: JwtOptions['secret']): void {
 }
 
 
-export function validateVerifySecret(input: JwtOptions['verifySecret']): void {
+export function validateVerifySecret(input: JwtConfig['verifySecret']): void {
   if (input === false) {
     return
   }

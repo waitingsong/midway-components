@@ -17,7 +17,7 @@ import {
 
 import { JwtMsg } from './config'
 import {
-  JwtOptions,
+  JwtConfig,
   JwtPayload,
   JwtToken,
   JwtDecodedPayload,
@@ -38,7 +38,7 @@ import {
 @Scope(ScopeEnum.Singleton)
 export class Jwt {
 
-  @Config('jwtOptions') private readonly config: JwtOptions
+  @Config('jwtConfig') private readonly config: JwtConfig
 
 
   // constructor(config: JwtOptions) {
@@ -129,7 +129,7 @@ export class Jwt {
   validateToken(
     token: JwtToken,
     secretSet: Set<VerifySecret>,
-    options: JwtOptions,
+    options: JwtConfig,
   ): JwtDecodedPayload {
 
     /* istanbul ignore next */

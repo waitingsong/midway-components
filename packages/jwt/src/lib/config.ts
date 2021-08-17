@@ -1,7 +1,7 @@
 import {
   JwtAuthenticateOptions,
   JwtMiddlewareConfig,
-  JwtOptions,
+  JwtConfig,
 } from './types'
 
 
@@ -21,7 +21,7 @@ export const initialJwtMiddlewareConfig: Readonly<JwtMiddlewareConfig> = {
     '/favicon.png',
   ],
 }
-export const initialJwtOptions: Readonly<JwtOptions> = {
+export const initialJwtConfig: Readonly<JwtConfig> = {
   debug: false,
   secret: '',
 }

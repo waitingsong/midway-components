@@ -13,7 +13,7 @@ import {
   RedirectURL,
   JwtState,
   JwtMiddlewareConfig,
-  JwtOptions,
+  JwtConfig,
 } from '../lib/types'
 
 
@@ -38,7 +38,7 @@ export async function jwtMiddleware(
 ): Promise<void> {
 
   const mdConfig = ctx.app.getConfig('jwtMiddlewareConfig') as JwtMiddlewareConfig
-  const options = ctx.app.getConfig('jwtOptions') as JwtOptions
+  const options = ctx.app.getConfig('jwtOptions') as JwtConfig
 
 
   const { debug } = options
@@ -104,7 +104,7 @@ export async function jwtMiddleware(
  */
 function genVerifySecretSet(
   signSecret: Secret,
-  verifySecret?: JwtOptions['verifySecret'],
+  verifySecret?: JwtConfig['verifySecret'],
   ctxSecret?: unknown,
 ): Set<VerifySecret> {
 
@@ -120,7 +120,7 @@ function genVerifySecretSet(
   return ret
 }
 
-function parseSecret(input?: JwtOptions['secret'] | JwtOptions['verifySecret']): Set<VerifySecret> {
+function parseSecret(input?: JwtConfig['secret'] | JwtConfig['verifySecret']): Set<VerifySecret> {
   const ret: Set<VerifySecret> = new Set()
 
   /* istanbul ignore else */

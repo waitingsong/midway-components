@@ -1,12 +1,12 @@
 
 import {
-  initialJwtOptions,
+  initialJwtConfig,
   initialJwtMiddlewareConfig,
 } from '../lib/config'
 
 
-export const jwtOptions = {
-  ...initialJwtOptions,
+export const jwtConfig = {
+  ...initialJwtConfig,
 }
 
 export const JwtMiddlewareConfig = {
