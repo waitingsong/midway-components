@@ -54,9 +54,10 @@ export class Jwt {
     const pconfig = this.app.getConfig('jwtConfig') as Partial<JwtConfig>
     this.config = genJwtConfig(pconfig)
 
-    const signSet = processSecret(this.config.secret)
     const verifySet = processSecret(this.config.verifySecret)
-    this.verifySecretSet = new Set([...verifySet, ...signSet])
+    const signSet = processSecret(this.config.secret)
+    signSet.forEach(val => verifySet.add(val))
+    this.verifySecretSet = verifySet
   }
 
   /**
