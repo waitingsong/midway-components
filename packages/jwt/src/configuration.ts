@@ -21,10 +21,10 @@ export class AutoConfiguration {
 
   @App() readonly app: IMidwayWebApplication
 
-  @Config('JwtMiddlewareConfig') protected readonly mdConfig: JwtMiddlewareConfig
+  @Config('jwtMiddlewareConfig') protected readonly mwConfig: JwtMiddlewareConfig
 
   async onReady(): Promise<void> {
-    if (this.mdConfig.enableMiddleware) {
+    if (this.mwConfig.enableMiddleware) {
       registerMiddleware(this.app)
     }
   }

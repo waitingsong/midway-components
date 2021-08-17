@@ -36,10 +36,10 @@ export async function jwtMiddleware(
 ): Promise<void> {
 
   const config = ctx.app.getConfig('jwtOptions') as JwtConfig
-  const mdConfig = ctx.app.getConfig('jwtMiddlewareConfig') as JwtMiddlewareConfig
+  const mwConfig = ctx.app.getConfig('jwtMiddlewareConfig') as JwtMiddlewareConfig
 
   const { debug } = config
-  const { passthrough } = mdConfig
+  const { passthrough } = mwConfig
 
   if (! ctx.jwtState) {
     ctx.jwtState = { } as JwtState
@@ -49,7 +49,7 @@ export async function jwtMiddleware(
   }
 
   try {
-    const token = retrieveToken(ctx, mdConfig)
+    const token = retrieveToken(ctx, mwConfig)
 
     /* istanbul ignore else */
     if (! token) {

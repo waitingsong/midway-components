@@ -8,6 +8,7 @@ import {
 } from './config'
 import {
   JwtConfig,
+  JwtMiddlewareConfig,
   JwtPayload,
   JwtToken,
 } from './types'
@@ -17,7 +18,7 @@ import {
 export function parseConfig(input: JwtConfig): JwtConfig {
   const config = {
     agent: initialJwtMiddlewareConfig.agent,
-    client: parseOptions(input.client),
+    client: genJwtMiddlewareConfig(input.client),
     enable: initialJwtMiddlewareConfig.enable,
   } as JwtConfig
 
@@ -48,38 +49,22 @@ export function parseConfig(input: JwtConfig): JwtConfig {
   return config
 }
 
-/** Generate jwtOptions with input and default value */
-export function parseOptions(client?: JwtConfig): JwtConfig {
-  const opts = {} as JwtConfig
-
-  if (client) {
-    const {
-      debug,
-      secret,
-      authOpts,
-      decodeOpts,
-      signOpts,
-      verifyOpts,
-      verifySecret,
-    } = client
-
-    opts.debug = !! debug
-    opts.secret = typeof secret === 'undefined' ? '' : secret
-    opts.authOpts = authOpts
-      ? { ...initialAuthOpts, ...authOpts }
-      : { ...initialAuthOpts }
-    opts.decodeOpts = decodeOpts ? { ...decodeOpts } : void 0
-    opts.signOpts = signOpts ? { ...signOpts } : void 0
-    opts.verifyOpts = verifyOpts ? { ...verifyOpts } : void 0
-    opts.verifySecret = typeof verifySecret === 'undefined' ? void 0 : verifySecret
+export function genJwtConfig(input?: Partial<JwtConfig>): JwtConfig {
+  const ret: JwtConfig = {
+    ...initialJwtConfig,
+    ...input,
   }
-  else {
-    opts.debug = initialJwtConfig.debug
-    opts.secret = initialJwtConfig.secret
-    opts.authOpts = { ...initialAuthOpts }
-  }
+  return ret
+}
 
-  return opts
+
+/** Generate jwtConfig with input and default value */
+export function genJwtMiddlewareConfig(input?: Partial<JwtMiddlewareConfig>): JwtMiddlewareConfig {
+  const ret: JwtMiddlewareConfig = {
+    ...initialJwtMiddlewareConfig,
+    ...input,
+  }
+  return ret
 }
 
 

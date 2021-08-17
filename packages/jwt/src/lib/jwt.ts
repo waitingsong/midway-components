@@ -26,7 +26,7 @@ import {
   JwtComplete,
 } from './types'
 import {
-  parseOptions,
+  genJwtMiddlewareConfig,
   validateSignSecret,
   validateVerifySecret,
   validateTokenString,
