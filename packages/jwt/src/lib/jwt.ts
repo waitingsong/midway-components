@@ -189,8 +189,8 @@ export class Jwt {
       return new Set([ctxSecret])
     }
 
-    const signSet = processSecret(this.config.secret)
-    const verifySet = processSecret(this.config.verifySecret)
+    const signSet = parseSecret(this.config.secret)
+    const verifySet = parseSecret(this.config.verifySecret)
     const ret = new Set([...verifySet, ...signSet])
 
     return ret
@@ -200,7 +200,7 @@ export class Jwt {
 }
 
 
-function processSecret(input?: JwtConfig['secret'] | JwtConfig['verifySecret']): Set<VerifySecret> {
+function parseSecret(input?: JwtConfig['secret'] | JwtConfig['verifySecret']): Set<VerifySecret> {
   const ret: Set<VerifySecret> = new Set()
 
   /* istanbul ignore else */
