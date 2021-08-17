@@ -128,13 +128,10 @@ export class Jwt {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (! this) { throw new TypeError('Should call with class name, such as jwt.decode()') }
 
-    let opts: DecodeOptions = { complete: true }
-
-    /* istanbul ignore else */
-    if (this.config.decodeOpts && Object.keys(this.config.decodeOpts).length) {
-      opts = { ...this.config.decodeOpts }
+    const opts: DecodeOptions = {
+      complete: true,
+      ...this.config.decodeOpts,
     }
-
     const ret = decode(token, opts)
     return ret as JwtComplete<T>
   }
