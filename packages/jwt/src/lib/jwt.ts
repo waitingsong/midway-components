@@ -97,7 +97,7 @@ export class Jwt {
   ): JwtDecodedPayload<T> {
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (! this) { throw new TypeError('Should call with class name, such as jwt.foo()') }
+    if (! this) { throw new TypeError('Should call with class name, such as jwt.verify()') }
 
     const opts: VerifyOpts = options
       ? { ...this.config.verifyOpts, ...options }
@@ -126,7 +126,7 @@ export class Jwt {
   ): JwtComplete<T> {
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (! this) { throw new TypeError('Should call with class name, such as jwt.foo()') }
+    if (! this) { throw new TypeError('Should call with class name, such as jwt.decode()') }
 
     let opts: DecodeOptions = { complete: true }
 
