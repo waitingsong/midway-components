@@ -189,17 +189,14 @@ export class Jwt {
     ctxSecret?: unknown,
   ): Set<VerifySecret> {
 
-    /* istanbul ignore else */
-    if ((typeof ctxSecret === 'string' || Buffer.isBuffer(ctxSecret)) && ctxSecret) {
-      return new Set([ctxSecret])
-    }
-    const cs = processSecret(ctxSecret)
-    if (cs.size) {
-      return cs
+    if (ctxSecret) {
+      const cs = processSecret(ctxSecret)
+      if (cs.size) {
+        return cs
+      }
     }
     return this.verifySecretSet
   }
-
 
 }
 
