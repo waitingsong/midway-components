@@ -70,7 +70,7 @@ export async function jwtMiddleware(
     const container = ctx.app.getApplicationContext()
     const jwt = await container.getAsync(Jwt)
 
-    const decoded = validateToken(jwt, token, secretSet, options)
+    const decoded = jwt.validateToken(token, secretSet, options)
     ctx.jwtState.user = decoded
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     ctx.state.user = decoded
@@ -140,50 +140,6 @@ function parseSecret(input?: JwtOptions['secret'] | JwtOptions['verifySecret']):
 }
 
 
-function validateToken(
-  jwtImpl: Jwt,
-  token: JwtToken,
-  secretSet: Set<VerifySecret>,
-  options: JwtOptions,
-): JwtDecodedPayload {
-
-  /* istanbul ignore next */
-  if (! secretSet.size) {
-    throw new Error(JwtMsg.VSceretInvalid)
-  }
-
-  /* istanbul ignore next */
-  // eslint-disable-next-line @typescript-eslint/unbound-method
-  if (typeof jwtImpl.verify !== 'function') {
-    throw new TypeError(JwtMsg.VerifyNotFunc)
-  }
-
-  let ret: JwtDecodedPayload | null = null
-  const msgs: string[] = []
-  Array.from(secretSet).some((secret) => {
-    try {
-      const decoded = jwtImpl.verify(token, secret, options.verifyOpts)
-      ret = decoded
-      return true
-    }
-    catch (ex) {
-      const ss = typeof secret === 'string' ? secret : secret.toString()
-      const start = ss.slice(0, 2)
-      let end = ss
-      if (! process.env.CI) {
-        end = ss.length > 5 ? ss.slice(-2) : '**'
-      }
-      msgs.push(`Error during verify: with secret "${start}****${end}"`)
-    }
-  })
-
-  /* istanbul ignore else */
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (ret === null) {
-    throw new Error(JwtMsg.TokenValidFailed + ':\n' + msgs.join('\n'))
-  }
-  return ret as JwtDecodedPayload
-}
 
 
 /** Compute passthrough state */
