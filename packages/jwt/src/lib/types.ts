@@ -57,12 +57,6 @@ export interface JwtAuthenticateOptions {
    */
   cookie: string | false
   /**
-   * This lets downstream middleware make decisions based on whether ctx.jwtState.user is set.
-   * You can still handle errors using ctx.jwtState.jwtOriginalError.
-   * Default: user
-   */
-  // key: 'user' | string
-  /**
    * - false (Default): throw error
    * - true: always yield next, even if no valid Authorization header was found,
    *    and ignore value of JwtOptions.debug
