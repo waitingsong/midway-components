@@ -35,7 +35,7 @@ export function registerMiddleware(
   app: IMidwayWebApplication,
 ): void {
 
-  const appMiddleware = app.getConfig('middleware') as string[]
+  const appMiddleware = app.getConfig('middleware') as string[] | undefined
   if (Array.isArray(appMiddleware)) {
     appMiddleware.push(namespace + ':jwtMiddleware')
   }

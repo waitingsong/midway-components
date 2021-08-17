@@ -1,7 +1,6 @@
 import assert from 'assert'
 
 import {
-  initialAuthOpts,
   initialJwtMiddlewareConfig,
   initialJwtConfig,
   JwtMsg,
@@ -13,41 +12,6 @@ import {
   JwtToken,
 } from './types'
 
-
-/** Generate jwtConfig with input and default value */
-export function parseConfig(input: JwtConfig): JwtConfig {
-  const config = {
-    agent: initialJwtMiddlewareConfig.agent,
-    client: genJwtMiddlewareConfig(input.client),
-    enable: initialJwtMiddlewareConfig.enable,
-  } as JwtConfig
-
-
-  /* istanbul ignore else */
-  if (typeof input.enable === 'boolean') {
-    config.enable = input.enable
-  }
-
-  /* istanbul ignore else */
-  if (typeof input.ignore !== 'undefined') {
-    config.ignore = input.ignore
-  }
-
-  /* istanbul ignore else */
-  if (typeof input.match !== 'undefined') {
-    config.match = input.match
-  }
-
-  config.appWork = typeof input.appWork === 'boolean'
-    ? input.appWork
-    : initialJwtMiddlewareConfig.appWork
-
-  config.appMiddlewareIndex = typeof input.appMiddlewareIndex === 'number'
-    ? input.appMiddlewareIndex
-    : initialJwtMiddlewareConfig.appMiddlewareIndex
-
-  return config
-}
 
 export function genJwtConfig(input?: Partial<JwtConfig>): JwtConfig {
   const ret: JwtConfig = {
