@@ -13,7 +13,7 @@ const filename = relative(process.cwd(), __filename)
 describe(filename, () => {
 
   describe('Should Jwt:sign() works', () => {
-    it('initializ secret', async () => {
+    it('config secret', async () => {
       const conf: JwtConfig = {
         secret,
       }
@@ -33,16 +33,15 @@ describe(filename, () => {
       assert(token === token1)
     })
 
-    // it('both initializing and passing secret', async () => {
-    //   const opts: ClientOptions = {
-    //     ...initialClientOptions,
-    //     secret: 'notused',
-    //   }
-    //   const jwt = new Jwt(opts)
-    //   const token = jwt.sign(payload1, secret)
+    it('both initializing and passing secret', async () => {
+      const conf: JwtConfig = {
+        secret: 'notused',
+      }
+      const jwt = new Jwt(conf)
 
-    //   assert(token === token1)
-    // })
+      const token = jwt.sign(payload1, secret)
+      assert(token === token1)
+    })
 
     it('without iat', async () => {
       const conf: JwtConfig = {
@@ -51,7 +50,6 @@ describe(filename, () => {
       const jwt = new Jwt(conf)
 
       const token = jwt.sign(payload2)
-
       assert(token.indexOf(tokenHeader2) === 0)
     })
 
@@ -63,7 +61,6 @@ describe(filename, () => {
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
       const { sign } = jwt
-
       try {
         sign(payload2)
       }
