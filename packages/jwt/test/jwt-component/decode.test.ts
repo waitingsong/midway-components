@@ -23,9 +23,11 @@ describe(filename, () => {
   describe('Should Jwt:decode() work', () => {
     it('normal string', async () => {
       const { app } = testConfig
+      const jwtConfig: JwtConfig = {
+        secret,
+      }
+      app.addConfigObject({ jwtConfig })
       const container = app.getApplicationContext()
-      const config = app.getConfig('jwtConfig') as JwtConfig
-      config.secret = secret
       const svc = await container.getAsync(JwtComponent)
 
       const input = 'fooabc' + Math.random().toString()
@@ -36,9 +38,11 @@ describe(filename, () => {
 
     it('various generics types', async () => {
       const { app } = testConfig
+      const jwtConfig: JwtConfig = {
+        secret,
+      }
+      app.addConfigObject({ jwtConfig })
       const container = app.getApplicationContext()
-      const config = app.getConfig('jwtConfig') as JwtConfig
-      config.secret = secret
       const svc = await container.getAsync(JwtComponent)
 
       const token = svc.sign(payload1, secret)
@@ -56,9 +60,11 @@ describe(filename, () => {
 
     it('pass secret', async () => {
       const { app } = testConfig
+      const jwtConfig: JwtConfig = {
+        secret,
+      }
+      app.addConfigObject({ jwtConfig })
       const container = app.getApplicationContext()
-      const config = app.getConfig('jwtConfig') as JwtConfig
-      config.secret = secret
       const svc = await container.getAsync(JwtComponent)
 
       const token = svc.sign(payload1, secret)
@@ -73,9 +79,11 @@ describe(filename, () => {
 
     it('with invalid scope', async () => {
       const { app } = testConfig
+      const jwtConfig: JwtConfig = {
+        secret,
+      }
+      app.addConfigObject({ jwtConfig })
       const container = app.getApplicationContext()
-      const config = app.getConfig('jwtConfig') as JwtConfig
-      config.secret = secret
       const svc = await container.getAsync(JwtComponent)
 
       // eslint-disable-next-line @typescript-eslint/unbound-method

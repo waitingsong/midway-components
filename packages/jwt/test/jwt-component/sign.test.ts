@@ -23,9 +23,11 @@ describe(filename, () => {
 
     it('initializ secret', async () => {
       const { app } = testConfig
+      const jwtConfig: JwtConfig = {
+        secret,
+      }
+      app.addConfigObject({ jwtConfig })
       const container = app.getApplicationContext()
-      const config = app.getConfig('jwtConfig') as JwtConfig
-      config.secret = secret
       const svc = await container.getAsync(JwtComponent)
 
       const token = svc.sign(payload1)
@@ -34,9 +36,11 @@ describe(filename, () => {
 
     it('pass secret', async () => {
       const { app } = testConfig
+      const jwtConfig: JwtConfig = {
+        secret,
+      }
+      app.addConfigObject({ jwtConfig })
       const container = app.getApplicationContext()
-      const config = app.getConfig('jwtConfig') as JwtConfig
-      config.secret = secret
       const svc = await container.getAsync(JwtComponent)
 
       const token = svc.sign(payload1, secret)
@@ -45,9 +49,11 @@ describe(filename, () => {
 
     it('without iat', async () => {
       const { app } = testConfig
+      const jwtConfig: JwtConfig = {
+        secret,
+      }
+      app.addConfigObject({ jwtConfig })
       const container = app.getApplicationContext()
-      const config = app.getConfig('jwtConfig') as JwtConfig
-      config.secret = secret
       const svc = await container.getAsync(JwtComponent)
 
       const token = svc.sign(payload2)

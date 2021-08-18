@@ -27,6 +27,10 @@ export const mochaHooks = async () => {
     beforeAll: async () => {
       const app = await createApp<Framework>()
       testConfig.app = app
+
+      app.addConfigObject({
+        keys: Math.random().toString(),
+      })
       const ctx = app.createAnonymousContext()
       // https:// www.yuque.com/midwayjs/midway_v2/testing
       // const svc = await app.getApplicationContext().getAsync(TaskQueueService)
