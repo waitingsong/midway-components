@@ -14,10 +14,19 @@ import {
   JwtToken,
   JwtDecodedPayload,
   VerifySecret,
+  JwtPayload,
+  VerifyOpts,
+  JwtComplete,
 } from './types'
 import { genJwtConfig } from './util'
 
-import { Application } from '~/interface'
+import {
+  Application,
+  JsonType,
+  DecodeOptions,
+  SignOptions,
+  Secret,
+} from '~/interface'
 
 
 @Provide()
@@ -44,6 +53,48 @@ export class JwtComponent {
     this.jwt = new Jwt(this.config)
   }
 
+  /**
+   * @description using app.config.jwt.secret if secretOrPrivateKey is undefined or false
+   */
+  sign(
+    payload: JwtPayload,
+    secretOrPrivateKey?: Secret | false,
+    options?: SignOptions,
+  ): JwtToken {
+
+    const ret = this.jwt.sign(payload, secretOrPrivateKey, options)
+    return ret
+  }
+
+
+  /**
+   * @description using app.config.jwt.secret if secretOrPrivateKey is undefined or false
+   */
+  verify<T extends string | JsonType = JsonType>(
+    token: JwtToken,
+    secretOrPrivateKey?: VerifySecret,
+    options?: VerifyOpts,
+  ): JwtDecodedPayload<T> {
+
+    const ret = this.jwt.verify<T>(token, secretOrPrivateKey, options)
+    return ret
+  }
+
+
+  /**
+   * Decode token,
+   * Warning: This will not verify whether the signature is valid.
+   * You should not use this for untrusted messages. You most likely want to use jwt.verify instead
+   *
+   * @param options value of complete always be TRUE
+   */
+  decode<T extends string | JsonType = JsonType>(
+    token: JwtToken,
+  ): JwtComplete<T> {
+
+    const ret = this.jwt.decode<T>(token)
+    return ret
+  }
 
   validateToken(
     token: JwtToken,

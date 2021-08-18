@@ -3,9 +3,6 @@ import {
   decode,
   sign,
   verify,
-  DecodeOptions,
-  SignOptions,
-  Secret,
 } from 'jsonwebtoken'
 
 import {
@@ -24,6 +21,12 @@ import {
   validatePayload,
   genJwtConfig,
 } from './util'
+
+import {
+  DecodeOptions,
+  SignOptions,
+  Secret,
+} from '~/interface'
 
 
 export class Jwt {
