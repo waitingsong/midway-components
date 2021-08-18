@@ -1,14 +1,5 @@
 import { Provide } from '@midwayjs/decorator'
 
-import { retrieveToken } from '../lib/resolvers'
-import {
-  JwtAuthenticateOptions,
-  VerifySecret,
-  RedirectURL,
-  JwtState,
-  JwtMiddlewareConfig,
-} from '../lib/types'
-
 import {
   Context,
   IMidwayWebNext,
@@ -20,6 +11,14 @@ import {
   JwtComponent,
   JwtMsg,
 } from '~/lib/index'
+import { retrieveToken } from '~/lib/resolvers'
+import {
+  JwtAuthenticateOptions,
+  VerifySecret,
+  RedirectURL,
+  JwtState,
+  JwtMiddlewareConfig,
+} from '~/lib/types'
 
 
 @Provide()
