@@ -1,6 +1,12 @@
 import { relative } from 'path'
 
-import { payload1, payload2, secret, token1, tokenHeader2 } from './test.config'
+import {
+  payload1,
+  payload2,
+  secret,
+  token1,
+  tokenHeader2,
+} from '../test.config'
 
 import { Jwt, JwtConfig } from '~/index'
 
