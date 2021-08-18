@@ -1,0 +1,143 @@
+import { relative } from 'path'
+
+import { token1 } from '../test.config'
+
+import {
+  schemePrefix,
+  resolveFromAuthorizationHeader,
+  resolveFromCookies,
+  validateTokenString,
+  validatePayload,
+  validateSignSecret,
+  validateVerifySecret,
+} from '~/index'
+
+// eslint-disable-next-line import/order
+import assert = require('power-assert')
+
+
+const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
+
+describe(filename, () => {
+
+  describe('Should validateTokenString() work', () => {
+    it('with invalid input', () => {
+      const arr = [true, false, null, void 0, '']
+
+      arr.forEach((val) => {
+        try {
+          // @ts-ignore
+          validateTokenString(val)
+        }
+        catch (ex) {
+          return assert(true)
+        }
+        assert(false, 'Should throw error but NOT.')
+      })
+    })
+  })
+
+
+  describe('Should validatePayload() work', () => {
+    it('with valid input', () => {
+      const arr = [
+        'abc', '\n', token1,
+        Buffer.from('foo'),
+        { foo: 'bar' },
+      ]
+
+      arr.forEach(validatePayload)
+    })
+
+    it('with invalid input', () => {
+      const arr = [
+        '', Buffer.alloc(0), {},
+        true, false, null, void 0, Symbol('foo'),
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        () => {},
+      ]
+
+      arr.forEach((val) => {
+        try {
+          // @ts-ignore
+          validatePayload(val)
+        }
+        catch (ex) {
+          return assert(true)
+        }
+        assert(false, 'Should throw error but NOT.')
+      })
+    })
+  })
+
+
+  describe('Should validateSignSecret() work', () => {
+    it('with valid input', () => {
+      const arr = [
+        'abc', '\n', token1,
+        { key: 'foo', passphrase: 'bar' },
+        Buffer.from('foo'),
+      ]
+
+      arr.forEach(validateSignSecret)
+    })
+
+    it('with invalid input', () => {
+      const arr = [
+        '', Buffer.alloc(0),
+        {}, { foo: 'bar' },
+        { key: 123 },
+        { passphrase: 123 },
+        true, false, null, void 0, Symbol('foo'),
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        () => {},
+      ]
+
+      arr.forEach((val) => {
+        try {
+          // @ts-ignore
+          validateSignSecret(val)
+        }
+        catch (ex) {
+          return assert(true)
+        }
+        assert(false, 'Should throw error but NOT.')
+      })
+    })
+  })
+
+
+  describe('Should validateVerifySecret() work', () => {
+    it('with valid input', () => {
+      const arr = [
+        'abc', '\n', token1,
+        Buffer.from('foo'),
+      ] as const
+
+      arr.forEach(validateVerifySecret)
+    })
+
+    it('with invalid input', () => {
+      const arr = [
+        '', Buffer.alloc(0), {},
+        true, null, void 0, Symbol('foo'),
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        () => { },
+        false,
+      ]
+
+      arr.forEach((val) => {
+        try {
+          // @ts-ignore
+          validateVerifySecret(val)
+        }
+        catch (ex) {
+          return assert(true)
+        }
+        assert(false, 'Should throw error but NOT.')
+      })
+    })
+  })
+
+})
+
