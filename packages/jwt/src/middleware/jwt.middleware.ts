@@ -86,6 +86,7 @@ export async function jwtMiddleware(
     }
     else {
       const msg = debug === true ? (ex as Error).message : JwtMsg.AuthFailed
+      ctx.status = 401
       ctx.throw(401, msg, { originalError: ex as unknown })
     }
   }
