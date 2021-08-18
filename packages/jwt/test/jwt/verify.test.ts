@@ -1,5 +1,7 @@
 import { relative } from 'path'
 
+import { VerifyOptions } from 'jsonwebtoken'
+
 import {
   payload1,
   secret,
@@ -77,18 +79,31 @@ describe(filename, () => {
       assert.deepStrictEqual(ret, payload1)
     })
 
-    it.only('pass VerifyOptions', async () => {
+    it('pass VerifyOptions', async () => {
       const conf: JwtConfig = {
         secret,
       }
       const jwt = new Jwt(conf)
 
       const token = jwt.sign(payload1, secret)
-      const opts: VerifyOpts = {
+      const opts: VerifyOptions = {
         complete: true,
       }
       const ret = jwt.verify(token, secret, opts)
-      console.info(ret)
+      assert.deepStrictEqual(ret.payload, payload1)
+    })
+
+    it('pass VerifyOptions ignore complete', async () => {
+      const conf: JwtConfig = {
+        secret,
+      }
+      const jwt = new Jwt(conf)
+
+      const token = jwt.sign(payload1, secret)
+      const opts: VerifyOptions = {
+        complete: false,
+      }
+      const ret = jwt.verify(token, secret, opts)
       assert.deepStrictEqual(ret.payload, payload1)
     })
 

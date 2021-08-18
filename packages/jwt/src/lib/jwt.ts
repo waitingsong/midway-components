@@ -3,6 +3,7 @@ import {
   decode,
   sign,
   verify,
+  VerifyOptions,
 } from 'jsonwebtoken'
 
 import {
@@ -79,9 +80,10 @@ export class Jwt {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (! this) { throw new TypeError('Should call with class name, such as jwt.verify()') }
 
-    const opts: VerifyOpts = options
+    const opts: VerifyOptions = options
       ? { ...this.config.verifyOpts, ...options }
       : { ...this.config.verifyOpts }
+    opts.complete = true
 
     const secret = secretOrPrivateKey
       ? secretOrPrivateKey

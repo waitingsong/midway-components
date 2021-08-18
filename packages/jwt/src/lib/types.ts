@@ -76,7 +76,7 @@ export interface JwtResult<T extends string | JsonType = JsonType> {
 }
 
 export type VerifySecret = string | Buffer
-export type VerifyOpts = Omit<VerifyOptions, 'maxAge'>
+export type VerifyOpts = Omit<VerifyOptions, 'maxAge' | 'complete'>
 
 export type MiddlewarePathPattern = (string | RegExp | PathPatternFunc)[]
 export type PathPatternFunc = (ctx: Context) => boolean
