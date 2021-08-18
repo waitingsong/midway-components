@@ -18,7 +18,7 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
 
-  describe('Should Jwt:sign() works', () => {
+  describe('Should Jwt:sign() work', () => {
     it('config secret', async () => {
       const conf: JwtConfig = {
         secret,

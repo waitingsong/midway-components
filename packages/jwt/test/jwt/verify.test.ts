@@ -16,7 +16,7 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
 
-  describe('Should Jwt:verify() works', () => {
+  describe('Should Jwt:verify() work', () => {
     it('initializ secret', () => {
       const conf: JwtConfig = {
         secret,
