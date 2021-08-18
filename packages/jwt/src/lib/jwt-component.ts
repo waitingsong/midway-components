@@ -23,7 +23,6 @@ import { genJwtConfig } from './util'
 import {
   Application,
   JsonType,
-  DecodeOptions,
   SignOptions,
   Secret,
 } from '~/interface'
