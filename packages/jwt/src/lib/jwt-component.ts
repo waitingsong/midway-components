@@ -34,11 +34,11 @@ export class JwtComponent {
 
   @App() private readonly app: Application
 
-  @Config('jwtConfig') protected config: JwtConfig
+  @Config('jwtConfig') private config: JwtConfig
 
-  public jwt: Jwt
+  private jwt: Jwt
 
-  protected verifySecretSet: Set<VerifySecret>
+  private verifySecretSet: Set<VerifySecret>
 
   @Init()
   async init(): Promise<void> {
