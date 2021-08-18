@@ -8,7 +8,7 @@ import { Jwt, JwtConfig } from '~/index'
 import assert = require('power-assert')
 
 
-const filename = relative(process.cwd(), __filename)
+const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
 
