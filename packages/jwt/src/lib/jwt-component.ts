@@ -56,7 +56,7 @@ export class JwtComponent {
    */
   sign(
     payload: JwtPayload,
-    secretOrPrivateKey?: Secret | false,
+    secretOrPrivateKey?: Secret,
     options?: SignOptions,
   ): JwtToken {
 

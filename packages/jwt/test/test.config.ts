@@ -22,6 +22,11 @@ export const token1 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.'
   + 'eyJmb28iOiJiYXIiLCJpYXQiOjE1NjY2Mjk5MTl9.'
   + signature1
 
+export const token7d = `
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJiYXIiLCJpYXQiOjE1NjY2Mjk5MTksImV4cCI6MTU2NzIzNDcxOX0.MdR1Z1gHTExIUIOTHurwIao7vbfrkqynDsoNZ8nMsnE
+`.trim()
+
+
 export const payload2 = { foo: 'bar' }
 export const tokenHeader2 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
 

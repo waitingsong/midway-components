@@ -45,20 +45,20 @@ export class Jwt {
    */
   sign(
     payload: JwtPayload,
-    secretOrPrivateKey?: Secret | false,
+    secretOrPrivateKey?: Secret,
     options?: SignOptions,
   ): JwtToken {
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (! this) { throw new TypeError('Should call with class name, such as jwt.foo()') }
 
+    const secret = secretOrPrivateKey
+      ? secretOrPrivateKey
+      : this.config.secret
+
     const opts: SignOptions = options
       ? { ...this.config.signOpts, ...options }
       : { ...this.config.signOpts }
-
-    const secret = typeof secretOrPrivateKey === 'undefined' || secretOrPrivateKey === false
-      ? this.config.secret
-      : secretOrPrivateKey
 
     validatePayload(payload)
     validateSignSecret(secret)

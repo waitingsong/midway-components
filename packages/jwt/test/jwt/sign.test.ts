@@ -5,10 +5,11 @@ import {
   payload2,
   secret,
   token1,
+  token7d,
   tokenHeader2,
 } from '../test.config'
 
-import { Jwt, JwtConfig } from '~/index'
+import { Jwt, JwtConfig, SignOptions } from '~/index'
 
 // eslint-disable-next-line import/order
 import assert = require('power-assert')
@@ -57,6 +58,19 @@ describe(filename, () => {
 
       const token = jwt.sign(payload2)
       assert(token.indexOf(tokenHeader2) === 0)
+    })
+
+    it('pass SignOptions', async () => {
+      const conf: JwtConfig = {
+        secret,
+      }
+      const jwt = new Jwt(conf)
+
+      const opts: SignOptions = {
+        expiresIn: '7d',
+      }
+      const token = jwt.sign(payload1, secret, opts)
+      assert(token === token7d)
     })
 
     it('with invalid scope', async () => {
