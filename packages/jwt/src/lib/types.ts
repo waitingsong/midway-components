@@ -10,6 +10,19 @@ import {
 import { Context } from '~/interface'
 
 
+export interface JwtConfig {
+  /**
+   * For signing and verifying if without passing secret param,
+   * Note: the type of VerifySecret without object
+   */
+  secret: Secret
+  /** Authentication options for middleware */
+  decodeOpts?: DecodeOptions
+  signOpts?: SignOptions
+  verifySecret?: VerifySecret | VerifySecret[]
+  verifyOpts?: VerifyOpts
+}
+
 export interface JwtMiddlewareConfig extends JwtAuthenticateOptions {
   /**
    * @default true
@@ -34,19 +47,6 @@ export interface JwtMiddlewareConfig extends JwtAuthenticateOptions {
    * @default false
    */
   debug: boolean
-}
-
-export interface JwtConfig {
-  /**
-   * For signing and verifying if without passing secret param,
-   * Note: the type of VerifySecret without object
-   */
-  secret: Secret
-  /** Authentication options for middleware */
-  decodeOpts?: DecodeOptions
-  signOpts?: SignOptions
-  verifySecret?: VerifySecret | VerifySecret[]
-  verifyOpts?: VerifyOpts
 }
 
 /** Authentication options for middleware */
