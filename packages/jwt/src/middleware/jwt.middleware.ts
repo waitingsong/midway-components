@@ -17,7 +17,6 @@ import {
 } from '~/interface'
 import {
   genJwtMiddlewareConfig,
-  Jwt,
   JwtComponent,
   JwtMsg,
 } from '~/lib/index'
