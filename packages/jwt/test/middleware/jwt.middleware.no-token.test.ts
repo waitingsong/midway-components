@@ -32,9 +32,10 @@ describe(filename, () => {
       const jwtConfig: JwtConfig = {
         secret,
       }
+      const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
-        ignore: ['/'],
+        ignore: [path],
       }
       app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
 
@@ -43,7 +44,7 @@ describe(filename, () => {
       const inst = await container.getAsync(JwtMiddleware)
 
       const ctx: Context = app.createAnonymousContext()
-      ctx.path = '/'
+      ctx.path = path
 
       const mw = inst.resolve() as MidwayWebMiddleware
       // @ts-expect-error
@@ -52,11 +53,12 @@ describe(filename, () => {
       assert(status === 200)
     })
 
-    it('path ignored', async () => {
+    it('path ignored with empty ignore', async () => {
       const { app } = testConfig
       const jwtConfig: JwtConfig = {
         secret,
       }
+      const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [],
@@ -67,7 +69,44 @@ describe(filename, () => {
       const inst = await container.getAsync(JwtMiddleware)
 
       const ctx: Context = app.createAnonymousContext()
-      ctx.path = '/'
+      ctx.path = path
+
+      const mw = inst.resolve() as MidwayWebMiddleware
+      try {
+        // @ts-expect-error
+        await mw(ctx, next)
+      }
+      catch (ex) {
+        assert(ctx.status === 401)
+
+        const msg = (ex as Error).message
+        assert(msg.includes(JwtMsg.AuthFailed))
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        const omsg = (ex.originalError as Error).message
+        assert(omsg.includes(JwtMsg.TokenNotFound))
+        return
+      }
+      assert(false, 'should throw error 401, but not.')
+    })
+
+    it('path ignored with random ignore', async () => {
+      const { app } = testConfig
+      const jwtConfig: JwtConfig = {
+        secret,
+      }
+      const path = '/' + Math.random().toString()
+      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
+        ...initialJwtMiddlewareConfig,
+        ignore: ['/' + Math.random().toString()],
+      }
+      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+
+      const container = app.getApplicationContext()
+      const inst = await container.getAsync(JwtMiddleware)
+
+      const ctx: Context = app.createAnonymousContext()
+      ctx.path = path
 
       const mw = inst.resolve() as MidwayWebMiddleware
       try {
