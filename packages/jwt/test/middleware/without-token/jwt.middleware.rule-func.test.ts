@@ -18,8 +18,6 @@ import { JwtMiddleware } from '~/middleware/jwt.middleware'
 
 // eslint-disable-next-line import/order
 import assert = require('power-assert')
-// eslint-disable-next-line import/order
-import rewire = require('rewire')
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
