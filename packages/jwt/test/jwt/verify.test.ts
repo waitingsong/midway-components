@@ -35,13 +35,8 @@ describe(filename, () => {
       const jwt = new Jwt(conf)
 
       const token = jwt.sign(payload1, secret)
-      try {
-        jwt.verify(token)
-      }
-      catch (ex) {
-        return assert(true)
-      }
-      assert(false, 'Should throw error but NOT.')
+      const ret = jwt.verify(token, secret)
+      assert.deepStrictEqual(ret, payload1)
     })
 
     it('pass secret', () => {
@@ -96,7 +91,7 @@ describe(filename, () => {
       catch (ex) {
         return assert(ex instanceof TypeError)
       }
-      assert(false, 'Should throw error but NOT.')
+      assert(false, 'Should throw error but not.')
     })
   })
 })
