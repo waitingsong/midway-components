@@ -8,8 +8,6 @@ import { Jwt } from '~/index'
 import { Application } from '~/interface'
 
 
-
-
 // eslint-disable-next-line import/order
 import assert = require('power-assert')
 
@@ -21,9 +19,7 @@ describe(filename, () => {
 
   describe('Should Jwt:sign() works', () => {
     it('initializ secret', async () => {
-      const { app } = testConfig
-      const container = app.getApplicationContext()
-      const jwt = await container.getAsync(Jwt)
+      const jwt = new Jwt()
 
       const token = jwt.sign(payload1)
       assert(token === token1)

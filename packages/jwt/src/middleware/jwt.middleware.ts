@@ -18,6 +18,7 @@ import {
 import {
   genJwtMiddlewareConfig,
   Jwt,
+  JwtComponent,
   JwtMsg,
 } from '~/lib/index'
 
@@ -55,14 +56,14 @@ export async function jwtMiddleware(
     }
 
     const container = ctx.app.getApplicationContext()
-    const jwt = await container.getAsync(Jwt)
+    const svc = await container.getAsync(JwtComponent)
 
-    const secretSet: Set<VerifySecret> = jwt.genVerifySecretSet(
+    const secretSet: Set<VerifySecret> = svc.genVerifySecretSet(
       // ctx.jwtState.secret ?? ctx.state?.secret,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       ctx.jwtState.secret ? ctx.jwtState.secret : ctx.state && ctx.state ? ctx.state.secret : void 0,
     )
-    const decoded = jwt.validateToken(token, secretSet)
+    const decoded = svc.validateToken(token, secretSet)
     ctx.jwtState.user = decoded
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     ctx.state.user = decoded
