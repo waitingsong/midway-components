@@ -6,8 +6,7 @@ import 'tsconfig-paths/register'
 import { createApp, close } from '@midwayjs/mock'
 import { Framework } from '@midwayjs/web'
 
-
-import { testConfig } from './test-config'
+import { testConfig } from './root.config'
 
 
 /**
