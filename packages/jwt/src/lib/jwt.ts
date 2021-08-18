@@ -9,7 +9,6 @@ import {
   JwtConfig,
   JwtPayload,
   JwtToken,
-  JwtDecodedPayload,
   VerifySecret,
   VerifyOpts,
   JwtResult,
@@ -75,7 +74,7 @@ export class Jwt {
     token: JwtToken,
     secretOrPrivateKey?: VerifySecret,
     options?: VerifyOpts,
-  ): JwtDecodedPayload<T> {
+  ): JwtResult<T> {
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (! this) { throw new TypeError('Should call with class name, such as jwt.verify()') }
@@ -92,7 +91,7 @@ export class Jwt {
     validateVerifySecret(secret)
 
     const ret = verify(token, secret, opts)
-    return ret as JwtDecodedPayload<T>
+    return ret as JwtResult<T>
   }
 
   /**

@@ -11,7 +11,6 @@ import { Jwt } from './jwt'
 import {
   JwtConfig,
   JwtToken,
-  JwtDecodedPayload,
   VerifySecret,
   JwtPayload,
   VerifyOpts,
@@ -72,7 +71,7 @@ export class JwtComponent {
     token: JwtToken,
     secretOrPrivateKey?: VerifySecret,
     options?: VerifyOpts,
-  ): JwtDecodedPayload<T> {
+  ): JwtResult<T> {
 
     const ret = this.jwt.verify<T>(token, secretOrPrivateKey, options)
     return ret
@@ -97,16 +96,15 @@ export class JwtComponent {
   validateToken(
     token: JwtToken,
     secretSet: Set<VerifySecret>,
-  ): JwtDecodedPayload {
+  ): JwtResult {
 
     /* istanbul ignore next */
     if (! secretSet.size) { throw new Error(JwtMsg.VSceretInvalid) }
 
-    let ret: JwtDecodedPayload | null = null
+    let ret: JwtResult | null = null
     const msgs: string[] = []
     Array.from(secretSet).some((secret) => {
       try {
-        // const decoded = this.jwt.verify(token, secret, this.config.verifyOpts)
         const decoded = this.jwt.verify(token, secret)
         ret = decoded
         return true
@@ -124,7 +122,7 @@ export class JwtComponent {
 
     /* istanbul ignore else */
     if (ret) {
-      return ret as JwtDecodedPayload
+      return ret as JwtResult
     }
     throw new Error(JwtMsg.TokenValidFailed + ':\n' + msgs.join('\n'))
   }

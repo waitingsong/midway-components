@@ -6,7 +6,7 @@ import {
   token1,
 } from '../test.config'
 
-import { Jwt, JwtConfig } from '~/index'
+import { Jwt, JwtConfig, VerifyOpts } from '~/index'
 
 // eslint-disable-next-line import/order
 import assert = require('power-assert')
@@ -75,6 +75,21 @@ describe(filename, () => {
       const token = jwt.sign(payload1, secret)
       const ret = jwt.verify(token, secret)
       assert.deepStrictEqual(ret, payload1)
+    })
+
+    it.only('pass VerifyOptions', async () => {
+      const conf: JwtConfig = {
+        secret,
+      }
+      const jwt = new Jwt(conf)
+
+      const token = jwt.sign(payload1, secret)
+      const opts: VerifyOpts = {
+        complete: true,
+      }
+      const ret = jwt.verify(token, secret, opts)
+      console.info(ret)
+      assert.deepStrictEqual(ret.payload, payload1)
     })
 
     it('with invalid scope', () => {

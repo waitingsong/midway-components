@@ -69,10 +69,9 @@ export interface JwtAuthenticateOptions {
 
 export type JwtToken = string
 export type JwtPayload = string | Buffer | JsonObject
-export type JwtDecodedPayload<T extends string | JsonType = JsonType> = T
 export interface JwtResult<T extends string | JsonType = JsonType> {
   header: JwtHeader
-  payload: JwtDecodedPayload<T>
+  payload: T
   signature: string
 }
 
@@ -91,7 +90,7 @@ export interface JwtState {
   jwtOriginalError: Error
   secret: unknown
   /** Decode Result */
-  user: JsonType
+  user: JwtResult
 }
 
 
