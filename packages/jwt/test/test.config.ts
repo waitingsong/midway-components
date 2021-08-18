@@ -32,3 +32,5 @@ export const tokenHeader2 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
 
 export const testRedirectURL = Math.random().toString()
 
+export const authHeader1 = `Bearer ${token1}`
+
