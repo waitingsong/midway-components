@@ -1,6 +1,5 @@
 import {
   App,
-  Config,
   Init,
   Provide,
   Scope,
