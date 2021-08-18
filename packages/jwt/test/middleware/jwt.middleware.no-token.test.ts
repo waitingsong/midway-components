@@ -11,6 +11,7 @@ import {
   initialJwtMiddlewareConfig,
   JwtConfig,
   JwtMiddlewareConfig,
+  JwtMsg,
 } from '~/index'
 import { JwtMiddleware } from '~/middleware/jwt.middleware'
 
@@ -26,7 +27,7 @@ const next: IMidwayKoaNext = async () => { return }
 describe(filename, () => {
 
   describe('Should JwtMiddlewareConfig.ignore work with string', () => {
-    it('path: / matched', async () => {
+    it('path matched', async () => {
       const { app } = testConfig
       const jwtConfig: JwtConfig = {
         secret,
@@ -51,7 +52,7 @@ describe(filename, () => {
       assert(status === 200)
     })
 
-    it('path: / ignored', async () => {
+    it('path ignored', async () => {
       const { app } = testConfig
       const jwtConfig: JwtConfig = {
         secret,
@@ -74,8 +75,14 @@ describe(filename, () => {
         await mw(ctx, next)
       }
       catch (ex) {
-        console.info(ctx)
         assert(ctx.status === 401)
+
+        const msg = (ex as Error).message
+        assert(msg.includes(JwtMsg.AuthFailed))
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        const omsg = (ex.originalError as Error).message
+        assert(omsg.includes(JwtMsg.TokenNotFound))
         return
       }
       assert(false, 'should throw error 401, but not.')
