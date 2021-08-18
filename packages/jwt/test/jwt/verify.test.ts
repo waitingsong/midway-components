@@ -27,7 +27,7 @@ describe(filename, () => {
 
       const token = jwt.sign(payload1)
       const ret = jwt.verify(token)
-      assert.deepStrictEqual(ret, payload1)
+      assert.deepStrictEqual(ret.payload, payload1)
     })
 
     it('without secret', () => {
@@ -38,7 +38,7 @@ describe(filename, () => {
 
       const token = jwt.sign(payload1, secret)
       const ret = jwt.verify(token, secret)
-      assert.deepStrictEqual(ret, payload1)
+      assert.deepStrictEqual(ret.payload, payload1)
     })
 
     it('pass secret', () => {
@@ -49,7 +49,7 @@ describe(filename, () => {
 
       const token = jwt.sign(payload1, secret)
       const ret = jwt.verify(token, secret)
-      assert.deepStrictEqual(ret, payload1)
+      assert.deepStrictEqual(ret.payload, payload1)
     })
 
     it('only initializing secret', () => {
@@ -76,7 +76,7 @@ describe(filename, () => {
 
       const token = jwt.sign(payload1, secret)
       const ret = jwt.verify(token, secret)
-      assert.deepStrictEqual(ret, payload1)
+      assert.deepStrictEqual(ret.payload, payload1)
     })
 
     it('pass VerifyOptions', async () => {
