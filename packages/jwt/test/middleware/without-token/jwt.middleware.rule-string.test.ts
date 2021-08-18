@@ -3,8 +3,8 @@ import { relative } from 'path'
 import { IMidwayKoaNext } from '@midwayjs/koa'
 import { MidwayWebMiddleware } from '@midwayjs/web'
 
-import { testConfig } from '../root.config'
-import { secret } from '../test.config'
+import { testConfig } from '../../root.config'
+import { secret } from '../../test.config'
 
 import {
   Context,
