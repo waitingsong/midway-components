@@ -4,7 +4,7 @@ import { testConfig } from '../test-config'
 
 import { payload1, payload2, secret, token1, tokenHeader2 } from './test.config'
 
-import { Jwt } from '~/index'
+import { Jwt, JwtConfig } from '~/index'
 import { Application } from '~/interface'
 
 
@@ -19,16 +19,20 @@ describe(filename, () => {
 
   describe('Should Jwt:sign() works', () => {
     it('initializ secret', async () => {
-      const jwt = new Jwt()
+      const conf: JwtConfig = {
+        secret,
+      }
+      const jwt = new Jwt(conf)
 
       const token = jwt.sign(payload1)
       assert(token === token1)
     })
 
     it('pass secret', async () => {
-      const { app } = testConfig
-      const container = app.getApplicationContext()
-      const jwt = await container.getAsync(Jwt)
+      const conf: JwtConfig = {
+        secret,
+      }
+      const jwt = new Jwt(conf)
 
       const token = jwt.sign(payload1, secret)
       assert(token === token1)
@@ -46,9 +50,10 @@ describe(filename, () => {
     // })
 
     it('without iat', async () => {
-      const { app } = testConfig
-      const container = app.getApplicationContext()
-      const jwt = await container.getAsync(Jwt)
+      const conf: JwtConfig = {
+        secret,
+      }
+      const jwt = new Jwt(conf)
 
       const token = jwt.sign(payload2)
 
@@ -56,9 +61,10 @@ describe(filename, () => {
     })
 
     it('with invalid scope', async () => {
-      const { app } = testConfig
-      const container = app.getApplicationContext()
-      const jwt = await container.getAsync(Jwt)
+      const conf: JwtConfig = {
+        secret,
+      }
+      const jwt = new Jwt(conf)
 
       // eslint-disable-next-line @typescript-eslint/unbound-method
       const { sign } = jwt
