@@ -48,7 +48,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "npm run tsc && cp -af src/database dist/",
+    "build": "npm run tsc",
     "clean": "npm run clean:cache & rm -rf dist/* -rf",
     "clean:cache": "rm -rf .eslintcache .vscode/.tsbuildinfo .vscode/.tsbuildinfo.*",
     "clean:lock": "rm package-lock.json -f",
