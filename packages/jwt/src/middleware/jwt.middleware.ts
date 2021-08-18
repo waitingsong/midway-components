@@ -19,6 +19,7 @@ import {
   JwtState,
   JwtMiddlewareConfig,
 } from '~/lib/types'
+import { reqestPathMatched } from '~/util/common'
 
 
 @Provide()
@@ -35,6 +36,11 @@ export async function jwtMiddleware(
 
   const pmwConfig = ctx.app.getConfig('jwtMiddlewareConfig') as JwtMiddlewareConfig
   const mwConfig = genJwtMiddlewareConfig(pmwConfig)
+
+  const { ignore } = mwConfig
+  if (reqestPathMatched(ctx, ignore)) {
+    return next()
+  }
 
   const { debug, passthrough } = mwConfig
 
