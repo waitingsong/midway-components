@@ -70,7 +70,7 @@ export interface JwtAuthenticateOptions {
 export type JwtToken = string
 export type JwtPayload = string | Buffer | JsonObject
 export type JwtDecodedPayload<T extends string | JsonType = JsonType> = T
-export interface JwtComplete<T extends string | JsonType = JsonType> {
+export interface JwtResult<T extends string | JsonType = JsonType> {
   header: JwtHeader
   payload: JwtDecodedPayload<T>
   signature: string

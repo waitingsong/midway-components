@@ -12,7 +12,7 @@ import {
   JwtDecodedPayload,
   VerifySecret,
   VerifyOpts,
-  JwtComplete,
+  JwtResult,
 } from './types'
 import {
   validateSignSecret,
@@ -104,7 +104,7 @@ export class Jwt {
    */
   decode<T extends string | JsonType = JsonType>(
     token: JwtToken,
-  ): JwtComplete<T> {
+  ): JwtResult<T> {
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (! this) { throw new TypeError('Should call with class name, such as jwt.decode()') }
@@ -114,7 +114,7 @@ export class Jwt {
       ...this.config.decodeOpts,
     }
     const ret = decode(token, opts)
-    return ret as JwtComplete<T>
+    return ret as JwtResult<T>
   }
 
 }

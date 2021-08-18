@@ -16,7 +16,7 @@ import {
   VerifySecret,
   JwtPayload,
   VerifyOpts,
-  JwtComplete,
+  JwtResult,
 } from './types'
 import { genJwtConfig } from './util'
 
@@ -34,7 +34,7 @@ export class JwtComponent {
 
   @App() private readonly app: Application
 
-  @Config('jwtConfig') private config: JwtConfig
+  protected config: JwtConfig
 
   private jwt: Jwt
 
@@ -43,6 +43,7 @@ export class JwtComponent {
   @Init()
   async init(): Promise<void> {
     const pconfig = this.app.getConfig('jwtConfig') as Partial<JwtConfig>
+    console.info('xxxxxxxxxxxxxxxxxxxx', pconfig)
     this.config = genJwtConfig(pconfig)
 
     const verifySet = processSecret(this.config.verifySecret)
@@ -89,7 +90,7 @@ export class JwtComponent {
    */
   decode<T extends string | JsonType = JsonType>(
     token: JwtToken,
-  ): JwtComplete<T> {
+  ): JwtResult<T> {
 
     const ret = this.jwt.decode<T>(token)
     return ret
