@@ -1,19 +1,14 @@
 import { relative } from 'path'
 
-import { testConfig } from '../test-config'
-
 import { payload1, payload2, secret, token1, tokenHeader2 } from './test.config'
 
 import { Jwt, JwtConfig } from '~/index'
-import { Application } from '~/interface'
-
 
 // eslint-disable-next-line import/order
 import assert = require('power-assert')
 
 
 const filename = relative(process.cwd(), __filename)
-
 
 describe(filename, () => {
 
