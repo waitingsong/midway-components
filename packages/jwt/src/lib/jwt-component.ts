@@ -43,7 +43,6 @@ export class JwtComponent {
   @Init()
   async init(): Promise<void> {
     const pconfig = this.app.getConfig('jwtConfig') as Partial<JwtConfig>
-    console.info('xxxxxxxxxxxxxxxxxxxx', pconfig)
     this.config = genJwtConfig(pconfig)
 
     const verifySet = processSecret(this.config.verifySecret)
