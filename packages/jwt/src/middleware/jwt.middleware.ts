@@ -5,21 +5,21 @@ import {
   IMidwayWebNext,
   IWebMiddleware,
   MidwayWebMiddleware,
-} from '~/interface'
+} from '../interface'
 import {
   genJwtMiddlewareConfig,
   JwtComponent,
   JwtMsg,
-} from '~/lib/index'
-import { retrieveToken } from '~/lib/resolvers'
+} from '../lib/index'
+import { retrieveToken } from '../lib/resolvers'
 import {
   JwtAuthenticateOptions,
   VerifySecret,
   RedirectURL,
   JwtState,
   JwtMiddlewareConfig,
-} from '~/lib/types'
-import { reqestPathMatched } from '~/util/common'
+} from '../lib/types'
+import { reqestPathMatched } from '../util/common'
 
 
 @Provide()
@@ -33,7 +33,6 @@ export async function jwtMiddleware(
   ctx: Context,
   next: IMidwayWebNext,
 ): Promise<void> {
-
 
   /* istanbul ignore else */
   if (! ctx.jwtState) {
