@@ -41,6 +41,8 @@ export async function authShouldFailedWithNotFound(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const omsg = (ex.originalError as Error).message
     assert(omsg.includes(JwtMsg.TokenNotFound))
+
+    assert(! ctx.jwtState.user)
     return
   }
   assert(false, 'should throw error 401, but not.')
@@ -64,6 +66,7 @@ export async function authShouldValidatFailed(
     const omsg = (ex.originalError as Error).message
     assert(omsg.includes(JwtMsg.TokenValidFailed))
 
+    assert(! ctx.jwtState.user)
     return
   }
   assert(false, 'should throw error 401, but not.')
