@@ -187,7 +187,6 @@ export class TaskQueueRepository {
       .insert(data)
       .returning('*')
       .then(async (rows) => {
-        await trx.commit()
         return rows.length ? rows[0] : void 0
       })
       .catch(async (ex) => {
@@ -195,6 +194,7 @@ export class TaskQueueRepository {
         throw ex
       })
 
+    await trx.commit()
     return ins as unknown as TaskProgressDTO
   }
 
@@ -301,7 +301,6 @@ export class TaskQueueRepository {
       .where('task_state', TaskState.running)
       .returning('*')
       .then(async (rows) => {
-        await trx.commit()
         return rows.length ? rows[0] : void 0
       })
       .catch(async (ex) => {
@@ -309,6 +308,7 @@ export class TaskQueueRepository {
         throw ex
       })
 
+    await trx.commit()
     return ret as unknown as TaskDTO
   }
 
@@ -416,16 +416,13 @@ export class TaskQueueRepository {
       .whereRaw(where)
       .whereIn('task_id', ids)
       .returning('*')
-      .then(async (rows) => {
-        await trx.commit()
-        return rows
-      })
       .catch(async (ex) => {
         await trx.rollback()
         throw ex
       })
       // .toQuery()
 
+    await trx.commit()
     return ret as unknown as TaskDTO[]
   }
 
