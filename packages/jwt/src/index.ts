@@ -19,7 +19,7 @@ export {
 
 declare module '@midwayjs/core' {
   interface Context {
-    jwtState?: JwtState
+    jwtState: JwtState
   }
 }
 

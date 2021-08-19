@@ -87,10 +87,10 @@ export type passthroughCallback = (ctx: Context) => Promise<boolean | RedirectUR
 
 /** Bind on Context.jwtState */
 export interface JwtState {
-  jwtOriginalError: Error
-  secret: unknown
+  jwtOriginalError?: Error
+  secret?: unknown
   /** Decode Result */
-  user: JwtResult
+  user?: JwtResult
 }
 
 
