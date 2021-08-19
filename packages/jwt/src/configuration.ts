@@ -24,6 +24,7 @@ export class AutoConfiguration {
   @Config('jwtMiddlewareConfig') protected readonly mwConfig: JwtMiddlewareConfig
 
   async onReady(): Promise<void> {
+    /* istanbul ignore else */
     if (this.mwConfig.enableMiddleware) {
       registerMiddleware(this.app)
     }
@@ -36,6 +37,7 @@ export function registerMiddleware(
 ): void {
 
   const appMiddleware = app.getConfig('middleware') as string[] | undefined
+  /* istanbul ignore if */
   if (Array.isArray(appMiddleware)) {
     appMiddleware.push(namespace + ':jwtMiddleware')
   }
