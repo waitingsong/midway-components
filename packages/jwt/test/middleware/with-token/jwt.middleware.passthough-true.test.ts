@@ -6,12 +6,9 @@ import { MidwayWebMiddleware } from '@midwayjs/web'
 import { testConfig } from '../../root.config'
 import { authHeader1, payload1, secret, token1 } from '../../test.config'
 import {
-  authShouldFailedWithNotFound,
   authShouldPassed,
   authShouldPassthroughNotFound,
   authShouldPassthroughValidFailed,
-  authShouldSkipped,
-  authShouldValidatFailed,
 } from '../helper'
 
 import {
@@ -19,7 +16,6 @@ import {
   initialJwtMiddlewareConfig,
   JwtConfig,
   JwtMiddlewareConfig,
-  JwtMsg,
 } from '~/index'
 import { JwtMiddleware } from '~/middleware/jwt.middleware'
 
@@ -28,7 +24,6 @@ import assert = require('power-assert')
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-const next: IMidwayKoaNext = async () => { return }
 
 describe(filename, () => {
 

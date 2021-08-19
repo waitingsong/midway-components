@@ -1,6 +1,5 @@
 import { relative } from 'path'
 
-import { IMidwayKoaNext } from '@midwayjs/koa'
 import { MidwayWebMiddleware } from '@midwayjs/web'
 
 import { testConfig } from '../../root.config'
@@ -12,7 +11,6 @@ import {
   initialJwtMiddlewareConfig,
   JwtConfig,
   JwtMiddlewareConfig,
-  JwtMsg,
 } from '~/index'
 import { JwtMiddleware } from '~/middleware/jwt.middleware'
 
@@ -21,7 +19,6 @@ import assert = require('power-assert')
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-const next: IMidwayKoaNext = async () => { return }
 
 describe(filename, () => {
 
