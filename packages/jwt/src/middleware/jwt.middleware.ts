@@ -39,7 +39,7 @@ export async function jwtMiddleware(
   if (! ctx.jwtState) {
     ctx.jwtState = {} as JwtState
   }
-  /* istanbul ignore else */
+  /* istanbul ignore if */
   if (! ctx.state) {
     ctx.state = {}
   }
