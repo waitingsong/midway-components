@@ -42,6 +42,7 @@ export async function authShouldSkipped(
 export async function authShouldFailedWithNotFound(
   ctx: Context,
   mw: MidwayWebMiddleware,
+  status = 401,
 ): Promise<void> {
 
   try {
@@ -49,7 +50,7 @@ export async function authShouldFailedWithNotFound(
     await mw(ctx, next)
   }
   catch (ex) {
-    assert(ctx.status === 401)
+    assert(ctx.status === status)
 
     const msg = (ex as Error).message
     assert(msg.includes(JwtMsg.AuthFailed))
@@ -61,7 +62,7 @@ export async function authShouldFailedWithNotFound(
     assert(! ctx.jwtState.user)
     return
   }
-  assert(false, 'should throw error 401, but not.')
+  assert(false, `should throw error with status: "${status}", but not.`)
 }
 
 export async function authShouldValidatFailed(
@@ -86,5 +87,24 @@ export async function authShouldValidatFailed(
     return
   }
   assert(false, 'should throw error 401, but not.')
+}
+
+export async function authShouldPassthroughFailed(
+  ctx: Context,
+  mw: MidwayWebMiddleware,
+  status = 200,
+): Promise<void> {
+
+  // @ts-expect-error
+  await mw(ctx, next)
+  assert(ctx.status === status)
+  assert(! ctx.jwtState.user)
+
+  const { jwtOriginalError } = ctx.jwtState
+  assert(jwtOriginalError)
+  if (jwtOriginalError) {
+    const omsg = jwtOriginalError.message
+    assert(omsg.includes(JwtMsg.TokenNotFound))
+  }
 }
 
