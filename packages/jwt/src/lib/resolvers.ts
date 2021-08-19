@@ -16,9 +16,7 @@ export function retrieveToken(ctx: Context, options?: JwtAuthenticateOptions): J
   if (token) {
     token = token.trimEnd()
   }
-
-  /* istanbul ignore else */
-  if (! token) {
+  else {
     // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     let authorization: string = ctx.header && ctx.header.authorization
       ? ctx.header.authorization
