@@ -77,7 +77,7 @@ describe(filename, () => {
       await authShouldPassed(ctx, mw)
     })
 
-    it.only('auth validation failed', async () => {
+    it('auth validation failed', async () => {
       const { app } = testConfig
       const jwtConfig: JwtConfig = {
         secret,
