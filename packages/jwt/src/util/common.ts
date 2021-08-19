@@ -26,6 +26,9 @@ export function reqestPathMatched(
     else if (typeof rule === 'function') {
       return rule(ctx)
     }
+    else {
+      throw new TypeError('Invalid type of rule value')
+    }
   })
   return ret
 }
