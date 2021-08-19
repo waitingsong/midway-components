@@ -88,8 +88,10 @@ describe(filename, () => {
       const queues = await svc.pickTasksWaitToRun({
         ord: 'DESC',
       })
+      assert(tasks && tasks.length)
       assert(queues && queues.length)
       const ids = tasks.map(row => BigInt(row.taskId))
+      assert(ids && ids.length)
       const maxTaskId = bigIntMax(...ids)
       const minTaskId = bigIntMin(...ids)
       assert(queues[0] && maxTaskId.toString() === queues[0].taskId)

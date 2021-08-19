@@ -1,13 +1,15 @@
 {
-  "name": "@mw-components/taskman",
+  "name": "@mw-components/jwt",
   "author": "waiting",
-  "version": "9.1.0",
-  "description": "midway component task manager",
+  "version": "7.1.0",
+  "description": "midway component jwt",
   "keywords": [
     "midway",
     "IoC",
     "plugin",
-    "task",
+    "jwt",
+    "authorization",
+    "authentication",
     "ts"
   ],
   "bin": {},
@@ -23,14 +25,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@mw-components/fetch": "^13.2.0",
-    "@mw-components/jaeger": "^8.0.1",
-    "@mw-components/kmore": "^22.5.0",
-    "@waiting/shared-core": "^14.4.1",
     "@waiting/shared-types": "^14.4.1",
-    "pg": "^8.7.1",
-    "postgres-interval": "^3.0.0",
-    "tsconfig-paths": "3"
+    "jsonwebtoken": "^8.5.1"
   },
   "devDependencies": {
     "@midwayjs/core": "^2.11.0",
@@ -38,8 +34,11 @@
     "@midwayjs/koa": "^2.11.0",
     "@midwayjs/mock": "^2.11.0",
     "@midwayjs/web": "^2.11.0",
-    "cross-env": "7",
-    "kmore-types": "^22.0.0"
+    "@types/jsonwebtoken": "^8.3.3",
+    "cross-env": "7"
+  },
+  "peerDependencies": {
+    "@midwayjs/web": ">=2.10.0"
   },
   "engines": {
     "node": ">=14.16.0"
@@ -52,7 +51,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "npm run tsc && cp -af src/database dist/",
+    "build": "npm run tsc",
     "clean": "npm run clean:cache & rm -rf dist/* -rf",
     "clean:cache": "rm -rf .eslintcache .vscode/.tsbuildinfo .vscode/.tsbuildinfo.*",
     "clean:lock": "rm package-lock.json -f",

@@ -13,9 +13,7 @@ export function increaseTaskRunnerCount(): void {
 }
 
 export function decreaseTaskRunnerCount(): void {
-  if (taskRunnerState.count >= taskRunnerState.max) {
-    taskRunnerState.count -= 1
-  }
+  taskRunnerState.count -= 1
 }
 
 

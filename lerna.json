@@ -16,9 +16,7 @@
       "nohoist": [
         "cross-env"
       ],
-      "npmClientArgs": [
-        "--no-package-lock"
-      ]
+      "npmClientArgs": [ ]
     },
     "version": {
       "conventionalCommits": true,

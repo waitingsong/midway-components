@@ -20,7 +20,7 @@ import {
 import {
   map,
   mergeMap,
-  tap,
+  takeWhile,
 } from 'rxjs/operators'
 
 import {
@@ -66,9 +66,9 @@ export class TaskAgentService {
   }
 
   get isRunning(): boolean {
-    const flag = this.subscription && ! this.subscription.closed
-      ? true
-      : false
+    const flag = this.subscription && this.subscription.closed
+      ? false
+      : true
     return flag
   }
 
@@ -80,23 +80,42 @@ export class TaskAgentService {
     const maxPickTaskCount = this.clientConfig.maxPickTaskCount > 0
       ? this.clientConfig.maxPickTaskCount
       : initTaskManClientConfig.maxPickTaskCount
+    const minPickTaskCount = this.clientConfig.minPickTaskCount > 0
+      ? this.clientConfig.minPickTaskCount
+      : initTaskManClientConfig.minPickTaskCount
 
     const intv$ = this.intv$.pipe(
-      tap((idx) => {
-        if (idx > maxPickTaskCount) {
-          this.stop()
-
-          const input: SpanLogInput = {
-            [TracerTag.logLevel]: 'info',
-            message: `taskAgent stopped at ${idx} of ${maxPickTaskCount}`,
-            time: genISO8601String(),
-          }
-          this.logger.log(input)
+      takeWhile((idx) => {
+        if (idx < maxPickTaskCount) {
+          return true
         }
+        const input: SpanLogInput = {
+          [TracerTag.logLevel]: 'info',
+          pid: process.pid,
+          message: `taskAgent stopped at ${idx} of ${maxPickTaskCount}`,
+          time: genISO8601String(),
+        }
+        this.logger.log(input)
+        agentConcurrentConfig.count -= 1
+        return false
       }),
     )
     const stream$ = this.pickTasksWaitToRun(intv$).pipe(
-      mergeMap(rows => ofrom(rows)),
+      takeWhile(({ rows, idx }) => {
+        if ((! rows || ! rows.length) && idx >= minPickTaskCount) {
+          // const input: SpanLogInput = {
+          //   [TracerTag.logLevel]: 'info',
+          //   pid: process.pid,
+          //   message: `taskAgent stopped at index: ${idx} of ${minPickTaskCount}`,
+          //   time: genISO8601String(),
+          // }
+          // this.logger.log(input)
+          agentConcurrentConfig.count -= 1
+          return false
+        }
+        return true
+      }),
+      mergeMap(({ rows }) => ofrom(rows)),
       mergeMap(task => this.sendTaskToRun(task), 1),
     )
     this.subscription = stream$.subscribe()
@@ -109,7 +128,7 @@ export class TaskAgentService {
     agentConcurrentConfig.count = 0
   }
 
-  private pickTasksWaitToRun(intv$: Observable<number>): Observable<TaskDTO[]> {
+  private pickTasksWaitToRun(intv$: Observable<number>): Observable<{ rows: TaskDTO[], idx: number }> {
     const stream$ = intv$.pipe(
       mergeMap(() => {
         const opts: FetchOptions = {
@@ -123,9 +142,9 @@ export class TaskAgentService {
         const res = this.fetch.fetch<TaskDTO[] | JsonResp<TaskDTO[]>>(opts)
         return res
       }, 1),
-      map((res) => {
-        const data = unwrapResp<TaskDTO[]>(res)
-        return data
+      map((res, idx) => {
+        const rows = unwrapResp<TaskDTO[]>(res)
+        return { rows, idx }
       }),
       // tap((rows) => {
       //   console.info(rows)
@@ -213,6 +232,12 @@ export class TaskAgentService {
         return this.processTaskDist(taskId, res)
       })
       .catch((err) => {
+        const { message } = err as Error
+        if (message && message.includes('429')
+          && message.includes('Task')
+          && message.includes(taskId)) {
+          return this.resetTaskToInitDueTo429(taskId, message)
+        }
         return this.processHttpCallExp(taskId, opts, err as Error)
       })
   }
@@ -268,32 +293,43 @@ export class TaskAgentService {
   ): Promise<void> {
 
     if (input && input.code === 429) {
-      const rid = this.ctx.reqId as string
-      const msg = {
-        reqId: rid,
-        taskId,
-        errMessage: `set taskState to "${TaskState.init}" due to httpCode=429`,
-      }
-      const opts: FetchOptions = {
-        ...this.initFetchOptions,
-        method: 'POST',
-        url: `${this.clientConfig.host}${ServerAgent.base}/${ServerAgent.setState}`,
-        data: {
-          id: taskId,
-          state: TaskState.init,
-          msg: JSON.stringify(msg),
-        },
-      }
-      const headers = new Node_Headers(opts.headers)
-      opts.headers = headers
-
-      await this.fetch.fetch(opts)
-        .catch((ex) => {
-          this.logger.error({ opts, ex: ex as Error })
-        })
-
+      await this.resetTaskToInitDueTo429(taskId)
     }
-    return
+  }
+
+  private async resetTaskToInitDueTo429(
+    taskId: TaskDTO['taskId'],
+    message?: string,
+  ): Promise<void> {
+
+    const rid = this.ctx.reqId as string
+    const msg = {
+      reqId: rid,
+      taskId,
+      errMessage: `reset taskState to "${TaskState.init}" due to httpCode=429`,
+    }
+    if (message) {
+      msg.errMessage += `\n${message}`
+    }
+
+    const opts: FetchOptions = {
+      ...this.initFetchOptions,
+      method: 'POST',
+      url: `${this.clientConfig.host}${ServerAgent.base}/${ServerAgent.setState}`,
+      data: {
+        id: taskId,
+        state: TaskState.init,
+        msg: JSON.stringify(msg),
+      },
+    }
+    const headers = new Node_Headers(opts.headers)
+    opts.headers = headers
+
+    await this.fetch.fetch(opts)
+      .catch((ex) => {
+        this.logger.error({ opts, ex: ex as Error })
+      })
+
   }
 
 }
