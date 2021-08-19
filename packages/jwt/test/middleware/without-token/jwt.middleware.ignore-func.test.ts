@@ -51,6 +51,7 @@ describe(filename, () => {
 
       const mw = inst.resolve() as MidwayWebMiddleware
       await authShouldPassed(ctx, mw)
+      assert(! ctx.jwtState.user)
     })
 
     it('auth skipped', async () => {
