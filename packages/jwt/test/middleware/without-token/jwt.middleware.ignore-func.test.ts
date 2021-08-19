@@ -5,6 +5,7 @@ import { MidwayWebMiddleware } from '@midwayjs/web'
 
 import { testConfig } from '../../root.config'
 import { secret } from '../../test.config'
+import { authShouldPassed } from '../helper'
 
 import {
   Context,
@@ -49,10 +50,7 @@ describe(filename, () => {
       ctx.path = path
 
       const mw = inst.resolve() as MidwayWebMiddleware
-      // @ts-expect-error
-      await mw(ctx, next)
-      const { status } = ctx
-      assert(status === 200)
+      await authShouldPassed(ctx, mw)
     })
 
     it('auth skipped', async () => {

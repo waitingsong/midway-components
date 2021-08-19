@@ -5,7 +5,11 @@ import { MidwayWebMiddleware } from '@midwayjs/web'
 
 import { testConfig } from '../../root.config'
 import { authHeader1, payload1, secret } from '../../test.config'
-import { authShouldFailed, authShouldPassed } from '../helper'
+import {
+  authShouldFailedWithNotFound,
+  authShouldPassed,
+  authShouldValidatFailed,
+} from '../helper'
 
 import {
   Context,
@@ -73,7 +77,7 @@ describe(filename, () => {
       await authShouldPassed(ctx, mw)
     })
 
-    it('auth testing failed', async () => {
+    it.only('auth validation failed', async () => {
       const { app } = testConfig
       const jwtConfig: JwtConfig = {
         secret,
@@ -93,7 +97,7 @@ describe(filename, () => {
       ctx.headers.authorization = authHeader1 + 'fake'
 
       const mw = inst.resolve() as MidwayWebMiddleware
-      await authShouldFailed(ctx, mw)
+      await authShouldValidatFailed(ctx, mw)
     })
   })
 })
