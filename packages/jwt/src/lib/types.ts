@@ -43,7 +43,7 @@ export interface JwtMiddlewareConfig extends JwtAuthenticateOptions {
    */
   ignore?: MiddlewarePathPattern
   /**
-   * Ignored if JwtAuthenticateOptions.passthrought true
+   * Ignored if JwtAuthenticateOptions.passthrough true
    * @default false
    */
   debug: boolean

@@ -167,3 +167,29 @@ export async function authShouldPassthroughEmptyStringNotFound(
   }
   assert(false, 'should throw error 401, but not.')
 }
+
+export async function authShouldFailedWithNotFoundFromDebug(
+  ctx: Context,
+  mw: MidwayWebMiddleware,
+  status = 401,
+): Promise<void> {
+
+  try {
+    // @ts-expect-error
+    await mw(ctx, next)
+  }
+  catch (ex) {
+    assert(ctx.status === status)
+
+    const msg = (ex as Error).message
+    assert(msg.includes(JwtMsg.TokenNotFound))
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const omsg = (ex.originalError as Error).message
+    assert(omsg.includes(JwtMsg.TokenNotFound))
+
+    assert(! ctx.jwtState.user)
+    return
+  }
+  assert(false, `should throw error with status: "${status}", but not.`)
+}
