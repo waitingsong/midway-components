@@ -12,7 +12,7 @@ import assert = require('power-assert')
 
 const next: IMidwayKoaNext = async () => { return }
 
-export async function authShouldPassed(
+export async function authShouldSkipped(
   ctx: Context,
   mw: MidwayWebMiddleware,
 ): Promise<void> {

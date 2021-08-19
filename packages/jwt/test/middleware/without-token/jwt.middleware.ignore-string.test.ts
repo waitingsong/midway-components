@@ -5,7 +5,7 @@ import { MidwayWebMiddleware } from '@midwayjs/web'
 
 import { testConfig } from '../../root.config'
 import { secret } from '../../test.config'
-import { authShouldFailedWithNotFound, authShouldPassed } from '../helper'
+import { authShouldFailedWithNotFound, authShouldSkipped } from '../helper'
 
 import {
   Context,
@@ -46,7 +46,7 @@ describe(filename, () => {
       ctx.path = path
 
       const mw = inst.resolve() as MidwayWebMiddleware
-      await authShouldPassed(ctx, mw)
+      await authShouldSkipped(ctx, mw)
       assert(! ctx.jwtState.user)
     })
 
