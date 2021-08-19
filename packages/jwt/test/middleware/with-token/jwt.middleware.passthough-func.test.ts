@@ -109,6 +109,31 @@ describe(filename, () => {
       const mw = inst.resolve() as MidwayWebMiddleware
       await authShouldFailedWithNotFound(ctx, mw, 401)
     })
+
+    it('invalid value 1: token not found', async () => {
+      const { app } = testConfig
+      const jwtConfig: JwtConfig = {
+        secret,
+      }
+      const path = '/' + Math.random().toString()
+      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
+        ...initialJwtMiddlewareConfig,
+        ignore: [],
+        // @ts-expect-error
+        passthrough: 1,
+      }
+      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+
+      const container = app.getApplicationContext()
+      const inst = await container.getAsync(JwtMiddleware)
+
+      const ctx: Context = app.createAnonymousContext()
+      ctx.path = path
+      ctx.headers.authorization = ''
+
+      const mw = inst.resolve() as MidwayWebMiddleware
+      await authShouldFailedWithNotFound(ctx, mw, 401)
+    })
   })
 })
 
