@@ -12,6 +12,21 @@ import assert = require('power-assert')
 
 const next: IMidwayKoaNext = async () => { return }
 
+export async function authShouldPassed(
+  ctx: Context,
+  mw: MidwayWebMiddleware,
+  expectPayload: unknown,
+): Promise<void> {
+
+  // @ts-expect-error
+  await mw(ctx, next)
+  const { status, jwtState } = ctx
+  assert(status === 200)
+  assert(jwtState)
+  assert(jwtState.user)
+  assert.deepStrictEqual(ctx.jwtState.user && ctx.jwtState.user.payload, expectPayload)
+}
+
 export async function authShouldSkipped(
   ctx: Context,
   mw: MidwayWebMiddleware,

@@ -8,6 +8,7 @@ import { authHeader1, payload1, secret, token1 } from '../../test.config'
 import {
   authShouldFailedWithNotFound,
   authShouldPassed,
+  authShouldSkipped,
   authShouldValidatFailed,
 } from '../helper'
 
@@ -51,7 +52,7 @@ describe(filename, () => {
       ctx.headers.authorization = authHeader1
 
       const mw = inst.resolve() as MidwayWebMiddleware
-      await authShouldPassed(ctx, mw)
+      await authShouldSkipped(ctx, mw)
       assert(! ctx.jwtState.user)
     })
 
@@ -75,8 +76,7 @@ describe(filename, () => {
       ctx.headers.authorization = authHeader1
 
       const mw = inst.resolve() as MidwayWebMiddleware
-      await authShouldPassed(ctx, mw)
-      assert.deepStrictEqual(ctx.jwtState.user && ctx.jwtState.user.payload, payload1)
+      await authShouldPassed(ctx, mw, payload1)
     })
 
     it('auth validation failed', async () => {
