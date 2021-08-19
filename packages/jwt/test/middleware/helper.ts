@@ -34,8 +34,9 @@ export async function authShouldSkipped(
 
   // @ts-expect-error
   await mw(ctx, next)
-  const { status } = ctx
+  const { status, jwtState } = ctx
   assert(status === 200)
+  assert(! jwtState.user)
 }
 
 export async function authShouldFailedWithNotFound(

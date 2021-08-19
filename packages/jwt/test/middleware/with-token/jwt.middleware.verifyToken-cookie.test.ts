@@ -5,7 +5,7 @@ import { MidwayWebMiddleware } from '@midwayjs/web'
 
 import { testConfig } from '../../root.config'
 import { payload1, secret, token1 } from '../../test.config'
-import { authShouldFailedWithNotFound, authShouldSkipped } from '../helper'
+import { authShouldFailedWithNotFound, authShouldPassed, authShouldSkipped } from '../helper'
 
 import {
   Context,
@@ -58,7 +58,6 @@ describe(filename, () => {
 
       const mw = inst.resolve() as MidwayWebMiddleware
       await authShouldSkipped(ctx, mw)
-      assert(! ctx.jwtState.user)
     })
 
     it('auth test with JwtAuthenticateOptions.cookie user value', async () => {
@@ -91,8 +90,7 @@ describe(filename, () => {
       assert(t1 === token1)
 
       const mw = inst.resolve() as MidwayWebMiddleware
-      await authShouldSkipped(ctx, mw)
-      assert.deepStrictEqual(ctx.jwtState.user && ctx.jwtState.user.payload, payload1)
+      await authShouldPassed(ctx, mw, payload1)
     })
 
     it('auth test with JwtAuthenticateOptions.cookie false (default)', async () => {
@@ -127,7 +125,6 @@ describe(filename, () => {
 
       const mw = inst.resolve() as MidwayWebMiddleware
       await authShouldFailedWithNotFound(ctx, mw)
-      assert(! ctx.jwtState.user)
     })
   })
 })
