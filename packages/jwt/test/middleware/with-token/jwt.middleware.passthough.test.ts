@@ -9,6 +9,7 @@ import {
   authShouldFailedWithNotFound,
   authShouldPassed,
   authShouldPassthroughNotFound,
+  authShouldPassthroughValidFailed,
   authShouldSkipped,
   authShouldValidatFailed,
 } from '../helper'
@@ -80,6 +81,29 @@ describe(filename, () => {
       await authShouldPassthroughNotFound(ctx, mw)
     })
 
+    it('true with token not found', async () => {
+      const { app } = testConfig
+      const jwtConfig: JwtConfig = {
+        secret,
+      }
+      const path = '/' + Math.random().toString()
+      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
+        ...initialJwtMiddlewareConfig,
+        ignore: [],
+        passthrough: true,
+      }
+      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+
+      const container = app.getApplicationContext()
+      const inst = await container.getAsync(JwtMiddleware)
+
+      const ctx: Context = app.createAnonymousContext()
+      ctx.path = path
+      ctx.headers.authorization = authHeader1 + 'FAKE'
+
+      const mw = inst.resolve() as MidwayWebMiddleware
+      await authShouldPassthroughValidFailed(ctx, mw)
+    })
   })
 })
 

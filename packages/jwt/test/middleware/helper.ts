@@ -108,3 +108,22 @@ export async function authShouldPassthroughNotFound(
   }
 }
 
+export async function authShouldPassthroughValidFailed(
+  ctx: Context,
+  mw: MidwayWebMiddleware,
+  status = 200,
+): Promise<void> {
+
+  // @ts-expect-error
+  await mw(ctx, next)
+  assert(ctx.status === status)
+  assert(! ctx.jwtState.user)
+
+  const { jwtOriginalError } = ctx.jwtState
+  assert(jwtOriginalError && jwtOriginalError instanceof Error)
+  if (jwtOriginalError) {
+    const omsg = jwtOriginalError.message
+    assert(omsg.includes(JwtMsg.TokenValidFailed))
+  }
+}
+
