@@ -1,6 +1,5 @@
 import { relative } from 'path'
 
-import { IMidwayKoaNext } from '@midwayjs/koa'
 import { MidwayWebMiddleware } from '@midwayjs/web'
 
 import { testConfig } from '../../root.config'
@@ -18,9 +17,6 @@ import {
   JwtMiddlewareConfig,
 } from '~/index'
 import { JwtMiddleware } from '~/middleware/jwt.middleware'
-
-// eslint-disable-next-line import/order
-import assert = require('power-assert')
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
