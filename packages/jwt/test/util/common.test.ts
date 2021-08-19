@@ -25,7 +25,7 @@ describe(filename, () => {
     it('with invalid rule', () => {
       try {
         // @ts-expect-error
-        reqestPathMatched(true as unknown as Context, [new Symbol()])
+        reqestPathMatched({ path: 'foo' } as unknown as Context, [Symbol()])
       }
       catch (ex) {
         assert(ex && ex instanceof TypeError)
