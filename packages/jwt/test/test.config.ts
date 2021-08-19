@@ -22,6 +22,8 @@ export const token1 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.'
   + 'eyJmb28iOiJiYXIiLCJpYXQiOjE1NjY2Mjk5MTl9.'
   + signature1
 
+export const authHeader1 = `Bearer ${token1}`
+
 export const token7d = `
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJiYXIiLCJpYXQiOjE1NjY2Mjk5MTksImV4cCI6MTU2NzIzNDcxOX0.MdR1Z1gHTExIUIOTHurwIao7vbfrkqynDsoNZ8nMsnE
 `.trim()
