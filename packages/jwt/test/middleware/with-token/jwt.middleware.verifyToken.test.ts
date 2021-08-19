@@ -5,6 +5,7 @@ import { MidwayWebMiddleware } from '@midwayjs/web'
 
 import { testConfig } from '../../root.config'
 import { authHeader1, payload1, secret } from '../../test.config'
+import { authShouldFailed, authShouldPassed } from '../helper'
 
 import {
   Context,
@@ -46,14 +47,10 @@ describe(filename, () => {
       ctx.headers.authorization = authHeader1
 
       const mw = inst.resolve() as MidwayWebMiddleware
-      // @ts-expect-error
-      await mw(ctx, next)
-      const { status, jwtState } = ctx
-      assert(status === 200)
-      assert(! jwtState)
+      await authShouldPassed(ctx, mw)
     })
 
-    it('auth testing', async () => {
+    it('auth testing passed', async () => {
       const { app } = testConfig
       const jwtConfig: JwtConfig = {
         secret,
@@ -73,12 +70,30 @@ describe(filename, () => {
       ctx.headers.authorization = authHeader1
 
       const mw = inst.resolve() as MidwayWebMiddleware
-      // @ts-expect-error
-      await mw(ctx, next)
-      const { status, jwtState } = ctx
-      assert(status === 200)
-      assert(jwtState)
-      assert.deepStrictEqual(jwtState && jwtState.user.payload, payload1)
+      await authShouldPassed(ctx, mw)
+    })
+
+    it('auth testing failed', async () => {
+      const { app } = testConfig
+      const jwtConfig: JwtConfig = {
+        secret,
+      }
+      const path = '/' + Math.random().toString()
+      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
+        ...initialJwtMiddlewareConfig,
+        ignore: [],
+      }
+      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+
+      const container = app.getApplicationContext()
+      const inst = await container.getAsync(JwtMiddleware)
+
+      const ctx: Context = app.createAnonymousContext()
+      ctx.path = path
+      ctx.headers.authorization = authHeader1 + 'fake'
+
+      const mw = inst.resolve() as MidwayWebMiddleware
+      await authShouldFailed(ctx, mw)
     })
   })
 })
