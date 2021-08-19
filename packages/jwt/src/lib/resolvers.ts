@@ -10,8 +10,8 @@ import { Context } from '~/interface'
  * according to node.js security since v10.19, v12.15
  * @link https://nodejs.org/en/blog/vulnerability/february-2020-security-releases/
  */
-export function retrieveToken(ctx: Context, options?: JwtAuthenticateOptions): JwtToken {
-  let token = resolveFromCookies(ctx.cookies, options ? options.cookie : false)
+export function retrieveToken(ctx: Context, cookie: JwtAuthenticateOptions['cookie']): JwtToken {
+  let token = resolveFromCookies(ctx.cookies, cookie)
 
   if (token) {
     token = token.trimEnd()

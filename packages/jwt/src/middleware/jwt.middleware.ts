@@ -53,7 +53,7 @@ export async function jwtMiddleware(
   const { debug, passthrough } = mwConfig
 
   try {
-    const token = retrieveToken(ctx, mwConfig)
+    const token = retrieveToken(ctx, mwConfig.cookie)
 
     /* istanbul ignore else */
     if (! token) {
