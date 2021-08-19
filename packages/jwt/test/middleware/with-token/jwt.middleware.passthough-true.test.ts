@@ -32,8 +32,8 @@ const next: IMidwayKoaNext = async () => { return }
 
 describe(filename, () => {
 
-  describe('Should JwtAuthenticateOptions.passthrough work', () => {
-    it('true with passed', async () => {
+  describe('Should JwtAuthenticateOptions.passthrough work with value: true', () => {
+    it('passed', async () => {
       const { app } = testConfig
       const jwtConfig: JwtConfig = {
         secret,
@@ -57,7 +57,7 @@ describe(filename, () => {
       await authShouldPassed(ctx, mw, payload1)
     })
 
-    it('true with token not found', async () => {
+    it('token not found', async () => {
       const { app } = testConfig
       const jwtConfig: JwtConfig = {
         secret,
@@ -81,7 +81,7 @@ describe(filename, () => {
       await authShouldPassthroughNotFound(ctx, mw)
     })
 
-    it('true with token not found', async () => {
+    it('token valid faied', async () => {
       const { app } = testConfig
       const jwtConfig: JwtConfig = {
         secret,
