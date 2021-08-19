@@ -86,6 +86,31 @@ describe(filename, () => {
       const mw = inst.resolve() as MidwayWebMiddleware
       await authShouldFailedWithNotFound(ctx, mw)
     })
+
+    it('auth skipped mixed with invalid value', async () => {
+      const { app } = testConfig
+      const jwtConfig: JwtConfig = {
+        secret,
+      }
+      const path = '/' + Math.random().toString()
+      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
+        ...initialJwtMiddlewareConfig,
+        // @ts-expect-error
+        ignore: [false, '', path],
+      }
+      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+
+      const container = app.getApplicationContext()
+      // const svc = await container.getAsync(JwtComponent)
+      const inst = await container.getAsync(JwtMiddleware)
+
+      const ctx: Context = app.createAnonymousContext()
+      ctx.path = path
+
+      const mw = inst.resolve() as MidwayWebMiddleware
+      await authShouldSkipped(ctx, mw)
+    })
+
   })
 })
 
