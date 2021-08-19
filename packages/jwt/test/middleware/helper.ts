@@ -89,7 +89,7 @@ export async function authShouldValidatFailed(
   assert(false, 'should throw error 401, but not.')
 }
 
-export async function authShouldPassthroughFailed(
+export async function authShouldPassthroughNotFound(
   ctx: Context,
   mw: MidwayWebMiddleware,
   status = 200,

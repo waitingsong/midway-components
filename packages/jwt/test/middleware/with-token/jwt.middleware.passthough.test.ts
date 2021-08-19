@@ -8,7 +8,7 @@ import { authHeader1, payload1, secret, token1 } from '../../test.config'
 import {
   authShouldFailedWithNotFound,
   authShouldPassed,
-  authShouldPassthroughFailed,
+  authShouldPassthroughNotFound,
   authShouldSkipped,
   authShouldValidatFailed,
 } from '../helper'
@@ -77,7 +77,7 @@ describe(filename, () => {
       ctx.headers.authorization = ''
 
       const mw = inst.resolve() as MidwayWebMiddleware
-      await authShouldPassthroughFailed(ctx, mw)
+      await authShouldPassthroughNotFound(ctx, mw)
     })
 
   })
