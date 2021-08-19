@@ -1,6 +1,5 @@
 import { relative } from 'path'
 
-import { IMidwayKoaNext } from '@midwayjs/koa'
 import { MidwayWebMiddleware } from '@midwayjs/web'
 
 import { testConfig } from '../../root.config'
@@ -12,16 +11,11 @@ import {
   initialJwtMiddlewareConfig,
   JwtConfig,
   JwtMiddlewareConfig,
-  JwtMsg,
 } from '~/index'
 import { JwtMiddleware } from '~/middleware/jwt.middleware'
 
-// eslint-disable-next-line import/order
-import assert = require('power-assert')
-
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-const next: IMidwayKoaNext = async () => { return }
 
 describe(filename, () => {
 
@@ -47,7 +41,6 @@ describe(filename, () => {
 
       const mw = inst.resolve() as MidwayWebMiddleware
       await authShouldSkipped(ctx, mw)
-      assert(! ctx.jwtState.user)
     })
 
     it('auth skipped with empty ignore', async () => {

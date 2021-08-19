@@ -14,7 +14,6 @@ import {
   initialJwtMiddlewareConfig,
   JwtConfig,
   JwtMiddlewareConfig,
-  JwtMsg,
 } from '~/index'
 import { JwtMiddleware } from '~/middleware/jwt.middleware'
 
