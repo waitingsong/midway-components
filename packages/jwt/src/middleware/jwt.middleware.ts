@@ -35,9 +35,11 @@ export async function jwtMiddleware(
 ): Promise<void> {
 
 
+  /* istanbul ignore else */
   if (! ctx.jwtState) {
     ctx.jwtState = {} as JwtState
   }
+  /* istanbul ignore else */
   if (! ctx.state) {
     ctx.state = {}
   }
