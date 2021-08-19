@@ -60,7 +60,7 @@ describe(filename, () => {
       await authShouldRedirect(ctx, mw, path2)
     })
 
-    it('empth string', async () => {
+    it('empty string', async () => {
       const { app } = testConfig
       const jwtConfig: JwtConfig = {
         secret,
@@ -82,30 +82,6 @@ describe(filename, () => {
 
       const mw = inst.resolve() as MidwayWebMiddleware
       await authShouldPassthroughEmptyStringNotFound(ctx, mw, 401)
-    })
-
-    it('true with token not found', async () => {
-      const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
-      const path = '/' + Math.random().toString()
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
-        passthrough: true,
-      }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
-
-      const container = app.getApplicationContext()
-      const inst = await container.getAsync(JwtMiddleware)
-
-      const ctx: Context = app.createAnonymousContext()
-      ctx.path = path
-      ctx.headers.authorization = authHeader1 + 'FAKE'
-
-      const mw = inst.resolve() as MidwayWebMiddleware
-      await authShouldPassthroughValidFailed(ctx, mw)
     })
   })
 })
