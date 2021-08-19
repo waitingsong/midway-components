@@ -4,7 +4,7 @@ import { IMidwayKoaNext } from '@midwayjs/koa'
 import { MidwayWebMiddleware } from '@midwayjs/web'
 
 import { testConfig } from '../../root.config'
-import { authHeader1, payload1, secret } from '../../test.config'
+import { authHeader1, payload1, secret, token1 } from '../../test.config'
 import {
   authShouldFailedWithNotFound,
   authShouldPassed,
@@ -52,6 +52,7 @@ describe(filename, () => {
 
       const mw = inst.resolve() as MidwayWebMiddleware
       await authShouldPassed(ctx, mw)
+      assert(! ctx.jwtState)
     })
 
     it('auth testing passed', async () => {
@@ -75,6 +76,7 @@ describe(filename, () => {
 
       const mw = inst.resolve() as MidwayWebMiddleware
       await authShouldPassed(ctx, mw)
+      assert.deepStrictEqual(ctx.jwtState && ctx.jwtState.user.payload, payload1)
     })
 
     it('auth validation failed', async () => {
@@ -98,6 +100,7 @@ describe(filename, () => {
 
       const mw = inst.resolve() as MidwayWebMiddleware
       await authShouldValidatFailed(ctx, mw)
+      assert(! ctx.jwtState)
     })
   })
 })

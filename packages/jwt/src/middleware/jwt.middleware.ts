@@ -44,13 +44,6 @@ export async function jwtMiddleware(
 
   const { debug, passthrough } = mwConfig
 
-  if (! ctx.jwtState) {
-    ctx.jwtState = { } as JwtState
-  }
-  if (! ctx.state) {
-    ctx.state = { }
-  }
-
   try {
     const token = retrieveToken(ctx, mwConfig)
 
@@ -65,9 +58,17 @@ export async function jwtMiddleware(
     const secretSet: Set<VerifySecret> = svc.genVerifySecretSet(
       // ctx.jwtState.secret ?? ctx.state?.secret,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      ctx.jwtState.secret ? ctx.jwtState.secret : ctx.state && ctx.state ? ctx.state.secret : void 0,
+      ctx.jwtState && ctx.jwtState.secret ? ctx.jwtState.secret : ctx.state && ctx.state ? ctx.state.secret : void 0,
     )
     const decoded = svc.validateToken(token, secretSet)
+
+    if (! ctx.jwtState) {
+      ctx.jwtState = {} as JwtState
+    }
+    if (! ctx.state) {
+      ctx.state = {}
+    }
+
     ctx.jwtState.user = decoded
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     ctx.state.user = decoded
@@ -75,6 +76,12 @@ export async function jwtMiddleware(
   catch (ex) {
     const pass = await parseByPassthrough(ctx, passthrough)
     if (pass === true) {
+      if (! ctx.jwtState) {
+        ctx.jwtState = {} as JwtState
+      }
+      if (! ctx.state) {
+        ctx.state = {}
+      }
       // lets downstream middlewares handle JWT exceptions
       ctx.jwtState.jwtOriginalError = ex as Error
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access

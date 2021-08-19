@@ -57,11 +57,8 @@ describe(filename, () => {
       assert(t1 === token1)
 
       const mw = inst.resolve() as MidwayWebMiddleware
-      // @ts-expect-error
-      await mw(ctx, next)
-      const { status, jwtState } = ctx
-      assert(status === 200)
-      assert(! jwtState)
+      await authShouldPassed(ctx, mw)
+      assert(! ctx.jwtState)
     })
 
     it('auth test with JwtAuthenticateOptions.cookie user value', async () => {
@@ -95,6 +92,7 @@ describe(filename, () => {
 
       const mw = inst.resolve() as MidwayWebMiddleware
       await authShouldPassed(ctx, mw)
+      assert.deepStrictEqual(ctx.jwtState && ctx.jwtState.user.payload, payload1)
     })
 
     it('auth test with JwtAuthenticateOptions.cookie false (default)', async () => {
@@ -129,6 +127,7 @@ describe(filename, () => {
 
       const mw = inst.resolve() as MidwayWebMiddleware
       await authShouldFailedWithNotFound(ctx, mw)
+      assert(! ctx.jwtState)
     })
   })
 })
