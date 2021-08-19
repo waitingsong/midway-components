@@ -26,7 +26,7 @@ const next: IMidwayKoaNext = async () => { return }
 describe(filename, () => {
 
   describe('Should JwtMiddlewareConfig.ignore work with func', () => {
-    it('matched', async () => {
+    it('auth skipped', async () => {
       const { app } = testConfig
       const jwtConfig: JwtConfig = {
         secret,
@@ -55,7 +55,7 @@ describe(filename, () => {
       assert(status === 200)
     })
 
-    it('ignored', async () => {
+    it('auth skipped', async () => {
       const { app } = testConfig
       const jwtConfig: JwtConfig = {
         secret,

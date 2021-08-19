@@ -25,7 +25,7 @@ const next: IMidwayKoaNext = async () => { return }
 describe(filename, () => {
 
   describe('Should JwtComponent.validateToken() work with header', () => {
-    it('path ignored', async () => {
+    it('auth skipped', async () => {
       const { app } = testConfig
       const jwtConfig: JwtConfig = {
         secret,
@@ -53,7 +53,7 @@ describe(filename, () => {
       assert(! jwtState)
     })
 
-    it('path skipped with empty ignore', async () => {
+    it('auth testing', async () => {
       const { app } = testConfig
       const jwtConfig: JwtConfig = {
         secret,

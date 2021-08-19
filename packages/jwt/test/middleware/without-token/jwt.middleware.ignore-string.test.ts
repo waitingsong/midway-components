@@ -25,7 +25,7 @@ const next: IMidwayKoaNext = async () => { return }
 describe(filename, () => {
 
   describe('Should JwtMiddlewareConfig.ignore work with string', () => {
-    it('path matched', async () => {
+    it('auth skipped', async () => {
       const { app } = testConfig
       const jwtConfig: JwtConfig = {
         secret,
@@ -51,7 +51,7 @@ describe(filename, () => {
       assert(status === 200)
     })
 
-    it('path ignored with empty ignore', async () => {
+    it('auth skipped with empty ignore', async () => {
       const { app } = testConfig
       const jwtConfig: JwtConfig = {
         secret,
@@ -88,7 +88,7 @@ describe(filename, () => {
       assert(false, 'should throw error 401, but not.')
     })
 
-    it('path ignored with random ignore', async () => {
+    it('auth skipped with random ignore', async () => {
       const { app } = testConfig
       const jwtConfig: JwtConfig = {
         secret,
