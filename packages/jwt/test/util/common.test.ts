@@ -12,7 +12,7 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 describe(filename, () => {
 
   describe('Should common() work', () => {
-    it('with valid input 1', () => {
+    it('with valid rules', () => {
       const ret = reqestPathMatched(true as unknown as Context)
       assert(ret === false)
     })
@@ -20,6 +20,18 @@ describe(filename, () => {
     it('with empty array', () => {
       const ret = reqestPathMatched(true as unknown as Context, [])
       assert(ret === false)
+    })
+
+    it('with invalid rule', () => {
+      try {
+        // @ts-expect-error
+        reqestPathMatched(true as unknown as Context, [new Symbol()])
+      }
+      catch (ex) {
+        assert(ex && ex instanceof TypeError)
+        return
+      }
+      assert(false, 'should throw TypeError, but not.')
     })
   })
 
