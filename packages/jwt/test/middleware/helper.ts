@@ -101,7 +101,7 @@ export async function authShouldPassthroughFailed(
   assert(! ctx.jwtState.user)
 
   const { jwtOriginalError } = ctx.jwtState
-  assert(jwtOriginalError)
+  assert(jwtOriginalError && jwtOriginalError instanceof Error)
   if (jwtOriginalError) {
     const omsg = jwtOriginalError.message
     assert(omsg.includes(JwtMsg.TokenNotFound))
