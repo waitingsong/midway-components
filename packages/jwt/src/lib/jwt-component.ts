@@ -113,6 +113,7 @@ export class JwtComponent {
         const ss = typeof secret === 'string' ? secret : secret.toString()
         const start = ss.slice(0, 2)
         let end = ss
+        /* istanbul ignore else */
         if (! process.env.CI) {
           end = ss.length > 10 ? ss.slice(-2) : '**'
         }
@@ -137,6 +138,7 @@ export class JwtComponent {
 
     if (ctxSecret) {
       const cs = processSecret(ctxSecret)
+      /* istanbul ignore else */
       if (cs.size) {
         return cs
       }
