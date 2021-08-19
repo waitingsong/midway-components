@@ -68,7 +68,7 @@ export async function jwtMiddleware(
     const secretSet: Set<VerifySecret> = svc.genVerifySecretSet(
       // ctx.jwtState.secret ?? ctx.state?.secret,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      ctx.jwtState.secret ? ctx.jwtState.secret : ctx.state && ctx.state ? ctx.state.secret : void 0,
+      ctx.jwtState.secret ? ctx.jwtState.secret : ctx.state && ctx.state.secret ? ctx.state.secret : void 0,
     )
     const decoded = svc.validateToken(token, secretSet)
 

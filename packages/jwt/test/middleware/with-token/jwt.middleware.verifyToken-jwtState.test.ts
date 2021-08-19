@@ -56,7 +56,8 @@ describe(filename, () => {
       const mw = inst.resolve() as MidwayWebMiddleware
       await authShouldPassed(ctx, mw, payload1)
     })
-    it.only('passed with ctx.state.secret', async () => {
+
+    it('passed with ctx.state.secret', async () => {
       const { app } = testConfig
       const jwtConfig: JwtConfig = {
         secret: 'FAKE',
