@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 9.1.1 (2021-08-19)
+
+
+### Bug Fixes
+
+* **taskman:** TaskQueueRepository.pickInitTasksToPending() condition ([bcd71b3](https://github.com/waitingsong/midway-components/commit/bcd71b38aec84442a1adb2b7462e5a554298735e))
+
+
+
+
+
 # [9.1.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@9.0.5...@mw-components/taskman@9.1.0) (2021-08-12)
 
 
