@@ -127,3 +127,43 @@ export async function authShouldPassthroughValidFailed(
   }
 }
 
+
+export async function authShouldRedirect(
+  ctx: Context,
+  mw: MidwayWebMiddleware,
+  redirectUrl: string,
+): Promise<void> {
+
+  // @ts-expect-error
+  await mw(ctx, next)
+  const { status, jwtState } = ctx
+  assert(status === 302)
+  assert(! jwtState.user)
+  const location = ctx.res.getHeader('location')
+  assert(location === redirectUrl)
+}
+
+export async function authShouldPassthroughEmptyStringNotFound(
+  ctx: Context,
+  mw: MidwayWebMiddleware,
+  status = 200,
+): Promise<void> {
+
+  try {
+    // @ts-expect-error
+    await mw(ctx, next)
+  }
+  catch (ex) {
+    assert(ctx.status === status)
+    const msg = (ex as Error).message
+    assert(msg.includes(JwtMsg.AuthFailed))
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const omsg = (ex.originalError as Error).message
+    assert(omsg.includes(JwtMsg.TokenNotFound))
+
+    assert(! ctx.jwtState.user)
+    return
+  }
+  assert(false, 'should throw error 401, but not.')
+}
