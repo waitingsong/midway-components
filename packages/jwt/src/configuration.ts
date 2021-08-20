@@ -24,9 +24,10 @@ export class AutoConfiguration {
   @Config('jwtMiddlewareConfig') protected readonly mwConfig: JwtMiddlewareConfig
 
   async onReady(): Promise<void> {
+    const { enableMiddleware } = this.mwConfig
     /* istanbul ignore else */
-    if (this.mwConfig.enableMiddleware) {
-      registerMiddleware(this.app)
+    if (enableMiddleware || typeof enableMiddleware === 'number') {
+      registerMiddleware(this.app, enableMiddleware)
     }
   }
 
@@ -34,12 +35,14 @@ export class AutoConfiguration {
 
 export function registerMiddleware(
   app: IMidwayWebApplication,
+  position: true | number,
 ): void {
 
   const appMiddleware = app.getConfig('middleware') as string[] | undefined
   /* istanbul ignore if */
   if (Array.isArray(appMiddleware)) {
-    appMiddleware.push(namespace + ':jwtMiddleware')
+    const pos = position === true ? 0 : position
+    appMiddleware.splice(pos, 0, namespace + ':jwtMiddleware')
   }
   else {
     app.logger.info('Jwt: appMiddleware is not valid Array, register via app.use(Middleware)')

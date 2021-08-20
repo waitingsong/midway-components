@@ -25,9 +25,11 @@ export interface JwtConfig {
 
 export interface JwtMiddlewareConfig extends JwtAuthenticateOptions {
   /**
-   * @default true
+   * Enable middleware.
+   * insert app.middlewares with value number, default 0, if using egg framework
+   * @default true (position: 0)
    */
-  enableMiddleware: boolean
+  enableMiddleware: boolean | number
   /**
    * match and ignore are exclusive exists
    * @default
