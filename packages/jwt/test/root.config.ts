@@ -1,8 +1,8 @@
-import { IMidwayWebApplication } from '@midwayjs/web'
+import { Application } from '~/interface'
 
 
 export interface TestConfig {
-  app: IMidwayWebApplication
+  app: Application
 }
 export const testConfig = {
 } as TestConfig
