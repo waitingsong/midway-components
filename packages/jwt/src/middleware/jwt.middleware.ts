@@ -71,9 +71,11 @@ export async function jwtMiddleware(
     )
     const decoded = svc.validateToken(token, secretSet)
 
-    ctx.jwtState.user = decoded
+    ctx.jwtState.header = decoded.header
+    ctx.jwtState.signature = decoded.signature
+    ctx.jwtState.user = decoded.payload
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    ctx.state.user = decoded
+    ctx.state.user = decoded.payload
   }
   catch (ex) {
     const pass = await parseByPassthrough(ctx, passthrough)
