@@ -86,11 +86,13 @@ export type passthroughCallback = (ctx: Context) => Promise<boolean | RedirectUR
 // export type Middleware = (ctx: Context, next: () => Promise<void>) => Promise<void>
 
 /** Bind on Context.jwtState */
-export interface JwtState {
-  jwtOriginalError?: Error
+export interface JwtState<T extends string | JsonType = JsonType> {
+  header?: JwtHeader
   secret?: unknown
+  signature?: string
   /** Decode Result */
-  user?: JwtResult
+  user?: JwtResult<T>['payload']
+  jwtOriginalError?: Error
 }
 
 

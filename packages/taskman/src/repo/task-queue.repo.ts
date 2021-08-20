@@ -187,7 +187,6 @@ export class TaskQueueRepository {
       .insert(data)
       .returning('*')
       .then(async (rows) => {
-        await trx.commit()
         return rows.length ? rows[0] : void 0
       })
       .catch(async (ex) => {
@@ -195,6 +194,7 @@ export class TaskQueueRepository {
         throw ex
       })
 
+    await trx.commit()
     return ins as unknown as TaskProgressDTO
   }
 
@@ -301,7 +301,6 @@ export class TaskQueueRepository {
       .where('task_state', TaskState.running)
       .returning('*')
       .then(async (rows) => {
-        await trx.commit()
         return rows.length ? rows[0] : void 0
       })
       .catch(async (ex) => {
@@ -309,6 +308,7 @@ export class TaskQueueRepository {
         throw ex
       })
 
+    await trx.commit()
     return ret as unknown as TaskDTO
   }
 
@@ -384,13 +384,16 @@ export class TaskQueueRepository {
     const { db } = this
     const trx = await db.dbh.transaction()
 
+    const where = `expect_start BETWEEN now() - interval '${options.earlierThanTimeIntv}'
+      AND now() + interval '1s'`
     const tasks = await db.refTables.ref_tb_task()
       .transacting(trx)
       .forUpdate()
       .select('task_id')
       .where('task_state', TaskState.init)
-      .whereRaw(`expect_start BETWEEN now() - interval '${options.earlierThanTimeIntv}' AND now()`)
+      .whereRaw(where)
       .limit(options.maxRows)
+      .orderBy('expect_start', options.ord)
       .orderBy('ctime', options.ord)
       .orderBy('task_id', options.ord)
       .catch(async (ex) => {
@@ -410,19 +413,16 @@ export class TaskQueueRepository {
       .update('started_at', 'now()')
       .update('mtime', 'now()')
       .where('task_state', TaskState.init)
-      .whereRaw(`expect_start BETWEEN now() - interval '${options.earlierThanTimeIntv}' AND now()`)
+      .whereRaw(where)
       .whereIn('task_id', ids)
       .returning('*')
-      .then(async (rows) => {
-        await trx.commit()
-        return rows
-      })
       .catch(async (ex) => {
         await trx.rollback()
         throw ex
       })
       // .toQuery()
 
+    await trx.commit()
     return ret as unknown as TaskDTO[]
   }
 

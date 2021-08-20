@@ -24,7 +24,9 @@ export async function authShouldPassed(
   assert(status === 200)
   assert(jwtState)
   assert(jwtState.user)
-  assert.deepStrictEqual(ctx.jwtState.user && ctx.jwtState.user.payload, expectPayload)
+  assert(jwtState.header)
+  assert(jwtState.signature)
+  assert.deepStrictEqual(ctx.jwtState.user && ctx.jwtState.user, expectPayload)
 }
 
 export async function authShouldSkipped(
@@ -37,6 +39,8 @@ export async function authShouldSkipped(
   const { status, jwtState } = ctx
   assert(status === 200)
   assert(! jwtState.user)
+  assert(! jwtState.secret)
+  assert(! jwtState.signature)
 }
 
 export async function authShouldFailedWithNotFound(
@@ -59,7 +63,10 @@ export async function authShouldFailedWithNotFound(
     const omsg = (ex.originalError as Error).message
     assert(omsg.includes(JwtMsg.TokenNotFound))
 
-    assert(! ctx.jwtState.user)
+    const { jwtState } = ctx
+    assert(! jwtState.user)
+    assert(! jwtState.secret)
+    assert(! jwtState.signature)
     return
   }
   assert(false, `should throw error with status: "${status}", but not.`)
@@ -83,7 +90,10 @@ export async function authShouldValidatFailed(
     const omsg = (ex.originalError as Error).message
     assert(omsg.includes(JwtMsg.TokenValidFailed))
 
-    assert(! ctx.jwtState.user)
+    const { jwtState } = ctx
+    assert(! jwtState.user)
+    assert(! jwtState.secret)
+    assert(! jwtState.signature)
     return
   }
   assert(false, 'should throw error 401, but not.')
@@ -98,7 +108,10 @@ export async function authShouldPassthroughNotFound(
   // @ts-expect-error
   await mw(ctx, next)
   assert(ctx.status === status)
-  assert(! ctx.jwtState.user)
+  const { jwtState } = ctx
+  assert(! jwtState.user)
+  assert(! jwtState.secret)
+  assert(! jwtState.signature)
 
   const { jwtOriginalError } = ctx.jwtState
   assert(jwtOriginalError && jwtOriginalError instanceof Error)
@@ -117,7 +130,10 @@ export async function authShouldPassthroughValidFailed(
   // @ts-expect-error
   await mw(ctx, next)
   assert(ctx.status === status)
-  assert(! ctx.jwtState.user)
+  const { jwtState } = ctx
+  assert(! jwtState.user)
+  assert(! jwtState.secret)
+  assert(! jwtState.signature)
 
   const { jwtOriginalError } = ctx.jwtState
   assert(jwtOriginalError && jwtOriginalError instanceof Error)
@@ -139,6 +155,9 @@ export async function authShouldRedirect(
   const { status, jwtState } = ctx
   assert(status === 302)
   assert(! jwtState.user)
+  assert(! jwtState.secret)
+  assert(! jwtState.signature)
+
   const location = ctx.res.getHeader('location')
   assert(location === redirectUrl)
 }
@@ -162,7 +181,10 @@ export async function authShouldPassthroughEmptyStringNotFound(
     const omsg = (ex.originalError as Error).message
     assert(omsg.includes(JwtMsg.TokenNotFound))
 
-    assert(! ctx.jwtState.user)
+    const { jwtState } = ctx
+    assert(! jwtState.user)
+    assert(! jwtState.secret)
+    assert(! jwtState.signature)
     return
   }
   assert(false, 'should throw error 401, but not.')
@@ -188,7 +210,10 @@ export async function authShouldFailedWithNotFoundFromDebug(
     const omsg = (ex.originalError as Error).message
     assert(omsg.includes(JwtMsg.TokenNotFound))
 
-    assert(! ctx.jwtState.user)
+    const { jwtState } = ctx
+    assert(! jwtState.user)
+    assert(! jwtState.secret)
+    assert(! jwtState.signature)
     return
   }
   assert(false, `should throw error with status: "${status}", but not.`)
