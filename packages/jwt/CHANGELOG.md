@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.1.0](https://github.com/waitingsong/midway-components/compare/@mw-components/jwt@8.0.0...@mw-components/jwt@8.1.0) (2021-08-20)
+
+
+### Features
+
+* **jwt:** change generic type of JwtState and JwtResult ([6024661](https://github.com/waitingsong/midway-components/commit/60246611fefb00310375c3e55a058cc3889b4f9c))
+
+
+
+
+
 # 8.0.0 (2021-08-20)
 
 **Note:** Version bump only for package @mw-components/jwt
