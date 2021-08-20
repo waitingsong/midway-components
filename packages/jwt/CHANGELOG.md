@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.2.0](https://github.com/waitingsong/midway-components/compare/@mw-components/jwt@8.1.0...@mw-components/jwt@8.2.0) (2021-08-20)
+
+
+### Features
+
+* **jwt:** change generic type of verify(), decode() ([ce0fd5d](https://github.com/waitingsong/midway-components/commit/ce0fd5d410d69774c64d0c2d9924f77a44a6daa2))
+
+
+
+
+
 # [8.1.0](https://github.com/waitingsong/midway-components/compare/@mw-components/jwt@8.0.0...@mw-components/jwt@8.1.0) (2021-08-20)
 
 
