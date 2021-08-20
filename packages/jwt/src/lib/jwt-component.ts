@@ -101,12 +101,12 @@ export class JwtComponent {
     /* istanbul ignore next */
     if (! secretSet.size) { throw new Error(JwtMsg.VSceretInvalid) }
 
-    let ret: JwtResult | null = null
+    const ret: JwtResult[] = []
     const msgs: string[] = []
     Array.from(secretSet).some((secret) => {
       try {
         const decoded = this.jwt.verify(token, secret)
-        ret = decoded
+        ret.push(decoded)
         return true
       }
       catch (ex) {
@@ -122,8 +122,8 @@ export class JwtComponent {
     })
 
     /* istanbul ignore else */
-    if (ret) {
-      return ret as JwtResult
+    if (ret.length) {
+      return ret[0] as JwtResult
     }
     throw new Error(JwtMsg.TokenValidFailed + ':\n' + msgs.join('\n'))
   }
