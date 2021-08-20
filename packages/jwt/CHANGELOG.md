@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.1.0](https://github.com/waitingsong/midway-components/compare/@mw-components/jwt@9.0.0...@mw-components/jwt@9.1.0) (2021-08-20)
+
+
+### Features
+
+* **jwt:** update initialJwtMiddlewareConfig with adding '/auth/login' ([e93c0e6](https://github.com/waitingsong/midway-components/commit/e93c0e63794d4c65db80f8e2dee65d8c9e44f4bd))
+
+
+
+
+
 # [9.0.0](https://github.com/waitingsong/midway-components/compare/@mw-components/jwt@8.2.0...@mw-components/jwt@9.0.0) (2021-08-20)
 
 
