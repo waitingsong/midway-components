@@ -1,4 +1,4 @@
-import { JsonType } from '@waiting/shared-types'
+import { JsonObject } from '@waiting/shared-types'
 import {
   decode,
   sign,
@@ -39,7 +39,6 @@ export class Jwt {
     this.config = genJwtConfig(config)
   }
 
-
   /**
    * @description using app.config.jwt.secret if secretOrPrivateKey is undefined or false
    */
@@ -71,7 +70,7 @@ export class Jwt {
   /**
    * @description using app.config.jwt.secret if secretOrPrivateKey is undefined or false
    */
-  verify<T extends string | JsonType = JsonType>(
+  verify<T = JsonObject>(
     token: JwtToken,
     secretOrPrivateKey?: VerifySecret,
     options?: VerifyOpts,
@@ -103,7 +102,7 @@ export class Jwt {
    *
    * @param options value of complete always be TRUE
    */
-  decode<T extends string | JsonType = JsonType>(
+  decode<T = JsonObject>(
     token: JwtToken,
   ): JwtResult<T> {
 

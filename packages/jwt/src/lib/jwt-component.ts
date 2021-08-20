@@ -20,7 +20,7 @@ import { genJwtConfig } from './util'
 
 import {
   Application,
-  JsonType,
+  JsonObject,
   SignOptions,
   Secret,
 } from '~/interface'
@@ -67,7 +67,7 @@ export class JwtComponent {
   /**
    * @description using app.config.jwt.secret if secretOrPrivateKey is undefined or false
    */
-  verify<T extends string | JsonType = JsonType>(
+  verify<T = JsonObject>(
     token: JwtToken,
     secretOrPrivateKey?: VerifySecret,
     options?: VerifyOpts,
@@ -85,7 +85,7 @@ export class JwtComponent {
    *
    * @param options value of complete always be TRUE
    */
-  decode<T extends string | JsonType = JsonType>(
+  decode<T = JsonObject>(
     token: JwtToken,
   ): JwtResult<T> {
 
@@ -101,12 +101,12 @@ export class JwtComponent {
     /* istanbul ignore next */
     if (! secretSet.size) { throw new Error(JwtMsg.VSceretInvalid) }
 
-    let ret: JwtResult | null = null
+    const ret: JwtResult[] = []
     const msgs: string[] = []
     Array.from(secretSet).some((secret) => {
       try {
         const decoded = this.jwt.verify(token, secret)
-        ret = decoded
+        ret.push(decoded)
         return true
       }
       catch (ex) {
@@ -122,8 +122,8 @@ export class JwtComponent {
     })
 
     /* istanbul ignore else */
-    if (ret) {
-      return ret as JwtResult
+    if (ret.length) {
+      return ret[0] as JwtResult
     }
     throw new Error(JwtMsg.TokenValidFailed + ':\n' + msgs.join('\n'))
   }

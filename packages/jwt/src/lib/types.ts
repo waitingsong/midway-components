@@ -1,4 +1,4 @@
-import { JsonObject, JsonType } from '@waiting/shared-types'
+import { JsonObject } from '@waiting/shared-types'
 import {
   DecodeOptions,
   JwtHeader,
@@ -25,9 +25,11 @@ export interface JwtConfig {
 
 export interface JwtMiddlewareConfig extends JwtAuthenticateOptions {
   /**
-   * @default true
+   * Enable middleware.
+   * insert app.middlewares with value number, default 0, if using egg framework
+   * @default true (position: 0)
    */
-  enableMiddleware: boolean
+  enableMiddleware: boolean | number
   /**
    * match and ignore are exclusive exists
    * @default
@@ -69,7 +71,7 @@ export interface JwtAuthenticateOptions {
 
 export type JwtToken = string
 export type JwtPayload = string | Buffer | JsonObject
-export interface JwtResult<T extends string | JsonType = JsonType> {
+export interface JwtResult<T = JsonObject> {
   header: JwtHeader
   payload: T
   signature: string
@@ -86,7 +88,7 @@ export type passthroughCallback = (ctx: Context) => Promise<boolean | RedirectUR
 // export type Middleware = (ctx: Context, next: () => Promise<void>) => Promise<void>
 
 /** Bind on Context.jwtState */
-export interface JwtState<T extends string | JsonType = JsonType> {
+export interface JwtState<T = JsonObject> {
   header?: JwtHeader
   secret?: unknown
   signature?: string
@@ -94,5 +96,4 @@ export interface JwtState<T extends string | JsonType = JsonType> {
   user?: JwtResult<T>['payload']
   jwtOriginalError?: Error
 }
-
 
