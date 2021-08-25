@@ -1,5 +1,3 @@
-import { JwtState } from './lib/index'
-
 
 export { AutoConfiguration as Configuration } from './configuration'
 export { registerMiddleware } from './configuration'
@@ -20,9 +18,9 @@ export {
   IMidwayWebContext as Context,
 } from '@midwayjs/web'
 
-declare module '@midwayjs/core' {
-  interface Context {
-    jwtState: JwtState
-  }
-}
+// declare module '@midwayjs/core' {
+//   interface Context {
+//     jwtState: JwtState
+//   }
+// }
 
