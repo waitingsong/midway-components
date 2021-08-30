@@ -53,7 +53,7 @@ export async function authShouldFailedWithNotFound(
     // @ts-expect-error
     await mw(ctx, next)
   }
-  catch (ex) {
+  catch (ex: any) {
     assert(ctx.status === status)
 
     const msg = (ex as Error).message
@@ -81,7 +81,7 @@ export async function authShouldValidatFailed(
     // @ts-expect-error
     await mw(ctx, next)
   }
-  catch (ex) {
+  catch (ex: any) {
     assert(ctx.status === 401)
     const msg = (ex as Error).message
     assert(msg.includes(JwtMsg.AuthFailed))
@@ -172,7 +172,7 @@ export async function authShouldPassthroughEmptyStringNotFound(
     // @ts-expect-error
     await mw(ctx, next)
   }
-  catch (ex) {
+  catch (ex: any) {
     assert(ctx.status === status)
     const msg = (ex as Error).message
     assert(msg.includes(JwtMsg.AuthFailed))
@@ -200,7 +200,7 @@ export async function authShouldFailedWithNotFoundFromDebug(
     // @ts-expect-error
     await mw(ctx, next)
   }
-  catch (ex) {
+  catch (ex: any) {
     assert(ctx.status === status)
 
     const msg = (ex as Error).message
