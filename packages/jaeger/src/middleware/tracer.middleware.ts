@@ -18,6 +18,7 @@ import {
   handleTopExceptionAndNext,
   processHTTPStatus,
   processResponseData,
+  updateSpan,
 } from './helper'
 
 
@@ -81,6 +82,7 @@ function startSpan(ctx: IMidwayWebContext<JsonResp | string>): TracerManager {
     [TracerLog.svcCpuUsage]: process.cpuUsage(),
     [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
   })
+  updateSpan(ctx)
 
   return tracerManager
 }
