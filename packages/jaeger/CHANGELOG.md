@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 8.1.0 (2021-08-30)
+
+
+### Features
+
+* **jaeger:** move calling updateSpan() into tracer.middleware.ts ([93820af](https://github.com/waitingsong/midway-components/commit/93820af888758f02b3ec7a2a3954702a47994c5b))
+
+
+
+
+
 ## 8.0.1 (2021-08-09)
 
 **Note:** Version bump only for package @mw-components/jaeger
