@@ -17,11 +17,10 @@ import { procInfo } from '../util/stat'
 
 const netInfo = retrieveExternalNetWorkInfo()
 
-export function updateSpan(
+export function updateDetailTags(
   ctx: IMidwayWebContext,
 ): void {
 
-  const { tracerManager } = ctx
   const pkg = ctx.app.getConfig('pkg') as NpmPkg
   const tags: SpanLogInput = {
     [Tags.HTTP_METHOD]: ctx.req.method ?? 'n/a',
@@ -60,7 +59,8 @@ export function updateSpan(
     })
   }
 
-  tracerManager.addTags(tags)
+  // tracerManager.addTags(tags)
+  updateCtxTagsData(ctx.tracerTags, tags)
 }
 
 
@@ -171,7 +171,6 @@ export async function processHTTPStatus(
   ctx: IMidwayWebContext<JsonResp | string>,
 ): Promise<void> {
 
-  const { tracerManager } = ctx
   const { status } = ctx.response
   const tracerConfig = ctx.app.config.tracer as TracerConfig
   const tags: SpanLogInput = {
@@ -187,15 +186,17 @@ export async function processHTTPStatus(
     }
 
     tags[Tags.ERROR] = true
-    tracerManager.addTags(tags)
+    // tracerManager.addTags(tags)
+    updateCtxTagsData(ctx.tracerTags, tags)
   }
   else {
     if (typeof tracerConfig.processCustomFailure === 'function') {
-      await tracerConfig.processCustomFailure(ctx, tracerManager)
+      await tracerConfig.processCustomFailure(ctx)
     }
     const opts: ProcessPriorityOpts = {
       starttime: ctx.starttime,
-      trm: tracerManager,
+      trm: ctx.tracerManager,
+      tracerTags: ctx.tracerTags,
       tracerConfig,
     }
     await processPriority(opts)
@@ -207,7 +208,6 @@ export function processRequestQuery(
   ctx: IMidwayWebContext,
 ): void {
 
-  const { tracerManager } = ctx
   const tracerConfig = ctx.app.config.tracer as TracerConfig
   const tags: SpanLogInput = {}
 
@@ -241,14 +241,14 @@ export function processRequestQuery(
     }
   }
 
-  tracerManager.addTags(tags)
+  // tracerManager.addTags(tags)
+  updateCtxTagsData(ctx.tracerTags, tags)
 }
 
 export function processResponseData(
   ctx: IMidwayWebContext<JsonResp | string>,
 ): void {
 
-  const { tracerManager } = ctx
   const tracerConfig = ctx.app.config.tracer as TracerConfig
   const tags: SpanLogInput = {}
 
@@ -256,20 +256,20 @@ export function processResponseData(
     tags[TracerTag.respBody] = ctx.body
   }
 
-  tracerManager.addTags(tags)
+  // tracerManager.addTags(tags)
+  updateCtxTagsData(ctx.tracerTags, tags)
 }
 
 
 export async function processCustomFailure(
   ctx: IMidwayWebContext<JsonResp | string>,
-  trm: TracerManager,
 ): Promise<void> {
 
   const { body } = ctx
 
   if (typeof body === 'object' && body) {
     if (typeof body.code !== 'undefined' && body.code !== 0) {
-      trm.addTags({
+      updateCtxTagsData(ctx.tracerTags, {
         [Tags.SAMPLING_PRIORITY]: 30,
         [TracerTag.resCode]: body.code,
       })
@@ -280,19 +280,20 @@ export async function processCustomFailure(
 export interface ProcessPriorityOpts {
   starttime: number
   trm: TracerManager
+  tracerTags: SpanLogInput
   tracerConfig: TracerConfig
 }
 async function processPriority(options: ProcessPriorityOpts): Promise<number | undefined> {
-  const { starttime, trm } = options
   const { reqThrottleMsForPriority: throttleMs } = options.tracerConfig
-
   if (throttleMs < 0) {
     return
   }
 
+  const { starttime, tracerTags, trm } = options
+
   const cost = Date.now() - starttime
   if (cost >= throttleMs) {
-    trm.addTags({
+    updateCtxTagsData(tracerTags, {
       [Tags.SAMPLING_PRIORITY]: 11,
       [TracerTag.logLevel]: 'warn',
     })
@@ -332,5 +333,16 @@ function retrieveHeadersItem(
   }
 
   return ''
+}
+
+
+export function updateCtxTagsData(
+  tracerTags: SpanLogInput,
+  input: SpanLogInput,
+): void {
+
+  Object.entries(input).forEach(([key, val]) => {
+    tracerTags[key] = val
+  })
 }
 

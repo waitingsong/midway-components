@@ -44,6 +44,7 @@ describe(filename, () => {
 
       const opts: ProcessPriorityOpts = {
         starttime: ctx.starttime,
+        tracerTags: {},
         trm: ctx.tracerManager,
         tracerConfig: ctx.app.config.tracer,
       }
@@ -66,6 +67,7 @@ describe(filename, () => {
 
       const opts: ProcessPriorityOpts = {
         starttime: ctx.starttime,
+        tracerTags: {},
         trm: ctx.tracerManager,
         tracerConfig: ctx.app.config.tracer,
       }
@@ -93,6 +95,7 @@ describe(filename, () => {
 
       const opts: ProcessPriorityOpts = {
         starttime: ctx.starttime,
+        tracerTags: {},
         trm: ctx.tracerManager,
         tracerConfig: ctx.app.config.tracer,
       }

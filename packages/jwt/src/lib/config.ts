@@ -14,6 +14,7 @@ export const initialJwtMiddlewareConfig: Readonly<JwtMiddlewareConfig> = {
   enableMiddleware: true,
   ignore: [
     '/',
+    '/auth/login',
     '/login',
     '/metrics',
     '/ping',

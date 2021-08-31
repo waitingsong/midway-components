@@ -5,8 +5,6 @@ import { IMidwayWebContext } from '@midwayjs/web'
 import { KnownKeys } from '@waiting/shared-types'
 import { TracingConfig } from 'jaeger-client'
 
-import { TracerManager } from './tracer'
-
 
 export interface TracerConfig {
   /**
@@ -55,10 +53,7 @@ export interface TracerConfig {
 	 * Callback to process custom failure
 	 * @default helper.ts/processCustomFailure()
 	 */
-  processCustomFailure?: (
-    ctx: IMidwayWebContext<any>,
-    trm: TracerManager,
-  ) => Promise<void>
+  processCustomFailure?: (ctx: IMidwayWebContext<any>) => Promise<void>
 }
 
 export enum HeadersKey {
@@ -70,6 +65,9 @@ export enum HeadersKey {
 }
 
 export enum TracerTag {
+  reqStartTime = 'req-start-time',
+  reqEndTime = 'req-end-time',
+
   logLevel = 'log.level',
   dbName = 'db',
   dbClient = 'db.client',

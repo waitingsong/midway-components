@@ -1,4 +1,4 @@
-import { TracerManager } from './lib/index'
+import { SpanLogInput, TracerManager } from './lib/index'
 
 
 export { AutoConfiguration as Configuration } from './configuration'
@@ -12,6 +12,7 @@ export {
 declare module '@midwayjs/core' {
   interface Context {
     tracerManager: TracerManager
+    tracerTags: SpanLogInput
   }
 }
 

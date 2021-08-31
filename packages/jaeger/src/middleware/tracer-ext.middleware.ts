@@ -14,7 +14,6 @@ import { pathMatched } from '../util/common'
 import {
   handleAppExceptionAndNext,
   processRequestQuery,
-  updateSpan,
 } from './helper'
 
 @Provide()
@@ -47,7 +46,6 @@ async function tracerMiddleware(
     return next()
   }
 
-  updateSpan(ctx)
   processRequestQuery(ctx)
 
   // preProcessFinish,
