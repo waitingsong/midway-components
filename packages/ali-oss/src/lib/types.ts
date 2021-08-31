@@ -1,4 +1,4 @@
-import { Span } from '@mw-components/jaeger'
+import { Span } from '@mwcp/jaeger'
 import type { MiddlewareConfig as MWConfig } from '@waiting/shared-types'
 import * as Ali from '@yuntools/ali-oss'
 
@@ -56,7 +56,7 @@ export interface AliOssSourceConfig<SourceName extends string = string> {
 export type DataSource<SourceName extends string = string> = Record<SourceName, Config>
 export interface Config extends ClientConfig {
   /**
-   * Enable tracing via @mw-components/jaeger
+   * Enable tracing via @mwcp/jaeger
    * @default false
    */
   enableTracing?: boolean
