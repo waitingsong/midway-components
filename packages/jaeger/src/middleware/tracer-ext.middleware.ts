@@ -46,7 +46,6 @@ async function tracerMiddleware(
     return next()
   }
 
-  // updateSpan(ctx)
   processRequestQuery(ctx)
 
   // preProcessFinish,

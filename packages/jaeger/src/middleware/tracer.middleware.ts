@@ -18,7 +18,8 @@ import {
   handleTopExceptionAndNext,
   processHTTPStatus,
   processResponseData,
-  updateSpan,
+  updateCtxTagsData,
+  updateDetailTags,
 } from './helper'
 
 
@@ -39,6 +40,8 @@ export async function tracerMiddleware(
   next: IMidwayWebNext,
 ): Promise<unknown> {
 
+  ctx.tracerTags = {}
+
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (ctx.tracerManager) {
     ctx.logger.warn('tracerManager invalid')
@@ -54,12 +57,15 @@ export async function tracerMiddleware(
   }
   const trm = startSpan(ctx)
   ctx.res.once('finish', () => {
-    finishSpan(ctx).catch((ex) => {
-      ctx.logger.error(ex)
-    })
+    finishSpan(ctx)
+      .catch((ex) => {
+        ctx.logger.error(ex)
+      })
+      .finally(() => {
+        ctx.tracerTags = {}
+      })
   })
 
-  // return next()
   return handleTopExceptionAndNext(trm, next)
 }
 
@@ -71,18 +77,19 @@ function startSpan(ctx: IMidwayWebContext<JsonResp | string>): TracerManager {
 
   ctx.tracerManager = tracerManager
 
+  const time = genISO8601String()
   tracerManager.startSpan(ctx.path, requestSpanCtx)
-  tracerManager.addTags({
+  updateCtxTagsData(ctx.tracerTags, {
     [TracerTag.svcPid]: process.pid,
     [TracerTag.svcPpid]: process.ppid,
+    [TracerTag.reqStartTime]: time,
   })
   tracerManager.spanLog({
     event: TracerLog.requestBegin,
-    time: genISO8601String(),
+    time,
     [TracerLog.svcCpuUsage]: process.cpuUsage(),
     [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
   })
-  updateSpan(ctx)
 
   return tracerManager
 }
@@ -92,13 +99,22 @@ async function finishSpan(ctx: IMidwayWebContext<JsonResp | string>): Promise<vo
 
   await processHTTPStatus(ctx)
   processResponseData(ctx)
+  updateDetailTags(ctx)
+
+  const time = genISO8601String()
 
   tracerManager.spanLog({
     event: TracerLog.requestEnd,
-    time: genISO8601String(),
+    time,
     [TracerLog.svcCpuUsage]: process.cpuUsage(),
     [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
   })
 
+  updateCtxTagsData(ctx.tracerTags, {
+    [TracerTag.reqEndTime]: time,
+  })
+  tracerManager.addTags(ctx.tracerTags)
+
   tracerManager.finishSpan()
 }
+
