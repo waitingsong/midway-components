@@ -52,7 +52,7 @@ export class TaskManComponent {
     const pdata: CreateTaskDTO = {
       ...input.createTaskDTO,
     }
-    pdata.json.headers = processJsonHeaders(pdata.json.headers, headers)
+    pdata.json.headers = processJsonHeaders(this.ctx, pdata.json.headers, headers)
 
     const opts: FetchOptions = {
       ...this.initFetchOptions(),
