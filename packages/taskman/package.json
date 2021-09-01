@@ -23,7 +23,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@mw-components/fetch": "^14.2.0",
+    "@mw-components/fetch": "^14.3.0",
     "@mw-components/jaeger": "^9.0.0",
     "@mw-components/kmore": "^22.6.1",
     "@waiting/shared-core": "^14.4.1",
