@@ -4,6 +4,7 @@ import { MidwayWebMiddleware } from '@midwayjs/web'
 import {
   Context,
   JwtMsg,
+  JwtState,
 } from '~/index'
 
 // eslint-disable-next-line import/order
@@ -217,4 +218,10 @@ export async function authShouldFailedWithNotFoundFromDebug(
     return
   }
   assert(false, `should throw error with status: "${status}", but not.`)
+}
+
+declare module '@midwayjs/core' {
+  interface Context {
+    jwtState: JwtState
+  }
 }
