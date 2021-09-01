@@ -1,8 +1,12 @@
 import { Node_Headers } from '@mw-components/fetch'
+import { HeadersKey } from '@mw-components/jaeger'
 import { defaultPropDescriptor } from '@waiting/shared-core'
+
 
 import { taskRunnerState } from './config'
 import { CreateTaskOptions } from './types'
+
+import { Context } from '~/interface'
 
 
 export function increaseTaskRunnerCount(): void {
@@ -18,6 +22,7 @@ export function decreaseTaskRunnerCount(): void {
 
 
 export function processJsonHeaders(
+  ctx: Context,
   inputJsonHeaders: CreateTaskOptions['createTaskDTO']['json']['headers'],
   fetchHeaders: Headers,
 ): Record<string, string> {
@@ -34,5 +39,12 @@ export function processJsonHeaders(
       value,
     })
   })
+
+  if (typeof ctx.reqId === 'string' && ctx.reqId && typeof jsonHeaders[HeadersKey.reqId] === 'undefined') {
+    Object.defineProperty(jsonHeaders, HeadersKey.reqId, {
+      ...defaultPropDescriptor,
+      value: ctx.reqId,
+    })
+  }
   return jsonHeaders
 }

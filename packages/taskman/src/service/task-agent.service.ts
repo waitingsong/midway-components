@@ -9,7 +9,7 @@ import {
   JsonResp,
   Node_Headers,
 } from '@mw-components/fetch'
-import { Logger, SpanLogInput, TracerTag } from '@mw-components/jaeger'
+import { HeadersKey, Logger, Span, SpanLogInput, TracerTag } from '@mw-components/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
 import {
   timer,
@@ -34,8 +34,6 @@ import {
   agentConcurrentConfig,
   initTaskManClientConfig,
 } from '../lib/index'
-
-// import { TaskQueueService } from './task-queue.service'
 
 import { Context, FetchOptions } from '~/interface'
 
@@ -73,7 +71,7 @@ export class TaskAgentService {
   }
 
   /** 获取待执行任务记录，发送到任务执行服务供其执行 */
-  async run(): Promise<boolean> {
+  async run(span?: Span): Promise<boolean> {
     if (agentConcurrentConfig.count >= agentConcurrentConfig.max) {
       return false
     }
@@ -95,7 +93,7 @@ export class TaskAgentService {
           message: `taskAgent stopped at ${idx} of ${maxPickTaskCount}`,
           time: genISO8601String(),
         }
-        this.logger.log(input)
+        this.logger.log(input, span)
         agentConcurrentConfig.count -= 1
         return false
       }),
@@ -209,7 +207,17 @@ export class TaskAgentService {
     headers.set(key, '1')
     const taskIdKey = this.config.headerKeyTaskId ? this.config.headerKeyTaskId : 'x-task-id'
     headers.set(taskIdKey, taskId)
+
+    if (this.ctx.tracerManager && ! headers.has(HeadersKey.traceId)) {
+      const newSpan = this.ctx.tracerManager.genSpan('TaskRunner')
+      const spanHeader = this.ctx.tracerManager.headerOfCurrentSpan(newSpan)
+      if (spanHeader) {
+        headers.set(HeadersKey.traceId, spanHeader[HeadersKey.traceId])
+      }
+    }
+
     opts.headers = headers
+
 
     if (opts.url.includes(`${ServerAgent.base}/${ServerAgent.hello}`)) {
       opts.dataType = 'text'

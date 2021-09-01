@@ -36,18 +36,19 @@ export async function taskAgentMiddleware(
   const { headers } = ctx.request
   const taskId = headers['x-task-id']
   const tm = ctx.tracerManager
-  const inputLog: SpanLogInput = {
-    event: 'TaskMan-entry',
-    agentConcurrentConfig,
-    taskId,
-    pid: process.pid,
-    time: genISO8601String(),
-    runnerCount: taskRunnerState.count,
-    runnerMax: taskRunnerState.max,
-  }
-  tm && tm.spanLog(inputLog)
 
   if (headers['x-task-agent']) { // task distribution
+    const inputLog: SpanLogInput = {
+      event: 'TaskMan-entry',
+      agentConcurrentConfig,
+      taskId,
+      pid: process.pid,
+      time: genISO8601String(),
+      runnerCount: taskRunnerState.count,
+      runnerMax: taskRunnerState.max,
+    }
+    tm && tm.spanLog(inputLog)
+
     if (taskRunnerState.count >= taskRunnerState.max) {
       ctx.status = 429
       const { reqId } = ctx
@@ -65,7 +66,18 @@ export async function taskAgentMiddleware(
     increaseTaskRunnerCount() // decreaseRunningTaskCount() 在 TaskManComponent 中任务完成后调用
   }
 
-  if (agentConcurrentConfig.count < agentConcurrentConfig.max) {
+  if (ctx.path === '/ping' && agentConcurrentConfig.count < agentConcurrentConfig.max) {
+    const inputLog: SpanLogInput = {
+      event: 'TaskAgent-run',
+      agentConcurrentConfig,
+      taskId,
+      pid: process.pid,
+      time: genISO8601String(),
+    }
+    // const span = tm ? tm.genSpan('TaskAgent') : void 0
+    // span && span.log(inputLog)
+    tm && tm.spanLog(inputLog)
+
     const taskAgent = await ctx.requestContext.getAsync(TaskAgentService)
     await taskAgent.run()
   }
