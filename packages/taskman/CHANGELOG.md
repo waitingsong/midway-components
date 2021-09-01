@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 11.0.0 (2021-09-01)
+
+
+### Features
+
+* **taskman:** breaking change params of processJsonHeaders() ([042b021](https://github.com/waitingsong/midway-components/commit/042b021fbdd45175dacfd14a1000172909b47686))
+* **taskman:** httpCall() using new span for request header ([be9b6f8](https://github.com/waitingsong/midway-components/commit/be9b6f8e9093654a1e98395f878f160ee75d35b5))
+
+
+
+
+
 ## [10.0.1](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@10.0.0...@mw-components/taskman@10.0.1) (2021-08-31)
 
 **Note:** Version bump only for package @mw-components/taskman
