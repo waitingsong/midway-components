@@ -66,7 +66,7 @@ export async function taskAgentMiddleware(
     increaseTaskRunnerCount() // decreaseRunningTaskCount() 在 TaskManComponent 中任务完成后调用
   }
 
-  if (agentConcurrentConfig.count < agentConcurrentConfig.max) {
+  if (ctx.path === '/ping' && agentConcurrentConfig.count < agentConcurrentConfig.max) {
     const inputLog: SpanLogInput = {
       event: 'TaskAgent-run',
       agentConcurrentConfig,
@@ -74,6 +74,8 @@ export async function taskAgentMiddleware(
       pid: process.pid,
       time: genISO8601String(),
     }
+    // const span = tm ? tm.genSpan('TaskAgent') : void 0
+    // span && span.log(inputLog)
     tm && tm.spanLog(inputLog)
 
     const taskAgent = await ctx.requestContext.getAsync(TaskAgentService)
