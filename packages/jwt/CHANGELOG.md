@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 9.2.0 (2021-09-01)
+
+
+### Features
+
+* **jwt:** remove declaration of Context['jwtState'] ([54d8c98](https://github.com/waitingsong/midway-components/commit/54d8c987b324b7f89d73ede16d1c3dd1039646c2))
+
+
+
+
+
 ## [9.1.1](https://github.com/waitingsong/midway-components/compare/@mw-components/jwt@9.1.0...@mw-components/jwt@9.1.1) (2021-08-30)
 
 **Note:** Version bump only for package @mw-components/jwt
