@@ -85,6 +85,23 @@ export class TaskAgentController {
 
   @Post('/' + ServerAgent.create)
   async [ServerMethod.create](@Body(ALL) input: CreateTaskDTO): Promise<TaskDTO> {
+    // start a agent
+    this[ServerMethod.startOne]().catch((ex: Error) => {
+      const trm = this.ctx.tracerManager
+      const inputLog: SpanLogInput = {
+        event: 'TaskAgent:startOne()-error',
+        pid: process.pid,
+        time: genISO8601String(),
+        message: ex.message,
+      }
+      if (trm) {
+        trm.spanLog(inputLog)
+      }
+      else {
+        console.error(inputLog)
+      }
+    })
+
     const ret = await this.queueSvc.create(input)
     return ret
   }
