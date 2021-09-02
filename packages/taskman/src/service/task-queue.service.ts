@@ -47,7 +47,11 @@ export class TaskQueueService {
   }
 
   async [ServerMethod.create](input: CreateTaskDTO): Promise<TaskDTO> {
-    const data: InitTaskDTO = mergeDoWithInitData(initTaskDTO, input)
+    const init: InitTaskDTO = {
+      ...initTaskDTO,
+      expectStart: new Date(),
+    }
+    const data: InitTaskDTO = mergeDoWithInitData(init, input)
 
     const ret = await this.repo.create(data)
 
