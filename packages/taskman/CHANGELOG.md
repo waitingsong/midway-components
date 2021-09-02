@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [13.0.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@12.0.1...@mw-components/taskman@13.0.0) (2021-09-02)
+
+
+### Bug Fixes
+
+* **taskman:** define taskAgentConfig ([996e7c7](https://github.com/waitingsong/midway-components/commit/996e7c7a9bb6b6debfe5a408ddb21a2fb6fa5264))
+
+
+
+
+
 ## [12.0.1](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@12.0.0...@mw-components/taskman@12.0.1) (2021-09-02)
 
 **Note:** Version bump only for package @mw-components/taskman
