@@ -54,6 +54,10 @@ export interface TaskManClientConfig {
  */
 export enum ServerAgent {
   base = '/task_agent',
+  /** start task pick and distribution */
+  startOne = 'start_one',
+  /** stop task pick and distribution */
+  stop = 'stop',
   create = 'create',
   hello = 'hello',
   stats = 'stats',
@@ -70,7 +74,12 @@ export enum ServerAgent {
   setState = 'set_state',
 }
 export enum ServerMethod {
+  /** start task pick and distribution */
+  startOne = 'startOne',
+  /** stop task pick and distribution */
+  stop = 'stop',
   /** Create a task recored */
+
   create = 'create',
   read = 'read',
   destroy = 'destroy',
@@ -242,3 +251,23 @@ export interface TaskRunnerState {
   max: number
 }
 
+export interface TaskAgentConfig {
+  /**
+   * @default 1
+   */
+  maxRunning: number
+  /**
+   * start one agent when accessing /ping
+   * @default false
+   */
+  enableStartOneByPing: boolean
+}
+export interface TaskAgentState {
+  count: number
+  maxRunning: TaskAgentConfig['maxRunning']
+  /**
+   * Started taskAgent uuid when calling /task_agent/start_one,
+   * blank string means no running TaskAgentService during this request
+   */
+  startedAgentId: string
+}

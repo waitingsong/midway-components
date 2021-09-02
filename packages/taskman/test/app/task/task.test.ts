@@ -1,7 +1,7 @@
 import { relative } from 'path'
 
 import { sleep } from '@midwayjs/decorator'
-import { testConfig } from 'test/test-config'
+import { testConfig } from 'test/root.config'
 
 import { genCreateTaskDTO } from '../helper'
 

@@ -1,3 +1,5 @@
+import { testConfig } from '../root.config'
+
 import {
   CreateTaskDTO,
   TaskFullDTO,
@@ -33,9 +35,11 @@ export function genCreateTaskDTO(
   input?: Partial<CreateTaskDTO>,
 ): CreateTaskDTO {
 
+  const dataUrl = `${testConfig.host}/task_agent/hello`
+
   const data: CreateTaskDTO = {
     json: {
-      url: 'http://localhost:7001/task_man/test/foo',
+      url: dataUrl,
       method: 'GET',
       headers: {
         f1: 'user',

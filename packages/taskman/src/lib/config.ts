@@ -10,6 +10,7 @@ import {
   TaskRunnerState,
   TaskState,
   TaskStatistics,
+  TaskAgentConfig,
 } from './types'
 
 
@@ -74,7 +75,7 @@ export const initDbConfig: Required<DbConfig> = {
   connection: {
     host: process.env.POSTGRES_HOST ? process.env.POSTGRES_HOST : 'localhost',
     port: process.env.POSTGRES_PORT ? +process.env.POSTGRES_PORT : 5432,
-    database: process.env.POSTGRES_DB ? process.env.POSTGRES_DB : 'db_ci_test',
+    database: process.env.POSTGRES_DB ? process.env.POSTGRES_DB : 'db_ci_mw',
     user: process.env.POSTGRES_USER ? process.env.POSTGRES_USER : 'postgres',
     password: process.env.POSTGRES_PASSWORD ? process.env.POSTGRES_PASSWORD : 'postgres',
   },
@@ -119,11 +120,10 @@ export const initTaskStatistics: TaskStatistics = {
   cancelled: 0,
 }
 
-export const agentConcurrentConfig = {
-  max: 1,
-  count: 0,
+export const taskAgentConfig: TaskAgentConfig = {
+  maxRunning: 1,
+  enableStartOneByPing: false,
 }
-
 
 export const taskRunnerState: TaskRunnerState = {
   count: 0,

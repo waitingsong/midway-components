@@ -8,6 +8,8 @@ import {
   Post,
   Query,
 } from '@midwayjs/decorator'
+import { Span, SpanLogInput } from '@mw-components/jaeger'
+import { genISO8601String } from '@waiting/shared-core'
 
 import {
   CommonSetMethodInputData,
@@ -23,15 +25,58 @@ import {
   TaskStatistics,
   TaskPayloadDTO,
   SetStateInputData,
+  TaskAgentState,
+  taskAgentConfig,
 } from '../lib/index'
-import { TaskQueueService } from '../service/index.service'
+import { TaskAgentService, TaskQueueService } from '../service/index.service'
+
+import { Context } from '~/interface'
+import { taskAgentSubscriptionMap } from '~/lib/data'
 
 
 @Provide()
 @Controller(ServerAgent.base)
 export class TaskAgentController {
 
+  @Inject() protected readonly ctx: Context
+  @Inject() protected readonly agentSvc: TaskAgentService
   @Inject() protected readonly queueSvc: TaskQueueService
+
+  @Get('/' + ServerAgent.startOne)
+  async [ServerMethod.startOne](): Promise<TaskAgentState> {
+    const trm = this.ctx.tracerManager
+    let span: Span | undefined
+
+    let agentId = ''
+    if (taskAgentSubscriptionMap.size < taskAgentConfig.maxRunning) {
+      agentId = await this.agentSvc.run(span) ? this.agentSvc.id : ''
+    }
+
+    const ret: TaskAgentState = {
+      startedAgentId: agentId,
+      count: taskAgentSubscriptionMap.size,
+      maxRunning: taskAgentConfig.maxRunning,
+    }
+
+    if (trm) {
+      const inputLog: SpanLogInput = {
+        event: 'TaskAgent-run',
+        taskAgentState: ret,
+        pid: process.pid,
+        time: genISO8601String(),
+      }
+      span = trm.genSpan('TaskAgent')
+      span.log(inputLog)
+    }
+
+    return ret
+  }
+
+  // @Get('/' + ServerAgent.stop)
+  // async [ServerMethod.stop](): Promise<AgentConcurrentConfig> {
+  //   this.agentSvc.stop()
+  //   return agentConcurrentConfig
+  // }
 
   @Get('/' + ServerAgent.hello)
   [ServerMethod.hello](): string {
@@ -40,6 +85,23 @@ export class TaskAgentController {
 
   @Post('/' + ServerAgent.create)
   async [ServerMethod.create](@Body(ALL) input: CreateTaskDTO): Promise<TaskDTO> {
+    // start a agent
+    this[ServerMethod.startOne]().catch((ex: Error) => {
+      const trm = this.ctx.tracerManager
+      const inputLog: SpanLogInput = {
+        event: 'TaskAgent:startOne()-error',
+        pid: process.pid,
+        time: genISO8601String(),
+        message: ex.message,
+      }
+      if (trm) {
+        trm.spanLog(inputLog)
+      }
+      else {
+        console.error(inputLog)
+      }
+    })
+
     const ret = await this.queueSvc.create(input)
     return ret
   }

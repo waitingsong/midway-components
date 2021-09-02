@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto'
+
 import {
   Config,
   Init,
@@ -15,7 +17,6 @@ import {
   timer,
   from as ofrom,
   Observable,
-  Subscription,
 } from 'rxjs'
 import {
   map,
@@ -31,11 +32,12 @@ import {
   TaskManServerConfig,
   TaskPayloadDTO,
   TaskState,
-  agentConcurrentConfig,
+  taskAgentConfig,
   initTaskManClientConfig,
 } from '../lib/index'
 
 import { Context, FetchOptions } from '~/interface'
+import { taskAgentSubscriptionMap } from '~/lib/data'
 
 
 @Provide()
@@ -50,11 +52,13 @@ export class TaskAgentService {
   @Config('taskManServerConfig') protected readonly config: TaskManServerConfig
   @Config('taskManClientConfig') protected readonly clientConfig: TaskManClientConfig
 
+  id: string
+
   protected intv$: Observable<number>
-  protected subscription: Subscription | undefined
 
   @Init()
   async init(): Promise<void> {
+    this.id = randomUUID()
 
     const pickTaskTimer = this.clientConfig.pickTaskTimer > 0
       ? this.clientConfig.pickTaskTimer
@@ -64,15 +68,13 @@ export class TaskAgentService {
   }
 
   get isRunning(): boolean {
-    const flag = this.subscription && this.subscription.closed
-      ? false
-      : true
+    const flag = taskAgentSubscriptionMap.size > 0 ? true : false
     return flag
   }
 
   /** 获取待执行任务记录，发送到任务执行服务供其执行 */
   async run(span?: Span): Promise<boolean> {
-    if (agentConcurrentConfig.count >= agentConcurrentConfig.max) {
+    if (taskAgentSubscriptionMap.size >= taskAgentConfig.maxRunning) {
       return false
     }
     const maxPickTaskCount = this.clientConfig.maxPickTaskCount > 0
@@ -94,21 +96,12 @@ export class TaskAgentService {
           time: genISO8601String(),
         }
         this.logger.log(input, span)
-        agentConcurrentConfig.count -= 1
         return false
       }),
     )
     const stream$ = this.pickTasksWaitToRun(intv$).pipe(
       takeWhile(({ rows, idx }) => {
         if ((! rows || ! rows.length) && idx >= minPickTaskCount) {
-          // const input: SpanLogInput = {
-          //   [TracerTag.logLevel]: 'info',
-          //   pid: process.pid,
-          //   message: `taskAgent stopped at index: ${idx} of ${minPickTaskCount}`,
-          //   time: genISO8601String(),
-          // }
-          // this.logger.log(input)
-          agentConcurrentConfig.count -= 1
           return false
         }
         return true
@@ -116,14 +109,43 @@ export class TaskAgentService {
       mergeMap(({ rows }) => ofrom(rows)),
       mergeMap(task => this.sendTaskToRun(task), 1),
     )
-    this.subscription = stream$.subscribe()
-    agentConcurrentConfig.count += 1
+
+    const subsp = stream$.subscribe({
+      error: (err: Error) => {
+        taskAgentSubscriptionMap.delete(this.id)
+
+        const input: SpanLogInput = {
+          [TracerTag.logLevel]: 'error',
+          pid: process.pid,
+          message: 'TaskAgent stopped when error',
+          errMsg: err.message,
+          time: genISO8601String(),
+        }
+        this.logger.warn(input)
+      },
+      complete: () => {
+        taskAgentSubscriptionMap.delete(this.id)
+
+        const input: SpanLogInput = {
+          [TracerTag.logLevel]: 'info',
+          pid: process.pid,
+          message: 'TaskAgent complete',
+          time: genISO8601String(),
+        }
+        this.logger.info(input)
+      },
+    })
+
+    taskAgentSubscriptionMap.set(this.id, subsp)
     return true
   }
 
   stop(): void {
-    this.subscription && this.subscription.unsubscribe()
-    agentConcurrentConfig.count = 0
+    const subsp = taskAgentSubscriptionMap.get(this.id)
+    if (subsp) {
+      subsp.unsubscribe()
+      taskAgentSubscriptionMap.delete(this.id)
+    }
   }
 
   private pickTasksWaitToRun(intv$: Observable<number>): Observable<{ rows: TaskDTO[], idx: number }> {
