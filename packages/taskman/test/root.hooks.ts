@@ -54,6 +54,9 @@ export const mochaHooks = async () => {
       testConfig.host = url
 
       app.addConfigObject({
+        security: {
+          csrf: false,
+        },
         taskManClientConfig: {
           ...initTaskManClientConfig,
           host: url.slice(0, -1),
