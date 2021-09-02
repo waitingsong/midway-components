@@ -12,7 +12,7 @@ import { genISO8601String } from '@waiting/shared-core'
 
 import { taskRunnerState } from '../lib/config'
 import { decreaseTaskRunnerCount, increaseTaskRunnerCount } from '../lib/helper'
-import { taskAgentConfig } from '../lib/index'
+import { TaskAgentConfig } from '../lib/index'
 import { TaskAgentService } from '../service/task-agent.service'
 
 import { taskAgentSubscriptionMap } from '~/lib/data'
@@ -38,9 +38,11 @@ export async function taskAgentMiddleware(
 
   const { headers } = ctx.request
   const taskId = headers['x-task-id']
-  const tm = ctx.tracerManager
 
+  /* istanbul ignore else */
   if (headers['x-task-agent']) { // task distribution
+    const taskAgentConfig = ctx.app.getConfig('taskAgentConfig ') as TaskAgentConfig
+    const trm = ctx.tracerManager
     const inputLog: SpanLogInput = {
       event: 'TaskMan-entry',
       agentConcurrentConfig: taskAgentConfig,
@@ -50,7 +52,7 @@ export async function taskAgentMiddleware(
       runnerCount: taskRunnerState.count,
       runnerMax: taskRunnerState.max,
     }
-    tm && tm.spanLog(inputLog)
+    trm && trm.spanLog(inputLog)
 
     if (taskRunnerState.count >= taskRunnerState.max) {
       ctx.status = 429
@@ -62,27 +64,33 @@ export async function taskAgentMiddleware(
         msg: `Task running limit: ${taskRunnerState.max}, now: ${taskRunnerState.count}, taskId: ${taskId}`,
       }
       inputLog.message = ctx.body
-      tm && tm.spanLog(inputLog)
+      trm && trm.spanLog(inputLog)
       return
     }
     isTaskRunning = true
     increaseTaskRunnerCount() // decreaseRunningTaskCount() 在 TaskManComponent 中任务完成后调用
   }
 
-  if (ctx.path === '/ping' && taskAgentSubscriptionMap.size < taskAgentConfig.maxRunning) {
-    const inputLog: SpanLogInput = {
-      event: 'TaskAgent-run',
-      agentConcurrentConfig: taskAgentConfig,
-      taskId,
-      pid: process.pid,
-      time: genISO8601String(),
-    }
-    // const span = tm ? tm.genSpan('TaskAgent') : void 0
-    // span && span.log(inputLog)
-    tm && tm.spanLog(inputLog)
+  /* istanbul ignore else */
+  if (ctx.path === '/ping') {
+    const taskAgentConfig = ctx.app.getConfig('taskAgentConfig ') as TaskAgentConfig
 
-    const taskAgent = await ctx.requestContext.getAsync(TaskAgentService)
-    await taskAgent.run()
+    if (taskAgentConfig.enableStartOneByPing && taskAgentSubscriptionMap.size < taskAgentConfig.maxRunning) {
+      const trm = ctx.tracerManager
+      const inputLog: SpanLogInput = {
+        event: 'TaskAgent-run',
+        agentConcurrentConfig: taskAgentConfig,
+        taskId,
+        pid: process.pid,
+        time: genISO8601String(),
+      }
+      // const span = tm ? tm.genSpan('TaskAgent') : void 0
+      // span && span.log(inputLog)
+      trm && trm.spanLog(inputLog)
+
+      const taskAgent = await ctx.requestContext.getAsync(TaskAgentService)
+      await taskAgent.run()
+    }
   }
 
 

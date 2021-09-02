@@ -122,6 +122,7 @@ export const initTaskStatistics: TaskStatistics = {
 
 export const taskAgentConfig: TaskAgentConfig = {
   maxRunning: 1,
+  enableStartOneByPing: false,
 }
 
 export const taskRunnerState: TaskRunnerState = {

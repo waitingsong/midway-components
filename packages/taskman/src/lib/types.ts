@@ -256,6 +256,11 @@ export interface TaskAgentConfig {
    * @default 1
    */
   maxRunning: number
+  /**
+   * start one agent when accessing /ping
+   * @default false
+   */
+  enableStartOneByPing: boolean
 }
 export interface TaskAgentState {
   count: number
