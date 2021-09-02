@@ -28,7 +28,7 @@ describe(filename, () => {
         .expect(200)
 
       const ret = resp.body as AgentConcurrentConfig
-      assert(ret.count <= ret.count)
+      assert(ret.count <= ret.max)
       assert(ret.count === 1)
     })
 
@@ -45,7 +45,7 @@ describe(filename, () => {
         .expect(200)
 
       const ret = resp.body as AgentConcurrentConfig
-      assert(ret.count <= ret.count)
+      assert(ret.count <= ret.max)
       assert(ret.count === 2)
     })
 
@@ -62,7 +62,7 @@ describe(filename, () => {
         .expect(200)
 
       const ret = resp.body as AgentConcurrentConfig
-      assert(ret.count <= ret.count)
+      assert(ret.count <= ret.max)
       assert(ret.count === 2)
 
       const resp2 = await httpRequest
