@@ -11,11 +11,10 @@ import { genISO8601String } from '@waiting/shared-core'
 
 
 import { taskRunnerState } from '../lib/config'
+import { taskAgentSubscriptionMap } from '../lib/data'
 import { decreaseTaskRunnerCount, increaseTaskRunnerCount } from '../lib/helper'
 import { TaskAgentConfig, TaskAgentState } from '../lib/index'
 import { TaskAgentService } from '../service/task-agent.service'
-
-import { taskAgentSubscriptionMap } from '~/lib/data'
 
 
 @Provide()

@@ -11,6 +11,7 @@ import {
 import { Span, SpanLogInput } from '@mw-components/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
 
+import { taskAgentSubscriptionMap } from '../lib/data'
 import {
   CommonSetMethodInputData,
   CreateTaskDTO,
@@ -26,12 +27,11 @@ import {
   TaskPayloadDTO,
   SetStateInputData,
   TaskAgentState,
-  taskAgentConfig,
+  initTaskAgentConfig,
 } from '../lib/index'
 import { TaskAgentService, TaskQueueService } from '../service/index.service'
 
 import { Context } from '~/interface'
-import { taskAgentSubscriptionMap } from '~/lib/data'
 
 
 @Provide()
@@ -48,14 +48,14 @@ export class TaskAgentController {
     let span: Span | undefined
 
     let agentId = ''
-    if (taskAgentSubscriptionMap.size < taskAgentConfig.maxRunning) {
+    if (taskAgentSubscriptionMap.size < initTaskAgentConfig.maxRunning) {
       agentId = await this.agentSvc.run(span) ? this.agentSvc.id : ''
     }
 
     const ret: TaskAgentState = {
       startedAgentId: agentId,
       count: taskAgentSubscriptionMap.size,
-      maxRunning: taskAgentConfig.maxRunning,
+      maxRunning: initTaskAgentConfig.maxRunning,
     }
 
     if (trm) {
