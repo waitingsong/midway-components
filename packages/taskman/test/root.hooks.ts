@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import 'tsconfig-paths/register'
 
-import { createApp, close } from '@midwayjs/mock'
+import { createApp, close, createHttpRequest } from '@midwayjs/mock'
 import { Framework } from '@midwayjs/web'
 
 import { TaskLogRepository, TaskQueueRepository, TaskResultRepository } from '../src/repo/index.repo'
@@ -11,7 +11,11 @@ import { TaskAgentService, TaskQueueService } from '../src/service/index.service
 
 import { testConfig } from './test-config'
 
-import { TaskManComponent } from '~/lib'
+import {
+  initTaskManClientConfig,
+  TaskManClientConfig,
+  TaskManComponent,
+} from '~/lib'
 
 
 /**
@@ -32,6 +36,9 @@ export const mochaHooks = async () => {
     beforeAll: async () => {
       const app = await createApp<Framework>()
       testConfig.app = app
+      app.addConfigObject({
+        keys: Math.random().toString(),
+      })
       const ctx = app.createAnonymousContext()
       // https:// www.yuque.com/midwayjs/midway_v2/testing
       // const svc = await app.getApplicationContext().getAsync(TaskQueueService)
@@ -41,6 +48,20 @@ export const mochaHooks = async () => {
       testConfig.retRepo = await ctx.requestContext.getAsync(TaskResultRepository)
       testConfig.agent = await ctx.requestContext.getAsync(TaskAgentService)
       testConfig.tm = await ctx.requestContext.getAsync(TaskManComponent)
+
+      testConfig.httpRequest = createHttpRequest(app)
+      const { url } = testConfig.httpRequest.get('/')
+      testConfig.host = url
+
+      app.addConfigObject({
+        taskManClientConfig: {
+          ...initTaskManClientConfig,
+          host: url.slice(0, -1),
+        },
+      })
+      const tmcConfig = app.getConfig('taskManClientConfig') as TaskManClientConfig
+      const host = tmcConfig.host
+      console.info('taskManClientConfig.host', host)
     },
 
     beforeEach: async () => {

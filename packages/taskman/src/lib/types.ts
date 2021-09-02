@@ -54,6 +54,10 @@ export interface TaskManClientConfig {
  */
 export enum ServerAgent {
   base = '/task_agent',
+  /** start task pick and distribution */
+  start = 'start',
+  /** stop task pick and distribution */
+  stop = 'stop',
   create = 'create',
   hello = 'hello',
   stats = 'stats',
@@ -70,7 +74,12 @@ export enum ServerAgent {
   setState = 'set_state',
 }
 export enum ServerMethod {
+  /** start task pick and distribution */
+  start = 'start',
+  /** stop task pick and distribution */
+  stop = 'stop',
   /** Create a task recored */
+
   create = 'create',
   read = 'read',
   destroy = 'destroy',
@@ -242,3 +251,7 @@ export interface TaskRunnerState {
   max: number
 }
 
+export interface AgentConcurrentConfig {
+  max: number
+  count: number
+}

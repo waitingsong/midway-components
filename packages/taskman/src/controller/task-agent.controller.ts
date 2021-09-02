@@ -8,6 +8,8 @@ import {
   Post,
   Query,
 } from '@midwayjs/decorator'
+import { Span, SpanLogInput } from '@mw-components/jaeger'
+import { genISO8601String } from '@waiting/shared-core'
 
 import {
   CommonSetMethodInputData,
@@ -23,15 +25,50 @@ import {
   TaskStatistics,
   TaskPayloadDTO,
   SetStateInputData,
+  AgentConcurrentConfig,
+  agentConcurrentConfig,
 } from '../lib/index'
-import { TaskQueueService } from '../service/index.service'
+import { TaskAgentService, TaskQueueService } from '../service/index.service'
+
+import { Context } from '~/interface'
 
 
 @Provide()
 @Controller(ServerAgent.base)
 export class TaskAgentController {
 
+  @Inject() protected readonly ctx: Context
+  @Inject() protected readonly agentSvc: TaskAgentService
   @Inject() protected readonly queueSvc: TaskQueueService
+
+  @Get('/' + ServerAgent.start)
+  async [ServerMethod.start](): Promise<AgentConcurrentConfig> {
+
+    const trm = this.ctx.tracerManager
+    let span: Span | undefined
+    if (trm) {
+      const inputLog: SpanLogInput = {
+        event: 'TaskAgent-run',
+        agentConcurrentConfig,
+        pid: process.pid,
+        time: genISO8601String(),
+      }
+      span = trm.genSpan('TaskAgent')
+      span.log(inputLog)
+    }
+
+    if (agentConcurrentConfig.count < agentConcurrentConfig.max) {
+      await this.agentSvc.run(span)
+    }
+
+    return agentConcurrentConfig
+  }
+
+  // @Get('/' + ServerAgent.stop)
+  // async [ServerMethod.stop](): Promise<AgentConcurrentConfig> {
+  //   this.agentSvc.stop()
+  //   return agentConcurrentConfig
+  // }
 
   @Get('/' + ServerAgent.hello)
   [ServerMethod.hello](): string {
