@@ -31,6 +31,7 @@ import {
 import { TaskAgentService, TaskQueueService } from '../service/index.service'
 
 import { Context } from '~/interface'
+import { taskAgentSubscriptionMap } from '~/lib/data'
 
 
 @Provide()
@@ -43,7 +44,6 @@ export class TaskAgentController {
 
   @Get('/' + ServerAgent.startOne)
   async [ServerMethod.startOne](): Promise<AgentConcurrentConfig> {
-
     const trm = this.ctx.tracerManager
     let span: Span | undefined
     if (trm) {
@@ -57,7 +57,7 @@ export class TaskAgentController {
       span.log(inputLog)
     }
 
-    if (agentConcurrentConfig.count < agentConcurrentConfig.max) {
+    if (taskAgentSubscriptionMap.size < agentConcurrentConfig.max) {
       await this.agentSvc.run(span)
     }
 
