@@ -108,7 +108,6 @@ export class TaskAgentService {
           //   time: genISO8601String(),
           // }
           // this.logger.log(input)
-          agentConcurrentConfig.count -= 1
           return false
         }
         return true
@@ -116,14 +115,37 @@ export class TaskAgentService {
       mergeMap(({ rows }) => ofrom(rows)),
       mergeMap(task => this.sendTaskToRun(task), 1),
     )
-    this.subscription = stream$.subscribe()
+    this.subscription = stream$.subscribe({
+      error: (err: Error) => {
+        agentConcurrentConfig.count -= 1
+
+        const input: SpanLogInput = {
+          [TracerTag.logLevel]: 'error',
+          pid: process.pid,
+          message: 'TaskAgent stopped when error',
+          errMsg: err.message,
+          time: genISO8601String(),
+        }
+        this.logger.warn(input)
+      },
+      complete: () => {
+        agentConcurrentConfig.count -= 1
+
+        const input: SpanLogInput = {
+          [TracerTag.logLevel]: 'info',
+          pid: process.pid,
+          message: 'TaskAgent complete',
+          time: genISO8601String(),
+        }
+        this.logger.info(input)
+      },
+    })
     agentConcurrentConfig.count += 1
     return true
   }
 
   stop(): void {
     this.subscription && this.subscription.unsubscribe()
-    agentConcurrentConfig.count = 0
   }
 
   private pickTasksWaitToRun(intv$: Observable<number>): Observable<{ rows: TaskDTO[], idx: number }> {
