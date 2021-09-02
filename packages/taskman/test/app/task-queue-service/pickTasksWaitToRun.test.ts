@@ -4,10 +4,10 @@ import {
   bigIntMax,
   bigIntMin,
 } from '@waiting/shared-core'
+import { testConfig } from 'test/root.config'
 
 import { createOneTask, createTasks } from '../helper'
 
-import { testConfig } from '~/../test/test-config'
 import { CreateTaskDTO, TaskState } from '~/lib/index'
 
 // eslint-disable-next-line import/order

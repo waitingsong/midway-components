@@ -9,7 +9,7 @@ import { Framework } from '@midwayjs/web'
 import { TaskLogRepository, TaskQueueRepository, TaskResultRepository } from '../src/repo/index.repo'
 import { TaskAgentService, TaskQueueService } from '../src/service/index.service'
 
-import { testConfig } from './test-config'
+import { testConfig } from './root.config'
 
 import {
   initTaskManClientConfig,

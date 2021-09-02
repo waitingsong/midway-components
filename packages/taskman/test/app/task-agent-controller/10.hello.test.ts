@@ -1,6 +1,6 @@
 import { relative } from 'path'
 
-import { testConfig } from 'test/test-config'
+import { testConfig } from 'test/root.config'
 
 import { taskAgentSubscriptionMap } from '~/lib/data'
 import { taskAgentConfig, ServerAgent } from '~/lib/index'

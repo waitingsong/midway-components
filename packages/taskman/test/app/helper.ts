@@ -1,4 +1,4 @@
-import { testConfig } from '../test-config'
+import { testConfig } from '../root.config'
 
 import {
   CreateTaskDTO,
