@@ -4,13 +4,13 @@ import {
   TaskProgressDTO,
 } from './tm.dto'
 import {
-  AgentConcurrentConfig,
   DbConfig,
   PickInitTaskOptions,
   TaskManClientConfig,
   TaskRunnerState,
   TaskState,
   TaskStatistics,
+  TaskAgentConfig,
 } from './types'
 
 
@@ -120,9 +120,8 @@ export const initTaskStatistics: TaskStatistics = {
   cancelled: 0,
 }
 
-export const agentConcurrentConfig: AgentConcurrentConfig = {
-  max: 1,
-  count: 0,
+export const taskAgentConfig: TaskAgentConfig = {
+  maxRunning: 1,
 }
 
 export const taskRunnerState: TaskRunnerState = {

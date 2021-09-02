@@ -9,10 +9,13 @@ import {
 import { SpanLogInput } from '@mw-components/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
 
+
 import { taskRunnerState } from '../lib/config'
 import { decreaseTaskRunnerCount, increaseTaskRunnerCount } from '../lib/helper'
-import { agentConcurrentConfig } from '../lib/index'
+import { taskAgentConfig } from '../lib/index'
 import { TaskAgentService } from '../service/task-agent.service'
+
+import { taskAgentSubscriptionMap } from '~/lib/data'
 
 
 @Provide()
@@ -40,7 +43,7 @@ export async function taskAgentMiddleware(
   if (headers['x-task-agent']) { // task distribution
     const inputLog: SpanLogInput = {
       event: 'TaskMan-entry',
-      agentConcurrentConfig,
+      agentConcurrentConfig: taskAgentConfig,
       taskId,
       pid: process.pid,
       time: genISO8601String(),
@@ -66,10 +69,10 @@ export async function taskAgentMiddleware(
     increaseTaskRunnerCount() // decreaseRunningTaskCount() 在 TaskManComponent 中任务完成后调用
   }
 
-  if (ctx.path === '/ping' && agentConcurrentConfig.count < agentConcurrentConfig.max) {
+  if (ctx.path === '/ping' && taskAgentSubscriptionMap.size < taskAgentConfig.maxRunning) {
     const inputLog: SpanLogInput = {
       event: 'TaskAgent-run',
-      agentConcurrentConfig,
+      agentConcurrentConfig: taskAgentConfig,
       taskId,
       pid: process.pid,
       time: genISO8601String(),

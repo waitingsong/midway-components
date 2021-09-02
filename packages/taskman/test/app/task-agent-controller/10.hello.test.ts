@@ -2,7 +2,8 @@ import { relative } from 'path'
 
 import { testConfig } from 'test/test-config'
 
-import { agentConcurrentConfig, ServerAgent } from '~/lib/index'
+import { taskAgentSubscriptionMap } from '~/lib/data'
+import { taskAgentConfig, ServerAgent } from '~/lib/index'
 
 // eslint-disable-next-line import/order
 import assert = require('power-assert')
@@ -16,15 +17,15 @@ describe(filename, () => {
     it('normal', async () => {
       const { httpRequest } = testConfig
 
-      assert(agentConcurrentConfig.count === 0)
-      assert(agentConcurrentConfig.count <= agentConcurrentConfig.max)
+      assert(taskAgentSubscriptionMap.size === 0)
+      assert(taskAgentSubscriptionMap.size <= taskAgentConfig.maxRunning)
 
       const resp = await httpRequest
         .get(`${ServerAgent.base}/${ServerAgent.hello}`)
         .expect(200)
 
       assert(resp.text === 'OK')
-      assert(agentConcurrentConfig.count === 0)
+      assert(taskAgentSubscriptionMap.size === 0)
     })
   })
 })

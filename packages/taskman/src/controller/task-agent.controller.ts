@@ -25,8 +25,8 @@ import {
   TaskStatistics,
   TaskPayloadDTO,
   SetStateInputData,
-  AgentConcurrentConfig,
-  agentConcurrentConfig,
+  TaskAgentState,
+  taskAgentConfig,
 } from '../lib/index'
 import { TaskAgentService, TaskQueueService } from '../service/index.service'
 
@@ -43,13 +43,13 @@ export class TaskAgentController {
   @Inject() protected readonly queueSvc: TaskQueueService
 
   @Get('/' + ServerAgent.startOne)
-  async [ServerMethod.startOne](): Promise<AgentConcurrentConfig> {
+  async [ServerMethod.startOne](): Promise<TaskAgentState> {
     const trm = this.ctx.tracerManager
     let span: Span | undefined
     if (trm) {
       const inputLog: SpanLogInput = {
         event: 'TaskAgent-run',
-        agentConcurrentConfig,
+        agentConcurrentConfig: taskAgentConfig,
         pid: process.pid,
         time: genISO8601String(),
       }
@@ -57,11 +57,17 @@ export class TaskAgentController {
       span.log(inputLog)
     }
 
-    if (taskAgentSubscriptionMap.size < agentConcurrentConfig.max) {
-      await this.agentSvc.run(span)
+    let agentId = ''
+    if (taskAgentSubscriptionMap.size < taskAgentConfig.maxRunning) {
+      agentId = await this.agentSvc.run(span) ? this.agentSvc.id : ''
+    }
+    const ret: TaskAgentState = {
+      startedAgentId: agentId,
+      count: taskAgentSubscriptionMap.size,
+      maxRunning: taskAgentConfig.maxRunning,
     }
 
-    return agentConcurrentConfig
+    return ret
   }
 
   // @Get('/' + ServerAgent.stop)

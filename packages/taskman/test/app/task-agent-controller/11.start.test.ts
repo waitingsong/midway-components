@@ -2,10 +2,11 @@ import { relative } from 'path'
 
 import { testConfig } from 'test/test-config'
 
+import { taskAgentSubscriptionMap } from '~/lib/data'
 import {
   ServerAgent,
-  agentConcurrentConfig,
-  AgentConcurrentConfig,
+  taskAgentConfig,
+  TaskAgentState,
 } from '~/lib/index'
 
 // eslint-disable-next-line import/order
@@ -20,57 +21,60 @@ describe(filename, () => {
     it('max 1', async () => {
       const { httpRequest } = testConfig
 
-      assert(agentConcurrentConfig.count === 0)
-      assert(agentConcurrentConfig.count <= agentConcurrentConfig.max)
+      assert(taskAgentSubscriptionMap.size === 0)
+      assert(taskAgentSubscriptionMap.size <= taskAgentConfig.maxRunning)
 
       const resp = await httpRequest
         .get(`${ServerAgent.base}/${ServerAgent.startOne}`)
         .expect(200)
 
-      const ret = resp.body as AgentConcurrentConfig
-      assert(ret.count <= ret.max)
+      const ret = resp.body as TaskAgentState
+      assert(ret.count <= ret.maxRunning)
       assert(ret.count === 1)
+      assert(ret.startedAgentId.length)
     })
 
     it('max 2', async () => {
       const { httpRequest } = testConfig
 
-      agentConcurrentConfig.max = 2
+      taskAgentConfig.maxRunning = 2
 
-      assert(agentConcurrentConfig.count === 1)
-      assert(agentConcurrentConfig.count <= agentConcurrentConfig.max)
+      assert(taskAgentSubscriptionMap.size === 1)
+      assert(taskAgentSubscriptionMap.size <= taskAgentConfig.maxRunning)
 
       const resp = await httpRequest
         .get(`${ServerAgent.base}/${ServerAgent.startOne}`)
         .expect(200)
 
-      const ret = resp.body as AgentConcurrentConfig
-      assert(ret.count <= ret.max)
+      const ret = resp.body as TaskAgentState
+      assert(ret.count <= ret.maxRunning)
       assert(ret.count === 2)
+      assert(ret.startedAgentId.length)
     })
 
     it('max limit', async () => {
       const { httpRequest } = testConfig
 
-      agentConcurrentConfig.max = 2
+      taskAgentConfig.maxRunning = 2
 
-      assert(agentConcurrentConfig.count === 2)
-      assert(agentConcurrentConfig.count <= agentConcurrentConfig.max)
+      assert(taskAgentSubscriptionMap.size === 2)
+      assert(taskAgentSubscriptionMap.size <= taskAgentConfig.maxRunning)
 
       const resp = await httpRequest
         .get(`${ServerAgent.base}/${ServerAgent.startOne}`)
         .expect(200)
 
-      const ret = resp.body as AgentConcurrentConfig
-      assert(ret.count <= ret.max)
+      const ret = resp.body as TaskAgentState
+      assert(ret.count <= ret.maxRunning)
       assert(ret.count === 2)
 
       const resp2 = await httpRequest
         .get(`${ServerAgent.base}/${ServerAgent.startOne}`)
         .expect(200)
 
-      const ret2 = resp2.body as AgentConcurrentConfig
+      const ret2 = resp2.body as TaskAgentState
       assert(ret2.count === 2)
+      assert(! ret.startedAgentId.length)
     })
   })
 })
