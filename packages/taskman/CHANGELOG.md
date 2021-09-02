@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.0.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@11.0.0...@mw-components/taskman@12.0.0) (2021-09-02)
+
+
+### Bug Fixes
+
+* **taskman:** event process within TaskAgentService:run() and TaskAgentService:stop() ([26f33fa](https://github.com/waitingsong/midway-components/commit/26f33fa87145c7782b02b9af16c2b40c28e931c9))
+* **taskman:** expectStart value not update when create task ([dae504c](https://github.com/waitingsong/midway-components/commit/dae504c68ba6ff450d0a8ece0200ac7135c7ae15))
+
+
+### Features
+
+* **taskman:** add api /task_agent/start ([362edc6](https://github.com/waitingsong/midway-components/commit/362edc657e1584d533a8b981c00759c5f56d0909))
+* **taskman:** start agent when create task ([3f34224](https://github.com/waitingsong/midway-components/commit/3f342243563d9083705c900b51aecaf2fda9515a))
+* **taskman:** start one agent via /ping by config taskAgentConfig.enableStartOneByPing ([86a2c4c](https://github.com/waitingsong/midway-components/commit/86a2c4cb7fc477946ef51ea6af1b6a52535def04))
+* **taskman:** use taskAgentSubscriptionMap instead of agentConcurrentConfig.count ([629aced](https://github.com/waitingsong/midway-components/commit/629aced3b48a6273025163b75c9289c93e5fe6eb))
+
+
+
+
+
 # 11.0.0 (2021-09-01)
 
 
