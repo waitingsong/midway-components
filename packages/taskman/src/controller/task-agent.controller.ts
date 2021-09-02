@@ -11,6 +11,7 @@ import {
 import { Span, SpanLogInput } from '@mw-components/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
 
+import { taskAgentSubscriptionMap } from '../lib/data'
 import {
   CommonSetMethodInputData,
   CreateTaskDTO,
@@ -31,7 +32,6 @@ import {
 import { TaskAgentService, TaskQueueService } from '../service/index.service'
 
 import { Context } from '~/interface'
-import { taskAgentSubscriptionMap } from '~/lib/data'
 
 
 @Provide()

@@ -24,6 +24,7 @@ import {
   takeWhile,
 } from 'rxjs/operators'
 
+import { taskAgentSubscriptionMap } from '../lib/data'
 import {
   CallTaskOptions,
   ServerAgent,
@@ -37,7 +38,6 @@ import {
 } from '../lib/index'
 
 import { Context, FetchOptions } from '~/interface'
-import { taskAgentSubscriptionMap } from '~/lib/data'
 
 
 @Provide()
