@@ -5,7 +5,7 @@ import { testConfig } from 'test/root.config'
 import { taskAgentSubscriptionMap } from '~/lib/data'
 import {
   ServerAgent,
-  taskAgentConfig,
+  initTaskAgentConfig,
   TaskAgentState,
 } from '~/lib/index'
 
@@ -22,7 +22,7 @@ describe(filename, () => {
       const { httpRequest } = testConfig
 
       assert(taskAgentSubscriptionMap.size === 0)
-      assert(taskAgentSubscriptionMap.size <= taskAgentConfig.maxRunning)
+      assert(taskAgentSubscriptionMap.size <= initTaskAgentConfig.maxRunning)
 
       const resp = await httpRequest
         .get(`${ServerAgent.base}/${ServerAgent.startOne}`)
@@ -37,10 +37,10 @@ describe(filename, () => {
     it('max 2', async () => {
       const { httpRequest } = testConfig
 
-      taskAgentConfig.maxRunning = 2
+      initTaskAgentConfig.maxRunning = 2
 
       assert(taskAgentSubscriptionMap.size === 1)
-      assert(taskAgentSubscriptionMap.size <= taskAgentConfig.maxRunning)
+      assert(taskAgentSubscriptionMap.size <= initTaskAgentConfig.maxRunning)
 
       const resp = await httpRequest
         .get(`${ServerAgent.base}/${ServerAgent.startOne}`)
@@ -55,10 +55,10 @@ describe(filename, () => {
     it('max limit', async () => {
       const { httpRequest } = testConfig
 
-      taskAgentConfig.maxRunning = 2
+      initTaskAgentConfig.maxRunning = 2
 
       assert(taskAgentSubscriptionMap.size === 2)
-      assert(taskAgentSubscriptionMap.size <= taskAgentConfig.maxRunning)
+      assert(taskAgentSubscriptionMap.size <= initTaskAgentConfig.maxRunning)
 
       const resp = await httpRequest
         .get(`${ServerAgent.base}/${ServerAgent.startOne}`)

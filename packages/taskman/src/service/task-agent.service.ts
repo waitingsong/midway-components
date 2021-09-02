@@ -33,7 +33,7 @@ import {
   TaskManServerConfig,
   TaskPayloadDTO,
   TaskState,
-  taskAgentConfig,
+  initTaskAgentConfig,
   initTaskManClientConfig,
 } from '../lib/index'
 
@@ -74,7 +74,7 @@ export class TaskAgentService {
 
   /** 获取待执行任务记录，发送到任务执行服务供其执行 */
   async run(span?: Span): Promise<boolean> {
-    if (taskAgentSubscriptionMap.size >= taskAgentConfig.maxRunning) {
+    if (taskAgentSubscriptionMap.size >= initTaskAgentConfig.maxRunning) {
       return false
     }
     const maxPickTaskCount = this.clientConfig.maxPickTaskCount > 0

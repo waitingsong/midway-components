@@ -120,7 +120,7 @@ export const initTaskStatistics: TaskStatistics = {
   cancelled: 0,
 }
 
-export const taskAgentConfig: TaskAgentConfig = {
+export const initTaskAgentConfig: TaskAgentConfig = {
   maxRunning: 1,
   enableStartOneByPing: false,
 }
