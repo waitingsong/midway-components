@@ -46,25 +46,27 @@ export class TaskAgentController {
   async [ServerMethod.startOne](): Promise<TaskAgentState> {
     const trm = this.ctx.tracerManager
     let span: Span | undefined
-    if (trm) {
-      const inputLog: SpanLogInput = {
-        event: 'TaskAgent-run',
-        agentConcurrentConfig: taskAgentConfig,
-        pid: process.pid,
-        time: genISO8601String(),
-      }
-      span = trm.genSpan('TaskAgent')
-      span.log(inputLog)
-    }
 
     let agentId = ''
     if (taskAgentSubscriptionMap.size < taskAgentConfig.maxRunning) {
       agentId = await this.agentSvc.run(span) ? this.agentSvc.id : ''
     }
+
     const ret: TaskAgentState = {
       startedAgentId: agentId,
       count: taskAgentSubscriptionMap.size,
       maxRunning: taskAgentConfig.maxRunning,
+    }
+
+    if (trm) {
+      const inputLog: SpanLogInput = {
+        event: 'TaskAgent-run',
+        taskAgentState: ret,
+        pid: process.pid,
+        time: genISO8601String(),
+      }
+      span = trm.genSpan('TaskAgent')
+      span.log(inputLog)
     }
 
     return ret
