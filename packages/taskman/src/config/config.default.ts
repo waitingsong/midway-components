@@ -3,6 +3,8 @@ import {
   initDbConfig,
   TaskManClientConfig,
   TaskManServerConfig,
+  TaskAgentConfig,
+  initTaskAgentConfig,
 } from '../lib/index'
 
 
@@ -22,4 +24,7 @@ export const taskManClientConfig: TaskManClientConfig = {
   ...initTaskManClientConfig,
 }
 
+export const taskAgentConfig: TaskAgentConfig = {
+  ...initTaskAgentConfig,
+}
 
