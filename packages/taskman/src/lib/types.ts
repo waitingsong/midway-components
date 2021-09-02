@@ -55,7 +55,7 @@ export interface TaskManClientConfig {
 export enum ServerAgent {
   base = '/task_agent',
   /** start task pick and distribution */
-  start = 'start',
+  startOne = 'start_one',
   /** stop task pick and distribution */
   stop = 'stop',
   create = 'create',
@@ -75,7 +75,7 @@ export enum ServerAgent {
 }
 export enum ServerMethod {
   /** start task pick and distribution */
-  start = 'start',
+  startOne = 'startOne',
   /** stop task pick and distribution */
   stop = 'stop',
   /** Create a task recored */

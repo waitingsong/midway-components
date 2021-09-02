@@ -41,8 +41,8 @@ export class TaskAgentController {
   @Inject() protected readonly agentSvc: TaskAgentService
   @Inject() protected readonly queueSvc: TaskQueueService
 
-  @Get('/' + ServerAgent.start)
-  async [ServerMethod.start](): Promise<AgentConcurrentConfig> {
+  @Get('/' + ServerAgent.startOne)
+  async [ServerMethod.startOne](): Promise<AgentConcurrentConfig> {
 
     const trm = this.ctx.tracerManager
     let span: Span | undefined

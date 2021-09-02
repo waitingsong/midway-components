@@ -16,7 +16,7 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
 
-  describe(`should ${ServerAgent.base}/${ServerAgent.start} work`, () => {
+  describe(`should ${ServerAgent.base}/${ServerAgent.startOne} work`, () => {
     it('max 1', async () => {
       const { httpRequest } = testConfig
 
@@ -24,7 +24,7 @@ describe(filename, () => {
       assert(agentConcurrentConfig.count <= agentConcurrentConfig.max)
 
       const resp = await httpRequest
-        .get(`${ServerAgent.base}/${ServerAgent.start}`)
+        .get(`${ServerAgent.base}/${ServerAgent.startOne}`)
         .expect(200)
 
       const ret = resp.body as AgentConcurrentConfig
@@ -41,7 +41,7 @@ describe(filename, () => {
       assert(agentConcurrentConfig.count <= agentConcurrentConfig.max)
 
       const resp = await httpRequest
-        .get(`${ServerAgent.base}/${ServerAgent.start}`)
+        .get(`${ServerAgent.base}/${ServerAgent.startOne}`)
         .expect(200)
 
       const ret = resp.body as AgentConcurrentConfig
@@ -58,7 +58,7 @@ describe(filename, () => {
       assert(agentConcurrentConfig.count <= agentConcurrentConfig.max)
 
       const resp = await httpRequest
-        .get(`${ServerAgent.base}/${ServerAgent.start}`)
+        .get(`${ServerAgent.base}/${ServerAgent.startOne}`)
         .expect(200)
 
       const ret = resp.body as AgentConcurrentConfig
@@ -66,7 +66,7 @@ describe(filename, () => {
       assert(ret.count === 2)
 
       const resp2 = await httpRequest
-        .get(`${ServerAgent.base}/${ServerAgent.start}`)
+        .get(`${ServerAgent.base}/${ServerAgent.startOne}`)
         .expect(200)
 
       const ret2 = resp2.body as AgentConcurrentConfig
