@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [13.0.2](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@13.0.1...@mw-components/taskman@13.0.2) (2021-09-03)
+
+
+### Bug Fixes
+
+* **taskman:** finish the span ([23a5916](https://github.com/waitingsong/midway-components/commit/23a5916b234933a79a1198966e66cbf39a817d00))
+
+
+
+
+
 ## [13.0.1](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@13.0.0...@mw-components/taskman@13.0.1) (2021-09-02)
 
 
