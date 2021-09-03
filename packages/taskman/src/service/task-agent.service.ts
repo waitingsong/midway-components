@@ -96,6 +96,7 @@ export class TaskAgentService {
           time: genISO8601String(),
         }
         this.logger.log(input, span)
+
         return false
       }),
     )
@@ -122,6 +123,9 @@ export class TaskAgentService {
           time: genISO8601String(),
         }
         this.logger.warn(input)
+        if (span) {
+          span.finish()
+        }
       },
       complete: () => {
         taskAgentSubscriptionMap.delete(this.id)
@@ -133,6 +137,9 @@ export class TaskAgentService {
           time: genISO8601String(),
         }
         this.logger.info(input)
+        if (span) {
+          span.finish()
+        }
       },
     })
 
@@ -229,17 +236,24 @@ export class TaskAgentService {
     headers.set(key, '1')
     const taskIdKey = this.config.headerKeyTaskId ? this.config.headerKeyTaskId : 'x-task-id'
     headers.set(taskIdKey, taskId)
+    this.ctx.reqId && headers.set(HeadersKey.reqId, this.ctx.reqId)
 
-    if (this.ctx.tracerManager && ! headers.has(HeadersKey.traceId)) {
-      const newSpan = this.ctx.tracerManager.genSpan('TaskRunner')
-      const spanHeader = this.ctx.tracerManager.headerOfCurrentSpan(newSpan)
-      if (spanHeader) {
-        headers.set(HeadersKey.traceId, spanHeader[HeadersKey.traceId])
-      }
+    // if (this.ctx.tracerManager && ! headers.has(HeadersKey.traceId)) {
+    //   const newSpan = this.ctx.tracerManager.genSpan('TaskRunner')
+    //   const spanHeader = this.ctx.tracerManager.headerOfCurrentSpan(newSpan)
+    //   if (spanHeader) {
+    //     headers.set(HeadersKey.traceId, spanHeader[HeadersKey.traceId])
+    //   }
+    // }
+    const newSpan = this.ctx.tracerManager && ! headers.has(HeadersKey.traceId)
+      ? this.ctx.tracerManager.genSpan('TaskRunner')
+      : void 0
+    const spanHeader = this.ctx.tracerManager.headerOfCurrentSpan(newSpan)
+    if (spanHeader) {
+      headers.set(HeadersKey.traceId, spanHeader[HeadersKey.traceId])
     }
 
     opts.headers = headers
-
 
     if (opts.url.includes(`${ServerAgent.base}/${ServerAgent.hello}`)) {
       opts.dataType = 'text'
@@ -253,7 +267,7 @@ export class TaskAgentService {
         opts,
         time: genISO8601String(),
       }
-      this.logger.error(input)
+      this.logger.log(input)
       return
     }
 
@@ -269,6 +283,9 @@ export class TaskAgentService {
           return this.resetTaskToInitDueTo429(taskId, message)
         }
         return this.processHttpCallExp(taskId, opts, err as Error)
+      })
+      .finally(() => {
+        newSpan && newSpan.finish()
       })
   }
 
