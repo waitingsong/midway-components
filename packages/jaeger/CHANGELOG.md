@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 9.0.1 (2021-09-17)
+
+
+### Bug Fixes
+
+* **jaeger:** types of TracerConfig['loggingReqHeaders'] ([b733148](https://github.com/waitingsong/midway-components/commit/b733148c748582ae08ff442380b3a1b73065f3e0))
+
+
+
+
+
 # [9.0.0](https://github.com/waitingsong/midway-components/compare/@mw-components/jaeger@8.1.0...@mw-components/jaeger@9.0.0) (2021-08-31)
 
 **Note:** Version bump only for package @mw-components/jaeger
