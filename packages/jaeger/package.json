@@ -24,10 +24,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@types/jaeger-client": "^3.18.0",
+    "@types/jaeger-client": "^3.18.3",
     "@waiting/shared-core": "^14.4.1",
     "@waiting/shared-types": "^14.4.1",
-    "jaeger-client": "^3.18.1",
+    "jaeger-client": "^3.19.0",
     "opentracing": "^0.14.5",
     "tsconfig-paths": "3"
   },
