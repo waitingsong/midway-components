@@ -82,7 +82,7 @@ describe(filename, () => {
       }
     })
 
-    it('batch DESC', async () => {
+    it.skip('batch DESC', async () => {
       const { svc, repo } = testConfig
       const tasks = await createTasks(svc, repo, 10)
       const queues = await svc.pickTasksWaitToRun({
