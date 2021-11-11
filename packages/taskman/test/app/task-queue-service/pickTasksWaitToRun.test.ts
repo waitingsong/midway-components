@@ -45,13 +45,22 @@ describe(filename, () => {
       assert(queues.length === 0)
     })
 
-    it('maxRows', async () => {
+    it('maxRows ge', async () => {
       const { svc, repo } = testConfig
       await createTasks(svc, repo, 10)
       const queues = await svc.pickTasksWaitToRun({
-        maxRows: 11,
+        maxRows: 100,
       })
-      assert(queues.length === 10)
+      assert(queues.length <= 10)
+    })
+
+    it('maxRows le', async () => {
+      const { svc, repo } = testConfig
+      await createTasks(svc, repo, 10)
+      const queues = await svc.pickTasksWaitToRun({
+        maxRows: 5,
+      })
+      assert(queues.length <= 5)
     })
 
     it('batch', async () => {
