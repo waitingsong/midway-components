@@ -3,11 +3,16 @@
   "packages": [
     "packages/*"
   ],
+  "ignore": "demo",
   "command": {
     "publish": {
       "ignoreChanges": [
         "*.md",
-        "package-lock.json"
+        ".githooks",
+        ".scripts",
+        ".vscode",
+        "package-lock.json",
+        "packages/demo"
       ]
     },
     "bootstrap": {
@@ -16,11 +21,16 @@
       "nohoist": [
         "cross-env"
       ],
-      "npmClientArgs": [ ]
+      "npmClientArgs": [
+        "--legacy-peer-deps"
+      ]
     },
     "version": {
       "conventionalCommits": true,
-      "allowBranch": ["master", "release"],
+      "allowBranch": [
+        "main",
+        "release"
+      ],
       "registry": "https://registry.npmjs.org/"
     }
   },
