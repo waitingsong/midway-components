@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 9.2.1 (2021-11-11)
+
+**Note:** Version bump only for package @mw-components/jwt
+
+
+
+
+
 # 9.2.0 (2021-09-01)
 
 
