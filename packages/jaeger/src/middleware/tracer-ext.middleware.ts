@@ -16,6 +16,7 @@ import {
   processRequestQuery,
 } from './helper'
 
+
 @Provide()
 export class TracerExtMiddleware implements IWebMiddleware {
   resolve(): MidwayWebMiddleware {
