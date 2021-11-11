@@ -236,6 +236,7 @@ export class TaskAgentService {
     headers.set(key, '1')
     const taskIdKey = this.config.headerKeyTaskId ? this.config.headerKeyTaskId : 'x-task-id'
     headers.set(taskIdKey, taskId)
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     this.ctx.reqId && headers.set(HeadersKey.reqId, this.ctx.reqId)
 
     // if (this.ctx.tracerManager && ! headers.has(HeadersKey.traceId)) {
