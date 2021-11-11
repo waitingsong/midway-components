@@ -23,23 +23,23 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@mw-components/fetch": "^15.0.0",
+    "@mw-components/fetch": "^15.0.2",
     "@mw-components/jaeger": "^9.0.2",
-    "@mw-components/kmore": "^22.6.1",
+    "@mw-components/kmore": "^23.0.0",
     "@waiting/shared-core": "^14.4.1",
     "@waiting/shared-types": "^14.4.1",
     "pg": "^8.7.1",
-    "postgres-interval": "^3.0.0",
+    "postgres-interval": "^4.0.0",
     "tsconfig-paths": "3"
   },
   "devDependencies": {
-    "@midwayjs/core": "^2.11.0",
-    "@midwayjs/decorator": "^2.11.0",
-    "@midwayjs/koa": "^2.11.0",
-    "@midwayjs/mock": "^2.11.0",
-    "@midwayjs/web": "^2.11.0",
+    "@midwayjs/core": "^2.13.0",
+    "@midwayjs/decorator": "^2.13.0",
+    "@midwayjs/koa": "^2.13.0",
+    "@midwayjs/mock": "^2.13.0",
+    "@midwayjs/web": "^2.13.0",
     "cross-env": "7",
-    "kmore-types": "^22.0.0"
+    "kmore-types": "^23.0.0"
   },
   "engines": {
     "node": ">=14.16.0"
