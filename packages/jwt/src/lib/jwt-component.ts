@@ -161,7 +161,12 @@ function processSecret(input?: unknown): Set<VerifySecret> {
   }
   else if (Array.isArray(input)) {
     input.forEach((secret) => {
-      ret.add(secret)
+      if (typeof secret === 'string') {
+        ret.add(secret)
+      }
+      else if (Buffer.isBuffer(secret)) {
+        ret.add(secret)
+      }
     })
   }
 
