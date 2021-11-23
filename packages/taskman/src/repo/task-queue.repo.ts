@@ -386,6 +386,7 @@ export class TaskQueueRepository {
 
     const where = `expect_start BETWEEN now() - interval '${options.earlierThanTimeIntv}'
       AND now() + interval '1s'`
+
     const tasks = await db.refTables.ref_tb_task()
       .transacting(trx)
       .forUpdate()
@@ -400,6 +401,30 @@ export class TaskQueueRepository {
         await trx.rollback()
         throw ex
       })
+
+    // const sql = db.refTables.ref_tb_task()
+    //   .select('task_id')
+    //   .where('task_state', TaskState.init)
+    //   .whereRaw(where)
+    //   .limit(options.maxRows)
+    //   .orderBy('expect_start', options.ord)
+    //   .orderBy('ctime', options.ord)
+    //   .orderBy('task_id', options.ord)
+    //   .toQuery()
+    // const foo = await db.dbh.schema.raw(sql).then()
+    // const bar = await db.dbh.schema.raw('SHOW TIMEZONE;').then()
+    // console.info({
+    //   // @ts-ignore
+    //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    //   foo: foo.rows,
+    //   // @ts-ignore
+    //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    //   bar: bar.rows,
+    //   sql,
+    //   where,
+    //   options,
+    //   tasks,
+    // })
 
     if (! tasks.length) {
       await trx.rollback() // !

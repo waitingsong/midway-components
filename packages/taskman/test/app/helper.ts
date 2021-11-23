@@ -18,6 +18,7 @@ export async function createTasks(
   svc: TaskQueueService,
   repo: TaskQueueRepository,
   num: number,
+  debug = false,
 ): Promise<TaskDTO[]> {
 
   const pms: Promise<TaskDTO>[] = []
@@ -27,6 +28,9 @@ export async function createTasks(
 
   const ret = await Promise.all(pms)
   assert(ret && ret.length === num)
+  if (debug) {
+    console.info({ ret })
+  }
   return ret
 }
 
