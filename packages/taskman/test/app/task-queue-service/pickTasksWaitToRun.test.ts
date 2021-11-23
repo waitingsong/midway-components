@@ -22,7 +22,7 @@ describe(filename, () => {
     it('normal', async () => {
       const { svc, repo } = testConfig
       const tasks = await createTasks(svc, repo, 1)
-      const queues = await svc.pickTasksWaitToRun()
+      const queues = await svc.pickTasksWaitToRun({ maxRows: 1 })
 
       assert(queues.length === 1)
       const [task] = queues
@@ -41,7 +41,7 @@ describe(filename, () => {
         expectStart: new Date('3000-01-01'),
       }
       await createOneTask(svc, repo, data)
-      const queues = await svc.pickTasksWaitToRun()
+      const queues = await svc.pickTasksWaitToRun({ maxRows: 1 })
       assert(queues.length === 0)
     })
 
@@ -49,7 +49,7 @@ describe(filename, () => {
       const { svc, repo } = testConfig
       await createTasks(svc, repo, 10)
       const queues = await svc.pickTasksWaitToRun({
-        maxRows: 100,
+        maxRows: 10,
       })
       assert(queues.length <= 10)
     })
