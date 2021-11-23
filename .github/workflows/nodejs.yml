@@ -57,6 +57,7 @@ jobs:
           dig postgres
           echo "\l" | psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U$POSTGRES_USER -d postgres
           psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U$POSTGRES_USER -d $POSTGRES_DB -c "\d+"
+          psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U$POSTGRES_USER -d $POSTGRES_DB -c "SHOW TIMEZONE;"
         env:
           CI: true
           POSTGRES_HOST: postgres
@@ -82,6 +83,7 @@ jobs:
 
       - name: Lint
         run: |
+          export cwd=`pwd`
           sh .scripts/ci/ci-prepare.sh
           npm run lint:s
         env:
@@ -102,6 +104,7 @@ jobs:
 
       - name: Testing
         run: |
+          export cwd=`pwd`
           sh .scripts/ci/ci-prepare.sh
           npm run ci
         env:

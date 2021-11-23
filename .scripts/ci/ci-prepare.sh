@@ -1,7 +1,7 @@
 #!/bin/bash
 
-ln -sf /usr/share/zoneinfo/Asia/Chongqing /etc/localtime
-echo "Asia/Chongqing" > /etc/timezone
+#ln -sf /usr/share/zoneinfo/Asia/Chongqing /etc/localtime
+#echo "Asia/Chongqing" > /etc/timezone
 
 git config --system core.fileMode false
 git config --global core.fileMode false
