@@ -24,7 +24,7 @@
     "espower-typescript": "10",
     "intelli-espower-loader": "1",
     "jest": "^26.4.0",
-    "kmore-cli": "^23.0.2",
+    "kmore-cli": "^24.0.0",
     "lerna-relinker": "^1.4.0",
     "mocha": "9",
     "mocha-lcov-reporter": "1",
