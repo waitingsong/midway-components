@@ -25,8 +25,8 @@
   "license": "MIT",
   "dependencies": {
     "@types/jaeger-client": "^3.18.3",
-    "@waiting/shared-core": "^14.4.1",
-    "@waiting/shared-types": "^14.4.1",
+    "@waiting/shared-core": "^15.1.0",
+    "@waiting/shared-types": "^15.1.0",
     "jaeger-client": "^3.19.0",
     "opentracing": "^0.14.5",
     "tsconfig-paths": "3"
@@ -40,7 +40,7 @@
     "cross-env": "7"
   },
   "engines": {
-    "node": ">=14.16.0"
+    "node": ">=16.13.0"
   },
   "files": [
     "bin/*.js",
