@@ -13,24 +13,27 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    container: node:14.17-buster
+    container: node:16-bullseye
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
 
     strategy:
       matrix:
-        node: [14]
+        node: [16]
         os: [ubuntu-latest]
 
     steps:
       - name: Prepare
         run: |
           uname -a
+          export DEBIAN_FRONTEND=noninteractive
           apt-get update -qq --yes > /dev/null
           apt-get upgrade -qq --yes > /dev/null
-          apt-get install -qq --yes --no-install-recommends bash git postgresql-client jq
+          apt-get install -qq --yes --no-install-recommends bash dnsutils git jq net-tools postgresql-client wget > /dev/null
+          uname -a
           npm -v && node -v
           git --version
-          uname -a
+          openssl version
+          cat /etc/*release
       - uses: actions/checkout@v2
         with:
           # pulls all commits (needed for lerna / semantic release to correctly version)
@@ -43,32 +46,65 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           registry-url: 'https://registry.npmjs.org'
+
       - name: Verify
         run: |
           echo $GITHUB_REF
           # github project/settings/Secrets/New repository secret: NPM_TOKEN
           npm whoami
+          psql -V
+          dig postgres
+          echo "\l" | psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U$POSTGRES_USER -d postgres
+          psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U$POSTGRES_USER -d $POSTGRES_DB -c "\d+"
         env:
           CI: true
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
+          POSTGRES_DB: db_ci_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          PGPASSWORD: postgres
 
-      - name: npm build
+      - name: Build
         run: |
-          openssl version
-          node -v
-          npm i -g lerna c8 rollup
+          whoami
+          export cwd=`pwd`
+          sh .scripts/ci/ci-prepare.sh
+          sh .github/workflows/fix.sh
+          npm i -g c8 lerna rollup
+          sh .github/workflows/fix.sh
           npm run bootstrap
+          sh .github/workflows/fix.sh
           npm run build --if-present
         env:
           CI: true
-      - name: npm ci
+
+      - name: Lint
         run: |
-          # lint must after build
           npm run lint:nofix
-          sh .github/workflows/ci-init-db.sh
+        env:
+          CI: true
+
+      - name: Init Database
+        run: |
+          export cwd=`pwd`
+          .scripts/ci/ci-init-db.sh
+        env:
+          CI: true
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
+          POSTGRES_DB: db_ci_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          PGPASSWORD: postgres
+
+      - name: Testing
+        run: |
           npm run ci
         env:
           CI: true
+          MOCK_HOME_DIR: ~/
           # use `localhost` if running the job on the VM
           # use `postgres` if running the job on a container
           POSTGRES_HOST: postgres
@@ -83,6 +119,7 @@ jobs:
 
       - name: npm publish
         run: |
+          git restore .
           git config user.name $GITHUB_ACTOR
           git config user.email gh-actions-${GITHUB_ACTOR}@github.com
           # npm run pub major
@@ -95,6 +132,7 @@ jobs:
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
+
 
     services:
       postgres:
