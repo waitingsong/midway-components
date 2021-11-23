@@ -82,6 +82,7 @@ jobs:
 
       - name: Lint
         run: |
+          sh .scripts/ci/ci-prepare.sh
           npm run lint:nofix
         env:
           CI: true
@@ -101,6 +102,7 @@ jobs:
 
       - name: Testing
         run: |
+          sh .scripts/ci/ci-prepare.sh
           npm run ci
         env:
           CI: true

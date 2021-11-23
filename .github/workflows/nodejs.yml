@@ -70,6 +70,7 @@ jobs:
         run: |
           whoami
           export cwd=`pwd`
+          sh .scripts/ci/ci-prepare.sh
           sh .github/workflows/fix.sh
           npm i -g c8 lerna rollup
           sh .github/workflows/fix.sh
@@ -81,6 +82,7 @@ jobs:
 
       - name: Lint
         run: |
+          sh .scripts/ci/ci-prepare.sh
           npm run lint:s
         env:
           CI: true
@@ -100,6 +102,7 @@ jobs:
 
       - name: Testing
         run: |
+          sh .scripts/ci/ci-prepare.sh
           npm run ci
         env:
           CI: true
