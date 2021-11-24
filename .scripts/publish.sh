@@ -64,14 +64,12 @@ if [ "$?" -ne 0 ]; then
 fi
 
 
-echo -e ">>> lerna initializing..."
-#npm run clean 
-npm run bootstrap
-#source $scriptDir/build.sh
-npm run build
+# echo ">>> lerna initializing..."
+# npm run bootstrap
+# npm run build
 
 echo -e ">>> lerna publishing..."
-#sh "$scriptDir/pre-publish-valiate.sh"
+"$scriptDir/pre-publish-valiate.sh"
 
 echo $*
 if [ -z "$NPM_VERSION_REGISTRY" ]; then

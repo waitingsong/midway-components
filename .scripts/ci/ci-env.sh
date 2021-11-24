@@ -3,6 +3,9 @@ set -e
 
 
 export LANG="en_US.UTF-8"
+#export LANGUAGE="en_US.UTF-8"
+#export LC_ALL="en_US.UTF-8"
+
 export TIMEZ=Asia/Chongqing
 export PGTZ=$TIMEZ
 export MOCK_HOME_DIR=~/
