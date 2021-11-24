@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [13.1.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@13.0.5...@mw-components/taskman@13.1.0) (2021-11-24)
+
+
+### Bug Fixes
+
+* **taskman:** genKmoreDbConfig() missing pool config ([6dd6a0c](https://github.com/waitingsong/midway-components/commit/6dd6a0cda4c8fee14ae4b1b072d6f4e7070271cd))
+
+
+### Features
+
+* **taskman:** set db timezone if process.env.PGTZ exists ([204323f](https://github.com/waitingsong/midway-components/commit/204323fb36d1b58f1101f444e624d80f56a199df))
+
+
+
+
+
 ## [13.0.5](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@13.0.4...@mw-components/taskman@13.0.5) (2021-11-11)
 
 **Note:** Version bump only for package @mw-components/taskman
