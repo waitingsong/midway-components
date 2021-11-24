@@ -82,6 +82,16 @@ export const initDbConfig: Required<DbConfig> = {
   pool: {
     min: 0,
     max: 10,
+    afterCreate: (conn: any, done: any) => {
+      const TZ = process.env.PGTZ as string | undefined
+      if (TZ) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        conn.query(`SET time zone '${TZ}';`, (err: Error | undefined) => done(err, conn))
+      }
+      else {
+        done(void 0, conn)
+      }
+    },
     /** @link https://stackoverflow.com/a/67621567 */
     propagateCreateError: false,
   },
