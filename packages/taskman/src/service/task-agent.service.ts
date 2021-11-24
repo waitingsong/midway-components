@@ -120,6 +120,7 @@ export class TaskAgentService {
           pid: process.pid,
           message: 'TaskAgent stopped when error',
           errMsg: err.message,
+          errStack: err.stack,
           time: genISO8601String(),
         }
         this.logger.warn(input)
