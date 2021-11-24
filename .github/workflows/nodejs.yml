@@ -71,6 +71,7 @@ jobs:
         run: |
           whoami
           export cwd=`pwd`
+          . .scripts/ci/ci-env.sh
           sh .scripts/ci/ci-prepare.sh
           sh .github/workflows/fix.sh
           npm i -g c8 lerna rollup
@@ -84,6 +85,7 @@ jobs:
       - name: Lint
         run: |
           export cwd=`pwd`
+          . .scripts/ci/ci-env.sh
           sh .scripts/ci/ci-prepare.sh
           npm run lint:s
         env:
@@ -92,7 +94,9 @@ jobs:
       - name: Init Database
         run: |
           export cwd=`pwd`
-          sh .scripts/ci/ci-init-db.sh
+          . .scripts/ci/ci-env.sh
+          sh .scripts/ci/ci-prepare.sh
+          .scripts/ci/ci-init-db.sh
         env:
           CI: true
           POSTGRES_HOST: postgres
@@ -105,11 +109,11 @@ jobs:
       - name: Testing
         run: |
           export cwd=`pwd`
+          . .scripts/ci/ci-env.sh
           sh .scripts/ci/ci-prepare.sh
           npm run ci
         env:
           CI: true
-          MOCK_HOME_DIR: ~/
           # use `localhost` if running the job on the VM
           # use `postgres` if running the job on a container
           POSTGRES_HOST: postgres

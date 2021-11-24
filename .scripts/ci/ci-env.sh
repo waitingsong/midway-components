@@ -1,0 +1,17 @@
+#!/bin/bash
+set -e
+
+
+export LANG="en_US.UTF-8"
+export TIMEZ=Asia/Chongqing
+export PGTZ=$TIMEZ
+export MOCK_HOME_DIR=~/
+
+
+# android
+export GRADLE_USER_HOME=.gradle-bin
+
+
+# flutter
+export PUB_CACHE="$CI_PROJECT_DIR/.pub-cache"
+
