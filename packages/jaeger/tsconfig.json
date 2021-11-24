@@ -15,7 +15,8 @@
     "noUnusedParameters": true,
     "outDir": "dist",
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "@/*": ["./test/*"]
     },
     "pretty": true,
     "skipLibCheck": true,
@@ -23,9 +24,9 @@
     "strict": true,
     "strictPropertyInitialization": false,
     "stripInternal": true,
-    "target": "ES2019",
+    "target": "ES2021",
     "tsBuildInfoFile": ".vscode/.tsbuildinfo",
-    "types" : ["node", "mocha"]
+    "types" : ["mocha", "node"]
   },
   "include": [
     "src/**/*.ts"

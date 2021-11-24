@@ -23,7 +23,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@mw-components/fetch": "^16.0.1",
+    "@mw-components/fetch": "^16.0.2",
     "@mw-components/jaeger": "^9.0.3",
     "@mw-components/kmore": "^24.0.0",
     "@waiting/shared-core": "^15.1.0",
@@ -52,7 +52,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "npm run tsc && cp -af src/database dist/",
+    "build": "npm run tsc",
     "clean": "npm run clean:cache & rm -rf dist/* -rf",
     "clean:cache": "rm -rf .eslintcache .vscode/.tsbuildinfo .vscode/.tsbuildinfo.*",
     "clean:lock": "rm package-lock.json -f",
@@ -61,6 +61,7 @@
     "db:gen": "kmore gen --project tsconfig.cjs.json --path ./src",
     "lint": "eslint --fix --cache {src,test}/**/*.ts",
     "lint:nofix": "eslint --cache {src,test}/**/*.ts",
+    "postbuild": "cp -af src/database dist/",
     "purge": "npm run clean && rm node_modules -rf",
     "test": "cross-env TS_NODE_PROJECT=test/tsconfig.json mocha --parallel=false",
     "test:local": "cross-env TS_NODE_PROJECT=test/tsconfig.json ../../node_modules/.bin/mocha --parallel=false",
