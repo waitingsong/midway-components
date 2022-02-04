@@ -41,6 +41,7 @@ export class JwtComponent {
   @Init()
   async init(): Promise<void> {
     const pconfig = this.app.getConfig('jwtConfig') as Partial<JwtConfig>
+    // const pconfig = this.app.jwtConfig as Partial<JwtConfig>
     this.config = genJwtConfig(pconfig)
 
     const verifySet = processSecret(this.config.verifySecret)
@@ -161,7 +162,12 @@ function processSecret(input?: unknown): Set<VerifySecret> {
   }
   else if (Array.isArray(input)) {
     input.forEach((secret) => {
-      ret.add(secret)
+      if (typeof secret === 'string') {
+        ret.add(secret)
+      }
+      else if (Buffer.isBuffer(secret)) {
+        ret.add(secret)
+      }
     })
   }
 

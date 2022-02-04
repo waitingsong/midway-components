@@ -4,6 +4,7 @@ import 'tsconfig-paths/register'
 
 import { join } from 'path'
 
+import { IMidwayContainer } from '@midwayjs/core'
 import { App, Config, Configuration } from '@midwayjs/decorator'
 import { IMidwayWebApplication } from '@midwayjs/web'
 import * as fetch from '@mw-components/fetch'
@@ -40,9 +41,9 @@ export class AutoConfiguration {
   @Config('taskManServerConfig') protected readonly serverConfig: TaskManServerConfig
   @Config('taskManClientConfig') protected readonly clientConfig: TaskManClientConfig
 
-  async onReady(): Promise<void> {
+  async onReady(container: IMidwayContainer): Promise<void> {
+    // const container = this.app.getApplicationContext()
     const dbConfig = genKmoreDbConfig(this.serverConfig, initDbConfig)
-    const container = this.app.getApplicationContext()
     const dbManager = await container.getAsync(DbManager) as DbManager<DbReplicaKeys>
     await dbManager.connect(DbReplica.taskMaster, dbConfig)
 

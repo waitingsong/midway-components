@@ -1,9 +1,10 @@
 import type { IncomingHttpHeaders } from 'http'
 
 import type { ILogger } from '@midwayjs/logger'
-import { IMidwayWebContext } from '@midwayjs/web'
 import { KnownKeys } from '@waiting/shared-types'
 import { TracingConfig } from 'jaeger-client'
+
+import { Context } from '../interface'
 
 
 export interface TracerConfig {
@@ -41,9 +42,9 @@ export interface TracerConfig {
    */
   loggingOutputBody: boolean
   /**
-   * @default ['authorization', 'user-agent']
+   * @default ['authorization', 'host', 'user-agent']
    */
-  loggingReqHeaders: string[] | KnownKeys<IncomingHttpHeaders>[]
+  loggingReqHeaders: (string | KnownKeys<IncomingHttpHeaders>)[]
   /**
    * @default pkg.name
    * @description \@ 字符将会被删除，/ 替换为 - ,便于（ali）日志服务能正常分类
@@ -53,7 +54,7 @@ export interface TracerConfig {
 	 * Callback to process custom failure
 	 * @default helper.ts/processCustomFailure()
 	 */
-  processCustomFailure?: (ctx: IMidwayWebContext<any>) => Promise<void>
+  processCustomFailure?: (ctx: Context) => Promise<void>
 }
 
 export enum HeadersKey {
@@ -154,3 +155,23 @@ export interface TracerError extends Error {
   __isTraced: boolean
 }
 
+
+export interface SpanRawLog {
+  timestamp: number
+  fields: SpanRawLogField[]
+}
+export interface SpanRawLogField {
+  key: string
+  value: unknown
+}
+export interface SpanRawTag {
+  key: string
+  value: unknown
+}
+export interface TestSpanInfo {
+  startTime: number
+  logs: SpanRawLog[]
+  tags: SpanRawTag[]
+  headerInit: SpanHeaderInit | undefined
+  isTraceEnabled: boolean
+}

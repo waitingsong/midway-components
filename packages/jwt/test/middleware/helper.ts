@@ -1,223 +1,158 @@
-import { IMidwayKoaNext } from '@midwayjs/koa'
-import { MidwayWebMiddleware } from '@midwayjs/web'
+import assert from 'assert/strict'
 
+import { TestResponse, TestRespBody } from '@/root.config'
 import {
-  Context,
   JwtMsg,
   JwtState,
 } from '~/index'
 
-// eslint-disable-next-line import/order
-import assert = require('power-assert')
 
-
-const next: IMidwayKoaNext = async () => { return }
-
-export async function authShouldPassed(
-  ctx: Context,
-  mw: MidwayWebMiddleware,
+export function authShouldPassed(
+  resp: TestResponse,
   expectPayload: unknown,
-): Promise<void> {
+): void {
 
-  // @ts-expect-error
-  await mw(ctx, next)
-  const { status, jwtState } = ctx
+  const { status } = resp
+  const { jwtState } = resp.body as TestRespBody
+
   assert(status === 200)
   assert(jwtState)
   assert(jwtState.user)
   assert(jwtState.header)
   assert(jwtState.signature)
-  assert.deepStrictEqual(ctx.jwtState.user && ctx.jwtState.user, expectPayload)
+  assert.deepStrictEqual(jwtState.user, expectPayload)
 }
 
-export async function authShouldSkipped(
-  ctx: Context,
-  mw: MidwayWebMiddleware,
-): Promise<void> {
+export function authShouldSkipped(
+  resp: TestResponse,
+): void {
 
-  // @ts-expect-error
-  await mw(ctx, next)
-  const { status, jwtState } = ctx
+  const { status } = resp
+  const { jwtState } = resp.body as TestRespBody
+
   assert(status === 200)
+  console.info({ jwtState })
   assert(! jwtState.user)
-  assert(! jwtState.secret)
   assert(! jwtState.signature)
 }
 
-export async function authShouldFailedWithNotFound(
-  ctx: Context,
-  mw: MidwayWebMiddleware,
-  status = 401,
-): Promise<void> {
+export function authShouldFailedWithNotFound2(
+  resp: TestResponse,
+  expectStatus = 401,
+): void {
 
-  try {
-    // @ts-expect-error
-    await mw(ctx, next)
-  }
-  catch (ex: any) {
-    assert(ctx.status === status)
+  const { status, error } = resp
+  const { jwtState } = resp.body as TestRespBody
 
-    const msg = (ex as Error).message
-    assert(msg.includes(JwtMsg.AuthFailed))
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const omsg = (ex.originalError as Error).message
-    assert(omsg.includes(JwtMsg.TokenNotFound))
-
-    const { jwtState } = ctx
-    assert(! jwtState.user)
-    assert(! jwtState.secret)
-    assert(! jwtState.signature)
-    return
-  }
-  assert(false, `should throw error with status: "${status}", but not.`)
+  assert(status === expectStatus)
+  assert(! jwtState)
+  assert(error)
+  assert(error.text.includes('401'))
 }
 
-export async function authShouldValidatFailed(
-  ctx: Context,
-  mw: MidwayWebMiddleware,
-): Promise<void> {
+export function authShouldFailedWithNotFound(
+  resp: TestResponse,
+  expectStatus = 401,
+): void {
 
-  try {
-    // @ts-expect-error
-    await mw(ctx, next)
-  }
-  catch (ex: any) {
-    assert(ctx.status === 401)
-    const msg = (ex as Error).message
-    assert(msg.includes(JwtMsg.AuthFailed))
+  const { status, error } = resp
+  const { jwtState } = resp.body as TestRespBody
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const omsg = (ex.originalError as Error).message
-    assert(omsg.includes(JwtMsg.TokenValidFailed))
-
-    const { jwtState } = ctx
-    assert(! jwtState.user)
-    assert(! jwtState.secret)
-    assert(! jwtState.signature)
-    return
-  }
-  assert(false, 'should throw error 401, but not.')
+  assert(status === expectStatus)
+  assert(! jwtState)
+  assert(error)
+  assert(error.text.includes('401'))
 }
 
-export async function authShouldPassthroughNotFound(
-  ctx: Context,
-  mw: MidwayWebMiddleware,
-  status = 200,
-): Promise<void> {
+export function authShouldValidatFailed(
+  resp: TestResponse,
+): void {
 
-  // @ts-expect-error
-  await mw(ctx, next)
-  assert(ctx.status === status)
-  const { jwtState } = ctx
+  const { status, error } = resp
+  const { jwtState } = resp.body as TestRespBody
+
+  assert(status === 401)
+  assert(! jwtState)
+  assert(error)
+  assert(error.text.includes('401'))
+}
+
+export function authShouldPassthroughNotFound(
+  resp: TestResponse,
+  expectStatus = 200,
+): void {
+
+  const { status } = resp
+  const { jwtState, jwtOriginalErrorText } = resp.body as TestRespBody
+
+  assert(status === expectStatus)
+  assert(jwtState)
   assert(! jwtState.user)
   assert(! jwtState.secret)
   assert(! jwtState.signature)
-
-  const { jwtOriginalError } = ctx.jwtState
-  assert(jwtOriginalError && jwtOriginalError instanceof Error)
-  if (jwtOriginalError) {
-    const omsg = jwtOriginalError.message
-    assert(omsg.includes(JwtMsg.TokenNotFound))
-  }
+  assert(jwtOriginalErrorText.includes(JwtMsg.TokenNotFound))
 }
 
-export async function authShouldPassthroughValidFailed(
-  ctx: Context,
-  mw: MidwayWebMiddleware,
-  status = 200,
-): Promise<void> {
+export function authShouldPassthroughValidFailed(
+  resp: TestResponse,
+  expectStatus = 200,
+): void {
 
-  // @ts-expect-error
-  await mw(ctx, next)
-  assert(ctx.status === status)
-  const { jwtState } = ctx
+  const { status } = resp
+  const { jwtState, jwtOriginalErrorText } = resp.body as TestRespBody
+
+  assert(status === expectStatus)
+  assert(jwtState)
   assert(! jwtState.user)
   assert(! jwtState.secret)
   assert(! jwtState.signature)
-
-  const { jwtOriginalError } = ctx.jwtState
-  assert(jwtOriginalError && jwtOriginalError instanceof Error)
-  if (jwtOriginalError) {
-    const omsg = jwtOriginalError.message
-    assert(omsg.includes(JwtMsg.TokenValidFailed))
-  }
+  assert(jwtOriginalErrorText.includes(JwtMsg.TokenValidFailed))
 }
 
 
-export async function authShouldRedirect(
-  ctx: Context,
-  mw: MidwayWebMiddleware,
+export function authShouldRedirect(
+  resp: TestResponse,
   redirectUrl: string,
-): Promise<void> {
+): void {
 
-  // @ts-expect-error
-  await mw(ctx, next)
-  const { status, jwtState } = ctx
+  const { status } = resp
+  const { jwtState } = resp.body as TestRespBody
+
   assert(status === 302)
-  assert(! jwtState.user)
-  assert(! jwtState.secret)
-  assert(! jwtState.signature)
+  assert(! jwtState)
 
-  const location = ctx.res.getHeader('location')
-  assert(location === redirectUrl)
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  const loc = resp.header.location as string
+  assert(loc === redirectUrl)
 }
 
-export async function authShouldPassthroughEmptyStringNotFound(
-  ctx: Context,
-  mw: MidwayWebMiddleware,
-  status = 200,
-): Promise<void> {
+export function authShouldPassthroughEmptyStringNotFound(
+  resp: TestResponse,
+  expectStatus = 200,
+): void {
 
-  try {
-    // @ts-expect-error
-    await mw(ctx, next)
-  }
-  catch (ex: any) {
-    assert(ctx.status === status)
-    const msg = (ex as Error).message
-    assert(msg.includes(JwtMsg.AuthFailed))
+  const { status, error } = resp
+  const { jwtState } = resp.body as TestRespBody
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const omsg = (ex.originalError as Error).message
-    assert(omsg.includes(JwtMsg.TokenNotFound))
-
-    const { jwtState } = ctx
-    assert(! jwtState.user)
-    assert(! jwtState.secret)
-    assert(! jwtState.signature)
-    return
-  }
-  assert(false, 'should throw error 401, but not.')
+  assert(status === expectStatus)
+  assert(! jwtState)
+  assert(error)
+  assert(error.text.includes('401'))
 }
 
-export async function authShouldFailedWithNotFoundFromDebug(
-  ctx: Context,
-  mw: MidwayWebMiddleware,
-  status = 401,
-): Promise<void> {
+export function authShouldFailedWithNotFoundFromDebug(
+  resp: TestResponse,
+  expectStatus = 401,
+): void {
 
-  try {
-    // @ts-expect-error
-    await mw(ctx, next)
-  }
-  catch (ex: any) {
-    assert(ctx.status === status)
+  const { status, error } = resp
+  const { jwtState } = resp.body as TestRespBody
 
-    const msg = (ex as Error).message
-    assert(msg.includes(JwtMsg.TokenNotFound))
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const omsg = (ex.originalError as Error).message
-    assert(omsg.includes(JwtMsg.TokenNotFound))
-
-    const { jwtState } = ctx
-    assert(! jwtState.user)
-    assert(! jwtState.secret)
-    assert(! jwtState.signature)
-    return
-  }
-  assert(false, `should throw error with status: "${status}", but not.`)
+  assert(status === expectStatus)
+  assert(! jwtState)
+  assert(error)
+  assert(error.text.includes('401'))
+  // assert(error.text.includes(JwtMsg.TokenNotFound))
 }
 
 declare module '@midwayjs/core' {

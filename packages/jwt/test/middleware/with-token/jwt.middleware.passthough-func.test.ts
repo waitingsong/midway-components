@@ -1,23 +1,19 @@
 import { relative } from 'path'
 
-import { MidwayWebMiddleware } from '@midwayjs/web'
-
-import { testConfig } from '../../root.config'
-import { authHeader1, payload1, secret, token1 } from '../../test.config'
 import {
   authShouldFailedWithNotFound,
+  authShouldFailedWithNotFound2,
   authShouldPassed,
   authShouldPassthroughNotFound,
 } from '../helper'
 
+import { testConfig } from '@/root.config'
+import { authHeader1, payload1, secret, token1 } from '@/test.config'
 import {
-  Context,
   initialJwtMiddlewareConfig,
-  JwtConfig,
   JwtMiddlewareConfig,
   passthroughCallback,
 } from '~/index'
-import { JwtMiddleware } from '~/middleware/jwt.middleware'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -25,105 +21,70 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 describe(filename, () => {
 
   const cb: passthroughCallback = async () => true
+  const path = '/'
 
   describe('Should JwtAuthenticateOptions.passthrough work with func', () => {
     it('true: passed', async () => {
-      const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
-      const path = '/' + Math.random().toString()
-      const path2 = '/redirect-' + Math.random().toString()
+      const { app, httpRequest } = testConfig
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [],
         passthrough: cb,
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig })
 
-      const container = app.getApplicationContext()
-      const inst = await container.getAsync(JwtMiddleware)
-
-      const ctx: Context = app.createAnonymousContext()
-      ctx.path = path
-      ctx.headers.authorization = authHeader1
-
-      const mw = inst.resolve() as MidwayWebMiddleware
-      await authShouldPassed(ctx, mw, payload1)
+      const sendHeader = {
+        authorization: authHeader1,
+      }
+      const resp = await httpRequest
+        .get(path)
+        .set(sendHeader)
+      authShouldPassed(resp, payload1)
     })
 
     it('true: token not found', async () => {
-      const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
-      const path = '/' + Math.random().toString()
+      const { app, httpRequest } = testConfig
+
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [],
         passthrough: cb,
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig })
 
-      const container = app.getApplicationContext()
-      const inst = await container.getAsync(JwtMiddleware)
-
-      const ctx: Context = app.createAnonymousContext()
-      ctx.path = path
-      ctx.headers.authorization = ''
-
-      const mw = inst.resolve() as MidwayWebMiddleware
-      await authShouldPassthroughNotFound(ctx, mw)
+      const resp = await httpRequest
+        .get(path)
+      authShouldPassthroughNotFound(resp, 200)
     })
 
     it('invalid value: token not found', async () => {
-      const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
-      const path = '/' + Math.random().toString()
+      const { app, httpRequest } = testConfig
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [],
         // @ts-expect-error
         passthrough: 0,
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig })
 
-      const container = app.getApplicationContext()
-      const inst = await container.getAsync(JwtMiddleware)
-
-      const ctx: Context = app.createAnonymousContext()
-      ctx.path = path
-      ctx.headers.authorization = ''
-
-      const mw = inst.resolve() as MidwayWebMiddleware
-      await authShouldFailedWithNotFound(ctx, mw, 401)
+      const resp = await httpRequest
+        .get(path)
+      authShouldFailedWithNotFound2(resp, 401)
     })
 
     it('invalid value 1: token not found', async () => {
-      const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
-      const path = '/' + Math.random().toString()
+      const { app, httpRequest } = testConfig
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [],
         // @ts-expect-error
         passthrough: 1,
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig })
 
-      const container = app.getApplicationContext()
-      const inst = await container.getAsync(JwtMiddleware)
-
-      const ctx: Context = app.createAnonymousContext()
-      ctx.path = path
-      ctx.headers.authorization = ''
-
-      const mw = inst.resolve() as MidwayWebMiddleware
-      await authShouldFailedWithNotFound(ctx, mw, 401)
+      const resp = await httpRequest
+        .get(path)
+      authShouldFailedWithNotFound2(resp, 401)
     })
   })
 })

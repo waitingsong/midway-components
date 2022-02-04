@@ -28,6 +28,11 @@ export function genKmoreDbConfig(
       acquireConnectionTimeout: serverConfig.dbConfigs.acquireConnectionTimeout
         ? serverConfig.dbConfigs.acquireConnectionTimeout
         : defaultDbConfig.acquireConnectionTimeout,
+      pool: {
+        ...defaultDbConfig.pool,
+        ...serverConfig.dbConfigs.pool,
+      },
+      // serverConfig.dbConfigs.pool
       postProcessResponse,
       wrapIdentifier,
     },
@@ -36,6 +41,7 @@ export function genKmoreDbConfig(
     tracingResponse: true,
     sampleThrottleMs: serverConfig.dbConfigs.sampleThrottleMs ?? defaultDbConfig.sampleThrottleMs,
   }
+
 
   return master
 }

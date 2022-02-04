@@ -1,6 +1,5 @@
 import type { IncomingHttpHeaders } from 'http'
 
-import { IMidwayWebContext, IMidwayWebNext } from '@midwayjs/web'
 import {
   defaultPropDescriptor,
   genISO8601String,
@@ -9,6 +8,7 @@ import {
 import { NpmPkg, JsonResp } from '@waiting/shared-types'
 import { Tags } from 'opentracing'
 
+import { Context, NextFunction } from '../interface'
 import { TracerManager } from '../lib/tracer'
 import { SpanLogInput, TracerConfig, TracerError, TracerLog, TracerTag } from '../lib/types'
 import { retrieveExternalNetWorkInfo } from '../util/common'
@@ -18,7 +18,7 @@ import { procInfo } from '../util/stat'
 const netInfo = retrieveExternalNetWorkInfo()
 
 export function updateDetailTags(
-  ctx: IMidwayWebContext,
+  ctx: Context,
 ): void {
 
   const pkg = ctx.app.getConfig('pkg') as NpmPkg
@@ -48,7 +48,7 @@ export function updateDetailTags(
   tags[Tags.HTTP_URL] = ctx.path
   tags[TracerTag.httpProtocol] = ctx.protocol
 
-  const config = ctx.app.config.tracer as TracerConfig
+  const config = ctx.app.getConfig('tracer') as TracerConfig
 
   if (Array.isArray(config.loggingReqHeaders)) {
     config.loggingReqHeaders.forEach((name) => {
@@ -70,7 +70,7 @@ export function updateDetailTags(
  */
 export async function handleTopExceptionAndNext(
   tracerManager: TracerManager,
-  next: IMidwayWebNext,
+  next: NextFunction,
 ): Promise<void> {
 
   try {
@@ -98,7 +98,7 @@ export async function handleTopExceptionAndNext(
 export async function handleAppExceptionAndNext(
   config: TracerConfig,
   tracerManager: TracerManager,
-  next: IMidwayWebNext,
+  next: NextFunction,
 ): Promise<void> {
 
   if (config.enableCatchError) {
@@ -168,11 +168,11 @@ async function logError(
 
 
 export async function processHTTPStatus(
-  ctx: IMidwayWebContext<JsonResp | string>,
+  ctx: Context,
 ): Promise<void> {
 
   const { status } = ctx.response
-  const tracerConfig = ctx.app.config.tracer as TracerConfig
+  const tracerConfig = ctx.app.getConfig('tracer') as TracerConfig
   const tags: SpanLogInput = {
     [Tags.HTTP_STATUS_CODE]: status,
   }
@@ -194,7 +194,7 @@ export async function processHTTPStatus(
       await tracerConfig.processCustomFailure(ctx)
     }
     const opts: ProcessPriorityOpts = {
-      starttime: ctx.starttime,
+      starttime: ctx.startTime,
       trm: ctx.tracerManager,
       tracerTags: ctx.tracerTags,
       tracerConfig,
@@ -205,10 +205,10 @@ export async function processHTTPStatus(
 
 
 export function processRequestQuery(
-  ctx: IMidwayWebContext,
+  ctx: Context,
 ): void {
 
-  const tracerConfig = ctx.app.config.tracer as TracerConfig
+  const tracerConfig = ctx.app.getConfig('tracer') as TracerConfig
   const tags: SpanLogInput = {}
 
   // [Tag] 请求参数和响应数据
@@ -246,10 +246,10 @@ export function processRequestQuery(
 }
 
 export function processResponseData(
-  ctx: IMidwayWebContext<JsonResp | string>,
+  ctx: Context,
 ): void {
 
-  const tracerConfig = ctx.app.config.tracer as TracerConfig
+  const tracerConfig = ctx.app.getConfig('tracer') as TracerConfig
   const tags: SpanLogInput = {}
 
   if (tracerConfig.loggingOutputBody) {
@@ -262,18 +262,23 @@ export function processResponseData(
 
 
 export async function processCustomFailure(
-  ctx: IMidwayWebContext<JsonResp | string>,
+  ctx: Context,
 ): Promise<void> {
 
-  const { body } = ctx
+  const bod = ctx.body as JsonResp
+  if (typeof bod !== 'object' || ! bod) {
+    return
+  }
 
-  if (typeof body === 'object' && body) {
-    if (typeof body.code !== 'undefined' && body.code !== 0) {
-      updateCtxTagsData(ctx.tracerTags, {
-        [Tags.SAMPLING_PRIORITY]: 30,
-        [TracerTag.resCode]: body.code,
-      })
-    }
+  if (typeof bod.code === 'undefined') {
+    return
+  }
+
+  if (bod.code !== 0) {
+    updateCtxTagsData(ctx.tracerTags, {
+      [Tags.SAMPLING_PRIORITY]: 30,
+      [TracerTag.resCode]: bod.code,
+    })
   }
 }
 
@@ -283,7 +288,7 @@ export interface ProcessPriorityOpts {
   tracerTags: SpanLogInput
   tracerConfig: TracerConfig
 }
-async function processPriority(options: ProcessPriorityOpts): Promise<number | undefined> {
+export async function processPriority(options: ProcessPriorityOpts): Promise<number | undefined> {
   const { reqThrottleMsForPriority: throttleMs } = options.tracerConfig
   if (throttleMs < 0) {
     return

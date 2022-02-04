@@ -77,6 +77,7 @@ function tracerLogger(
     logger[level](info)
   }
   else if (Array.isArray(args)) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     logger[level](msg, ...args)
   }
   else {

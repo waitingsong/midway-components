@@ -1,21 +1,15 @@
 import { relative } from 'path'
 
-import { MidwayWebMiddleware } from '@midwayjs/web'
-
-import { testConfig } from '../../root.config'
-import { secret } from '../../test.config'
 import {
   authShouldFailedWithNotFoundFromDebug,
   authShouldPassthroughNotFound,
 } from '../helper'
 
+import { testConfig } from '@/root.config'
 import {
-  Context,
   initialJwtMiddlewareConfig,
-  JwtConfig,
   JwtMiddlewareConfig,
 } from '~/index'
-import { JwtMiddleware } from '~/middleware/jwt.middleware'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -24,50 +18,32 @@ describe(filename, () => {
 
   describe('Should JwtMiddlewareConfig.debug work true', () => {
     it('normal', async () => {
-      const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
-      const path = '/' + Math.random().toString()
+      const { app, httpRequest } = testConfig
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [],
         debug: true,
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig })
 
-      const container = app.getApplicationContext()
-      const inst = await container.getAsync(JwtMiddleware)
-
-      const ctx: Context = app.createAnonymousContext()
-      ctx.path = path
-
-      const mw = inst.resolve() as MidwayWebMiddleware
-      await authShouldFailedWithNotFoundFromDebug(ctx, mw)
+      const resp = await httpRequest
+        .get('/')
+      authShouldFailedWithNotFoundFromDebug(resp)
     })
 
     it('ignored with passthrough:true', async () => {
-      const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
-      const path = '/' + Math.random().toString()
+      const { app, httpRequest } = testConfig
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [],
         debug: true,
         passthrough: true,
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig })
 
-      const container = app.getApplicationContext()
-      const inst = await container.getAsync(JwtMiddleware)
-
-      const ctx: Context = app.createAnonymousContext()
-      ctx.path = path
-
-      const mw = inst.resolve() as MidwayWebMiddleware
-      await authShouldPassthroughNotFound(ctx, mw)
+      const resp = await httpRequest
+        .get('/')
+      authShouldPassthroughNotFound(resp)
     })
   })
 })

@@ -9,7 +9,7 @@ import {
   tokenHeader2,
 } from '../test.config'
 
-import { JwtComponent, JwtConfig } from '~/index'
+import { JwtComponent } from '~/index'
 
 // eslint-disable-next-line import/order
 import assert = require('power-assert')
@@ -23,10 +23,6 @@ describe(filename, () => {
 
     it('initializ secret', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
-      app.addConfigObject({ jwtConfig })
       const container = app.getApplicationContext()
       const svc = await container.getAsync(JwtComponent)
 
@@ -36,10 +32,6 @@ describe(filename, () => {
 
     it('pass secret', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
-      app.addConfigObject({ jwtConfig })
       const container = app.getApplicationContext()
       const svc = await container.getAsync(JwtComponent)
 
@@ -49,10 +41,6 @@ describe(filename, () => {
 
     it('without iat', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
-      app.addConfigObject({ jwtConfig })
       const container = app.getApplicationContext()
       const svc = await container.getAsync(JwtComponent)
 

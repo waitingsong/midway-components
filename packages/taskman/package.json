@@ -1,7 +1,7 @@
 {
   "name": "@mw-components/taskman",
   "author": "waiting",
-  "version": "13.0.0",
+  "version": "14.0.0",
   "description": "midway component task manager",
   "keywords": [
     "midway",
@@ -23,26 +23,26 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@mw-components/fetch": "^15.0.0",
-    "@mw-components/jaeger": "^9.0.0",
-    "@mw-components/kmore": "^22.6.1",
-    "@waiting/shared-core": "^14.4.1",
-    "@waiting/shared-types": "^14.4.1",
+    "@mw-components/fetch": "^16.0.2",
+    "@mw-components/jaeger": "^10.0.0",
+    "@mw-components/kmore": "^24.0.0",
+    "@waiting/shared-core": "^15.1.0",
+    "@waiting/shared-types": "^15.1.0",
     "pg": "^8.7.1",
-    "postgres-interval": "^3.0.0",
+    "postgres-interval": "^4.0.0",
     "tsconfig-paths": "3"
   },
   "devDependencies": {
-    "@midwayjs/core": "^2.11.0",
-    "@midwayjs/decorator": "^2.11.0",
-    "@midwayjs/koa": "^2.11.0",
-    "@midwayjs/mock": "^2.11.0",
-    "@midwayjs/web": "^2.11.0",
+    "@midwayjs/core": "^2.13.0",
+    "@midwayjs/decorator": "^2.13.0",
+    "@midwayjs/koa": "^2.13.0",
+    "@midwayjs/mock": "^2.13.0",
+    "@midwayjs/web": "^2.13.0",
     "cross-env": "7",
-    "kmore-types": "^22.0.0"
+    "kmore-types": "^24.0.0"
   },
   "engines": {
-    "node": ">=14.16.0"
+    "node": ">=16.13.0"
   },
   "files": [
     "bin/*.js",
@@ -52,45 +52,19 @@
     "access": "public"
   },
   "scripts": {
-    "build": "npm run tsc && cp -af src/database dist/",
+    "build": "npm run tsc",
     "clean": "npm run clean:cache & rm -rf dist/* -rf",
     "clean:cache": "rm -rf .eslintcache .vscode/.tsbuildinfo .vscode/.tsbuildinfo.*",
     "clean:lock": "rm package-lock.json -f",
-    "cov": "cross-env TS_NODE_PROJECT=test/tsconfig.json nyc mocha --parallel=false",
+    "cov": "cross-env TS_NODE_PROJECT=test/tsconfig.json c8 mocha --parallel=false",
     "dev": "cross-env TS_NODE_TYPE_CHECK=false TS_NODE_TRANSPILE_ONLY=true NODE_ENV=local ../../node_modules/.bin/midway-bin dev --ts --port=7001",
     "db:gen": "kmore gen --project tsconfig.cjs.json --path ./src",
     "lint": "eslint --fix --cache {src,test}/**/*.ts",
     "lint:nofix": "eslint --cache {src,test}/**/*.ts",
+    "postbuild": "cp -af src/database dist/",
     "purge": "npm run clean && rm node_modules -rf",
     "test": "cross-env TS_NODE_PROJECT=test/tsconfig.json mocha --parallel=false",
     "test:local": "cross-env TS_NODE_PROJECT=test/tsconfig.json ../../node_modules/.bin/mocha --parallel=false",
     "tsc": "tsc -p tsconfig.json"
-  },
-  "nyc": {
-    "include": [
-      "src/**/*.ts"
-    ],
-    "exclude": [
-      ".githooks",
-      "dist",
-      "node_modules*",
-      "src/bin",
-      "src/domain.ts",
-      "src/interface.ts",
-      "test*",
-      "**/node_modules*",
-      "**/*.d.ts",
-      "**/*.js"
-    ],
-    "extension": [
-      ".ts"
-    ],
-    "reporter": [
-      "html",
-      "json",
-      "text",
-      "text-summary"
-    ],
-    "all": true
   }
 }

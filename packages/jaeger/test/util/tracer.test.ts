@@ -1,9 +1,7 @@
-import { close } from '@midwayjs/mock'
-import { IMidwayWebApplication } from '@midwayjs/web'
-import { basename } from '@waiting/shared-core'
+import { relative } from 'path'
 
-import { testConfig } from '../test-config'
-
+import { testConfig } from '@/root.config'
+import { Application } from '~/interface'
 import { TracerManager } from '~/lib/tracer'
 import { HeadersKey, SpanHeaderInit } from '~/lib/types'
 
@@ -11,14 +9,9 @@ import { HeadersKey, SpanHeaderInit } from '~/lib/types'
 import assert = require('power-assert')
 
 
-const filename = basename(__filename)
+const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
-  let app: IMidwayWebApplication
-
-  before(() => {
-    app = testConfig.app
-  })
 
   it('should work if enabled', async () => {
     const tracerManager = new TracerManager(true)

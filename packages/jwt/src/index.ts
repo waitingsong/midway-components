@@ -13,14 +13,3 @@ export {
   Secret,
 } from 'jsonwebtoken'
 
-export {
-  IMidwayWebApplication as Application,
-  IMidwayWebContext as Context,
-} from '@midwayjs/web'
-
-// declare module '@midwayjs/core' {
-//   interface Context {
-//     jwtState: JwtState
-//   }
-// }
-

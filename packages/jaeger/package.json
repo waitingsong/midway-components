@@ -1,7 +1,7 @@
 {
   "name": "@mw-components/jaeger",
   "author": "waiting",
-  "version": "9.0.0",
+  "version": "10.0.0",
   "description": "midway component for jaeger",
   "keywords": [
     "midway",
@@ -24,23 +24,26 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@types/jaeger-client": "^3.18.0",
-    "@waiting/shared-core": "^14.4.1",
-    "@waiting/shared-types": "^14.4.1",
-    "jaeger-client": "^3.18.1",
+    "@types/jaeger-client": "^3.18.3",
+    "@waiting/shared-core": "^15.1.0",
+    "@waiting/shared-types": "^15.1.0",
+    "jaeger-client": "^3.19.0",
     "opentracing": "^0.14.5",
     "tsconfig-paths": "3"
   },
   "devDependencies": {
-    "@midwayjs/core": "^2.11.0",
-    "@midwayjs/decorator": "^2.11.0",
-    "@midwayjs/koa": "^2.11.0",
-    "@midwayjs/mock": "^2.11.0",
-    "@midwayjs/web": "^2.11.0",
+    "@midwayjs/core": "^3.0.7",
+    "@midwayjs/decorator": "^3.0.7",
+    "@midwayjs/koa": "^3.0.7",
+    "@midwayjs/mock": "^3.0.7",
+    "@midwayjs/web": "^3.0.7",
     "cross-env": "7"
   },
+  "peerDependencies": {
+    "@midwayjs/core": ">=3"
+  },
   "engines": {
-    "node": ">=14.16.0"
+    "node": ">=16.13.0"
   },
   "files": [
     "bin/*.js",
@@ -54,39 +57,12 @@
     "clean": "npm run clean:cache & rm -rf dist/* -rf",
     "clean:cache": "rm -rf .eslintcache .vscode/.tsbuildinfo .vscode/.tsbuildinfo.*",
     "clean:lock": "rm package-lock.json -f",
-    "cov": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json nyc mocha --parallel=false",
+    "cov": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json c8 mocha --parallel=false",
     "lint": "eslint --fix --cache {src,test}/**/*.ts",
     "lint:nofix": "eslint --cache {src,test}/**/*.ts",
-    "purge": "npm run clean && rm node_modules -rf",
+    "purge": "npm run clean && rm node_modules -rf && rm package-lock.json",
     "test": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json mocha --parallel=false",
     "test:local": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json ../../node_modules/.bin/mocha --parallel=false",
     "tsc": "tsc -p tsconfig.json"
-  },
-  "nyc": {
-    "include": [
-      "src/**/*.ts"
-    ],
-    "exclude": [
-      ".githooks",
-      "dist",
-      "node_modules*",
-      "src/bin",
-      "src/domain.ts",
-      "src/interface.ts",
-      "test*",
-      "**/node_modules*",
-      "**/*.d.ts",
-      "**/*.js"
-    ],
-    "extension": [
-      ".ts"
-    ],
-    "reporter": [
-      "html",
-      "json",
-      "text",
-      "text-summary"
-    ],
-    "all": true
   }
 }

@@ -40,7 +40,7 @@ export async function taskAgentMiddleware(
 
   /* istanbul ignore else */
   if (headers['x-task-agent']) { // task distribution
-    const taskAgentConfig = ctx.app.getConfig('taskAgentConfig ') as TaskAgentConfig
+    const taskAgentConfig = ctx.app.getConfig('taskAgentConfig') as TaskAgentConfig
     const trm = ctx.tracerManager
 
     const taskAgentState: TaskAgentState = {
@@ -78,7 +78,7 @@ export async function taskAgentMiddleware(
 
   /* istanbul ignore else */
   if (ctx.path === '/ping') {
-    const taskAgentConfig = ctx.app.getConfig('taskAgentConfig ') as TaskAgentConfig
+    const taskAgentConfig = ctx.app.getConfig('taskAgentConfig') as TaskAgentConfig
 
     if (taskAgentConfig.enableStartOneByPing && taskAgentSubscriptionMap.size < taskAgentConfig.maxRunning) {
       const trm = ctx.tracerManager
