@@ -32,11 +32,11 @@
     "tsconfig-paths": "3"
   },
   "devDependencies": {
-    "@midwayjs/core": "^2.13.0",
-    "@midwayjs/decorator": "^2.13.0",
-    "@midwayjs/koa": "^2.13.0",
-    "@midwayjs/mock": "^2.13.0",
-    "@midwayjs/web": "^2.13.0",
+    "@midwayjs/core": "^3.0.6",
+    "@midwayjs/decorator": "^3.0.6",
+    "@midwayjs/koa": "^3.0.6",
+    "@midwayjs/mock": "^3.0.6",
+    "@midwayjs/web": "^3.0.6",
     "cross-env": "7"
   },
   "engines": {
