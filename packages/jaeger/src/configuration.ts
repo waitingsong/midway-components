@@ -1,11 +1,14 @@
 /* eslint-disable node/no-extraneous-import */
 /* eslint-disable @typescript-eslint/no-extraneous-class */
-import { join } from 'path'
+// import { join } from 'path'
 
+import { IMidwayApplication } from '@midwayjs/core'
+// import { IMidwayWebApplication } from '@midwayjs/web'
 import { App, Config, Configuration } from '@midwayjs/decorator'
-import { IMidwayWebApplication } from '@midwayjs/web'
 import { JaegerTracer } from 'jaeger-client'
 
+import { tracer as DefaultConfig } from './config/config.default'
+import { tracer as LocalConfig } from './config/config.local'
 import { initTracer } from './lib/tracer'
 import { TracerConfig } from './lib/types'
 import { tracerMiddleware } from './middleware/tracer.middleware'
@@ -16,10 +19,16 @@ const compName = `${namespace}Component`
 
 @Configuration({
   namespace,
-  importConfigs: [join(__dirname, 'config')],
+  // importConfigs: [join(__dirname, 'config')],
+  importConfigs: [
+    {
+      default: DefaultConfig,
+      local: LocalConfig,
+    },
+  ],
 })
 export class AutoConfiguration {
-  @App() readonly app: IMidwayWebApplication
+  @App() readonly app: IMidwayApplication
 
   @Config('tracer') readonly tracerConfig: TracerConfig
 
@@ -36,7 +45,7 @@ export class AutoConfiguration {
 }
 
 export function registerMiddleware(
-  app: IMidwayWebApplication,
+  app: IMidwayApplication,
   tracerConfig: TracerConfig,
 ): void {
 
@@ -48,12 +57,13 @@ export function registerMiddleware(
     appMiddleware.push(namespace + ':tracerExtMiddleware')
   }
   else {
-    app.logger.warn(`${compName} appMiddleware is not valid Array`)
+    app.getLogger().warn(`${compName} appMiddleware is not valid Array`)
     // throw new TypeError('appMiddleware is not valid Array')
   }
 
   /**
    * 应于所有中间件之前，以便追踪覆盖更大范围
    */
-  app.use(tracerMiddleware)
+  app.useMiddleware(tracerMiddleware)
 }
+

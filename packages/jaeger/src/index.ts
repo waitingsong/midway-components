@@ -1,4 +1,4 @@
-import { SpanLogInput, TracerManager } from './lib/index'
+import { SpanLogInput, TracerManager, TracerConfig } from './lib/index'
 
 
 export { AutoConfiguration as Configuration } from './configuration'
@@ -13,6 +13,13 @@ declare module '@midwayjs/core' {
   interface Context {
     tracerManager: TracerManager
     tracerTags: SpanLogInput
+  }
+}
+
+declare module '@midwayjs/core/dist/interface' {
+  // 将配置合并到 MidwayConfig 中
+  interface MidwayConfig {
+    jaeger?: TracerConfig
   }
 }
 
