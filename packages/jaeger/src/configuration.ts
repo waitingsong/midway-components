@@ -58,6 +58,7 @@ export function registerMiddleware(
   /**
    * 应于所有中间件之前，以便追踪覆盖更大范围
    */
+  // @ts-ignore
   app.getMiddleware().insertFirst(TracerMiddleware)
 
   // const appMiddleware = app.getConfig('middleware') as string[]
