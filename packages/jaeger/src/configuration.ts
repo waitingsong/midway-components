@@ -12,7 +12,7 @@ import { tracer as LocalConfig } from './config/config.local'
 import { namespace, compName } from './lib/config'
 import { initTracer } from './lib/tracer'
 import { TracerConfig } from './lib/types'
-import { tracerMiddleware, TracerMiddleware } from './middleware/tracer.middleware'
+import { TracerMiddleware } from './middleware/tracer.middleware'
 
 
 @Configuration({

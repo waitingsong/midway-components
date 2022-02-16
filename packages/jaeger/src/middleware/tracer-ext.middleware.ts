@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { IMiddleware } from '@midwayjs/core'
+import { IMiddleware, NextFunction } from '@midwayjs/core'
 import { Middleware } from '@midwayjs/decorator'
 import {
   IMidwayWebContext,
@@ -17,7 +17,7 @@ import {
 
 
 @Middleware()
-export class TracerMiddleware implements IMiddleware<IMidwayWebContext, NextFunction> {
+export class TracerExtMiddleware implements IMiddleware<IMidwayWebContext, NextFunction> {
   resolve() {
     return tracerMiddleware
   }
