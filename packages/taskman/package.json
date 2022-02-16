@@ -23,6 +23,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@midwayjs/validate": "^3.0.6",
     "@mw-components/fetch": "^16.0.2",
     "@mw-components/jaeger": "^9.0.4",
     "@mw-components/kmore": "^24.0.0",
