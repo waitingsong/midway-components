@@ -24,6 +24,9 @@ export class AutoConfiguration {
   @Config('jwtMiddlewareConfig') protected readonly mwConfig: JwtMiddlewareConfig
 
   async onReady(): Promise<void> {
+    if (! this.app) {
+      throw new TypeError('this.app invalid')
+    }
     const { enableMiddleware } = this.mwConfig
     if (enableMiddleware || typeof enableMiddleware === 'number') {
       registerMiddleware(this.app, enableMiddleware)

@@ -4,7 +4,7 @@
 import 'tsconfig-paths/register'
 
 import { createApp, close } from '@midwayjs/mock'
-import { Framework } from '@midwayjs/web'
+import * as WEB from '@midwayjs/web'
 
 import { testConfig } from './root.config'
 
@@ -25,12 +25,20 @@ export const mochaHooks = async () => {
 
   return {
     beforeAll: async () => {
-      const app = await createApp<Framework>()
+      const opts = {
+        imports: WEB,
+        globalConfig: {
+          keys: Math.random().toString(),
+        },
+      }
+      const app = await createApp<WEB.Framework>(void 0, opts)
+      console.log({ app })
       testConfig.app = app
 
       app.addConfigObject({
         keys: Math.random().toString(),
       })
+
       // const ctx = app.createAnonymousContext()
       // https:// www.yuque.com/midwayjs/midway_v2/testing
       // const svc = await app.getApplicationContext().getAsync(TaskQueueService)
