@@ -1,4 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
+import { IMiddleware } from '@midwayjs/core'
 import { Middleware } from '@midwayjs/decorator'
 import {
   IMidwayWebContext,
