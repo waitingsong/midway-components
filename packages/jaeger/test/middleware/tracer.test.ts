@@ -1,10 +1,8 @@
 
-import { createApp, close } from '@midwayjs/mock'
 import {
   Framework,
   IMidwayWebApplication,
   IMidwayWebContext,
-  MidwayWebMiddleware,
 } from '@midwayjs/web'
 import { basename } from '@waiting/shared-core'
 
@@ -15,8 +13,6 @@ import { TracerMiddleware } from '~/middleware/tracer.middleware'
 
 // eslint-disable-next-line import/order
 import assert = require('power-assert')
-
-
 
 
 const filename = basename(__filename)
@@ -31,8 +27,7 @@ describe(filename, () => {
   it('Should work', async () => {
     const ctx: IMidwayWebContext = app.createAnonymousContext()
     const inst = await ctx.requestContext.getAsync(TracerMiddleware)
-    const mw = inst.resolve() as MidwayWebMiddleware
-    // @ts-expect-error
+    const mw = inst.resolve()
     await mw(ctx, next)
     const span = ctx.tracerManager.currentSpan()
     assert(span)
@@ -44,7 +39,6 @@ describe(filename, () => {
     ctx.request.headers[HeadersKey.traceId] = `${parentSpanId}:${parentSpanId}:0:1`
     const inst = await ctx.requestContext.getAsync(TracerMiddleware)
     const mw = inst.resolve()
-    // @ts-expect-error
     await mw(ctx, next)
     const spanHeaderInit = ctx.tracerManager.headerOfCurrentSpan()
     assert(spanHeaderInit)
@@ -58,7 +52,6 @@ describe(filename, () => {
     const inst = await ctx.requestContext.getAsync(TracerMiddleware)
     const mw = inst.resolve()
     ctx.path = '/untraced_path_string'
-    // @ts-expect-error
     await mw(ctx, next)
     assert(ctx.tracerManager.isTraceEnabled === false)
   })
@@ -66,9 +59,8 @@ describe(filename, () => {
   it('Should work if path match whitelist regexp', async () => {
     const ctx: IMidwayWebContext = app.createAnonymousContext()
     const inst = await ctx.requestContext.getAsync(TracerMiddleware)
-    const mw = inst.resolve() as MidwayWebMiddleware
+    const mw = inst.resolve()
     ctx.path = '/untraced_path_reg_exp'
-    // @ts-expect-error
     await mw(ctx, next)
     assert(ctx.tracerManager.isTraceEnabled === false)
   })
@@ -76,9 +68,8 @@ describe(filename, () => {
   it('Should work if path not match whitelist regexp', async () => {
     const ctx: IMidwayWebContext = app.createAnonymousContext()
     const inst = await ctx.requestContext.getAsync(TracerMiddleware)
-    const mw = inst.resolve() as MidwayWebMiddleware
+    const mw = inst.resolve()
     ctx.path = '/untraced_path_reg_exp' + Math.random().toString()
-    // @ts-expect-error
     await mw(ctx, next)
     assert(ctx.tracerManager.isTraceEnabled === true)
   })
