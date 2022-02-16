@@ -9,13 +9,11 @@ import { JaegerTracer } from 'jaeger-client'
 
 import { tracer as DefaultConfig } from './config/config.default'
 import { tracer as LocalConfig } from './config/config.local'
+import { namespace, compName } from './lib/config'
 import { initTracer } from './lib/tracer'
 import { TracerConfig } from './lib/types'
 import { tracerMiddleware } from './middleware/tracer.middleware'
 
-
-const namespace = 'jaeger'
-const compName = `${namespace}Component`
 
 @Configuration({
   namespace,
@@ -51,6 +49,8 @@ export function registerMiddleware(
 
   const { enableMiddleWare } = tracerConfig
   if (! enableMiddleWare) { return }
+
+  this.app.getMiddleware().insertFirst(ReportMiddleware)
 
   const appMiddleware = app.getConfig('middleware') as string[]
   if (Array.isArray(appMiddleware)) {

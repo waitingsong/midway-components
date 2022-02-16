@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { Provide } from '@midwayjs/decorator'
+import { IMiddleware, NextFunction } from '@midwayjs/core'
+import { Middleware } from '@midwayjs/decorator'
 import {
   IMidwayWebContext,
   IMidwayWebNext,
@@ -10,6 +11,7 @@ import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
 import { JsonResp } from '@waiting/shared-types'
 import { globalTracer, FORMAT_HTTP_HEADERS } from 'opentracing'
 
+import { compName } from '../lib/config'
 import { TracerManager } from '../lib/tracer'
 import { TracerConfig, TracerLog, TracerTag } from '../lib/types'
 import { pathMatched } from '../util/common'
@@ -23,10 +25,14 @@ import {
 } from './helper'
 
 
-@Provide()
-export class TracerMiddleware implements IWebMiddleware {
-  resolve(): MidwayWebMiddleware {
+@Middleware()
+export class TracerMiddleware implements IMiddleware<IMidwayWebContext<JsonResp | string>, IMidwayWebNext> {
+  resolve() {
     return tracerMiddleware
+  }
+
+  static getName(): string {
+    return compName
   }
 }
 
@@ -38,7 +44,7 @@ export class TracerMiddleware implements IWebMiddleware {
 export async function tracerMiddleware(
   ctx: IMidwayWebContext<JsonResp | string>,
   next: IMidwayWebNext,
-): Promise<unknown> {
+): Promise<void> {
 
   ctx.tracerTags = {}
 
