@@ -3,8 +3,6 @@ import { Middleware } from '@midwayjs/decorator'
 import {
   IMidwayWebContext,
   IMidwayWebNext,
-  IWebMiddleware,
-  MidwayWebMiddleware,
 } from '@midwayjs/web'
 import { humanMemoryUsage } from '@waiting/shared-core'
 
@@ -18,8 +16,8 @@ import {
 
 
 @Middleware()
-export class TracerExtMiddleware implements IWebMiddleware {
-  resolve(): MidwayWebMiddleware {
+export class TracerMiddleware implements IMiddleware<IMidwayWebContext, NextFunction> {
+  resolve() {
     return tracerMiddleware
   }
 }
@@ -30,7 +28,7 @@ export class TracerExtMiddleware implements IWebMiddleware {
  * - 对异常链路进行上报
  */
 async function tracerMiddleware(
-  ctx: IMidwayWebContext<unknown>,
+  ctx: IMidwayWebContext,
   next: IMidwayWebNext,
 ): Promise<unknown> {
 

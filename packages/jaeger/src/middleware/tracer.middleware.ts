@@ -1,14 +1,11 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { Context, IMiddleware, IMidwayContext, NextFunction } from '@midwayjs/core'
+import { IMiddleware, NextFunction } from '@midwayjs/core'
 import { Middleware } from '@midwayjs/decorator'
 import {
   IMidwayWebContext,
   IMidwayWebNext,
-  IWebMiddleware,
-  MidwayWebMiddleware,
 } from '@midwayjs/web'
 import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
-import { JsonResp } from '@waiting/shared-types'
 import { globalTracer, FORMAT_HTTP_HEADERS } from 'opentracing'
 
 import { compName } from '../lib/config'
@@ -26,7 +23,7 @@ import {
 
 
 @Middleware()
-export class TracerMiddleware implements IMiddleware<Context, NextFunction> {
+export class TracerMiddleware implements IMiddleware<IMidwayWebContext, NextFunction> {
   resolve() {
     return tracerMiddleware
   }
