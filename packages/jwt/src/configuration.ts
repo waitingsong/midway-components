@@ -8,7 +8,7 @@ import { App, Config, Configuration } from '@midwayjs/decorator'
 import { IMidwayWebApplication } from '@midwayjs/web'
 
 import { JwtMiddlewareConfig } from './lib/index'
-import { jwtMiddleware } from './middleware/jwt.middleware'
+import { JwtMiddleware } from './middleware/jwt.middleware'
 
 
 const namespace = 'jwt'
@@ -25,7 +25,6 @@ export class AutoConfiguration {
 
   async onReady(): Promise<void> {
     const { enableMiddleware } = this.mwConfig
-    /* istanbul ignore else */
     if (enableMiddleware || typeof enableMiddleware === 'number') {
       registerMiddleware(this.app, enableMiddleware)
     }
@@ -38,15 +37,19 @@ export function registerMiddleware(
   position: true | number,
 ): void {
 
-  const appMiddleware = app.getConfig('middleware') as string[] | undefined
-  /* istanbul ignore if */
-  if (Array.isArray(appMiddleware)) {
-    const pos = position === true ? 0 : position
-    appMiddleware.splice(pos, 0, namespace + ':jwtMiddleware')
-  }
-  else {
-    app.logger.info('Jwt: appMiddleware is not valid Array, register via app.use(Middleware)')
-    app.use(jwtMiddleware)
-  }
+  console.log({ position })
+  // @ts-expect-error
+  app.getMiddleware().insertLast(JwtMiddleware)
+
+  // const appMiddleware = app.getConfig('middleware') as string[] | undefined
+  // /* istanbul ignore if */
+  // if (Array.isArray(appMiddleware)) {
+  //   const pos = position === true ? 0 : position
+  //   appMiddleware.splice(pos, 0, namespace + ':jwtMiddleware')
+  // }
+  // else {
+  //   app.logger.info('Jwt: appMiddleware is not valid Array, register via app.use(Middleware)')
+  //   app.use(jwtMiddleware)
+  // }
 }
 

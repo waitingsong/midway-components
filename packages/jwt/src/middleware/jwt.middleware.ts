@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { Provide } from '@midwayjs/decorator'
+import { IMiddleware, NextFunction } from '@midwayjs/core'
+import { Middleware } from '@midwayjs/decorator'
 
 import {
   Context,
   IMidwayWebNext,
-  IWebMiddleware,
-  MidwayWebMiddleware,
 } from '../interface'
 import {
   genJwtMiddlewareConfig,
@@ -23,9 +22,9 @@ import {
 import { reqestPathMatched } from '../util/common'
 
 
-@Provide()
-export class JwtMiddleware implements IWebMiddleware {
-  resolve(): MidwayWebMiddleware {
+@Middleware()
+export class JwtMiddleware implements IMiddleware<Context, NextFunction> {
+  resolve() {
     return jwtMiddleware
   }
 }
@@ -35,11 +34,10 @@ export async function jwtMiddleware(
   next: IMidwayWebNext,
 ): Promise<void> {
 
-  /* istanbul ignore else */
   if (! ctx.jwtState) {
     ctx.jwtState = {} as JwtState
   }
-  /* istanbul ignore if */
+
   if (! ctx.state) {
     ctx.state = {}
   }
@@ -57,7 +55,6 @@ export async function jwtMiddleware(
   try {
     const token = retrieveToken(ctx, mwConfig.cookie)
 
-    /* istanbul ignore else */
     if (! token) {
       ctx.throw(401, JwtMsg.TokenNotFound)
     }
