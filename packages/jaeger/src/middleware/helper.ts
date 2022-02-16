@@ -168,7 +168,7 @@ async function logError(
 
 
 export async function processHTTPStatus(
-  ctx: IMidwayWebContext<JsonResp | string>,
+  ctx: IMidwayWebContext,
 ): Promise<void> {
 
   const { status } = ctx.response
@@ -246,7 +246,7 @@ export function processRequestQuery(
 }
 
 export function processResponseData(
-  ctx: IMidwayWebContext<JsonResp | string>,
+  ctx: IMidwayWebContext,
 ): void {
 
   const tracerConfig = ctx.app.config.tracer as TracerConfig
@@ -262,18 +262,23 @@ export function processResponseData(
 
 
 export async function processCustomFailure(
-  ctx: IMidwayWebContext<JsonResp | string>,
+  ctx: IMidwayWebContext<JsonResp>,
 ): Promise<void> {
 
   const { body } = ctx
+  if (typeof body !== 'object' || ! body) {
+    return
+  }
 
-  if (typeof body === 'object' && body) {
-    if (typeof body.code !== 'undefined' && body.code !== 0) {
-      updateCtxTagsData(ctx.tracerTags, {
-        [Tags.SAMPLING_PRIORITY]: 30,
-        [TracerTag.resCode]: body.code,
-      })
-    }
+  if (typeof body.code === 'undefined') {
+    return
+  }
+
+  if (body.code !== 0) {
+    updateCtxTagsData(ctx.tracerTags, {
+      [Tags.SAMPLING_PRIORITY]: 30,
+      [TracerTag.resCode]: body.code,
+    })
   }
 }
 

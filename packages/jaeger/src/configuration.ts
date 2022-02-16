@@ -12,7 +12,7 @@ import { tracer as LocalConfig } from './config/config.local'
 import { namespace, compName } from './lib/config'
 import { initTracer } from './lib/tracer'
 import { TracerConfig } from './lib/types'
-import { tracerMiddleware } from './middleware/tracer.middleware'
+import { tracerMiddleware, TracerMiddleware } from './middleware/tracer.middleware'
 
 
 @Configuration({
@@ -50,20 +50,28 @@ export function registerMiddleware(
   const { enableMiddleWare } = tracerConfig
   if (! enableMiddleWare) { return }
 
-  this.app.getMiddleware().insertFirst(ReportMiddleware)
-
-  const appMiddleware = app.getConfig('middleware') as string[]
-  if (Array.isArray(appMiddleware)) {
-    appMiddleware.push(namespace + ':tracerExtMiddleware')
-  }
-  else {
-    app.getLogger().warn(`${compName} appMiddleware is not valid Array`)
-    // throw new TypeError('appMiddleware is not valid Array')
+  const names = app.getMiddleware().getNames()
+  if (names.includes(compName)) {
+    return
   }
 
   /**
    * 应于所有中间件之前，以便追踪覆盖更大范围
    */
-  app.useMiddleware(tracerMiddleware)
+  app.getMiddleware().insertFirst(TracerMiddleware)
+
+  // const appMiddleware = app.getConfig('middleware') as string[]
+  // if (Array.isArray(appMiddleware)) {
+  //   appMiddleware.push(namespace + ':tracerExtMiddleware')
+  // }
+  // else {
+  //   app.getLogger().warn(`${compName} appMiddleware is not valid Array`)
+  //   // throw new TypeError('appMiddleware is not valid Array')
+  // }
+
+  /**
+   * 应于所有中间件之前，以便追踪覆盖更大范围
+   */
+  // app.useMiddleware(tracerMiddleware)
 }
 

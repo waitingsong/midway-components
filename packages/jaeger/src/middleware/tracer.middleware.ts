@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { IMiddleware, NextFunction } from '@midwayjs/core'
+import { Context, IMiddleware, IMidwayContext, NextFunction } from '@midwayjs/core'
 import { Middleware } from '@midwayjs/decorator'
 import {
   IMidwayWebContext,
@@ -26,7 +26,7 @@ import {
 
 
 @Middleware()
-export class TracerMiddleware implements IMiddleware<IMidwayWebContext<JsonResp | string>, IMidwayWebNext> {
+export class TracerMiddleware implements IMiddleware<Context, NextFunction> {
   resolve() {
     return tracerMiddleware
   }
@@ -42,7 +42,7 @@ export class TracerMiddleware implements IMiddleware<IMidwayWebContext<JsonResp 
  * - 对异常链路进行上报
  */
 export async function tracerMiddleware(
-  ctx: IMidwayWebContext<JsonResp | string>,
+  ctx: IMidwayWebContext,
   next: IMidwayWebNext,
 ): Promise<void> {
 
@@ -75,7 +75,7 @@ export async function tracerMiddleware(
   return handleTopExceptionAndNext(trm, next)
 }
 
-function startSpan(ctx: IMidwayWebContext<JsonResp | string>): TracerManager {
+function startSpan(ctx: IMidwayWebContext): TracerManager {
   // 开启第一个span并入栈
   const tracerManager = new TracerManager(true)
   const requestSpanCtx
@@ -100,7 +100,7 @@ function startSpan(ctx: IMidwayWebContext<JsonResp | string>): TracerManager {
   return tracerManager
 }
 
-async function finishSpan(ctx: IMidwayWebContext<JsonResp | string>): Promise<void> {
+async function finishSpan(ctx: IMidwayWebContext): Promise<void> {
   const { tracerManager } = ctx
 
   await processHTTPStatus(ctx)
