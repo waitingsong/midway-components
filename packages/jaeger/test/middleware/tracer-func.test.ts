@@ -59,7 +59,6 @@ describe(filename, () => {
 
       const inst = await ctx.requestContext.getAsync(TracerMiddleware)
       const mw = inst.resolve()
-      // @ts-expect-error
       await mw(ctx, next)
 
       const fnName = 'processPriority'
@@ -87,7 +86,6 @@ describe(filename, () => {
 
       const inst = await ctx.requestContext.getAsync(TracerMiddleware)
       const mw = inst.resolve()
-      // @ts-expect-error
       await mw(ctx, next)
 
       const fnName = 'processPriority'
