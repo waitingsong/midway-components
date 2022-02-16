@@ -122,7 +122,7 @@ async function genFromCommon(pkgNameArr: string[], files: string[]): Promise<str
         }
       }
       catch (ex) {
-        console.log(ex.message)
+        console.log((ex as Error).message)
       }
     }
   }
@@ -148,7 +148,7 @@ async function genFromDetail(files: string[]): Promise<string[]> {
       }
     }
     catch (ex) {
-      console.log(ex.message)
+      console.log((ex as Error).message)
     }
   }
 
@@ -172,7 +172,7 @@ async function copyRootFilesToMainPkg(dstName: string): Promise<string[]> {
       paths.push(dstPath)
     }
     catch (ex) {
-      console.log(ex.message)
+      console.log((ex as Error).message)
     }
   }
 
