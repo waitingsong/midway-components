@@ -37,7 +37,10 @@ describe(filename, () => {
       // @ts-expect-error
       ctx.app = app
       ctx.path = path
-      ctx.headers.authorization = ''
+      ctx.header = {
+        ...ctx.header,
+        authorization: '',
+      }
 
       await authShouldRedirect(ctx, mw, path2)
     })
@@ -59,7 +62,10 @@ describe(filename, () => {
       // @ts-expect-error
       ctx.app = app
       ctx.path = path
-      ctx.headers.authorization = ''
+      ctx.header = {
+        ...ctx.header,
+        authorization: '',
+      }
 
       await authShouldPassthroughEmptyStringNotFound(ctx, mw, 401)
     })

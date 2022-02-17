@@ -3,8 +3,11 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import 'tsconfig-paths/register'
 
+import { join } from 'path'
+
 import * as WEB from '@midwayjs/koa'
-import { createApp, close } from '@midwayjs/mock'
+// import { createApp, close } from '@midwayjs/mock'
+import { createApp, close, createHttpRequest } from '@midwayjs/mock'
 
 import { testConfig } from './root.config'
 import { jwtConfig } from './test.config'
@@ -36,9 +39,14 @@ export const mochaHooks = async () => {
         imports: [WEB],
         globalConfig: configs,
       }
-      const app = await createApp(void 0, opts) as Application
+      // const app = await createApp(void 0, opts) as Application
+      const app = await createApp(join(__dirname, 'fixtures', 'base-app'), opts) as Application
       app.addConfigObject(configs)
       testConfig.app = app
+      testConfig.httpRequest = createHttpRequest(app)
+      const { url } = testConfig.httpRequest.get('/')
+      console.log({ url })
+
 
       // const frameworkType = app.getFrameworkType()
       // const names = app.getMiddleware().getNames()

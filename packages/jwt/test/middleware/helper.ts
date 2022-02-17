@@ -2,6 +2,8 @@ import assert from 'assert/strict'
 
 import { IMiddleware } from '@midwayjs/core'
 
+
+import { TestResponse } from '@/root.config'
 import {
   Context,
   NextFunction,
@@ -13,23 +15,17 @@ import {
 const next: NextFunction = async () => { return }
 
 export async function authShouldPassed(
-  ctx: Context,
-  mw: IMiddleware<Context, NextFunction>,
+  resp: TestResponse,
   expectPayload: unknown,
 ): Promise<void> {
 
-  const fn = mw.resolve()
-  if (typeof fn !== 'function') {
-    throw new TypeError('Not function')
-  }
-  await fn(ctx, next)
-  const { status, jwtState } = ctx
+  const { status, jwtState } = resp
   assert(status === 200)
   assert(jwtState)
   assert(jwtState.user)
   assert(jwtState.header)
   assert(jwtState.signature)
-  assert.deepStrictEqual(ctx.jwtState.user && ctx.jwtState.user, expectPayload)
+  assert.deepStrictEqual(jwtState.user, expectPayload)
 }
 
 export async function authShouldSkipped(
@@ -50,39 +46,28 @@ export async function authShouldSkipped(
 }
 
 export async function authShouldFailedWithNotFound(
-  ctx: Context,
-  mw: IMiddleware<Context, NextFunction>,
-  status = 401,
+  resp: TestResponse,
+  expectStatus = 401,
 ): Promise<void> {
 
+  const { status, jwtState } = resp
+  assert(status === expectStatus)
+  assert(! jwtState.user)
+  assert(! jwtState.secret)
+  assert(! jwtState.signature)
 
-  try {
-    const fn = mw.resolve()
-    if (typeof fn !== 'function') {
-      throw new TypeError('Not function')
-    }
-    await fn(ctx, next)
-  }
-  catch (ex: any) {
-    assert(ctx.status === status)
+  // const msg = (ex as Error).message
+  // assert(msg.includes(JwtMsg.AuthFailed))
 
-    const msg = (ex as Error).message
-    assert(msg.includes(JwtMsg.AuthFailed))
+  // // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  // if (typeof ex.originalError !== 'undefined') {
+  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  //   const omsg = (ex.originalError as Error).message
+  //   assert(omsg.includes(JwtMsg.TokenNotFound))
+  // }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (typeof ex.originalError !== 'undefined') {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      const omsg = (ex.originalError as Error).message
-      assert(omsg.includes(JwtMsg.TokenNotFound))
-    }
-
-    const { jwtState } = ctx
-    assert(! jwtState.user)
-    assert(! jwtState.secret)
-    assert(! jwtState.signature)
-    return
-  }
-  assert(false, `should throw error with status: "${status}", but not.`)
+  return
+  // assert(false, `should throw error with status: "${status}", but not.`)
 }
 
 export async function authShouldValidatFailed(
@@ -116,23 +101,17 @@ export async function authShouldValidatFailed(
 }
 
 export async function authShouldPassthroughNotFound(
-  ctx: Context,
-  mw: IMiddleware<Context, NextFunction>,
-  status = 200,
+  resp: TestResponse,
+  expectStatus = 200,
 ): Promise<void> {
 
-  const fn = mw.resolve()
-  if (typeof fn !== 'function') {
-    throw new TypeError('Not function')
-  }
-  await fn(ctx, next)
-  assert(ctx.status === status)
-  const { jwtState } = ctx
+  const { status, jwtState } = resp
+  assert(status === expectStatus)
   assert(! jwtState.user)
   assert(! jwtState.secret)
   assert(! jwtState.signature)
 
-  const { jwtOriginalError } = ctx.jwtState
+  const { jwtOriginalError } = jwtState
   assert(jwtOriginalError && jwtOriginalError instanceof Error)
   if (jwtOriginalError) {
     const omsg = jwtOriginalError.message
