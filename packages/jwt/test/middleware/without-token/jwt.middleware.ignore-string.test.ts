@@ -1,9 +1,6 @@
 import { relative } from 'path'
 
-import { MidwayWebMiddleware } from '@midwayjs/web'
-
 import { testConfig } from '../../root.config'
-import { secret } from '../../test.config'
 import { authShouldFailedWithNotFound, authShouldSkipped } from '../helper'
 
 import {
@@ -35,7 +32,7 @@ describe(filename, () => {
       const ctx: Context = app.createAnonymousContext()
       ctx.path = path
 
-      const mw = inst.resolve() as MidwayWebMiddleware
+      const mw = inst.resolve()
       await authShouldSkipped(ctx, mw)
     })
 
@@ -54,7 +51,7 @@ describe(filename, () => {
       const ctx: Context = app.createAnonymousContext()
       ctx.path = path
 
-      const mw = inst.resolve() as MidwayWebMiddleware
+      const mw = inst.resolve()
       await authShouldFailedWithNotFound(ctx, mw)
     })
 
@@ -73,7 +70,7 @@ describe(filename, () => {
       const ctx: Context = app.createAnonymousContext()
       ctx.path = path
 
-      const mw = inst.resolve() as MidwayWebMiddleware
+      const mw = inst.resolve()
       await authShouldFailedWithNotFound(ctx, mw)
     })
 
@@ -94,7 +91,7 @@ describe(filename, () => {
       const ctx: Context = app.createAnonymousContext()
       ctx.path = path
 
-      const mw = inst.resolve() as MidwayWebMiddleware
+      const mw = inst.resolve()
       await authShouldSkipped(ctx, mw)
     })
 

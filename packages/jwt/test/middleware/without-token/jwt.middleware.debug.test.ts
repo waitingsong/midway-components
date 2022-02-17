@@ -1,9 +1,6 @@
 import { relative } from 'path'
 
-import { MidwayWebMiddleware } from '@midwayjs/web'
-
 import { testConfig } from '../../root.config'
-import { secret } from '../../test.config'
 import {
   authShouldFailedWithNotFoundFromDebug,
   authShouldPassthroughNotFound,
@@ -38,7 +35,7 @@ describe(filename, () => {
       const ctx: Context = app.createAnonymousContext()
       ctx.path = path
 
-      const mw = inst.resolve() as MidwayWebMiddleware
+      const mw = inst.resolve()
       await authShouldFailedWithNotFoundFromDebug(ctx, mw)
     })
 
@@ -59,7 +56,7 @@ describe(filename, () => {
       const ctx: Context = app.createAnonymousContext()
       ctx.path = path
 
-      const mw = inst.resolve() as MidwayWebMiddleware
+      const mw = inst.resolve()
       await authShouldPassthroughNotFound(ctx, mw)
     })
   })

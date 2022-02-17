@@ -1,7 +1,5 @@
 import { relative } from 'path'
 
-import { MidwayWebMiddleware } from '@midwayjs/web'
-
 import { testConfig } from '../../root.config'
 import { authHeader1, payload1, secret, token1 } from '../../test.config'
 import {
@@ -45,7 +43,7 @@ describe(filename, () => {
       ctx.path = path
       ctx.headers.authorization = authHeader1
 
-      const mw = inst.resolve() as MidwayWebMiddleware
+      const mw = inst.resolve()
       await authShouldPassed(ctx, mw, payload1)
     })
 
@@ -66,7 +64,7 @@ describe(filename, () => {
       ctx.path = path
       ctx.headers.authorization = ''
 
-      const mw = inst.resolve() as MidwayWebMiddleware
+      const mw = inst.resolve()
       await authShouldPassthroughNotFound(ctx, mw)
     })
 
@@ -88,7 +86,7 @@ describe(filename, () => {
       ctx.path = path
       ctx.headers.authorization = ''
 
-      const mw = inst.resolve() as MidwayWebMiddleware
+      const mw = inst.resolve()
       await authShouldFailedWithNotFound(ctx, mw, 401)
     })
 
@@ -110,7 +108,7 @@ describe(filename, () => {
       ctx.path = path
       ctx.headers.authorization = ''
 
-      const mw = inst.resolve() as MidwayWebMiddleware
+      const mw = inst.resolve()
       await authShouldFailedWithNotFound(ctx, mw, 401)
     })
   })

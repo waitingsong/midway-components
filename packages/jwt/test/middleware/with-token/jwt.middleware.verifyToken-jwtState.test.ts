@@ -1,7 +1,5 @@
 import { relative } from 'path'
 
-import { MidwayWebMiddleware } from '@midwayjs/web'
-
 import { testConfig } from '../../root.config'
 import { authHeader1, payload1, secret, token1 } from '../../test.config'
 import { authShouldPassed } from '../helper'
@@ -43,7 +41,7 @@ describe(filename, () => {
         secret,
       }
 
-      const mw = inst.resolve() as MidwayWebMiddleware
+      const mw = inst.resolve()
       await authShouldPassed(ctx, mw, payload1)
     })
 
@@ -66,7 +64,7 @@ describe(filename, () => {
         secret,
       }
 
-      const mw = inst.resolve() as MidwayWebMiddleware
+      const mw = inst.resolve()
       await authShouldPassed(ctx, mw, payload1)
     })
 

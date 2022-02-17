@@ -1,3 +1,4 @@
+import { NextFunction } from '@midwayjs/core'
 import { IMidwayKoaNext } from '@midwayjs/koa'
 import { MidwayWebMiddleware } from '@midwayjs/web'
 
@@ -11,7 +12,7 @@ import {
 import assert = require('power-assert')
 
 
-const next: IMidwayKoaNext = async () => { return }
+const next: NextFunction = async () => { return }
 
 export async function authShouldPassed(
   ctx: Context,

@@ -1,9 +1,6 @@
 import { relative } from 'path'
 
-import { MidwayWebMiddleware } from '@midwayjs/web'
-
 import { testConfig } from '../../root.config'
-import { secret } from '../../test.config'
 import {
   authShouldPassthroughEmptyStringNotFound,
   authShouldRedirect,
@@ -40,7 +37,7 @@ describe(filename, () => {
       ctx.path = path
       ctx.headers.authorization = ''
 
-      const mw = inst.resolve() as MidwayWebMiddleware
+      const mw = inst.resolve()
       await authShouldRedirect(ctx, mw, path2)
     })
 
@@ -61,7 +58,7 @@ describe(filename, () => {
       ctx.path = path
       ctx.headers.authorization = ''
 
-      const mw = inst.resolve() as MidwayWebMiddleware
+      const mw = inst.resolve()
       await authShouldPassthroughEmptyStringNotFound(ctx, mw, 401)
     })
   })

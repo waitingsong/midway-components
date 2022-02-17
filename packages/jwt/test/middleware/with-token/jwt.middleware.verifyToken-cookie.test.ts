@@ -1,7 +1,5 @@
 import { relative } from 'path'
 
-import { MidwayWebMiddleware } from '@midwayjs/web'
-
 import { testConfig } from '../../root.config'
 import { payload1, secret, token1 } from '../../test.config'
 import { authShouldFailedWithNotFound, authShouldPassed, authShouldSkipped } from '../helper'
@@ -49,7 +47,7 @@ describe(filename, () => {
       const t1 = ctx.cookies.get(cookieKey)
       assert(t1 === token1)
 
-      const mw = inst.resolve() as MidwayWebMiddleware
+      const mw = inst.resolve()
       await authShouldSkipped(ctx, mw)
     })
 
@@ -79,7 +77,7 @@ describe(filename, () => {
       const t1 = ctx.cookies.get(cookieKey)
       assert(t1 === token1)
 
-      const mw = inst.resolve() as MidwayWebMiddleware
+      const mw = inst.resolve()
       await authShouldPassed(ctx, mw, payload1)
     })
 
@@ -110,7 +108,7 @@ describe(filename, () => {
       const t1 = ctx.cookies.get(cookieKey)
       assert(t1 === token1)
 
-      const mw = inst.resolve() as MidwayWebMiddleware
+      const mw = inst.resolve()
       await authShouldFailedWithNotFound(ctx, mw)
     })
   })
