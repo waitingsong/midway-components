@@ -6,13 +6,15 @@ export {
   JsonType,
 } from '@waiting/shared-types'
 
-export {
-  IMidwayWebApplication as Application,
-  IMidwayWebContext as Context,
-  IWebMiddleware,
-  IMidwayWebNext,
-  MidwayWebMiddleware,
-} from '@midwayjs/web'
+export { IMidwayApplication as Application } from '@midwayjs/core'
+
+// export {
+//   IMidwayWebApplication as Application,
+//   IMidwayWebContext as Context,
+//   IWebMiddleware,
+//   IMidwayWebNext,
+//   MidwayWebMiddleware,
+// } from '@midwayjs/web'
 
 export { NpmPkg } from '@waiting/shared-types'
 

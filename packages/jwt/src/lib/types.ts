@@ -1,3 +1,5 @@
+import { IMidwayContext } from '@midwayjs/core'
+import { Context as KoaContext } from '@midwayjs/koa'
 import { JsonObject } from '@waiting/shared-types'
 import {
   DecodeOptions,
@@ -7,8 +9,9 @@ import {
   VerifyOptions,
 } from 'jsonwebtoken'
 
-import { Context } from '~/interface'
 
+export { NextFunction } from '@midwayjs/core'
+export type Context = IMidwayContext<KoaContext>
 
 export interface JwtConfig {
   /**
@@ -85,7 +88,6 @@ export type PathPatternFunc = (ctx: Context) => boolean
 export type RedirectURL = string
 export type passthroughCallback = (ctx: Context) => Promise<boolean | RedirectURL>
 
-// export type Middleware = (ctx: Context, next: () => Promise<void>) => Promise<void>
 
 /** Bind on Context.jwtState */
 export interface JwtState<T = JsonObject> {

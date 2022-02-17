@@ -1,6 +1,6 @@
 import { relative } from 'path'
 
-import { Context } from '~/interface'
+import { Context } from '~/index'
 import { reqestPathMatched } from '~/util/common'
 
 // eslint-disable-next-line import/order

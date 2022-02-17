@@ -32,13 +32,12 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig })
 
       const container = app.getApplicationContext()
-      const inst = await container.getAsync(JwtMiddleware)
+      const mw = await container.getAsync(JwtMiddleware)
 
-      const ctx: Context = app.createAnonymousContext()
+      const ctx: Context = app.createAnonymousContext() as Context
       ctx.path = path
       ctx.headers.authorization = authHeader1
 
-      const mw = inst.resolve()
       await authShouldPassed(ctx, mw, payload1)
     })
 
@@ -53,13 +52,12 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig })
 
       const container = app.getApplicationContext()
-      const inst = await container.getAsync(JwtMiddleware)
+      const mw = await container.getAsync(JwtMiddleware)
 
-      const ctx: Context = app.createAnonymousContext()
+      const ctx: Context = app.createAnonymousContext() as Context
       ctx.path = path
       ctx.headers.authorization = ''
 
-      const mw = inst.resolve() as MidwayWebMiddleware
       await authShouldPassthroughNotFound(ctx, mw)
     })
 
@@ -74,13 +72,12 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig })
 
       const container = app.getApplicationContext()
-      const inst = await container.getAsync(JwtMiddleware)
+      const mw = await container.getAsync(JwtMiddleware)
 
-      const ctx: Context = app.createAnonymousContext()
+      const ctx: Context = app.createAnonymousContext() as Context
       ctx.path = path
       ctx.headers.authorization = authHeader1 + 'FAKE'
 
-      const mw = inst.resolve() as MidwayWebMiddleware
       await authShouldPassthroughValidFailed(ctx, mw)
     })
   })

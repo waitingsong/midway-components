@@ -1,9 +1,8 @@
-import { NextFunction } from '@midwayjs/core'
-import { IMidwayKoaNext } from '@midwayjs/koa'
-import { MidwayWebMiddleware } from '@midwayjs/web'
+import { IMiddleware } from '@midwayjs/core'
 
 import {
   Context,
+  NextFunction,
   JwtMsg,
   JwtState,
 } from '~/index'
@@ -16,12 +15,15 @@ const next: NextFunction = async () => { return }
 
 export async function authShouldPassed(
   ctx: Context,
-  mw: MidwayWebMiddleware,
+  mw: IMiddleware<Context, NextFunction>,
   expectPayload: unknown,
 ): Promise<void> {
 
-  // @ts-expect-error
-  await mw(ctx, next)
+  const fn = mw.resolve()
+  if (typeof fn !== 'function') {
+    throw new TypeError('Not function')
+  }
+  await fn(ctx, next)
   const { status, jwtState } = ctx
   assert(status === 200)
   assert(jwtState)
@@ -33,11 +35,14 @@ export async function authShouldPassed(
 
 export async function authShouldSkipped(
   ctx: Context,
-  mw: MidwayWebMiddleware,
+  mw: IMiddleware<Context, NextFunction>,
 ): Promise<void> {
 
-  // @ts-expect-error
-  await mw(ctx, next)
+  const fn = mw.resolve()
+  if (typeof fn !== 'function') {
+    throw new TypeError('Not function')
+  }
+  await fn(ctx, next)
   const { status, jwtState } = ctx
   assert(status === 200)
   assert(! jwtState.user)
@@ -47,13 +52,17 @@ export async function authShouldSkipped(
 
 export async function authShouldFailedWithNotFound(
   ctx: Context,
-  mw: MidwayWebMiddleware,
+  mw: IMiddleware<Context, NextFunction>,
   status = 401,
 ): Promise<void> {
 
+
   try {
-    // @ts-expect-error
-    await mw(ctx, next)
+    const fn = mw.resolve()
+    if (typeof fn !== 'function') {
+      throw new TypeError('Not function')
+    }
+    await fn(ctx, next)
   }
   catch (ex: any) {
     assert(ctx.status === status)
@@ -76,12 +85,15 @@ export async function authShouldFailedWithNotFound(
 
 export async function authShouldValidatFailed(
   ctx: Context,
-  mw: MidwayWebMiddleware,
+  mw: IMiddleware<Context, NextFunction>,
 ): Promise<void> {
 
   try {
-    // @ts-expect-error
-    await mw(ctx, next)
+    const fn = mw.resolve()
+    if (typeof fn !== 'function') {
+      throw new TypeError('Not function')
+    }
+    await fn(ctx, next)
   }
   catch (ex: any) {
     assert(ctx.status === 401)
@@ -103,12 +115,15 @@ export async function authShouldValidatFailed(
 
 export async function authShouldPassthroughNotFound(
   ctx: Context,
-  mw: MidwayWebMiddleware,
+  mw: IMiddleware<Context, NextFunction>,
   status = 200,
 ): Promise<void> {
 
-  // @ts-expect-error
-  await mw(ctx, next)
+  const fn = mw.resolve()
+  if (typeof fn !== 'function') {
+    throw new TypeError('Not function')
+  }
+  await fn(ctx, next)
   assert(ctx.status === status)
   const { jwtState } = ctx
   assert(! jwtState.user)
@@ -125,12 +140,15 @@ export async function authShouldPassthroughNotFound(
 
 export async function authShouldPassthroughValidFailed(
   ctx: Context,
-  mw: MidwayWebMiddleware,
+  mw: IMiddleware<Context, NextFunction>,
   status = 200,
 ): Promise<void> {
 
-  // @ts-expect-error
-  await mw(ctx, next)
+  const fn = mw.resolve()
+  if (typeof fn !== 'function') {
+    throw new TypeError('Not function')
+  }
+  await fn(ctx, next)
   assert(ctx.status === status)
   const { jwtState } = ctx
   assert(! jwtState.user)
@@ -148,12 +166,15 @@ export async function authShouldPassthroughValidFailed(
 
 export async function authShouldRedirect(
   ctx: Context,
-  mw: MidwayWebMiddleware,
+  mw: IMiddleware<Context, NextFunction>,
   redirectUrl: string,
 ): Promise<void> {
 
-  // @ts-expect-error
-  await mw(ctx, next)
+  const fn = mw.resolve()
+  if (typeof fn !== 'function') {
+    throw new TypeError('Not function')
+  }
+  await fn(ctx, next)
   const { status, jwtState } = ctx
   assert(status === 302)
   assert(! jwtState.user)
@@ -166,13 +187,16 @@ export async function authShouldRedirect(
 
 export async function authShouldPassthroughEmptyStringNotFound(
   ctx: Context,
-  mw: MidwayWebMiddleware,
+  mw: IMiddleware<Context, NextFunction>,
   status = 200,
 ): Promise<void> {
 
   try {
-    // @ts-expect-error
-    await mw(ctx, next)
+    const fn = mw.resolve()
+    if (typeof fn !== 'function') {
+      throw new TypeError('Not function')
+    }
+    await fn(ctx, next)
   }
   catch (ex: any) {
     assert(ctx.status === status)
@@ -194,13 +218,16 @@ export async function authShouldPassthroughEmptyStringNotFound(
 
 export async function authShouldFailedWithNotFoundFromDebug(
   ctx: Context,
-  mw: MidwayWebMiddleware,
+  mw: IMiddleware<Context, NextFunction>,
   status = 401,
 ): Promise<void> {
 
   try {
-    // @ts-expect-error
-    await mw(ctx, next)
+    const fn = mw.resolve()
+    if (typeof fn !== 'function') {
+      throw new TypeError('Not function')
+    }
+    await fn(ctx, next)
   }
   catch (ex: any) {
     assert(ctx.status === status)

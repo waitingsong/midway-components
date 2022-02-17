@@ -32,16 +32,14 @@ describe(filename, () => {
       app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
 
       const container = app.getApplicationContext()
-      const inst = await container.getAsync(JwtMiddleware)
-
-      const ctx: Context = app.createAnonymousContext()
+      const mw = await container.getAsync(JwtMiddleware)
+      const ctx: Context = app.createAnonymousContext() as Context
       ctx.path = path
       ctx.headers.authorization = authHeader1
       ctx.jwtState = {
         secret,
       }
 
-      const mw = inst.resolve()
       await authShouldPassed(ctx, mw, payload1)
     })
 
@@ -55,16 +53,14 @@ describe(filename, () => {
       app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
 
       const container = app.getApplicationContext()
-      const inst = await container.getAsync(JwtMiddleware)
-
-      const ctx: Context = app.createAnonymousContext()
+      const mw = await container.getAsync(JwtMiddleware)
+      const ctx: Context = app.createAnonymousContext() as Context
       ctx.path = path
       ctx.headers.authorization = authHeader1
       ctx.state = {
         secret,
       }
 
-      const mw = inst.resolve()
       await authShouldPassed(ctx, mw, payload1)
     })
 

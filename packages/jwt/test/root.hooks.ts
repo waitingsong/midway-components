@@ -3,13 +3,13 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import 'tsconfig-paths/register'
 
+import * as WEB from '@midwayjs/koa'
 import { createApp, close } from '@midwayjs/mock'
-import * as WEB from '@midwayjs/web'
 
 import { testConfig } from './root.config'
 import { jwtConfig } from './test.config'
 
-import { JwtConfig } from '~/index'
+import { Application } from '~/interface'
 
 
 /**
@@ -35,7 +35,7 @@ export const mochaHooks = async () => {
           jwtConfig,
         },
       }
-      const app = await createApp<WEB.Framework>(void 0, opts)
+      const app = await createApp(void 0, opts) as Application
       testConfig.app = app
 
       app.addConfigObject({

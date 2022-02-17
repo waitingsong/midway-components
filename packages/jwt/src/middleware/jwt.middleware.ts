@@ -1,11 +1,10 @@
+// @ts-nocheck
+/* eslint-disable */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { IMiddleware, NextFunction } from '@midwayjs/core'
+import { IMiddleware } from '@midwayjs/core'
 import { Middleware } from '@midwayjs/decorator'
 
-import {
-  Context,
-  IMidwayWebNext,
-} from '../interface'
+
 import {
   genJwtMiddlewareConfig,
   JwtComponent,
@@ -13,6 +12,8 @@ import {
 } from '../lib/index'
 import { retrieveToken } from '../lib/resolvers'
 import {
+  Context,
+  NextFunction,
   JwtAuthenticateOptions,
   VerifySecret,
   RedirectURL,
@@ -31,7 +32,7 @@ export class JwtMiddleware implements IMiddleware<Context, NextFunction> {
 
 export async function jwtMiddleware(
   ctx: Context,
-  next: IMidwayWebNext,
+  next: NextFunction,
 ): Promise<void> {
 
   if (! ctx.jwtState) {
@@ -42,7 +43,9 @@ export async function jwtMiddleware(
     ctx.state = {}
   }
 
-  const pmwConfig = ctx.app.getConfig('jwtMiddlewareConfig') as JwtMiddlewareConfig
+  // const pmwConfig = ctx.app.getConfig('jwtMiddlewareConfig') as JwtMiddlewareConfig
+  // @ts-expect-error
+  const pmwConfig = ctx.app.jwtMiddlewareConfig as JwtMiddlewareConfig
   const mwConfig = genJwtMiddlewareConfig(pmwConfig)
 
   const { ignore } = mwConfig

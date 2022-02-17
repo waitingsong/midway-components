@@ -43,6 +43,8 @@ export function registerMiddleware(
   console.log({ position })
   // @ts-expect-error
   app.getMiddleware().insertLast(JwtMiddleware)
+  // const names = app.getMiddleware().getNames()
+  // console.log({ names })
 
   // const appMiddleware = app.getConfig('middleware') as string[] | undefined
   // /* istanbul ignore if */

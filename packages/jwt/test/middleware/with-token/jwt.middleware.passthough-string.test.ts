@@ -31,13 +31,12 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig })
 
       const container = app.getApplicationContext()
-      const inst = await container.getAsync(JwtMiddleware)
+      const mw = await container.getAsync(JwtMiddleware)
 
-      const ctx: Context = app.createAnonymousContext()
+      const ctx: Context = app.createAnonymousContext() as Context
       ctx.path = path
       ctx.headers.authorization = ''
 
-      const mw = inst.resolve()
       await authShouldRedirect(ctx, mw, path2)
     })
 
@@ -52,13 +51,12 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig })
 
       const container = app.getApplicationContext()
-      const inst = await container.getAsync(JwtMiddleware)
+      const mw = await container.getAsync(JwtMiddleware)
 
-      const ctx: Context = app.createAnonymousContext()
+      const ctx: Context = app.createAnonymousContext() as Context
       ctx.path = path
       ctx.headers.authorization = ''
 
-      const mw = inst.resolve()
       await authShouldPassthroughEmptyStringNotFound(ctx, mw, 401)
     })
   })

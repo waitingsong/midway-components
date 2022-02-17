@@ -37,13 +37,12 @@ describe(filename, () => {
 
       const names = app.getMiddleware().getNames()
       const container = app.getApplicationContext()
-      const inst = await container.getAsync(JwtMiddleware)
+      const mw = await container.getAsync(JwtMiddleware)
 
-      const ctx: Context = app.createAnonymousContext()
+      const ctx = app.createAnonymousContext() as Context
       ctx.path = path
       ctx.headers.authorization = authHeader1
 
-      const mw = inst.resolve()
       await authShouldPassed(ctx, mw, payload1)
     })
 
@@ -58,13 +57,12 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig })
 
       const container = app.getApplicationContext()
-      const inst = await container.getAsync(JwtMiddleware)
+      const mw = await container.getAsync(JwtMiddleware)
 
-      const ctx: Context = app.createAnonymousContext()
+      const ctx: Context = app.createAnonymousContext() as Context
       ctx.path = path
       ctx.headers.authorization = ''
 
-      const mw = inst.resolve()
       await authShouldPassthroughNotFound(ctx, mw)
     })
 
@@ -80,13 +78,12 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig })
 
       const container = app.getApplicationContext()
-      const inst = await container.getAsync(JwtMiddleware)
+      const mw = await container.getAsync(JwtMiddleware)
 
-      const ctx: Context = app.createAnonymousContext()
+      const ctx = app.createAnonymousContext() as Context
       ctx.path = path
       ctx.headers.authorization = ''
 
-      const mw = inst.resolve()
       await authShouldFailedWithNotFound(ctx, mw, 401)
     })
 
@@ -102,13 +99,12 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig })
 
       const container = app.getApplicationContext()
-      const inst = await container.getAsync(JwtMiddleware)
+      const mw = await container.getAsync(JwtMiddleware)
 
-      const ctx: Context = app.createAnonymousContext()
+      const ctx: Context = app.createAnonymousContext() as Context
       ctx.path = path
       ctx.headers.authorization = ''
 
-      const mw = inst.resolve()
       await authShouldFailedWithNotFound(ctx, mw, 401)
     })
   })
