@@ -35,14 +35,16 @@ describe(filename, () => {
       }
       app.addConfigObject({ jwtMiddlewareConfig })
 
-      const names = app.getMiddleware().getNames()
       const container = app.getApplicationContext()
       const mw = await container.getAsync(JwtMiddleware)
 
       const ctx = app.createAnonymousContext() as Context
+      // @ts-expect-error
+      ctx.app = app
       ctx.path = path
-      ctx.headers.authorization = authHeader1
-
+      ctx.header = {
+        authorization: authHeader1,
+      }
       await authShouldPassed(ctx, mw, payload1)
     })
 
@@ -60,9 +62,12 @@ describe(filename, () => {
       const mw = await container.getAsync(JwtMiddleware)
 
       const ctx: Context = app.createAnonymousContext() as Context
+      // @ts-expect-error
+      ctx.app = app
       ctx.path = path
-      ctx.headers.authorization = ''
-
+      ctx.headers = {
+        authorization: '',
+      }
       await authShouldPassthroughNotFound(ctx, mw)
     })
 
@@ -81,8 +86,13 @@ describe(filename, () => {
       const mw = await container.getAsync(JwtMiddleware)
 
       const ctx = app.createAnonymousContext() as Context
+      const foo = ctx.requestContext
+      // @ts-expect-error
+      ctx.app = app
       ctx.path = path
-      ctx.headers.authorization = ''
+      ctx.headers = {
+        authorization: '',
+      }
 
       await authShouldFailedWithNotFound(ctx, mw, 401)
     })
@@ -102,8 +112,12 @@ describe(filename, () => {
       const mw = await container.getAsync(JwtMiddleware)
 
       const ctx: Context = app.createAnonymousContext() as Context
+      // @ts-expect-error
+      ctx.app = app
       ctx.path = path
-      ctx.headers.authorization = ''
+      ctx.headers = {
+        authorization: '',
+      }
 
       await authShouldFailedWithNotFound(ctx, mw, 401)
     })

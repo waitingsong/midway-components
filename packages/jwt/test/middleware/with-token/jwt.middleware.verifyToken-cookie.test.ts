@@ -35,6 +35,8 @@ describe(filename, () => {
       const mw = await container.getAsync(JwtMiddleware)
 
       const ctx: Context = app.createAnonymousContext() as Context
+      // @ts-expect-error
+      ctx.app = app
       ctx.path = path
       ctx.headers.authorization = ''
       ctx.headers.authorization = ''
@@ -65,6 +67,8 @@ describe(filename, () => {
       const mw = await container.getAsync(JwtMiddleware)
 
       const ctx: Context = app.createAnonymousContext() as Context
+      // @ts-expect-error
+      ctx.app = app
       ctx.path = path
       ctx.headers.authorization = ''
       ctx.cookies.get = (key) => {
@@ -94,6 +98,8 @@ describe(filename, () => {
       const mw = await container.getAsync(JwtMiddleware)
 
       const ctx: Context = app.createAnonymousContext() as Context
+      // @ts-expect-error
+      ctx.app = app
       ctx.path = path
       ctx.headers.authorization = ''
       ctx.headers.authorization = ''

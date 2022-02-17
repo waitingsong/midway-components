@@ -28,21 +28,20 @@ export const mochaHooks = async () => {
 
   return {
     beforeAll: async () => {
-      const opts = {
-        imports: WEB,
-        globalConfig: {
-          keys: Math.random().toString(),
-          jwtConfig,
-        },
-      }
-      const app = await createApp(void 0, opts) as Application
-      testConfig.app = app
-
-      app.addConfigObject({
+      const configs = {
         keys: Math.random().toString(),
         jwtConfig,
-      })
+      }
+      const opts = {
+        imports: [WEB],
+        globalConfig: configs,
+      }
+      const app = await createApp(void 0, opts) as Application
+      app.addConfigObject(configs)
+      testConfig.app = app
 
+      // const frameworkType = app.getFrameworkType()
+      // const names = app.getMiddleware().getNames()
       // const ctx = app.createAnonymousContext()
       // https:// www.yuque.com/midwayjs/midway_v2/testing
       // const svc = await app.getApplicationContext().getAsync(TaskQueueService)

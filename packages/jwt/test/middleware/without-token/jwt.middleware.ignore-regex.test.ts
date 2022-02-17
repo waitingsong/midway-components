@@ -29,7 +29,8 @@ describe(filename, () => {
       // const svc = await container.getAsync(JwtComponent)
       const mw = await container.getAsync(JwtMiddleware)
       const ctx: Context = app.createAnonymousContext() as Context
-
+      // @ts-expect-error
+      ctx.app = app
       ctx.path = path
       await authShouldSkipped(ctx, mw)
     })
@@ -46,7 +47,8 @@ describe(filename, () => {
       const container = app.getApplicationContext()
       const mw = await container.getAsync(JwtMiddleware)
       const ctx: Context = app.createAnonymousContext() as Context
-
+      // @ts-expect-error
+      ctx.app = app
       ctx.path = path
       await authShouldSkipped(ctx, mw)
     })
@@ -63,7 +65,8 @@ describe(filename, () => {
       const container = app.getApplicationContext()
       const mw = await container.getAsync(JwtMiddleware)
       const ctx: Context = app.createAnonymousContext() as Context
-
+      // @ts-expect-error
+      ctx.app = app
       ctx.path = path
       await authShouldFailedWithNotFound(ctx, mw)
     })

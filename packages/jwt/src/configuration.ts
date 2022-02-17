@@ -5,10 +5,11 @@ import 'tsconfig-paths/register'
 import { join } from 'path'
 
 import { App, Config, Configuration } from '@midwayjs/decorator'
-import { IMidwayWebApplication } from '@midwayjs/web'
 
 import { JwtMiddlewareConfig } from './lib/index'
 import { JwtMiddleware } from './middleware/jwt.middleware'
+
+import { Application } from '~/interface'
 
 
 const namespace = 'jwt'
@@ -19,7 +20,7 @@ const namespace = 'jwt'
 })
 export class AutoConfiguration {
 
-  @App() readonly app: IMidwayWebApplication
+  @App() readonly app: Application
 
   @Config('jwtMiddlewareConfig') protected readonly mwConfig: JwtMiddlewareConfig
 
@@ -27,6 +28,7 @@ export class AutoConfiguration {
     if (! this.app) {
       throw new TypeError('this.app invalid')
     }
+
     const { enableMiddleware } = this.mwConfig
     if (enableMiddleware || typeof enableMiddleware === 'number') {
       registerMiddleware(this.app, enableMiddleware)
@@ -36,7 +38,7 @@ export class AutoConfiguration {
 }
 
 export function registerMiddleware(
-  app: IMidwayWebApplication,
+  app: Application,
   position: true | number,
 ): void {
 
@@ -46,7 +48,6 @@ export function registerMiddleware(
   // const names = app.getMiddleware().getNames()
   // console.log({ names })
 
-  // const appMiddleware = app.getConfig('middleware') as string[] | undefined
   // /* istanbul ignore if */
   // if (Array.isArray(appMiddleware)) {
   //   const pos = position === true ? 0 : position

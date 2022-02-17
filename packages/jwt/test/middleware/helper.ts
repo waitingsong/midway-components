@@ -1,3 +1,5 @@
+import assert from 'assert/strict'
+
 import { IMiddleware } from '@midwayjs/core'
 
 import {
@@ -6,9 +8,6 @@ import {
   JwtMsg,
   JwtState,
 } from '~/index'
-
-// eslint-disable-next-line import/order
-import assert = require('power-assert')
 
 
 const next: NextFunction = async () => { return }
@@ -71,8 +70,11 @@ export async function authShouldFailedWithNotFound(
     assert(msg.includes(JwtMsg.AuthFailed))
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const omsg = (ex.originalError as Error).message
-    assert(omsg.includes(JwtMsg.TokenNotFound))
+    if (typeof ex.originalError !== 'undefined') {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      const omsg = (ex.originalError as Error).message
+      assert(omsg.includes(JwtMsg.TokenNotFound))
+    }
 
     const { jwtState } = ctx
     assert(! jwtState.user)
