@@ -7,6 +7,9 @@ import { createApp, close } from '@midwayjs/mock'
 import * as WEB from '@midwayjs/web'
 
 import { testConfig } from './root.config'
+import { jwtConfig } from './test.config'
+
+import { JwtConfig } from '~/index'
 
 
 /**
@@ -29,14 +32,15 @@ export const mochaHooks = async () => {
         imports: WEB,
         globalConfig: {
           keys: Math.random().toString(),
+          jwtConfig,
         },
       }
       const app = await createApp<WEB.Framework>(void 0, opts)
-      console.log({ app })
       testConfig.app = app
 
       app.addConfigObject({
         keys: Math.random().toString(),
+        jwtConfig,
       })
 
       // const ctx = app.createAnonymousContext()
@@ -48,6 +52,10 @@ export const mochaHooks = async () => {
     },
 
     afterEach: async () => {
+      const { app } = testConfig
+      app.addConfigObject({
+        jwtConfig,
+      })
     },
 
     afterAll: async () => {

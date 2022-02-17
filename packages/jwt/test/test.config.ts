@@ -1,7 +1,13 @@
 import { JsonObject } from '@waiting/shared-types'
 
+import { JwtConfig } from '~/index'
+
 
 export const secret = '123456abc'
+export const jwtConfig: JwtConfig = {
+  secret,
+}
+
 
 /** Type with index signature */
 export interface PayloadSig1 {
