@@ -20,11 +20,12 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 describe(filename, () => {
 
   describe('Should JwtComponent.validateToken() work with scret from ctx', () => {
+    const jwtConfig: JwtConfig = {
+      secret: 'FAKE',
+    }
+
     it('passed with ctx.jwtState.secret', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret: 'FAKE',
-      }
       const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
@@ -48,9 +49,6 @@ describe(filename, () => {
 
     it('passed with ctx.state.secret', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret: 'FAKE',
-      }
       const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,

@@ -12,7 +12,6 @@ import {
 import {
   Context,
   initialJwtMiddlewareConfig,
-  JwtConfig,
   JwtMiddlewareConfig,
 } from '~/index'
 import { JwtMiddleware } from '~/middleware/jwt.middleware'
@@ -25,9 +24,6 @@ describe(filename, () => {
   describe('Should JwtAuthenticateOptions.passthrough work with value string', () => {
     it('valid url', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
       const path = '/' + Math.random().toString()
       const path2 = '/redirect-' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
@@ -35,7 +31,7 @@ describe(filename, () => {
         ignore: [],
         passthrough: path2,
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig })
 
       const container = app.getApplicationContext()
       const inst = await container.getAsync(JwtMiddleware)
@@ -50,16 +46,13 @@ describe(filename, () => {
 
     it('empty string', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
       const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [],
         passthrough: '',
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig })
 
       const container = app.getApplicationContext()
       const inst = await container.getAsync(JwtMiddleware)

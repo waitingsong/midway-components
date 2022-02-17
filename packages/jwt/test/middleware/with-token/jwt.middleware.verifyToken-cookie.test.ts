@@ -9,7 +9,6 @@ import { authShouldFailedWithNotFound, authShouldPassed, authShouldSkipped } fro
 import {
   Context,
   initialJwtMiddlewareConfig,
-  JwtConfig,
   JwtMiddlewareConfig,
 } from '~/index'
 import { JwtMiddleware } from '~/middleware/jwt.middleware'
@@ -25,16 +24,13 @@ describe(filename, () => {
   describe('Should JwtComponent.validateToken() work with cookie', () => {
     it('auth skipped', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
       const path = '/' + Math.random().toString()
       const cookieKey = 'user'
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [path],
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig })
 
       const container = app.getApplicationContext()
       // const svc = await container.getAsync(JwtComponent)
@@ -59,9 +55,6 @@ describe(filename, () => {
 
     it('auth test with JwtAuthenticateOptions.cookie user value', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
       const path = '/' + Math.random().toString()
       const cookieKey = 'user'
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
@@ -69,7 +62,7 @@ describe(filename, () => {
         ignore: [],
         cookie: cookieKey,
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig })
 
       const container = app.getApplicationContext()
       const inst = await container.getAsync(JwtMiddleware)
@@ -92,9 +85,6 @@ describe(filename, () => {
 
     it('auth test with JwtAuthenticateOptions.cookie false (default)', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
       const path = '/' + Math.random().toString()
       const cookieKey = 'user'
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
@@ -102,7 +92,7 @@ describe(filename, () => {
         ignore: [],
         cookie: false,
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig })
 
       const container = app.getApplicationContext()
       const inst = await container.getAsync(JwtMiddleware)

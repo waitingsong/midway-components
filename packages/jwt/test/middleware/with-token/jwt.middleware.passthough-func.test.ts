@@ -13,7 +13,6 @@ import {
 import {
   Context,
   initialJwtMiddlewareConfig,
-  JwtConfig,
   JwtMiddlewareConfig,
   passthroughCallback,
 } from '~/index'
@@ -29,9 +28,6 @@ describe(filename, () => {
   describe('Should JwtAuthenticateOptions.passthrough work with func', () => {
     it('true: passed', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
       const path = '/' + Math.random().toString()
       const path2 = '/redirect-' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
@@ -39,8 +35,9 @@ describe(filename, () => {
         ignore: [],
         passthrough: cb,
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig })
 
+      const names = app.getMiddleware().getNames()
       const container = app.getApplicationContext()
       const inst = await container.getAsync(JwtMiddleware)
 
@@ -54,16 +51,13 @@ describe(filename, () => {
 
     it('true: token not found', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
       const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [],
         passthrough: cb,
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig })
 
       const container = app.getApplicationContext()
       const inst = await container.getAsync(JwtMiddleware)
@@ -78,9 +72,6 @@ describe(filename, () => {
 
     it('invalid value: token not found', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
       const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
@@ -88,7 +79,7 @@ describe(filename, () => {
         // @ts-expect-error
         passthrough: 0,
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig })
 
       const container = app.getApplicationContext()
       const inst = await container.getAsync(JwtMiddleware)
@@ -103,9 +94,6 @@ describe(filename, () => {
 
     it('invalid value 1: token not found', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
       const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
@@ -113,7 +101,7 @@ describe(filename, () => {
         // @ts-expect-error
         passthrough: 1,
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig })
 
       const container = app.getApplicationContext()
       const inst = await container.getAsync(JwtMiddleware)

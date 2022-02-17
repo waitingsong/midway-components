@@ -13,7 +13,6 @@ import {
 import {
   Context,
   initialJwtMiddlewareConfig,
-  JwtConfig,
   JwtMiddlewareConfig,
 } from '~/index'
 import { JwtMiddleware } from '~/middleware/jwt.middleware'
@@ -26,15 +25,12 @@ describe(filename, () => {
   describe('Should JwtComponent.validateToken() work with header', () => {
     it('auth skipped', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
       const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [path],
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig })
 
       const container = app.getApplicationContext()
       // const svc = await container.getAsync(JwtComponent)
@@ -50,15 +46,12 @@ describe(filename, () => {
 
     it('auth testing passed', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
       const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [],
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig })
 
       const container = app.getApplicationContext()
       const inst = await container.getAsync(JwtMiddleware)
@@ -73,15 +66,12 @@ describe(filename, () => {
 
     it('auth validation failed', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
       const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [],
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig })
 
       const container = app.getApplicationContext()
       const inst = await container.getAsync(JwtMiddleware)
