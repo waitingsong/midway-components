@@ -10,7 +10,7 @@ import {
   token1,
 } from '../test.config'
 
-import { Jwt, JwtComponent, JwtConfig } from '~/index'
+import { Jwt, JwtComponent } from '~/index'
 
 // eslint-disable-next-line import/order
 import assert = require('power-assert')
@@ -23,10 +23,6 @@ describe(filename, () => {
   describe('Should Jwt:decode() work', () => {
     it('normal string', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
-      app.addConfigObject({ jwtConfig })
       const container = app.getApplicationContext()
       const svc = await container.getAsync(JwtComponent)
 
@@ -38,10 +34,6 @@ describe(filename, () => {
 
     it('various generics types', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
-      app.addConfigObject({ jwtConfig })
       const container = app.getApplicationContext()
       const svc = await container.getAsync(JwtComponent)
 
@@ -60,10 +52,6 @@ describe(filename, () => {
 
     it('pass secret', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
-      app.addConfigObject({ jwtConfig })
       const container = app.getApplicationContext()
       const svc = await container.getAsync(JwtComponent)
 
@@ -79,10 +67,6 @@ describe(filename, () => {
 
     it('with invalid scope', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
-      app.addConfigObject({ jwtConfig })
       const container = app.getApplicationContext()
       const svc = await container.getAsync(JwtComponent)
 
