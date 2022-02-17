@@ -9,7 +9,6 @@ import { authShouldFailedWithNotFound, authShouldSkipped } from '../helper'
 import {
   Context,
   initialJwtMiddlewareConfig,
-  JwtConfig,
   JwtMiddlewareConfig,
   PathPatternFunc,
 } from '~/index'
@@ -23,9 +22,6 @@ describe(filename, () => {
   describe('Should JwtMiddlewareConfig.ignore work with func', () => {
     it('auth skipped', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
       const path = '/' + Math.random().toString()
       const cb: PathPatternFunc = (ctx) => {
         const url = ctx.path
@@ -35,7 +31,7 @@ describe(filename, () => {
         ...initialJwtMiddlewareConfig,
         ignore: [cb],
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig })
 
       const container = app.getApplicationContext()
       const inst = await container.getAsync(JwtMiddleware)
@@ -49,9 +45,6 @@ describe(filename, () => {
 
     it('auth skipped', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
       const path = '/' + Math.random().toString()
       const cb: PathPatternFunc = (ctx) => {
         const url = ctx.path
@@ -61,7 +54,7 @@ describe(filename, () => {
         ...initialJwtMiddlewareConfig,
         ignore: [cb],
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig })
 
       const container = app.getApplicationContext()
       const inst = await container.getAsync(JwtMiddleware)
