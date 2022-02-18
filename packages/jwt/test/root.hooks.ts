@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import 'tsconfig-paths/register'
 
 import { join } from 'path'
@@ -38,14 +35,12 @@ export const mochaHooks = async () => {
         imports: [WEB],
         globalConfig: configs,
       }
-      // const app = await createApp(void 0, opts) as Application
       const app = await createApp(join(__dirname, 'fixtures', 'base-app'), opts) as Application
       app.addConfigObject(configs)
       testConfig.app = app
       testConfig.httpRequest = createHttpRequest(app)
       // const { url } = testConfig.httpRequest.get('/')
       // console.log({ url })
-
 
       // const frameworkType = app.getFrameworkType()
       // const names = app.getMiddleware().getNames()
@@ -55,6 +50,7 @@ export const mochaHooks = async () => {
     },
 
     beforeEach: async () => {
+      return
     },
 
     afterEach: async () => {
