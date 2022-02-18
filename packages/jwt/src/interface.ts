@@ -1,5 +1,4 @@
 
-// export { TracerLog } from '@mw-components/jaeger'
 export {
   JsonObject,
   JsonResp,
@@ -7,14 +6,6 @@ export {
 } from '@waiting/shared-types'
 
 export { IMidwayApplication as Application } from '@midwayjs/core'
-
-// export {
-//   IMidwayWebApplication as Application,
-//   IMidwayWebContext as Context,
-//   IWebMiddleware,
-//   IMidwayWebNext,
-//   MidwayWebMiddleware,
-// } from '@midwayjs/web'
 
 export { NpmPkg } from '@waiting/shared-types'
 

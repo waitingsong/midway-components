@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { IMiddleware } from '@midwayjs/core'
 import { Middleware } from '@midwayjs/decorator'
-import { Application } from '@midwayjs/koa'
 
 
+import { Application } from '../interface'
 import {
   genJwtMiddlewareConfig,
   JwtComponent,
