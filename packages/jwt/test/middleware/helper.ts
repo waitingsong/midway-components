@@ -7,10 +7,10 @@ import {
 } from '~/index'
 
 
-export async function authShouldPassed(
+export function authShouldPassed(
   resp: TestResponse,
   expectPayload: unknown,
-): Promise<void> {
+): void {
 
   const { status } = resp
   const { jwtState } = resp.body as TestRespBody
@@ -23,15 +23,16 @@ export async function authShouldPassed(
   assert.deepStrictEqual(jwtState.user, expectPayload)
 }
 
-export async function authShouldSkipped(
+export function authShouldSkipped(
   resp: TestResponse,
-): Promise<void> {
+): void {
 
   const { status } = resp
   const { jwtState } = resp.body as TestRespBody
 
   assert(status === 200)
-  assert(! jwtState)
+  assert(! jwtState.user)
+  assert(! jwtState.signature)
 }
 
 export function authShouldFailedWithNotFound2(
@@ -48,20 +49,18 @@ export function authShouldFailedWithNotFound2(
   assert(error.text.includes('401'))
 }
 
-export async function authShouldFailedWithNotFound(
+export function authShouldFailedWithNotFound(
   resp: TestResponse,
   expectStatus = 401,
-): Promise<void> {
+): void {
 
-  const { status } = resp
-  const { jwtState, jwtOriginalErrorText } = resp.body as TestRespBody
+  const { status, error } = resp
+  const { jwtState } = resp.body as TestRespBody
 
   assert(status === expectStatus)
   assert(! jwtState)
-
-  // const msg = (ex as Error).message
-  // assert(msg.includes(JwtMsg.AuthFailed))
-  assert(jwtOriginalErrorText.includes(JwtMsg.TokenNotFound))
+  assert(error)
+  assert(error.text.includes('401'))
 }
 
 export async function authShouldValidatFailed(
@@ -77,12 +76,6 @@ export async function authShouldValidatFailed(
   assert(! jwtState.secret)
   assert(! jwtState.signature)
 
-  // const msg = (ex as Error).message
-  // assert(msg.includes(JwtMsg.AuthFailed))
-
-  // // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  // const omsg = (ex.originalError as Error).message
-  // assert(omsg.includes(JwtMsg.TokenValidFailed))
   assert(jwtOriginalErrorText.includes(JwtMsg.TokenValidFailed))
 }
 
@@ -141,7 +134,7 @@ export function authShouldPassthroughEmptyStringNotFound(
 ): void {
 
   const { status, error } = resp
-  const { jwtState, jwtOriginalErrorText } = resp.body as TestRespBody
+  const { jwtState } = resp.body as TestRespBody
 
   assert(status === expectStatus)
   assert(! jwtState)

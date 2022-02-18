@@ -8,8 +8,8 @@ import { Context, JwtToken, JwtAuthenticateOptions } from './types'
  * according to node.js security since v10.19, v12.15
  * @link https://nodejs.org/en/blog/vulnerability/february-2020-security-releases/
  */
-export function retrieveToken(ctx: Context, cookie: JwtAuthenticateOptions['cookie']): JwtToken {
-  let token = resolveFromCookies(ctx.cookies, cookie)
+export function retrieveToken(ctx: Context, cookieKey: JwtAuthenticateOptions['cookie']): JwtToken {
+  let token = resolveFromCookies(ctx, cookieKey)
 
   if (token) {
     token = token.trimEnd()
@@ -62,12 +62,51 @@ export function resolveFromAuthorizationHeader(authorization: string): JwtToken 
  * This function uses the opts.cookie option to retrieve the token
  */
 export function resolveFromCookies(
-  cookies: Context['cookies'],
+  ctx: Context,
   cookieKey?: JwtAuthenticateOptions['cookie'],
 ): JwtToken | undefined {
 
-  const token = cookieKey && cookieKey.length > 0
-    ? cookies.get(cookieKey)
+  if (typeof cookieKey === 'undefined' || cookieKey === false) {
+    return ''
+  }
+
+  let token = ctx.cookies && typeof ctx.cookies.get === 'function'
+    ? ctx.cookies.get(cookieKey)
     : ''
+  if (! token) {
+    token = pickTokenFromCookies(ctx.header.cookie, cookieKey)
+  }
   return token
+}
+
+export function pickTokenFromCookies(
+  cookie: string | string[] | undefined,
+  key: string,
+): string {
+
+  if (! cookie) {
+    return ''
+  }
+  else if (typeof cookie === 'string') {
+    return pickTokenFromCookie(cookie, key)
+  }
+  else {
+    for (const line of cookie) {
+      const token = pickTokenFromCookie(line, key)
+      if (token) {
+        return token
+      }
+    }
+    return ''
+  }
+}
+
+function pickTokenFromCookie(
+  cookie: string,
+  key: string,
+): string {
+
+  const re = new RegExp(`(?<=\\b${key}=)[\\w\\d.]+`)
+  const match = re.exec(cookie)
+  return match && Array.isArray(match) && match[0] ? match[0] : ''
 }
