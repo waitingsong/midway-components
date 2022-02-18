@@ -77,10 +77,10 @@ export function authShouldValidatFailed(
   assert(error.text.includes('401'))
 }
 
-export async function authShouldPassthroughNotFound(
+export function authShouldPassthroughNotFound(
   resp: TestResponse,
   expectStatus = 200,
-): Promise<void> {
+): void {
 
   const { status } = resp
   const { jwtState, jwtOriginalErrorText } = resp.body as TestRespBody
@@ -93,10 +93,10 @@ export async function authShouldPassthroughNotFound(
   assert(jwtOriginalErrorText.includes(JwtMsg.TokenNotFound))
 }
 
-export async function authShouldPassthroughValidFailed(
+export function authShouldPassthroughValidFailed(
   resp: TestResponse,
   expectStatus = 200,
-): Promise<void> {
+): void {
 
   const { status } = resp
   const { jwtState, jwtOriginalErrorText } = resp.body as TestRespBody
@@ -140,10 +140,10 @@ export function authShouldPassthroughEmptyStringNotFound(
   assert(error.text.includes('401'))
 }
 
-export async function authShouldFailedWithNotFoundFromDebug(
+export function authShouldFailedWithNotFoundFromDebug(
   resp: TestResponse,
   expectStatus = 401,
-): Promise<void> {
+): void {
 
   const { status } = resp
   const { jwtState, jwtOriginalErrorText } = resp.body as TestRespBody
