@@ -1,6 +1,6 @@
 import { relative } from 'path'
 
-import { authShouldFailedWithNotFound, authShouldSkipped } from '../helper'
+import { authShouldSkipped } from '../helper'
 
 import { testConfig } from '@/root.config'
 import {
@@ -16,10 +16,9 @@ describe(filename, () => {
   describe('Should JwtMiddlewareConfig.ignore work with regex', () => {
     it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
-        ignore: [/^\/.+/u],
+        ignore: [/^\/.*/u],
       }
       app.addConfigObject({ jwtMiddlewareConfig })
 
@@ -28,44 +27,6 @@ describe(filename, () => {
       authShouldSkipped(resp)
     })
 
-    it('auth skipped2', async () => {
-      const { app, httpRequest } = testConfig
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [/\w+/u],
-      }
-      app.addConfigObject({ jwtMiddlewareConfig })
-
-      const resp = await httpRequest
-        .get('/')
-      authShouldSkipped(resp)
-    })
-
-    it('auth testing 1', async () => {
-      const { app, httpRequest } = testConfig
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [/^\/$/u],
-      }
-      app.addConfigObject({ jwtMiddlewareConfig })
-
-      const resp = await httpRequest
-        .get('/')
-      authShouldFailedWithNotFound(resp)
-    })
-
-    it('auth testing 2', async () => {
-      const { app, httpRequest } = testConfig
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [/^\/$/u],
-      }
-      app.addConfigObject({ jwtMiddlewareConfig })
-
-      const resp = await httpRequest
-        .get('/')
-      authShouldFailedWithNotFound(resp)
-    })
   })
 })
 
