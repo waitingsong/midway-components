@@ -2,7 +2,7 @@ import { relative } from 'path'
 
 import { authShouldFailedWithNotFound, authShouldSkipped } from '../helper'
 
-import { testConfig, TestResponse } from '@/root.config'
+import { testConfig } from '@/root.config'
 import {
   initialJwtMiddlewareConfig,
   JwtMiddlewareConfig,
@@ -38,8 +38,8 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig })
 
       const resp = await httpRequest
-        .get('/') as TestResponse
-      await authShouldFailedWithNotFound(resp)
+        .get('/')
+      authShouldFailedWithNotFound(resp)
     })
 
     it('auth skipped with random ignore', async () => {
@@ -52,8 +52,8 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig })
 
       const resp = await httpRequest
-        .get('/') as TestResponse
-      await authShouldFailedWithNotFound(resp)
+        .get('/')
+      authShouldFailedWithNotFound(resp)
     })
 
     it('auth skipped mixed with invalid value', async () => {

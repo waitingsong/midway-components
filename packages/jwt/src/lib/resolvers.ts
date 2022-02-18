@@ -73,14 +73,14 @@ export function resolveFromCookies(
   let token = ctx.cookies && typeof ctx.cookies.get === 'function'
     ? ctx.cookies.get(cookieKey)
     : ''
-  if (! token) {
+  if (! token && ctx.header && ctx.header.cookie) {
     token = pickTokenFromCookies(ctx.header.cookie, cookieKey)
   }
   return token
 }
 
 export function pickTokenFromCookies(
-  cookie: string | string[] | undefined,
+  cookie: string | string[],
   key: string,
 ): string {
 
