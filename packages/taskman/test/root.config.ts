@@ -10,6 +10,12 @@ import {
 import { TaskAgentService, TaskQueueService } from '~/service/index.service'
 
 export type TestResponse = supertest.Response
+export interface TestRespBody {
+  cookies: unknown
+  header: unknown
+  url: string
+  jwtOriginalErrorText: string
+}
 
 export interface TestConfig {
   /** host of test process */
