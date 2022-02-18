@@ -6,7 +6,6 @@ import 'tsconfig-paths/register'
 import { join } from 'path'
 
 import * as WEB from '@midwayjs/koa'
-// import { createApp, close } from '@midwayjs/mock'
 import { createApp, close, createHttpRequest } from '@midwayjs/mock'
 
 import { testConfig } from './root.config'
