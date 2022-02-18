@@ -56,7 +56,6 @@ describe(filename, () => {
 
     it('auth validation failed', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [],

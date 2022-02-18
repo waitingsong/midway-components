@@ -67,16 +67,13 @@ export function authShouldValidatFailed(
   resp: TestResponse,
 ): void {
 
-  const { status } = resp
-  const { jwtState, jwtOriginalErrorText } = resp.body as TestRespBody
+  const { status, error } = resp
+  const { jwtState } = resp.body as TestRespBody
 
   assert(status === 401)
-  assert(jwtState)
-  assert(! jwtState.user)
-  assert(! jwtState.secret)
-  assert(! jwtState.signature)
-
-  assert(jwtOriginalErrorText.includes(JwtMsg.TokenValidFailed))
+  assert(! jwtState)
+  assert(error)
+  assert(error.text.includes('401'))
 }
 
 export async function authShouldPassthroughNotFound(
