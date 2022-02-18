@@ -1,16 +1,16 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import 'tsconfig-paths/register'
 
+import { join } from 'path'
+
+import * as WEB from '@midwayjs/koa'
 import { createApp, close, createHttpRequest } from '@midwayjs/mock'
-import { Framework } from '@midwayjs/web'
 
 import { TaskLogRepository, TaskQueueRepository, TaskResultRepository } from '../src/repo/index.repo'
 import { TaskAgentService, TaskQueueService } from '../src/service/index.service'
 
 import { testConfig } from './root.config'
 
+import { Application } from '~/interface'
 import {
   initTaskManClientConfig,
   TaskManClientConfig,
@@ -34,11 +34,20 @@ export const mochaHooks = async () => {
 
   return {
     beforeAll: async () => {
-      const app = await createApp<Framework>()
-      testConfig.app = app
-      app.addConfigObject({
+      const configs = {
         keys: Math.random().toString(),
-      })
+      }
+      const opts = {
+        imports: [WEB],
+        globalConfig: configs,
+      }
+      const app = await createApp(join(__dirname, 'fixtures', 'base-app'), opts) as Application
+      app.addConfigObject(configs)
+      testConfig.app = app
+      testConfig.httpRequest = createHttpRequest(app)
+
+      // const frameworkType = app.getFrameworkType()
+      // const names = app.getMiddleware().getNames()
       const ctx = app.createAnonymousContext()
       // https:// www.yuque.com/midwayjs/midway_v2/testing
       // const svc = await app.getApplicationContext().getAsync(TaskQueueService)

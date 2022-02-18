@@ -1,6 +1,6 @@
-import { IMidwayWebApplication } from '@midwayjs/web'
 import supertest, { SuperTest } from 'supertest'
 
+import { Application } from '~/interface'
 import { TaskManComponent } from '~/lib'
 import {
   TaskLogRepository,
@@ -9,11 +9,12 @@ import {
 } from '~/repo/index.repo'
 import { TaskAgentService, TaskQueueService } from '~/service/index.service'
 
+export type TestResponse = supertest.Response
 
 export interface TestConfig {
   /** host of test process */
   host: string
-  app: IMidwayWebApplication
+  app: Application
   httpRequest: SuperTest<supertest.Test>
   agent: TaskAgentService
   svc: TaskQueueService
