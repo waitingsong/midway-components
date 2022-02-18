@@ -14,7 +14,7 @@ import {
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
-describe.only(filename, () => {
+describe(filename, () => {
 
   describe('Should JwtAuthenticateOptions.passthrough work with value string', () => {
     it('valid url', async () => {
