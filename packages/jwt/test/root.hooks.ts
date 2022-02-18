@@ -44,8 +44,8 @@ export const mochaHooks = async () => {
       app.addConfigObject(configs)
       testConfig.app = app
       testConfig.httpRequest = createHttpRequest(app)
-      const { url } = testConfig.httpRequest.get('/')
-      console.log({ url })
+      // const { url } = testConfig.httpRequest.get('/')
+      // console.log({ url })
 
 
       // const frameworkType = app.getFrameworkType()

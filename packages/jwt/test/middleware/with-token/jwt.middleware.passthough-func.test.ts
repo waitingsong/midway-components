@@ -42,7 +42,7 @@ describe.only(filename, () => {
       await authShouldPassed(resp, payload1)
     })
 
-    it.only('true: token not found', async () => {
+    it('true: token not found', async () => {
       const { app, httpRequest } = testConfig
 
       const path = '/' + Math.random().toString()
