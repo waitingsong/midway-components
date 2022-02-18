@@ -19,7 +19,7 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 describe(filename, () => {
 
   describe('Should JwtComponent.validateToken() work with header', () => {
-    it.only('auth skipped', async () => {
+    it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
       const path = '/'
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
@@ -27,7 +27,6 @@ describe(filename, () => {
         ignore: [path],
       }
       app.addConfigObject({ jwtMiddlewareConfig })
-      const foo = app.getConfig('jwtMiddlewareConfig') as unknown
 
       const sendHeader = {
         authorization: authHeader1,
