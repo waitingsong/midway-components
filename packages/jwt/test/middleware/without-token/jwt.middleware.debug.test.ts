@@ -14,7 +14,7 @@ import {
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
-describe.only(filename, () => {
+describe(filename, () => {
 
   describe('Should JwtMiddlewareConfig.debug work true', () => {
     it('normal', async () => {

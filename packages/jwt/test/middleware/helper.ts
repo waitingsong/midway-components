@@ -145,18 +145,14 @@ export function authShouldFailedWithNotFoundFromDebug(
   expectStatus = 401,
 ): void {
 
-  const { status } = resp
-  const { jwtState, jwtOriginalErrorText } = resp.body as TestRespBody
+  const { status, error } = resp
+  const { jwtState } = resp.body as TestRespBody
 
   assert(status === expectStatus)
-  assert(jwtState)
-  assert(! jwtState.user)
-  assert(! jwtState.secret)
-  assert(! jwtState.signature)
-
-  // const msg = (ex as Error).message
-  // assert(msg.includes(JwtMsg.TokenNotFound))
-  assert(jwtOriginalErrorText.includes(JwtMsg.TokenNotFound))
+  assert(! jwtState)
+  assert(error)
+  assert(error.text.includes('401'))
+  // assert(error.text.includes(JwtMsg.TokenNotFound))
 }
 
 declare module '@midwayjs/core' {
