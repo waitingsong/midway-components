@@ -31,7 +31,7 @@ export class AutoConfiguration {
 
     const { enableMiddleware } = this.mwConfig
     if (enableMiddleware || typeof enableMiddleware === 'number') {
-      registerMiddleware(this.app, enableMiddleware)
+      registerMiddleware(this.app)
     }
   }
 
@@ -39,10 +39,9 @@ export class AutoConfiguration {
 
 export function registerMiddleware(
   app: Application,
-  position: true | number,
+  // position: true | number,
 ): void {
 
-  console.log({ position })
   // @ts-expect-error
   app.getMiddleware().insertLast(JwtMiddleware)
   // const names = app.getMiddleware().getNames()
