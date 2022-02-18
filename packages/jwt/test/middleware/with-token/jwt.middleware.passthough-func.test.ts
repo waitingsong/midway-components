@@ -1,23 +1,18 @@
-import { assert } from 'console'
 import { relative } from 'path'
 
-import { createHttpRequest } from '@midwayjs/mock'
-
-import { testConfig, TestResponse } from '../../root.config'
-import { authHeader1, payload1, secret, token1 } from '../../test.config'
 import {
   authShouldFailedWithNotFound,
   authShouldPassed,
   authShouldPassthroughNotFound,
 } from '../helper'
 
+import { testConfig, TestResponse } from '@/root.config'
+import { authHeader1, payload1, secret, token1 } from '@/test.config'
 import {
-  Context,
   initialJwtMiddlewareConfig,
   JwtMiddlewareConfig,
   passthroughCallback,
 } from '~/index'
-import { JwtMiddleware } from '~/middleware/jwt.middleware'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -41,12 +36,10 @@ describe.only(filename, () => {
       const sendHeader = {
         authorization: authHeader1,
       }
-
       const resp = await httpRequest
         .get('/')
         .set(sendHeader)
         .expect(200) as TestResponse
-      assert(resp.text === 'OK')
       await authShouldPassed(resp, payload1)
     })
 
@@ -69,7 +62,6 @@ describe.only(filename, () => {
       const resp = await httpRequest
         .get('/')
         .set(sendHeader) as TestResponse
-      assert(resp.text === 'OK')
       await authShouldPassthroughNotFound(resp, 200)
     })
 
@@ -84,16 +76,8 @@ describe.only(filename, () => {
       }
       app.addConfigObject({ jwtMiddlewareConfig })
 
-
-      const sendHeader = {
-        authorization: '',
-      }
-
       const resp = await httpRequest
-        .get('/')
-        .set(sendHeader) as TestResponse
-      assert(resp.text === 'OK')
-
+        .get('/') as TestResponse
       await authShouldFailedWithNotFound(resp, 401)
     })
 

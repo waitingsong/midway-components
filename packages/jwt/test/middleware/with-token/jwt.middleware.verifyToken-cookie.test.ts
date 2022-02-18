@@ -1,18 +1,13 @@
 import { relative } from 'path'
 
-import { testConfig } from '../../root.config'
-import { payload1, secret, token1 } from '../../test.config'
 import { authShouldFailedWithNotFound, authShouldPassed, authShouldSkipped } from '../helper'
 
+import { testConfig, TestResponse } from '@/root.config'
+import { payload1, secret, token1 } from '@/test.config'
 import {
-  Context,
   initialJwtMiddlewareConfig,
   JwtMiddlewareConfig,
 } from '~/index'
-import { JwtMiddleware } from '~/middleware/jwt.middleware'
-
-// eslint-disable-next-line import/order
-import assert = require('power-assert')
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -21,7 +16,7 @@ describe(filename, () => {
 
   describe('Should JwtComponent.validateToken() work with cookie', () => {
     it('auth skipped', async () => {
-      const { app } = testConfig
+      const { app, httpRequest } = testConfig
       const path = '/' + Math.random().toString()
       const cookieKey = 'user'
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
@@ -30,30 +25,19 @@ describe(filename, () => {
       }
       app.addConfigObject({ jwtMiddlewareConfig })
 
-      const container = app.getApplicationContext()
-      // const svc = await container.getAsync(JwtComponent)
-      const mw = await container.getAsync(JwtMiddleware)
-
-      const ctx: Context = app.createAnonymousContext() as Context
-      // @ts-expect-error
-      ctx.app = app
-      ctx.path = path
-      ctx.headers.authorization = ''
-      ctx.headers.authorization = ''
-      ctx.cookies.get = (key) => {
-        if (key === cookieKey) {
-          return token1
-        }
-        return ''
+      const cookie = [`${cookieKey}=${token1}; path=/; expires=Wed, 24 Feb 2021 06:59:09 GMT; httponly`]
+      const sendHeader = {
+        authorization: '',
+        Cookie: cookie,
       }
-      const t1 = ctx.cookies.get(cookieKey)
-      assert(t1 === token1)
-
-      await authShouldSkipped(ctx, mw)
+      const resp = await httpRequest
+        .get('/')
+        .set(sendHeader) as TestResponse
+      await authShouldSkipped(resp)
     })
 
     it('auth test with JwtAuthenticateOptions.cookie user value', async () => {
-      const { app } = testConfig
+      const { app, httpRequest } = testConfig
       const path = '/' + Math.random().toString()
       const cookieKey = 'user'
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
@@ -63,28 +47,19 @@ describe(filename, () => {
       }
       app.addConfigObject({ jwtMiddlewareConfig })
 
-      const container = app.getApplicationContext()
-      const mw = await container.getAsync(JwtMiddleware)
-
-      const ctx: Context = app.createAnonymousContext() as Context
-      // @ts-expect-error
-      ctx.app = app
-      ctx.path = path
-      ctx.headers.authorization = ''
-      ctx.cookies.get = (key) => {
-        if (key === cookieKey) {
-          return token1
-        }
-        return ''
+      const cookie = [`${cookieKey}=${token1}; path=/; expires=Wed, 24 Feb 2021 06:59:09 GMT; httponly`]
+      const sendHeader = {
+        authorization: '',
+        Cookie: cookie,
       }
-      const t1 = ctx.cookies.get(cookieKey)
-      assert(t1 === token1)
-
-      await authShouldPassed(ctx, mw, payload1)
+      const resp = await httpRequest
+        .get('/')
+        .set(sendHeader) as TestResponse
+      await authShouldPassed(resp, payload1)
     })
 
     it('auth test with JwtAuthenticateOptions.cookie false (default)', async () => {
-      const { app } = testConfig
+      const { app, httpRequest } = testConfig
       const path = '/' + Math.random().toString()
       const cookieKey = 'user'
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
@@ -94,25 +69,15 @@ describe(filename, () => {
       }
       app.addConfigObject({ jwtMiddlewareConfig })
 
-      const container = app.getApplicationContext()
-      const mw = await container.getAsync(JwtMiddleware)
-
-      const ctx: Context = app.createAnonymousContext() as Context
-      // @ts-expect-error
-      ctx.app = app
-      ctx.path = path
-      ctx.headers.authorization = ''
-      ctx.headers.authorization = ''
-      ctx.cookies.get = (key) => {
-        if (key === cookieKey) {
-          return token1
-        }
-        return ''
+      const cookie = [`${cookieKey}=${token1}; path=/; expires=Wed, 24 Feb 2021 06:59:09 GMT; httponly`]
+      const sendHeader = {
+        authorization: '',
+        Cookie: cookie,
       }
-      const t1 = ctx.cookies.get(cookieKey)
-      assert(t1 === token1)
-
-      await authShouldFailedWithNotFound(ctx, mw)
+      const resp = await httpRequest
+        .get('/')
+        .set(sendHeader) as TestResponse
+      await authShouldFailedWithNotFound(resp)
     })
   })
 })
