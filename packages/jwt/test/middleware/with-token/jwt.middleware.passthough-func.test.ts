@@ -2,6 +2,7 @@ import { relative } from 'path'
 
 import {
   authShouldFailedWithNotFound,
+  authShouldFailedWithNotFound2,
   authShouldPassed,
   authShouldPassthroughNotFound,
 } from '../helper'
@@ -17,7 +18,7 @@ import {
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
-describe.only(filename, () => {
+describe(filename, () => {
 
   const cb: passthroughCallback = async () => true
 
@@ -53,12 +54,8 @@ describe.only(filename, () => {
       }
       app.addConfigObject({ jwtMiddlewareConfig })
 
-      const sendHeader = {
-        authorization: '',
-      }
       const resp = await httpRequest
         .get('/')
-        .set(sendHeader)
       await authShouldPassthroughNotFound(resp, 200)
     })
 
@@ -75,34 +72,24 @@ describe.only(filename, () => {
 
       const resp = await httpRequest
         .get('/')
-      await authShouldFailedWithNotFound(resp, 401)
+      authShouldFailedWithNotFound2(resp, 401)
     })
 
-    // it('invalid value 1: token not found', async () => {
-    //   const { app } = testConfig
-    //   const path = '/' + Math.random().toString()
-    //   const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-    //     ...initialJwtMiddlewareConfig,
-    //     ignore: [],
-    //     // @ts-expect-error
-    //     passthrough: 1,
-    //   }
-    //   app.addConfigObject({ jwtMiddlewareConfig })
+    it('invalid value 1: token not found', async () => {
+      const { app, httpRequest } = testConfig
+      const path = '/' + Math.random().toString()
+      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
+        ...initialJwtMiddlewareConfig,
+        ignore: [],
+        // @ts-expect-error
+        passthrough: 1,
+      }
+      app.addConfigObject({ jwtMiddlewareConfig })
 
-    //   const container = app.getApplicationContext()
-    //   const mw = await container.getAsync(JwtMiddleware)
-
-    //   const ctx: Context = app.createAnonymousContext() as Context
-    //   // @ts-expect-error
-    //   ctx.app = app
-    //   ctx.path = path
-    //   ctx.header = {
-    //     ...ctx.header,
-    //     authorization: '',
-    //   }
-
-    //   await authShouldFailedWithNotFound(ctx, mw, 401)
-    // })
+      const resp = await httpRequest
+        .get('/') as TestResponse
+      authShouldFailedWithNotFound2(resp, 401)
+    })
   })
 })
 

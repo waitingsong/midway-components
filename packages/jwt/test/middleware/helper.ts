@@ -34,6 +34,20 @@ export async function authShouldSkipped(
   assert(! jwtState)
 }
 
+export function authShouldFailedWithNotFound2(
+  resp: TestResponse,
+  expectStatus = 401,
+): void {
+
+  const { status, error } = resp
+  const { jwtState } = resp.body as TestRespBody
+
+  assert(status === expectStatus)
+  assert(! jwtState)
+  assert(error)
+  assert(error.text.includes('401'))
+}
+
 export async function authShouldFailedWithNotFound(
   resp: TestResponse,
   expectStatus = 401,
