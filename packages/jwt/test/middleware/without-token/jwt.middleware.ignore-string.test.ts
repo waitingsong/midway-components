@@ -16,7 +16,7 @@ describe(filename, () => {
   describe('Should JwtMiddlewareConfig.ignore work with string', () => {
     it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/' + Math.random().toString()
+      const path = '/'
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [path],
@@ -24,8 +24,8 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig })
 
       const resp = await httpRequest
-        .get('/') as TestResponse
-      await authShouldSkipped(resp)
+        .get('/')
+      authShouldSkipped(resp)
     })
 
     it('auth skipped with empty ignore', async () => {
@@ -67,8 +67,8 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig })
 
       const resp = await httpRequest
-        .get('/') as TestResponse
-      await authShouldSkipped(resp)
+        .get('/')
+      authShouldSkipped(resp)
     })
 
   })

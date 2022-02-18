@@ -31,6 +31,7 @@ export function authShouldSkipped(
   const { jwtState } = resp.body as TestRespBody
 
   assert(status === 200)
+  console.info({ jwtState })
   assert(! jwtState.user)
   assert(! jwtState.signature)
 }
