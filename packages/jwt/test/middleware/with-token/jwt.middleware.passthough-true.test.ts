@@ -6,7 +6,7 @@ import {
   authShouldPassthroughValidFailed,
 } from '../helper'
 
-import { testConfig, TestResponse } from '@/root.config'
+import { testConfig } from '@/root.config'
 import { authHeader1, payload1, secret, token1 } from '@/test.config'
 import {
   initialJwtMiddlewareConfig,
@@ -34,13 +34,12 @@ describe(filename, () => {
       }
       const resp = await httpRequest
         .get('/')
-        .set(sendHeader) as TestResponse
-      await authShouldPassed(resp, payload1)
+        .set(sendHeader)
+      authShouldPassed(resp, payload1)
     })
 
     it('token not found', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [],
@@ -53,8 +52,7 @@ describe(filename, () => {
       }
       const resp = await httpRequest
         .get('/')
-        .set(sendHeader) as TestResponse
-      await authShouldPassthroughNotFound(resp)
+      authShouldPassthroughNotFound(resp)
     })
 
     it('token valid faied', async () => {
@@ -72,8 +70,8 @@ describe(filename, () => {
       }
       const resp = await httpRequest
         .get('/')
-        .set(sendHeader) as TestResponse
-      await authShouldPassthroughValidFailed(resp)
+        .set(sendHeader)
+      authShouldPassthroughValidFailed(resp)
     })
   })
 })

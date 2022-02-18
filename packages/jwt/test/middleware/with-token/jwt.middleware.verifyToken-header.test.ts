@@ -6,7 +6,7 @@ import {
   authShouldValidatFailed,
 } from '../helper'
 
-import { testConfig, TestResponse } from '@/root.config'
+import { testConfig } from '@/root.config'
 import { authHeader1, payload1, secret, token1 } from '@/test.config'
 import {
   initialJwtMiddlewareConfig,

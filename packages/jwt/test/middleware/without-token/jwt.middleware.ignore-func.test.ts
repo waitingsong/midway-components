@@ -2,7 +2,7 @@ import { relative } from 'path'
 
 import { authShouldFailedWithNotFound, authShouldSkipped } from '../helper'
 
-import { testConfig, TestResponse } from '@/root.config'
+import { testConfig } from '@/root.config'
 import {
   initialJwtMiddlewareConfig,
   JwtMiddlewareConfig,

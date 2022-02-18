@@ -2,7 +2,7 @@ import { relative } from 'path'
 
 import { authShouldPassed } from '../helper'
 
-import { testConfig, TestResponse } from '@/root.config'
+import { testConfig } from '@/root.config'
 import { authHeader1, payload1, secret, token1 } from '@/test.config'
 import {
   initialJwtMiddlewareConfig,
@@ -22,7 +22,6 @@ describe(filename, () => {
 
     it('passed with ctx.jwtState.secret', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [],
@@ -34,13 +33,12 @@ describe(filename, () => {
       }
       const resp = await httpRequest
         .get('/')
-        .set(sendHeader) as TestResponse
-      await authShouldPassed(resp, payload1)
+        .set(sendHeader)
+      authShouldPassed(resp, payload1)
     })
 
     it('passed with ctx.state.secret', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [],
@@ -52,8 +50,8 @@ describe(filename, () => {
       }
       const resp = await httpRequest
         .get('/')
-        .set(sendHeader) as TestResponse
-      await authShouldPassed(resp, payload1)
+        .set(sendHeader)
+      authShouldPassed(resp, payload1)
     })
 
   })
