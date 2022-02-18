@@ -2,7 +2,7 @@ import { relative } from 'path'
 
 import { authShouldFailedWithNotFound, authShouldSkipped } from '../helper'
 
-import { testConfig, TestResponse } from '@/root.config'
+import { testConfig } from '@/root.config'
 import {
   initialJwtMiddlewareConfig,
   JwtMiddlewareConfig,
@@ -24,13 +24,12 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig })
 
       const resp = await httpRequest
-        .get('/') as TestResponse
-      await authShouldSkipped(resp)
+        .get('/')
+      authShouldSkipped(resp)
     })
 
     it('auth skipped2', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [/\w+/u],
@@ -38,13 +37,12 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig })
 
       const resp = await httpRequest
-        .get('/') as TestResponse
-      await authShouldSkipped(resp)
+        .get('/')
+      authShouldSkipped(resp)
     })
 
     it('auth testing 1', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [/^\/$/u],
@@ -52,13 +50,12 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig })
 
       const resp = await httpRequest
-        .get('/') as TestResponse
-      await authShouldFailedWithNotFound(resp)
+        .get('/')
+      authShouldFailedWithNotFound(resp)
     })
 
     it('auth testing 2', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [/^\/$/u],
@@ -66,8 +63,8 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig })
 
       const resp = await httpRequest
-        .get('/') as TestResponse
-      await authShouldFailedWithNotFound(resp)
+        .get('/')
+      authShouldFailedWithNotFound(resp)
     })
   })
 })
