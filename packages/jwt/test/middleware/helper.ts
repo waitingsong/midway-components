@@ -63,9 +63,9 @@ export function authShouldFailedWithNotFound(
   assert(error.text.includes('401'))
 }
 
-export async function authShouldValidatFailed(
+export function authShouldValidatFailed(
   resp: TestResponse,
-): Promise<void> {
+): void {
 
   const { status } = resp
   const { jwtState, jwtOriginalErrorText } = resp.body as TestRespBody

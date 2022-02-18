@@ -33,13 +33,12 @@ describe(filename, () => {
       }
       const resp = await httpRequest
         .get('/')
-        .set(sendHeader) as TestResponse
-      await authShouldSkipped(resp)
+        .set(sendHeader)
+      authShouldSkipped(resp)
     })
 
     it('auth testing passed', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [],
@@ -51,8 +50,8 @@ describe(filename, () => {
       }
       const resp = await httpRequest
         .get('/')
-        .set(sendHeader) as TestResponse
-      await authShouldPassed(resp, payload1)
+        .set(sendHeader)
+      authShouldPassed(resp, payload1)
     })
 
     it('auth validation failed', async () => {
@@ -69,8 +68,8 @@ describe(filename, () => {
       }
       const resp = await httpRequest
         .get('/')
-        .set(sendHeader) as TestResponse
-      await authShouldValidatFailed(resp)
+        .set(sendHeader)
+      authShouldValidatFailed(resp)
     })
   })
 })
