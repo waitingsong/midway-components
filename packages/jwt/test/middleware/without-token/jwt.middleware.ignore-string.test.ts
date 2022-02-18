@@ -58,7 +58,7 @@ describe(filename, () => {
 
     it('auth skipped mixed with invalid value', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/' + Math.random().toString()
+      const path = '/'
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         // @ts-expect-error
