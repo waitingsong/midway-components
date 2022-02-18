@@ -40,23 +40,14 @@ export async function authShouldFailedWithNotFound(
 ): Promise<void> {
 
   const { status } = resp
-  const { jwtState } = resp.body as TestRespBody
+  const { jwtState, jwtOriginalErrorText } = resp.body as TestRespBody
 
   assert(status === expectStatus)
   assert(! jwtState)
 
   // const msg = (ex as Error).message
   // assert(msg.includes(JwtMsg.AuthFailed))
-
-  // // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  // if (typeof ex.originalError !== 'undefined') {
-  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  //   const omsg = (ex.originalError as Error).message
-  //   assert(omsg.includes(JwtMsg.TokenNotFound))
-  // }
-
-  return
-  // assert(false, `should throw error with status: "${status}", but not.`)
+  assert(jwtOriginalErrorText.includes(JwtMsg.TokenNotFound))
 }
 
 export async function authShouldValidatFailed(
@@ -64,10 +55,13 @@ export async function authShouldValidatFailed(
 ): Promise<void> {
 
   const { status } = resp
-  const { jwtState } = resp.body as TestRespBody
+  const { jwtState, jwtOriginalErrorText } = resp.body as TestRespBody
 
   assert(status === 401)
-  assert(! jwtState)
+  assert(jwtState)
+  assert(! jwtState.user)
+  assert(! jwtState.secret)
+  assert(! jwtState.signature)
 
   // const msg = (ex as Error).message
   // assert(msg.includes(JwtMsg.AuthFailed))
@@ -75,9 +69,7 @@ export async function authShouldValidatFailed(
   // // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   // const omsg = (ex.originalError as Error).message
   // assert(omsg.includes(JwtMsg.TokenValidFailed))
-
-  return
-  // assert(false, 'should throw error 401, but not.')
+  assert(jwtOriginalErrorText.includes(JwtMsg.TokenValidFailed))
 }
 
 export async function authShouldPassthroughNotFound(
@@ -86,17 +78,14 @@ export async function authShouldPassthroughNotFound(
 ): Promise<void> {
 
   const { status } = resp
-  const { jwtState } = resp.body as TestRespBody
+  const { jwtState, jwtOriginalErrorText } = resp.body as TestRespBody
 
   assert(status === expectStatus)
-  assert(! jwtState)
-
-  // const { jwtOriginalError } = jwtState
-  // assert(jwtOriginalError && jwtOriginalError instanceof Error)
-  // if (jwtOriginalError) {
-  //   const omsg = jwtOriginalError.message
-  //   assert(omsg.includes(JwtMsg.TokenNotFound))
-  // }
+  assert(jwtState)
+  assert(! jwtState.user)
+  assert(! jwtState.secret)
+  assert(! jwtState.signature)
+  assert(jwtOriginalErrorText.includes(JwtMsg.TokenNotFound))
 }
 
 export async function authShouldPassthroughValidFailed(
@@ -105,19 +94,14 @@ export async function authShouldPassthroughValidFailed(
 ): Promise<void> {
 
   const { status } = resp
-  const { jwtState } = resp.body as TestRespBody
+  const { jwtState, jwtOriginalErrorText } = resp.body as TestRespBody
 
   assert(status === expectStatus)
+  assert(jwtState)
   assert(! jwtState.user)
   assert(! jwtState.secret)
   assert(! jwtState.signature)
-
-  const { jwtOriginalError } = jwtState
-  assert(jwtOriginalError && jwtOriginalError instanceof Error)
-  if (jwtOriginalError) {
-    const omsg = jwtOriginalError.message
-    assert(omsg.includes(JwtMsg.TokenValidFailed))
-  }
+  assert(jwtOriginalErrorText.includes(JwtMsg.TokenValidFailed))
 }
 
 
@@ -144,7 +128,7 @@ export async function authShouldPassthroughEmptyStringNotFound(
 ): Promise<void> {
 
   const { status } = resp
-  const { jwtState } = resp.body as TestRespBody
+  const { jwtState, jwtOriginalErrorText } = resp.body as TestRespBody
 
   assert(status === expectStatus)
   assert(! jwtState.user)
@@ -153,13 +137,7 @@ export async function authShouldPassthroughEmptyStringNotFound(
 
   // const msg = (ex as Error).message
   // assert(msg.includes(JwtMsg.AuthFailed))
-
-  // // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  // const omsg = (ex.originalError as Error).message
-  // assert(omsg.includes(JwtMsg.TokenNotFound))
-
-  return
-  assert(false, 'should throw error 401, but not.')
+  assert(jwtOriginalErrorText.includes(JwtMsg.TokenNotFound))
 }
 
 export async function authShouldFailedWithNotFoundFromDebug(
@@ -168,20 +146,17 @@ export async function authShouldFailedWithNotFoundFromDebug(
 ): Promise<void> {
 
   const { status } = resp
-  const { jwtState } = resp.body as TestRespBody
+  const { jwtState, jwtOriginalErrorText } = resp.body as TestRespBody
 
   assert(status === expectStatus)
-  assert(! jwtState)
+  assert(jwtState)
+  assert(! jwtState.user)
+  assert(! jwtState.secret)
+  assert(! jwtState.signature)
 
   // const msg = (ex as Error).message
   // assert(msg.includes(JwtMsg.TokenNotFound))
-
-  // // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  // const omsg = (ex.originalError as Error).message
-  // assert(omsg.includes(JwtMsg.TokenNotFound))
-
-  return
-  // assert(false, `should throw error with status: "${expectStatus}", but not.`)
+  assert(jwtOriginalErrorText.includes(JwtMsg.TokenNotFound))
 }
 
 declare module '@midwayjs/core' {

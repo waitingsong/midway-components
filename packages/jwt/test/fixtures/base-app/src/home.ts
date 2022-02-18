@@ -22,6 +22,10 @@ export class HomeController {
       cookies,
       header,
       url,
+      jwtOriginalErrorText: '',
+    }
+    if (jwtState.jwtOriginalError) {
+      res.jwtOriginalErrorText = jwtState.jwtOriginalError.message
     }
     return res
   }

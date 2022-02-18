@@ -17,12 +17,12 @@ import {
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
-describe(filename, () => {
+describe.only(filename, () => {
 
   const cb: passthroughCallback = async () => true
 
   describe('Should JwtAuthenticateOptions.passthrough work with func', () => {
-    it.only('true: passed', async () => {
+    it('true: passed', async () => {
       const { app, httpRequest } = testConfig
       const path = '/' + Math.random().toString()
       const path2 = '/redirect-' + Math.random().toString()
@@ -42,7 +42,7 @@ describe(filename, () => {
       await authShouldPassed(resp, payload1)
     })
 
-    it('true: token not found', async () => {
+    it.only('true: token not found', async () => {
       const { app, httpRequest } = testConfig
 
       const path = '/' + Math.random().toString()
@@ -62,7 +62,7 @@ describe(filename, () => {
       await authShouldPassthroughNotFound(resp, 200)
     })
 
-    it.only('invalid value: token not found', async () => {
+    it('invalid value: token not found', async () => {
       const { app, httpRequest } = testConfig
       const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
