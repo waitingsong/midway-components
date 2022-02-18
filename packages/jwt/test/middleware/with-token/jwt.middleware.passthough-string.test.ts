@@ -14,7 +14,7 @@ import {
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
-describe(filename, () => {
+describe.only(filename, () => {
 
   describe('Should JwtAuthenticateOptions.passthrough work with value string', () => {
     it('valid url', async () => {
@@ -28,13 +28,9 @@ describe(filename, () => {
       }
       app.addConfigObject({ jwtMiddlewareConfig })
 
-      const sendHeader = {
-        authorization: '',
-      }
       const resp = await httpRequest
         .get('/')
-        .set(sendHeader) as TestResponse
-      await authShouldRedirect(resp, path2)
+      authShouldRedirect(resp, path2)
     })
 
     it('empty string', async () => {
@@ -47,13 +43,9 @@ describe(filename, () => {
       }
       app.addConfigObject({ jwtMiddlewareConfig })
 
-      const sendHeader = {
-        authorization: '',
-      }
       const resp = await httpRequest
         .get('/')
-        .set(sendHeader) as TestResponse
-      await authShouldPassthroughEmptyStringNotFound(resp, 401)
+      authShouldPassthroughEmptyStringNotFound(resp, 401)
     })
   })
 })

@@ -119,39 +119,34 @@ export async function authShouldPassthroughValidFailed(
 }
 
 
-export async function authShouldRedirect(
+export function authShouldRedirect(
   resp: TestResponse,
   redirectUrl: string,
-): Promise<void> {
+): void {
 
   const { status } = resp
   const { jwtState } = resp.body as TestRespBody
 
   assert(status === 302)
-  assert(! jwtState.user)
-  assert(! jwtState.secret)
-  assert(! jwtState.signature)
+  assert(! jwtState)
 
-  const location = resp.header('location') as string
-  assert(location === redirectUrl)
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  const loc = resp.header.location as string
+  assert(loc === redirectUrl)
 }
 
-export async function authShouldPassthroughEmptyStringNotFound(
+export function authShouldPassthroughEmptyStringNotFound(
   resp: TestResponse,
   expectStatus = 200,
-): Promise<void> {
+): void {
 
-  const { status } = resp
+  const { status, error } = resp
   const { jwtState, jwtOriginalErrorText } = resp.body as TestRespBody
 
   assert(status === expectStatus)
-  assert(! jwtState.user)
-  assert(! jwtState.secret)
-  assert(! jwtState.signature)
-
-  // const msg = (ex as Error).message
-  // assert(msg.includes(JwtMsg.AuthFailed))
-  assert(jwtOriginalErrorText.includes(JwtMsg.TokenNotFound))
+  assert(! jwtState)
+  assert(error)
+  assert(error.text.includes('401'))
 }
 
 export async function authShouldFailedWithNotFoundFromDebug(
