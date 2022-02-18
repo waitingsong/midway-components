@@ -73,7 +73,7 @@ export function resolveFromCookies(
   cookieKey?: JwtAuthenticateOptions['cookie'],
 ): JwtToken | undefined {
 
-  if (typeof cookieKey === 'undefined' || cookieKey === false) {
+  if (! cookieKey) {
     return ''
   }
 
