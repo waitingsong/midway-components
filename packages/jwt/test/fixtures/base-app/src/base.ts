@@ -1,13 +1,22 @@
 import {
   Controller,
   Get,
+  Inject,
 } from '@midwayjs/decorator'
+import { Context } from '@midwayjs/koa'
 
 
 @Controller('/')
-export class RootController {
+export class HomeController {
+
+  @Inject() readonly ctx: Context
+
   @Get('/')
-  async base() {
+  async home() {
+    const res = this.ctx
+    console.log({ res })
     return 'OK'
   }
+
 }
+
