@@ -19,8 +19,10 @@ import {
   DbReplica,
   DbReplicaKeys, TaskManClientConfig,
 } from './lib/index'
-import { taskAgentMiddleware } from './middleware/task-agent.middleware'
+import { TaskAgentMiddleware } from './middleware/task-agent.middleware'
 import { genKmoreDbConfig } from './repo/helper'
+
+import { Application } from '~/interface'
 
 
 const namespace = 'taskman'
@@ -36,7 +38,7 @@ const namespace = 'taskman'
 })
 export class AutoConfiguration {
 
-  @App() readonly app: IMidwayWebApplication
+  @App() readonly app: Application
 
   @Config('taskManServerConfig') protected readonly serverConfig: TaskManServerConfig
   @Config('taskManClientConfig') protected readonly clientConfig: TaskManClientConfig
@@ -57,16 +59,10 @@ export class AutoConfiguration {
 }
 
 export function registerMiddleware(
-  app: IMidwayWebApplication,
+  app: Application,
 ): void {
 
-  const appMiddleware = app.getConfig('middleware') as string[]
-  if (Array.isArray(appMiddleware)) {
-    appMiddleware.push(namespace + ':taskAgentMiddleware')
-  }
-  else {
-    app.logger.info('TaskAgent appMiddleware is not valid Array, register via app.use(taskAgentMiddleware)')
-    app.use(taskAgentMiddleware)
-  }
+  // @ts-expect-error
+  app.getMiddleware().insertLast(TaskAgentMiddleware)
 }
 

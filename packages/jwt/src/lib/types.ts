@@ -1,5 +1,3 @@
-import { IMidwayContext } from '@midwayjs/core'
-import { Context as KoaContext } from '@midwayjs/koa'
 import { JsonObject } from '@waiting/shared-types'
 import {
   DecodeOptions,
@@ -9,9 +7,10 @@ import {
   VerifyOptions,
 } from 'jsonwebtoken'
 
+import { Context } from '~/interface'
+
 
 export { NextFunction } from '@midwayjs/core'
-export type Context = IMidwayContext<KoaContext>
 
 export interface JwtConfig {
   /**

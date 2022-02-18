@@ -4,7 +4,7 @@ import {
   Get,
 } from '@midwayjs/decorator'
 
-import { Context } from '../../../../src/index'
+import { Context } from '../../../../src/interface'
 import { TestRespBody } from '../../../root.config'
 
 

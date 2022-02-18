@@ -1,14 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { Provide } from '@midwayjs/decorator'
-import {
-  IMidwayWebContext,
-  IMidwayWebNext,
-  IWebMiddleware,
-  MidwayWebMiddleware,
-} from '@midwayjs/web'
+import { IMiddleware, NextFunction } from '@midwayjs/core'
+import { Middleware } from '@midwayjs/decorator'
 import { SpanLogInput } from '@mw-components/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
-
 
 import { taskRunnerState } from '../lib/config'
 import { taskAgentSubscriptionMap } from '../lib/data'
@@ -16,10 +10,12 @@ import { decreaseTaskRunnerCount, increaseTaskRunnerCount } from '../lib/helper'
 import { TaskAgentConfig, TaskAgentState } from '../lib/index'
 import { TaskAgentService } from '../service/task-agent.service'
 
+import { Context } from '~/interface'
 
-@Provide()
-export class TaskAgentMiddleware implements IWebMiddleware {
-  resolve(): MidwayWebMiddleware {
+
+@Middleware()
+export class TaskAgentMiddleware implements IMiddleware<Context, NextFunction> {
+  resolve() {
     return taskAgentMiddleware
   }
 }
@@ -29,8 +25,8 @@ export class TaskAgentMiddleware implements IWebMiddleware {
  * 超过数量则返回 429 HTTP 状态码
  */
 export async function taskAgentMiddleware(
-  ctx: IMidwayWebContext,
-  next: IMidwayWebNext,
+  ctx: Context,
+  next: NextFunction,
 ): Promise<unknown> {
 
   let isTaskRunning = false
