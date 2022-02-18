@@ -7,7 +7,7 @@ import {
   authShouldPassthroughNotFound,
 } from '../helper'
 
-import { testConfig, TestResponse } from '@/root.config'
+import { testConfig } from '@/root.config'
 import { authHeader1, payload1, secret, token1 } from '@/test.config'
 import {
   initialJwtMiddlewareConfig,
@@ -87,7 +87,7 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig })
 
       const resp = await httpRequest
-        .get('/') as TestResponse
+        .get('/')
       authShouldFailedWithNotFound2(resp, 401)
     })
   })

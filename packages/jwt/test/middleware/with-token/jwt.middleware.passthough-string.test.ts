@@ -5,7 +5,7 @@ import {
   authShouldRedirect,
 } from '../helper'
 
-import { testConfig, TestResponse } from '@/root.config'
+import { testConfig } from '@/root.config'
 import {
   initialJwtMiddlewareConfig,
   JwtMiddlewareConfig,
