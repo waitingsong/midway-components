@@ -9,7 +9,14 @@ import { Context, JwtToken, JwtAuthenticateOptions } from './types'
  * @link https://nodejs.org/en/blog/vulnerability/february-2020-security-releases/
  */
 export function retrieveToken(ctx: Context, cookieKey: JwtAuthenticateOptions['cookie']): JwtToken {
-  let token = resolveFromCookies(ctx, cookieKey)
+  let token = resolveFromCookies(ctx.cookies, cookieKey)
+
+  if (token) {
+    token = token.trimEnd()
+  }
+  else if (ctx.header && ctx.header.cookie) {
+    token = pickTokenFromHeaderCookies(ctx.header.cookie, cookieKey)
+  }
 
   if (token) {
     token = token.trimEnd()
@@ -62,7 +69,7 @@ export function resolveFromAuthorizationHeader(authorization: string): JwtToken 
  * This function uses the opts.cookie option to retrieve the token
  */
 export function resolveFromCookies(
-  ctx: Context,
+  cookies: Context['cookies'],
   cookieKey?: JwtAuthenticateOptions['cookie'],
 ): JwtToken | undefined {
 
@@ -70,24 +77,22 @@ export function resolveFromCookies(
     return ''
   }
 
-  let token = ctx.cookies && typeof ctx.cookies.get === 'function'
-    ? ctx.cookies.get(cookieKey)
+  const token = cookies && typeof cookies.get === 'function'
+    ? cookies.get(cookieKey)
     : ''
-  if (! token && ctx.header && ctx.header.cookie) {
-    token = pickTokenFromCookies(ctx.header.cookie, cookieKey)
-  }
   return token
 }
 
-export function pickTokenFromCookies(
+export function pickTokenFromHeaderCookies(
   cookie: string | string[],
-  key: string,
+  key: string | false,
 ): string {
 
-  if (! cookie) {
+  if (! key) {
     return ''
   }
-  else if (typeof cookie === 'string') {
+
+  if (typeof cookie === 'string') {
     return pickTokenFromCookie(cookie, key)
   }
   else {
@@ -97,8 +102,9 @@ export function pickTokenFromCookies(
         return token
       }
     }
-    return ''
   }
+
+  return ''
 }
 
 function pickTokenFromCookie(
