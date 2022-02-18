@@ -17,12 +17,12 @@ import {
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
-describe.only(filename, () => {
+describe(filename, () => {
 
   const cb: passthroughCallback = async () => true
 
-  describe.only('Should JwtAuthenticateOptions.passthrough work with func', () => {
-    it('true: passed', async () => {
+  describe('Should JwtAuthenticateOptions.passthrough work with func', () => {
+    it.only('true: passed', async () => {
       const { app, httpRequest } = testConfig
       const path = '/' + Math.random().toString()
       const path2 = '/redirect-' + Math.random().toString()
@@ -39,7 +39,6 @@ describe.only(filename, () => {
       const resp = await httpRequest
         .get('/')
         .set(sendHeader)
-        .expect(200) as TestResponse
       await authShouldPassed(resp, payload1)
     })
 
@@ -54,14 +53,12 @@ describe.only(filename, () => {
       }
       app.addConfigObject({ jwtMiddlewareConfig })
 
-
       const sendHeader = {
         authorization: '',
       }
-
       const resp = await httpRequest
         .get('/')
-        .set(sendHeader) as TestResponse
+        .set(sendHeader)
       await authShouldPassthroughNotFound(resp, 200)
     })
 
@@ -77,7 +74,7 @@ describe.only(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig })
 
       const resp = await httpRequest
-        .get('/') as TestResponse
+        .get('/')
       await authShouldFailedWithNotFound(resp, 401)
     })
 

@@ -1,21 +1,29 @@
+/* eslint-disable node/no-unpublished-import */
 import {
   Controller,
   Get,
-  Inject,
 } from '@midwayjs/decorator'
-import { Context } from '@midwayjs/koa'
+
+import { Context } from '../../../../src/index'
+import { TestRespBody } from '../../../root.config'
 
 
 @Controller('/')
 export class HomeController {
 
-  @Inject() readonly ctx: Context
+  // @Inject() readonly ctx: Context
 
   @Get('/')
-  async home() {
-    const res = this.ctx
-    console.log({ res })
-    return 'OK'
+  async home(): Promise<TestRespBody> {
+    // @ts-expect-error
+    const { jwtState, cookies, header, url } = this._req_ctx as Context
+    const res = {
+      jwtState,
+      cookies,
+      header,
+      url,
+    }
+    return res
   }
 
 }

@@ -4,8 +4,12 @@ import { Application } from '~/interface'
 import { JwtState } from '~/lib'
 
 
-export type TestResponse = supertest.Response & {
-  jwtState: JwtState,
+export type TestResponse = supertest.Response
+export interface TestRespBody {
+  jwtState: JwtState
+  cookies: unknown
+  header: unknown
+  url: string
 }
 
 export interface TestConfig {

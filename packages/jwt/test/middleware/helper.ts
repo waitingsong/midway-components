@@ -1,6 +1,6 @@
 import assert from 'assert/strict'
 
-import { TestResponse } from '@/root.config'
+import { TestResponse, TestRespBody } from '@/root.config'
 import {
   JwtMsg,
   JwtState,
@@ -12,9 +12,9 @@ export async function authShouldPassed(
   expectPayload: unknown,
 ): Promise<void> {
 
-  const { status, jwtState, text } = resp
+  const { status } = resp
+  const { jwtState } = resp.body as TestRespBody
 
-  assert(text === 'OK')
   assert(status === 200)
   assert(jwtState)
   assert(jwtState.user)
@@ -27,12 +27,11 @@ export async function authShouldSkipped(
   resp: TestResponse,
 ): Promise<void> {
 
-  const { status, jwtState } = resp
+  const { status } = resp
+  const { jwtState } = resp.body as TestRespBody
 
   assert(status === 200)
-  assert(! jwtState.user)
-  assert(! jwtState.secret)
-  assert(! jwtState.signature)
+  assert(! jwtState)
 }
 
 export async function authShouldFailedWithNotFound(
@@ -40,12 +39,11 @@ export async function authShouldFailedWithNotFound(
   expectStatus = 401,
 ): Promise<void> {
 
-  const { status, jwtState } = resp
+  const { status } = resp
+  const { jwtState } = resp.body as TestRespBody
 
   assert(status === expectStatus)
-  assert(! jwtState.user)
-  assert(! jwtState.secret)
-  assert(! jwtState.signature)
+  assert(! jwtState)
 
   // const msg = (ex as Error).message
   // assert(msg.includes(JwtMsg.AuthFailed))
@@ -65,12 +63,11 @@ export async function authShouldValidatFailed(
   resp: TestResponse,
 ): Promise<void> {
 
-  const { status, jwtState } = resp
+  const { status } = resp
+  const { jwtState } = resp.body as TestRespBody
 
   assert(status === 401)
-  assert(! jwtState.user)
-  assert(! jwtState.secret)
-  assert(! jwtState.signature)
+  assert(! jwtState)
 
   // const msg = (ex as Error).message
   // assert(msg.includes(JwtMsg.AuthFailed))
@@ -88,20 +85,18 @@ export async function authShouldPassthroughNotFound(
   expectStatus = 200,
 ): Promise<void> {
 
-  const { status, jwtState, text } = resp
+  const { status } = resp
+  const { jwtState } = resp.body as TestRespBody
 
-  assert(text === 'OK')
   assert(status === expectStatus)
-  assert(! jwtState.user)
-  assert(! jwtState.secret)
-  assert(! jwtState.signature)
+  assert(! jwtState)
 
-  const { jwtOriginalError } = jwtState
-  assert(jwtOriginalError && jwtOriginalError instanceof Error)
-  if (jwtOriginalError) {
-    const omsg = jwtOriginalError.message
-    assert(omsg.includes(JwtMsg.TokenNotFound))
-  }
+  // const { jwtOriginalError } = jwtState
+  // assert(jwtOriginalError && jwtOriginalError instanceof Error)
+  // if (jwtOriginalError) {
+  //   const omsg = jwtOriginalError.message
+  //   assert(omsg.includes(JwtMsg.TokenNotFound))
+  // }
 }
 
 export async function authShouldPassthroughValidFailed(
@@ -109,9 +104,9 @@ export async function authShouldPassthroughValidFailed(
   expectStatus = 200,
 ): Promise<void> {
 
-  const { status, jwtState, text } = resp
+  const { status } = resp
+  const { jwtState } = resp.body as TestRespBody
 
-  assert(text === 'OK')
   assert(status === expectStatus)
   assert(! jwtState.user)
   assert(! jwtState.secret)
@@ -131,7 +126,8 @@ export async function authShouldRedirect(
   redirectUrl: string,
 ): Promise<void> {
 
-  const { status, jwtState } = resp
+  const { status } = resp
+  const { jwtState } = resp.body as TestRespBody
 
   assert(status === 302)
   assert(! jwtState.user)
@@ -147,9 +143,9 @@ export async function authShouldPassthroughEmptyStringNotFound(
   expectStatus = 200,
 ): Promise<void> {
 
-  const { status, jwtState, text } = resp
+  const { status } = resp
+  const { jwtState } = resp.body as TestRespBody
 
-  assert(text === 'OK')
   assert(status === expectStatus)
   assert(! jwtState.user)
   assert(! jwtState.secret)
@@ -171,12 +167,11 @@ export async function authShouldFailedWithNotFoundFromDebug(
   expectStatus = 401,
 ): Promise<void> {
 
-  const { status, jwtState } = resp
+  const { status } = resp
+  const { jwtState } = resp.body as TestRespBody
 
   assert(status === expectStatus)
-  assert(! jwtState.user)
-  assert(! jwtState.secret)
-  assert(! jwtState.signature)
+  assert(! jwtState)
 
   // const msg = (ex as Error).message
   // assert(msg.includes(JwtMsg.TokenNotFound))
