@@ -11,8 +11,6 @@ import { TestRespBody } from '../../../root.config'
 @Controller('/')
 export class HomeController {
 
-  // @Inject() readonly ctx: Context
-
   @Get('/')
   async home(): Promise<TestRespBody> {
     // @ts-expect-error
