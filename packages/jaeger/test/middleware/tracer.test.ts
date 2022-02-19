@@ -1,13 +1,6 @@
+import { relative } from 'path'
 
-import {
-  Framework,
-  IMidwayWebApplication,
-  IMidwayWebContext,
-} from '@midwayjs/web'
-import { basename } from '@waiting/shared-core'
-
-import { testConfig } from '../test-config'
-
+import { testConfig } from '@/root.config'
 import { HeadersKey } from '~/lib/types'
 import { TracerMiddleware } from '~/middleware/tracer.middleware'
 
@@ -15,17 +8,14 @@ import { TracerMiddleware } from '~/middleware/tracer.middleware'
 import assert = require('power-assert')
 
 
-const filename = basename(__filename)
+const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
-  let app: IMidwayWebApplication
-
-  before(() => {
-    app = testConfig.app
-  })
 
   it('Should work', async () => {
-    const ctx: IMidwayWebContext = app.createAnonymousContext()
+    const { app } = testConfig
+
+    const ctx = app.createAnonymousContext()
     const inst = await ctx.requestContext.getAsync(TracerMiddleware)
     const mw = inst.resolve()
     await mw(ctx, next)
@@ -34,7 +24,9 @@ describe(filename, () => {
   })
 
   it('Should work with parent span', async () => {
-    const ctx: IMidwayWebContext = app.createAnonymousContext()
+    const { app } = testConfig
+
+    const ctx = app.createAnonymousContext()
     const parentSpanId = '123'
     ctx.request.headers[HeadersKey.traceId] = `${parentSpanId}:${parentSpanId}:0:1`
     const inst = await ctx.requestContext.getAsync(TracerMiddleware)
@@ -48,7 +40,9 @@ describe(filename, () => {
   })
 
   it('Should work if path match whitelist string', async () => {
-    const ctx: IMidwayWebContext = app.createAnonymousContext()
+    const { app } = testConfig
+
+    const ctx = app.createAnonymousContext()
     const inst = await ctx.requestContext.getAsync(TracerMiddleware)
     const mw = inst.resolve()
     ctx.path = '/untraced_path_string'
@@ -57,7 +51,9 @@ describe(filename, () => {
   })
 
   it('Should work if path match whitelist regexp', async () => {
-    const ctx: IMidwayWebContext = app.createAnonymousContext()
+    const { app } = testConfig
+
+    const ctx = app.createAnonymousContext()
     const inst = await ctx.requestContext.getAsync(TracerMiddleware)
     const mw = inst.resolve()
     ctx.path = '/untraced_path_reg_exp'
@@ -66,7 +62,9 @@ describe(filename, () => {
   })
 
   it('Should work if path not match whitelist regexp', async () => {
-    const ctx: IMidwayWebContext = app.createAnonymousContext()
+    const { app } = testConfig
+
+    const ctx = app.createAnonymousContext()
     const inst = await ctx.requestContext.getAsync(TracerMiddleware)
     const mw = inst.resolve()
     ctx.path = '/untraced_path_reg_exp' + Math.random().toString()
