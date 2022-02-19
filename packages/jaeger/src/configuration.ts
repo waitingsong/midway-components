@@ -1,9 +1,9 @@
 /* eslint-disable node/no-extraneous-import */
 /* eslint-disable @typescript-eslint/no-extraneous-class */
+import 'tsconfig-paths/register'
+
 // import { join } from 'path'
 
-import { IMidwayApplication } from '@midwayjs/core'
-// import { IMidwayWebApplication } from '@midwayjs/web'
 import { App, Config, Configuration } from '@midwayjs/decorator'
 import { JaegerTracer } from 'jaeger-client'
 
@@ -13,6 +13,8 @@ import { namespace, compName } from './lib/config'
 import { initTracer } from './lib/tracer'
 import { TracerConfig } from './lib/types'
 import { TracerMiddleware } from './middleware/tracer.middleware'
+
+import { Application } from '~/interface'
 
 
 @Configuration({
@@ -26,7 +28,7 @@ import { TracerMiddleware } from './middleware/tracer.middleware'
   ],
 })
 export class AutoConfiguration {
-  @App() readonly app: IMidwayApplication
+  @App() readonly app: Application
 
   @Config('tracer') readonly tracerConfig: TracerConfig
 
@@ -43,7 +45,7 @@ export class AutoConfiguration {
 }
 
 export function registerMiddleware(
-  app: IMidwayApplication,
+  app: Application,
   tracerConfig: TracerConfig,
 ): void {
 
