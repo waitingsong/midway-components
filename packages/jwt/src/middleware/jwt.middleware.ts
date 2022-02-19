@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { IMiddleware } from '@midwayjs/core'
 import { Middleware } from '@midwayjs/decorator'
 
-
-import { Application, Context } from '../interface'
+import { Context } from '../interface'
 import {
   genJwtMiddlewareConfig,
   JwtComponent,
@@ -41,9 +39,9 @@ export async function jwtMiddleware(
     ctx.state = {}
   }
 
-  const app2 = ctx.app as unknown as Application
+  const { app } = ctx
 
-  const pmwConfig = app2.getConfig('jwtMiddlewareConfig') as JwtMiddlewareConfig
+  const pmwConfig = app.getConfig('jwtMiddlewareConfig') as JwtMiddlewareConfig
   const mwConfig = genJwtMiddlewareConfig(pmwConfig)
 
   const { ignore } = mwConfig
@@ -61,7 +59,7 @@ export async function jwtMiddleware(
       throw new Error(JwtMsg.TokenNotFound)
     }
 
-    const container = app2.getApplicationContext()
+    const container = app.getApplicationContext()
     const svc = await container.getAsync(JwtComponent)
 
     const secretSet: Set<VerifySecret> = svc.genVerifySecretSet(
