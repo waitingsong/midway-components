@@ -1,13 +1,10 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { IMiddleware, NextFunction } from '@midwayjs/core'
 import { Middleware } from '@midwayjs/decorator'
-import {
-  IMidwayWebContext,
-  IMidwayWebNext,
-} from '@midwayjs/web'
 import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
 import { globalTracer, FORMAT_HTTP_HEADERS } from 'opentracing'
 
+import { Context } from '../interface'
 import { compName } from '../lib/config'
 import { TracerManager } from '../lib/tracer'
 import { TracerConfig, TracerLog, TracerTag } from '../lib/types'
@@ -23,7 +20,7 @@ import {
 
 
 @Middleware()
-export class TracerMiddleware implements IMiddleware<IMidwayWebContext, NextFunction> {
+export class TracerMiddleware implements IMiddleware<Context, NextFunction> {
   resolve() {
     return tracerMiddleware
   }
@@ -39,8 +36,8 @@ export class TracerMiddleware implements IMiddleware<IMidwayWebContext, NextFunc
  * - 对异常链路进行上报
  */
 export async function tracerMiddleware(
-  ctx: IMidwayWebContext,
-  next: IMidwayWebNext,
+  ctx: Context,
+  next: NextFunction,
 ): Promise<void> {
 
   ctx.tracerTags = {}
@@ -51,7 +48,10 @@ export async function tracerMiddleware(
     return next()
   }
 
-  const config = ctx.app.config.tracer as TracerConfig
+  const { app } = ctx
+
+  // const config = ctx.app.config.tracer as TracerConfig
+  const config = app.getConfig('tracer') as TracerConfig
 
   // 白名单内的路由不会被追踪
   if (pathMatched(ctx.path, config.whiteList)) {
@@ -72,7 +72,7 @@ export async function tracerMiddleware(
   return handleTopExceptionAndNext(trm, next)
 }
 
-function startSpan(ctx: IMidwayWebContext): TracerManager {
+function startSpan(ctx: Context): TracerManager {
   // 开启第一个span并入栈
   const tracerManager = new TracerManager(true)
   const requestSpanCtx
@@ -97,7 +97,7 @@ function startSpan(ctx: IMidwayWebContext): TracerManager {
   return tracerManager
 }
 
-async function finishSpan(ctx: IMidwayWebContext): Promise<void> {
+async function finishSpan(ctx: Context): Promise<void> {
   const { tracerManager } = ctx
 
   await processHTTPStatus(ctx)

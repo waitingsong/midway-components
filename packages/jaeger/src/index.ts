@@ -10,16 +10,20 @@ export {
 } from 'opentracing'
 
 declare module '@midwayjs/core' {
+  interface Application {
+    jaeger: TracerConfig
+  }
+
   interface Context {
     tracerManager: TracerManager
     tracerTags: SpanLogInput
   }
 }
 
-declare module '@midwayjs/core/dist/interface' {
-  // 将配置合并到 MidwayConfig 中
-  interface MidwayConfig {
-    jaeger?: TracerConfig
-  }
-}
+// declare module '@midwayjs/core/dist/interface' {
+//   // 将配置合并到 MidwayConfig 中
+//   interface MidwayConfig {
+//     jaeger?: TracerConfig
+//   }
+// }
 
