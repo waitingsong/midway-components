@@ -23,7 +23,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/validate": "^3.0.6",
+    "@midwayjs/validate": "^3.0.7",
     "@mw-components/fetch": "^16.0.2",
     "@mw-components/jaeger": "^9.0.4",
     "@mw-components/kmore": "^24.0.0",
@@ -34,11 +34,11 @@
     "tsconfig-paths": "3"
   },
   "devDependencies": {
-    "@midwayjs/core": "^3.0.6",
-    "@midwayjs/decorator": "^3.0.6",
-    "@midwayjs/koa": "^3.0.6",
-    "@midwayjs/mock": "^3.0.6",
-    "@midwayjs/web": "^3.0.6",
+    "@midwayjs/core": "^3.0.7",
+    "@midwayjs/decorator": "^3.0.7",
+    "@midwayjs/koa": "^3.0.7",
+    "@midwayjs/mock": "^3.0.7",
+    "@midwayjs/web": "^3.0.7",
     "cross-env": "7",
     "kmore-types": "^24.0.0"
   },
