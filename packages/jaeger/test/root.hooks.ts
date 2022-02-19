@@ -6,9 +6,10 @@ import * as WEB from '@midwayjs/koa'
 import { createApp, close, createHttpRequest } from '@midwayjs/mock'
 
 import { testConfig } from './root.config'
-import { jwtConfig } from './test.config'
 
 import { Application } from '~/interface'
+import { TracerManager } from '~/lib/tracer'
+import { SpanLogInput, TracerConfig } from '~/lib/types'
 
 
 /**
@@ -29,7 +30,6 @@ export const mochaHooks = async () => {
     beforeAll: async () => {
       const configs = {
         keys: Math.random().toString(),
-        jwtConfig,
       }
       const opts = {
         imports: [WEB],
@@ -65,3 +65,14 @@ export const mochaHooks = async () => {
 
 }
 
+
+declare module '@midwayjs/core' {
+  interface Application {
+    jaeger: TracerConfig
+  }
+
+  interface Context {
+    tracerManager: TracerManager
+    tracerTags: SpanLogInput
+  }
+}

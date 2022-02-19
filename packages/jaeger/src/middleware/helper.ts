@@ -208,7 +208,7 @@ export function processRequestQuery(
   ctx: Context,
 ): void {
 
-  const tracerConfig = ctx.app.config.tracer as TracerConfig
+  const tracerConfig = ctx.app.getConfig('tracer') as TracerConfig
   const tags: SpanLogInput = {}
 
   // [Tag] 请求参数和响应数据
