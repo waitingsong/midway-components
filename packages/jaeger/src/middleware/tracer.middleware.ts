@@ -1,10 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { IMiddleware, NextFunction } from '@midwayjs/core'
 import { Middleware } from '@midwayjs/decorator'
 import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
 import { globalTracer, FORMAT_HTTP_HEADERS } from 'opentracing'
 
-import { Context } from '../interface'
+import { Context, IMiddleware, NextFunction } from '../interface'
 import { compName } from '../lib/config'
 import { TracerManager } from '../lib/tracer'
 import { TracerConfig, TracerLog, TracerTag } from '../lib/types'
