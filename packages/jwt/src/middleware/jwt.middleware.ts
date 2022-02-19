@@ -1,7 +1,6 @@
-import { IMiddleware } from '@midwayjs/core'
 import { Middleware } from '@midwayjs/decorator'
 
-import { Context } from '../interface'
+import { Context, IMiddleware, NextFunction } from '../interface'
 import {
   genJwtMiddlewareConfig,
   JwtComponent,
@@ -9,7 +8,6 @@ import {
 } from '../lib/index'
 import { retrieveToken } from '../lib/resolvers'
 import {
-  NextFunction,
   JwtAuthenticateOptions,
   VerifySecret,
   RedirectURL,
