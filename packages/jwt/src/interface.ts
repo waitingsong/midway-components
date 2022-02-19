@@ -8,7 +8,10 @@ export {
   JsonType,
 } from '@waiting/shared-types'
 
-export { IMidwayApplication as Application } from '@midwayjs/core'
+export {
+  IMidwayApplication as Application,
+  IMiddleware, NextFunction,
+} from '@midwayjs/core'
 export type Context = IMidwayContext<KoaContext>
 
 export { NpmPkg } from '@waiting/shared-types'
