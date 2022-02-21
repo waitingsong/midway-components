@@ -1,4 +1,5 @@
-import { Context, MiddlewarePathPattern } from '~/lib/types'
+import { Context } from '~/interface'
+import { MiddlewarePathPattern } from '~/lib/types'
 
 
 export function reqestPathMatched(
