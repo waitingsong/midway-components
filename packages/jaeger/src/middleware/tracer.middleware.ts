@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import { Middleware } from '@midwayjs/decorator'
 import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
 import { globalTracer, FORMAT_HTTP_HEADERS } from 'opentracing'

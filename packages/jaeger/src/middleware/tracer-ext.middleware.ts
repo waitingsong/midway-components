@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import { Middleware } from '@midwayjs/decorator'
 import { humanMemoryUsage } from '@waiting/shared-core'
 
