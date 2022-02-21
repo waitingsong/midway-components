@@ -194,7 +194,7 @@ export async function processHTTPStatus(
       await tracerConfig.processCustomFailure(ctx)
     }
     const opts: ProcessPriorityOpts = {
-      starttime: ctx.starttime,
+      starttime: ctx.startTime,
       trm: ctx.tracerManager,
       tracerTags: ctx.tracerTags,
       tracerConfig,
