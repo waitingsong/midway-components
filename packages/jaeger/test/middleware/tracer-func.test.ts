@@ -1,21 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable import/order */
 import { relative } from 'path'
 
 import { testConfig } from '@/root.config'
-import { TracerMiddleware } from '~/middleware/tracer.middleware'
 import { TracerConfig } from '~/lib/types'
-import { ProcessPriorityOpts } from '~/middleware/helper'
-import { Context } from '~/interface'
 
 import assert = require('power-assert')
-import rewire = require('rewire')
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
-  const mods = rewire('../../src/middleware/helper')
 
   describe('Should processPriority() work', () => {
     const path = '/processPriority'
@@ -40,7 +34,7 @@ describe(filename, () => {
 
       const resp = await httpRequest
         .get(path)
-      const cost = resp.body
+      const cost = resp.body as number
       assert(typeof cost === 'number')
       assert(cost < tracerConfig.reqThrottleMsForPriority)
     })
@@ -54,7 +48,7 @@ describe(filename, () => {
 
       const resp = await httpRequest
         .get(path)
-      const cost = resp.body
+      const cost = resp.body as number
       assert(typeof cost === 'number')
       assert(cost >= tracerConfig.reqThrottleMsForPriority)
     })
