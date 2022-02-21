@@ -5,6 +5,7 @@ import { TracerConfig } from '../lib/types'
 export const tracer: TracerConfig = {
   ...defaultTracerConfig,
   tracingConfig: {
+    serviceName: 'jaeger',
     sampler: {
       type: 'probabilistic',
       param: 1,

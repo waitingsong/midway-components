@@ -36,7 +36,7 @@ export const mochaHooks = async () => {
         globalConfig: configs,
       }
       const app = await createApp(join(__dirname, 'fixtures', 'base-app'), opts) as Application
-      app.addConfigObject(configs)
+      // app.addConfigObject(configs)
       testConfig.app = app
       testConfig.httpRequest = createHttpRequest(app)
       // const { url } = testConfig.httpRequest.get('/')

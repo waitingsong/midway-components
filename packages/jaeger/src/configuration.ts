@@ -7,8 +7,9 @@ import 'tsconfig-paths/register'
 import { App, Config, Configuration } from '@midwayjs/decorator'
 import { JaegerTracer } from 'jaeger-client'
 
-import { tracer as DefaultConfig } from './config/config.default'
-import { tracer as LocalConfig } from './config/config.local'
+import * as DefaultConfig from './config/config.default'
+import * as LocalConfig from './config/config.local'
+import * as TestConfig from './config/config.unittest'
 import { namespace, compName } from './lib/config'
 import { initTracer } from './lib/tracer'
 import { TracerConfig } from './lib/types'
@@ -24,6 +25,7 @@ import { Application } from '~/interface'
     {
       default: DefaultConfig,
       local: LocalConfig,
+      unittest: TestConfig,
     },
   ],
 })
@@ -35,6 +37,7 @@ export class AutoConfiguration {
   private tracer: JaegerTracer
 
   async onReady(): Promise<void> {
+    const foo = this.tracerConfig
     this.tracer = initTracer(this.app)
     registerMiddleware(this.app, this.tracerConfig)
   }

@@ -23,7 +23,7 @@ describe(filename, () => {
       const { app } = testConfig
 
       const ctx = app.createAnonymousContext() as Context
-      const tracerConfig = ctx.app.getConfig('tracer') as TracerConfig
+      const tracerConfig = app.getConfig('tracer') as TracerConfig
       tracerConfig.reqThrottleMsForPriority = -1
 
       const inst = await ctx.requestContext.getAsync(TracerMiddleware)
@@ -48,7 +48,7 @@ describe(filename, () => {
       const { app } = testConfig
 
       const ctx = app.createAnonymousContext() as Context
-      const tracerConfig = ctx.app.getConfig('tracer') as TracerConfig
+      const tracerConfig = app.getConfig('tracer') as TracerConfig
       tracerConfig.reqThrottleMsForPriority = 10000
 
       const inst = await ctx.requestContext.getAsync(TracerMiddleware)
@@ -77,7 +77,7 @@ describe(filename, () => {
       const { app } = testConfig
 
       const ctx = app.createAnonymousContext() as Context
-      const tracerConfig = ctx.app.getConfig('tracer') as TracerConfig
+      const tracerConfig = app.getConfig('tracer') as TracerConfig
       tracerConfig.reqThrottleMsForPriority = 0
 
       const inst = await ctx.requestContext.getAsync(TracerMiddleware)
