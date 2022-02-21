@@ -35,9 +35,11 @@ describe(filename, () => {
     await mw(ctx, next)
     const spanHeaderInit = ctx.tracerManager.headerOfCurrentSpan()
     assert(spanHeaderInit)
-    const header = spanHeaderInit[HeadersKey.traceId]
-    const expectParentSpanId = header.slice(0, header.indexOf(':'))
-    assert(expectParentSpanId === parentSpanId)
+    if (spanHeaderInit) {
+      const header = spanHeaderInit[HeadersKey.traceId]
+      const expectParentSpanId = header.slice(0, header.indexOf(':'))
+      assert(expectParentSpanId === parentSpanId)
+    }
   })
 
   it('Should work if path match whitelist string', async () => {
