@@ -288,7 +288,7 @@ export interface ProcessPriorityOpts {
   tracerTags: SpanLogInput
   tracerConfig: TracerConfig
 }
-async function processPriority(options: ProcessPriorityOpts): Promise<number | undefined> {
+export async function processPriority(options: ProcessPriorityOpts): Promise<number | undefined> {
   const { reqThrottleMsForPriority: throttleMs } = options.tracerConfig
   if (throttleMs < 0) {
     return

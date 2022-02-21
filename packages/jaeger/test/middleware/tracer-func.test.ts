@@ -18,95 +18,47 @@ describe(filename, () => {
   const mods = rewire('../../src/middleware/helper')
 
   describe('Should processPriority() work', () => {
+    const path = '/processPriority'
 
     it('reqThrottleMsForPriority -1', async () => {
-      const { app } = testConfig
+      const { app, httpRequest } = testConfig
 
-      const ctx = app.createAnonymousContext() as Context
       const tracerConfig = app.getConfig('tracer') as TracerConfig
       tracerConfig.reqThrottleMsForPriority = -1
 
-      const inst = await ctx.requestContext.getAsync(TracerMiddleware)
-      const mw = inst.resolve()
-      await mw(ctx, next)
-
-      const fnName = 'processPriority'
-      const fn = mods.__get__(fnName)
-      // const fn = mods.__get__(fnName) as (options: ProcessPriorityOpts) => number | undefined
-
-      const opts: ProcessPriorityOpts = {
-        starttime: ctx.starttime,
-        tracerTags: {},
-        trm: ctx.tracerManager,
-        tracerConfig,
-      }
-      const cost = await fn(opts)
-      assert(typeof cost === 'undefined')
+      const resp = await httpRequest
+        .get(path)
+      const cost = resp.text
+      assert(cost === 'undefined')
     })
 
-    it('reqThrottleMsForPriority 10000', async () => {
-      const { app } = testConfig
+    it.only('reqThrottleMsForPriority 10000', async () => {
+      const { app, httpRequest } = testConfig
 
-      const ctx = app.createAnonymousContext() as Context
       const tracerConfig = app.getConfig('tracer') as TracerConfig
       tracerConfig.reqThrottleMsForPriority = 10000
 
-      const inst = await ctx.requestContext.getAsync(TracerMiddleware)
-      const mw = inst.resolve()
-      await mw(ctx, next)
-
-      const fnName = 'processPriority'
-      const fn = mods.__get__(fnName)
-
-      const opts: ProcessPriorityOpts = {
-        starttime: ctx.starttime,
-        tracerTags: {},
-        trm: ctx.tracerManager,
-        tracerConfig,
-      }
-      const cost = await fn(opts)
-      console.log({
-        cost,
-        starttime: ctx.starttime,
-        reqThrottleMsForPriority: tracerConfig.reqThrottleMsForPriority,
-      })
+      const resp = await httpRequest
+        .get(path)
+      const cost = resp.body
+      assert(typeof cost === 'number')
       assert(cost < tracerConfig.reqThrottleMsForPriority)
     })
 
     it('reqThrottleMsForPriority zero', async () => {
-      const { app } = testConfig
+      const { app, httpRequest } = testConfig
 
-      const ctx = app.createAnonymousContext() as Context
       const tracerConfig = app.getConfig('tracer') as TracerConfig
+      tracerConfig.reqThrottleMsForPriority = 10000
       tracerConfig.reqThrottleMsForPriority = 0
 
-      const inst = await ctx.requestContext.getAsync(TracerMiddleware)
-      const mw = inst.resolve()
-      await mw(ctx, next)
-
-      const fnName = 'processPriority'
-      const fn = mods.__get__(fnName)
-
-      const opts: ProcessPriorityOpts = {
-        starttime: ctx.starttime,
-        tracerTags: {},
-        trm: ctx.tracerManager,
-        tracerConfig,
-      }
-      const cost = await fn(opts)
-      console.log({
-        cost,
-        starttime: ctx.starttime,
-        reqThrottleMsForPriority: tracerConfig.reqThrottleMsForPriority,
-      })
+      const resp = await httpRequest
+        .get(path)
+      const cost = resp.body
+      assert(typeof cost === 'number')
       assert(cost >= tracerConfig.reqThrottleMsForPriority)
     })
 
   })
 })
-
-
-async function next(): Promise<void> {
-  return void 0
-}
 

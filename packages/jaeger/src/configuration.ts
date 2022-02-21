@@ -37,7 +37,6 @@ export class AutoConfiguration {
   private tracer: JaegerTracer
 
   async onReady(): Promise<void> {
-    const foo = this.tracerConfig
     this.tracer = initTracer(this.app)
     registerMiddleware(this.app, this.tracerConfig)
   }
