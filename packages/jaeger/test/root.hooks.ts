@@ -54,6 +54,7 @@ export const mochaHooks = async () => {
     },
 
     afterEach: async () => {
+      return
     },
 
     afterAll: async () => {
