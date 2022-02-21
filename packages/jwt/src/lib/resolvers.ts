@@ -1,5 +1,7 @@
+import { Context } from '../interface'
+
 import { schemePrefix } from './config'
-import { Context, JwtToken, JwtAuthenticateOptions } from './types'
+import { JwtToken, JwtAuthenticateOptions } from './types'
 
 
 /**
