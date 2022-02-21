@@ -12,9 +12,8 @@ import { TestRespBody } from '../../../root.config'
 export class HomeController {
 
   @Get('/')
-  async home(): Promise<TestRespBody> {
-    // @ts-expect-error
-    const { jwtState, cookies, header, url } = this._req_ctx as Context
+  async home(ctx: Context): Promise<TestRespBody> {
+    const { jwtState, cookies, header, url } = ctx
     const res = {
       jwtState,
       cookies,
