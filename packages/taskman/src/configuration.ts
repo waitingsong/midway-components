@@ -6,7 +6,6 @@ import { join } from 'path'
 
 import { IMidwayContainer } from '@midwayjs/core'
 import { App, Config, Configuration } from '@midwayjs/decorator'
-import { IMidwayWebApplication } from '@midwayjs/web'
 import * as fetch from '@mw-components/fetch'
 import * as jaeger from '@mw-components/jaeger'
 import * as db from '@mw-components/kmore'
