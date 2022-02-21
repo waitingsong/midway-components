@@ -1,41 +1,33 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable import/order */
-import {
-  IMidwayWebApplication,
-  IMidwayWebContext,
-  MidwayWebMiddleware,
-} from '@midwayjs/web'
-import { basename } from '@waiting/shared-core'
+import { relative } from 'path'
 
+import { testConfig } from '@/root.config'
 import { TracerMiddleware } from '~/middleware/tracer.middleware'
 import { TracerConfig } from '~/lib/types'
 import { ProcessPriorityOpts } from '~/middleware/helper'
-import { testConfig } from '../test-config'
+import { Context } from '~/interface'
 
 import assert = require('power-assert')
 import rewire = require('rewire')
 
 
-const filename = basename(__filename)
+const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
   const mods = rewire('../../src/middleware/helper')
-  let app: IMidwayWebApplication
-
-  before(() => {
-    app = testConfig.app
-  })
 
   describe('Should processPriority() work', () => {
 
     it('reqThrottleMsForPriority -1', async () => {
-      const ctx: IMidwayWebContext = app.createAnonymousContext()
-      const config = ctx.app.config.tracer as TracerConfig
-      config.reqThrottleMsForPriority = -1
+      const { app } = testConfig
+
+      const ctx = app.createAnonymousContext() as Context
+      const tracerConfig = ctx.app.getConfig('tracer') as TracerConfig
+      tracerConfig.reqThrottleMsForPriority = -1
 
       const inst = await ctx.requestContext.getAsync(TracerMiddleware)
-      const mw = inst.resolve() as MidwayWebMiddleware
-      // @ts-expect-error
+      const mw = inst.resolve()
       await mw(ctx, next)
 
       const fnName = 'processPriority'
@@ -46,16 +38,18 @@ describe(filename, () => {
         starttime: ctx.starttime,
         tracerTags: {},
         trm: ctx.tracerManager,
-        tracerConfig: ctx.app.config.tracer,
+        tracerConfig,
       }
       const cost = await fn(opts)
       assert(typeof cost === 'undefined')
     })
 
     it('reqThrottleMsForPriority 10000', async () => {
-      const ctx: IMidwayWebContext = app.createAnonymousContext()
-      const config = ctx.app.config.tracer as TracerConfig
-      config.reqThrottleMsForPriority = 10000
+      const { app } = testConfig
+
+      const ctx = app.createAnonymousContext() as Context
+      const tracerConfig = ctx.app.getConfig('tracer') as TracerConfig
+      tracerConfig.reqThrottleMsForPriority = 10000
 
       const inst = await ctx.requestContext.getAsync(TracerMiddleware)
       const mw = inst.resolve()
@@ -68,21 +62,23 @@ describe(filename, () => {
         starttime: ctx.starttime,
         tracerTags: {},
         trm: ctx.tracerManager,
-        tracerConfig: ctx.app.config.tracer,
+        tracerConfig,
       }
       const cost = await fn(opts)
       console.log({
         cost,
         starttime: ctx.starttime,
-        reqThrottleMsForPriority: config.reqThrottleMsForPriority,
+        reqThrottleMsForPriority: tracerConfig.reqThrottleMsForPriority,
       })
-      assert(cost < config.reqThrottleMsForPriority)
+      assert(cost < tracerConfig.reqThrottleMsForPriority)
     })
 
     it('reqThrottleMsForPriority zero', async () => {
-      const ctx: IMidwayWebContext = app.createAnonymousContext()
-      const config = ctx.app.config.tracer as TracerConfig
-      config.reqThrottleMsForPriority = 0
+      const { app } = testConfig
+
+      const ctx = app.createAnonymousContext() as Context
+      const tracerConfig = ctx.app.getConfig('tracer') as TracerConfig
+      tracerConfig.reqThrottleMsForPriority = 0
 
       const inst = await ctx.requestContext.getAsync(TracerMiddleware)
       const mw = inst.resolve()
@@ -95,15 +91,15 @@ describe(filename, () => {
         starttime: ctx.starttime,
         tracerTags: {},
         trm: ctx.tracerManager,
-        tracerConfig: ctx.app.config.tracer,
+        tracerConfig,
       }
       const cost = await fn(opts)
       console.log({
         cost,
         starttime: ctx.starttime,
-        reqThrottleMsForPriority: config.reqThrottleMsForPriority,
+        reqThrottleMsForPriority: tracerConfig.reqThrottleMsForPriority,
       })
-      assert(cost >= config.reqThrottleMsForPriority)
+      assert(cost >= tracerConfig.reqThrottleMsForPriority)
     })
 
   })
