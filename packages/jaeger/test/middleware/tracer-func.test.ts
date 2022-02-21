@@ -26,7 +26,7 @@ describe(filename, () => {
       assert(cost === 'undefined')
     })
 
-    it.only('reqThrottleMsForPriority 10000', async () => {
+    it('reqThrottleMsForPriority 10000', async () => {
       const { app, httpRequest } = testConfig
 
       const tracerConfig = app.getConfig('tracer') as TracerConfig
