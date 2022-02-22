@@ -7,6 +7,7 @@ import {
 import { Context } from '../../../../src/interface'
 import { TestSpanInfo, TracerConfig } from '../../../../src/lib/types'
 import { processPriority, ProcessPriorityOpts } from '../../../../src/middleware/helper'
+import { TracerMiddleware } from '../../../../src/middleware/tracer.middleware'
 import { TestRespBody } from '../../../root.config'
 
 
@@ -55,6 +56,18 @@ export class HomeController {
     }
     const cost = await processPriority(opts)
     const ret = typeof cost === 'undefined' ? 'undefined' : cost
+    return ret
+  }
+
+  @Get('/untraced_path_string')
+  async untracedPathString(ctx: Context): Promise<boolean> {
+    const ret = ctx.tracerManager.isTraceEnabled
+    return ret
+  }
+
+  @Get('/untraced_path_reg_exp')
+  async untracedPathRegExp(ctx: Context): Promise<boolean> {
+    const ret = ctx.tracerManager.isTraceEnabled
     return ret
   }
 

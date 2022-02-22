@@ -13,11 +13,11 @@ import assert = require('power-assert')
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
-  const path = '/'
 
-  it.only('Should work', async () => {
+  it('Should work', async () => {
     const { app, httpRequest } = testConfig
 
+    const path = '/'
     const tracerConfig = app.getConfig('tracer') as TracerConfig
     assert(tracerConfig)
     const { sampler } = tracerConfig.tracingConfig
@@ -42,9 +42,10 @@ describe(filename, () => {
     assert.deepStrictEqual(spanInfo.tags, expectTags)
   })
 
-  it.only('Should work with parent span', async () => {
+  it('Should work with parent span', async () => {
     const { httpRequest } = testConfig
 
+    const path = '/'
     const parentSpanId = Math.random().toString().slice(2)
     const sendHeader = {
       [HeadersKey.traceId]: `${parentSpanId}:${parentSpanId}:0:1`,
@@ -68,25 +69,23 @@ describe(filename, () => {
   })
 
   it('Should work if path match whitelist string', async () => {
-    const { app } = testConfig
+    const { httpRequest } = testConfig
 
-    const ctx = app.createAnonymousContext() as Context
-    const inst = await ctx.requestContext.getAsync(TracerMiddleware)
-    const mw = inst.resolve()
-    ctx.path = '/untraced_path_string'
-    await mw(ctx, next)
-    assert(ctx.tracerManager.isTraceEnabled === false)
+    const path = '/untraced_path_string'
+    const resp = await httpRequest
+      .get(path)
+      .expect(200)
+    assert(resp.body === false)
   })
 
   it('Should work if path match whitelist regexp', async () => {
-    const { app } = testConfig
+    const { httpRequest } = testConfig
 
-    const ctx = app.createAnonymousContext() as Context
-    const inst = await ctx.requestContext.getAsync(TracerMiddleware)
-    const mw = inst.resolve()
-    ctx.path = '/untraced_path_reg_exp'
-    await mw(ctx, next)
-    assert(ctx.tracerManager.isTraceEnabled === false)
+    const path = '/untraced_path_reg_exp'
+    const resp = await httpRequest
+      .get(path)
+      .expect(200)
+    assert(resp.body === false)
   })
 
   it('Should work if path not match whitelist regexp', async () => {
