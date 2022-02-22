@@ -21,8 +21,9 @@ import { SpanHeaderInit, SpanLogInput, TracerConfig } from './types'
 export function initTracer(app: IMidwayApplication): JaegerTracer {
   const tconf = app.getConfig('tracer') as TracerConfig
   const pconf = app.getConfig('pkg') as NpmPkg
+  const pkgName = pconf && pconf.name ? pconf.name : 'jager'
 
-  let name = tconf.tracingConfig.serviceName ?? pconf.name
+  let name = tconf.tracingConfig.serviceName ?? pkgName
   name = name.replace(/@/ug, '').replace(/\//ug, '-')
   if (! name) {
     throw new Error('service name empty')
