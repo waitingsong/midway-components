@@ -7,7 +7,6 @@ import {
 import { Context } from '../../../../src/interface'
 import { TestSpanInfo, TracerConfig } from '../../../../src/lib/types'
 import { processPriority, ProcessPriorityOpts } from '../../../../src/middleware/helper'
-import { TracerMiddleware } from '../../../../src/middleware/tracer.middleware'
 import { TestRespBody } from '../../../root.config'
 
 
@@ -23,6 +22,7 @@ export class HomeController {
       throw TypeError('span undefined')
     }
     const headerInit = ctx.tracerManager.headerOfCurrentSpan()
+    const isTraceEnabled = ctx.tracerManager.isTraceEnabled
     const spanInfo: TestSpanInfo = {
       // @ts-expect-error
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -34,6 +34,7 @@ export class HomeController {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       startTime: span._startTime,
       headerInit,
+      isTraceEnabled,
     }
 
     const res: TestRespBody = {

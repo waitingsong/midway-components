@@ -173,4 +173,5 @@ export interface TestSpanInfo {
   logs: SpanRawLog[]
   tags: SpanRawTag[]
   headerInit: SpanHeaderInit | undefined
+  isTraceEnabled: boolean
 }

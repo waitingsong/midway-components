@@ -87,29 +87,14 @@ describe(filename, () => {
       .expect(200)
     assert(resp.body === false)
   })
-
-  it('Should work if path not match whitelist regexp', async () => {
-    const { app } = testConfig
-
-    const ctx = app.createAnonymousContext() as Context
-    const inst = await ctx.requestContext.getAsync(TracerMiddleware)
-    const mw = inst.resolve()
-    ctx.path = '/untraced_path_reg_exp' + Math.random().toString()
-    await mw(ctx, next)
-    assert(ctx.tracerManager.isTraceEnabled === true)
-  })
 })
-
-
-async function next(): Promise<void> {
-  return void 0
-}
 
 
 function assertSpanInfo(spanInfo: TestSpanInfo): void {
   assert(spanInfo)
-  const { startTime, logs, tags } = spanInfo
+  const { startTime, logs, tags, isTraceEnabled } = spanInfo
 
+  assert(isTraceEnabled === true)
   assert(startTime > 0)
   assert(Array.isArray(logs) && logs.length > 0)
   assert(Array.isArray(tags))
