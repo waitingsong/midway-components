@@ -1,8 +1,9 @@
+// import assert from 'assert'
 import { relative } from 'path'
 
-import { testConfig } from '@/root.config'
+import { testConfig, TestRespBody } from '@/root.config'
 import { Context } from '~/interface'
-import { HeadersKey } from '~/lib/types'
+import { HeadersKey, TestSpanInfo, TracerLog } from '~/lib/types'
 import { TracerMiddleware } from '~/middleware/tracer.middleware'
 
 // eslint-disable-next-line import/order
@@ -12,31 +13,50 @@ import assert = require('power-assert')
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
+  const path = '/'
 
-  it('Should work', async () => {
-    const { app } = testConfig
+  it.only('Should work', async () => {
+    const { app, httpRequest } = testConfig
 
-    const ctx = app.createAnonymousContext() as Context
-    const inst = await ctx.requestContext.getAsync(TracerMiddleware)
-    const mw = inst.resolve()
-    await mw(ctx, next)
-    const span = ctx.tracerManager.currentSpan()
-    assert(span)
+    const resp = await httpRequest
+      .get(path)
+      .expect(200)
+    const { spanInfo } = resp.body as TestRespBody
+    assertSpanInfo(spanInfo)
+    const expectTags = [
+      {
+        key: 'sampler.type',
+        value: 'probabilistic',
+      },
+      {
+        key: 'sampler.param',
+        value: 1,
+      },
+    ]
+    assert.deepStrictEqual(spanInfo.tags, expectTags)
   })
 
-  it('Should work with parent span', async () => {
-    const { app } = testConfig
+  it.only('Should work with parent span', async () => {
+    const { app, httpRequest } = testConfig
 
     const ctx = app.createAnonymousContext() as Context
-    const parentSpanId = '123'
-    ctx.request.headers[HeadersKey.traceId] = `${parentSpanId}:${parentSpanId}:0:1`
-    const inst = await ctx.requestContext.getAsync(TracerMiddleware)
-    const mw = inst.resolve()
-    await mw(ctx, next)
-    const spanHeaderInit = ctx.tracerManager.headerOfCurrentSpan()
-    assert(spanHeaderInit)
-    if (spanHeaderInit) {
-      const header = spanHeaderInit[HeadersKey.traceId]
+    const parentSpanId = Math.random().toString().slice(2)
+
+    const sendHeader = {
+      [HeadersKey.traceId]: `${parentSpanId}:${parentSpanId}:0:1`,
+    }
+    const resp = await httpRequest
+      .get(path)
+      .set(sendHeader)
+      .expect(200)
+    const { spanInfo } = resp.body as TestRespBody
+    assertSpanInfo(spanInfo)
+
+    assert(spanInfo.tags.length === 0)
+
+    const { headerInit } = spanInfo
+    if (headerInit) {
+      const header = headerInit[HeadersKey.traceId]
       const expectParentSpanId = header.slice(0, header.indexOf(':'))
       assert(expectParentSpanId === parentSpanId)
     }
@@ -81,3 +101,26 @@ async function next(): Promise<void> {
   return void 0
 }
 
+
+function assertSpanInfo(spanInfo: TestSpanInfo): void {
+  assert(spanInfo)
+  const { startTime, logs, tags } = spanInfo
+
+  assert(startTime > 0)
+  assert(Array.isArray(logs) && logs.length > 0)
+  assert(Array.isArray(tags))
+
+  const [log0] = logs
+  assert(log0)
+  if (log0) {
+    assert(log0.timestamp > 0)
+    const { fields } = log0
+    assert(Array.isArray(fields))
+    const [row0] = fields
+    assert(row0)
+    if (row0) {
+      assert(row0.key === 'event')
+      assert(row0.value === TracerLog.requestBegin)
+    }
+  }
+}

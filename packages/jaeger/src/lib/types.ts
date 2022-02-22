@@ -155,3 +155,22 @@ export interface TracerError extends Error {
   __isTraced: boolean
 }
 
+
+export interface SpanRawLog {
+  timestamp: number
+  fields: SpanRawLogField[]
+}
+export interface SpanRawLogField {
+  key: string
+  value: unknown
+}
+export interface SpanRawTag {
+  key: string
+  value: unknown
+}
+export interface TestSpanInfo {
+  startTime: number
+  logs: SpanRawLog[]
+  tags: SpanRawTag[]
+  headerInit: SpanHeaderInit | undefined
+}
