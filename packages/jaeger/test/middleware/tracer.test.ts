@@ -3,7 +3,7 @@ import { relative } from 'path'
 
 import { testConfig, TestRespBody } from '@/root.config'
 import { Context } from '~/interface'
-import { HeadersKey, TestSpanInfo, TracerLog } from '~/lib/types'
+import { HeadersKey, TestSpanInfo, TracerConfig, TracerLog } from '~/lib/types'
 import { TracerMiddleware } from '~/middleware/tracer.middleware'
 
 // eslint-disable-next-line import/order
@@ -18,30 +18,34 @@ describe(filename, () => {
   it.only('Should work', async () => {
     const { app, httpRequest } = testConfig
 
+    const tracerConfig = app.getConfig('tracer') as TracerConfig
+    assert(tracerConfig)
+    const { sampler } = tracerConfig.tracingConfig
+    assert(sampler)
+
     const resp = await httpRequest
       .get(path)
       .expect(200)
     const { spanInfo } = resp.body as TestRespBody
     assertSpanInfo(spanInfo)
+
     const expectTags = [
       {
         key: 'sampler.type',
-        value: 'probabilistic',
+        value: sampler ? sampler.type : 'fake', // 'probabilistic',
       },
       {
         key: 'sampler.param',
-        value: 1,
+        value: sampler ? sampler.param : 'fake', // 1,
       },
     ]
     assert.deepStrictEqual(spanInfo.tags, expectTags)
   })
 
   it.only('Should work with parent span', async () => {
-    const { app, httpRequest } = testConfig
+    const { httpRequest } = testConfig
 
-    const ctx = app.createAnonymousContext() as Context
     const parentSpanId = Math.random().toString().slice(2)
-
     const sendHeader = {
       [HeadersKey.traceId]: `${parentSpanId}:${parentSpanId}:0:1`,
     }
@@ -55,6 +59,7 @@ describe(filename, () => {
     assert(spanInfo.tags.length === 0)
 
     const { headerInit } = spanInfo
+    assert(headerInit)
     if (headerInit) {
       const header = headerInit[HeadersKey.traceId]
       const expectParentSpanId = header.slice(0, header.indexOf(':'))
