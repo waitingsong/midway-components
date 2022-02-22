@@ -1,16 +1,14 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { IMiddleware, NextFunction } from '@midwayjs/core'
 import { Middleware } from '@midwayjs/decorator'
 import { SpanLogInput } from '@mw-components/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
 
+import { Context, IMiddleware, NextFunction } from '../interface'
 import { taskRunnerState } from '../lib/config'
 import { taskAgentSubscriptionMap } from '../lib/data'
 import { decreaseTaskRunnerCount, increaseTaskRunnerCount } from '../lib/helper'
 import { TaskAgentConfig, TaskAgentState } from '../lib/index'
 import { TaskAgentService } from '../service/task-agent.service'
-
-import { Context } from '~/interface'
 
 
 @Middleware()
