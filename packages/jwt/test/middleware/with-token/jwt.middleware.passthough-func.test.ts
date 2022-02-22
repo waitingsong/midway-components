@@ -21,12 +21,11 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 describe(filename, () => {
 
   const cb: passthroughCallback = async () => true
+  const path = '/'
 
   describe('Should JwtAuthenticateOptions.passthrough work with func', () => {
     it('true: passed', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/' + Math.random().toString()
-      const path2 = '/redirect-' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [],
@@ -38,15 +37,14 @@ describe(filename, () => {
         authorization: authHeader1,
       }
       const resp = await httpRequest
-        .get('/')
+        .get(path)
         .set(sendHeader)
-      await authShouldPassed(resp, payload1)
+      authShouldPassed(resp, payload1)
     })
 
     it('true: token not found', async () => {
       const { app, httpRequest } = testConfig
 
-      const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [],
@@ -55,13 +53,12 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig })
 
       const resp = await httpRequest
-        .get('/')
-      await authShouldPassthroughNotFound(resp, 200)
+        .get(path)
+      authShouldPassthroughNotFound(resp, 200)
     })
 
     it('invalid value: token not found', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [],
@@ -71,13 +68,12 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig })
 
       const resp = await httpRequest
-        .get('/')
+        .get(path)
       authShouldFailedWithNotFound2(resp, 401)
     })
 
     it('invalid value 1: token not found', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [],
@@ -87,7 +83,7 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig })
 
       const resp = await httpRequest
-        .get('/')
+        .get(path)
       authShouldFailedWithNotFound2(resp, 401)
     })
   })
