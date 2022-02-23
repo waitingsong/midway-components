@@ -1,12 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { Provide } from '@midwayjs/decorator'
+import { Middleware } from '@midwayjs/decorator'
 
-import {
-  Context,
-  IMidwayWebNext,
-  IWebMiddleware,
-  MidwayWebMiddleware,
-} from '../interface'
+import { Context, IMiddleware, NextFunction } from '../interface'
 import {
   genJwtMiddlewareConfig,
   JwtComponent,
@@ -23,28 +17,29 @@ import {
 import { reqestPathMatched } from '../util/common'
 
 
-@Provide()
-export class JwtMiddleware implements IWebMiddleware {
-  resolve(): MidwayWebMiddleware {
+@Middleware()
+export class JwtMiddleware implements IMiddleware<Context, NextFunction> {
+  resolve() {
     return jwtMiddleware
   }
 }
 
 export async function jwtMiddleware(
   ctx: Context,
-  next: IMidwayWebNext,
+  next: NextFunction,
 ): Promise<void> {
 
-  /* istanbul ignore else */
   if (! ctx.jwtState) {
     ctx.jwtState = {} as JwtState
   }
-  /* istanbul ignore if */
+
   if (! ctx.state) {
     ctx.state = {}
   }
 
-  const pmwConfig = ctx.app.getConfig('jwtMiddlewareConfig') as JwtMiddlewareConfig
+  const { app } = ctx
+
+  const pmwConfig = app.getConfig('jwtMiddlewareConfig') as JwtMiddlewareConfig
   const mwConfig = genJwtMiddlewareConfig(pmwConfig)
 
   const { ignore } = mwConfig
@@ -57,12 +52,12 @@ export async function jwtMiddleware(
   try {
     const token = retrieveToken(ctx, mwConfig.cookie)
 
-    /* istanbul ignore else */
     if (! token) {
-      ctx.throw(401, JwtMsg.TokenNotFound)
+      // ctx.throw(401, JwtMsg.TokenNotFound)
+      throw new Error(JwtMsg.TokenNotFound)
     }
 
-    const container = ctx.app.getApplicationContext()
+    const container = app.getApplicationContext()
     const svc = await container.getAsync(JwtComponent)
 
     const secretSet: Set<VerifySecret> = svc.genVerifySecretSet(
@@ -77,6 +72,9 @@ export async function jwtMiddleware(
     ctx.jwtState.user = decoded.payload
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     ctx.state.user = decoded.payload
+    if (typeof ctx.status === 'undefined') {
+      ctx.status = 200
+    }
   }
   catch (ex) {
     const pass = await parseByPassthrough(ctx, passthrough)
@@ -85,6 +83,9 @@ export async function jwtMiddleware(
       ctx.jwtState.jwtOriginalError = ex as Error
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       ctx.state.jwtOriginalError = ex as Error
+      if (typeof ctx.status === 'undefined') {
+        ctx.status = 200
+      }
     }
     else if (typeof pass === 'string' && pass.length > 0) {
       ctx.redirect(pass)
@@ -93,7 +94,13 @@ export async function jwtMiddleware(
     else {
       const msg = debug === true ? (ex as Error).message : JwtMsg.AuthFailed
       ctx.status = 401
-      ctx.throw(401, msg, { originalError: ex as unknown })
+      if (typeof ctx.throw === 'function') {
+        ctx.throw(401, msg, { originalError: ex as unknown })
+        return
+      }
+      else {
+        throw new Error(msg)
+      }
     }
   }
 

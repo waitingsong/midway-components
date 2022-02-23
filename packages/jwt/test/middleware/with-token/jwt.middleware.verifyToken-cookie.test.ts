@@ -1,21 +1,13 @@
 import { relative } from 'path'
 
-import { MidwayWebMiddleware } from '@midwayjs/web'
-
-import { testConfig } from '../../root.config'
-import { payload1, secret, token1 } from '../../test.config'
 import { authShouldFailedWithNotFound, authShouldPassed, authShouldSkipped } from '../helper'
 
+import { testConfig } from '@/root.config'
+import { payload1, secret, token1 } from '@/test.config'
 import {
-  Context,
   initialJwtMiddlewareConfig,
-  JwtConfig,
   JwtMiddlewareConfig,
 } from '~/index'
-import { JwtMiddleware } from '~/middleware/jwt.middleware'
-
-// eslint-disable-next-line import/order
-import assert = require('power-assert')
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -24,104 +16,67 @@ describe(filename, () => {
 
   describe('Should JwtComponent.validateToken() work with cookie', () => {
     it('auth skipped', async () => {
-      const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
-      const path = '/' + Math.random().toString()
+      const { app, httpRequest } = testConfig
+      const path = '/'
       const cookieKey = 'user'
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
+        cookie: cookieKey,
         ignore: [path],
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig })
 
-      const container = app.getApplicationContext()
-      // const svc = await container.getAsync(JwtComponent)
-      const inst = await container.getAsync(JwtMiddleware)
-
-      const ctx: Context = app.createAnonymousContext()
-      ctx.path = path
-      ctx.headers.authorization = ''
-      ctx.headers.authorization = ''
-      ctx.cookies.get = (key) => {
-        if (key === cookieKey) {
-          return token1
-        }
-        return ''
+      const cookie = [`${cookieKey}=${token1}`]
+      const sendHeader = {
+        authorization: '',
+        Cookie: cookie,
       }
-      const t1 = ctx.cookies.get(cookieKey)
-      assert(t1 === token1)
-
-      const mw = inst.resolve() as MidwayWebMiddleware
-      await authShouldSkipped(ctx, mw)
+      const resp = await httpRequest
+        .get('/')
+        .set(sendHeader)
+      authShouldSkipped(resp)
     })
 
     it('auth test with JwtAuthenticateOptions.cookie user value', async () => {
-      const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
-      const path = '/' + Math.random().toString()
+      const { app, httpRequest } = testConfig
       const cookieKey = 'user'
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [],
         cookie: cookieKey,
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig })
 
-      const container = app.getApplicationContext()
-      const inst = await container.getAsync(JwtMiddleware)
-
-      const ctx: Context = app.createAnonymousContext()
-      ctx.path = path
-      ctx.headers.authorization = ''
-      ctx.cookies.get = (key) => {
-        if (key === cookieKey) {
-          return token1
-        }
-        return ''
+      const cookie = [`${cookieKey}=${token1}; path=/; expires=Wed, 24 Feb 2021 06:59:09 GMT; httponly`]
+      const sendHeader = {
+        authorization: '',
+        Cookie: cookie,
       }
-      const t1 = ctx.cookies.get(cookieKey)
-      assert(t1 === token1)
-
-      const mw = inst.resolve() as MidwayWebMiddleware
-      await authShouldPassed(ctx, mw, payload1)
+      const resp = await httpRequest
+        .get('/')
+        .set(sendHeader)
+      authShouldPassed(resp, payload1)
     })
 
     it('auth test with JwtAuthenticateOptions.cookie false (default)', async () => {
-      const { app } = testConfig
-      const jwtConfig: JwtConfig = {
-        secret,
-      }
-      const path = '/' + Math.random().toString()
+      const { app, httpRequest } = testConfig
       const cookieKey = 'user'
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
         ...initialJwtMiddlewareConfig,
         ignore: [],
         cookie: false,
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig })
 
-      const container = app.getApplicationContext()
-      const inst = await container.getAsync(JwtMiddleware)
-
-      const ctx: Context = app.createAnonymousContext()
-      ctx.path = path
-      ctx.headers.authorization = ''
-      ctx.headers.authorization = ''
-      ctx.cookies.get = (key) => {
-        if (key === cookieKey) {
-          return token1
-        }
-        return ''
+      const cookie = [`${cookieKey}=${token1}; path=/; expires=Wed, 24 Feb 2021 06:59:09 GMT; httponly`]
+      const sendHeader = {
+        authorization: '',
+        Cookie: cookie,
       }
-      const t1 = ctx.cookies.get(cookieKey)
-      assert(t1 === token1)
-
-      const mw = inst.resolve() as MidwayWebMiddleware
-      await authShouldFailedWithNotFound(ctx, mw)
+      const resp = await httpRequest
+        .get('/')
+        .set(sendHeader)
+      authShouldFailedWithNotFound(resp)
     })
   })
 })

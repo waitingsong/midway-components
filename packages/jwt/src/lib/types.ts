@@ -10,6 +10,8 @@ import {
 import { Context } from '~/interface'
 
 
+export { NextFunction } from '@midwayjs/core'
+
 export interface JwtConfig {
   /**
    * For signing and verifying if without passing secret param,
@@ -85,7 +87,6 @@ export type PathPatternFunc = (ctx: Context) => boolean
 export type RedirectURL = string
 export type passthroughCallback = (ctx: Context) => Promise<boolean | RedirectURL>
 
-// export type Middleware = (ctx: Context, next: () => Promise<void>) => Promise<void>
 
 /** Bind on Context.jwtState */
 export interface JwtState<T = JsonObject> {

@@ -29,16 +29,16 @@
     "jsonwebtoken": "^8.5.1"
   },
   "devDependencies": {
-    "@midwayjs/core": "^2.13.0",
-    "@midwayjs/decorator": "^2.13.0",
-    "@midwayjs/koa": "^2.13.0",
-    "@midwayjs/mock": "^2.13.0",
-    "@midwayjs/web": "^2.13.0",
-    "@types/jsonwebtoken": "^8.5.6",
+    "@midwayjs/core": "^3.0.7",
+    "@midwayjs/decorator": "^3.0.7",
+    "@midwayjs/koa": "^3.0.7",
+    "@midwayjs/mock": "^3.0.7",
+    "@midwayjs/web": "^3.0.7",
+    "@types/jsonwebtoken": "^8.5.8",
     "cross-env": "7"
   },
   "peerDependencies": {
-    "@midwayjs/web": ">=2.13.0"
+    "@midwayjs/core": ">=3"
   },
   "engines": {
     "node": ">=16.13.0"
@@ -60,7 +60,7 @@
     "db:gen": "kmore gen --project tsconfig.cjs.json --path ./src",
     "lint": "eslint --fix --cache {src,test}/**/*.ts",
     "lint:nofix": "eslint --cache {src,test}/**/*.ts",
-    "purge": "npm run clean && rm node_modules -rf",
+    "purge": "npm run clean && rm node_modules -rf && rm package-lock.json",
     "test": "cross-env TS_NODE_PROJECT=test/tsconfig.json mocha --parallel=false",
     "test:local": "cross-env TS_NODE_PROJECT=test/tsconfig.json ../../node_modules/.bin/mocha --parallel=false",
     "tsc": "tsc -p tsconfig.json"

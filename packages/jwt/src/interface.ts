@@ -1,18 +1,32 @@
+import { IMidwayContext } from '@midwayjs/core'
+import { Context as KoaContext } from '@midwayjs/koa'
 
-// export { TracerLog } from '@mw-components/jaeger'
+import { JwtConfig, JwtMiddlewareConfig, JwtState } from './lib/index'
+
+
 export {
   JsonObject,
   JsonResp,
   JsonType,
 } from '@waiting/shared-types'
 
+
+declare module '@midwayjs/core' {
+  interface Application{
+    jwtConfig: JwtConfig
+    jwtMiddlewareConfig: JwtMiddlewareConfig
+  }
+
+  interface Context {
+    jwtState: JwtState
+  }
+}
+
 export {
-  IMidwayWebApplication as Application,
-  IMidwayWebContext as Context,
-  IWebMiddleware,
-  IMidwayWebNext,
-  MidwayWebMiddleware,
-} from '@midwayjs/web'
+  IMidwayApplication as Application,
+  IMiddleware, NextFunction,
+} from '@midwayjs/core'
+export type Context = IMidwayContext<KoaContext>
 
 export { NpmPkg } from '@waiting/shared-types'
 
