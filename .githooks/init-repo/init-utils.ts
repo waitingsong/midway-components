@@ -82,7 +82,7 @@ export async function cpGlobalConfigsToPkgs(
         ret.push(dst)
       }
       catch (ex) {
-        console.log(ex.message)
+        console.log((ex as Error).message)
       }
     }
   }
