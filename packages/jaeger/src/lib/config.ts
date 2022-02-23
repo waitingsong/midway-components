@@ -3,6 +3,9 @@ import { processCustomFailure } from '../middleware/helper'
 import { TracerConfig } from './types'
 
 
+export const namespace = 'jaeger'
+export const compName = `${namespace}Component`
+
 export const defaultTracerConfig: Omit<TracerConfig, 'tracingConfig'> = {
   whiteList: ['/favicon.ico', '/favicon.png'],
   reqThrottleMsForPriority: 500,

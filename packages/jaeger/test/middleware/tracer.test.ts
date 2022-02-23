@@ -1,91 +1,115 @@
+// import assert from 'assert'
+import { relative } from 'path'
 
-import { createApp, close } from '@midwayjs/mock'
-import {
-  Framework,
-  IMidwayWebApplication,
-  IMidwayWebContext,
-  MidwayWebMiddleware,
-} from '@midwayjs/web'
-import { basename } from '@waiting/shared-core'
-
-import { testConfig } from '../test-config'
-
-import { HeadersKey } from '~/lib/types'
+import { testConfig, TestRespBody } from '@/root.config'
+import { Context } from '~/interface'
+import { HeadersKey, TestSpanInfo, TracerConfig, TracerLog } from '~/lib/types'
 import { TracerMiddleware } from '~/middleware/tracer.middleware'
 
 // eslint-disable-next-line import/order
 import assert = require('power-assert')
 
 
-
-
-const filename = basename(__filename)
+const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
-  let app: IMidwayWebApplication
-
-  before(() => {
-    app = testConfig.app
-  })
 
   it('Should work', async () => {
-    const ctx: IMidwayWebContext = app.createAnonymousContext()
-    const inst = await ctx.requestContext.getAsync(TracerMiddleware)
-    const mw = inst.resolve() as MidwayWebMiddleware
-    // @ts-expect-error
-    await mw(ctx, next)
-    const span = ctx.tracerManager.currentSpan()
-    assert(span)
+    const { app, httpRequest } = testConfig
+
+    const path = '/'
+    const tracerConfig = app.getConfig('tracer') as TracerConfig
+    assert(tracerConfig)
+    const { sampler } = tracerConfig.tracingConfig
+    assert(sampler)
+
+    const resp = await httpRequest
+      .get(path)
+      .expect(200)
+    const { spanInfo } = resp.body as TestRespBody
+    assertSpanInfo(spanInfo)
+
+    const expectTags = [
+      {
+        key: 'sampler.type',
+        value: sampler ? sampler.type : 'fake', // 'probabilistic',
+      },
+      {
+        key: 'sampler.param',
+        value: sampler ? sampler.param : 'fake', // 1,
+      },
+    ]
+    assert.deepStrictEqual(spanInfo.tags, expectTags)
   })
 
   it('Should work with parent span', async () => {
-    const ctx: IMidwayWebContext = app.createAnonymousContext()
-    const parentSpanId = '123'
-    ctx.request.headers[HeadersKey.traceId] = `${parentSpanId}:${parentSpanId}:0:1`
-    const inst = await ctx.requestContext.getAsync(TracerMiddleware)
-    const mw = inst.resolve()
-    // @ts-expect-error
-    await mw(ctx, next)
-    const spanHeaderInit = ctx.tracerManager.headerOfCurrentSpan()
-    assert(spanHeaderInit)
-    const header = spanHeaderInit[HeadersKey.traceId]
-    const expectParentSpanId = header.slice(0, header.indexOf(':'))
-    assert(expectParentSpanId === parentSpanId)
+    const { httpRequest } = testConfig
+
+    const path = '/'
+    const parentSpanId = Math.random().toString().slice(2)
+    const sendHeader = {
+      [HeadersKey.traceId]: `${parentSpanId}:${parentSpanId}:0:1`,
+    }
+    const resp = await httpRequest
+      .get(path)
+      .set(sendHeader)
+      .expect(200)
+    const { spanInfo } = resp.body as TestRespBody
+    assertSpanInfo(spanInfo)
+
+    assert(spanInfo.tags.length === 0)
+
+    const { headerInit } = spanInfo
+    assert(headerInit)
+    if (headerInit) {
+      const header = headerInit[HeadersKey.traceId]
+      const expectParentSpanId = header.slice(0, header.indexOf(':'))
+      assert(expectParentSpanId === parentSpanId)
+    }
   })
 
   it('Should work if path match whitelist string', async () => {
-    const ctx: IMidwayWebContext = app.createAnonymousContext()
-    const inst = await ctx.requestContext.getAsync(TracerMiddleware)
-    const mw = inst.resolve()
-    ctx.path = '/untraced_path_string'
-    // @ts-expect-error
-    await mw(ctx, next)
-    assert(ctx.tracerManager.isTraceEnabled === false)
+    const { httpRequest } = testConfig
+
+    const path = '/untraced_path_string'
+    const resp = await httpRequest
+      .get(path)
+      .expect(200)
+    assert(resp.body === false)
   })
 
   it('Should work if path match whitelist regexp', async () => {
-    const ctx: IMidwayWebContext = app.createAnonymousContext()
-    const inst = await ctx.requestContext.getAsync(TracerMiddleware)
-    const mw = inst.resolve() as MidwayWebMiddleware
-    ctx.path = '/untraced_path_reg_exp'
-    // @ts-expect-error
-    await mw(ctx, next)
-    assert(ctx.tracerManager.isTraceEnabled === false)
-  })
+    const { httpRequest } = testConfig
 
-  it('Should work if path not match whitelist regexp', async () => {
-    const ctx: IMidwayWebContext = app.createAnonymousContext()
-    const inst = await ctx.requestContext.getAsync(TracerMiddleware)
-    const mw = inst.resolve() as MidwayWebMiddleware
-    ctx.path = '/untraced_path_reg_exp' + Math.random().toString()
-    // @ts-expect-error
-    await mw(ctx, next)
-    assert(ctx.tracerManager.isTraceEnabled === true)
+    const path = '/untraced_path_reg_exp'
+    const resp = await httpRequest
+      .get(path)
+      .expect(200)
+    assert(resp.body === false)
   })
 })
 
 
-async function next(): Promise<void> {
-  return void 0
-}
+function assertSpanInfo(spanInfo: TestSpanInfo): void {
+  assert(spanInfo)
+  const { startTime, logs, tags, isTraceEnabled } = spanInfo
 
+  assert(isTraceEnabled === true)
+  assert(startTime > 0)
+  assert(Array.isArray(logs) && logs.length > 0)
+  assert(Array.isArray(tags))
+
+  const [log0] = logs
+  assert(log0)
+  if (log0) {
+    assert(log0.timestamp > 0)
+    const { fields } = log0
+    assert(Array.isArray(fields))
+    const [row0] = fields
+    assert(row0)
+    if (row0) {
+      assert(row0.key === 'event')
+      assert(row0.value === TracerLog.requestBegin)
+    }
+  }
+}

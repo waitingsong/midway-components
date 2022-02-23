@@ -1,13 +1,7 @@
-/* eslint-disable import/no-extraneous-dependencies */
-import { Provide } from '@midwayjs/decorator'
-import {
-  IMidwayWebContext,
-  IMidwayWebNext,
-  IWebMiddleware,
-  MidwayWebMiddleware,
-} from '@midwayjs/web'
+import { Middleware } from '@midwayjs/decorator'
 import { humanMemoryUsage } from '@waiting/shared-core'
 
+import { Context, IMiddleware, NextFunction } from '../interface'
 import { TracerConfig, TracerLog } from '../lib/types'
 import { pathMatched } from '../util/common'
 
@@ -17,9 +11,9 @@ import {
 } from './helper'
 
 
-@Provide()
-export class TracerExtMiddleware implements IWebMiddleware {
-  resolve(): MidwayWebMiddleware {
+@Middleware()
+export class TracerExtMiddleware implements IMiddleware<Context, NextFunction> {
+  resolve() {
     return tracerMiddleware
   }
 }
@@ -30,12 +24,12 @@ export class TracerExtMiddleware implements IWebMiddleware {
  * - 对异常链路进行上报
  */
 async function tracerMiddleware(
-  ctx: IMidwayWebContext<unknown>,
-  next: IMidwayWebNext,
+  ctx: Context,
+  next: NextFunction,
 ): Promise<unknown> {
 
   const { tracerManager } = ctx
-  const config = ctx.app.config.tracer as TracerConfig
+  const config = ctx.app.getConfig('tracer ') as TracerConfig
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (! tracerManager) {
