@@ -1,3 +1,4 @@
+/* eslint-disable node/no-missing-require */
 import { Configuration } from '@midwayjs/decorator'
 
 
