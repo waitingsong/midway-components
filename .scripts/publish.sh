@@ -68,7 +68,7 @@ fi
 # npm run bootstrap
 # npm run build
 
-echo -e ">>> lerna publishing..."
+echo ">>> lerna publishing..."
 "$scriptDir/pre-publish-valiate.sh"
 
 echo $*
