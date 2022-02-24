@@ -24,7 +24,7 @@
   "license": "MIT",
   "dependencies": {
     "@midwayjs/validate": "^3.0.7",
-    "@mw-components/fetch": "^16.0.2",
+    "@mw-components/fetch": "^17.0.0",
     "@mw-components/jaeger": "^10.0.1",
     "@mw-components/kmore": "^24.0.0",
     "@waiting/shared-core": "^15.1.0",
@@ -38,7 +38,6 @@
     "@midwayjs/decorator": "^3.0.7",
     "@midwayjs/koa": "^3.0.7",
     "@midwayjs/mock": "^3.0.7",
-    "@midwayjs/web": "^3.0.7",
     "cross-env": "7",
     "kmore-types": "^24.0.0"
   },
