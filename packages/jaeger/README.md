@@ -1,4 +1,4 @@
-# @mw-components/jaeger
+# [@mw-components/jaeger](https://www.npmjs.com/package/@mw-components/jaeger)
 
 Jaeger opentracing client component for midway.js
 
