@@ -8,8 +8,8 @@ export {
   JsonObject,
   JsonResp,
   JsonType,
+  NpmPkg,
 } from '@waiting/shared-types'
-
 
 declare module '@midwayjs/core' {
   interface Application{
@@ -27,8 +27,6 @@ export {
   IMiddleware, NextFunction,
 } from '@midwayjs/core'
 export type Context = IMidwayContext<KoaContext>
-
-export { NpmPkg } from '@waiting/shared-types'
 
 export {
   DecodeOptions,
