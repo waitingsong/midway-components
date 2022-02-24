@@ -3,7 +3,7 @@
   "packages": [
     "packages/*"
   ],
-  "ignore": ["demo", "@mw-components/taskman"],
+  "ignore": ["demo"],
   "command": {
     "publish": {
       "ignoreChanges": [
