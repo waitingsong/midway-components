@@ -39,14 +39,11 @@ export const mochaHooks = async () => {
       app.addConfigObject(configs)
       testConfig.app = app
       testConfig.httpRequest = createHttpRequest(app)
-      // const { url } = testConfig.httpRequest.get('/')
+      const { url } = testConfig.httpRequest.get('/')
+      testConfig.host = url
       // console.log({ url })
 
-      // const frameworkType = app.getFrameworkType()
-      // const names = app.getMiddleware().getNames()
-      // const ctx = app.createAnonymousContext()
-      // https:// www.yuque.com/midwayjs/midway_v2/testing
-      // const svc = await app.getApplicationContext().getAsync(TaskQueueService)
+      // https://midwayjs.org/docs/testing
     },
 
     beforeEach: async () => {
