@@ -20,7 +20,7 @@
     "strictPropertyInitialization": false,
     "target": "ES2021",
     "tsBuildInfoFile": ".vscode/.tsbuildinfo",
-    "types" : ["jest", "node", "mocha"]
+    "types" : ["mocha", "node"]
   },
   "include": [
     "src/**/*.ts",
