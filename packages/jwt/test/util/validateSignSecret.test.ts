@@ -1,11 +1,9 @@
+import assert from 'assert/strict'
 import { relative } from 'path'
 
 import { token1 } from '../test.config'
 
 import { validateSignSecret } from '~/index'
-
-// eslint-disable-next-line import/order
-import assert = require('power-assert')
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
