@@ -26,9 +26,9 @@
     "@midwayjs/validate": "^3.0.10",
     "@mw-components/fetch": "^17.0.0",
     "@mw-components/jaeger": "^10.0.1",
-    "@mw-components/kmore": "^24.0.0",
-    "@waiting/shared-core": "^15.1.0",
-    "@waiting/shared-types": "^15.1.0",
+    "@mw-components/kmore": "^25.0.0",
+    "@waiting/shared-core": "^15.2.0",
+    "@waiting/shared-types": "^15.2.0",
     "pg": "^8.7.3",
     "postgres-interval": "^4.0.0",
     "tsconfig-paths": "3"
@@ -40,7 +40,7 @@
     "@midwayjs/mock": "^3.0.10",
     "@midwayjs/web": "^3.0.10",
     "cross-env": "7",
-    "kmore-types": "^24.0.0"
+    "kmore-types": "^25.0.0"
   },
   "peerDependencies": {
     "@midwayjs/core": ">=3"
