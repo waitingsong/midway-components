@@ -1,13 +1,10 @@
-// import assert from 'assert'
+import assert from 'assert/strict'
 import { relative } from 'path'
 
 import { testConfig, TestRespBody } from '@/root.config'
 import { Context } from '~/interface'
 import { HeadersKey, TestSpanInfo, TracerConfig, TracerLog } from '~/lib/types'
 import { TracerMiddleware } from '~/middleware/tracer.middleware'
-
-// eslint-disable-next-line import/order
-import assert = require('power-assert')
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
