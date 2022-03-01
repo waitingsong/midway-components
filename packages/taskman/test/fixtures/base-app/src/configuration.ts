@@ -1,19 +1,9 @@
-import { Configuration } from '@midwayjs/decorator';
+import 'tsconfig-paths/register'
+import { Configuration } from '@midwayjs/decorator'
+
 
 @Configuration({
-  imports: [
-    require('../../../../src')
-  ],
-  importConfigs: [
-    {
-      default: {
-        jwt: {
-          expiresIn: '200s',
-          secret: '123',
-        }
-      }
-    }
-  ]
+  imports: [require('../../../../src')],
 })
 export class AutoConfiguration {
 }

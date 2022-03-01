@@ -1,25 +1,30 @@
-/* eslint-disable node/no-unpublished-import */
 import {
   Controller,
   Get,
 } from '@midwayjs/decorator'
 
-import { Context } from '../../../../src/interface'
-import { TestRespBody } from '../../../root.config'
+import { TestRespBody } from '@/root.config'
+import { Context } from '~/interface'
+import {
+  getConfigFromApp,
+  getMiddlewareConfigFromApp,
+} from '~/index'
 
 
 @Controller('/')
 export class HomeController {
 
   @Get('/')
-  async home(): Promise<TestRespBody> {
-    // @ts-expect-error
-    const { cookies, header, url } = this._req_ctx as Context
+  async home(ctx: Context): Promise<TestRespBody> {
+    const { app, cookies, header, url } = ctx
+    const config = getConfigFromApp(app)
+    const mwConfig = getMiddlewareConfigFromApp(app)
     const res = {
+      config,
+      mwConfig,
       cookies,
       header,
       url,
-      jwtOriginalErrorText: '',
     }
     return res
   }
