@@ -1,3 +1,4 @@
+import assert from 'assert/strict'
 import { relative } from 'path'
 
 import { testConfig } from '../root.config'
@@ -11,9 +12,6 @@ import {
 } from '../test.config'
 
 import { Jwt, JwtComponent } from '~/index'
-
-// eslint-disable-next-line import/order
-import assert = require('power-assert')
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
