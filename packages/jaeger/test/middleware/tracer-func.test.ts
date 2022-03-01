@@ -1,10 +1,8 @@
-/* eslint-disable import/order */
+import assert from 'assert/strict'
 import { relative } from 'path'
 
 import { testConfig } from '@/root.config'
 import { TracerConfig } from '~/lib/types'
-
-import assert = require('power-assert')
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
