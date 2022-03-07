@@ -1,5 +1,6 @@
 import 'tsconfig-paths/register'
 
+import assert from 'assert/strict'
 import { join } from 'path'
 
 import * as WEB from '@midwayjs/koa'
@@ -51,16 +52,9 @@ export const mochaHooks = async () => {
       const ctx = app.createAnonymousContext()
       // https:// www.yuque.com/midwayjs/midway_v2/testing
       // const svc = await app.getApplicationContext().getAsync(TaskQueueService)
-      testConfig.svc = await ctx.requestContext.getAsync(TaskQueueService)
-      testConfig.repo = await ctx.requestContext.getAsync(TaskQueueRepository)
-      testConfig.logRepo = await ctx.requestContext.getAsync(TaskLogRepository)
-      testConfig.retRepo = await ctx.requestContext.getAsync(TaskResultRepository)
-      testConfig.agent = await ctx.requestContext.getAsync(TaskAgentService)
-      testConfig.tm = await ctx.requestContext.getAsync(TaskManComponent)
-
-      testConfig.httpRequest = createHttpRequest(app)
       const { url } = testConfig.httpRequest.get('/')
       testConfig.host = url
+
 
       app.addConfigObject({
         security: {
@@ -72,8 +66,17 @@ export const mochaHooks = async () => {
         },
       })
       const tmcConfig = app.getConfig('taskManClientConfig') as TaskManClientConfig
-      const host = tmcConfig.host
-      console.info('taskManClientConfig.host', host)
+      assert(testConfig.host === tmcConfig.host + '/')
+
+      testConfig.svc = await ctx.requestContext.getAsync(TaskQueueService)
+      testConfig.repo = await ctx.requestContext.getAsync(TaskQueueRepository)
+      testConfig.logRepo = await ctx.requestContext.getAsync(TaskLogRepository)
+      testConfig.retRepo = await ctx.requestContext.getAsync(TaskResultRepository)
+      testConfig.agent = await ctx.requestContext.getAsync(TaskAgentService)
+      testConfig.tm = await ctx.requestContext.getAsync(TaskManComponent)
+
+
+
     },
 
     beforeEach: async () => {
