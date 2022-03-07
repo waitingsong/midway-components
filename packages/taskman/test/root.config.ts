@@ -17,7 +17,6 @@ export interface TestRespBody {
   cookies: unknown
   header: IncomingHttpHeaders
   url: string
-  jwtOriginalErrorText: string
 }
 
 export interface TestConfig {
