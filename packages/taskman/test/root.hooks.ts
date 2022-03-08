@@ -50,7 +50,8 @@ export const mochaHooks = async () => {
       // const frameworkType = app.getFrameworkType()
       // const names = app.getMiddleware().getNames()
       const ctx = app.createAnonymousContext()
-      // https:// www.yuque.com/midwayjs/midway_v2/testing
+      // https://www.yuque.com/midwayjs/midway_v2/testing
+      // https://midwayjs.org/docs/testing
       // const svc = await app.getApplicationContext().getAsync(TaskQueueService)
       const { url } = testConfig.httpRequest.get('/')
       testConfig.host = url
@@ -65,6 +66,9 @@ export const mochaHooks = async () => {
           host: url.slice(0, -1),
         },
       })
+      const container = app.getApplicationContext()
+      const svc = await container.getAsync(TaskQueueService)
+
       const tmcConfig = app.getConfig('taskManClientConfig') as TaskManClientConfig
       assert(testConfig.host === tmcConfig.host + '/')
 
