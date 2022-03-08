@@ -66,21 +66,17 @@ export const mochaHooks = async () => {
           host: url.slice(0, -1),
         },
       })
+
       const container = app.getApplicationContext()
-      const svc = await container.getAsync(TaskQueueService)
+      testConfig.svc = await container.getAsync(TaskQueueService)
+      testConfig.repo = await container.getAsync(TaskQueueRepository)
+      testConfig.logRepo = await container.getAsync(TaskLogRepository)
+      testConfig.retRepo = await container.getAsync(TaskResultRepository)
+      testConfig.agent = await container.getAsync(TaskAgentService)
+      testConfig.tm = await container.getAsync(TaskManComponent)
 
       const tmcConfig = app.getConfig('taskManClientConfig') as TaskManClientConfig
       assert(testConfig.host === tmcConfig.host + '/')
-
-      testConfig.svc = await ctx.requestContext.getAsync(TaskQueueService)
-      testConfig.repo = await ctx.requestContext.getAsync(TaskQueueRepository)
-      testConfig.logRepo = await ctx.requestContext.getAsync(TaskLogRepository)
-      testConfig.retRepo = await ctx.requestContext.getAsync(TaskResultRepository)
-      testConfig.agent = await ctx.requestContext.getAsync(TaskAgentService)
-      testConfig.tm = await ctx.requestContext.getAsync(TaskManComponent)
-
-
-
     },
 
     beforeEach: async () => {
