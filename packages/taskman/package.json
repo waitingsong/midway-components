@@ -33,13 +33,11 @@
     "tsconfig-paths": "3"
   },
   "devDependencies": {
-    "@midwayjs/core": "^2.13.0",
-    "@midwayjs/decorator": "^2.13.0",
-    "@midwayjs/koa": "^2.13.0",
-    "@midwayjs/mock": "^2.13.0",
-    "@midwayjs/web": "^2.13.0",
     "cross-env": "7",
     "kmore-types": "^24.0.0"
+  },
+  "peerDependencies": {
+    "@midwayjs/core": ">=3"
   },
   "engines": {
     "node": ">=16.13.0"

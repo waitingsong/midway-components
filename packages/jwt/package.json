@@ -25,14 +25,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@waiting/shared-types": "^15.1.0",
+    "@waiting/shared-types": "^15.3.0",
     "jsonwebtoken": "^8.5.1"
   },
   "devDependencies": {
-    "@midwayjs/core": "^3.0.7",
-    "@midwayjs/decorator": "^3.0.7",
-    "@midwayjs/koa": "^3.0.7",
-    "@midwayjs/mock": "^3.0.7",
     "@types/jsonwebtoken": "^8.5.8",
     "cross-env": "7",
     "tsconfig-paths": "3"
@@ -61,8 +57,8 @@
     "lint": "eslint --fix --cache {src,test}/**/*.ts",
     "lint:nofix": "eslint --cache {src,test}/**/*.ts",
     "purge": "npm run clean && rm node_modules -rf && rm package-lock.json",
-    "test": "cross-env TS_NODE_PROJECT=test/tsconfig.json mocha --parallel=false",
-    "test:local": "cross-env TS_NODE_PROJECT=test/tsconfig.json ../../node_modules/.bin/mocha --parallel=false",
+    "test": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json mocha --parallel=false",
+    "test:local": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json ../../node_modules/.bin/mocha --parallel=false",
     "tsc": "tsc -p tsconfig.json"
   }
 }

@@ -32,10 +32,6 @@
     "tsconfig-paths": "3"
   },
   "devDependencies": {
-    "@midwayjs/core": "^3.0.7",
-    "@midwayjs/decorator": "^3.0.7",
-    "@midwayjs/koa": "^3.0.7",
-    "@midwayjs/mock": "^3.0.7",
     "cross-env": "7"
   },
   "peerDependencies": {
