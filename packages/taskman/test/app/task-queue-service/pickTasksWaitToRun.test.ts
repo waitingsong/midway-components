@@ -1,4 +1,5 @@
 import assert from 'assert/strict'
+import console from 'console'
 import { relative } from 'path'
 
 import {
@@ -67,6 +68,7 @@ describe(filename, () => {
       const queues = await svc.pickTasksWaitToRun({
         maxRows: 2,
       })
+      console.info({ queuesLen: queues.length })
       assert(queues.length === 2, queues.length.toString())
     })
 
