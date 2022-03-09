@@ -1,9 +1,9 @@
 {
-  "version": "independent",
+  "version": "0.0.0",
   "packages": [
     "packages/*"
   ],
-  "ignore": ["demo", "@mw-components/taskman"],
+  "ignore": [],
   "command": {
     "publish": {
       "ignoreChanges": [
@@ -12,14 +12,16 @@
         ".scripts",
         ".vscode",
         "package-lock.json",
-        "packages/demo"
+        "packages/demo",
+        "packages/mw-demo"
       ]
     },
     "bootstrap": {
       "hoist": true,
       "noCi": true,
       "nohoist": [
-        "cross-env"
+        "cross-env",
+        "egg"
       ],
       "npmClientArgs": [
         "--legacy-peer-deps"

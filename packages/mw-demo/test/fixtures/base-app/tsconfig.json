@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
-    "declaration": false,
+    "baseUrl": ".",
+    "declaration": true,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "incremental": true,
-    "module": "ESNext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "newLine": "lf",
     "noFallthroughCasesInSwitch": true,
@@ -13,19 +14,22 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "outDir": "dist",
+    "paths": {
+      "~/*": ["../../../src/*"],
+      "@/*": ["../../../test/*"]
+    },
     "pretty": true,
     "skipLibCheck": true,
-    "sourceMap": false,
+    "sourceMap": true,
     "strict": true,
-    "stripInternal": true,
     "strictPropertyInitialization": false,
-    "target": "ES2021",
+    "stripInternal": true,
+    "target": "ESNext",
     "tsBuildInfoFile": ".vscode/.tsbuildinfo",
     "types" : ["mocha", "node"]
   },
   "include": [
-    "src/**/*.ts",
-    "packages/*/src/**/*.ts"
+    "src/**/*.ts"
   ],
   "exclude": [
     "asset",
