@@ -1,16 +1,17 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import 'tsconfig-paths/register'
 
+import assert from 'assert/strict'
+import { join } from 'path'
+
+import * as WEB from '@midwayjs/koa'
 import { createApp, close, createHttpRequest } from '@midwayjs/mock'
-import { Framework } from '@midwayjs/web'
 
 import { TaskLogRepository, TaskQueueRepository, TaskResultRepository } from '../src/repo/index.repo'
 import { TaskAgentService, TaskQueueService } from '../src/service/index.service'
 
 import { testConfig } from './root.config'
 
+import { Application } from '~/interface'
 import {
   initTaskManClientConfig,
   TaskManClientConfig,
@@ -34,24 +35,27 @@ export const mochaHooks = async () => {
 
   return {
     beforeAll: async () => {
-      const app = await createApp<Framework>()
-      testConfig.app = app
-      app.addConfigObject({
+      const configs = {
         keys: Math.random().toString(),
-      })
-      const ctx = app.createAnonymousContext()
-      // https:// www.yuque.com/midwayjs/midway_v2/testing
-      // const svc = await app.getApplicationContext().getAsync(TaskQueueService)
-      testConfig.svc = await ctx.requestContext.getAsync(TaskQueueService)
-      testConfig.repo = await ctx.requestContext.getAsync(TaskQueueRepository)
-      testConfig.logRepo = await ctx.requestContext.getAsync(TaskLogRepository)
-      testConfig.retRepo = await ctx.requestContext.getAsync(TaskResultRepository)
-      testConfig.agent = await ctx.requestContext.getAsync(TaskAgentService)
-      testConfig.tm = await ctx.requestContext.getAsync(TaskManComponent)
-
+      }
+      const opts = {
+        imports: [WEB],
+        globalConfig: configs,
+      }
+      const app = await createApp(join(__dirname, 'fixtures', 'base-app'), opts) as Application
+      app.addConfigObject(configs)
+      testConfig.app = app
       testConfig.httpRequest = createHttpRequest(app)
+
+      // const frameworkType = app.getFrameworkType()
+      // const names = app.getMiddleware().getNames()
+      const ctx = app.createAnonymousContext()
+      // https://www.yuque.com/midwayjs/midway_v2/testing
+      // https://midwayjs.org/docs/testing
+      // const svc = await app.getApplicationContext().getAsync(TaskQueueService)
       const { url } = testConfig.httpRequest.get('/')
       testConfig.host = url
+
 
       app.addConfigObject({
         security: {
@@ -62,9 +66,17 @@ export const mochaHooks = async () => {
           host: url.slice(0, -1),
         },
       })
+
+      const container = app.getApplicationContext()
+      testConfig.svc = await container.getAsync(TaskQueueService)
+      testConfig.repo = await container.getAsync(TaskQueueRepository)
+      testConfig.logRepo = await container.getAsync(TaskLogRepository)
+      testConfig.retRepo = await container.getAsync(TaskResultRepository)
+      testConfig.agent = await container.getAsync(TaskAgentService)
+      testConfig.tm = await container.getAsync(TaskManComponent)
+
       const tmcConfig = app.getConfig('taskManClientConfig') as TaskManClientConfig
-      const host = tmcConfig.host
-      console.info('taskManClientConfig.host', host)
+      assert(testConfig.host === tmcConfig.host + '/')
     },
 
     beforeEach: async () => {
