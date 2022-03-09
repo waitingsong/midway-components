@@ -67,7 +67,7 @@ describe(filename, () => {
       const queues = await svc.pickTasksWaitToRun({
         maxRows: 2,
       })
-      assert(queues.length === 2)
+      assert(queues.length === 2, queues.length.toString())
     })
 
     it('batch ASC', async () => {
