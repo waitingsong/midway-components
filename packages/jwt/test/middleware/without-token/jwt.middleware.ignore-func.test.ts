@@ -4,10 +4,11 @@ import { authShouldFailedWithNotFound, authShouldSkipped } from '../helper'
 
 import { testConfig } from '@/root.config'
 import {
-  initialJwtMiddlewareConfig,
+  initialMiddlewareConfig,
   JwtMiddlewareConfig,
   PathPatternFunc,
 } from '~/index'
+import { Context } from '~/interface'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -18,12 +19,12 @@ describe(filename, () => {
     it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
       const path = '/'
-      const cb: PathPatternFunc = (ctx) => {
+      const cb = (ctx: Context) => {
         const url = ctx.path
         return url === path
       }
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
+        ...initialMiddlewareConfig,
         ignore: [cb],
       }
       app.addConfigObject({ jwtMiddlewareConfig })
@@ -41,7 +42,7 @@ describe(filename, () => {
         return url !== path // actual eq
       }
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
+        ...initialMiddlewareConfig,
         ignore: [cb],
       }
       app.addConfigObject({ jwtMiddlewareConfig })

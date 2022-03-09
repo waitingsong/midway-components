@@ -9,7 +9,7 @@ import {
 import { testConfig } from '@/root.config'
 import { authHeader1, payload1, secret, token1 } from '@/test.config'
 import {
-  initialJwtMiddlewareConfig,
+  initialMiddlewareConfig,
   JwtMiddlewareConfig,
 } from '~/index'
 
@@ -23,7 +23,7 @@ describe(filename, () => {
       const { app, httpRequest } = testConfig
       const path = '/'
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
+        ...initialMiddlewareConfig,
         ignore: [path],
       }
       app.addConfigObject({ jwtMiddlewareConfig })
@@ -40,7 +40,7 @@ describe(filename, () => {
     it('auth testing passed', async () => {
       const { app, httpRequest } = testConfig
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
+        ...initialMiddlewareConfig,
         ignore: [],
       }
       app.addConfigObject({ jwtMiddlewareConfig })
@@ -57,7 +57,7 @@ describe(filename, () => {
     it('auth validation failed', async () => {
       const { app, httpRequest } = testConfig
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
+        ...initialMiddlewareConfig,
         ignore: [],
       }
       app.addConfigObject({ jwtMiddlewareConfig })

@@ -8,7 +8,7 @@ import {
   token1,
 } from '../test.config'
 
-import { JwtComponent, JwtConfig } from '~/index'
+import { JwtComponent, Config } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -28,7 +28,7 @@ describe(filename, () => {
 
     it('pass secret', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
+      const jwtConfig: Config = {
         secret: '',
       }
       app.addConfigObject({ jwtConfig })
@@ -42,7 +42,7 @@ describe(filename, () => {
 
     it('without verify secret (using signing secret)', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
+      const jwtConfig: Config = {
         secret: 'not used',
       }
       app.addConfigObject({ jwtConfig })
@@ -56,7 +56,7 @@ describe(filename, () => {
 
     it('both initializing and passing secret', async () => {
       const { app } = testConfig
-      const jwtConfig: JwtConfig = {
+      const jwtConfig: Config = {
         secret: 'not used',
       }
       app.addConfigObject({ jwtConfig })

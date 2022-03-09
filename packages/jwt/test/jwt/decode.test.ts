@@ -10,7 +10,7 @@ import {
   token1,
 } from '../test.config'
 
-import { Jwt, JwtConfig } from '~/index'
+import { Jwt, Config } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -19,7 +19,7 @@ describe(filename, () => {
 
   describe('Should Jwt:decode() work', () => {
     it('normal string', () => {
-      const conf: JwtConfig = {
+      const conf: Config = {
         secret,
       }
       const jwt = new Jwt(conf)
@@ -31,7 +31,7 @@ describe(filename, () => {
     })
 
     it('various generics types', () => {
-      const conf: JwtConfig = {
+      const conf: Config = {
         secret,
       }
       const jwt = new Jwt(conf)
@@ -49,7 +49,7 @@ describe(filename, () => {
     })
 
     it('pass secret', () => {
-      const conf: JwtConfig = {
+      const conf: Config = {
         secret,
       }
       const jwt = new Jwt(conf)
@@ -65,7 +65,7 @@ describe(filename, () => {
     })
 
     it('with invalid scope', () => {
-      const conf: JwtConfig = {
+      const conf: Config = {
         secret,
       }
       const jwt = new Jwt(conf)

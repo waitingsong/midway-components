@@ -4,7 +4,7 @@ import { authShouldFailedWithNotFound, authShouldSkipped } from '../helper'
 
 import { testConfig } from '@/root.config'
 import {
-  initialJwtMiddlewareConfig,
+  initialMiddlewareConfig,
   JwtMiddlewareConfig,
 } from '~/index'
 
@@ -18,7 +18,7 @@ describe(filename, () => {
       const { app, httpRequest } = testConfig
       const path = '/'
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
+        ...initialMiddlewareConfig,
         ignore: [path],
       }
       app.addConfigObject({ jwtMiddlewareConfig })
@@ -32,7 +32,7 @@ describe(filename, () => {
       const { app, httpRequest } = testConfig
       const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
+        ...initialMiddlewareConfig,
         ignore: [],
       }
       app.addConfigObject({ jwtMiddlewareConfig })
@@ -46,7 +46,7 @@ describe(filename, () => {
       const { app, httpRequest } = testConfig
       const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
+        ...initialMiddlewareConfig,
         ignore: ['/' + Math.random().toString()],
       }
       app.addConfigObject({ jwtMiddlewareConfig })
@@ -60,7 +60,7 @@ describe(filename, () => {
       const { app, httpRequest } = testConfig
       const path = '/'
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
+        ...initialMiddlewareConfig,
         // @ts-expect-error
         ignore: [false, '', path],
       }

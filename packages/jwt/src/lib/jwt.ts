@@ -7,7 +7,7 @@ import {
 } from 'jsonwebtoken'
 
 import {
-  JwtConfig,
+  Config,
   JwtPayload,
   JwtToken,
   VerifySecret,
@@ -31,10 +31,10 @@ import {
 
 export class Jwt {
 
-  protected readonly config: JwtConfig
+  protected readonly config: Config
 
   constructor(
-    config?: Partial<JwtConfig>,
+    config?: Partial<Config>,
   ) {
     this.config = genJwtConfig(config)
   }

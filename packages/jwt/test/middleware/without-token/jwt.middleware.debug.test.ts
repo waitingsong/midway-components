@@ -7,7 +7,7 @@ import {
 
 import { testConfig } from '@/root.config'
 import {
-  initialJwtMiddlewareConfig,
+  initialMiddlewareConfig,
   JwtMiddlewareConfig,
 } from '~/index'
 
@@ -20,7 +20,7 @@ describe(filename, () => {
     it('normal', async () => {
       const { app, httpRequest } = testConfig
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
+        ...initialMiddlewareConfig,
         ignore: [],
         debug: true,
       }
@@ -34,7 +34,7 @@ describe(filename, () => {
     it('ignored with passthrough:true', async () => {
       const { app, httpRequest } = testConfig
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
+        ...initialMiddlewareConfig,
         ignore: [],
         debug: true,
         passthrough: true,

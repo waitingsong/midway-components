@@ -5,7 +5,7 @@ import { authShouldFailedWithNotFound, authShouldPassed, authShouldSkipped } fro
 import { testConfig } from '@/root.config'
 import { payload1, secret, token1 } from '@/test.config'
 import {
-  initialJwtMiddlewareConfig,
+  initialMiddlewareConfig,
   JwtMiddlewareConfig,
 } from '~/index'
 
@@ -20,7 +20,7 @@ describe(filename, () => {
       const path = '/'
       const cookieKey = 'user'
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
+        ...initialMiddlewareConfig,
         cookie: cookieKey,
         ignore: [path],
       }
@@ -41,8 +41,7 @@ describe(filename, () => {
       const { app, httpRequest } = testConfig
       const cookieKey = 'user'
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
+        ...initialMiddlewareConfig,
         cookie: cookieKey,
       }
       app.addConfigObject({ jwtMiddlewareConfig })
@@ -62,8 +61,7 @@ describe(filename, () => {
       const { app, httpRequest } = testConfig
       const cookieKey = 'user'
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
+        ...initialMiddlewareConfig,
         cookie: false,
       }
       app.addConfigObject({ jwtMiddlewareConfig })

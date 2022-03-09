@@ -1,10 +1,10 @@
 import { JsonObject } from '@waiting/shared-types'
 
-import { JwtConfig } from '~/index'
+import { Config } from '~/index'
 
 
 export const secret = '123456abc'
-export const jwtConfig: JwtConfig = {
+export const jwtConfig: Config = {
   secret,
 }
 

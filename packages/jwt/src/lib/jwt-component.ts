@@ -9,7 +9,7 @@ import {
 import { JwtMsg } from './config'
 import { Jwt } from './jwt'
 import {
-  JwtConfig,
+  Config,
   JwtToken,
   VerifySecret,
   JwtPayload,
@@ -32,7 +32,7 @@ export class JwtComponent {
 
   @App() private readonly app: Application
 
-  protected config: JwtConfig
+  protected config: Config
 
   private jwt: Jwt
 
@@ -40,7 +40,7 @@ export class JwtComponent {
 
   @Init()
   async init(): Promise<void> {
-    const pconfig = this.app.getConfig('jwtConfig') as Partial<JwtConfig>
+    const pconfig = this.app.getConfig('jwtConfig') as Partial<Config>
     // const pconfig = this.app.jwtConfig as Partial<JwtConfig>
     this.config = genJwtConfig(pconfig)
 

@@ -1,6 +1,5 @@
 import { Middleware } from '@midwayjs/decorator'
 
-import { Context, IMiddleware, NextFunction } from '../interface'
 import {
   genJwtMiddlewareConfig,
   JwtComponent,
@@ -12,13 +11,24 @@ import {
   VerifySecret,
   RedirectURL,
   JwtState,
-  JwtMiddlewareConfig,
 } from '../lib/types'
-import { reqestPathMatched } from '../util/common'
+
+import { ConfigKey, getMiddlewareConfigFromApp } from '~/index'
+import { Context, IMiddleware, NextFunction } from '~/interface'
+import { matchFunc } from '~/util/common'
 
 
 @Middleware()
 export class JwtMiddleware implements IMiddleware<Context, NextFunction> {
+  static getName(): string {
+    const name = ConfigKey.middlewareName
+    return name
+  }
+
+  match(ctx?: Context) {
+    return matchFunc(ctx)
+  }
+
   resolve() {
     return jwtMiddleware
   }
@@ -39,8 +49,7 @@ export async function jwtMiddleware(
 
   const { app } = ctx
 
-  const pmwConfig = app.getConfig('jwtMiddlewareConfig') as JwtMiddlewareConfig
-  const mwConfig = genJwtMiddlewareConfig(pmwConfig)
+  const mwConfig = getMiddlewareConfigFromApp(app)
 
   const { ignore } = mwConfig
   if (reqestPathMatched(ctx, ignore)) {

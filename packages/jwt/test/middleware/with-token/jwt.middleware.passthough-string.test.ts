@@ -7,7 +7,7 @@ import {
 
 import { testConfig } from '@/root.config'
 import {
-  initialJwtMiddlewareConfig,
+  initialMiddlewareConfig,
   JwtMiddlewareConfig,
 } from '~/index'
 
@@ -22,8 +22,7 @@ describe(filename, () => {
       const path = '/' + Math.random().toString()
       const path2 = '/redirect-' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
+        ...initialMiddlewareConfig,
         passthrough: path2,
       }
       app.addConfigObject({ jwtMiddlewareConfig })
@@ -37,8 +36,7 @@ describe(filename, () => {
       const { app, httpRequest } = testConfig
       const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
+        ...initialMiddlewareConfig,
         passthrough: '',
       }
       app.addConfigObject({ jwtMiddlewareConfig })

@@ -9,7 +9,7 @@ import {
 import { testConfig } from '@/root.config'
 import { authHeader1, payload1, secret, token1 } from '@/test.config'
 import {
-  initialJwtMiddlewareConfig,
+  initialMiddlewareConfig,
   JwtMiddlewareConfig,
 } from '~/index'
 
@@ -23,8 +23,7 @@ describe(filename, () => {
       const { app, httpRequest } = testConfig
       const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
+        ...initialMiddlewareConfig,
         passthrough: true,
       }
       app.addConfigObject({ jwtMiddlewareConfig })
@@ -41,8 +40,7 @@ describe(filename, () => {
     it('token not found', async () => {
       const { app, httpRequest } = testConfig
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
+        ...initialMiddlewareConfig,
         passthrough: true,
       }
       app.addConfigObject({ jwtMiddlewareConfig })
@@ -59,8 +57,7 @@ describe(filename, () => {
       const { app, httpRequest } = testConfig
       const path = '/' + Math.random().toString()
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
+        ...initialMiddlewareConfig,
         passthrough: true,
       }
       app.addConfigObject({ jwtMiddlewareConfig })

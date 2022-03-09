@@ -5,8 +5,8 @@ import { authShouldPassed } from '../helper'
 import { testConfig } from '@/root.config'
 import { authHeader1, payload1, secret, token1 } from '@/test.config'
 import {
-  initialJwtMiddlewareConfig,
-  JwtConfig,
+  initialMiddlewareConfig,
+  Config,
   JwtMiddlewareConfig,
 } from '~/index'
 
@@ -16,14 +16,14 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 describe(filename, () => {
 
   describe('Should JwtComponent.validateToken() work with scret from ctx', () => {
-    const jwtConfig: JwtConfig = {
+    const jwtConfig: Config = {
       secret: 'FAKE',
     }
 
     it('passed with ctx.jwtState.secret', async () => {
       const { app, httpRequest } = testConfig
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
+        ...initialMiddlewareConfig,
         ignore: [],
       }
       app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
@@ -40,7 +40,7 @@ describe(filename, () => {
     it('passed with ctx.state.secret', async () => {
       const { app, httpRequest } = testConfig
       const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
+        ...initialMiddlewareConfig,
         ignore: [],
       }
       app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })

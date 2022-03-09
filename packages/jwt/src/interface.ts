@@ -1,19 +1,20 @@
-import { IMidwayContext } from '@midwayjs/core'
+import { IMidwayApplication, IMidwayContext } from '@midwayjs/core'
 import { Context as KoaContext } from '@midwayjs/koa'
 
-import { JwtConfig, JwtMiddlewareConfig, JwtState } from './lib/index'
+import { Config, JwtMiddlewareConfig, JwtState } from './lib/index'
 
 
 export {
   JsonObject,
   JsonResp,
   JsonType,
+  MiddlewareConfig,
   NpmPkg,
 } from '@waiting/shared-types'
 
 declare module '@midwayjs/core' {
   interface Application{
-    jwtConfig: JwtConfig
+    jwtConfig: Config
     jwtMiddlewareConfig: JwtMiddlewareConfig
   }
 
@@ -23,9 +24,12 @@ declare module '@midwayjs/core' {
 }
 
 export {
-  IMidwayApplication as Application,
-  IMiddleware, NextFunction,
+  IMidwayApplication,
+  IMidwayContainer,
+  IMiddleware,
+  NextFunction,
 } from '@midwayjs/core'
+export type Application = IMidwayApplication<Context>
 export type Context = IMidwayContext<KoaContext>
 
 export {

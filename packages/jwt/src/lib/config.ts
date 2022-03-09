@@ -1,16 +1,21 @@
 import {
-  JwtAuthenticateOptions,
   JwtMiddlewareConfig,
-  JwtConfig,
+  Config,
 } from './types'
 
 
-export const initialAuthOpts: Readonly<JwtAuthenticateOptions> = {
-  cookie: false,
-  passthrough: false,
+export const enum ConfigKey {
+  config = 'jwtConfig',
+  middlewareConfig = 'jwtMiddlewareConfig',
+  namespace = 'jwt',
+  componentName = 'jwtComponent',
+  middlewareName = 'jwtMiddleware'
 }
-export const initialJwtMiddlewareConfig: Readonly<JwtMiddlewareConfig> = {
-  ...initialAuthOpts,
+
+export const initialConfig: Readonly<Config> = {
+  secret: '',
+}
+export const initialMiddlewareConfig: Readonly<JwtMiddlewareConfig> = {
   enableMiddleware: true,
   ignore: [
     '/',
@@ -22,9 +27,8 @@ export const initialJwtMiddlewareConfig: Readonly<JwtMiddlewareConfig> = {
     '/favicon.png',
   ],
   debug: false,
-}
-export const initialJwtConfig: Readonly<JwtConfig> = {
-  secret: '',
+  cookie: false,
+  passthrough: false,
 }
 
 export const schemePrefix = 'Bearer'
