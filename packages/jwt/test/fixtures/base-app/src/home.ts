@@ -1,11 +1,11 @@
-/* eslint-disable node/no-unpublished-import */
 import {
   Controller,
   Get,
 } from '@midwayjs/decorator'
 
-import { Context } from '../../../../src/interface'
-import { TestRespBody } from '../../../root.config'
+import { TestRespBody } from '@/root.config'
+import { Context } from '~/interface'
+
 
 
 @Controller('/')

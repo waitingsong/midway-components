@@ -1,3 +1,4 @@
+import 'tsconfig-paths/register'
 import { Configuration } from '@midwayjs/decorator'
 
 
@@ -8,7 +9,7 @@ import { Configuration } from '@midwayjs/decorator'
       default: {
         jwt: {
           expiresIn: '200s',
-          secret: '123',
+          secret: 'abc123',
         },
       },
     },

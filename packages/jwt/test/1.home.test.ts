@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'assert/strict'
 import { relative } from 'path'
 
 import { testConfig, TestRespBody } from '@/root.config'
