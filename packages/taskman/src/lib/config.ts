@@ -95,7 +95,7 @@ export const initDbConfig: Required<DbConfig> = {
     /** @link https://stackoverflow.com/a/67621567 */
     propagateCreateError: false,
   },
-  enableTracing: true,
+  enableTracing: false,
   tracingResponse: true,
   sampleThrottleMs: 1000,
 }
