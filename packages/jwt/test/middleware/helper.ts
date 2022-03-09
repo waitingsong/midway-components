@@ -47,7 +47,7 @@ export function authShouldFailedWithNotFound2(
   assert(status === expectStatus)
   assert(! jwtState)
   assert(error)
-  assert(error.text.includes('401'))
+  assert(error.text.includes('401') || error.text.includes(JwtMsg.AuthFailed))
 }
 
 export function authShouldFailedWithNotFound(
@@ -137,7 +137,7 @@ export function authShouldPassthroughEmptyStringNotFound(
   assert(status === expectStatus)
   assert(! jwtState)
   assert(error)
-  assert(error.text.includes('401'))
+  assert(error.text.includes('401') || error.text.includes(JwtMsg.AuthFailed))
 }
 
 export function authShouldFailedWithNotFoundFromDebug(
