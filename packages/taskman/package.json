@@ -26,7 +26,7 @@
     "@midwayjs/validate": "^3.1.0",
     "@mw-components/fetch": "^17.0.0",
     "@mw-components/jaeger": "^10.0.1",
-    "@mw-components/kmore": "^25.0.1",
+    "@mw-components/kmore": "^25.0.2",
     "@waiting/shared-core": "^15.2.0",
     "@waiting/shared-types": "^15.2.0",
     "pg": "^8.7.3",
@@ -40,7 +40,7 @@
     "@midwayjs/mock": "^3.1.0",
     "@midwayjs/web": "^3.1.0",
     "cross-env": "7",
-    "kmore-types": "^25.0.1"
+    "kmore-types": "^25.0.0"
   },
   "peerDependencies": {
     "@midwayjs/core": ">=3"
