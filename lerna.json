@@ -15,14 +15,16 @@
         ".scripts",
         ".vscode",
         "package-lock.json",
-        "packages/demo"
+        "packages/demo",
+        "packages/mw-demo"
       ]
     },
     "bootstrap": {
       "hoist": true,
       "noCi": true,
       "nohoist": [
-        "cross-env"
+        "cross-env",
+        "egg"
       ],
       "npmClientArgs": [
         "--legacy-peer-deps"

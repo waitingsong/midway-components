@@ -15,6 +15,7 @@
     "outDir": "dist",
     "pretty": true,
     "skipLibCheck": true,
+    "sourceMap": false,
     "strict": true,
     "stripInternal": true,
     "strictPropertyInitialization": false,
