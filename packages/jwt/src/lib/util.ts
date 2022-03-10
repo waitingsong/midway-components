@@ -8,25 +8,6 @@ import {
 } from './types'
 
 
-// export function genJwtConfig(input?: Partial<JwtConfig>): JwtConfig {
-//   const ret: JwtConfig = {
-//     ...initialJwtConfig,
-//     ...input,
-//   }
-//   return ret
-// }
-
-
-// /** Generate jwtConfig with input and default value */
-// export function genJwtMiddlewareConfig(input?: Partial<JwtMiddlewareConfig>): JwtMiddlewareConfig {
-//   const ret: JwtMiddlewareConfig = {
-//     ...initialJwtMiddlewareConfig,
-//     ...input,
-//   }
-//   return ret
-// }
-
-
 export function validateTokenString(input: JwtToken): void {
   if (typeof input === 'string') {
     assert(input.length > 0)
