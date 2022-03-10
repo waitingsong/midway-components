@@ -1,13 +1,14 @@
 import { isPathMatchRules } from '@waiting/shared-core'
 
+import { Config, MiddlewareConfig } from '../index'
 import {
   ConfigKey,
   initialMiddlewareConfig,
   initialConfig,
+  initMiddlewareOptions,
 } from '../lib/config'
-import { Config } from '../lib/types'
 
-import { Application, Context, MiddlewareConfig } from '~/interface'
+import { Application, Context } from '~/interface'
 
 
 /**
@@ -39,23 +40,23 @@ export function matchFunc(ctx?: Context): boolean {
 }
 
 
-export function getConfigFromApp(
+export function getConfigFromApp<T = Config>(
   app: Application,
   key: ConfigKey = ConfigKey.config,
-): Config {
+): T {
 
-  const pConfig = getConfig<Partial<Config>>(app, key)
-  const config = mergeConfig(pConfig)
+  const pConfig = getConfig<Partial<T>>(app, key)
+  const config = mergeConfig<T>(pConfig)
   return config
 }
 
-export function getMiddlewareConfigFromApp(
+export function getMiddlewareConfigFromApp<T = MiddlewareConfig>(
   app: Application,
   key: ConfigKey = ConfigKey.middlewareConfig,
-): MiddlewareConfig {
+): T {
 
-  const pConfig = getConfig<Partial<MiddlewareConfig>>(app, key)
-  const config = mergeMiddlewareConfig(pConfig)
+  const pConfig = getConfig<Partial<T>>(app, key)
+  const config = mergeMiddlewareConfig<T>(pConfig)
   return config
 }
 
@@ -65,17 +66,28 @@ export function getConfig<T>(app: Application, key: ConfigKey): T {
 }
 
 
-export function mergeConfig(input?: Partial<Config>): Config {
-  const ret: Config = {
+export function mergeConfig<T = Config>(input?: Partial<Config>): T {
+  const ret: T = {
     ...initialConfig,
     ...input,
   }
   return ret
 }
 
-export function mergeMiddlewareConfig(input?: Partial<MiddlewareConfig>): MiddlewareConfig {
+export function mergeMiddlewareConfig<T = MiddlewareConfig>(input?: Partial<MiddlewareConfig>): T {
   if (! input) {
-    return { ...initialMiddlewareConfig }
+    // return { ...initialMiddlewareConfig }
+    const mwConfig: T = {
+      ...initialMiddlewareConfig,
+      options: {
+        ...initMiddlewareOptions,
+      },
+    }
+    return mwConfig
+    // return {
+    //   ...initialMiddlewareConfig,
+    //   ...jwtMiddlewareConfig,
+    // }
   }
 
   const enableMiddleware = typeof input.enableMiddleware === 'boolean'

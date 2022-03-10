@@ -6,3 +6,5 @@ export * from './types'
 export * from './resolvers'
 export * from './util'
 
+export { JwtMiddlewareConfig as MiddlewareConfig } from './types'
+

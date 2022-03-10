@@ -50,13 +50,7 @@ export async function jwtMiddleware(
   const { app } = ctx
 
   const mwConfig = getMiddlewareConfigFromApp(app)
-
-  const { ignore } = mwConfig
-  if (reqestPathMatched(ctx, ignore)) {
-    return next()
-  }
-
-  const { debug, passthrough } = mwConfig
+  const { debug, passthrough } = mwConfig.options
 
   try {
     const token = retrieveToken(ctx, mwConfig.cookie)
