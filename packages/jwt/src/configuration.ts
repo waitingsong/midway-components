@@ -35,22 +35,11 @@ export class AutoConfiguration {
 
 export function registerMiddleware(
   app: Application,
-  // position: true | number,
 ): void {
 
   // @ts-expect-error
   app.getMiddleware().insertLast(JwtMiddleware)
   // const names = app.getMiddleware().getNames()
   // console.log({ names })
-
-  // /* istanbul ignore if */
-  // if (Array.isArray(appMiddleware)) {
-  //   const pos = position === true ? 0 : position
-  //   appMiddleware.splice(pos, 0, namespace + ':jwtMiddleware')
-  // }
-  // else {
-  //   app.logger.info('Jwt: appMiddleware is not valid Array, register via app.use(Middleware)')
-  //   app.use(jwtMiddleware)
-  // }
 }
 
