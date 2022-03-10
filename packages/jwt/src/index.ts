@@ -3,8 +3,8 @@ export { AutoConfiguration as Configuration } from './configuration'
 export * from './middleware/jwt.middleware'
 export * from './lib/index'
 export {
-  getConfigFromApp,
-  getMiddlewareConfigFromApp,
+  getComponentConfig,
+  getMiddlewareConfig,
 } from './util/common'
 export {
   DecodeOptions,

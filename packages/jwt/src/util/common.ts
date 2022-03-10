@@ -19,7 +19,7 @@ export function matchFunc(ctx?: Context): boolean {
     return false
   }
 
-  const mwConfig = getMiddlewareConfigFromApp(ctx.app)
+  const mwConfig = getMiddlewareConfig(ctx.app)
   const { enableMiddleware, match, ignore } = mwConfig
 
   if (! enableMiddleware) {
@@ -40,81 +40,73 @@ export function matchFunc(ctx?: Context): boolean {
 }
 
 
-export function getConfigFromApp<T = Config>(
+export function getComponentConfig<T extends Config = Config>(
   app: Application,
   key: ConfigKey = ConfigKey.config,
 ): T {
 
-  const pConfig = getConfig<Partial<T>>(app, key)
+  const pConfig = getConfigFromApp<T>(app, key)
   const config = mergeConfig<T>(pConfig)
   return config
 }
 
-export function getMiddlewareConfigFromApp<T = MiddlewareConfig>(
+export function getMiddlewareConfig<T extends MiddlewareConfig = MiddlewareConfig>(
   app: Application,
   key: ConfigKey = ConfigKey.middlewareConfig,
 ): T {
 
-  const pConfig = getConfig<Partial<T>>(app, key)
+  const pConfig = getConfigFromApp<T>(app, key)
   const config = mergeMiddlewareConfig<T>(pConfig)
   return config
 }
 
-export function getConfig<T>(app: Application, key: ConfigKey): T {
+function getConfigFromApp<T>(app: Application, key: ConfigKey): T {
   const config = app.getConfig(key) as T
   return config
 }
 
 
-export function mergeConfig<T = Config>(input?: Partial<Config>): T {
+export function mergeConfig<T extends Config = Config>(input?: Partial<Config>): T {
   const ret: T = {
     ...initialConfig,
     ...input,
-  }
+  } as T
   return ret
 }
 
-export function mergeMiddlewareConfig<T = MiddlewareConfig>(input?: Partial<MiddlewareConfig>): T {
+export function mergeMiddlewareConfig<T extends MiddlewareConfig = MiddlewareConfig>(input?: T): T {
+  const ret = {
+    ...initialMiddlewareConfig,
+    options: {
+      ...initMiddlewareOptions,
+    },
+  } as T
+
   if (! input) {
-    // return { ...initialMiddlewareConfig }
-    const mwConfig: T = {
-      ...initialMiddlewareConfig,
-      options: {
-        ...initMiddlewareOptions,
-      },
-    }
-    return mwConfig
-    // return {
-    //   ...initialMiddlewareConfig,
-    //   ...jwtMiddlewareConfig,
-    // }
+    return ret
   }
 
-  const enableMiddleware = typeof input.enableMiddleware === 'boolean'
-    ? input.enableMiddleware
-    : initialMiddlewareConfig.enableMiddleware
+  if (typeof input.enableMiddleware === 'boolean') {
+    ret.enableMiddleware = input.enableMiddleware
+  }
 
   const { match, ignore } = input
   if (Array.isArray(match) && match.length) {
-    const ret = {
-      enableMiddleware,
-      match,
-    }
-    return ret
+    ret.match = match
   }
   else if (Array.isArray(ignore) && ignore.length) {
-    const ret = {
-      enableMiddleware,
-      ignore,
-    }
-    return ret
+    ret.ignore = ignore
   }
-  else {
-    const ret = {
-      enableMiddleware,
-      ignore: initialMiddlewareConfig.ignore,
+
+  const { options } = input
+  if (typeof options !== 'undefined') {
+    const opts = {
+      ...initMiddlewareOptions,
+      ...options,
     }
-    return ret
+    ret.options = opts
   }
+
+  return ret
 }
 

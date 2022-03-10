@@ -1,7 +1,6 @@
 import { Middleware } from '@midwayjs/decorator'
 
 import {
-  genJwtMiddlewareConfig,
   JwtComponent,
   JwtMsg,
 } from '../lib/index'
@@ -13,7 +12,7 @@ import {
   JwtState,
 } from '../lib/types'
 
-import { ConfigKey, getMiddlewareConfigFromApp } from '~/index'
+import { ConfigKey, getMiddlewareConfig } from '~/index'
 import { Context, IMiddleware, NextFunction } from '~/interface'
 import { matchFunc } from '~/util/common'
 
@@ -49,14 +48,17 @@ export async function jwtMiddleware(
 
   const { app } = ctx
 
-  const mwConfig = getMiddlewareConfigFromApp(app)
-  const { debug, passthrough } = mwConfig.options
+  const mwConfig = getMiddlewareConfig(app)
+  const { options } = mwConfig
+  if (! options) {
+    throw new TypeError('options undefined')
+  }
+  const { debug, cookie, passthrough } = options
 
   try {
-    const token = retrieveToken(ctx, mwConfig.cookie)
+    const token = retrieveToken(ctx, cookie)
 
     if (! token) {
-      // ctx.throw(401, JwtMsg.TokenNotFound)
       throw new Error(JwtMsg.TokenNotFound)
     }
 
@@ -109,7 +111,6 @@ export async function jwtMiddleware(
 
   return next()
 }
-
 
 
 
