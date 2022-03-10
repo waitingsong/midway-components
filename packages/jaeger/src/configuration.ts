@@ -21,7 +21,6 @@ export class AutoConfiguration {
 
   @Config(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
 
-
   async onReady(): Promise<void> {
     if (! this.app) {
       throw new TypeError('this.app invalid')

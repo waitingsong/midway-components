@@ -1,44 +1,35 @@
 import {
-  initTracer as initJaegerTracer,
-  JaegerTracer,
-  TracingConfig,
-} from 'jaeger-client'
-import {
   FORMAT_HTTP_HEADERS,
   Span,
   SpanContext,
-  initGlobalTracer,
   globalTracer,
 } from 'opentracing'
 
-import { ConfigKey } from './config'
-import { SpanHeaderInit, SpanLogInput, Config } from './types'
-
-import { Application, NpmPkg } from '~/interface'
+import { SpanHeaderInit, SpanLogInput } from './types'
 
 
 /**
  * 初始化 tracer 单例
  */
-export function initTracer(app: Application): JaegerTracer {
-  const tconf = app.getConfig(ConfigKey.config) as Config
-  const pconf = app.getConfig('pkg') as NpmPkg
-  const pkgName = pconf && pconf.name ? pconf.name : 'jager'
+// export function initTracer(app: Application): JaegerTracer {
+//   const tconf = app.getConfig(ConfigKey.config) as Config
+//   const pconf = app.getConfig('pkg') as NpmPkg
+//   const pkgName = pconf && pconf.name ? pconf.name : 'jager'
 
-  let name = tconf.tracingConfig.serviceName ?? pkgName
-  name = name.replace(/@/ug, '').replace(/\//ug, '-')
-  if (! name) {
-    throw new Error('service name empty')
-  }
+//   let name = tconf.tracingConfig.serviceName ?? pkgName
+//   name = name.replace(/@/ug, '').replace(/\//ug, '-')
+//   if (! name) {
+//     throw new Error('service name empty')
+//   }
 
-  const config: TracingConfig = {
-    ...tconf.tracingConfig,
-    serviceName: name,
-  }
-  const tracer = initJaegerTracer(config, {})
-  initGlobalTracer(tracer)
-  return tracer
-}
+//   const config: TracingConfig = {
+//     ...tconf.tracingConfig,
+//     serviceName: name,
+//   }
+//   const tracer = initJaegerTracer(config, {})
+//   initGlobalTracer(tracer)
+//   return tracer
+// }
 
 /**
  * tracer 管理类，需初始化并挂载到ctx
