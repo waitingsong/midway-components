@@ -19,7 +19,6 @@ import {
   validateVerifySecret,
   validateTokenString,
   validatePayload,
-  genJwtConfig,
 } from './util'
 
 import {
@@ -27,6 +26,7 @@ import {
   SignOptions,
   Secret,
 } from '~/interface'
+import { mergeConfig } from '~/util/common'
 
 
 export class Jwt {
@@ -36,7 +36,7 @@ export class Jwt {
   constructor(
     config?: Partial<Config>,
   ) {
-    this.config = genJwtConfig(config)
+    this.config = mergeConfig(config)
   }
 
   /**
