@@ -1,4 +1,4 @@
-import { Config, JwtMiddlewareConfig } from '../index'
+import { Config, MiddlewareConfig } from '../index'
 import {
   initialConfig,
   initialMiddlewareConfig,
@@ -10,7 +10,7 @@ export const jwtConfig: Config = {
   ...initialConfig,
 }
 
-export const jwtMiddlewareConfig: Readonly<Omit<JwtMiddlewareConfig, 'match'>> = {
+export const jwtMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
   ...initialMiddlewareConfig,
   ignore: [
     '/',
