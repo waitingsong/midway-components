@@ -25,7 +25,7 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 describe(filename, () => {
 
   const cb: passthroughCallback = async () => true
-  const path = '/'
+  const path = '/test'
 
   describe('Should JwtAuthenticateOptions.passthrough work with func', () => {
     it('true: passed', async () => {

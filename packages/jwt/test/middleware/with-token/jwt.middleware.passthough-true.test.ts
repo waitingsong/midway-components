@@ -20,10 +20,11 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
 
+  const path = '/test'
+
   describe('Should JwtAuthenticateOptions.passthrough work with value: true', () => {
     it('passed', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/' + Math.random().toString()
       const mwConfig: JwtMiddlewareConfig = {
         ...jwtMiddlewareConfigNoOpts,
         options: {
@@ -37,7 +38,7 @@ describe(filename, () => {
         authorization: authHeader1,
       }
       const resp = await httpRequest
-        .get('/')
+        .get(path)
         .set(sendHeader)
       authShouldPassed(resp, payload1)
     })
@@ -57,7 +58,7 @@ describe(filename, () => {
         authorization: '',
       }
       const resp = await httpRequest
-        .get('/')
+        .get(path)
       authShouldPassthroughNotFound(resp)
     })
 
@@ -77,7 +78,7 @@ describe(filename, () => {
         authorization: authHeader1 + 'FAKE',
       }
       const resp = await httpRequest
-        .get('/')
+        .get(path)
         .set(sendHeader)
       authShouldPassthroughValidFailed(resp)
     })

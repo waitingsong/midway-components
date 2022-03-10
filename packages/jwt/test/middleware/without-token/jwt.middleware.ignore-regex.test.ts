@@ -11,6 +11,8 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
 
+  const path = '/test'
+
   describe('Should JwtMiddlewareConfig.ignore work with regex', () => {
     it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
@@ -21,7 +23,7 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
 
       const resp = await httpRequest
-        .get('/')
+        .get(path)
       authShouldSkipped(resp)
     })
 

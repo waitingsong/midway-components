@@ -12,10 +12,11 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
 
+  const path = '/test'
+
   describe('Should JwtMiddlewareConfig.ignore work with func', () => {
     it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/'
       const cb = (ctx: Context) => {
         const url = ctx.path
         return url === path
@@ -27,13 +28,12 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
 
       const resp = await httpRequest
-        .get('/')
+        .get(path)
       authShouldSkipped(resp)
     })
 
     it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/'
       const cb = (ctx: Context) => {
         const url = ctx.path
         return url !== path // actual eq
@@ -45,7 +45,7 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
 
       const resp = await httpRequest
-        .get('/')
+        .get(path)
       authShouldFailedWithNotFound(resp)
     })
   })

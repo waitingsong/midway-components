@@ -17,6 +17,8 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
 
+  const path = '/test'
+
   describe('Should JwtComponent.validateToken() work with scret from ctx', () => {
     const jwtConfig: Config = {
       secret: 'FAKE',
@@ -36,7 +38,7 @@ describe(filename, () => {
         authorization: authHeader1,
       }
       const resp = await httpRequest
-        .get('/')
+        .get(path)
         .set(sendHeader)
       authShouldPassed(resp, payload1)
     })
@@ -55,7 +57,7 @@ describe(filename, () => {
         authorization: authHeader1,
       }
       const resp = await httpRequest
-        .get('/')
+        .get(path)
         .set(sendHeader)
       authShouldPassed(resp, payload1)
     })

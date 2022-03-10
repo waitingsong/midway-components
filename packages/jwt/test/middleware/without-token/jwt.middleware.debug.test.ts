@@ -18,6 +18,8 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
 
+  const path = '/test'
+
   describe('Should JwtMiddlewareConfig.debug work true', () => {
     it('normal', async () => {
       const { app, httpRequest } = testConfig
@@ -31,7 +33,7 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
 
       const resp = await httpRequest
-        .get('/')
+        .get(path)
       authShouldFailedWithNotFoundFromDebug(resp)
     })
 
@@ -48,7 +50,7 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
 
       const resp = await httpRequest
-        .get('/')
+        .get(path)
       authShouldPassthroughNotFound(resp)
     })
   })

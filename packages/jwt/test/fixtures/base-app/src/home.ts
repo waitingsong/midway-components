@@ -27,5 +27,21 @@ export class HomeController {
     return res
   }
 
+  @Get('/test')
+  async test(ctx: Context): Promise<TestRespBody> {
+    const { jwtState, cookies, header, url } = ctx
+    const res = {
+      jwtState,
+      cookies,
+      header,
+      url,
+      jwtOriginalErrorText: '',
+    }
+    if (jwtState.jwtOriginalError) {
+      res.jwtOriginalErrorText = jwtState.jwtOriginalError.message
+    }
+    return res
+  }
+
 }
 

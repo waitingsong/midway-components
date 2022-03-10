@@ -19,10 +19,11 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
 
+  const path = '/test'
+
   describe('Should JwtComponent.validateToken() work with cookie', () => {
     it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/'
       const cookieKey = 'user'
       const mwConfig: JwtMiddlewareConfig = {
         ...jwtMiddlewareConfigNoOpts,
@@ -40,7 +41,7 @@ describe(filename, () => {
         Cookie: cookie,
       }
       const resp = await httpRequest
-        .get('/')
+        .get(path)
         .set(sendHeader)
       authShouldSkipped(resp)
     })
@@ -63,7 +64,7 @@ describe(filename, () => {
         Cookie: cookie,
       }
       const resp = await httpRequest
-        .get('/')
+        .get(path)
         .set(sendHeader)
       authShouldPassed(resp, payload1)
     })
@@ -86,7 +87,7 @@ describe(filename, () => {
         Cookie: cookie,
       }
       const resp = await httpRequest
-        .get('/')
+        .get(path)
         .set(sendHeader)
       authShouldFailedWithNotFound(resp)
     })

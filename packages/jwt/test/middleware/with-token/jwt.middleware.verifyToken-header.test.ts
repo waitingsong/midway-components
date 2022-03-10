@@ -18,10 +18,11 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
 
+  const path = '/test'
+
   describe('Should JwtComponent.validateToken() work with header', () => {
     it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/'
       const mwConfig: JwtMiddlewareConfig = {
         ...jwtMiddlewareConfig,
         ignore: [path],
@@ -32,7 +33,7 @@ describe(filename, () => {
         authorization: authHeader1,
       }
       const resp = await httpRequest
-        .get('/')
+        .get(path)
         .set(sendHeader)
       authShouldSkipped(resp)
     })
@@ -48,7 +49,7 @@ describe(filename, () => {
         authorization: authHeader1,
       }
       const resp = await httpRequest
-        .get('/')
+        .get(path)
         .set(sendHeader)
       authShouldPassed(resp, payload1)
     })
@@ -64,7 +65,7 @@ describe(filename, () => {
         authorization: authHeader1 + 'fake',
       }
       const resp = await httpRequest
-        .get('/')
+        .get(path)
         .set(sendHeader)
       authShouldValidatFailed(resp)
     })

@@ -11,6 +11,8 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
 
+  const path = '/test'
+
   describe('Should JwtMiddlewareConfig.ignore work with string', () => {
     it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
@@ -22,26 +24,24 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
 
       const resp = await httpRequest
-        .get('/')
+        .get(path)
       authShouldSkipped(resp)
     })
 
     it('auth skipped with empty ignore', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/' + Math.random().toString()
       const mwConfig: JwtMiddlewareConfig = {
         ...jwtMiddlewareConfig,
       }
       app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
 
       const resp = await httpRequest
-        .get('/')
+        .get(path)
       authShouldFailedWithNotFound(resp)
     })
 
     it('auth skipped with random ignore', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/' + Math.random().toString()
       const mwConfig: JwtMiddlewareConfig = {
         ...jwtMiddlewareConfig,
         ignore: ['/' + Math.random().toString()],
@@ -49,13 +49,12 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
 
       const resp = await httpRequest
-        .get('/')
+        .get(path)
       authShouldFailedWithNotFound(resp)
     })
 
     it('auth skipped mixed with invalid value', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/'
       const mwConfig: JwtMiddlewareConfig = {
         ...jwtMiddlewareConfig,
         // @ts-expect-error
@@ -64,7 +63,7 @@ describe(filename, () => {
       app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
 
       const resp = await httpRequest
-        .get('/')
+        .get(path)
       authShouldSkipped(resp)
     })
 
