@@ -6,7 +6,7 @@ import { join } from 'path'
 
 import { App, Config, Configuration } from '@midwayjs/decorator'
 
-import { ConfigKey, JwtMiddlewareConfig } from './lib/index'
+import { ConfigKey, MiddlewareConfig } from './lib/index'
 import { JwtMiddleware } from './middleware/jwt.middleware'
 
 
@@ -21,7 +21,7 @@ export class AutoConfiguration {
 
   @App() readonly app: Application
 
-  @Config(ConfigKey.middlewareConfig) protected readonly mwConfig: JwtMiddlewareConfig
+  @Config(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
 
   async onReady(): Promise<void> {
     if (! this.app) {
