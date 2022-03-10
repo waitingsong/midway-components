@@ -7,11 +7,10 @@ import {
 
 import { testConfig } from '@/root.config'
 import {
-  jwtMiddlewareConfig,
   mwConfigNoOpts,
   mwOptions,
 } from '@/test.config'
-import { JwtMiddlewareConfig } from '~/index'
+import { ConfigKey, MiddlewareConfig } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -24,14 +23,16 @@ describe(filename, () => {
     it('valid url', async () => {
       const { app, httpRequest } = testConfig
       const path2 = '/redirect-' + Math.random().toString()
-      const mwConfig: JwtMiddlewareConfig = {
+      const mwConfig: MiddlewareConfig = {
         ...mwConfigNoOpts,
         options: {
           ...mwOptions,
           passthrough: path2,
         },
       }
-      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const resp = await httpRequest
         .get(path)
@@ -40,14 +41,16 @@ describe(filename, () => {
 
     it('empty string', async () => {
       const { app, httpRequest } = testConfig
-      const mwConfig: JwtMiddlewareConfig = {
+      const mwConfig: MiddlewareConfig = {
         ...mwConfigNoOpts,
         options: {
           ...mwOptions,
           passthrough: '',
         },
       }
-      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const resp = await httpRequest
         .get(path)

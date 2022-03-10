@@ -9,9 +9,10 @@ import {
 import { testConfig } from '@/root.config'
 import {
   authHeader1, payload1,
-  jwtMiddlewareConfig, mwOptions,
+  mwConfig as mConfig,
+  mwOptions,
 } from '@/test.config'
-import { JwtMiddlewareConfig } from '~/index'
+import { ConfigKey, MiddlewareConfig } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -23,11 +24,13 @@ describe(filename, () => {
   describe('Should JwtComponent.validateToken() work with header', () => {
     it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
-      const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfig,
+      const mwConfig: MiddlewareConfig = {
+        ...mConfig,
         ignore: [path],
       }
-      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const sendHeader = {
         authorization: authHeader1,
@@ -40,10 +43,12 @@ describe(filename, () => {
 
     it('auth testing passed', async () => {
       const { app, httpRequest } = testConfig
-      const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfig,
+      const mwConfig: MiddlewareConfig = {
+        ...mConfig,
       }
-      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const sendHeader = {
         authorization: authHeader1,
@@ -56,10 +61,12 @@ describe(filename, () => {
 
     it('auth validation failed', async () => {
       const { app, httpRequest } = testConfig
-      const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfig,
+      const mwConfig: MiddlewareConfig = {
+        ...mConfig,
       }
-      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const sendHeader = {
         authorization: authHeader1 + 'fake',

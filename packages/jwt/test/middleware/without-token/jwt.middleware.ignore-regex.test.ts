@@ -3,8 +3,8 @@ import { relative } from 'path'
 import { authShouldSkipped } from '../helper'
 
 import { testConfig } from '@/root.config'
-import { jwtMiddlewareConfig, mwOptions } from '@/test.config'
-import { JwtMiddlewareConfig } from '~/index'
+import { mwConfig as mConfig, mwOptions } from '@/test.config'
+import { ConfigKey, MiddlewareConfig } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -13,14 +13,16 @@ describe(filename, () => {
 
   const path = '/test'
 
-  describe('Should JwtMiddlewareConfig.ignore work with regex', () => {
+  describe('Should MiddlewareConfig.ignore work with regex', () => {
     it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
-      const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfig,
+      const mwConfig: MiddlewareConfig = {
+        ...mConfig,
         ignore: [/^\/.*/u],
       }
-      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const resp = await httpRequest
         .get(path)

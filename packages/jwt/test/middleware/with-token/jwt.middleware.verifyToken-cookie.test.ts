@@ -5,11 +5,10 @@ import { authShouldFailedWithNotFound, authShouldPassed, authShouldSkipped } fro
 import { testConfig } from '@/root.config'
 import {
   payload1, token1,
-  jwtMiddlewareConfig,
   mwConfigNoOpts,
   mwOptions,
 } from '@/test.config'
-import { JwtMiddlewareConfig } from '~/index'
+import { ConfigKey, MiddlewareConfig } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -22,7 +21,7 @@ describe(filename, () => {
     it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
       const cookieKey = 'user'
-      const mwConfig: JwtMiddlewareConfig = {
+      const mwConfig: MiddlewareConfig = {
         ...mwConfigNoOpts,
         ignore: [path],
         options: {
@@ -30,7 +29,9 @@ describe(filename, () => {
           cookie: cookieKey,
         },
       }
-      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const cookie = [`${cookieKey}=${token1}`]
       const sendHeader = {
@@ -46,14 +47,16 @@ describe(filename, () => {
     it('auth test with JwtAuthenticateOptions.cookie user value', async () => {
       const { app, httpRequest } = testConfig
       const cookieKey = 'user'
-      const mwConfig: JwtMiddlewareConfig = {
+      const mwConfig: MiddlewareConfig = {
         ...mwConfigNoOpts,
         options: {
           ...mwOptions,
           cookie: cookieKey,
         },
       }
-      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const cookie = [`${cookieKey}=${token1}; path=/; expires=Wed, 24 Feb 2021 06:59:09 GMT; httponly`]
       const sendHeader = {
@@ -69,14 +72,16 @@ describe(filename, () => {
     it('auth test with JwtAuthenticateOptions.cookie false (default)', async () => {
       const { app, httpRequest } = testConfig
       const cookieKey = 'user'
-      const mwConfig: JwtMiddlewareConfig = {
+      const mwConfig: MiddlewareConfig = {
         ...mwConfigNoOpts,
         options: {
           ...mwOptions,
           cookie: false,
         },
       }
-      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const cookie = [`${cookieKey}=${token1}; path=/; expires=Wed, 24 Feb 2021 06:59:09 GMT; httponly`]
       const sendHeader = {

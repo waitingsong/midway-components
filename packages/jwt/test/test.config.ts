@@ -4,18 +4,18 @@ import {
   Config,
   initialMiddlewareConfig,
   initMiddlewareOptions,
-  JwtMiddlewareConfig,
+  MiddlewareConfig,
   MiddlewareOptions,
 } from '~/index'
 
 
-export { jwtMiddlewareConfig } from '~/config/config.unittest'
+export { jwtMiddlewareConfig as mwConfig } from '~/config/config.unittest'
 
 export const secret = '123456abc'
-export const jwtConfig: Config = {
+export const config: Config = {
   secret,
 }
-export const mwConfigNoOpts: Omit<JwtMiddlewareConfig, 'match' | 'ignore' | 'options'> = {
+export const mwConfigNoOpts: Omit<MiddlewareConfig, 'match' | 'ignore' | 'options'> = {
   ...initialMiddlewareConfig,
 }
 export const mwOptions: MiddlewareOptions = {

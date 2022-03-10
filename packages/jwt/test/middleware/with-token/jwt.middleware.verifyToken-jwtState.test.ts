@@ -5,11 +5,13 @@ import { authShouldPassed } from '../helper'
 import { testConfig } from '@/root.config'
 import {
   authHeader1, payload1,
-  jwtMiddlewareConfig, mwOptions,
+  mwConfig as mConfig,
+  mwOptions,
 } from '@/test.config'
 import {
   Config,
-  JwtMiddlewareConfig,
+  ConfigKey,
+  MiddlewareConfig,
 } from '~/index'
 
 
@@ -20,18 +22,18 @@ describe(filename, () => {
   const path = '/test'
 
   describe('Should JwtComponent.validateToken() work with scret from ctx', () => {
-    const jwtConfig: Config = {
+    const config: Config = {
       secret: 'FAKE',
     }
 
     it('passed with ctx.jwtState.secret', async () => {
       const { app, httpRequest } = testConfig
-      const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfig,
+      const mwConfig: MiddlewareConfig = {
+        ...mConfig,
       }
       app.addConfigObject({
-        jwtConfig,
-        jwtMiddlewareConfig: mwConfig,
+        [ConfigKey.config]: config,
+        [ConfigKey.middlewareConfig]: mwConfig,
       })
 
       const sendHeader = {
@@ -45,12 +47,12 @@ describe(filename, () => {
 
     it('passed with ctx.state.secret', async () => {
       const { app, httpRequest } = testConfig
-      const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfig,
+      const mwConfig: MiddlewareConfig = {
+        ...mConfig,
       }
       app.addConfigObject({
-        jwtConfig,
-        jwtMiddlewareConfig: mwConfig,
+        [ConfigKey.config]: config,
+        [ConfigKey.middlewareConfig]: mwConfig,
       })
 
       const sendHeader = {

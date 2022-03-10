@@ -3,9 +3,8 @@ import { relative } from 'path'
 import { authShouldFailedWithNotFound, authShouldSkipped } from '../helper'
 
 import { testConfig } from '@/root.config'
-import { jwtMiddlewareConfig, mwOptions } from '@/test.config'
-import { JwtMiddlewareConfig } from '~/index'
-import { Context } from '~/interface'
+import { mwConfig as mConfig, mwOptions } from '@/test.config'
+import { ConfigKey, MiddlewareConfig } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -20,11 +19,13 @@ describe(filename, () => {
       const cb = (url: string) => {
         return url === path
       }
-      const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfig,
+      const mwConfig: MiddlewareConfig = {
+        ...mConfig,
         ignore: [cb],
       }
-      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const resp = await httpRequest
         .get(path)
@@ -36,11 +37,13 @@ describe(filename, () => {
       const cb = (url: string) => {
         return url !== path // actual eq
       }
-      const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfig,
+      const mwConfig: MiddlewareConfig = {
+        ...mConfig,
         ignore: [cb],
       }
-      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const resp = await httpRequest
         .get(path)
