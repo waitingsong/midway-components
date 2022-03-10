@@ -3,8 +3,9 @@ import { relative } from 'path'
 
 import { testConfig, TestRespBody } from '@/root.config'
 import { Context } from '~/interface'
-import { HeadersKey, TestSpanInfo, TracerConfig, TracerLog } from '~/lib/types'
+import { HeadersKey, TestSpanInfo, TracerLog } from '~/lib/types'
 import { TracerMiddleware } from '~/middleware/tracer.middleware'
+import { getComponentConfig } from '~/util/common'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -15,7 +16,8 @@ describe(filename, () => {
     const { app, httpRequest } = testConfig
 
     const path = '/'
-    const tracerConfig = app.getConfig('tracer') as TracerConfig
+    const tracerConfig = getComponentConfig(app)
+
     assert(tracerConfig)
     const { sampler } = tracerConfig.tracingConfig
     assert(sampler)
