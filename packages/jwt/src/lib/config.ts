@@ -1,17 +1,9 @@
 import {
-  JwtMiddlewareConfig,
   Config,
+  MiddlewareConfig,
   MiddlewareOptions,
 } from './types'
 
-
-export const enum ConfigKey {
-  config = 'jwtConfig',
-  middlewareConfig = 'jwtMiddlewareConfig',
-  namespace = 'jwt',
-  componentName = 'jwtComponent',
-  middlewareName = 'jwtMiddleware'
-}
 
 export const initialConfig: Readonly<Config> = {
   secret: '',
@@ -21,10 +13,18 @@ export const initMiddlewareOptions: MiddlewareOptions = {
   cookie: false,
   passthrough: false,
 }
-export const initialMiddlewareConfig: Readonly<Omit<JwtMiddlewareConfig, 'ignore' | 'match' | 'options'>> = {
+export const initialMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'ignore' | 'match' | 'options'>> = {
   enableMiddleware: true,
 }
 
+
+export const enum ConfigKey {
+  config = 'jwtConfig',
+  middlewareConfig = 'jwtMiddlewareConfig',
+  namespace = 'jwt',
+  componentName = 'jwtComponent',
+  middlewareName = 'jwtMiddleware'
+}
 
 export const schemePrefix = 'Bearer'
 

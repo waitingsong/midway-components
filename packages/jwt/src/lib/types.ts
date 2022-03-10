@@ -1,4 +1,4 @@
-import { MiddlewareConfig, JsonObject } from '@waiting/shared-types'
+import { MiddlewareConfig as MWConfig, JsonObject } from '@waiting/shared-types'
 import {
   DecodeOptions,
   JwtHeader,
@@ -41,8 +41,9 @@ export interface MiddlewareOptions {
    */
   passthrough: boolean | RedirectURL | passthroughCallback
 }
-export type JwtMiddlewareConfig = MiddlewareConfig<MiddlewareOptions>
+export type JwtMiddlewareConfig = MWConfig<MiddlewareOptions>
 export type JwtAuthenticateOptions = MiddlewareOptions
+export type MiddlewareConfig = JwtMiddlewareConfig
 
 
 export type JwtToken = string

@@ -17,8 +17,7 @@ describe(filename, () => {
   describe('Should JwtMiddlewareConfig.ignore work with func', () => {
     it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
-      const cb = (ctx: Context) => {
-        const url = ctx.path
+      const cb = (url: string) => {
         return url === path
       }
       const mwConfig: JwtMiddlewareConfig = {
@@ -34,8 +33,7 @@ describe(filename, () => {
 
     it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
-      const cb = (ctx: Context) => {
-        const url = ctx.path
+      const cb = (url: string) => {
         return url !== path // actual eq
       }
       const mwConfig: JwtMiddlewareConfig = {

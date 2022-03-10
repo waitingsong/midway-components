@@ -12,9 +12,12 @@ import {
   JwtState,
 } from '../lib/types'
 
-import { ConfigKey, getMiddlewareConfig } from '~/index'
+import { ConfigKey } from '~/index'
 import { Context, IMiddleware, NextFunction } from '~/interface'
-import { matchFunc } from '~/util/common'
+import {
+  getMiddlewareConfig,
+  matchFunc,
+} from '~/util/common'
 
 
 @Middleware()
@@ -26,13 +29,14 @@ export class JwtMiddleware implements IMiddleware<Context, NextFunction> {
 
   match(ctx?: Context) {
     if (ctx) {
-      if (! ctx.jwtState) {
-        ctx.jwtState = {} as JwtState
-      }
 
       if (! ctx.state) {
         ctx.state = {}
       }
+      if (! ctx.jwtState) {
+        ctx.jwtState = {} as JwtState
+      }
+
     }
 
     const flag = matchFunc(ctx)
