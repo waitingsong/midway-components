@@ -22,15 +22,16 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@waiting/shared-core": "^15.3.0",
-    "@waiting/shared-types": "^15.3.0"
+    "@waiting/shared-core": "^16.0.0",
+    "@waiting/shared-types": "^16.0.0"
   },
   "devDependencies": {
     "cross-env": "7",
     "tsconfig-paths": "3"
   },
   "peerDependencies": {
-    "@midwayjs/core": ">=3"
+    "@midwayjs/core": ">=3",
+    "@midwayjs/decorator": "*"
   },
   "engines": {
     "node": ">=16.13.0"
