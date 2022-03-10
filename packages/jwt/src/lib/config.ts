@@ -19,9 +19,9 @@ export const initialMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'ignore' |
 
 
 export const enum ConfigKey {
+  namespace = 'jwt',
   config = 'jwtConfig',
   middlewareConfig = 'jwtMiddlewareConfig',
-  namespace = 'jwt',
   componentName = 'jwtComponent',
   middlewareName = 'jwtMiddleware'
 }
