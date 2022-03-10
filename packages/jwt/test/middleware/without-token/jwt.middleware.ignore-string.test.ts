@@ -16,7 +16,6 @@ describe(filename, () => {
   describe('Should JwtMiddlewareConfig.ignore work with string', () => {
     it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/'
       const mwConfig: JwtMiddlewareConfig = {
         ...jwtMiddlewareConfig,
         ignore: [path],

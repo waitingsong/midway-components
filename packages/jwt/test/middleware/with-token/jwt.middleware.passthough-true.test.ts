@@ -64,7 +64,6 @@ describe(filename, () => {
 
     it('token valid faied', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/' + Math.random().toString()
       const mwConfig: JwtMiddlewareConfig = {
         ...jwtMiddlewareConfigNoOpts,
         options: {
