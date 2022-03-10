@@ -1,8 +1,11 @@
-import { initialConfig } from '../lib/config'
-import { Config } from '../lib/types'
+import { Config, MiddlewareConfig } from '../index'
+import {
+  initialConfig,
+  initialMiddlewareConfig,
+} from '../lib/config'
 
 
-export const tracer: Config = {
+export const tracerConfig: Config = {
   ...initialConfig,
   tracingConfig: {
     sampler: {
@@ -13,4 +16,10 @@ export const tracer: Config = {
       agentHost: '127.0.0.1',
     },
   },
+  whiteList: [],
 }
+
+export const tracerMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
+  ...initialMiddlewareConfig,
+}
+

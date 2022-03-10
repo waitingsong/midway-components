@@ -1,8 +1,8 @@
+import { Config } from '../index'
 import { initialConfig } from '../lib/config'
-import { Config } from '../lib/types'
 
 
-export const tracer: Config = {
+export const tracerConfig: Config = {
   ...initialConfig,
   tracingConfig: {
     serviceName: 'jaeger',
@@ -14,4 +14,7 @@ export const tracer: Config = {
       agentHost: '127.0.0.1',
     },
   },
+  whiteList: [],
 }
+
+
