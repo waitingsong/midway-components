@@ -1,5 +1,3 @@
-import { IMidwayApplication } from '@midwayjs/core'
-import { NpmPkg } from '@waiting/shared-types'
 import {
   initTracer as initJaegerTracer,
   JaegerTracer,
@@ -13,13 +11,17 @@ import {
   globalTracer,
 } from 'opentracing'
 
+import { ConfigKey } from './config'
 import { SpanHeaderInit, SpanLogInput, Config } from './types'
+
+import { Application, NpmPkg } from '~/interface'
+
 
 /**
  * 初始化 tracer 单例
  */
-export function initTracer(app: IMidwayApplication): JaegerTracer {
-  const tconf = app.getConfig('tracer') as Config
+export function initTracer(app: Application): JaegerTracer {
+  const tconf = app.getConfig(ConfigKey.config) as Config
   const pconf = app.getConfig('pkg') as NpmPkg
   const pkgName = pconf && pconf.name ? pconf.name : 'jager'
 
