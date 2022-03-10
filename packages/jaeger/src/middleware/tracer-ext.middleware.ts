@@ -2,7 +2,7 @@ import { Middleware } from '@midwayjs/decorator'
 import { humanMemoryUsage } from '@waiting/shared-core'
 
 import { Context, IMiddleware, NextFunction } from '../interface'
-import { TracerConfig, TracerLog } from '../lib/types'
+import { Config, TracerLog } from '../lib/types'
 import { pathMatched } from '../util/common'
 
 import {
@@ -29,7 +29,7 @@ async function tracerMiddleware(
 ): Promise<unknown> {
 
   const { tracerManager } = ctx
-  const config = ctx.app.getConfig('tracer ') as TracerConfig
+  const config = ctx.app.getConfig('tracer ') as Config
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (! tracerManager) {
