@@ -11,7 +11,7 @@ import { Tags } from 'opentracing'
 import { Context, NextFunction } from '../interface'
 import { TracerManager } from '../lib/tracer'
 import { SpanLogInput, Config, TracerError, TracerLog, TracerTag } from '../lib/types'
-import { retrieveExternalNetWorkInfo } from '../util/common'
+import { getComponentConfig, retrieveExternalNetWorkInfo } from '../util/common'
 import { procInfo } from '../util/stat'
 
 
@@ -48,7 +48,7 @@ export function updateDetailTags(
   tags[Tags.HTTP_URL] = ctx.path
   tags[TracerTag.httpProtocol] = ctx.protocol
 
-  const config = ctx.app.getConfig('tracer') as Config
+  const config = getComponentConfig(ctx.app)
 
   if (Array.isArray(config.loggingReqHeaders)) {
     config.loggingReqHeaders.forEach((name) => {
@@ -193,9 +193,14 @@ export async function processHTTPStatus(
     if (typeof tracerConfig.processCustomFailure === 'function') {
       await tracerConfig.processCustomFailure(ctx)
     }
+
+    const { app } = ctx
+    const container = app.getApplicationContext()
+    const tracerManager = await container.getAsync(TracerManager)
+
     const opts: ProcessPriorityOpts = {
       starttime: ctx.startTime,
-      trm: ctx.tracerManager,
+      trm: tracerManager,
       tracerTags: ctx.tracerTags,
       tracerConfig,
     }
@@ -208,11 +213,11 @@ export function processRequestQuery(
   ctx: Context,
 ): void {
 
-  const tracerConfig = ctx.app.getConfig('tracer') as Config
+  const config = getComponentConfig(ctx.app)
   const tags: SpanLogInput = {}
 
   // [Tag] 请求参数和响应数据
-  if (tracerConfig.logginInputQuery) {
+  if (config.logginInputQuery) {
     if (ctx.method === 'GET') {
       const { query } = ctx.request
       if (typeof query === 'object' && Object.keys(query).length) {
@@ -249,10 +254,10 @@ export function processResponseData(
   ctx: Context,
 ): void {
 
-  const tracerConfig = ctx.app.getConfig('tracer') as Config
+  const config = getComponentConfig(ctx.app)
   const tags: SpanLogInput = {}
 
-  if (tracerConfig.loggingOutputBody) {
+  if (config.loggingOutputBody) {
     tags[TracerTag.respBody] = ctx.body
   }
 
