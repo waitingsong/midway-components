@@ -1,3 +1,4 @@
+import assert from 'assert/strict'
 import { relative } from 'path'
 
 import { VerifyOptions } from 'jsonwebtoken'
@@ -8,10 +9,7 @@ import {
   token1,
 } from '../test.config'
 
-import { Jwt, JwtConfig, VerifyOpts } from '~/index'
-
-// eslint-disable-next-line import/order
-import assert = require('power-assert')
+import { Jwt, Config, VerifyOpts } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -20,7 +18,7 @@ describe(filename, () => {
 
   describe('Should Jwt:verify() work', () => {
     it('initializ secret', () => {
-      const conf: JwtConfig = {
+      const conf: Config = {
         secret,
       }
       const jwt = new Jwt(conf)
@@ -31,7 +29,7 @@ describe(filename, () => {
     })
 
     it('without secret', () => {
-      const conf: JwtConfig = {
+      const conf: Config = {
         secret,
       }
       const jwt = new Jwt(conf)
@@ -42,7 +40,7 @@ describe(filename, () => {
     })
 
     it('pass secret', () => {
-      const conf: JwtConfig = {
+      const conf: Config = {
         secret,
       }
       const jwt = new Jwt(conf)
@@ -53,7 +51,7 @@ describe(filename, () => {
     })
 
     it('only initializing secret', () => {
-      const conf: JwtConfig = {
+      const conf: Config = {
         secret: 'notused',
       }
       const jwt = new Jwt(conf)
@@ -69,7 +67,7 @@ describe(filename, () => {
     })
 
     it('both initializing and passing secret', () => {
-      const conf: JwtConfig = {
+      const conf: Config = {
         secret: 'notused',
       }
       const jwt = new Jwt(conf)
@@ -80,7 +78,7 @@ describe(filename, () => {
     })
 
     it('pass VerifyOptions', async () => {
-      const conf: JwtConfig = {
+      const conf: Config = {
         secret,
       }
       const jwt = new Jwt(conf)
@@ -94,7 +92,7 @@ describe(filename, () => {
     })
 
     it('pass VerifyOptions ignore complete', async () => {
-      const conf: JwtConfig = {
+      const conf: Config = {
         secret,
       }
       const jwt = new Jwt(conf)
@@ -108,7 +106,7 @@ describe(filename, () => {
     })
 
     it('with invalid scope', () => {
-      const conf: JwtConfig = {
+      const conf: Config = {
         secret,
       }
       const jwt = new Jwt(conf)

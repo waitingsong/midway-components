@@ -7,42 +7,49 @@ import {
 
 import { testConfig } from '@/root.config'
 import {
-  initialJwtMiddlewareConfig,
-  JwtMiddlewareConfig,
-} from '~/index'
+  mwConfigNoOpts,
+  mwOptions,
+} from '@/test.config'
+import { ConfigKey, MiddlewareConfig } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
 
-  describe('Should JwtMiddlewareConfig.debug work true', () => {
+  const path = '/test'
+
+  describe('Should MiddlewareConfig.debug work true', () => {
     it('normal', async () => {
       const { app, httpRequest } = testConfig
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
-        debug: true,
+      const mwConfig: MiddlewareConfig = {
+        ...mwConfigNoOpts,
+        options: {
+          ...mwOptions,
+          debug: true,
+        },
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({ [ConfigKey.middlewareConfig]: mwConfig })
 
       const resp = await httpRequest
-        .get('/')
+        .get(path)
       authShouldFailedWithNotFoundFromDebug(resp)
     })
 
     it('ignored with passthrough:true', async () => {
       const { app, httpRequest } = testConfig
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
-        debug: true,
-        passthrough: true,
+      const mwConfig: MiddlewareConfig = {
+        ...mwConfigNoOpts,
+        options: {
+          ...mwOptions,
+          debug: true,
+          passthrough: true,
+        },
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({ [ConfigKey.middlewareConfig]: mwConfig })
 
       const resp = await httpRequest
-        .get('/')
+        .get(path)
       authShouldPassthroughNotFound(resp)
     })
   })

@@ -3,51 +3,50 @@ import { relative } from 'path'
 import { authShouldFailedWithNotFound, authShouldSkipped } from '../helper'
 
 import { testConfig } from '@/root.config'
-import {
-  initialJwtMiddlewareConfig,
-  JwtMiddlewareConfig,
-  PathPatternFunc,
-} from '~/index'
+import { mwConfig as mConfig, mwOptions } from '@/test.config'
+import { ConfigKey, MiddlewareConfig } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
 
-  describe('Should JwtMiddlewareConfig.ignore work with func', () => {
+  const path = '/test'
+
+  describe('Should MiddlewareConfig.ignore work with func', () => {
     it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/'
-      const cb: PathPatternFunc = (ctx) => {
-        const url = ctx.path
+      const cb = (url: string) => {
         return url === path
       }
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
+      const mwConfig: MiddlewareConfig = {
+        ...mConfig,
         ignore: [cb],
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const resp = await httpRequest
-        .get('/')
+        .get(path)
       authShouldSkipped(resp)
     })
 
     it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/'
-      const cb: PathPatternFunc = (ctx) => {
-        const url = ctx.path
+      const cb = (url: string) => {
         return url !== path // actual eq
       }
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
+      const mwConfig: MiddlewareConfig = {
+        ...mConfig,
         ignore: [cb],
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const resp = await httpRequest
-        .get('/')
+        .get(path)
       authShouldFailedWithNotFound(resp)
     })
   })

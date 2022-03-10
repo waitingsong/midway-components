@@ -7,66 +7,72 @@ import {
 } from '../helper'
 
 import { testConfig } from '@/root.config'
-import { authHeader1, payload1, secret, token1 } from '@/test.config'
 import {
-  initialJwtMiddlewareConfig,
-  JwtMiddlewareConfig,
-} from '~/index'
+  authHeader1, payload1,
+  mwConfig as mConfig,
+  mwOptions,
+} from '@/test.config'
+import { ConfigKey, MiddlewareConfig } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
 
+  const path = '/test'
+
   describe('Should JwtComponent.validateToken() work with header', () => {
     it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/'
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
+      const mwConfig: MiddlewareConfig = {
+        ...mConfig,
         ignore: [path],
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const sendHeader = {
         authorization: authHeader1,
       }
       const resp = await httpRequest
-        .get('/')
+        .get(path)
         .set(sendHeader)
       authShouldSkipped(resp)
     })
 
     it('auth testing passed', async () => {
       const { app, httpRequest } = testConfig
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
+      const mwConfig: MiddlewareConfig = {
+        ...mConfig,
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const sendHeader = {
         authorization: authHeader1,
       }
       const resp = await httpRequest
-        .get('/')
+        .get(path)
         .set(sendHeader)
       authShouldPassed(resp, payload1)
     })
 
     it('auth validation failed', async () => {
       const { app, httpRequest } = testConfig
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
+      const mwConfig: MiddlewareConfig = {
+        ...mConfig,
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const sendHeader = {
         authorization: authHeader1 + 'fake',
       }
       const resp = await httpRequest
-        .get('/')
+        .get(path)
         .set(sendHeader)
       authShouldValidatFailed(resp)
     })

@@ -1,11 +1,25 @@
 import { JsonObject } from '@waiting/shared-types'
 
-import { JwtConfig } from '~/index'
+import {
+  Config,
+  initialMiddlewareConfig,
+  initMiddlewareOptions,
+  MiddlewareConfig,
+  MiddlewareOptions,
+} from '~/index'
 
+
+export { jwtMiddlewareConfig as mwConfig } from '~/config/config.unittest'
 
 export const secret = '123456abc'
-export const jwtConfig: JwtConfig = {
+export const config: Config = {
   secret,
+}
+export const mwConfigNoOpts: Omit<MiddlewareConfig, 'match' | 'ignore' | 'options'> = {
+  ...initialMiddlewareConfig,
+}
+export const mwOptions: MiddlewareOptions = {
+  ...initMiddlewareOptions,
 }
 
 

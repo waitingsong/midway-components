@@ -1,4 +1,4 @@
-import { JsonObject } from '@waiting/shared-types'
+import { MiddlewareConfig as MWConfig, JsonObject } from '@waiting/shared-types'
 import {
   DecodeOptions,
   JwtHeader,
@@ -10,9 +10,7 @@ import {
 import { Context } from '~/interface'
 
 
-export { NextFunction } from '@midwayjs/core'
-
-export interface JwtConfig {
+export interface Config {
   /**
    * For signing and verifying if without passing secret param,
    * Note: the type of VerifySecret without object
@@ -25,36 +23,10 @@ export interface JwtConfig {
   verifyOpts?: VerifyOpts
 }
 
-export interface JwtMiddlewareConfig extends JwtAuthenticateOptions {
-  /**
-   * Enable middleware.
-   * insert app.middlewares with value number, default 0, if using egg framework
-   * @default true (position: 0)
-   */
-  enableMiddleware: boolean | number
-  /**
-   * match and ignore are exclusive exists
-   * @default
-   *   - /
-   *   - /login
-   *   - /metrics
-   *   - /ping
-   *   - /favicon.ico
-   *   - /favicon.png
-   * @description
-   *   - `/` match root only
-   *   - `/^\/$/` match root only
-   */
-  ignore?: MiddlewarePathPattern
-  /**
-   * Ignored if JwtAuthenticateOptions.passthrough true
-   * @default false
-   */
-  debug: boolean
-}
 
 /** Authentication options for middleware */
-export interface JwtAuthenticateOptions {
+export interface MiddlewareOptions {
+  debug: boolean
   /**
    * Retrieving the token from the name of cookie, instead of from HTTP header (Authorization),
    * @default false
@@ -69,6 +41,8 @@ export interface JwtAuthenticateOptions {
    */
   passthrough: boolean | RedirectURL | passthroughCallback
 }
+export type MiddlewareConfig = MWConfig<MiddlewareOptions>
+export type JwtAuthenticateOptions = MiddlewareOptions
 
 
 export type JwtToken = string
@@ -82,8 +56,8 @@ export interface JwtResult<T = JsonObject> {
 export type VerifySecret = string | Buffer
 export type VerifyOpts = Omit<VerifyOptions, 'maxAge' | 'complete'>
 
-export type MiddlewarePathPattern = (string | RegExp | PathPatternFunc)[]
-export type PathPatternFunc = (ctx: Context) => boolean
+// export type MiddlewarePathPattern = (string | RegExp | PathPatternFunc)[]
+// export type PathPatternFunc = (ctx: Context) => boolean
 export type RedirectURL = string
 export type passthroughCallback = (ctx: Context) => Promise<boolean | RedirectURL>
 

@@ -1,3 +1,6 @@
+import { IMidwayContext } from '@midwayjs/core'
+import { Context as KoaContext } from '@midwayjs/koa'
+
 
 export { TracerLog } from '@mw-components/jaeger'
 export {
@@ -7,9 +10,10 @@ export {
 } from '@waiting/shared-types'
 
 export {
-  IMidwayWebApplication as Application,
-  IMidwayWebContext as Context,
-} from '@midwayjs/web'
+  IMidwayApplication as Application,
+  IMiddleware, NextFunction,
+} from '@midwayjs/core'
+export type Context = IMidwayContext<KoaContext>
 
 export { NpmPkg } from '@waiting/shared-types'
 export type { Options as FetchOptions } from '@mw-components/fetch'

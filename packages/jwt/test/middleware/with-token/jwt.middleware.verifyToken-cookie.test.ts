@@ -3,28 +3,35 @@ import { relative } from 'path'
 import { authShouldFailedWithNotFound, authShouldPassed, authShouldSkipped } from '../helper'
 
 import { testConfig } from '@/root.config'
-import { payload1, secret, token1 } from '@/test.config'
 import {
-  initialJwtMiddlewareConfig,
-  JwtMiddlewareConfig,
-} from '~/index'
+  payload1, token1,
+  mwConfigNoOpts,
+  mwOptions,
+} from '@/test.config'
+import { ConfigKey, MiddlewareConfig } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
 
+  const path = '/test'
+
   describe('Should JwtComponent.validateToken() work with cookie', () => {
     it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/'
       const cookieKey = 'user'
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        cookie: cookieKey,
+      const mwConfig: MiddlewareConfig = {
+        ...mwConfigNoOpts,
         ignore: [path],
+        options: {
+          ...mwOptions,
+          cookie: cookieKey,
+        },
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const cookie = [`${cookieKey}=${token1}`]
       const sendHeader = {
@@ -32,7 +39,7 @@ describe(filename, () => {
         Cookie: cookie,
       }
       const resp = await httpRequest
-        .get('/')
+        .get(path)
         .set(sendHeader)
       authShouldSkipped(resp)
     })
@@ -40,12 +47,16 @@ describe(filename, () => {
     it('auth test with JwtAuthenticateOptions.cookie user value', async () => {
       const { app, httpRequest } = testConfig
       const cookieKey = 'user'
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
-        cookie: cookieKey,
+      const mwConfig: MiddlewareConfig = {
+        ...mwConfigNoOpts,
+        options: {
+          ...mwOptions,
+          cookie: cookieKey,
+        },
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const cookie = [`${cookieKey}=${token1}; path=/; expires=Wed, 24 Feb 2021 06:59:09 GMT; httponly`]
       const sendHeader = {
@@ -53,7 +64,7 @@ describe(filename, () => {
         Cookie: cookie,
       }
       const resp = await httpRequest
-        .get('/')
+        .get(path)
         .set(sendHeader)
       authShouldPassed(resp, payload1)
     })
@@ -61,12 +72,16 @@ describe(filename, () => {
     it('auth test with JwtAuthenticateOptions.cookie false (default)', async () => {
       const { app, httpRequest } = testConfig
       const cookieKey = 'user'
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
-        cookie: false,
+      const mwConfig: MiddlewareConfig = {
+        ...mwConfigNoOpts,
+        options: {
+          ...mwOptions,
+          cookie: false,
+        },
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const cookie = [`${cookieKey}=${token1}; path=/; expires=Wed, 24 Feb 2021 06:59:09 GMT; httponly`]
       const sendHeader = {
@@ -74,7 +89,7 @@ describe(filename, () => {
         Cookie: cookie,
       }
       const resp = await httpRequest
-        .get('/')
+        .get(path)
         .set(sendHeader)
       authShouldFailedWithNotFound(resp)
     })

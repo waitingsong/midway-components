@@ -1,8 +1,8 @@
 
 export * from './config'
-export { Jwt } from './jwt'
-export { JwtComponent } from './jwt-component'
 export * from './types'
+export { JwtComponent } from './component'
+export { Jwt } from './jwt'
 export * from './resolvers'
 export * from './util'
 
