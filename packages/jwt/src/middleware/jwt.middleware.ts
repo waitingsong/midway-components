@@ -25,6 +25,16 @@ export class JwtMiddleware implements IMiddleware<Context, NextFunction> {
   }
 
   match(ctx?: Context) {
+    if (ctx) {
+      if (! ctx.jwtState) {
+        ctx.jwtState = {} as JwtState
+      }
+
+      if (! ctx.state) {
+        ctx.state = {}
+      }
+    }
+
     return matchFunc(ctx)
   }
 
@@ -37,14 +47,6 @@ export async function jwtMiddleware(
   ctx: Context,
   next: NextFunction,
 ): Promise<void> {
-
-  if (! ctx.jwtState) {
-    ctx.jwtState = {} as JwtState
-  }
-
-  if (! ctx.state) {
-    ctx.state = {}
-  }
 
   const { app } = ctx
 
