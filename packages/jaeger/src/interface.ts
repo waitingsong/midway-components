@@ -1,13 +1,18 @@
-import { IMidwayContext } from '@midwayjs/core'
+import { IMidwayApplication, IMidwayContext } from '@midwayjs/core'
 import { Context as KoaContext } from '@midwayjs/koa'
 
-import { SpanLogInput, TracerManager, TracerConfig } from './lib/index'
+import {
+  SpanLogInput,
+  TracerManager,
+  TracerConfig,
+} from './lib/index'
 
 
 export {
   JsonObject,
   JsonResp,
   JsonType,
+  NpmPkg,
 } from '@waiting/shared-types'
 
 declare module '@midwayjs/core' {
@@ -22,12 +27,13 @@ declare module '@midwayjs/core' {
 }
 
 export {
-  IMidwayApplication as Application,
-  IMiddleware, NextFunction,
+  IMidwayApplication,
+  IMidwayContainer,
+  IMiddleware,
+  NextFunction,
 } from '@midwayjs/core'
+export type Application = IMidwayApplication<Context>
 export type Context = IMidwayContext<KoaContext>
-
-export { NpmPkg } from '@waiting/shared-types'
 
 // declare module '@midwayjs/core/dist/interface' {
 //   // 将配置合并到 MidwayConfig 中
