@@ -9,11 +9,10 @@ import {
 import { testConfig } from '@/root.config'
 import {
   authHeader1, payload1,
-  jwtMiddlewareConfig,
-  jwtMiddlewareConfigNoOpts,
-  jwtMiddlewareOptions,
+  mwConfigNoOpts,
+  mwOptions,
 } from '@/test.config'
-import { JwtMiddlewareConfig } from '~/index'
+import { MiddlewareConfig } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -25,10 +24,10 @@ describe(filename, () => {
   describe('Should JwtAuthenticateOptions.passthrough work with value: true', () => {
     it('passed', async () => {
       const { app, httpRequest } = testConfig
-      const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfigNoOpts,
+      const mwConfig: MiddlewareConfig = {
+        ...mwConfigNoOpts,
         options: {
-          ...jwtMiddlewareOptions,
+          ...mwOptions,
           passthrough: true,
         },
       }
@@ -45,10 +44,10 @@ describe(filename, () => {
 
     it('token not found', async () => {
       const { app, httpRequest } = testConfig
-      const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfigNoOpts,
+      const mwConfig: MiddlewareConfig = {
+        ...mwConfigNoOpts,
         options: {
-          ...jwtMiddlewareOptions,
+          ...mwOptions,
           passthrough: true,
         },
       }
@@ -64,10 +63,10 @@ describe(filename, () => {
 
     it('token valid faied', async () => {
       const { app, httpRequest } = testConfig
-      const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfigNoOpts,
+      const mwConfig: MiddlewareConfig = {
+        ...mwConfigNoOpts,
         options: {
-          ...jwtMiddlewareOptions,
+          ...mwOptions,
           passthrough: true,
         },
       }

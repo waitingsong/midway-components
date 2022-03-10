@@ -6,8 +6,8 @@ import { testConfig } from '@/root.config'
 import {
   payload1, token1,
   jwtMiddlewareConfig,
-  jwtMiddlewareConfigNoOpts,
-  jwtMiddlewareOptions,
+  mwConfigNoOpts,
+  mwOptions,
 } from '@/test.config'
 import { JwtMiddlewareConfig } from '~/index'
 
@@ -23,10 +23,10 @@ describe(filename, () => {
       const { app, httpRequest } = testConfig
       const cookieKey = 'user'
       const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfigNoOpts,
+        ...mwConfigNoOpts,
         ignore: [path],
         options: {
-          ...jwtMiddlewareOptions,
+          ...mwOptions,
           cookie: cookieKey,
         },
       }
@@ -47,9 +47,9 @@ describe(filename, () => {
       const { app, httpRequest } = testConfig
       const cookieKey = 'user'
       const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfigNoOpts,
+        ...mwConfigNoOpts,
         options: {
-          ...jwtMiddlewareOptions,
+          ...mwOptions,
           cookie: cookieKey,
         },
       }
@@ -70,9 +70,9 @@ describe(filename, () => {
       const { app, httpRequest } = testConfig
       const cookieKey = 'user'
       const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfigNoOpts,
+        ...mwConfigNoOpts,
         options: {
-          ...jwtMiddlewareOptions,
+          ...mwOptions,
           cookie: false,
         },
       }

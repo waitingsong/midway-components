@@ -9,7 +9,7 @@ import {
 import { testConfig } from '@/root.config'
 import {
   authHeader1, payload1,
-  jwtMiddlewareConfig, jwtMiddlewareOptions,
+  jwtMiddlewareConfig, mwOptions,
 } from '@/test.config'
 import { JwtMiddlewareConfig } from '~/index'
 

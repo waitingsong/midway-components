@@ -11,8 +11,8 @@ import { testConfig } from '@/root.config'
 import {
   authHeader1, payload1,
   jwtMiddlewareConfig,
-  jwtMiddlewareConfigNoOpts,
-  jwtMiddlewareOptions,
+  mwConfigNoOpts,
+  mwOptions,
 } from '@/test.config'
 import {
   JwtMiddlewareConfig,
@@ -31,9 +31,9 @@ describe(filename, () => {
     it('true: passed', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfigNoOpts,
+        ...mwConfigNoOpts,
         options: {
-          ...jwtMiddlewareOptions,
+          ...mwOptions,
           passthrough: cb,
         },
       }
@@ -51,9 +51,9 @@ describe(filename, () => {
     it('true: token not found', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfigNoOpts,
+        ...mwConfigNoOpts,
         options: {
-          ...jwtMiddlewareOptions,
+          ...mwOptions,
           passthrough: cb,
         },
       }
@@ -67,9 +67,9 @@ describe(filename, () => {
     it('invalid value: token not found', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfigNoOpts,
+        ...mwConfigNoOpts,
         options: {
-          ...jwtMiddlewareOptions,
+          ...mwOptions,
           // @ts-expect-error
           passthrough: 0,
         },
@@ -84,9 +84,9 @@ describe(filename, () => {
     it('invalid value 1: token not found', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfigNoOpts,
+        ...mwConfigNoOpts,
         options: {
-          ...jwtMiddlewareOptions,
+          ...mwOptions,
           // @ts-expect-error
           passthrough: 1,
         },

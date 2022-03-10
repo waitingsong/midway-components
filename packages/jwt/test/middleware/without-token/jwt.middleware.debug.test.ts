@@ -8,10 +8,10 @@ import {
 import { testConfig } from '@/root.config'
 import {
   jwtMiddlewareConfig,
-  jwtMiddlewareConfigNoOpts,
-  jwtMiddlewareOptions,
+  mwConfigNoOpts,
+  mwOptions,
 } from '@/test.config'
-import { JwtMiddlewareConfig } from '~/index'
+import { MiddlewareConfig } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -20,13 +20,13 @@ describe(filename, () => {
 
   const path = '/test'
 
-  describe('Should JwtMiddlewareConfig.debug work true', () => {
+  describe('Should MiddlewareConfig.debug work true', () => {
     it('normal', async () => {
       const { app, httpRequest } = testConfig
-      const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfigNoOpts,
+      const mwConfig: MiddlewareConfig = {
+        ...mwConfigNoOpts,
         options: {
-          ...jwtMiddlewareOptions,
+          ...mwOptions,
           debug: true,
         },
       }
@@ -39,10 +39,10 @@ describe(filename, () => {
 
     it('ignored with passthrough:true', async () => {
       const { app, httpRequest } = testConfig
-      const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfigNoOpts,
+      const mwConfig: MiddlewareConfig = {
+        ...mwConfigNoOpts,
         options: {
-          ...jwtMiddlewareOptions,
+          ...mwOptions,
           debug: true,
           passthrough: true,
         },

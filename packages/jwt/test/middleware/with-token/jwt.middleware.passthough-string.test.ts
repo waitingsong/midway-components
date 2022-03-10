@@ -8,8 +8,8 @@ import {
 import { testConfig } from '@/root.config'
 import {
   jwtMiddlewareConfig,
-  jwtMiddlewareConfigNoOpts,
-  jwtMiddlewareOptions,
+  mwConfigNoOpts,
+  mwOptions,
 } from '@/test.config'
 import { JwtMiddlewareConfig } from '~/index'
 
@@ -25,9 +25,9 @@ describe(filename, () => {
       const { app, httpRequest } = testConfig
       const path2 = '/redirect-' + Math.random().toString()
       const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfigNoOpts,
+        ...mwConfigNoOpts,
         options: {
-          ...jwtMiddlewareOptions,
+          ...mwOptions,
           passthrough: path2,
         },
       }
@@ -41,9 +41,9 @@ describe(filename, () => {
     it('empty string', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfigNoOpts,
+        ...mwConfigNoOpts,
         options: {
-          ...jwtMiddlewareOptions,
+          ...mwOptions,
           passthrough: '',
         },
       }

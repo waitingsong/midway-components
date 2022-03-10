@@ -15,10 +15,10 @@ export const secret = '123456abc'
 export const jwtConfig: Config = {
   secret,
 }
-export const jwtMiddlewareConfigNoOpts: Omit<JwtMiddlewareConfig, 'match' | 'ignore' | 'options'> = {
+export const mwConfigNoOpts: Omit<JwtMiddlewareConfig, 'match' | 'ignore' | 'options'> = {
   ...initialMiddlewareConfig,
 }
-export const jwtMiddlewareOptions: MiddlewareOptions = {
+export const mwOptions: MiddlewareOptions = {
   ...initMiddlewareOptions,
 }
 

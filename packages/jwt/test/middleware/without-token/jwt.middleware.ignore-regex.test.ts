@@ -3,7 +3,7 @@ import { relative } from 'path'
 import { authShouldSkipped } from '../helper'
 
 import { testConfig } from '@/root.config'
-import { jwtMiddlewareConfig, jwtMiddlewareOptions } from '@/test.config'
+import { jwtMiddlewareConfig, mwOptions } from '@/test.config'
 import { JwtMiddlewareConfig } from '~/index'
 
 
