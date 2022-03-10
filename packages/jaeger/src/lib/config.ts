@@ -30,4 +30,12 @@ export const initialMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'ignore' |
   enableMiddleware: true,
 }
 
+export const enum ConfigKey {
+  namespace = 'jaeger',
+  config = 'jaegerConfig',
+  middlewareConfig = 'jaegerMiddlewareConfig',
+  componentName = 'jaegerComponent',
+  middlewareName = 'jaegerMiddleware'
+}
+
 

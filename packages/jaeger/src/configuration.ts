@@ -7,7 +7,6 @@ import { join } from 'path'
 import { App, Config, Configuration } from '@midwayjs/decorator'
 import { JaegerTracer } from 'jaeger-client'
 
-import { namespace, compName } from './lib/config'
 import { initTracer } from './lib/tracer'
 import { TracerMiddleware } from './middleware/tracer.middleware'
 
