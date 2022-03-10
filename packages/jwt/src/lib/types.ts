@@ -25,13 +25,13 @@ export interface Config {
 
 
 /** Authentication options for middleware */
-export type JwtMiddlewareConfig = {
-  debug: boolean,
+export interface MiddlewareOptions {
+  debug: boolean
   /**
    * Retrieving the token from the name of cookie, instead of from HTTP header (Authorization),
    * @default false
    */
-  cookie: string | false,
+  cookie: string | false
   /**
    * - false (Default): throw error
    * - true: always yield next, even if no valid Authorization header was found,
@@ -39,8 +39,9 @@ export type JwtMiddlewareConfig = {
    * - <RedirectURL>: redirect and without yield next
    * @default false
    */
-  passthrough: boolean | RedirectURL | passthroughCallback,
-} & MiddlewareConfig
+  passthrough: boolean | RedirectURL | passthroughCallback
+}
+export type JwtMiddlewareConfig = MiddlewareConfig<MiddlewareOptions>
 
 
 export type JwtToken = string
@@ -54,7 +55,7 @@ export interface JwtResult<T = JsonObject> {
 export type VerifySecret = string | Buffer
 export type VerifyOpts = Omit<VerifyOptions, 'maxAge' | 'complete'>
 
-export type MiddlewarePathPattern = (string | RegExp | PathPatternFunc)[]
+// export type MiddlewarePathPattern = (string | RegExp | PathPatternFunc)[]
 // export type PathPatternFunc = (ctx: Context) => boolean
 export type RedirectURL = string
 export type passthroughCallback = (ctx: Context) => Promise<boolean | RedirectURL>

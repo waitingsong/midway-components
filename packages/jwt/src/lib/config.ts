@@ -1,6 +1,7 @@
 import {
   JwtMiddlewareConfig,
   Config,
+  MiddlewareOptions,
 } from './types'
 
 
@@ -15,21 +16,15 @@ export const enum ConfigKey {
 export const initialConfig: Readonly<Config> = {
   secret: '',
 }
-export const initialMiddlewareConfig: Readonly<JwtMiddlewareConfig> = {
-  enableMiddleware: true,
-  ignore: [
-    '/',
-    '/auth/login',
-    '/login',
-    '/metrics',
-    '/ping',
-    '/favicon.ico',
-    '/favicon.png',
-  ],
+export const initMiddlewareOptions: MiddlewareOptions = {
   debug: false,
   cookie: false,
   passthrough: false,
 }
+export const initialMiddlewareConfig: Readonly<Omit<JwtMiddlewareConfig, 'ignore' | 'match' | 'options'>> = {
+  enableMiddleware: true,
+}
+
 
 export const schemePrefix = 'Bearer'
 

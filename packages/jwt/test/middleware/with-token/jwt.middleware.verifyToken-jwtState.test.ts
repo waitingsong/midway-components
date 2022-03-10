@@ -3,9 +3,11 @@ import { relative } from 'path'
 import { authShouldPassed } from '../helper'
 
 import { testConfig } from '@/root.config'
-import { authHeader1, payload1, secret, token1 } from '@/test.config'
 import {
-  initialMiddlewareConfig,
+  authHeader1, payload1,
+  jwtMiddlewareConfig, jwtMiddlewareOptions,
+} from '@/test.config'
+import {
   Config,
   JwtMiddlewareConfig,
 } from '~/index'
@@ -22,11 +24,13 @@ describe(filename, () => {
 
     it('passed with ctx.jwtState.secret', async () => {
       const { app, httpRequest } = testConfig
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialMiddlewareConfig,
-        ignore: [],
+      const mwConfig: JwtMiddlewareConfig = {
+        ...jwtMiddlewareConfig,
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({
+        jwtConfig,
+        jwtMiddlewareConfig: mwConfig,
+      })
 
       const sendHeader = {
         authorization: authHeader1,
@@ -39,11 +43,13 @@ describe(filename, () => {
 
     it('passed with ctx.state.secret', async () => {
       const { app, httpRequest } = testConfig
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialMiddlewareConfig,
-        ignore: [],
+      const mwConfig: JwtMiddlewareConfig = {
+        ...jwtMiddlewareConfig,
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({
+        jwtConfig,
+        jwtMiddlewareConfig: mwConfig,
+      })
 
       const sendHeader = {
         authorization: authHeader1,

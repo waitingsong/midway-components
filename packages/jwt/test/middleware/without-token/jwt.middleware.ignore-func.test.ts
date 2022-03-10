@@ -3,11 +3,8 @@ import { relative } from 'path'
 import { authShouldFailedWithNotFound, authShouldSkipped } from '../helper'
 
 import { testConfig } from '@/root.config'
-import {
-  initialMiddlewareConfig,
-  JwtMiddlewareConfig,
-  PathPatternFunc,
-} from '~/index'
+import { jwtMiddlewareConfig, jwtMiddlewareOptions } from '@/test.config'
+import { JwtMiddlewareConfig } from '~/index'
 import { Context } from '~/interface'
 
 
@@ -23,11 +20,11 @@ describe(filename, () => {
         const url = ctx.path
         return url === path
       }
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialMiddlewareConfig,
+      const mwConfig: JwtMiddlewareConfig = {
+        ...jwtMiddlewareConfig,
         ignore: [cb],
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
 
       const resp = await httpRequest
         .get('/')
@@ -41,11 +38,11 @@ describe(filename, () => {
         const url = ctx.path
         return url !== path // actual eq
       }
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialMiddlewareConfig,
+      const mwConfig: JwtMiddlewareConfig = {
+        ...jwtMiddlewareConfig,
         ignore: [cb],
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
 
       const resp = await httpRequest
         .get('/')

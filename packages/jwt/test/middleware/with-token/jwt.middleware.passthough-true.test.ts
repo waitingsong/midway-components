@@ -7,11 +7,13 @@ import {
 } from '../helper'
 
 import { testConfig } from '@/root.config'
-import { authHeader1, payload1, secret, token1 } from '@/test.config'
 import {
-  initialMiddlewareConfig,
-  JwtMiddlewareConfig,
-} from '~/index'
+  authHeader1, payload1,
+  jwtMiddlewareConfig,
+  jwtMiddlewareConfigNoOpts,
+  jwtMiddlewareOptions,
+} from '@/test.config'
+import { JwtMiddlewareConfig } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -22,11 +24,14 @@ describe(filename, () => {
     it('passed', async () => {
       const { app, httpRequest } = testConfig
       const path = '/' + Math.random().toString()
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialMiddlewareConfig,
-        passthrough: true,
+      const mwConfig: JwtMiddlewareConfig = {
+        ...jwtMiddlewareConfigNoOpts,
+        options: {
+          ...jwtMiddlewareOptions,
+          passthrough: true,
+        },
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
 
       const sendHeader = {
         authorization: authHeader1,
@@ -39,11 +44,14 @@ describe(filename, () => {
 
     it('token not found', async () => {
       const { app, httpRequest } = testConfig
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialMiddlewareConfig,
-        passthrough: true,
+      const mwConfig: JwtMiddlewareConfig = {
+        ...jwtMiddlewareConfigNoOpts,
+        options: {
+          ...jwtMiddlewareOptions,
+          passthrough: true,
+        },
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
 
       const sendHeader = {
         authorization: '',
@@ -56,11 +64,14 @@ describe(filename, () => {
     it('token valid faied', async () => {
       const { app, httpRequest } = testConfig
       const path = '/' + Math.random().toString()
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialMiddlewareConfig,
-        passthrough: true,
+      const mwConfig: JwtMiddlewareConfig = {
+        ...jwtMiddlewareConfigNoOpts,
+        options: {
+          ...jwtMiddlewareOptions,
+          passthrough: true,
+        },
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
 
       const sendHeader = {
         authorization: authHeader1 + 'FAKE',

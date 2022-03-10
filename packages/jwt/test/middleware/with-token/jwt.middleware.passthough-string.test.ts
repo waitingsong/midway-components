@@ -7,9 +7,11 @@ import {
 
 import { testConfig } from '@/root.config'
 import {
-  initialMiddlewareConfig,
-  JwtMiddlewareConfig,
-} from '~/index'
+  jwtMiddlewareConfig,
+  jwtMiddlewareConfigNoOpts,
+  jwtMiddlewareOptions,
+} from '@/test.config'
+import { JwtMiddlewareConfig } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -21,11 +23,14 @@ describe(filename, () => {
       const { app, httpRequest } = testConfig
       const path = '/' + Math.random().toString()
       const path2 = '/redirect-' + Math.random().toString()
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialMiddlewareConfig,
-        passthrough: path2,
+      const mwConfig: JwtMiddlewareConfig = {
+        ...jwtMiddlewareConfigNoOpts,
+        options: {
+          ...jwtMiddlewareOptions,
+          passthrough: path2,
+        },
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
 
       const resp = await httpRequest
         .get('/')
@@ -35,11 +40,14 @@ describe(filename, () => {
     it('empty string', async () => {
       const { app, httpRequest } = testConfig
       const path = '/' + Math.random().toString()
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialMiddlewareConfig,
-        passthrough: '',
+      const mwConfig: JwtMiddlewareConfig = {
+        ...jwtMiddlewareConfigNoOpts,
+        options: {
+          ...jwtMiddlewareOptions,
+          passthrough: '',
+        },
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
 
       const resp = await httpRequest
         .get('/')
