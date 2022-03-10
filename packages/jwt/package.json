@@ -25,7 +25,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@waiting/shared-types": "^15.3.0",
+    "@waiting/shared-types": "^16.0.0",
     "jsonwebtoken": "^8.5.1"
   },
   "devDependencies": {

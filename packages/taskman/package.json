@@ -26,8 +26,8 @@
     "@mw-components/fetch": "^16.0.2",
     "@mw-components/jaeger": "^10.0.1",
     "@mw-components/kmore": "^24.0.0",
-    "@waiting/shared-core": "^15.1.0",
-    "@waiting/shared-types": "^15.1.0",
+    "@waiting/shared-core": "^16.0.0",
+    "@waiting/shared-types": "^16.0.0",
     "pg": "^8.7.1",
     "postgres-interval": "^4.0.0",
     "tsconfig-paths": "3"
