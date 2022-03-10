@@ -42,9 +42,10 @@ export class TracerManager {
     this.spans = []
   }
 
+  /**
+   * 开启第一个span并入栈
+   */
   start(): void {
-    // 开启第一个span并入栈
-    // const tracerManager = new TracerManager(true)
     this.isTraceEnabled = true
     const requestSpanCtx
       = globalTracer().extract(FORMAT_HTTP_HEADERS, this.ctx.headers) ?? undefined
@@ -64,9 +65,7 @@ export class TracerManager {
     })
   }
 
-
   async finish(): Promise<void> {
-
     await processHTTPStatus(this.ctx)
     processResponseData(this.ctx)
     updateDetailTags(this.ctx)
