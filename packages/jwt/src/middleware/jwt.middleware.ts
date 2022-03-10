@@ -35,7 +35,8 @@ export class JwtMiddleware implements IMiddleware<Context, NextFunction> {
       }
     }
 
-    return matchFunc(ctx)
+    const flag = matchFunc(ctx)
+    return flag
   }
 
   resolve() {

@@ -28,7 +28,7 @@ describe(filename, () => {
   const path = '/'
 
   describe('Should JwtAuthenticateOptions.passthrough work with func', () => {
-    it('true: passed', async () => {
+    it.only('true: passed', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: JwtMiddlewareConfig = {
         ...jwtMiddlewareConfigNoOpts,
