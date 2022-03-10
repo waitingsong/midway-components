@@ -1,5 +1,8 @@
-import { Config } from '../index'
-import { initialConfig } from '../lib/config'
+import { Config, MiddlewareConfig } from '../index'
+import {
+  initialConfig,
+  initialMiddlewareConfig,
+} from '../lib/config'
 
 
 export const tracerConfig: Config = {
@@ -14,7 +17,14 @@ export const tracerConfig: Config = {
       agentHost: '127.0.0.1',
     },
   },
-  whiteList: [],
+}
+
+export const tracerMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
+  ...initialMiddlewareConfig,
+  ignore: [
+    '/untraced_path_string',
+    new RegExp('/untraced_path_reg_exp$', 'u'),
+  ],
 }
 
 

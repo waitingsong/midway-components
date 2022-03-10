@@ -16,10 +16,13 @@ export const tracerConfig: Config = {
       agentHost: '127.0.0.1',
     },
   },
-  whiteList: [],
 }
 
 export const tracerMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
   ...initialMiddlewareConfig,
+  ignore: [
+    '/favicon.ico',
+    '/favicon.png',
+  ],
 }
 

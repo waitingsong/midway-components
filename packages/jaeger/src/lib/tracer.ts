@@ -1,49 +1,93 @@
 import {
+  Init,
+  Inject,
+  Provide,
+} from '@midwayjs/decorator'
+import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
+import {
   FORMAT_HTTP_HEADERS,
   Span,
   SpanContext,
   globalTracer,
 } from 'opentracing'
 
-import { SpanHeaderInit, SpanLogInput } from './types'
+import { SpanHeaderInit, SpanLogInput, TracerLog, TracerTag } from './types'
 
+import { Context } from '~/interface'
+import {
+  processHTTPStatus,
+  processResponseData,
+  updateCtxTagsData,
+  updateDetailTags,
+} from '~/middleware/helper'
 
-/**
- * 初始化 tracer 单例
- */
-// export function initTracer(app: Application): JaegerTracer {
-//   const tconf = app.getConfig(ConfigKey.config) as Config
-//   const pconf = app.getConfig('pkg') as NpmPkg
-//   const pkgName = pconf && pconf.name ? pconf.name : 'jager'
-
-//   let name = tconf.tracingConfig.serviceName ?? pkgName
-//   name = name.replace(/@/ug, '').replace(/\//ug, '-')
-//   if (! name) {
-//     throw new Error('service name empty')
-//   }
-
-//   const config: TracingConfig = {
-//     ...tconf.tracingConfig,
-//     serviceName: name,
-//   }
-//   const tracer = initJaegerTracer(config, {})
-//   initGlobalTracer(tracer)
-//   return tracer
-// }
 
 /**
  * tracer 管理类，需初始化并挂载到ctx
  */
+@Provide()
 export class TracerManager {
+
+  @Inject() readonly ctx: Context
+
   readonly instanceId = Symbol(new Date().getTime().toString())
-  readonly isTraceEnabled: boolean
 
-  readonly spans: Span[]
+  isTraceEnabled: boolean
 
-  constructor(isTraceEnabled: boolean) {
-    this.isTraceEnabled = isTraceEnabled
+  spans: Span[]
+
+  @Init()
+  async init(): Promise<void> {
+    this.isTraceEnabled = false
     this.spans = []
   }
+
+  start(): void {
+    // 开启第一个span并入栈
+    // const tracerManager = new TracerManager(true)
+    this.isTraceEnabled = true
+    const requestSpanCtx
+      = globalTracer().extract(FORMAT_HTTP_HEADERS, this.ctx.headers) ?? undefined
+
+    const time = genISO8601String()
+    this.startSpan(this.ctx.path, requestSpanCtx)
+    updateCtxTagsData(this.ctx.tracerTags, {
+      [TracerTag.svcPid]: process.pid,
+      [TracerTag.svcPpid]: process.ppid,
+      [TracerTag.reqStartTime]: time,
+    })
+    this.spanLog({
+      event: TracerLog.requestBegin,
+      time,
+      [TracerLog.svcCpuUsage]: process.cpuUsage(),
+      [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
+    })
+  }
+
+
+  async finish(): Promise<void> {
+
+    await processHTTPStatus(this.ctx)
+    processResponseData(this.ctx)
+    updateDetailTags(this.ctx)
+
+    const time = genISO8601String()
+
+    this.spanLog({
+      event: TracerLog.requestEnd,
+      time,
+      [TracerLog.svcCpuUsage]: process.cpuUsage(),
+      [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
+    })
+
+    updateCtxTagsData(this.ctx.tracerTags, {
+      [TracerTag.reqEndTime]: time,
+    })
+    this.addTags(this.ctx.tracerTags)
+
+    this.finishSpan()
+  }
+
 
   currentSpan(): Span | undefined {
     return this.spans[this.spans.length - 1]

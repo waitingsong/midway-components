@@ -8,10 +8,6 @@ import {
 
 
 export const initialConfig: Readonly<Omit<Config, 'tracingConfig'>> = {
-  whiteList: [
-    '/favicon.ico',
-    '/favicon.png',
-  ],
   reqThrottleMsForPriority: 500,
   enableCatchError: true,
   logginInputQuery: true,

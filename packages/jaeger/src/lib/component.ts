@@ -11,7 +11,6 @@ import {
 } from 'jaeger-client'
 import { initGlobalTracer } from 'opentracing'
 
-
 import {
   Config,
   ConfigKey,

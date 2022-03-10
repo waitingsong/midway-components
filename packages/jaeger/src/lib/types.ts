@@ -9,11 +9,6 @@ import { Context } from '../interface'
 
 export interface Config {
   /**
-   * 请求路径忽略名单
-   * @default ['/favicon.ico', '/favicon.png']
-   */
-  whiteList: (string | RegExp)[]
-  /**
    * 强制采样请求处理时间（毫秒）阈值，
    * 负数不采样
    */
