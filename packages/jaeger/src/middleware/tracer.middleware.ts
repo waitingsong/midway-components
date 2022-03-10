@@ -47,7 +47,6 @@ export async function middleware(
 
   const { app } = ctx
   const container = app.getApplicationContext()
-
   const tracerManager = await container.getAsync(TracerManager)
   tracerManager.start()
 
