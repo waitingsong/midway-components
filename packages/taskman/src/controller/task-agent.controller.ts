@@ -8,7 +8,7 @@ import {
   Post,
   Query,
 } from '@midwayjs/decorator'
-import { Span, SpanLogInput } from '@mw-components/jaeger'
+import { Span, SpanLogInput, TracerManager } from '@mw-components/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
 
 import { taskAgentSubscriptionMap } from '../lib/data'
@@ -39,12 +39,13 @@ import { Context } from '~/interface'
 export class TaskAgentController {
 
   @Inject() protected readonly ctx: Context
+  @Inject() protected readonly tracerManager: TracerManager
   @Inject() protected readonly agentSvc: TaskAgentService
   @Inject() protected readonly queueSvc: TaskQueueService
 
   @Get('/' + ServerAgent.startOne)
   async [ServerMethod.startOne](): Promise<TaskAgentState> {
-    const trm = this.ctx.tracerManager
+    const trm = this.tracerManager
     let span: Span | undefined
 
     let agentId = ''
@@ -87,7 +88,7 @@ export class TaskAgentController {
   async [ServerMethod.create](@Body(ALL) input: CreateTaskDTO): Promise<TaskDTO> {
     // start a agent
     this[ServerMethod.startOne]().catch((ex: Error) => {
-      const trm = this.ctx.tracerManager
+      const trm = this.tracerManager
       const inputLog: SpanLogInput = {
         event: 'TaskAgent:startOne()-error',
         pid: process.pid,
