@@ -41,9 +41,8 @@ export interface MiddlewareOptions {
    */
   passthrough: boolean | RedirectURL | passthroughCallback
 }
-export type JwtMiddlewareConfig = MWConfig<MiddlewareOptions>
+export type MiddlewareConfig = MWConfig<MiddlewareOptions>
 export type JwtAuthenticateOptions = MiddlewareOptions
-export type MiddlewareConfig = JwtMiddlewareConfig
 
 
 export type JwtToken = string
