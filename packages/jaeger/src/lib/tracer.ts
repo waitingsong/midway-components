@@ -13,13 +13,13 @@ import {
   globalTracer,
 } from 'opentracing'
 
-import { SpanHeaderInit, SpanLogInput, TracerConfig } from './types'
+import { SpanHeaderInit, SpanLogInput, Config } from './types'
 
 /**
  * 初始化 tracer 单例
  */
 export function initTracer(app: IMidwayApplication): JaegerTracer {
-  const tconf = app.getConfig('tracer') as TracerConfig
+  const tconf = app.getConfig('tracer') as Config
   const pconf = app.getConfig('pkg') as NpmPkg
   const pkgName = pconf && pconf.name ? pconf.name : 'jager'
 

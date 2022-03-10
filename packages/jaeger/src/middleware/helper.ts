@@ -10,7 +10,7 @@ import { Tags } from 'opentracing'
 
 import { Context, NextFunction } from '../interface'
 import { TracerManager } from '../lib/tracer'
-import { SpanLogInput, TracerConfig, TracerError, TracerLog, TracerTag } from '../lib/types'
+import { SpanLogInput, Config, TracerError, TracerLog, TracerTag } from '../lib/types'
 import { retrieveExternalNetWorkInfo } from '../util/common'
 import { procInfo } from '../util/stat'
 
@@ -48,7 +48,7 @@ export function updateDetailTags(
   tags[Tags.HTTP_URL] = ctx.path
   tags[TracerTag.httpProtocol] = ctx.protocol
 
-  const config = ctx.app.getConfig('tracer') as TracerConfig
+  const config = ctx.app.getConfig('tracer') as Config
 
   if (Array.isArray(config.loggingReqHeaders)) {
     config.loggingReqHeaders.forEach((name) => {
@@ -96,7 +96,7 @@ export async function handleTopExceptionAndNext(
  * throw catched ex
  */
 export async function handleAppExceptionAndNext(
-  config: TracerConfig,
+  config: Config,
   tracerManager: TracerManager,
   next: NextFunction,
 ): Promise<void> {
@@ -172,7 +172,7 @@ export async function processHTTPStatus(
 ): Promise<void> {
 
   const { status } = ctx.response
-  const tracerConfig = ctx.app.getConfig('tracer') as TracerConfig
+  const tracerConfig = ctx.app.getConfig('tracer') as Config
   const tags: SpanLogInput = {
     [Tags.HTTP_STATUS_CODE]: status,
   }
@@ -208,7 +208,7 @@ export function processRequestQuery(
   ctx: Context,
 ): void {
 
-  const tracerConfig = ctx.app.getConfig('tracer') as TracerConfig
+  const tracerConfig = ctx.app.getConfig('tracer') as Config
   const tags: SpanLogInput = {}
 
   // [Tag] 请求参数和响应数据
@@ -249,7 +249,7 @@ export function processResponseData(
   ctx: Context,
 ): void {
 
-  const tracerConfig = ctx.app.getConfig('tracer') as TracerConfig
+  const tracerConfig = ctx.app.getConfig('tracer') as Config
   const tags: SpanLogInput = {}
 
   if (tracerConfig.loggingOutputBody) {
@@ -286,7 +286,7 @@ export interface ProcessPriorityOpts {
   starttime: number
   trm: TracerManager
   tracerTags: SpanLogInput
-  tracerConfig: TracerConfig
+  tracerConfig: Config
 }
 export async function processPriority(options: ProcessPriorityOpts): Promise<number | undefined> {
   const { reqThrottleMsForPriority: throttleMs } = options.tracerConfig

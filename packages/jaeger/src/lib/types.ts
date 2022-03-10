@@ -1,13 +1,13 @@
 import type { IncomingHttpHeaders } from 'http'
 
 import type { ILogger } from '@midwayjs/logger'
-import { KnownKeys } from '@waiting/shared-types'
+import { MiddlewareConfig as MWConfig, JsonObject, KnownKeys } from '@waiting/shared-types'
 import { TracingConfig } from 'jaeger-client'
 
 import { Context } from '../interface'
 
 
-export interface TracerConfig {
+export interface Config {
   /**
    * 请求路径忽略名单
    * @default ['/favicon.ico', '/favicon.png']

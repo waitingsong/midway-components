@@ -1,6 +1,6 @@
 import { NetworkInterfaceInfo, networkInterfaces } from 'os'
 
-import { TracerConfig } from '../lib/types'
+import { Config } from '../lib/types'
 
 /**
  * 获取网络信息，不包括回环地址信息
@@ -25,7 +25,7 @@ export function retrieveExternalNetWorkInfo(): NetworkInterfaceInfo[] {
   )
 }
 
-export function pathMatched(path: string, rules: TracerConfig['whiteList']): boolean {
+export function pathMatched(path: string, rules: Config['whiteList']): boolean {
   const ret = rules.some((rule) => {
     if (! rule) {
       return

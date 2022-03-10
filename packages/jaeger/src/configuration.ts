@@ -12,7 +12,7 @@ import * as LocalConfig from './config/config.local'
 import * as TestConfig from './config/config.unittest'
 import { namespace, compName } from './lib/config'
 import { initTracer } from './lib/tracer'
-import { TracerConfig } from './lib/types'
+import { Config } from './lib/types'
 import { TracerMiddleware } from './middleware/tracer.middleware'
 
 import { Application } from '~/interface'
@@ -32,7 +32,7 @@ import { Application } from '~/interface'
 export class AutoConfiguration {
   @App() readonly app: Application
 
-  @Config('tracer') readonly tracerConfig: TracerConfig
+  @Config('tracer') readonly tracerConfig: Config
 
   private tracer: JaegerTracer
 
@@ -48,7 +48,7 @@ export class AutoConfiguration {
 
 export function registerMiddleware(
   app: Application,
-  tracerConfig: TracerConfig,
+  tracerConfig: Config,
 ): void {
 
   const { enableMiddleWare } = tracerConfig

@@ -1,8 +1,8 @@
 import { defaultTracerConfig } from '../lib/config'
-import { TracerConfig } from '../lib/types'
+import { Config } from '../lib/types'
 
 
-export const tracer: TracerConfig = {
+export const tracer: Config = {
   ...defaultTracerConfig,
   tracingConfig: {
     serviceName: 'jaeger',

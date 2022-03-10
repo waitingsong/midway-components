@@ -4,7 +4,7 @@ import { Context as KoaContext } from '@midwayjs/koa'
 import {
   SpanLogInput,
   TracerManager,
-  TracerConfig,
+  Config,
 } from './lib/index'
 
 
@@ -17,7 +17,7 @@ export {
 
 declare module '@midwayjs/core' {
   interface Application {
-    jaeger: TracerConfig
+    jaeger: Config
   }
 
   interface Context {

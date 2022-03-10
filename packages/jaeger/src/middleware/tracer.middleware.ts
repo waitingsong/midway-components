@@ -5,7 +5,7 @@ import { globalTracer, FORMAT_HTTP_HEADERS } from 'opentracing'
 import { Context, IMiddleware, NextFunction } from '../interface'
 import { compName } from '../lib/config'
 import { TracerManager } from '../lib/tracer'
-import { TracerConfig, TracerLog, TracerTag } from '../lib/types'
+import { Config, TracerLog, TracerTag } from '../lib/types'
 import { pathMatched } from '../util/common'
 
 import {
@@ -49,7 +49,7 @@ export async function tracerMiddleware(
   const { app } = ctx
 
   // const config = ctx.app.config.tracer as TracerConfig
-  const config = app.getConfig('tracer') as TracerConfig
+  const config = app.getConfig('tracer') as Config
 
   // 白名单内的路由不会被追踪
   if (pathMatched(ctx.path, config.whiteList)) {
