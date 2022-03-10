@@ -44,11 +44,11 @@ export class JwtMiddleware implements IMiddleware<Context, NextFunction> {
   }
 
   resolve() {
-    return jwtMiddleware
+    return middleware
   }
 }
 
-export async function jwtMiddleware(
+export async function middleware(
   ctx: Context,
   next: NextFunction,
 ): Promise<void> {
