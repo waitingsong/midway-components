@@ -12,7 +12,7 @@ import {
   mwConfigNoOpts,
   mwOptions,
 } from '@/test.config'
-import { MiddlewareConfig } from '~/index'
+import { ConfigKey, MiddlewareConfig } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -31,7 +31,7 @@ describe(filename, () => {
           passthrough: true,
         },
       }
-      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
+      app.addConfigObject({ [ConfigKey.middlewareConfig]: mwConfig })
 
       const sendHeader = {
         authorization: authHeader1,
@@ -51,7 +51,7 @@ describe(filename, () => {
           passthrough: true,
         },
       }
-      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
+      app.addConfigObject({ [ConfigKey.middlewareConfig]: mwConfig })
 
       const sendHeader = {
         authorization: '',
@@ -70,7 +70,7 @@ describe(filename, () => {
           passthrough: true,
         },
       }
-      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
+      app.addConfigObject({ [ConfigKey.middlewareConfig]: mwConfig })
 
       const sendHeader = {
         authorization: authHeader1 + 'FAKE',

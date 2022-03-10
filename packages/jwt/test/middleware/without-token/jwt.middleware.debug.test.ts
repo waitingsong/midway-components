@@ -7,11 +7,10 @@ import {
 
 import { testConfig } from '@/root.config'
 import {
-  jwtMiddlewareConfig,
   mwConfigNoOpts,
   mwOptions,
 } from '@/test.config'
-import { MiddlewareConfig } from '~/index'
+import { ConfigKey, MiddlewareConfig } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -30,7 +29,7 @@ describe(filename, () => {
           debug: true,
         },
       }
-      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
+      app.addConfigObject({ [ConfigKey.middlewareConfig]: mwConfig })
 
       const resp = await httpRequest
         .get(path)
@@ -47,7 +46,7 @@ describe(filename, () => {
           passthrough: true,
         },
       }
-      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
+      app.addConfigObject({ [ConfigKey.middlewareConfig]: mwConfig })
 
       const resp = await httpRequest
         .get(path)
