@@ -3,8 +3,8 @@ import { relative } from 'path'
 import { authShouldFailedWithNotFound, authShouldSkipped } from '../helper'
 
 import { testConfig } from '@/root.config'
-import { jwtMiddlewareConfig } from '@/test.config'
-import { JwtMiddlewareConfig } from '~/index'
+import { mwConfig as mConfig } from '@/test.config'
+import { ConfigKey, MiddlewareConfig } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -13,14 +13,16 @@ describe(filename, () => {
 
   const path = '/test'
 
-  describe('Should JwtMiddlewareConfig.ignore work with string', () => {
+  describe('Should MiddlewareConfig.ignore work with string', () => {
     it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
-      const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfig,
+      const mwConfig: MiddlewareConfig = {
+        ...mConfig,
         ignore: [path],
       }
-      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const resp = await httpRequest
         .get(path)
@@ -29,10 +31,12 @@ describe(filename, () => {
 
     it('auth skipped with empty ignore', async () => {
       const { app, httpRequest } = testConfig
-      const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfig,
+      const mwConfig: MiddlewareConfig = {
+        ...mConfig,
       }
-      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const resp = await httpRequest
         .get(path)
@@ -41,11 +45,13 @@ describe(filename, () => {
 
     it('auth skipped with random ignore', async () => {
       const { app, httpRequest } = testConfig
-      const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfig,
+      const mwConfig: MiddlewareConfig = {
+        ...mConfig,
         ignore: ['/' + Math.random().toString()],
       }
-      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const resp = await httpRequest
         .get(path)
@@ -54,12 +60,14 @@ describe(filename, () => {
 
     it('auth skipped mixed with invalid value', async () => {
       const { app, httpRequest } = testConfig
-      const mwConfig: JwtMiddlewareConfig = {
-        ...jwtMiddlewareConfig,
+      const mwConfig: MiddlewareConfig = {
+        ...mConfig,
         // @ts-expect-error
         ignore: [false, '', path],
       }
-      app.addConfigObject({ jwtMiddlewareConfig: mwConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const resp = await httpRequest
         .get(path)

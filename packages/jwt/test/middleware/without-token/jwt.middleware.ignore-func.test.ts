@@ -13,7 +13,7 @@ describe(filename, () => {
 
   const path = '/test'
 
-  describe('Should JwtMiddlewareConfig.ignore work with func', () => {
+  describe('Should MiddlewareConfig.ignore work with func', () => {
     it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
       const cb = (url: string) => {
