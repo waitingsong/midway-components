@@ -79,7 +79,6 @@ describe(filename, () => {
         },
       }
       app.addConfigObject({
-        [ConfigKey.config]: config,
         [ConfigKey.middlewareConfig]: mwConfig,
       })
 
