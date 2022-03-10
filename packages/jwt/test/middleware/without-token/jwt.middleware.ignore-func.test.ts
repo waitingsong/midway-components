@@ -34,7 +34,7 @@ describe(filename, () => {
     it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
       const path = '/'
-      const cb: PathPatternFunc = (ctx) => {
+      const cb = (ctx: Context) => {
         const url = ctx.path
         return url !== path // actual eq
       }
