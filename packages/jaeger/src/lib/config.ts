@@ -1,15 +1,18 @@
 import { processCustomFailure } from '../middleware/helper'
 
-import { Config } from './types'
+import {
+  Config,
+  MiddlewareConfig,
+  MiddlewareOptions,
+} from './types'
 
 
-export const namespace = 'jaeger'
-export const compName = `${namespace}Component`
-
-export const defaultTracerConfig: Omit<Config, 'tracingConfig'> = {
-  whiteList: ['/favicon.ico', '/favicon.png'],
+export const initialConfig: Readonly<Omit<Config, 'tracingConfig'>> = {
+  whiteList: [
+    '/favicon.ico',
+    '/favicon.png',
+  ],
   reqThrottleMsForPriority: 500,
-  enableMiddleWare: true,
   enableCatchError: true,
   logginInputQuery: true,
   loggingOutputBody: true,
@@ -20,3 +23,11 @@ export const defaultTracerConfig: Omit<Config, 'tracingConfig'> = {
   ],
   processCustomFailure,
 }
+export const initMiddlewareOptions: MiddlewareOptions = {
+  debug: false,
+}
+export const initialMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'ignore' | 'match' | 'options'>> = {
+  enableMiddleware: true,
+}
+
+

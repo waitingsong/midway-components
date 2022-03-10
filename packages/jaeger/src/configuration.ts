@@ -2,32 +2,24 @@
 /* eslint-disable @typescript-eslint/no-extraneous-class */
 import 'tsconfig-paths/register'
 
-// import { join } from 'path'
+import { join } from 'path'
 
 import { App, Config, Configuration } from '@midwayjs/decorator'
 import { JaegerTracer } from 'jaeger-client'
 
-import * as DefaultConfig from './config/config.default'
-import * as LocalConfig from './config/config.local'
-import * as TestConfig from './config/config.unittest'
 import { namespace, compName } from './lib/config'
 import { initTracer } from './lib/tracer'
-import { Config } from './lib/types'
 import { TracerMiddleware } from './middleware/tracer.middleware'
 
+import { ConfigKey, MiddlewareConfig } from '~/index'
 import { Application } from '~/interface'
 
 
+
+
 @Configuration({
-  namespace,
-  // importConfigs: [join(__dirname, 'config')],
-  importConfigs: [
-    {
-      default: DefaultConfig,
-      local: LocalConfig,
-      unittest: TestConfig,
-    },
-  ],
+  namespace: ConfigKey.namespace,
+  importConfigs: [join(__dirname, 'config')],
 })
 export class AutoConfiguration {
   @App() readonly app: Application

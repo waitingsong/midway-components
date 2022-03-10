@@ -1,9 +1,9 @@
-import { defaultTracerConfig } from '../lib/config'
+import { initialConfig } from '../lib/config'
 import { Config } from '../lib/types'
 
 
 export const tracer: Config = {
-  ...defaultTracerConfig,
+  ...initialConfig,
   tracingConfig: {
     sampler: {
       type: 'probabilistic',
