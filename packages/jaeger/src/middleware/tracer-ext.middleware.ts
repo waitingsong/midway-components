@@ -39,8 +39,7 @@ export class TracerExtMiddleware implements IMiddleware<Context, NextFunction> {
 async function middleware(
   ctx: Context,
   next: NextFunction,
-): Promise<unknown> {
-
+): Promise<void> {
 
   const { app } = ctx
   const container = app.getApplicationContext()
