@@ -8,24 +8,14 @@ import {
 import {
   initTracer as initJaegerTracer,
   JaegerTracer,
-  TracingConfig,
 } from 'jaeger-client'
-import {
-  FORMAT_HTTP_HEADERS,
-  Span,
-  SpanContext,
-  initGlobalTracer,
-  globalTracer,
-} from 'opentracing'
+import { initGlobalTracer } from 'opentracing'
 
-import { SpanHeaderInit, SpanLogInput } from './types'
 
 import {
   Config,
   ConfigKey,
 } from './index'
-
-import { Application, NpmPkg } from '~/interface'
 
 
 @Provide()
