@@ -9,18 +9,14 @@ import {
 } from '~/index'
 
 
+export { jwtMiddlewareConfig } from '~/config/config.unittest'
+
 export const secret = '123456abc'
 export const jwtConfig: Config = {
   secret,
 }
 export const jwtMiddlewareConfigNoOpts: Omit<JwtMiddlewareConfig, 'match' | 'ignore' | 'options'> = {
   ...initialMiddlewareConfig,
-}
-export const jwtMiddlewareConfig: Omit<JwtMiddlewareConfig, 'match' | 'ignore'> = {
-  ...initialMiddlewareConfig,
-  options: {
-    ...initMiddlewareOptions,
-  },
 }
 export const jwtMiddlewareOptions: MiddlewareOptions = {
   ...initMiddlewareOptions,

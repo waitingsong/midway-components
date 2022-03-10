@@ -6,7 +6,7 @@ import * as WEB from '@midwayjs/koa'
 import { createApp, close, createHttpRequest } from '@midwayjs/mock'
 
 import { testConfig } from './root.config'
-import { jwtConfig } from './test.config'
+import { jwtConfig, jwtMiddlewareConfig } from './test.config'
 
 import { Application } from '~/interface'
 
@@ -30,6 +30,7 @@ export const mochaHooks = async () => {
       const globalConfig = {
         keys: Math.random().toString(),
         jwtConfig,
+        jwtMiddlewareConfig,
       }
       const opts = {
         imports: [WEB],
@@ -54,6 +55,7 @@ export const mochaHooks = async () => {
       const { app } = testConfig
       app.addConfigObject({
         jwtConfig,
+        jwtMiddlewareConfig,
       })
     },
 

@@ -9,10 +9,7 @@ import {
   jwtMiddlewareConfigNoOpts,
   jwtMiddlewareOptions,
 } from '@/test.config'
-import {
-  initialMiddlewareConfig,
-  JwtMiddlewareConfig,
-} from '~/index'
+import { JwtMiddlewareConfig } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')

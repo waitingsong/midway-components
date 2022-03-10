@@ -12,7 +12,7 @@ export const jwtConfig: Config = {
 
 export const jwtMiddlewareConfig: Readonly<Omit<JwtMiddlewareConfig, 'match'>> = {
   ...initialMiddlewareConfig,
-  ignore: [], // !
+  ignore: ['/'], // !
   options: {
     ...initMiddlewareOptions,
   },
