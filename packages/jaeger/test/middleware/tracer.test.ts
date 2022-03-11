@@ -39,7 +39,7 @@ describe(filename, () => {
     // assert.deepStrictEqual(spanInfo.tags, expectTags)
   })
 
-  it('Should work with parent span', async () => {
+  it.only('Should work with parent span', async () => {
     const { httpRequest } = testConfig
 
     const path = '/'
@@ -54,7 +54,8 @@ describe(filename, () => {
     const { spanInfo } = resp.body as TestRespBody
     assertSpanInfo(spanInfo)
 
-    assert(spanInfo.tags.length === 0)
+    console.log({ tags: spanInfo.tags })
+    assert(spanInfo.tags.length === 3)
 
     const { headerInit } = spanInfo
     assert(headerInit)
