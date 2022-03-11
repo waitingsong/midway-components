@@ -17,7 +17,7 @@ import { getComponentConfig, matchFunc } from '~/util/common'
 @Middleware()
 export class TracerExtMiddleware implements IMiddleware<Context, NextFunction> {
   static getName(): string {
-    const name = ConfigKey.middlewareName + 'Ext'
+    const name = ConfigKey.extMiddlewareName
     return name
   }
 
@@ -27,7 +27,7 @@ export class TracerExtMiddleware implements IMiddleware<Context, NextFunction> {
   }
 
   resolve() {
-    return middleware
+    return extMiddleware
   }
 }
 
@@ -36,7 +36,7 @@ export class TracerExtMiddleware implements IMiddleware<Context, NextFunction> {
  * - 对不在白名单内的路由进行追踪
  * - 对异常链路进行上报
  */
-async function middleware(
+async function extMiddleware(
   ctx: Context,
   next: NextFunction,
 ): Promise<void> {

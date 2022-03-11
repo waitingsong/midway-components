@@ -31,7 +31,8 @@ export const enum ConfigKey {
   config = 'tracerConfig',
   middlewareConfig = 'tracerMiddlewareConfig',
   componentName = 'tracerComponent',
-  middlewareName = 'tracerMiddleware'
+  middlewareName = 'tracerMiddleware',
+  extMiddlewareName = 'tracerExtMiddleware'
 }
 
 
