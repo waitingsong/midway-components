@@ -94,6 +94,7 @@ function assertSpanInfo(spanInfo: TestSpanInfo): void {
   const { startTime, logs, tags, isTraceEnabled } = spanInfo
 
   assert(isTraceEnabled === true)
+  assert(typeof startTime === 'number')
   assert(startTime > 0)
   assert(Array.isArray(logs) && logs.length > 0)
   assert(Array.isArray(tags))
