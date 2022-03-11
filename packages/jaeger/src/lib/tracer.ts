@@ -23,9 +23,6 @@ import {
 } from '~/middleware/helper'
 
 
-/**
- * tracer 管理类，需初始化并挂载到ctx
- */
 @Provide()
 export class TracerManager {
 
