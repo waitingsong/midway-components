@@ -2,9 +2,7 @@ import assert from 'assert/strict'
 import { relative } from 'path'
 
 import { testConfig, TestRespBody } from '@/root.config'
-import { Context } from '~/interface'
 import { HeadersKey, TestSpanInfo, TracerLog } from '~/lib/types'
-import { TracerMiddleware } from '~/middleware/tracer.middleware'
 import { getComponentConfig } from '~/util/common'
 
 
