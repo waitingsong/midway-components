@@ -69,7 +69,7 @@ export class TracerManager {
       [TracerLog.svcCpuUsage]: process.cpuUsage(),
       [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
     })
-    console.log({ instId: this.instanceId })
+    // console.log({ instId: this.instanceId })
     this.isStarted = true
   }
 
