@@ -18,8 +18,8 @@ export class TracerMiddleware implements IMiddleware<Context, NextFunction> {
 
   match(ctx?: Context) {
     if (ctx) {
-      if (! ctx.state) {
-        ctx.state = {}
+      if (! ctx.tracerTags) {
+        ctx.tracerTags = {}
       }
     }
 
@@ -42,8 +42,6 @@ export async function middleware(
   ctx: Context,
   next: NextFunction,
 ): Promise<void> {
-
-  ctx.tracerTags = {}
 
   const { app } = ctx
   const container = app.getApplicationContext()

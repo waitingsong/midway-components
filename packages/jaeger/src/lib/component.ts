@@ -1,5 +1,6 @@
 import {
   Config as _Config,
+  Destroy,
   Init,
   Provide,
   Scope,
@@ -38,6 +39,11 @@ export class TracerComponent {
 
     this.tracer = initJaegerTracer(this.config.tracingConfig, {})
     initGlobalTracer(this.tracer)
+  }
+
+  @Destroy()
+  async stop(): Promise<void> {
+    this.close()
   }
 
   close(): void {

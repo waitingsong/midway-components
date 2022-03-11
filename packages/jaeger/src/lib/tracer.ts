@@ -1,4 +1,5 @@
 import {
+  ApplicationContext,
   Init,
   Inject,
   Provide,
@@ -40,6 +41,9 @@ export class TracerManager {
   async init(): Promise<void> {
     this.isTraceEnabled = false
     this.spans = []
+    if (! this.ctx.tracerTags) {
+      this.ctx.tracerTags = {}
+    }
   }
 
   /**
@@ -52,17 +56,23 @@ export class TracerManager {
 
     const time = genISO8601String()
     this.startSpan(this.ctx.path, requestSpanCtx)
-    updateCtxTagsData(this.ctx.tracerTags, {
-      [TracerTag.svcPid]: process.pid,
-      [TracerTag.svcPpid]: process.ppid,
-      [TracerTag.reqStartTime]: time,
-    })
-    this.spanLog({
-      event: TracerLog.requestBegin,
-      time,
-      [TracerLog.svcCpuUsage]: process.cpuUsage(),
-      [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
-    })
+    try {
+      const data = {
+        [TracerTag.svcPid]: process.pid,
+        [TracerTag.svcPpid]: process.ppid,
+        [TracerTag.reqStartTime]: time,
+      }
+      updateCtxTagsData(this.ctx.tracerTags, data)
+      this.spanLog({
+        event: TracerLog.requestBegin,
+        time,
+        [TracerLog.svcCpuUsage]: process.cpuUsage(),
+        [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
+      })
+    }
+    catch (ex) {
+      console.error(ex)
+    }
   }
 
   async finish(): Promise<void> {
@@ -94,7 +104,8 @@ export class TracerManager {
 
   @RunIfEnabled
   startSpan(name: string, parentSpan?: Span | SpanContext): void {
-    const span = this.genSpan(name, parentSpan)
+    const txt = name ?? Date.now().toString()
+    const span = this.genSpan(txt, parentSpan)
     this.spans.push(span)
   }
 

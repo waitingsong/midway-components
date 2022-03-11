@@ -1,5 +1,5 @@
 import 'tsconfig-paths/register'
-
+import assert from 'assert/strict'
 import { join } from 'path'
 
 import * as WEB from '@midwayjs/koa'
