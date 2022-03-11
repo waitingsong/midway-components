@@ -12,7 +12,7 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
 
-  it('Should work', async () => {
+  it.only('Should work', async () => {
     const { app, httpRequest } = testConfig
 
     const path = '/'

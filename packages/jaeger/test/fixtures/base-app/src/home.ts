@@ -29,7 +29,9 @@ export class HomeController {
   async home(ctx: Context): Promise<TestRespBody> {
     const { cookies, header, url } = ctx
 
+    this.tracerManager.addTags(ctx.tracerTags)
     const span = this.tracerManager.currentSpan()
+    console.info({ span })
     if (! span) {
       throw TypeError('span undefined')
     }
