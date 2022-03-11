@@ -1,4 +1,5 @@
 import {
+  Destroy,
   Init,
   Inject,
   Provide,
@@ -40,6 +41,12 @@ export class TracerManager {
     if (! this.ctx.tracerTags) {
       this.ctx.tracerTags = {}
     }
+  }
+
+
+  @Destroy()
+  async stop(): Promise<void> {
+    await this.finish()
   }
 
   /**
