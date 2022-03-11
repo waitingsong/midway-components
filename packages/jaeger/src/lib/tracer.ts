@@ -1,5 +1,4 @@
 import {
-  Destroy,
   Init,
   Inject,
   Provide,
