@@ -31,51 +31,46 @@ export class TracerManager {
   readonly instanceId = Symbol(new Date().getTime().toString())
 
   isTraceEnabled: boolean
+  isStarted: boolean
 
   spans: Span[]
 
   @Init()
   async init(): Promise<void> {
     this.isTraceEnabled = false
+    this.isStarted = false
     this.spans = []
     if (! this.ctx.tracerTags) {
       this.ctx.tracerTags = {}
     }
   }
 
-
-  @Destroy()
-  async stop(): Promise<void> {
-    await this.finish()
-  }
-
   /**
    * 开启第一个span并入栈
    */
   start(): void {
+    if (this.isStarted) {
+      return
+    }
     this.isTraceEnabled = true
     const requestSpanCtx
       = globalTracer().extract(FORMAT_HTTP_HEADERS, this.ctx.headers) ?? undefined
 
     const time = genISO8601String()
     this.startSpan(this.ctx.path, requestSpanCtx)
-    try {
-      const data = {
-        [TracerTag.svcPid]: process.pid,
-        [TracerTag.svcPpid]: process.ppid,
-        [TracerTag.reqStartTime]: time,
-      }
-      updateCtxTagsData(this.ctx.tracerTags, data)
-      this.spanLog({
-        event: TracerLog.requestBegin,
-        time,
-        [TracerLog.svcCpuUsage]: process.cpuUsage(),
-        [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
-      })
+    const data = {
+      [TracerTag.svcPid]: process.pid,
+      [TracerTag.svcPpid]: process.ppid,
+      [TracerTag.reqStartTime]: time,
     }
-    catch (ex) {
-      console.error(ex)
-    }
+    updateCtxTagsData(this.ctx.tracerTags, data)
+    this.spanLog({
+      event: TracerLog.requestBegin,
+      time,
+      [TracerLog.svcCpuUsage]: process.cpuUsage(),
+      [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
+    })
+    this.isStarted = true
   }
 
   async finish(): Promise<void> {
@@ -183,3 +178,4 @@ function RunIfEnabled(
   }
   return descriptor
 }
+
