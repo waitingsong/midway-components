@@ -52,8 +52,10 @@ export class TracerManager {
       return
     }
     this.isTraceEnabled = true
-    const requestSpanCtx
-      = globalTracer().extract(FORMAT_HTTP_HEADERS, this.ctx.headers) ?? undefined
+    const obj = globalTracer().extract(FORMAT_HTTP_HEADERS, this.ctx.headers) ?? void 0
+    const requestSpanCtx = obj && typeof obj.toTraceId === 'function'
+      ? obj
+      : void 0
 
     const time = genISO8601String()
     this.startSpan(this.ctx.path, requestSpanCtx)
