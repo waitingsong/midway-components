@@ -6,6 +6,7 @@ import {
   Scope,
   ScopeEnum,
 } from '@midwayjs/decorator'
+import { NpmPkg } from '@waiting/shared-types'
 import {
   initTracer as initJaegerTracer,
   JaegerTracer,
@@ -24,13 +25,17 @@ export class TracerComponent {
 
   @_Config(ConfigKey.config) protected readonly config: Config
 
+  @_Config('pkg') protected readonly pkg: NpmPkg
+
   private tracer: JaegerTracer
 
   @Init()
   async init(): Promise<void> {
     const { tracingConfig } = this.config
 
-    let name = tracingConfig.serviceName ?? `jaeger-${Date.now()}`
+    const pkgName = this.pkg?.name
+    // let name = tracingConfig.serviceName ?? `jaeger-${Date.now()}`
+    let name = tracingConfig.serviceName ?? pkgName
     name = name.replace(/@/ug, '').replace(/\//ug, '-')
     if (! name) {
       throw new Error('service name empty')

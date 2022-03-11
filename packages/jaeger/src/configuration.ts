@@ -29,11 +29,7 @@ export class AutoConfiguration {
 
   @Inject() informationService: MidwayInformationService
 
-  async onReady(): Promise<void> {
-    if (! this.app) {
-      throw new TypeError('this.app invalid')
-    }
-
+  async onConfigLoad(): Promise<void> {
     const pkgNow = this.app.getConfig('pkg') as unknown
     if (! pkgNow) {
       const pkg = this.informationService.getPkg() as NpmPkg
@@ -41,6 +37,14 @@ export class AutoConfiguration {
         pkg,
       })
     }
+  }
+
+  async onReady(): Promise<void> {
+    if (! this.app) {
+      throw new TypeError('this.app invalid')
+    }
+
+    await this.app.getApplicationContext().getAsync(TracerComponent)
 
     if (this.mwConfig.enableMiddleware) {
       registerMiddleware(this.app)
