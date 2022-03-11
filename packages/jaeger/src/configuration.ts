@@ -5,6 +5,7 @@ import { join } from 'path'
 import { App, Config, Configuration } from '@midwayjs/decorator'
 
 import { TracerComponent } from './lib/component'
+import { TracerExtMiddleware } from './middleware/tracer-ext.middleware'
 import { TracerMiddleware } from './middleware/tracer.middleware'
 
 import { ConfigKey, MiddlewareConfig } from '~/index'
@@ -31,6 +32,14 @@ export class AutoConfiguration {
     }
   }
 
+  async onServerReady(): Promise<void> {
+    if (this.mwConfig.enableMiddleware) {
+      // @ts-expect-error
+      this.app.getMiddleware().insertFirst(TracerMiddleware)
+      void 0
+    }
+  }
+
   async onStop(container: IMidwayContainer): Promise<void> {
     const inst = await container.getAsync(TracerComponent)
     inst.close()
@@ -42,6 +51,6 @@ export function registerMiddleware(
 ): void {
 
   // @ts-expect-error
-  app.getMiddleware().insertFirst(TracerMiddleware)
+  app.getMiddleware().insertLast(TracerExtMiddleware)
 }
 
