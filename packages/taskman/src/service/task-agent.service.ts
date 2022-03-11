@@ -11,7 +11,7 @@ import {
   JsonResp,
   Node_Headers,
 } from '@mw-components/fetch'
-import { HeadersKey, Logger, Span, SpanLogInput, TracerTag } from '@mw-components/jaeger'
+import { HeadersKey, Logger, Span, SpanLogInput, TracerManager, TracerTag } from '@mw-components/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
 import {
   timer,
@@ -247,10 +247,13 @@ export class TaskAgentService {
     //     headers.set(HeadersKey.traceId, spanHeader[HeadersKey.traceId])
     //   }
     // }
-    const newSpan = this.ctx.tracerManager && ! headers.has(HeadersKey.traceId)
-      ? this.ctx.tracerManager.genSpan('TaskRunner')
+
+    const tracerManager = await this.ctx.requestContext.getAsync(TracerManager)
+
+    const newSpan = tracerManager && ! headers.has(HeadersKey.traceId)
+      ? tracerManager.genSpan('TaskRunner')
       : void 0
-    const spanHeader = this.ctx.tracerManager.headerOfCurrentSpan(newSpan)
+    const spanHeader = tracerManager.headerOfCurrentSpan(newSpan)
     if (spanHeader) {
       headers.set(HeadersKey.traceId, spanHeader[HeadersKey.traceId])
     }

@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { Middleware } from '@midwayjs/decorator'
-import { SpanLogInput } from '@mw-components/jaeger'
+import { SpanLogInput, TracerManager } from '@mw-components/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
 
 import { Context, IMiddleware, NextFunction } from '../interface'
@@ -31,11 +31,11 @@ export async function taskAgentMiddleware(
 
   const { headers } = ctx.request
   const taskId = headers['x-task-id']
+  const trm = await ctx.requestContext.getAsync(TracerManager)
 
   /* istanbul ignore else */
   if (headers['x-task-agent']) { // task distribution
     const taskAgentConfig = ctx.app.getConfig('taskAgentConfig') as TaskAgentConfig
-    const trm = ctx.tracerManager
 
     const taskAgentState: TaskAgentState = {
       count: taskAgentSubscriptionMap.size,
@@ -75,8 +75,6 @@ export async function taskAgentMiddleware(
     const taskAgentConfig = ctx.app.getConfig('taskAgentConfig') as TaskAgentConfig
 
     if (taskAgentConfig.enableStartOneByPing && taskAgentSubscriptionMap.size < taskAgentConfig.maxRunning) {
-      const trm = ctx.tracerManager
-
       const taskAgent = await ctx.requestContext.getAsync(TaskAgentService)
       await taskAgent.run()
       const taskAgentState: TaskAgentState = {

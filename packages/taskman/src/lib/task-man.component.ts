@@ -4,7 +4,7 @@ import {
   Provide,
 } from '@midwayjs/decorator'
 import { FetchComponent, JsonResp, Node_Headers } from '@mw-components/fetch'
-import { HeadersKey, Logger } from '@mw-components/jaeger'
+import { HeadersKey, Logger, TracerManager } from '@mw-components/jaeger'
 import { retrieveHeadersItem } from '@waiting/shared-core'
 
 import { Context, FetchOptions } from '../interface'
@@ -39,6 +39,8 @@ export class TaskManComponent {
 
   @Config('taskManClientConfig') protected readonly config: TaskManClientConfig
 
+  @Inject() readonly tracerManager: TracerManager
+
   protected readonly taskRunnerMap = new Map<TaskDTO['taskId'], TaskRunner>()
 
   /** 请求 taskAgent 接口所需 headers */
@@ -47,7 +49,7 @@ export class TaskManComponent {
 
   async [ServerMethod.create](input: CreateTaskOptions): Promise<TaskRunner | undefined> {
     const headers = this.processPostHeaders(input)
-    const spanHeader = this.ctx.tracerManager.headerOfCurrentSpan()?.[HeadersKey.traceId] as string
+    const spanHeader = this.tracerManager.headerOfCurrentSpan()?.[HeadersKey.traceId] as string
     headers.set(HeadersKey.traceId, spanHeader)
     const pdata: CreateTaskDTO = {
       ...input.createTaskDTO,
