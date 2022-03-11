@@ -43,8 +43,6 @@ export async function middleware(
   next: NextFunction,
 ): Promise<void> {
 
-  // const { app } = ctx
-  // const container = app.getApplicationContext()
   const tracerManager = await ctx.requestContext.getAsync(TracerManager)
   tracerManager.start()
 
