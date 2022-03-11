@@ -34,6 +34,7 @@ export {
   IMidwayApplication,
   IMidwayContainer,
   IMiddleware,
+  MidwayInformationService,
   NextFunction,
 } from '@midwayjs/core'
 export type Application = IMidwayApplication<Context>

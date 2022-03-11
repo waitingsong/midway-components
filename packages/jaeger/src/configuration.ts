@@ -2,14 +2,19 @@ import 'tsconfig-paths/register'
 
 import { join } from 'path'
 
-import { App, Config, Configuration } from '@midwayjs/decorator'
+import { App, Config, Configuration, Inject } from '@midwayjs/decorator'
+import { NpmPkg } from '@waiting/shared-types'
 
 import { TracerComponent } from './lib/component'
 import { TracerExtMiddleware } from './middleware/tracer-ext.middleware'
 import { TracerMiddleware } from './middleware/tracer.middleware'
 
 import { ConfigKey, MiddlewareConfig } from '~/index'
-import { Application, IMidwayContainer } from '~/interface'
+import {
+  Application,
+  IMidwayContainer,
+  MidwayInformationService,
+} from '~/interface'
 
 
 @Configuration({
@@ -22,9 +27,19 @@ export class AutoConfiguration {
 
   @Config(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
 
+  @Inject() informationService: MidwayInformationService
+
   async onReady(): Promise<void> {
     if (! this.app) {
       throw new TypeError('this.app invalid')
+    }
+
+    const pkgNow = this.app.getConfig('pkg') as unknown
+    if (! pkgNow) {
+      const pkg = this.informationService.getPkg() as NpmPkg
+      this.app.addConfigObject({
+        pkg,
+      })
     }
 
     if (this.mwConfig.enableMiddleware) {
