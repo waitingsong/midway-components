@@ -8,6 +8,7 @@ import {
 export const tracerConfig: Config = {
   ...initialConfig,
   tracingConfig: {
+    // serviceName: 'jaeger',
     sampler: {
       type: 'probabilistic',
       param: 1,

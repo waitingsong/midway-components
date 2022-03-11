@@ -29,13 +29,14 @@ export class TracerComponent {
   async init(): Promise<void> {
     const { tracingConfig } = this.config
 
-    let name = tracingConfig.serviceName ?? 'jaeger'
+    let name = tracingConfig.serviceName ?? `jaeger-${Date.now()}`
     name = name.replace(/@/ug, '').replace(/\//ug, '-')
     if (! name) {
       throw new Error('service name empty')
     }
+    tracingConfig.serviceName = name
 
-    this.tracer = initJaegerTracer(this.config, {})
+    this.tracer = initJaegerTracer(this.config.tracingConfig, {})
     initGlobalTracer(this.tracer)
   }
 

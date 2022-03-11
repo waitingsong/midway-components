@@ -11,11 +11,9 @@ import { Tags } from 'opentracing'
 import { Context, NextFunction } from '../interface'
 import { TracerManager } from '../lib/tracer'
 import { SpanLogInput, Config, TracerError, TracerLog, TracerTag } from '../lib/types'
-import { getComponentConfig, retrieveExternalNetWorkInfo } from '../util/common'
+import { getComponentConfig, netInfo } from '../util/common'
 import { procInfo } from '../util/stat'
 
-
-const netInfo = retrieveExternalNetWorkInfo()
 
 export function updateDetailTags(
   ctx: Context,

@@ -135,3 +135,6 @@ export function retrieveExternalNetWorkInfo(): NetworkInterfaceInfo[] {
     [],
   )
 }
+
+export const netInfo = retrieveExternalNetWorkInfo()
+
