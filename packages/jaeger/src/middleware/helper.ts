@@ -170,7 +170,8 @@ export async function processHTTPStatus(
 ): Promise<void> {
 
   const { status } = ctx.response
-  const tracerConfig = ctx.app.getConfig('tracer') as Config
+  const tracerConfig = getComponentConfig(ctx.app)
+
   const tags: SpanLogInput = {
     [Tags.HTTP_STATUS_CODE]: status,
   }
@@ -192,9 +193,7 @@ export async function processHTTPStatus(
       await tracerConfig.processCustomFailure(ctx)
     }
 
-    const { app } = ctx
-    const container = app.getApplicationContext()
-    const tracerManager = await container.getAsync(TracerManager)
+    const tracerManager = await ctx.requestContext.getAsync(TracerManager)
 
     const opts: ProcessPriorityOpts = {
       starttime: ctx.startTime,

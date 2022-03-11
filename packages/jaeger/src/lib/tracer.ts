@@ -129,7 +129,11 @@ export class TracerManager {
 
   @RunIfEnabled
   spanLog(keyValuePairs: SpanLogInput): void {
-    this.currentSpan()?.log(keyValuePairs)
+    // this.currentSpan()?.log(keyValuePairs)
+    const span = this.currentSpan()
+    if (span) {
+      span.log(keyValuePairs)
+    }
   }
 
   @RunIfEnabled
