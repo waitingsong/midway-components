@@ -2,6 +2,7 @@ import assert from 'assert/strict'
 import { relative } from 'path'
 
 import { testConfig } from '@/root.config'
+import { ConfigKey } from '~/lib/config'
 import { getComponentConfig } from '~/util/common'
 
 
@@ -15,8 +16,14 @@ describe(filename, () => {
     it('reqThrottleMsForPriority -1', async () => {
       const { app, httpRequest } = testConfig
 
+      const config = getComponentConfig(app)
+      config.reqThrottleMsForPriority = -1
+      app.addConfigObject({
+        [ConfigKey.config]: config,
+      })
+
       const tracerConfig = getComponentConfig(app)
-      tracerConfig.reqThrottleMsForPriority = -1
+      assert(tracerConfig.reqThrottleMsForPriority === -1)
 
       const resp = await httpRequest
         .get(path)
@@ -29,6 +36,9 @@ describe(filename, () => {
 
       const tracerConfig = getComponentConfig(app)
       tracerConfig.reqThrottleMsForPriority = 10000
+      app.addConfigObject({
+        [ConfigKey.config]: tracerConfig,
+      })
 
       const resp = await httpRequest
         .get(path)
@@ -43,6 +53,9 @@ describe(filename, () => {
       const tracerConfig = getComponentConfig(app)
       tracerConfig.reqThrottleMsForPriority = 10000
       tracerConfig.reqThrottleMsForPriority = 0
+      app.addConfigObject({
+        [ConfigKey.config]: tracerConfig,
+      })
 
       const resp = await httpRequest
         .get(path)
