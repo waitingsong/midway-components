@@ -1,25 +1,24 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { Provide } from '@midwayjs/decorator'
-import {
-  IMidwayWebContext,
-  IMidwayWebNext,
-  IWebMiddleware,
-  MidwayWebMiddleware,
-} from '@midwayjs/web'
-import { SpanLogInput } from '@mw-components/jaeger'
+import { Middleware } from '@midwayjs/decorator'
+import { SpanLogInput, TracerManager } from '@mw-components/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
 
-
-import { taskRunnerState } from '../lib/config'
+import { Context, IMiddleware, NextFunction } from '../interface'
+import { ConfigKey, taskRunnerState } from '../lib/config'
 import { taskAgentSubscriptionMap } from '../lib/data'
 import { decreaseTaskRunnerCount, increaseTaskRunnerCount } from '../lib/helper'
 import { TaskAgentConfig, TaskAgentState } from '../lib/index'
 import { TaskAgentService } from '../service/task-agent.service'
 
 
-@Provide()
-export class TaskAgentMiddleware implements IWebMiddleware {
-  resolve(): MidwayWebMiddleware {
+@Middleware()
+export class TaskAgentMiddleware implements IMiddleware<Context, NextFunction> {
+  static getName(): string {
+    const name = ConfigKey.agentMiddlewareName
+    return name
+  }
+
+  resolve() {
     return taskAgentMiddleware
   }
 }
@@ -29,19 +28,19 @@ export class TaskAgentMiddleware implements IWebMiddleware {
  * 超过数量则返回 429 HTTP 状态码
  */
 export async function taskAgentMiddleware(
-  ctx: IMidwayWebContext,
-  next: IMidwayWebNext,
+  ctx: Context,
+  next: NextFunction,
 ): Promise<unknown> {
 
   let isTaskRunning = false
 
   const { headers } = ctx.request
   const taskId = headers['x-task-id']
+  const trm = await ctx.requestContext.getAsync(TracerManager)
 
-  /* istanbul ignore else */
+  /* c8 ignore else */
   if (headers['x-task-agent']) { // task distribution
     const taskAgentConfig = ctx.app.getConfig('taskAgentConfig') as TaskAgentConfig
-    const trm = ctx.tracerManager
 
     const taskAgentState: TaskAgentState = {
       count: taskAgentSubscriptionMap.size,
@@ -81,8 +80,6 @@ export async function taskAgentMiddleware(
     const taskAgentConfig = ctx.app.getConfig('taskAgentConfig') as TaskAgentConfig
 
     if (taskAgentConfig.enableStartOneByPing && taskAgentSubscriptionMap.size < taskAgentConfig.maxRunning) {
-      const trm = ctx.tracerManager
-
       const taskAgent = await ctx.requestContext.getAsync(TaskAgentService)
       await taskAgent.run()
       const taskAgentState: TaskAgentState = {

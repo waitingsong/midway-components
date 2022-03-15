@@ -5,7 +5,6 @@ import {
   TaskManServerConfig,
   TaskAgentConfig,
   initTaskAgentConfig,
-  AgentConfig,
 } from '../lib/index'
 
 
@@ -16,14 +15,7 @@ export const taskManServerConfig: TaskManServerConfig = {
   expInterval: '30min',
   dbConfigs: {
     ...initDbConfig,
-  },
-  headerKey: 'x-task-agent',
-  headerKeyTaskId: 'x-task-id',
-}
-export const agentConfig: AgentConfig = {
-  expInterval: '30min',
-  dbConfigs: {
-    ...initDbConfig,
+    enableTracing: false,
   },
   headerKey: 'x-task-agent',
   headerKeyTaskId: 'x-task-id',

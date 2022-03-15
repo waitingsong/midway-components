@@ -7,12 +7,21 @@ import {
   DbConfig,
   PickInitTaskOptions,
   TaskManClientConfig,
-  TaskRunnerState,
   TaskState,
   TaskStatistics,
-  TaskAgentConfig,
+  Config,
 } from './types'
 
+
+export const enum ConfigKey {
+  namespace = 'taskman',
+  config = 'taskmanConfig',
+  middlewareConfig = 'taskmanMiddlewareConfig',
+  componentName = 'taskmanComponent',
+  middlewareName = 'taskmanMiddleware',
+  agentConfig = 'taskagentConfig',
+  agentMiddlewareName = 'taskagentMiddleware',
+}
 
 export const initTaskDTO: InitTaskDTO = {
   taskState: TaskState.init,
@@ -95,7 +104,7 @@ export const initDbConfig: Required<DbConfig> = {
     /** @link https://stackoverflow.com/a/67621567 */
     propagateCreateError: false,
   },
-  enableTracing: true,
+  enableTracing: false,
   tracingResponse: true,
   sampleThrottleMs: 1000,
 }
@@ -119,6 +128,15 @@ export const initTaskManClientConfig: TaskManClientConfig = {
   maxPickTaskCount: 1000,
   maxRunner: 4,
 }
+export const initConfig: Config = {
+  agentHost: 'http://localhost:7001',
+  transferHeaders: ['authorization', 'user-agent'],
+  headerKeyTaskId: 'x-task-id',
+  pickTaskTimer: 2000,
+  minPickTaskCount: 5,
+  maxPickTaskCount: 1000,
+  maxRunner: 4,
+}
 
 export const initTaskStatistics: TaskStatistics = {
   init: 0,
@@ -130,13 +148,13 @@ export const initTaskStatistics: TaskStatistics = {
   cancelled: 0,
 }
 
-export const initTaskAgentConfig: TaskAgentConfig = {
-  maxRunning: 1,
-  enableStartOneByPing: false,
-}
+// export const initTaskAgentConfig: TaskAgentConfig = {
+//   maxRunning: 1,
+//   enableStartOneByPing: false,
+// }
 
-export const taskRunnerState: TaskRunnerState = {
-  count: 0,
-  max: initTaskManClientConfig.maxRunner,
-}
+// export const taskRunnerState: TaskRunnerState = {
+//   count: 0,
+//   max: initTaskManClientConfig.maxRunner,
+// }
 

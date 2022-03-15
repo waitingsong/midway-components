@@ -2,14 +2,16 @@ import {
   Config,
   Inject,
   Provide,
+  Scope,
+  ScopeEnum,
 } from '@midwayjs/decorator'
 import { FetchComponent, JsonResp, Node_Headers } from '@mw-components/fetch'
-import { HeadersKey, Logger } from '@mw-components/jaeger'
+import { HeadersKey, TracerManager } from '@mw-components/jaeger'
 import { retrieveHeadersItem } from '@waiting/shared-core'
 
 import { Context, FetchOptions } from '../interface'
 
-import { decreaseTaskRunnerCount, processJsonHeaders } from './helper'
+import { processJsonHeaders } from './helper'
 import { TaskRunner, taskRunnerFactory } from './task-runner'
 import { CreateTaskDTO } from './tm.dto'
 
@@ -29,11 +31,8 @@ import {
 
 
 @Provide()
+@Scope(ScopeEnum.Singleton)
 export class TaskManComponent {
-
-  @Inject() protected readonly ctx: Context
-
-  @Inject('jaeger:logger') readonly logger: Logger
 
   @Inject('fetch:fetchComponent') protected readonly fetch: FetchComponent
 
@@ -45,14 +44,20 @@ export class TaskManComponent {
   protected readonly taskReqHeadersMap = new Map<TaskDTO['taskId'], Headers>()
 
 
-  async [ServerMethod.create](input: CreateTaskOptions): Promise<TaskRunner | undefined> {
-    const headers = this.processPostHeaders(input)
-    const spanHeader = this.ctx.tracerManager.headerOfCurrentSpan()?.[HeadersKey.traceId] as string
+  async [ServerMethod.create](
+    ctx: Context,
+    input: CreateTaskOptions,
+  ): Promise<TaskRunner | undefined> {
+
+    const tracerManager = await ctx.requestContext.getAsync(TracerManager)
+
+    const headers = this.processPostHeaders(ctx, input)
+    const spanHeader = tracerManager.headerOfCurrentSpan()?.[HeadersKey.traceId] as string
     headers.set(HeadersKey.traceId, spanHeader)
     const pdata: CreateTaskDTO = {
       ...input.createTaskDTO,
     }
-    pdata.json.headers = processJsonHeaders(this.ctx, pdata.json.headers, headers)
+    pdata.json.headers = processJsonHeaders(ctx, pdata.json.headers, headers)
 
     const opts: FetchOptions = {
       ...this.initFetchOptions(),
@@ -79,12 +84,15 @@ export class TaskManComponent {
   }
 
   /** Retrieve the task, taskId from request header */
-  async [ServerMethod.retrieveTask](taskId?: string): Promise<TaskRunner | undefined> {
+  async [ServerMethod.retrieveTask](
+    ctx: Context,
+    taskId?: string,
+  ): Promise<TaskRunner | undefined> {
     let id = taskId
     if (! id) {
-      // const headers = new Node_Headers(this.ctx.request.headers)
+      // const headers = new Node_Headers(ctx.request.headers)
       const key = this.config.headerKeyTaskId ? this.config.headerKeyTaskId : 'x-task-id'
-      const val = this.ctx.request.headers[key]
+      const val = ctx.request.headers[key]
       if (typeof val !== 'string') {
         throw new TypeError('x-task-id not valid taskId string')
       }
@@ -99,7 +107,7 @@ export class TaskManComponent {
       return cachedTask
     }
 
-    const headers = this.retrieveHeadersFromContext()
+    const headers = this.retrieveHeadersFromContext(ctx)
     const taskInfo = await this.getInfo(id, headers)
     if (! taskInfo) {
       return
@@ -163,7 +171,9 @@ export class TaskManComponent {
 
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setCancelled}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
-    decreaseTaskRunnerCount()
+
+    this.taskRunnerMap.delete(id)
+
     if (res.code) {
       return
     }
@@ -182,7 +192,8 @@ export class TaskManComponent {
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setFailed}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
-    decreaseTaskRunnerCount()
+
+    this.taskRunnerMap.delete(id)
     if (res.code) {
       return
     }
@@ -201,7 +212,8 @@ export class TaskManComponent {
     }
     opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setSucceeded}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
-    decreaseTaskRunnerCount()
+
+    this.taskRunnerMap.delete(id)
     if (res.code) {
       return
     }
@@ -266,8 +278,12 @@ export class TaskManComponent {
     return res.data
   }
 
-  initFetchOptions(id?: TaskDTO['taskId']): FetchOptions {
-    const headers = this.retrieveHeadersFromContext()
+  initFetchOptions(
+    id?: TaskDTO['taskId'],
+  ): FetchOptions {
+
+    // const headers = this.retrieveHeadersFromContext()
+    const headers = new Node_Headers()
     const reqHeaders = this.readReqHeaders(id)
     if (reqHeaders) {
       reqHeaders.forEach((value, key) => {
@@ -277,7 +293,7 @@ export class TaskManComponent {
 
     const opts: FetchOptions = {
       url: this.config.host,
-      method: (this.ctx.request.method ?? 'GET') as 'GET' | 'POST',
+      method: 'GET',
       contentType: 'application/json; charset=utf-8',
       timeout: 60000,
       headers,
@@ -313,7 +329,10 @@ export class TaskManComponent {
     return id ? this.taskReqHeadersMap.get(id) : void 0
   }
 
-  protected processPostHeaders(input: CreateTaskOptions): Headers {
+  protected processPostHeaders(
+    ctx: Context,
+    input: CreateTaskOptions,
+  ): Headers {
     const headers = new Node_Headers(input.headers)
     if (! input.headers) {
       const arr = this.config.transferHeaders && this.config.transferHeaders.length
@@ -321,7 +340,7 @@ export class TaskManComponent {
         : initTaskManClientConfig.transferHeaders
 
       arr.forEach((key) => {
-        const val = retrieveHeadersItem(this.ctx.request.headers, key)
+        const val = retrieveHeadersItem(ctx.request.headers, key)
         if (val) {
           headers.set(key, val)
         }
@@ -330,14 +349,14 @@ export class TaskManComponent {
     return headers
   }
 
-  protected retrieveHeadersFromContext(): Headers {
+  protected retrieveHeadersFromContext(ctx: Context): Headers {
     const headers = new Node_Headers()
     const arr = this.config.transferHeaders && this.config.transferHeaders.length
       ? this.config.transferHeaders
       : initTaskManClientConfig.transferHeaders
 
     arr.forEach((key) => {
-      const val = retrieveHeadersItem(this.ctx.request.headers, key)
+      const val = retrieveHeadersItem(ctx.request.headers, key)
       if (val) {
         headers.set(key, val)
       }

@@ -1,3 +1,4 @@
+import assert from 'assert/strict'
 import { relative } from 'path'
 
 import { testConfig } from 'test/root.config'
@@ -8,9 +9,6 @@ import {
   initTaskDTO,
   CreateTaskDTO,
 } from '~/lib/index'
-
-// eslint-disable-next-line import/order
-import assert = require('power-assert')
 
 
 const filename = relative(process.cwd(), __filename)

@@ -1,3 +1,5 @@
+import assert from 'assert/strict'
+
 import { testConfig } from '../root.config'
 
 import {
@@ -9,9 +11,6 @@ import {
 } from '~/lib/index'
 import { TaskQueueRepository } from '~/repo/index.repo'
 import { TaskQueueService } from '~/service/index.service'
-
-// eslint-disable-next-line import/order
-import assert = require('power-assert')
 
 
 export async function createTasks(

@@ -3,22 +3,10 @@ import { HeadersKey } from '@mw-components/jaeger'
 import { defaultPropDescriptor } from '@waiting/shared-core'
 
 
-import { taskRunnerState } from './config'
 import { CreateTaskOptions } from './types'
 
 import { Context } from '~/interface'
 
-
-export function increaseTaskRunnerCount(): void {
-  if (taskRunnerState.count < 0) {
-    taskRunnerState.count = 0
-  }
-  taskRunnerState.count += 1
-}
-
-export function decreaseTaskRunnerCount(): void {
-  taskRunnerState.count -= 1
-}
 
 
 export function processJsonHeaders(

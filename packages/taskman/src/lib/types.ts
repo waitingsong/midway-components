@@ -48,6 +48,43 @@ export interface TaskManClientConfig {
    */
   maxRunner: number
 }
+export interface Config {
+  /**
+   * server host url
+   * @default http://localhost:7001
+   * @example http://192.168.0.2
+   */
+  agentHost: string
+  /**
+   * @default ['authorization']
+   * @example ['authorization', 'user-agent']
+   */
+  transferHeaders: string[]
+  /**
+   * @default x-task-id
+   */
+  headerKeyTaskId?: string
+  /**
+   * @default 2000(ms)
+   */
+  pickTaskTimer: number
+  /**
+   * Mininum loop times until no 'init' task
+   * @default 5
+   */
+  minPickTaskCount: number
+  /**
+   * Max loop times until no 'init' task
+   * @default 1000 (loop times, not tasks number)
+   */
+  maxPickTaskCount: number
+  /**
+   * @default 4
+   */
+  maxRunner: number
+}
+
+
 
 /**
  * @description http request path `${base}/${action}`, eg. /task_agent/create
@@ -156,6 +193,19 @@ export interface TaskManServerConfig {
    */
   headerKeyTaskId?: string
 }
+export interface AgentConfig {
+  expInterval: TaskDTO['timeoutIntv']
+  dbConfigs: DbConfig
+  /**
+   * Indicate request from task-agent
+   * @default x-task-agent
+   */
+  headerKey?: string
+  /**
+   * @default x-task-id
+   */
+  headerKeyTaskId?: string
+}
 
 export interface DbConfig {
   connection: {
@@ -246,22 +296,24 @@ export interface SetStateInputData extends CommonSetMethodInputData {
   state: TaskDTO['taskState']
 }
 
-export interface TaskRunnerState {
-  count: number
-  max: number
-}
+// export interface TaskRunnerState {
+//   count: number
+//   max: number
+// }
 
-export interface TaskAgentConfig {
-  /**
-   * @default 1
-   */
-  maxRunning: number
-  /**
-   * start one agent when accessing /ping
-   * @default false
-   */
-  enableStartOneByPing: boolean
-}
+// export interface TaskAgentConfig {
+//   /**
+//    * @default 1
+//    */
+//   maxRunning: number
+//   /**
+//    * start an agent when accessed by /ping
+//    * @default false
+//    */
+//   enableStartOneByPing: boolean
+// }
+
+
 export interface TaskAgentState {
   count: number
   maxRunning: TaskAgentConfig['maxRunning']

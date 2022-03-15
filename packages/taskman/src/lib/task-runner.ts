@@ -1,4 +1,6 @@
-import { TaskManComponent } from './task-man.component'
+import { Provide } from '@midwayjs/decorator'
+
+import { TaskManComponent } from './taskman.component'
 
 import {
   TaskDTO,
@@ -9,6 +11,7 @@ import {
 } from './index'
 
 
+@Provide()
 export class TaskRunner {
 
   constructor(
