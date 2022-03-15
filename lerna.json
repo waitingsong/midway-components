@@ -1,11 +1,11 @@
 {
-  "version": "0.0.0",
+  "version": "independent",
   "packages": [
     "packages/*"
   ],
   "ignore": [
-    "demo", 
-    "@mw-components/taskman"
+    "demo",
+    "@mw-components/demo"
   ],
   "command": {
     "publish": {
