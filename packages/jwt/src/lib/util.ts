@@ -1,35 +1,11 @@
 import assert from 'assert'
 
+import { JwtMsg } from './config'
 import {
-  initialJwtMiddlewareConfig,
-  initialJwtConfig,
-  JwtMsg,
-} from './config'
-import {
-  JwtConfig,
-  JwtMiddlewareConfig,
+  Config,
   JwtPayload,
   JwtToken,
 } from './types'
-
-
-export function genJwtConfig(input?: Partial<JwtConfig>): JwtConfig {
-  const ret: JwtConfig = {
-    ...initialJwtConfig,
-    ...input,
-  }
-  return ret
-}
-
-
-/** Generate jwtConfig with input and default value */
-export function genJwtMiddlewareConfig(input?: Partial<JwtMiddlewareConfig>): JwtMiddlewareConfig {
-  const ret: JwtMiddlewareConfig = {
-    ...initialJwtMiddlewareConfig,
-    ...input,
-  }
-  return ret
-}
 
 
 export function validateTokenString(input: JwtToken): void {
@@ -60,7 +36,7 @@ export function validatePayload(input: JwtPayload): void {
 }
 
 
-export function validateSignSecret(input: JwtConfig['secret']): void {
+export function validateSignSecret(input: Config['secret']): void {
   if (typeof input === 'string') {
     assert(input.length > 0, JwtMsg.InvalidInputString)
     return

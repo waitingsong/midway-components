@@ -12,15 +12,7 @@ export const jwtConfig: Config = {
 
 export const jwtMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
   ...initialMiddlewareConfig,
-  ignore: [
-    '/',
-    '/auth/login',
-    '/login',
-    '/metrics',
-    '/ping',
-    '/favicon.ico',
-    '/favicon.png',
-  ],
+  ignore: ['/'], // !
   options: {
     ...initMiddlewareOptions,
   },

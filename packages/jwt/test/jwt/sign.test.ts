@@ -1,3 +1,4 @@
+import assert from 'assert/strict'
 import { relative } from 'path'
 
 import {
@@ -9,10 +10,7 @@ import {
   tokenHeader2,
 } from '../test.config'
 
-import { Jwt, JwtConfig, SignOptions } from '~/index'
-
-// eslint-disable-next-line import/order
-import assert = require('power-assert')
+import { Jwt, Config, SignOptions } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -21,7 +19,7 @@ describe(filename, () => {
 
   describe('Should Jwt:sign() work', () => {
     it('config secret', async () => {
-      const conf: JwtConfig = {
+      const conf: Config = {
         secret,
       }
       const jwt = new Jwt(conf)
@@ -31,7 +29,7 @@ describe(filename, () => {
     })
 
     it('pass secret', async () => {
-      const conf: JwtConfig = {
+      const conf: Config = {
         secret,
       }
       const jwt = new Jwt(conf)
@@ -41,7 +39,7 @@ describe(filename, () => {
     })
 
     it('both initializing and passing secret', async () => {
-      const conf: JwtConfig = {
+      const conf: Config = {
         secret: 'notused',
       }
       const jwt = new Jwt(conf)
@@ -51,7 +49,7 @@ describe(filename, () => {
     })
 
     it('without iat', async () => {
-      const conf: JwtConfig = {
+      const conf: Config = {
         secret,
       }
       const jwt = new Jwt(conf)
@@ -61,7 +59,7 @@ describe(filename, () => {
     })
 
     it('pass SignOptions', async () => {
-      const conf: JwtConfig = {
+      const conf: Config = {
         secret,
       }
       const jwt = new Jwt(conf)
@@ -74,7 +72,7 @@ describe(filename, () => {
     })
 
     it('with invalid scope', async () => {
-      const conf: JwtConfig = {
+      const conf: Config = {
         secret,
       }
       const jwt = new Jwt(conf)

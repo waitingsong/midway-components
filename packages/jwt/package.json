@@ -25,13 +25,14 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@waiting/shared-core": "^16.0.0",
     "@waiting/shared-types": "^16.0.0",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "tsconfig-paths": "3"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^8.5.8",
-    "cross-env": "7",
-    "tsconfig-paths": "3"
+    "cross-env": "7"
   },
   "peerDependencies": {
     "@midwayjs/core": ">=3"

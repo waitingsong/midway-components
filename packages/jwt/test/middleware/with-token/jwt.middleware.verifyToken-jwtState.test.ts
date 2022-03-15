@@ -3,11 +3,15 @@ import { relative } from 'path'
 import { authShouldPassed } from '../helper'
 
 import { testConfig } from '@/root.config'
-import { authHeader1, payload1, secret, token1 } from '@/test.config'
 import {
-  initialJwtMiddlewareConfig,
-  JwtConfig,
-  JwtMiddlewareConfig,
+  authHeader1, payload1,
+  mwConfig as mConfig,
+  mwOptions,
+} from '@/test.config'
+import {
+  Config,
+  ConfigKey,
+  MiddlewareConfig,
 } from '~/index'
 
 
@@ -15,41 +19,47 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
 
+  const path = '/test'
+
   describe('Should JwtComponent.validateToken() work with scret from ctx', () => {
-    const jwtConfig: JwtConfig = {
+    const config: Config = {
       secret: 'FAKE',
     }
 
     it('passed with ctx.jwtState.secret', async () => {
       const { app, httpRequest } = testConfig
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
+      const mwConfig: MiddlewareConfig = {
+        ...mConfig,
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({
+        [ConfigKey.config]: config,
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const sendHeader = {
         authorization: authHeader1,
       }
       const resp = await httpRequest
-        .get('/')
+        .get(path)
         .set(sendHeader)
       authShouldPassed(resp, payload1)
     })
 
     it('passed with ctx.state.secret', async () => {
       const { app, httpRequest } = testConfig
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
+      const mwConfig: MiddlewareConfig = {
+        ...mConfig,
       }
-      app.addConfigObject({ jwtConfig, jwtMiddlewareConfig })
+      app.addConfigObject({
+        [ConfigKey.config]: config,
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const sendHeader = {
         authorization: authHeader1,
       }
       const resp = await httpRequest
-        .get('/')
+        .get(path)
         .set(sendHeader)
       authShouldPassed(resp, payload1)
     })

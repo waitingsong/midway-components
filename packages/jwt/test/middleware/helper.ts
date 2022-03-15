@@ -47,7 +47,7 @@ export function authShouldFailedWithNotFound2(
   assert(status === expectStatus)
   assert(! jwtState)
   assert(error)
-  assert(error.text.includes('401'))
+  assert(error.text.includes('401') || error.text.includes(JwtMsg.AuthFailed))
 }
 
 export function authShouldFailedWithNotFound(
@@ -61,7 +61,7 @@ export function authShouldFailedWithNotFound(
   assert(status === expectStatus)
   assert(! jwtState)
   assert(error)
-  assert(error.text.includes('401'))
+  assert(error.text.includes('401') || error.text.includes(JwtMsg.AuthFailed))
 }
 
 export function authShouldValidatFailed(
@@ -74,7 +74,7 @@ export function authShouldValidatFailed(
   assert(status === 401)
   assert(! jwtState)
   assert(error)
-  assert(error.text.includes('401'))
+  assert(error.text.includes('401') || error.text.includes(JwtMsg.AuthFailed))
 }
 
 export function authShouldPassthroughNotFound(
@@ -137,7 +137,7 @@ export function authShouldPassthroughEmptyStringNotFound(
   assert(status === expectStatus)
   assert(! jwtState)
   assert(error)
-  assert(error.text.includes('401'))
+  assert(error.text.includes('401') || error.text.includes(JwtMsg.AuthFailed))
 }
 
 export function authShouldFailedWithNotFoundFromDebug(
@@ -151,8 +151,7 @@ export function authShouldFailedWithNotFoundFromDebug(
   assert(status === expectStatus)
   assert(! jwtState)
   assert(error)
-  assert(error.text.includes('401'))
-  // assert(error.text.includes(JwtMsg.TokenNotFound))
+  assert(error.text.includes('401') || error.text.includes(JwtMsg.TokenNotFound))
 }
 
 declare module '@midwayjs/core' {

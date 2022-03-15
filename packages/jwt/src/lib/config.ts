@@ -1,30 +1,29 @@
 import {
-  JwtAuthenticateOptions,
-  JwtMiddlewareConfig,
-  JwtConfig,
+  Config,
+  MiddlewareConfig,
+  MiddlewareOptions,
 } from './types'
 
 
-export const initialAuthOpts: Readonly<JwtAuthenticateOptions> = {
+export const initialConfig: Readonly<Config> = {
+  secret: '',
+}
+export const initMiddlewareOptions: MiddlewareOptions = {
+  debug: false,
   cookie: false,
   passthrough: false,
 }
-export const initialJwtMiddlewareConfig: Readonly<JwtMiddlewareConfig> = {
-  ...initialAuthOpts,
+export const initialMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'ignore' | 'match' | 'options'>> = {
   enableMiddleware: true,
-  ignore: [
-    '/',
-    '/auth/login',
-    '/login',
-    '/metrics',
-    '/ping',
-    '/favicon.ico',
-    '/favicon.png',
-  ],
-  debug: false,
 }
-export const initialJwtConfig: Readonly<JwtConfig> = {
-  secret: '',
+
+
+export const enum ConfigKey {
+  namespace = 'jwt',
+  config = 'jwtConfig',
+  middlewareConfig = 'jwtMiddlewareConfig',
+  componentName = 'jwtComponent',
+  middlewareName = 'jwtMiddleware'
 }
 
 export const schemePrefix = 'Bearer'
