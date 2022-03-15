@@ -1,9 +1,12 @@
-import { defaultTracerConfig } from '../lib/config'
-import { TracerConfig } from '../lib/types'
+import { Config, MiddlewareConfig } from '../index'
+import {
+  initialConfig,
+  initialMiddlewareConfig,
+} from '../lib/config'
 
 
-export const tracer: TracerConfig = {
-  ...defaultTracerConfig,
+export const tracerConfig: Config = {
+  ...initialConfig,
   tracingConfig: {
     serviceName: 'jaeger',
     sampler: {
@@ -15,3 +18,13 @@ export const tracer: TracerConfig = {
     },
   },
 }
+
+export const tracerMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
+  ...initialMiddlewareConfig,
+  ignore: [
+    '/untraced_path_string',
+    new RegExp('/untraced_path_reg_exp$', 'u'),
+  ],
+}
+
+

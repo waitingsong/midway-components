@@ -10,12 +10,10 @@ import { Tags } from 'opentracing'
 
 import { Context, NextFunction } from '../interface'
 import { TracerManager } from '../lib/tracer'
-import { SpanLogInput, TracerConfig, TracerError, TracerLog, TracerTag } from '../lib/types'
-import { retrieveExternalNetWorkInfo } from '../util/common'
+import { SpanLogInput, Config, TracerError, TracerLog, TracerTag } from '../lib/types'
+import { getComponentConfig, netInfo } from '../util/common'
 import { procInfo } from '../util/stat'
 
-
-const netInfo = retrieveExternalNetWorkInfo()
 
 export function updateDetailTags(
   ctx: Context,
@@ -48,7 +46,7 @@ export function updateDetailTags(
   tags[Tags.HTTP_URL] = ctx.path
   tags[TracerTag.httpProtocol] = ctx.protocol
 
-  const config = ctx.app.getConfig('tracer') as TracerConfig
+  const config = getComponentConfig(ctx.app)
 
   if (Array.isArray(config.loggingReqHeaders)) {
     config.loggingReqHeaders.forEach((name) => {
@@ -96,7 +94,7 @@ export async function handleTopExceptionAndNext(
  * throw catched ex
  */
 export async function handleAppExceptionAndNext(
-  config: TracerConfig,
+  config: Config,
   tracerManager: TracerManager,
   next: NextFunction,
 ): Promise<void> {
@@ -172,7 +170,8 @@ export async function processHTTPStatus(
 ): Promise<void> {
 
   const { status } = ctx.response
-  const tracerConfig = ctx.app.getConfig('tracer') as TracerConfig
+  const tracerConfig = getComponentConfig(ctx.app)
+
   const tags: SpanLogInput = {
     [Tags.HTTP_STATUS_CODE]: status,
   }
@@ -193,9 +192,12 @@ export async function processHTTPStatus(
     if (typeof tracerConfig.processCustomFailure === 'function') {
       await tracerConfig.processCustomFailure(ctx)
     }
+
+    const tracerManager = await ctx.requestContext.getAsync(TracerManager)
+
     const opts: ProcessPriorityOpts = {
       starttime: ctx.startTime,
-      trm: ctx.tracerManager,
+      trm: tracerManager,
       tracerTags: ctx.tracerTags,
       tracerConfig,
     }
@@ -208,11 +210,11 @@ export function processRequestQuery(
   ctx: Context,
 ): void {
 
-  const tracerConfig = ctx.app.getConfig('tracer') as TracerConfig
+  const config = getComponentConfig(ctx.app)
   const tags: SpanLogInput = {}
 
   // [Tag] 请求参数和响应数据
-  if (tracerConfig.logginInputQuery) {
+  if (config.logginInputQuery) {
     if (ctx.method === 'GET') {
       const { query } = ctx.request
       if (typeof query === 'object' && Object.keys(query).length) {
@@ -249,10 +251,10 @@ export function processResponseData(
   ctx: Context,
 ): void {
 
-  const tracerConfig = ctx.app.getConfig('tracer') as TracerConfig
+  const config = getComponentConfig(ctx.app)
   const tags: SpanLogInput = {}
 
-  if (tracerConfig.loggingOutputBody) {
+  if (config.loggingOutputBody) {
     tags[TracerTag.respBody] = ctx.body
   }
 
@@ -286,7 +288,7 @@ export interface ProcessPriorityOpts {
   starttime: number
   trm: TracerManager
   tracerTags: SpanLogInput
-  tracerConfig: TracerConfig
+  tracerConfig: Config
 }
 export async function processPriority(options: ProcessPriorityOpts): Promise<number | undefined> {
   const { reqThrottleMsForPriority: throttleMs } = options.tracerConfig

@@ -2,19 +2,32 @@ import { Middleware } from '@midwayjs/decorator'
 import { humanMemoryUsage } from '@waiting/shared-core'
 
 import { Context, IMiddleware, NextFunction } from '../interface'
-import { TracerConfig, TracerLog } from '../lib/types'
-import { pathMatched } from '../util/common'
+import { ConfigKey } from '../lib/config'
+import { TracerLog } from '../lib/types'
 
 import {
   handleAppExceptionAndNext,
   processRequestQuery,
 } from './helper'
 
+import { TracerManager } from '~/lib/tracer'
+import { getComponentConfig, matchFunc } from '~/util/common'
+
 
 @Middleware()
 export class TracerExtMiddleware implements IMiddleware<Context, NextFunction> {
+  static getName(): string {
+    const name = ConfigKey.extMiddlewareName
+    return name
+  }
+
+  match(ctx?: Context) {
+    const flag = matchFunc(ctx)
+    return flag
+  }
+
   resolve() {
-    return tracerMiddleware
+    return extMiddleware
   }
 }
 
@@ -23,34 +36,26 @@ export class TracerExtMiddleware implements IMiddleware<Context, NextFunction> {
  * - 对不在白名单内的路由进行追踪
  * - 对异常链路进行上报
  */
-async function tracerMiddleware(
+async function extMiddleware(
   ctx: Context,
   next: NextFunction,
-): Promise<unknown> {
+): Promise<void> {
 
-  const { tracerManager } = ctx
-  const config = ctx.app.getConfig('tracer ') as TracerConfig
-
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const tracerManager = await ctx.requestContext.getAsync(TracerManager)
   if (! tracerManager) {
     ctx.logger.warn('tracerManager invalid')
-    return next()
-  }
-  // 白名单内的路由不会被追踪
-  else if (pathMatched(ctx.path, config.whiteList)) {
     return next()
   }
 
   processRequestQuery(ctx)
 
-  // preProcessFinish,
   tracerManager.spanLog({
     event: TracerLog.preProcessFinish,
     [TracerLog.svcCpuUsage]: process.cpuUsage(),
     [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
   })
 
+  const config = getComponentConfig(ctx.app)
   return handleAppExceptionAndNext(config, tracerManager, next)
 }
-
 

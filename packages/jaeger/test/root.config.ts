@@ -1,4 +1,5 @@
 import { IncomingHttpHeaders } from 'http'
+
 import supertest, { SuperTest } from 'supertest'
 
 import { Application } from '~/interface'
@@ -8,8 +9,8 @@ import { TestSpanInfo } from '~/lib/types'
 export type TestResponse = supertest.Response
 export interface TestRespBody {
   cookies: unknown
-  url: string
   header: IncomingHttpHeaders
+  url: string
   spanInfo: TestSpanInfo
 }
 

@@ -1,4 +1,4 @@
-import { Context } from '@midwayjs/core'
+// import { Context } from '@midwayjs/core'
 import {
   Inject,
   Logger as _Logger,
@@ -7,7 +7,10 @@ import {
 import { ILogger } from '@midwayjs/logger'
 import type { Span } from 'opentracing'
 
+import { TracerManager } from './tracer'
 import { LogInfo, SpanLogInput } from './types'
+
+import { Context } from '~/interface'
 
 
 /**
@@ -19,6 +22,8 @@ import { LogInfo, SpanLogInput } from './types'
 @Provide()
 export class Logger implements ILogger {
   @Inject() protected readonly ctx: Context
+
+  @Inject() protected readonly tracerManager: TracerManager
 
   @_Logger() protected readonly logger: ILogger
 
@@ -57,7 +62,7 @@ export class Logger implements ILogger {
   log(info: SpanLogInput | LogInfo, span?: Span): void {
     const currSpan = span
       ? span
-      : this?.ctx?.tracerManager?.currentSpan()
+      : this.tracerManager.currentSpan()
     tracerLogger(this.logger, info, currSpan)
   }
 }

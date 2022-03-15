@@ -1,5 +1,5 @@
 import 'tsconfig-paths/register'
-
+import assert from 'assert/strict'
 import { join } from 'path'
 
 import * as WEB from '@midwayjs/koa'
@@ -8,8 +8,6 @@ import { createApp, close, createHttpRequest } from '@midwayjs/mock'
 import { testConfig } from './root.config'
 
 import { Application } from '~/interface'
-import { TracerManager } from '~/lib/tracer'
-import { SpanLogInput, TracerConfig } from '~/lib/types'
 
 
 /**
@@ -63,14 +61,3 @@ export const mochaHooks = async () => {
 
 }
 
-
-declare module '@midwayjs/core' {
-  interface Application {
-    jaeger: TracerConfig
-  }
-
-  interface Context {
-    tracerManager: TracerManager
-    tracerTags: SpanLogInput
-  }
-}

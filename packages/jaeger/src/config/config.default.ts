@@ -1,9 +1,12 @@
-import { defaultTracerConfig } from '../lib/config'
-import { TracerConfig } from '../lib/types'
+import { Config, MiddlewareConfig } from '../index'
+import {
+  initialConfig,
+  initialMiddlewareConfig,
+} from '../lib/config'
 
 
-export const tracer: TracerConfig = {
-  ...defaultTracerConfig,
+export const tracerConfig: Config = {
+  ...initialConfig,
   tracingConfig: {
     sampler: {
       type: 'probabilistic',
@@ -14,3 +17,12 @@ export const tracer: TracerConfig = {
     },
   },
 }
+
+export const tracerMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
+  ...initialMiddlewareConfig,
+  ignore: [
+    '/favicon.ico',
+    '/favicon.png',
+  ],
+}
+

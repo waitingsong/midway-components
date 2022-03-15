@@ -1,82 +1,75 @@
-/* eslint-disable node/no-extraneous-import */
-/* eslint-disable @typescript-eslint/no-extraneous-class */
 import 'tsconfig-paths/register'
 
-// import { join } from 'path'
+import { join } from 'path'
 
-import { App, Config, Configuration } from '@midwayjs/decorator'
-import { JaegerTracer } from 'jaeger-client'
+import { App, Config, Configuration, Inject } from '@midwayjs/decorator'
+import { NpmPkg } from '@waiting/shared-types'
 
-import * as DefaultConfig from './config/config.default'
-import * as LocalConfig from './config/config.local'
-import * as TestConfig from './config/config.unittest'
-import { namespace, compName } from './lib/config'
-import { initTracer } from './lib/tracer'
-import { TracerConfig } from './lib/types'
+import { TracerComponent } from './lib/component'
+import { TracerExtMiddleware } from './middleware/tracer-ext.middleware'
 import { TracerMiddleware } from './middleware/tracer.middleware'
 
-import { Application } from '~/interface'
+import { ConfigKey, MiddlewareConfig } from '~/index'
+import {
+  Application,
+  IMidwayContainer,
+  MidwayInformationService,
+} from '~/interface'
 
 
 @Configuration({
-  namespace,
-  // importConfigs: [join(__dirname, 'config')],
-  importConfigs: [
-    {
-      default: DefaultConfig,
-      local: LocalConfig,
-      unittest: TestConfig,
-    },
-  ],
+  namespace: ConfigKey.namespace,
+  importConfigs: [join(__dirname, 'config')],
 })
 export class AutoConfiguration {
+
   @App() readonly app: Application
 
-  @Config('tracer') readonly tracerConfig: TracerConfig
+  @Config(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
 
-  private tracer: JaegerTracer
+  @Inject() informationService: MidwayInformationService
 
-  async onReady(): Promise<void> {
-    this.tracer = initTracer(this.app)
-    registerMiddleware(this.app, this.tracerConfig)
+  async onConfigLoad(): Promise<void> {
+    const pkgNow = this.app.getConfig('pkg') as unknown
+    if (! pkgNow) {
+      const pkg = this.informationService.getPkg() as NpmPkg
+      this.app.addConfigObject({
+        pkg,
+      })
+    }
   }
 
-  async onStop(): Promise<void> {
-    this.tracer.close()
+  async onReady(): Promise<void> {
+    if (! this.app) {
+      throw new TypeError('this.app invalid')
+    }
+
+    await this.app.getApplicationContext().getAsync(TracerComponent)
+
+    if (this.mwConfig.enableMiddleware) {
+      registerMiddleware(this.app)
+    }
+  }
+
+  async onServerReady(): Promise<void> {
+    if (this.mwConfig.enableMiddleware) {
+      // @ts-expect-error
+      this.app.getMiddleware().insertFirst(TracerMiddleware)
+      void 0
+    }
+  }
+
+  async onStop(container: IMidwayContainer): Promise<void> {
+    const inst = await container.getAsync(TracerComponent)
+    inst.close()
   }
 }
 
 export function registerMiddleware(
   app: Application,
-  tracerConfig: TracerConfig,
 ): void {
 
-  const { enableMiddleWare } = tracerConfig
-  if (! enableMiddleWare) { return }
-
-  const names = app.getMiddleware().getNames()
-  if (names.includes(compName)) {
-    return
-  }
-
-  /**
-   * 应于所有中间件之前，以便追踪覆盖更大范围
-   */
   // @ts-expect-error
-  app.getMiddleware().insertFirst(TracerMiddleware)
-
-  // const appMiddleware = app.getConfig('middleware') as string[]
-  // if (Array.isArray(appMiddleware)) {
-  //   appMiddleware.push(namespace + ':tracerExtMiddleware')
-  // }
-  // else {
-  //   app.getLogger().warn(`${compName} appMiddleware is not valid Array`)
-  //   // throw new TypeError('appMiddleware is not valid Array')
-  // }
-
-  /**
-   * 应于所有中间件之前，以便追踪覆盖更大范围
-   */
-  // app.useMiddleware(tracerMiddleware)
+  app.getMiddleware().insertLast(TracerExtMiddleware)
 }
 
