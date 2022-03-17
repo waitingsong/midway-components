@@ -6,21 +6,23 @@ import { join } from 'path'
 
 import { IMidwayContainer } from '@midwayjs/core'
 import { App, Config, Configuration } from '@midwayjs/decorator'
-import { IMidwayWebApplication } from '@midwayjs/web'
 import * as fetch from '@mw-components/fetch'
 import * as jaeger from '@mw-components/jaeger'
 import * as db from '@mw-components/kmore'
 import { DbManager } from '@mw-components/kmore'
+import * as koid from '@mw-components/koid'
 
-import { taskRunnerState } from './lib/config'
 import {
-  TaskManServerConfig,
+  ConfigKey,
+  TaskServerConfig,
   initDbConfig,
   DbReplica,
-  DbReplicaKeys, TaskManClientConfig,
+  DbReplicaKeys, TaskClientConfig,
 } from './lib/index'
-import { taskAgentMiddleware } from './middleware/task-agent.middleware'
 import { genKmoreDbConfig } from './repo/helper'
+import { TaskAgentService } from './service/task-agent.service'
+
+import { Application } from '~/interface'
 
 
 const namespace = 'taskman'
@@ -28,6 +30,7 @@ const namespace = 'taskman'
 @Configuration({
   namespace,
   imports: [
+    koid,
     jaeger,
     fetch,
     db,
@@ -36,10 +39,10 @@ const namespace = 'taskman'
 })
 export class AutoConfiguration {
 
-  @App() readonly app: IMidwayWebApplication
+  @App() readonly app: Application
 
-  @Config('taskManServerConfig') protected readonly serverConfig: TaskManServerConfig
-  @Config('taskManClientConfig') protected readonly clientConfig: TaskManClientConfig
+  @Config(ConfigKey.serverConfig) protected readonly serverConfig: TaskServerConfig
+  @Config(ConfigKey.clientConfig) protected readonly clientConfig: TaskClientConfig
 
   async onReady(container: IMidwayContainer): Promise<void> {
     // const container = this.app.getApplicationContext()
@@ -47,26 +50,19 @@ export class AutoConfiguration {
     const dbManager = await container.getAsync(DbManager) as DbManager<DbReplicaKeys>
     await dbManager.connect(DbReplica.taskMaster, dbConfig)
 
-    if (this.clientConfig.maxRunner > 0) {
-      taskRunnerState.max = this.clientConfig.maxRunner
-    }
+    const agentSvc = await container.getAsync(TaskAgentService)
+    await agentSvc.run()
 
-    registerMiddleware(this.app)
+    // registerMiddleware(this.app)
   }
 
 }
 
-export function registerMiddleware(
-  app: IMidwayWebApplication,
-): void {
+// export function registerMiddleware(
+//   app: Application,
+// ): void {
 
-  const appMiddleware = app.getConfig('middleware') as string[]
-  if (Array.isArray(appMiddleware)) {
-    appMiddleware.push(namespace + ':taskAgentMiddleware')
-  }
-  else {
-    app.logger.info('TaskAgent appMiddleware is not valid Array, register via app.use(taskAgentMiddleware)')
-    app.use(taskAgentMiddleware)
-  }
-}
+//   // @ts-expect-error
+//   app.getMiddleware().insertLast(TaskAgentMiddleware)
+// }
 

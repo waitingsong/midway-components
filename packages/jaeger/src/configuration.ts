@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-extraneous-class */
 import 'tsconfig-paths/register'
 
 import { join } from 'path'
 
+import { MidwayInformationService } from '@midwayjs/core'
 import { App, Config, Configuration, Inject } from '@midwayjs/decorator'
 import { NpmPkg } from '@waiting/shared-types'
 
@@ -13,7 +15,6 @@ import { ConfigKey, MiddlewareConfig } from '~/index'
 import {
   Application,
   IMidwayContainer,
-  MidwayInformationService,
 } from '~/interface'
 
 

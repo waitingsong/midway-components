@@ -1,31 +1,28 @@
+import assert from 'assert/strict'
 import { relative } from 'path'
 
-import { testConfig } from 'test/root.config'
-
-import { taskAgentSubscriptionMap } from '~/lib/data'
-import { initTaskAgentConfig, ServerAgent } from '~/lib/index'
-
-// eslint-disable-next-line import/order
-import assert = require('power-assert')
+import { testConfig } from '@/root.config'
+import { taskClientConfig } from '@/test.config'
+import { ClientURL } from '~/lib/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
 
-  describe(`should ${ServerAgent.base}/${ServerAgent.hello} work`, () => {
+  describe(`should ${ClientURL.base}/${ClientURL.hello} work`, () => {
     it('normal', async () => {
-      const { httpRequest } = testConfig
+      const { httpRequest, tm } = testConfig
 
-      assert(taskAgentSubscriptionMap.size === 0)
-      assert(taskAgentSubscriptionMap.size <= initTaskAgentConfig.maxRunning)
+      assert(tm.runningTasks.size === 0)
+      assert(tm.runningTasks.size <= taskClientConfig.maxRunner)
 
       const resp = await httpRequest
-        .get(`${ServerAgent.base}/${ServerAgent.hello}`)
+        .get(`${ClientURL.base}/${ClientURL.hello}`)
         .expect(200)
 
       assert(resp.text === 'OK')
-      assert(taskAgentSubscriptionMap.size === 0)
+      assert(tm.runningTasks.size === 0)
     })
   })
 })
