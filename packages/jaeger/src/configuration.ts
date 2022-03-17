@@ -31,7 +31,7 @@ export class AutoConfiguration {
 
   @Config(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
 
-  @Inject() informationService: MidwayInformationService
+  @Inject() readonly informationService: MidwayInformationService
 
   async onConfigLoad(): Promise<void> {
     const pkgNow = this.app.getConfig('pkg') as unknown
