@@ -9,26 +9,25 @@ import { App, Config, Configuration } from '@midwayjs/decorator'
 import * as fetch from '@mw-components/fetch'
 import * as jaeger from '@mw-components/jaeger'
 import * as db from '@mw-components/kmore'
-import { DbManager } from '@mw-components/kmore'
 import * as koid from '@mw-components/koid'
+
+import { genKmoreDbConfig } from './repo/helper'
+import { TaskAgentService } from './service/task-agent.service'
 
 import {
   ConfigKey,
-  TaskServerConfig,
   initDbConfig,
   DbReplica,
-  DbReplicaKeys, TaskClientConfig,
-} from './lib/index'
-import { genKmoreDbConfig } from './repo/helper'
-import { TaskAgentService } from './service/task-agent.service'
+  DbReplicaKeys,
+  TaskClientConfig,
+  TaskServerConfig,
+} from './index'
 
 import { Application } from '~/interface'
 
 
-const namespace = 'taskman'
-
 @Configuration({
-  namespace,
+  namespace: ConfigKey.namespace,
   imports: [
     koid,
     jaeger,
@@ -47,7 +46,7 @@ export class AutoConfiguration {
   async onReady(container: IMidwayContainer): Promise<void> {
     // const container = this.app.getApplicationContext()
     const dbConfig = genKmoreDbConfig(this.serverConfig, initDbConfig)
-    const dbManager = await container.getAsync(DbManager) as DbManager<DbReplicaKeys>
+    const dbManager = await container.getAsync(db.DbManager) as db.DbManager<DbReplicaKeys>
     await dbManager.connect(DbReplica.taskMaster, dbConfig)
 
     const agentSvc = await container.getAsync(TaskAgentService)
