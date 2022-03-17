@@ -60,7 +60,7 @@ export class TaskAgentService {
   // @Inject('jaeger:logger') protected readonly logger: Logger
   @Inject() readonly logger: IMidwayLogger
 
-  @Inject('fetch:fetchComponent') readonly fetch: FetchComponent
+  @Inject() readonly fetch: FetchComponent
 
   @Inject() readonly koid: KoidComponent
 
