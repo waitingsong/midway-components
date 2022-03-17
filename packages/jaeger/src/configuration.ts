@@ -33,18 +33,20 @@ export class AutoConfiguration {
 
   // @Inject() readonly informationService: MidwayInformationService
 
-  async onReady(container: IMidwayContainer): Promise<void> {
+  async onReady(): Promise<void> {
     if (! this.app) {
       throw new TypeError('this.app invalid')
     }
 
     const pkgNow = this.app.getConfig('pkg') as unknown
     if (! pkgNow) {
-      const informationService = await container.getAsync(MidwayInformationService)
-      const pkg = informationService.getPkg() as NpmPkg
-      this.app.addConfigObject({
-        pkg,
-      })
+      const informationService = await this.app.getApplicationContext().getAsync(MidwayInformationService)
+      if (informationService) {
+        const pkg = informationService.getPkg() as NpmPkg
+        this.app.addConfigObject({
+          pkg,
+        })
+      }
     }
 
     await this.app.getApplicationContext().getAsync(TracerComponent)
