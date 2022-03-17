@@ -4,7 +4,7 @@ import 'tsconfig-paths/register'
 import { join } from 'path'
 
 import { MidwayInformationService } from '@midwayjs/core'
-import { App, Config, Configuration, Inject } from '@midwayjs/decorator'
+import { App, Config, Configuration } from '@midwayjs/decorator'
 import { NpmPkg } from '@waiting/shared-types'
 
 import {
@@ -31,21 +31,20 @@ export class AutoConfiguration {
 
   @Config(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
 
-  @Inject() readonly informationService: MidwayInformationService
+  // @Inject() readonly informationService: MidwayInformationService
 
-  async onConfigLoad(): Promise<void> {
+  async onReady(container: IMidwayContainer): Promise<void> {
+    if (! this.app) {
+      throw new TypeError('this.app invalid')
+    }
+
     const pkgNow = this.app.getConfig('pkg') as unknown
     if (! pkgNow) {
-      const pkg = this.informationService.getPkg() as NpmPkg
+      const informationService = await container.getAsync(MidwayInformationService)
+      const pkg = informationService.getPkg() as NpmPkg
       this.app.addConfigObject({
         pkg,
       })
-    }
-  }
-
-  async onReady(): Promise<void> {
-    if (! this.app) {
-      throw new TypeError('this.app invalid')
     }
 
     await this.app.getApplicationContext().getAsync(TracerComponent)
