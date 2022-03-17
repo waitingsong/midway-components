@@ -7,11 +7,14 @@ import { MidwayInformationService } from '@midwayjs/core'
 import { App, Config, Configuration, Inject } from '@midwayjs/decorator'
 import { NpmPkg } from '@waiting/shared-types'
 
-import { TracerComponent } from './lib/component'
-import { TracerExtMiddleware } from './middleware/tracer-ext.middleware'
-import { TracerMiddleware } from './middleware/tracer.middleware'
+import {
+  ConfigKey,
+  MiddlewareConfig,
+  TracerComponent,
+  TracerExtMiddleware,
+  TracerMiddleware,
+} from './index'
 
-import { ConfigKey, MiddlewareConfig } from '~/index'
 import {
   Application,
   IMidwayContainer,
