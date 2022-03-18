@@ -1,7 +1,6 @@
 import assert from 'assert/strict'
 
-import { testConfig } from '../root.config'
-
+import { testConfig } from '@/root.config'
 import {
   CreateTaskDTO,
   TaskFullDTO,
