@@ -1,8 +1,9 @@
+import { IMidwayLogger } from '@midwayjs/core'
 import {
   Inject,
   Provide,
 } from '@midwayjs/decorator'
-import { Logger } from '@mw-components/jaeger'
+// import { Logger } from '@mw-components/jaeger'
 import { mergeDoWithInitData } from '@mw-components/kmore'
 
 import {
@@ -33,7 +34,8 @@ import {
 @Provide()
 export class TaskQueueService {
 
-  @Inject('jaeger:logger') protected readonly logger: Logger
+  // @Inject() protected readonly logger: Logger
+  @Inject() readonly logger: IMidwayLogger
 
   @Inject() protected readonly repo: TaskQueueRepository
   @Inject() protected readonly logRepo: TaskLogRepository
