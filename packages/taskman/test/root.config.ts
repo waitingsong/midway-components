@@ -4,14 +4,14 @@ import supertest, { SuperTest } from 'supertest'
 
 import { taskClientConfig } from './test.config'
 
+import { Config, MiddlewareConfig } from '~/index'
 import { Application } from '~/interface'
-import { ClientService, Config, MiddlewareConfig } from '~/lib'
 import {
   TaskLogRepository,
   TaskQueueRepository,
   TaskResultRepository,
 } from '~/repo/index.repo'
-import { TaskAgentService, TaskQueueService } from '~/service/index.service'
+import { ClientService, TaskAgentService, TaskQueueService } from '~/service/index.service'
 
 
 export type TestResponse = supertest.Response
