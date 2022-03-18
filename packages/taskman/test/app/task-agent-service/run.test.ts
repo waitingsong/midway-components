@@ -18,8 +18,13 @@ describe.skip(filename, () => {
         await agent.run()
         setTimeout(() => {
           agent.stop()
-          assert(agent.isRunning === true)
-          done()
+            .then(() => {
+              assert(agent.isRunning === true)
+              done()
+            })
+            .catch((ex) => {
+              throw ex
+            })
         }, 500000)
       })
         .catch((ex) => {
