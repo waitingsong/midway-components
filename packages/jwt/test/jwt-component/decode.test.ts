@@ -1,7 +1,6 @@
 import assert from 'assert/strict'
 import { relative } from 'path'
 
-import { testConfig } from '../root.config'
 import {
   payload1,
   PayloadSig1,
@@ -11,7 +10,8 @@ import {
   token1,
 } from '../test.config'
 
-import { Jwt, JwtComponent } from '~/index'
+import { testConfig } from '@/root.config'
+import { JwtComponent } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
