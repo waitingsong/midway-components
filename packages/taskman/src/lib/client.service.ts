@@ -1,10 +1,15 @@
+import { IMidwayLogger } from '@midwayjs/core'
 import {
   Config,
   Inject,
   Provide,
 } from '@midwayjs/decorator'
 import { FetchComponent, JsonResp, Node_Headers } from '@mw-components/fetch'
-import { HeadersKey, Logger, TracerManager } from '@mw-components/jaeger'
+import {
+  HeadersKey,
+  // Logger,
+  TracerManager,
+} from '@mw-components/jaeger'
 import { retrieveHeadersItem } from '@waiting/shared-core'
 
 import { Context, FetchOptions } from '../interface'
@@ -32,7 +37,8 @@ export class ClientService {
 
   @Inject() protected readonly ctx: Context
 
-  @Inject('jaeger:logger') readonly logger: Logger
+  // @Inject() readonly logger: Logger
+  @Inject() readonly logger: IMidwayLogger
 
   @Inject('fetch:fetchComponent') protected readonly fetch: FetchComponent
 
