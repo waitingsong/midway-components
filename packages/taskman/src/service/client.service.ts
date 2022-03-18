@@ -12,9 +12,9 @@ import {
 import { retrieveHeadersItem } from '@waiting/shared-core'
 
 import { Context, FetchOptions } from '../interface'
+import { CreateTaskDTO } from '../lib/tm.dto'
 
 import { processJsonHeaders } from './helper'
-import { CreateTaskDTO } from './tm.dto'
 
 import {
   CreateTaskOptions,
