@@ -321,11 +321,11 @@ export interface SetStateInputData extends CommonSetMethodInputData {
 // }
 
 
-// export interface TaskAgentState {
-//   count: number
-//   /**
-//    * Started taskAgent uuid when calling /task_agent/start_one,
-//    * blank string means no running TaskAgentService during this request
-//    */
-//   startedAgentId: string
-// }
+export interface TaskAgentState {
+  /**
+   * Started taskAgent uuid when calling /task_agent/start_one,
+   * blank string means no running TaskAgentService during this request
+   */
+  agentId: string
+  count: number
+}
