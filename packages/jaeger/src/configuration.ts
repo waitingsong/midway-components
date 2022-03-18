@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-extraneous-class */
 import 'tsconfig-paths/register'
 
 import { join } from 'path'
 
 import { MidwayInformationService } from '@midwayjs/core'
-import { App, Config, Configuration, Inject } from '@midwayjs/decorator'
+import { App, Config, Configuration } from '@midwayjs/decorator'
 import { NpmPkg } from '@waiting/shared-types'
 
 import {
@@ -30,7 +31,7 @@ export class AutoConfiguration {
 
   @Config(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
 
-  @Inject() readonly informationService: MidwayInformationService
+  // @Inject() readonly informationService: MidwayInformationService
 
   async onReady(): Promise<void> {
     if (! this.app) {
@@ -39,8 +40,9 @@ export class AutoConfiguration {
 
     const pkgNow = this.app.getConfig('pkg') as unknown
     if (! pkgNow) {
-      if (this.informationService) {
-        const pkg = this.informationService.getPkg() as NpmPkg
+      const informationService = await this.app.getApplicationContext().getAsync(MidwayInformationService)
+      if (informationService) {
+        const pkg = informationService.getPkg() as NpmPkg
         this.app.addConfigObject({
           pkg,
         })
