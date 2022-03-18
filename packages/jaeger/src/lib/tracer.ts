@@ -11,15 +11,16 @@ import {
   globalTracer,
 } from 'opentracing'
 
-import { SpanHeaderInit, SpanLogInput, TracerLog, TracerTag } from './types'
-
-import { Context } from '~/interface'
 import {
   processHTTPStatus,
   processResponseData,
   updateCtxTagsData,
   updateDetailTags,
-} from '~/middleware/helper'
+} from '../middleware/helper'
+
+import { SpanHeaderInit, SpanLogInput, TracerLog, TracerTag } from './types'
+
+import { Context } from '~/interface'
 
 
 @Provide()
