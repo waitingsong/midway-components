@@ -1,30 +1,37 @@
+import { MiddlewareConfig } from '../index'
 import {
-  initTaskManClientConfig,
+  initTaskClientConfig,
   initDbConfig,
-  TaskManClientConfig,
-  TaskManServerConfig,
-  TaskAgentConfig,
-  initTaskAgentConfig,
+  TaskClientConfig,
+  TaskServerConfig,
+  initTaskServerConfig,
+  initialMiddlewareConfig,
+  initMiddlewareOptions,
 } from '../lib/index'
 
 
 /**
  * Remove this variable if running as client
  */
-export const taskManServerConfig: TaskManServerConfig = {
-  expInterval: '30min',
+export const taskServerConfig: TaskServerConfig = {
+  ...initTaskServerConfig,
   dbConfigs: {
     ...initDbConfig,
   },
-  headerKey: 'x-task-agent',
-  headerKeyTaskId: 'x-task-id',
 }
 
-export const taskManClientConfig: TaskManClientConfig = {
-  ...initTaskManClientConfig,
+export const taskClientConfig: TaskClientConfig = {
+  ...initTaskClientConfig,
 }
 
-export const taskAgentConfig: TaskAgentConfig = {
-  ...initTaskAgentConfig,
+export const taskMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
+  ...initialMiddlewareConfig,
+  ignore: [
+    '/',
+    '/ping',
+  ],
+  options: {
+    ...initMiddlewareOptions,
+  },
 }
 

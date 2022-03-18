@@ -1,25 +1,23 @@
 import {
-  App,
+  Config as _Config,
   Init,
   Provide,
   Scope,
   ScopeEnum,
 } from '@midwayjs/decorator'
 
-import { JwtMsg } from './config'
+import { ConfigKey, JwtMsg } from './config'
 import { Jwt } from './jwt'
 import {
-  JwtConfig,
+  Config,
   JwtToken,
   VerifySecret,
   JwtPayload,
   VerifyOpts,
   JwtResult,
 } from './types'
-import { genJwtConfig } from './util'
 
 import {
-  Application,
   JsonObject,
   SignOptions,
   Secret,
@@ -30,9 +28,7 @@ import {
 @Scope(ScopeEnum.Singleton)
 export class JwtComponent {
 
-  @App() private readonly app: Application
-
-  protected config: JwtConfig
+  @_Config(ConfigKey.config) protected readonly config: Config
 
   private jwt: Jwt
 
@@ -40,10 +36,6 @@ export class JwtComponent {
 
   @Init()
   async init(): Promise<void> {
-    const pconfig = this.app.getConfig('jwtConfig') as Partial<JwtConfig>
-    // const pconfig = this.app.jwtConfig as Partial<JwtConfig>
-    this.config = genJwtConfig(pconfig)
-
     const verifySet = processSecret(this.config.verifySecret)
     const signSet = processSecret(this.config.secret)
     signSet.forEach(val => verifySet.add(val))

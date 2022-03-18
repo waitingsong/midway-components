@@ -1,15 +1,15 @@
 import 'tsconfig-paths/register'
-
+import assert from 'assert/strict'
 import { join } from 'path'
 
 import * as WEB from '@midwayjs/koa'
 import { createApp, close, createHttpRequest } from '@midwayjs/mock'
 
 import { testConfig } from './root.config'
+import { config, mwConfig } from './test.config'
 
+import { ConfigKey } from '~/index'
 import { Application } from '~/interface'
-import { TracerManager } from '~/lib/tracer'
-import { SpanLogInput, TracerConfig } from '~/lib/types'
 
 
 /**
@@ -28,20 +28,24 @@ export const mochaHooks = async () => {
 
   return {
     beforeAll: async () => {
-      const configs = {
+      const globalConfig = {
         keys: Math.random().toString(),
+        [ConfigKey.config]: config,
+        [ConfigKey.middlewareConfig]: mwConfig,
       }
       const opts = {
         imports: [WEB],
-        globalConfig: configs,
+        globalConfig,
       }
       const app = await createApp(join(__dirname, 'fixtures', 'base-app'), opts) as Application
-      // app.addConfigObject(configs)
+      app.addConfigObject(globalConfig)
       testConfig.app = app
       testConfig.httpRequest = createHttpRequest(app)
       const { url } = testConfig.httpRequest.get('/')
       testConfig.host = url
-      // console.log({ url })
+
+      const names = app.getMiddleware().getNames()
+      assert(names.includes(ConfigKey.middlewareName) === mwConfig.enableMiddleware)
 
       // https://midwayjs.org/docs/testing
     },
@@ -51,7 +55,11 @@ export const mochaHooks = async () => {
     },
 
     afterEach: async () => {
-      return
+      const { app } = testConfig
+      app.addConfigObject({
+        [ConfigKey.config]: config,
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
     },
 
     afterAll: async () => {
@@ -63,14 +71,3 @@ export const mochaHooks = async () => {
 
 }
 
-
-declare module '@midwayjs/core' {
-  interface Application {
-    jaeger: TracerConfig
-  }
-
-  interface Context {
-    tracerManager: TracerManager
-    tracerTags: SpanLogInput
-  }
-}

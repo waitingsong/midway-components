@@ -1,3 +1,4 @@
 
-export { TaskAgentController } from './task-agent.controller'
+export { AgentController } from './agent.controller'
+export { ServerController } from './server.controller'
 

@@ -1,43 +1,58 @@
-/* eslint-disable node/no-unpublished-import */
 import {
+  Config as _Config,
   Controller,
   Get,
+  Inject,
 } from '@midwayjs/decorator'
 
-import { Context } from '../../../../src/interface'
-import { TestSpanInfo, TracerConfig } from '../../../../src/lib/types'
-import { processPriority, ProcessPriorityOpts } from '../../../../src/middleware/helper'
-import { TestRespBody } from '../../../root.config'
+import { TestRespBody } from '@/root.config'
+import { Context } from '~/interface'
+import { processPriority, ProcessPriorityOpts } from '~/middleware/helper'
+import {
+  Config,
+  ConfigKey,
+  MiddlewareConfig,
+  TestSpanInfo,
+  TracerManager,
+} from '~/index'
 
 
 @Controller('/')
 export class HomeController {
 
+  @_Config(ConfigKey.config) protected readonly config: Config
+  @_Config(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
+
+  @Inject() readonly tracerManager: TracerManager
+
   @Get('/')
   async home(ctx: Context): Promise<TestRespBody> {
     const { cookies, header, url } = ctx
 
-    const span = ctx.tracerManager.currentSpan()
+    this.tracerManager.addTags(ctx.tracerTags)
+    const span = this.tracerManager.currentSpan()
+    console.info({ span })
     if (! span) {
       throw TypeError('span undefined')
     }
-    const headerInit = ctx.tracerManager.headerOfCurrentSpan()
-    const isTraceEnabled = ctx.tracerManager.isTraceEnabled
+    const headerInit = this.tracerManager.headerOfCurrentSpan()
+    const isTraceEnabled = this.tracerManager.isTraceEnabled
     const spanInfo: TestSpanInfo = {
       // @ts-expect-error
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       logs: span._logs,
       // @ts-expect-error
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       tags: span._tags,
       // @ts-expect-error
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       startTime: span._startTime,
       headerInit,
       isTraceEnabled,
     }
 
-    const res: TestRespBody = {
+    const config = this.config
+    const mwConfig = this.mwConfig
+    const res = {
+      config,
+      mwConfig,
       cookies,
       header,
       url,
@@ -48,11 +63,11 @@ export class HomeController {
 
   @Get('/processPriority')
   async processPriority(ctx: Context): Promise<number | 'undefined'> {
-    const tracerConfig = ctx.app.getConfig('tracer') as TracerConfig
+    const tracerConfig = this.config
     const opts: ProcessPriorityOpts = {
       starttime: ctx.startTime,
       tracerTags: {},
-      trm: ctx.tracerManager,
+      trm: this.tracerManager,
       tracerConfig,
     }
     const cost = await processPriority(opts)
@@ -61,14 +76,14 @@ export class HomeController {
   }
 
   @Get('/untraced_path_string')
-  async untracedPathString(ctx: Context): Promise<boolean> {
-    const ret = ctx.tracerManager.isTraceEnabled
+  async untracedPathString(): Promise<boolean> {
+    const ret = this.tracerManager.isTraceEnabled
     return ret
   }
 
   @Get('/untraced_path_reg_exp')
-  async untracedPathRegExp(ctx: Context): Promise<boolean> {
-    const ret = ctx.tracerManager.isTraceEnabled
+  async untracedPathRegExp(): Promise<boolean> {
+    const ret = this.tracerManager.isTraceEnabled
     return ret
   }
 

@@ -1,8 +1,6 @@
 import { Middleware } from '@midwayjs/decorator'
 
-import { Context, IMiddleware, NextFunction } from '../interface'
 import {
-  genJwtMiddlewareConfig,
   JwtComponent,
   JwtMsg,
 } from '../lib/index'
@@ -12,48 +10,62 @@ import {
   VerifySecret,
   RedirectURL,
   JwtState,
-  JwtMiddlewareConfig,
 } from '../lib/types'
-import { reqestPathMatched } from '../util/common'
+
+import { ConfigKey } from '~/index'
+import { Context, IMiddleware, NextFunction } from '~/interface'
+import {
+  getMiddlewareConfig,
+  matchFunc,
+} from '~/util/common'
 
 
 @Middleware()
 export class JwtMiddleware implements IMiddleware<Context, NextFunction> {
+  static getName(): string {
+    const name = ConfigKey.middlewareName
+    return name
+  }
+
+  match(ctx?: Context) {
+    if (ctx) {
+
+      if (! ctx.state) {
+        ctx.state = {}
+      }
+      if (! ctx.jwtState) {
+        ctx.jwtState = {} as JwtState
+      }
+
+    }
+
+    const flag = matchFunc(ctx)
+    return flag
+  }
+
   resolve() {
-    return jwtMiddleware
+    return middleware
   }
 }
 
-export async function jwtMiddleware(
+export async function middleware(
   ctx: Context,
   next: NextFunction,
 ): Promise<void> {
 
-  if (! ctx.jwtState) {
-    ctx.jwtState = {} as JwtState
-  }
-
-  if (! ctx.state) {
-    ctx.state = {}
-  }
-
   const { app } = ctx
 
-  const pmwConfig = app.getConfig('jwtMiddlewareConfig') as JwtMiddlewareConfig
-  const mwConfig = genJwtMiddlewareConfig(pmwConfig)
-
-  const { ignore } = mwConfig
-  if (reqestPathMatched(ctx, ignore)) {
-    return next()
+  const mwConfig = getMiddlewareConfig(app)
+  const { options } = mwConfig
+  if (! options) {
+    throw new TypeError('options undefined')
   }
-
-  const { debug, passthrough } = mwConfig
+  const { debug, cookie, passthrough } = options
 
   try {
-    const token = retrieveToken(ctx, mwConfig.cookie)
+    const token = retrieveToken(ctx, cookie)
 
     if (! token) {
-      // ctx.throw(401, JwtMsg.TokenNotFound)
       throw new Error(JwtMsg.TokenNotFound)
     }
 
@@ -106,7 +118,6 @@ export async function jwtMiddleware(
 
   return next()
 }
-
 
 
 

@@ -1,10 +1,9 @@
-/* eslint-disable import/order */
+import assert from 'assert/strict'
 import { relative } from 'path'
 
 import { testConfig } from '@/root.config'
-import { TracerConfig } from '~/lib/types'
-
-import assert = require('power-assert')
+import { ConfigKey } from '~/lib/config'
+import { getComponentConfig } from '~/util/common'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -17,8 +16,14 @@ describe(filename, () => {
     it('reqThrottleMsForPriority -1', async () => {
       const { app, httpRequest } = testConfig
 
-      const tracerConfig = app.getConfig('tracer') as TracerConfig
-      tracerConfig.reqThrottleMsForPriority = -1
+      const config = getComponentConfig(app)
+      config.reqThrottleMsForPriority = -1
+      app.addConfigObject({
+        [ConfigKey.config]: config,
+      })
+
+      const tracerConfig = getComponentConfig(app)
+      assert(tracerConfig.reqThrottleMsForPriority === -1)
 
       const resp = await httpRequest
         .get(path)
@@ -29,8 +34,11 @@ describe(filename, () => {
     it('reqThrottleMsForPriority 10000', async () => {
       const { app, httpRequest } = testConfig
 
-      const tracerConfig = app.getConfig('tracer') as TracerConfig
+      const tracerConfig = getComponentConfig(app)
       tracerConfig.reqThrottleMsForPriority = 10000
+      app.addConfigObject({
+        [ConfigKey.config]: tracerConfig,
+      })
 
       const resp = await httpRequest
         .get(path)
@@ -42,9 +50,12 @@ describe(filename, () => {
     it('reqThrottleMsForPriority zero', async () => {
       const { app, httpRequest } = testConfig
 
-      const tracerConfig = app.getConfig('tracer') as TracerConfig
+      const tracerConfig = getComponentConfig(app)
       tracerConfig.reqThrottleMsForPriority = 10000
       tracerConfig.reqThrottleMsForPriority = 0
+      app.addConfigObject({
+        [ConfigKey.config]: tracerConfig,
+      })
 
       const resp = await httpRequest
         .get(path)

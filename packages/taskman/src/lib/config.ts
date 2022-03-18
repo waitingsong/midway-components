@@ -5,14 +5,32 @@ import {
 } from './tm.dto'
 import {
   DbConfig,
+  MiddlewareConfig,
+  MiddlewareOptions,
   PickInitTaskOptions,
-  TaskManClientConfig,
-  TaskRunnerState,
+  TaskClientConfig,
+  TaskServerConfig,
   TaskState,
   TaskStatistics,
-  TaskAgentConfig,
 } from './types'
 
+
+export const initMiddlewareOptions: MiddlewareOptions = {
+  debug: false,
+}
+export const initialMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'ignore' | 'match' | 'options'>> = {
+  enableMiddleware: true,
+}
+
+export const enum ConfigKey {
+  namespace = 'taskman',
+  config = 'taskClientConfig',
+  middlewareConfig = 'taskMiddlewareConfig',
+  // componentName = 'taskmanComponent',
+  middlewareName = 'taskmanMiddleware',
+  clientConfig = 'taskClientConfig',
+  serverConfig = 'taskServerConfig'
+}
 
 export const initTaskDTO: InitTaskDTO = {
   taskState: TaskState.init,
@@ -95,7 +113,7 @@ export const initDbConfig: Required<DbConfig> = {
     /** @link https://stackoverflow.com/a/67621567 */
     propagateCreateError: false,
   },
-  enableTracing: true,
+  enableTracing: false,
   tracingResponse: true,
   sampleThrottleMs: 1000,
 }
@@ -108,16 +126,24 @@ export const initPickInitTasksOptions: PickInitTaskOptions = {
 }
 
 
-export const initTaskManClientConfig: TaskManClientConfig = {
+export const initTaskServerConfig: Omit<TaskServerConfig, 'dbConfigs'> = {
   /** TaskMan Server host */
+  host: 'http://localhost:7001',
+  expInterval: '30min',
+  headerKey: 'x-task-agent',
+  headerKeyTaskId: 'x-task-id',
+}
+
+export const initTaskClientConfig: TaskClientConfig = {
+  /** TaskMan client host */
   host: 'http://localhost:7001',
   // clientHost: 'http://localhost:7001',
   transferHeaders: ['authorization', 'user-agent'],
-  headerKeyTaskId: 'x-task-id',
+  headerKeyTaskId: initTaskServerConfig.headerKeyTaskId,
   pickTaskTimer: 2000,
   minPickTaskCount: 5,
   maxPickTaskCount: 1000,
-  maxRunner: 4,
+  maxRunner: 2,
 }
 
 export const initTaskStatistics: TaskStatistics = {
@@ -130,13 +156,4 @@ export const initTaskStatistics: TaskStatistics = {
   cancelled: 0,
 }
 
-export const initTaskAgentConfig: TaskAgentConfig = {
-  maxRunning: 1,
-  enableStartOneByPing: false,
-}
-
-export const taskRunnerState: TaskRunnerState = {
-  count: 0,
-  max: initTaskManClientConfig.maxRunner,
-}
 

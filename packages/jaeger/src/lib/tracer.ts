@@ -1,56 +1,103 @@
-import { IMidwayApplication } from '@midwayjs/core'
-import { NpmPkg } from '@waiting/shared-types'
 import {
-  initTracer as initJaegerTracer,
-  JaegerTracer,
-  TracingConfig,
-} from 'jaeger-client'
+  Init,
+  Inject,
+  Provide,
+} from '@midwayjs/decorator'
+import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
 import {
   FORMAT_HTTP_HEADERS,
   Span,
   SpanContext,
-  initGlobalTracer,
   globalTracer,
 } from 'opentracing'
 
-import { SpanHeaderInit, SpanLogInput, TracerConfig } from './types'
+import {
+  processHTTPStatus,
+  processResponseData,
+  updateCtxTagsData,
+  updateDetailTags,
+} from '../middleware/helper'
 
-/**
- * 初始化 tracer 单例
- */
-export function initTracer(app: IMidwayApplication): JaegerTracer {
-  const tconf = app.getConfig('tracer') as TracerConfig
-  const pconf = app.getConfig('pkg') as NpmPkg
-  const pkgName = pconf && pconf.name ? pconf.name : 'jager'
+import { SpanHeaderInit, SpanLogInput, TracerLog, TracerTag } from './types'
 
-  let name = tconf.tracingConfig.serviceName ?? pkgName
-  name = name.replace(/@/ug, '').replace(/\//ug, '-')
-  if (! name) {
-    throw new Error('service name empty')
-  }
+import { Context } from '~/interface'
 
-  const config: TracingConfig = {
-    ...tconf.tracingConfig,
-    serviceName: name,
-  }
-  const tracer = initJaegerTracer(config, {})
-  initGlobalTracer(tracer)
-  return tracer
-}
 
-/**
- * tracer 管理类，需初始化并挂载到ctx
- */
+@Provide()
 export class TracerManager {
+
+  @Inject() readonly ctx: Context
+
   readonly instanceId = Symbol(new Date().getTime().toString())
-  readonly isTraceEnabled: boolean
 
-  readonly spans: Span[]
+  isTraceEnabled: boolean
+  isStarted: boolean
 
-  constructor(isTraceEnabled: boolean) {
-    this.isTraceEnabled = isTraceEnabled
+  spans: Span[]
+
+  @Init()
+  async init(): Promise<void> {
+    this.isTraceEnabled = false
+    this.isStarted = false
     this.spans = []
+    if (! this.ctx.tracerTags) {
+      this.ctx.tracerTags = {}
+    }
   }
+
+  /**
+   * 开启第一个span并入栈
+   */
+  start(): void {
+    if (this.isStarted) {
+      return
+    }
+    this.isTraceEnabled = true
+    const obj = globalTracer().extract(FORMAT_HTTP_HEADERS, this.ctx.headers) ?? void 0
+    const requestSpanCtx = obj && typeof obj.toTraceId === 'function'
+      ? obj
+      : void 0
+
+    const time = genISO8601String()
+    this.startSpan(this.ctx.path, requestSpanCtx)
+    const data = {
+      [TracerTag.svcPid]: process.pid,
+      [TracerTag.svcPpid]: process.ppid,
+      [TracerTag.reqStartTime]: time,
+    }
+    updateCtxTagsData(this.ctx.tracerTags, data)
+    this.spanLog({
+      event: TracerLog.requestBegin,
+      time,
+      [TracerLog.svcCpuUsage]: process.cpuUsage(),
+      [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
+    })
+    // console.log({ instId: this.instanceId })
+    this.isStarted = true
+  }
+
+  async finish(): Promise<void> {
+    await processHTTPStatus(this.ctx)
+    processResponseData(this.ctx)
+    updateDetailTags(this.ctx)
+
+    const time = genISO8601String()
+
+    this.spanLog({
+      event: TracerLog.requestEnd,
+      time,
+      [TracerLog.svcCpuUsage]: process.cpuUsage(),
+      [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
+    })
+
+    updateCtxTagsData(this.ctx.tracerTags, {
+      [TracerTag.reqEndTime]: time,
+    })
+    this.addTags(this.ctx.tracerTags)
+
+    this.finishSpan()
+  }
+
 
   currentSpan(): Span | undefined {
     return this.spans[this.spans.length - 1]
@@ -58,7 +105,8 @@ export class TracerManager {
 
   @RunIfEnabled
   startSpan(name: string, parentSpan?: Span | SpanContext): void {
-    const span = this.genSpan(name, parentSpan)
+    const txt = name ?? Date.now().toString()
+    const span = this.genSpan(txt, parentSpan)
     this.spans.push(span)
   }
 
@@ -133,3 +181,4 @@ function RunIfEnabled(
   }
   return descriptor
 }
+

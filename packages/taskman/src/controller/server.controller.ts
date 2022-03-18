@@ -3,20 +3,17 @@ import {
   Controller,
   Get,
   Inject,
-  Provide,
   Body,
   Post,
   Query,
 } from '@midwayjs/decorator'
-import { Span, SpanLogInput } from '@mw-components/jaeger'
-import { genISO8601String } from '@waiting/shared-core'
+import { TracerManager } from '@mw-components/jaeger'
 
-import { taskAgentSubscriptionMap } from '../lib/data'
 import {
   CommonSetMethodInputData,
   CreateTaskDTO,
   SetProgressInputData,
-  ServerAgent,
+  ServerURL,
   ServerMethod,
   SetProgressDTO,
   TaskDTO,
@@ -26,99 +23,38 @@ import {
   TaskStatistics,
   TaskPayloadDTO,
   SetStateInputData,
-  TaskAgentState,
-  initTaskAgentConfig,
 } from '../lib/index'
-import { TaskAgentService, TaskQueueService } from '../service/index.service'
+import { TaskQueueService } from '../service/index.service'
 
 import { Context } from '~/interface'
 
 
-@Provide()
-@Controller(ServerAgent.base)
-export class TaskAgentController {
+@Controller(ServerURL.base)
+export class ServerController {
 
   @Inject() protected readonly ctx: Context
-  @Inject() protected readonly agentSvc: TaskAgentService
+  @Inject() protected readonly tracerManager: TracerManager
   @Inject() protected readonly queueSvc: TaskQueueService
 
-  @Get('/' + ServerAgent.startOne)
-  async [ServerMethod.startOne](): Promise<TaskAgentState> {
-    const trm = this.ctx.tracerManager
-    let span: Span | undefined
-
-    let agentId = ''
-    if (taskAgentSubscriptionMap.size < initTaskAgentConfig.maxRunning) {
-      agentId = await this.agentSvc.run(span) ? this.agentSvc.id : ''
-    }
-
-    const ret: TaskAgentState = {
-      startedAgentId: agentId,
-      count: taskAgentSubscriptionMap.size,
-      maxRunning: initTaskAgentConfig.maxRunning,
-    }
-
-    if (trm) {
-      const inputLog: SpanLogInput = {
-        event: 'TaskAgent-run',
-        taskAgentState: ret,
-        pid: process.pid,
-        time: genISO8601String(),
-      }
-      span = trm.genSpan('TaskAgent')
-      span.log(inputLog)
-    }
-
-    return ret
-  }
-
-  // @Get('/' + ServerAgent.stop)
-  // async [ServerMethod.stop](): Promise<AgentConcurrentConfig> {
-  //   this.agentSvc.stop()
-  //   return agentConcurrentConfig
-  // }
-
-  @Get('/' + ServerAgent.hello)
-  [ServerMethod.hello](): string {
-    return 'OK'
-  }
-
-  @Post('/' + ServerAgent.create)
+  @Post('/' + ServerURL.create)
   async [ServerMethod.create](@Body(ALL) input: CreateTaskDTO): Promise<TaskDTO> {
-    // start a agent
-    this[ServerMethod.startOne]().catch((ex: Error) => {
-      const trm = this.ctx.tracerManager
-      const inputLog: SpanLogInput = {
-        event: 'TaskAgent:startOne()-error',
-        pid: process.pid,
-        time: genISO8601String(),
-        message: ex.message,
-      }
-      if (trm) {
-        trm.spanLog(inputLog)
-      }
-      else {
-        console.error(inputLog)
-      }
-    })
-
     const ret = await this.queueSvc.create(input)
     return ret
   }
 
-  @Get('/' + ServerAgent.getInfo)
+  @Get('/' + ServerURL.getInfo)
   async [ServerMethod.getInfo](@Query() id: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
     const ret = await this.queueSvc.getInfo(id)
     return ret
   }
 
-  @Get('/' + ServerAgent.stats)
+  @Get('/' + ServerURL.stats)
   async [ServerMethod.stats](): Promise<TaskStatistics> {
     const ret = await this.queueSvc.stats()
     return ret
   }
 
-  @Post('/' + ServerAgent.setRunning)
+  @Post('/' + ServerURL.setRunning)
   async [ServerMethod.setRunning](
     @Body(ALL) input: CommonSetMethodInputData,
   ): Promise<TaskDTO | undefined> {
@@ -128,7 +64,7 @@ export class TaskAgentController {
     return ret
   }
 
-  @Post('/' + ServerAgent.setCancelled)
+  @Post('/' + ServerURL.setCancelled)
   async [ServerMethod.setCancelled](
     @Body(ALL) input: CommonSetMethodInputData,
   ): Promise<TaskDTO | undefined> {
@@ -138,7 +74,7 @@ export class TaskAgentController {
     return ret
   }
 
-  @Post('/' + ServerAgent.setFailed)
+  @Post('/' + ServerURL.setFailed)
   async [ServerMethod.setFailed](
     @Body(ALL) input: CommonSetMethodInputData,
   ): Promise<TaskDTO | undefined> {
@@ -148,7 +84,7 @@ export class TaskAgentController {
     return ret
   }
 
-  @Post('/' + ServerAgent.setSucceeded)
+  @Post('/' + ServerURL.setSucceeded)
   async [ServerMethod.setSucceeded](
     @Body(ALL) input: CommonSetMethodInputData,
   ): Promise<TaskDTO | undefined> {
@@ -161,7 +97,7 @@ export class TaskAgentController {
   /**
    * @description task must in state pending
    */
-  @Post('/' + ServerAgent.setProgress)
+  @Post('/' + ServerURL.setProgress)
   async [ServerMethod.setProgress](
     @Body(ALL) input: SetProgressInputData,
   ): Promise<TaskProgressDTO | undefined> {
@@ -174,7 +110,7 @@ export class TaskAgentController {
     return ret
   }
 
-  @Get('/' + ServerAgent.getProgress)
+  @Get('/' + ServerURL.getProgress)
   async [ServerMethod.getProgress](
     @Query() id: TaskDTO['taskId'],
   ): Promise<TaskProgressDetailDTO | undefined> {
@@ -183,19 +119,19 @@ export class TaskAgentController {
     return ret
   }
 
-  @Get('/' + ServerAgent.getResult)
+  @Get('/' + ServerURL.getResult)
   async [ServerMethod.getResult](@Query() id: TaskDTO['taskId']): Promise<TaskResultDTO | undefined> {
     const ret = await this.queueSvc.getResult(id)
     return ret
   }
 
-  @Get('/' + ServerAgent.pickTasksWaitToRun)
+  @Get('/' + ServerURL.pickTasksWaitToRun)
   async [ServerMethod.pickTasksWaitToRun](): Promise<TaskDTO[]> {
     const ret = await this.queueSvc.pickTasksWaitToRun({ maxRows: 1 })
     return ret
   }
 
-  @Get('/' + ServerAgent.getPayload)
+  @Get('/' + ServerURL.getPayload)
   async [ServerMethod.getPayload](
     @Query() id: TaskDTO['taskId'],
   ): Promise<TaskPayloadDTO | undefined> {
@@ -204,7 +140,7 @@ export class TaskAgentController {
     return ret
   }
 
-  @Post('/' + ServerAgent.setState)
+  @Post('/' + ServerURL.setState)
   async [ServerMethod.setState](
     @Body(ALL) input: SetStateInputData,
   ): Promise<TaskDTO | undefined> {

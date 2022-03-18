@@ -1,16 +1,24 @@
 import { KnexConfig } from '@mw-components/kmore'
+import { MiddlewareConfig as MWConfig } from '@waiting/shared-types'
 
 import { JsonObject, FetchOptions } from '../interface'
 
 import { CreateTaskDTO, TaskDTO, TaskLogDTO, TaskProgressDTO } from './tm.dto'
 
 
+export type Config = TaskServerConfig | TaskClientConfig
+
+export interface MiddlewareOptions {
+  debug: boolean
+}
+export type MiddlewareConfig = MWConfig<MiddlewareOptions>
+
 /**
  * TaskMan Client Config
  */
-export interface TaskManClientConfig {
+export interface TaskClientConfig {
   /**
-   * server host url
+   * client host url
    * @default http://localhost:7001
    * @example http://192.168.0.2
    */
@@ -28,7 +36,7 @@ export interface TaskManClientConfig {
   /**
    * @default x-task-id
    */
-  headerKeyTaskId?: string
+  headerKeyTaskId: string
   /**
    * @default 2000(ms)
    */
@@ -49,15 +57,31 @@ export interface TaskManClientConfig {
   maxRunner: number
 }
 
+
+
 /**
  * @description http request path `${base}/${action}`, eg. /task_agent/create
  */
-export enum ServerAgent {
+export enum ClientURL {
   base = '/task_agent',
   /** start task pick and distribution */
-  startOne = 'start_one',
+  start = 'start',
   /** stop task pick and distribution */
   stop = 'stop',
+  hello = 'hello',
+  status = 'status',
+}
+export enum ClientMethod {
+  start = 'start',
+  stop = 'stop',
+  status = 'status',
+  hello = 'hello',
+}
+/**
+ * @description http request path `${base}/${action}`, eg. /taskman/create
+ */
+export enum ServerURL {
+  base = '/taskman',
   create = 'create',
   hello = 'hello',
   stats = 'stats',
@@ -73,6 +97,7 @@ export enum ServerAgent {
   getPayload = 'get_payload',
   setState = 'set_state',
 }
+
 export enum ServerMethod {
   /** start task pick and distribution */
   startOne = 'startOne',
@@ -122,7 +147,7 @@ export interface CreateTaskOptions {
    * TM服务器地址, 采用 POST 提交
    * @example http://localhost:7001
    */
-  host?: TaskManClientConfig['host']
+  host?: TaskClientConfig['host']
   /**
    * 向TM服务器发送 HTTP 请求时附带请求头数据
    */
@@ -141,20 +166,22 @@ export interface CallTaskOptions {
 
 
 /**
- * TaskMan Server Config
+ * Server Config
  */
-export interface TaskManServerConfig {
+export interface TaskServerConfig {
+  /** server host */
+  host: string
   expInterval: TaskDTO['timeoutIntv']
   dbConfigs: DbConfig
   /**
    * Indicate request from task-agent
    * @default x-task-agent
    */
-  headerKey?: string
+  headerKey: string
   /**
    * @default x-task-id
    */
-  headerKeyTaskId?: string
+  headerKeyTaskId: string
 }
 
 export interface DbConfig {
@@ -246,28 +273,29 @@ export interface SetStateInputData extends CommonSetMethodInputData {
   state: TaskDTO['taskState']
 }
 
-export interface TaskRunnerState {
-  count: number
-  max: number
-}
+// export interface TaskRunnerState {
+//   count: number
+//   max: number
+// }
 
-export interface TaskAgentConfig {
-  /**
-   * @default 1
-   */
-  maxRunning: number
-  /**
-   * start one agent when accessing /ping
-   * @default false
-   */
-  enableStartOneByPing: boolean
-}
+// export interface TaskAgentConfig {
+//   /**
+//    * @default 1
+//    */
+//   maxRunning: number
+//   /**
+//    * start an agent when accessed by /ping
+//    * @default false
+//    */
+//   enableStartOneByPing: boolean
+// }
+
+
 export interface TaskAgentState {
-  count: number
-  maxRunning: TaskAgentConfig['maxRunning']
   /**
    * Started taskAgent uuid when calling /task_agent/start_one,
    * blank string means no running TaskAgentService during this request
    */
-  startedAgentId: string
+  agentId: string
+  count: number
 }

@@ -7,44 +7,53 @@ import {
 
 import { testConfig } from '@/root.config'
 import {
-  initialJwtMiddlewareConfig,
-  JwtMiddlewareConfig,
-} from '~/index'
+  mwConfigNoOpts,
+  mwOptions,
+} from '@/test.config'
+import { ConfigKey, MiddlewareConfig } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
 
+  const path = '/test'
+
   describe('Should JwtAuthenticateOptions.passthrough work with value string', () => {
     it('valid url', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/' + Math.random().toString()
       const path2 = '/redirect-' + Math.random().toString()
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
-        passthrough: path2,
+      const mwConfig: MiddlewareConfig = {
+        ...mwConfigNoOpts,
+        options: {
+          ...mwOptions,
+          passthrough: path2,
+        },
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const resp = await httpRequest
-        .get('/')
+        .get(path)
       authShouldRedirect(resp, path2)
     })
 
     it('empty string', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/' + Math.random().toString()
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
-        passthrough: '',
+      const mwConfig: MiddlewareConfig = {
+        ...mwConfigNoOpts,
+        options: {
+          ...mwOptions,
+          passthrough: '',
+        },
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const resp = await httpRequest
-        .get('/')
+        .get(path)
       authShouldPassthroughEmptyStringNotFound(resp, 401)
     })
   })

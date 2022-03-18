@@ -7,69 +7,76 @@ import {
 } from '../helper'
 
 import { testConfig } from '@/root.config'
-import { authHeader1, payload1, secret, token1 } from '@/test.config'
 import {
-  initialJwtMiddlewareConfig,
-  JwtMiddlewareConfig,
-} from '~/index'
+  authHeader1, payload1,
+  mwConfigNoOpts,
+  mwOptions,
+} from '@/test.config'
+import { ConfigKey, MiddlewareConfig } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
 
+  const path = '/test'
+
   describe('Should JwtAuthenticateOptions.passthrough work with value: true', () => {
     it('passed', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/' + Math.random().toString()
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
-        passthrough: true,
+      const mwConfig: MiddlewareConfig = {
+        ...mwConfigNoOpts,
+        options: {
+          ...mwOptions,
+          passthrough: true,
+        },
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({ [ConfigKey.middlewareConfig]: mwConfig })
 
       const sendHeader = {
         authorization: authHeader1,
       }
       const resp = await httpRequest
-        .get('/')
+        .get(path)
         .set(sendHeader)
       authShouldPassed(resp, payload1)
     })
 
     it('token not found', async () => {
       const { app, httpRequest } = testConfig
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
-        passthrough: true,
+      const mwConfig: MiddlewareConfig = {
+        ...mwConfigNoOpts,
+        options: {
+          ...mwOptions,
+          passthrough: true,
+        },
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({ [ConfigKey.middlewareConfig]: mwConfig })
 
       const sendHeader = {
         authorization: '',
       }
       const resp = await httpRequest
-        .get('/')
+        .get(path)
       authShouldPassthroughNotFound(resp)
     })
 
     it('token valid faied', async () => {
       const { app, httpRequest } = testConfig
-      const path = '/' + Math.random().toString()
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
-        passthrough: true,
+      const mwConfig: MiddlewareConfig = {
+        ...mwConfigNoOpts,
+        options: {
+          ...mwOptions,
+          passthrough: true,
+        },
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({ [ConfigKey.middlewareConfig]: mwConfig })
 
       const sendHeader = {
         authorization: authHeader1 + 'FAKE',
       }
       const resp = await httpRequest
-        .get('/')
+        .get(path)
         .set(sendHeader)
       authShouldPassthroughValidFailed(resp)
     })

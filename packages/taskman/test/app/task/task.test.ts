@@ -1,3 +1,4 @@
+import assert from 'assert/strict'
 import { relative } from 'path'
 
 import { sleep } from '@midwayjs/decorator'
@@ -10,9 +11,6 @@ import {
   CreateTaskOptions,
   ServerMethod,
 } from '~/lib/index'
-
-// eslint-disable-next-line import/order
-import assert = require('power-assert')
 
 
 const filename = relative(process.cwd(), __filename)
@@ -35,9 +33,11 @@ describe.skip(filename, () => {
         assert(false)
         return
       }
-      if (typeof task.taskInfo.timeoutIntv === 'object') {
+      assert(task.taskId)
+
+      if (typeof task.timeoutIntv === 'object') {
         assert(
-          task.taskInfo.timeoutIntv.hours === Number.parseInt(initTaskDTO.timeoutIntv as string),
+          task.timeoutIntv.hours === Number.parseInt(initTaskDTO.timeoutIntv as string),
           JSON.stringify(task),
         )
       }
@@ -57,16 +57,18 @@ describe.skip(filename, () => {
         },
         createTaskDTO,
       }
-      const taskRunner = await tm.create(opts)
+      const task = await tm.create(opts)
 
-      if (! taskRunner) {
+      if (! task) {
         assert(false)
         return
       }
-      taskRunner.notifyRunning()
+      assert(task.taskId)
+
+      tm.notifyRunning(task.taskId)
       await sleep(500)
-      const prog = await taskRunner.getProgress()
-      assert(prog && prog.taskProgress === 0)
+      const progress = await tm.getProgress(task.taskId)
+      assert(progress && progress.taskProgress === 0)
     })
   })
 

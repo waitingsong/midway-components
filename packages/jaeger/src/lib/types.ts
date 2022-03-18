@@ -1,30 +1,19 @@
 import type { IncomingHttpHeaders } from 'http'
 
 import type { ILogger } from '@midwayjs/logger'
-import { KnownKeys } from '@waiting/shared-types'
+import { MiddlewareConfig as MWConfig, KnownKeys } from '@waiting/shared-types'
 import { TracingConfig } from 'jaeger-client'
 
 import { Context } from '../interface'
 
 
-export interface TracerConfig {
-  /**
-   * 请求路径忽略名单
-   * @default ['/favicon.ico', '/favicon.png']
-   */
-  whiteList: (string | RegExp)[]
+export interface Config {
   /**
    * 强制采样请求处理时间（毫秒）阈值，
    * 负数不采样
    */
   reqThrottleMsForPriority: number
   tracingConfig: TracingConfig
-  /**
-   * Use integrated tracer middleware,
-   * set to false if custom tracer middleware enabled
-   * @default true
-   */
-  enableMiddleWare: boolean
   /**
    * Catch and sample error,
    * set to false if other tracer middleware log the error
@@ -56,6 +45,12 @@ export interface TracerConfig {
 	 */
   processCustomFailure?: (ctx: Context) => Promise<void>
 }
+
+/** Authentication options for middleware */
+export interface MiddlewareOptions {
+  debug: boolean
+}
+export type MiddlewareConfig = MWConfig<MiddlewareOptions>
 
 export enum HeadersKey {
   /**

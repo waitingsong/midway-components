@@ -8,10 +8,14 @@ import {
 } from '../helper'
 
 import { testConfig } from '@/root.config'
-import { authHeader1, payload1, secret, token1 } from '@/test.config'
 import {
-  initialJwtMiddlewareConfig,
-  JwtMiddlewareConfig,
+  authHeader1, payload1,
+  mwConfigNoOpts,
+  mwOptions,
+} from '@/test.config'
+import {
+  ConfigKey,
+  MiddlewareConfig,
   passthroughCallback,
 } from '~/index'
 
@@ -21,17 +25,21 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 describe(filename, () => {
 
   const cb: passthroughCallback = async () => true
-  const path = '/'
+  const path = '/test'
 
   describe('Should JwtAuthenticateOptions.passthrough work with func', () => {
     it('true: passed', async () => {
       const { app, httpRequest } = testConfig
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
-        passthrough: cb,
+      const mwConfig: MiddlewareConfig = {
+        ...mwConfigNoOpts,
+        options: {
+          ...mwOptions,
+          passthrough: cb,
+        },
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const sendHeader = {
         authorization: authHeader1,
@@ -44,13 +52,16 @@ describe(filename, () => {
 
     it('true: token not found', async () => {
       const { app, httpRequest } = testConfig
-
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
-        passthrough: cb,
+      const mwConfig: MiddlewareConfig = {
+        ...mwConfigNoOpts,
+        options: {
+          ...mwOptions,
+          passthrough: cb,
+        },
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const resp = await httpRequest
         .get(path)
@@ -59,13 +70,17 @@ describe(filename, () => {
 
     it('invalid value: token not found', async () => {
       const { app, httpRequest } = testConfig
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
-        // @ts-expect-error
-        passthrough: 0,
+      const mwConfig: MiddlewareConfig = {
+        ...mwConfigNoOpts,
+        options: {
+          ...mwOptions,
+          // @ts-expect-error
+          passthrough: 0,
+        },
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const resp = await httpRequest
         .get(path)
@@ -74,13 +89,17 @@ describe(filename, () => {
 
     it('invalid value 1: token not found', async () => {
       const { app, httpRequest } = testConfig
-      const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-        ...initialJwtMiddlewareConfig,
-        ignore: [],
-        // @ts-expect-error
-        passthrough: 1,
+      const mwConfig: MiddlewareConfig = {
+        ...mwConfigNoOpts,
+        options: {
+          ...mwOptions,
+          // @ts-expect-error
+          passthrough: 1,
+        },
       }
-      app.addConfigObject({ jwtMiddlewareConfig })
+      app.addConfigObject({
+        [ConfigKey.middlewareConfig]: mwConfig,
+      })
 
       const resp = await httpRequest
         .get(path)

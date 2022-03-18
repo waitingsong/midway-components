@@ -21,7 +21,7 @@ import {
   TaskFullDTO,
   InitTaskDTO,
   TaskProgressDTO,
-  TaskManServerConfig,
+  TaskServerConfig,
   TbTaskProgressDO,
   TaskPayloadDTO,
   PickInitTaskOptions,
@@ -31,6 +31,7 @@ import {
   SetProgressDTO,
   ServerMethod,
   TaskProgressDetailDTO,
+  ConfigKey,
 } from '../lib/index'
 
 import { Application, Context } from '~/interface'
@@ -43,7 +44,7 @@ export class TaskQueueRepository {
 
   @Inject() protected readonly ctx: Context
 
-  @Config('taskManServerConfig') protected readonly serverConfig: TaskManServerConfig
+  @Config(ConfigKey.serverConfig) protected readonly serverConfig: TaskServerConfig
 
   public db: KmoreComponent<DbModel> | TracerKmoreComponent<DbModel>
 

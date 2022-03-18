@@ -8,12 +8,12 @@ import {
   dbDict,
   DbConfig,
   DbModel,
-  TaskManServerConfig,
+  TaskServerConfig,
 } from '../lib/index'
 
 
 export function genKmoreDbConfig(
-  serverConfig: TaskManServerConfig,
+  serverConfig: TaskServerConfig,
   defaultDbConfig: Required<DbConfig>,
 ): KmoreDbConfig<DbModel> {
 

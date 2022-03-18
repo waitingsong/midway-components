@@ -1,7 +1,11 @@
-import { IMidwayWebApplication } from '@midwayjs/web'
+import { IncomingHttpHeaders } from 'http'
+
 import supertest, { SuperTest } from 'supertest'
 
-import { TaskManComponent } from '~/lib'
+import { taskClientConfig } from './test.config'
+
+import { Application } from '~/interface'
+import { ClientService, Config, MiddlewareConfig } from '~/lib'
 import {
   TaskLogRepository,
   TaskQueueRepository,
@@ -10,18 +14,29 @@ import {
 import { TaskAgentService, TaskQueueService } from '~/service/index.service'
 
 
+export type TestResponse = supertest.Response
+export interface TestRespBody {
+  config: Config
+  mwConfig: MiddlewareConfig
+  cookies: unknown
+  header: IncomingHttpHeaders
+  url: string
+}
+
 export interface TestConfig {
+  config: Config
   /** host of test process */
   host: string
-  app: IMidwayWebApplication
+  app: Application
   httpRequest: SuperTest<supertest.Test>
   agent: TaskAgentService
   svc: TaskQueueService
   repo: TaskQueueRepository
   logRepo: TaskLogRepository
   retRepo: TaskResultRepository
-  tm: TaskManComponent
+  tm: ClientService
 }
 export const testConfig = {
+  config: taskClientConfig,
 } as TestConfig
 

@@ -1,11 +1,10 @@
+import assert from 'assert/strict'
 import { relative } from 'path'
+
 
 import { testConfig } from 'test/root.config'
 
 import { createTasks } from '../helper'
-
-// eslint-disable-next-line import/order
-import assert = require('power-assert')
 
 
 const filename = relative(process.cwd(), __filename)
@@ -19,8 +18,13 @@ describe.skip(filename, () => {
         await agent.run()
         setTimeout(() => {
           agent.stop()
-          assert(agent.isRunning === true)
-          done()
+            .then(() => {
+              assert(agent.isRunning === true)
+              done()
+            })
+            .catch((ex) => {
+              throw ex
+            })
         }, 500000)
       })
         .catch((ex) => {
