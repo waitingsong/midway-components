@@ -56,8 +56,6 @@ import { Context, FetchOptions } from '~/interface'
 @Scope(ScopeEnum.Singleton)
 export class TaskAgentService {
 
-  // @Inject() readonly logger: IMidwayLogger
-
   @Inject() readonly fetch: FetchComponent
 
   @Inject() readonly koid: KoidComponent
