@@ -9,6 +9,7 @@ import { genISO8601String } from '@waiting/shared-core'
 import {
   ClientURL,
   ServerMethod,
+  TaskAgentState,
 } from '../lib/index'
 import { TaskAgentService } from '../service/index.service'
 
@@ -23,21 +24,22 @@ export class AgentController {
   @Inject() protected readonly agentSvc: TaskAgentService
 
   @Get('/' + ClientURL.start)
-  async [ServerMethod.startOne](): Promise<string> {
+  async [ServerMethod.startOne](): Promise<TaskAgentState> {
     const trm = this.tracerManager
     let span: Span | undefined
 
     const agentId = this.agentSvc.id
-    if (! this.agentSvc.isRunning) {
-      await this.agentSvc.run(span)
-    }
+    await this.agentSvc.run(this.ctx, span)
 
-    const ret = agentId
+    const taskAgentState: TaskAgentState = {
+      agentId,
+      count: this.agentSvc.runnerSet.size,
+    }
 
     if (trm) {
       const inputLog: SpanLogInput = {
         event: 'TaskAgent-run',
-        agentId,
+        taskAgentState,
         pid: process.pid,
         time: genISO8601String(),
       }
@@ -45,12 +47,12 @@ export class AgentController {
       span.log(inputLog)
     }
 
-    return ret
+    return taskAgentState
   }
 
   @Get('/' + ClientURL.stop)
   async [ServerMethod.stop](): Promise<'OK'> {
-    this.agentSvc.stop()
+    await this.agentSvc.stop(this.ctx)
     return 'OK'
   }
 
