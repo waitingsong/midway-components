@@ -29,22 +29,26 @@ import {
   SignOptions,
   Secret,
 } from '~/interface'
+import { mergeConfig } from '~/util/common'
 
 
 @Provide()
 @Scope(ScopeEnum.Singleton)
 export class JwtComponent {
 
-  @_Config(ConfigKey.config) protected readonly config: Config
+  @_Config(ConfigKey.config) protected readonly configOri: Config
+
+  protected config: Config
 
   private verifySecretSet: Set<VerifySecret>
 
   @Init()
   async init(): Promise<void> {
-    const verifySet = processSecret(this.config.verifySecret)
-    const signSet = processSecret(this.config.secret)
+    const verifySet = processSecret(this.configOri.verifySecret)
+    const signSet = processSecret(this.configOri.secret)
     signSet.forEach(val => verifySet.add(val))
     this.verifySecretSet = verifySet
+    this.config = mergeConfig(this.configOri)
   }
 
   /**
