@@ -1,7 +1,6 @@
 
 export { AutoConfiguration as Configuration } from './configuration'
-export { TaskAgentMiddleware } from './middleware/task-agent.middleware'
-export { registerMiddleware } from './configuration'
+export { TaskManMiddleware } from './middleware/taskman.middleware'
 export * from './validation-schema/index.schema'
 export * from './controller/index.controller'
 export * from './service/index.service'
