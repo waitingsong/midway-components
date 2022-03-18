@@ -48,7 +48,11 @@ export class HomeController {
       isTraceEnabled,
     }
 
-    const res: TestRespBody = {
+    const config = this.config
+    const mwConfig = this.mwConfig
+    const res = {
+      config,
+      mwConfig,
       cookies,
       header,
       url,

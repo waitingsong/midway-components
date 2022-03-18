@@ -1,4 +1,4 @@
-import { Rule } from '@midwayjs/decorator'
+import { Rule } from '@midwayjs/validate'
 import { RecusiveCamelKeys } from '@waiting/shared-types'
 
 import { taskManValidSchemas } from '../validation-schema/index.schema'

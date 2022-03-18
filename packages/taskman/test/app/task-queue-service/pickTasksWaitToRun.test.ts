@@ -1,3 +1,5 @@
+import assert from 'assert/strict'
+import console from 'console'
 import { relative } from 'path'
 
 import {
@@ -9,9 +11,6 @@ import { testConfig } from 'test/root.config'
 import { createOneTask, createTasks } from '../helper'
 
 import { CreateTaskDTO, TaskState } from '~/lib/index'
-
-// eslint-disable-next-line import/order
-import assert = require('power-assert')
 
 
 const filename = relative(process.cwd(), __filename)
@@ -69,7 +68,8 @@ describe(filename, () => {
       const queues = await svc.pickTasksWaitToRun({
         maxRows: 2,
       })
-      assert(queues.length === 2)
+      console.info({ queuesLen: queues.length })
+      assert(queues.length === 2, queues.length.toString())
     })
 
     it('batch ASC', async () => {

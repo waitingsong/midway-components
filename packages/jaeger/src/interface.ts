@@ -16,7 +16,6 @@ export {
   NpmPkg,
 } from '@waiting/shared-types'
 
-
 declare module '@midwayjs/core/dist/interface' {
   // 将配置合并到 MidwayConfig 中
   interface MidwayConfig {
@@ -34,7 +33,6 @@ export {
   IMidwayApplication,
   IMidwayContainer,
   IMiddleware,
-  MidwayInformationService,
   NextFunction,
 } from '@midwayjs/core'
 export type Application = IMidwayApplication<Context>

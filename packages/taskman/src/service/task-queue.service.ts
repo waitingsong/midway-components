@@ -33,8 +33,7 @@ import {
 @Provide()
 export class TaskQueueService {
 
-  @Inject('jaeger:logger') protected readonly logger: Logger
-
+  @Inject() protected readonly logger: Logger
   @Inject() protected readonly repo: TaskQueueRepository
   @Inject() protected readonly logRepo: TaskLogRepository
   @Inject() protected readonly retRepo: TaskResultRepository;

@@ -4,50 +4,58 @@ import {
   Provide,
 } from '@midwayjs/decorator'
 import { FetchComponent, JsonResp, Node_Headers } from '@mw-components/fetch'
-import { HeadersKey, Logger } from '@mw-components/jaeger'
+import {
+  HeadersKey,
+  Logger,
+  TracerManager,
+} from '@mw-components/jaeger'
 import { retrieveHeadersItem } from '@waiting/shared-core'
 
 import { Context, FetchOptions } from '../interface'
 
-import { decreaseTaskRunnerCount, processJsonHeaders } from './helper'
-import { TaskRunner, taskRunnerFactory } from './task-runner'
+import { processJsonHeaders } from './helper'
 import { CreateTaskDTO } from './tm.dto'
 
 import {
   CreateTaskOptions,
   SetProgressInputData,
-  ServerAgent,
+  ServerURL,
   ServerMethod,
   TaskDTO,
   TaskLogDTO,
-  TaskManClientConfig,
+  TaskClientConfig,
   TaskProgressDTO,
   TaskProgressDetailDTO,
   TaskResultDTO,
-  initTaskManClientConfig,
+  initTaskClientConfig,
 } from './index'
 
 
 @Provide()
-export class TaskManComponent {
+export class ClientService {
 
   @Inject() protected readonly ctx: Context
 
-  @Inject('jaeger:logger') readonly logger: Logger
+  @Inject() readonly logger: Logger
 
   @Inject('fetch:fetchComponent') protected readonly fetch: FetchComponent
 
-  @Config('taskManClientConfig') protected readonly config: TaskManClientConfig
+  @Config('taskManClientConfig') protected readonly config: TaskClientConfig
 
-  protected readonly taskRunnerMap = new Map<TaskDTO['taskId'], TaskRunner>()
+  @Inject() readonly tracerManager: TracerManager
 
-  /** 请求 taskAgent 接口所需 headers */
+  runningTasks = new Set<TaskDTO['taskId']>()
+
+  /** 请求 server 接口所需 headers */
   protected readonly taskReqHeadersMap = new Map<TaskDTO['taskId'], Headers>()
 
 
-  async [ServerMethod.create](input: CreateTaskOptions): Promise<TaskRunner | undefined> {
+  /**
+   * Create a task
+   */
+  async [ServerMethod.create](input: CreateTaskOptions): Promise<TaskDTO | undefined> {
     const headers = this.processPostHeaders(input)
-    const spanHeader = this.ctx.tracerManager.headerOfCurrentSpan()?.[HeadersKey.traceId] as string
+    const spanHeader = this.tracerManager.headerOfCurrentSpan()?.[HeadersKey.traceId] as string
     headers.set(HeadersKey.traceId, spanHeader)
     const pdata: CreateTaskDTO = {
       ...input.createTaskDTO,
@@ -66,20 +74,22 @@ export class TaskManComponent {
     if (! opts.url) {
       throw new Error('host of opts.url empty')
     }
-    opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.create}`
+    opts.url = `${opts.url}${ServerURL.base}/${ServerURL.create}`
 
     const res = await this.fetch.fetch<JsonResp<TaskDTO>>(opts)
     if (res.code) {
       return
     }
-    const taskRunner = taskRunnerFactory(res.data, this)
-    this.writeTaskCache(taskRunner)
-    this.writeReqHeaders(taskRunner.taskInfo.taskId, headers)
-    return taskRunner
+    const { data: task } = res
+    // const taskRunner = taskRunnerFactory(res.data, this)
+    // @FIXME
+    // this.writeTaskCache(taskRunner)
+    this.writeReqHeaders(task.taskId, headers)
+    return task
   }
 
   /** Retrieve the task, taskId from request header */
-  async [ServerMethod.retrieveTask](taskId?: string): Promise<TaskRunner | undefined> {
+  async [ServerMethod.retrieveTask](taskId?: string): Promise<TaskDTO | undefined> {
     let id = taskId
     if (! id) {
       // const headers = new Node_Headers(this.ctx.request.headers)
@@ -94,26 +104,22 @@ export class TaskManComponent {
       return
     }
 
-    const cachedTask = this.readTaskFromCache(id)
-    if (cachedTask) {
-      return cachedTask
-    }
-
     const headers = this.retrieveHeadersFromContext()
-    const taskInfo = await this.getInfo(id, headers)
-    if (! taskInfo) {
+    const task = await this.getInfo(id, headers)
+    if (! task) {
       return
     }
-    const taskRunner = taskRunnerFactory(taskInfo, this)
-    this.writeTaskCache(taskRunner)
-    this.writeReqHeaders(taskRunner.taskInfo.taskId, headers)
-    return taskRunner
+    // @FIXME
+    // this.writeTaskCache(taskRunner)
+    this.writeReqHeaders(task.taskId, headers)
+    return task
   }
 
   async [ServerMethod.getInfo](
     id: TaskDTO['taskId'],
     headers?: Headers,
   ): Promise<TaskDTO | undefined> {
+
     const opts: FetchOptions = {
       ...this.initFetchOptions(id),
       method: 'GET',
@@ -123,7 +129,7 @@ export class TaskManComponent {
       opts.headers = headers
     }
 
-    opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.getInfo}`
+    opts.url = `${opts.url}${ServerURL.base}/${ServerURL.getInfo}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO>>(opts)
     if (res.code) {
       return
@@ -142,11 +148,12 @@ export class TaskManComponent {
       data: { id, msg },
     }
 
-    opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setRunning}`
+    opts.url = `${opts.url}${ServerURL.base}/${ServerURL.setRunning}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
     if (res.code) {
       return
     }
+    this.runningTasks.add(id)
     return res.data
   }
 
@@ -155,15 +162,16 @@ export class TaskManComponent {
     msg?: TaskLogDTO['taskLogContent'],
   ): Promise<TaskDTO | undefined> {
 
+    this.runningTasks.delete(id)
+
     const opts: FetchOptions = {
       ...this.initFetchOptions(id),
       method: 'POST',
       data: { id, msg },
     }
 
-    opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setCancelled}`
+    opts.url = `${opts.url}${ServerURL.base}/${ServerURL.setCancelled}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
-    decreaseTaskRunnerCount()
     if (res.code) {
       return
     }
@@ -175,14 +183,15 @@ export class TaskManComponent {
     msg?: TaskLogDTO['taskLogContent'],
   ): Promise<TaskDTO | undefined> {
 
+    this.runningTasks.delete(id)
+
     const opts: FetchOptions = {
       ...this.initFetchOptions(id),
       method: 'POST',
       data: { id, msg },
     }
-    opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setFailed}`
+    opts.url = `${opts.url}${ServerURL.base}/${ServerURL.setFailed}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
-    decreaseTaskRunnerCount()
     if (res.code) {
       return
     }
@@ -194,14 +203,15 @@ export class TaskManComponent {
     result?: TaskResultDTO['json'],
   ): Promise<TaskDTO | undefined> {
 
+    this.runningTasks.delete(id)
+
     const opts: FetchOptions = {
       ...this.initFetchOptions(id),
       method: 'POST',
       data: { id, msg: result },
     }
-    opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setSucceeded}`
+    opts.url = `${opts.url}${ServerURL.base}/${ServerURL.setSucceeded}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
-    decreaseTaskRunnerCount()
     if (res.code) {
       return
     }
@@ -217,7 +227,7 @@ export class TaskManComponent {
       method: 'GET',
       data: { id },
     }
-    opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.getProgress}`
+    opts.url = `${opts.url}${ServerURL.base}/${ServerURL.getProgress}`
     const res = await this.fetch.fetch<JsonResp<TaskProgressDetailDTO | undefined>>(opts)
     if (res.code) {
       return
@@ -234,7 +244,7 @@ export class TaskManComponent {
       method: 'GET',
       data: { id },
     }
-    opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.getResult}`
+    opts.url = `${opts.url}${ServerURL.base}/${ServerURL.getResult}`
     const res = await this.fetch.fetch<JsonResp<TaskResultDTO | undefined>>(opts)
     if (res.code) {
       return
@@ -258,12 +268,54 @@ export class TaskManComponent {
       method: 'POST',
       data,
     }
-    opts.url = `${opts.url}${ServerAgent.base}/${ServerAgent.setProgress}`
+    opts.url = `${opts.url}${ServerURL.base}/${ServerURL.setProgress}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO>>(opts)
     if (res.code) {
       return
     }
     return res.data
+  }
+
+
+  notifyRunning(
+    id: TaskDTO['taskId'],
+    msg?: TaskLogDTO['taskLogContent'],
+  ): void {
+
+    this.setRunning(id, msg).catch(ex => this.logger.error(ex))
+  }
+
+  notifyCancelled(
+    id: TaskDTO['taskId'],
+    msg?: TaskLogDTO['taskLogContent'],
+  ): void {
+
+    this.setCancelled(id, msg).catch(ex => this.logger.error(ex))
+  }
+
+  notifyFailed(
+    id: TaskDTO['taskId'],
+    msg?: TaskLogDTO['taskLogContent'],
+  ): void {
+
+    this.setFailed(id, msg).catch(ex => this.logger.error(ex))
+  }
+
+  notifySucceeded(
+    id: TaskDTO['taskId'],
+    result?: TaskResultDTO['json'],
+  ): void {
+
+    this.setSucceeded(id, result).catch(ex => this.logger.error(ex))
+  }
+
+  notifyProgress(
+    id: TaskDTO['taskId'],
+    progress: TaskProgressDTO['taskProgress'],
+    msg?: TaskLogDTO['taskLogContent'],
+  ): void {
+
+    this.setProgress(id, progress, msg).catch(ex => this.logger.error(ex))
   }
 
   initFetchOptions(id?: TaskDTO['taskId']): FetchOptions {
@@ -285,25 +337,6 @@ export class TaskManComponent {
     return opts
   }
 
-  /**
-   * Clean cache if id not passed
-   */
-  deleteTaskFromCache(id?: TaskDTO['taskId']): void {
-    if (id) {
-      this.taskRunnerMap.delete(id)
-    }
-    else {
-      this.taskRunnerMap.clear()
-    }
-  }
-
-  protected writeTaskCache(task: TaskRunner): void {
-    this.taskRunnerMap.set(task.taskInfo.taskId, task)
-  }
-
-  protected readTaskFromCache(id: TaskDTO['taskId']): TaskRunner | undefined {
-    return this.taskRunnerMap.get(id)
-  }
 
   protected writeReqHeaders(id: TaskDTO['taskId'], headers: Headers): void {
     this.taskReqHeadersMap.set(id, headers)
@@ -318,7 +351,7 @@ export class TaskManComponent {
     if (! input.headers) {
       const arr = this.config.transferHeaders && this.config.transferHeaders.length
         ? this.config.transferHeaders
-        : initTaskManClientConfig.transferHeaders
+        : initTaskClientConfig.transferHeaders
 
       arr.forEach((key) => {
         const val = retrieveHeadersItem(this.ctx.request.headers, key)
@@ -334,7 +367,7 @@ export class TaskManComponent {
     const headers = new Node_Headers()
     const arr = this.config.transferHeaders && this.config.transferHeaders.length
       ? this.config.transferHeaders
-      : initTaskManClientConfig.transferHeaders
+      : initTaskClientConfig.transferHeaders
 
     arr.forEach((key) => {
       const val = retrieveHeadersItem(this.ctx.request.headers, key)

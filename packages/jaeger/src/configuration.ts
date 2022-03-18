@@ -1,19 +1,23 @@
+/* eslint-disable @typescript-eslint/no-extraneous-class */
 import 'tsconfig-paths/register'
 
 import { join } from 'path'
 
-import { App, Config, Configuration, Inject } from '@midwayjs/decorator'
+import { MidwayInformationService } from '@midwayjs/core'
+import { App, Config, Configuration } from '@midwayjs/decorator'
 import { NpmPkg } from '@waiting/shared-types'
 
-import { TracerComponent } from './lib/component'
-import { TracerExtMiddleware } from './middleware/tracer-ext.middleware'
-import { TracerMiddleware } from './middleware/tracer.middleware'
+import {
+  ConfigKey,
+  MiddlewareConfig,
+  TracerComponent,
+  TracerExtMiddleware,
+  TracerMiddleware,
+} from './index'
 
-import { ConfigKey, MiddlewareConfig } from '~/index'
 import {
   Application,
   IMidwayContainer,
-  MidwayInformationService,
 } from '~/interface'
 
 
@@ -27,21 +31,22 @@ export class AutoConfiguration {
 
   @Config(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
 
-  @Inject() informationService: MidwayInformationService
-
-  async onConfigLoad(): Promise<void> {
-    const pkgNow = this.app.getConfig('pkg') as unknown
-    if (! pkgNow) {
-      const pkg = this.informationService.getPkg() as NpmPkg
-      this.app.addConfigObject({
-        pkg,
-      })
-    }
-  }
+  // @Inject() readonly informationService: MidwayInformationService
 
   async onReady(): Promise<void> {
     if (! this.app) {
       throw new TypeError('this.app invalid')
+    }
+
+    const pkgNow = this.app.getConfig('pkg') as unknown
+    if (! pkgNow) {
+      const informationService = await this.app.getApplicationContext().getAsync(MidwayInformationService)
+      if (informationService) {
+        const pkg = informationService.getPkg() as NpmPkg
+        this.app.addConfigObject({
+          pkg,
+        })
+      }
     }
 
     await this.app.getApplicationContext().getAsync(TracerComponent)

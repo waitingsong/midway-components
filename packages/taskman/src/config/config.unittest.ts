@@ -10,18 +10,18 @@ import {
 } from '../lib/index'
 
 
+export const taskClientConfig: TaskClientConfig = {
+  ...initTaskClientConfig,
+}
+
 /**
- * Remove this variable if running as client
+ * this variable can be delete if running as client
  */
 export const taskServerConfig: TaskServerConfig = {
   ...initTaskServerConfig,
   dbConfigs: {
     ...initDbConfig,
   },
-}
-
-export const taskClientConfig: TaskClientConfig = {
-  ...initTaskClientConfig,
 }
 
 export const taskMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {

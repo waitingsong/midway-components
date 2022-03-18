@@ -3,15 +3,15 @@ import { humanMemoryUsage } from '@waiting/shared-core'
 
 import { Context, IMiddleware, NextFunction } from '../interface'
 import { ConfigKey } from '../lib/config'
+import { TracerManager } from '../lib/tracer'
 import { TracerLog } from '../lib/types'
+import { getComponentConfig, matchFunc } from '../util/common'
 
 import {
   handleAppExceptionAndNext,
   processRequestQuery,
 } from './helper'
 
-import { TracerManager } from '~/lib/tracer'
-import { getComponentConfig, matchFunc } from '~/util/common'
 
 
 @Middleware()

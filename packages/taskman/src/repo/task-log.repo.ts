@@ -18,9 +18,10 @@ import {
   DbReplica,
   DbReplicaKeys,
   InitTaskLogDTO,
-  TaskManServerConfig,
+  TaskServerConfig,
   ServerMethod,
   TaskLogDTO,
+  ConfigKey,
 } from '../lib/index'
 
 import { Application, Context } from '~/interface'
@@ -33,9 +34,9 @@ export class TaskLogRepository {
 
   @Inject() protected readonly ctx: Context
 
-  @Inject('jaeger:logger') protected readonly logger: Logger
+  @Inject() protected readonly logger: Logger
 
-  @Config('taskManServerConfig') protected readonly serverConfig: TaskManServerConfig
+  @Config(ConfigKey.serverConfig) protected readonly serverConfig: TaskServerConfig
 
   public db: KmoreComponent<DbModel> | TracerKmoreComponent<DbModel>
 
