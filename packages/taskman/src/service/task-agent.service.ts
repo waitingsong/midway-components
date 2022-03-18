@@ -1,11 +1,10 @@
 import { randomUUID } from 'crypto'
 
-import { IMidwayLogger } from '@midwayjs/core'
+// import { IMidwayLogger } from '@midwayjs/core'
 import {
   Config,
   Init,
   Inject,
-  // Logger,
   Provide,
   Scope,
   ScopeEnum,
@@ -17,7 +16,7 @@ import {
 } from '@mw-components/fetch'
 import {
   HeadersKey,
-  // Logger,
+  Logger,
   Span,
   SpanLogInput,
   TracerTag,
@@ -50,15 +49,14 @@ import {
   initTaskClientConfig,
 } from '../lib/index'
 
-import { FetchOptions } from '~/interface'
+import { Context, FetchOptions } from '~/interface'
 
 
 @Provide()
 @Scope(ScopeEnum.Singleton)
 export class TaskAgentService {
 
-  // @Inject('jaeger:logger') protected readonly logger: Logger
-  @Inject() readonly logger: IMidwayLogger
+  // @Inject() readonly logger: IMidwayLogger
 
   @Inject() readonly fetch: FetchComponent
 
@@ -68,6 +66,7 @@ export class TaskAgentService {
   @Config(ConfigKey.serverConfig) protected readonly serverConfig: TaskServerConfig
 
   id: string
+  maxRunner = 1
   runnerSet = new Set<Subscription>()
 
   protected intv$: Observable<number>
@@ -81,6 +80,9 @@ export class TaskAgentService {
       : initTaskClientConfig.pickTaskTimer
 
     this.intv$ = timer(500, pickTaskTimer)
+    if (this.clientConfig.maxRunner > 1) {
+      this.maxRunner = this.clientConfig.maxRunner
+    }
   }
 
   get isRunning(): boolean {
@@ -89,7 +91,20 @@ export class TaskAgentService {
   }
 
   /** 获取待执行任务记录，发送到任务执行服务供其执行 */
-  async run(span?: Span): Promise<boolean> {
+  async run(
+    ctx?: Context,
+    span?: Span,
+  ): Promise<boolean> {
+
+    if (this.clientConfig.maxRunner > 0) {
+      this.maxRunner = this.clientConfig.maxRunner
+    }
+    if (this.runnerSet.size >= this.maxRunner) {
+      return true
+    }
+
+    const logger = await ctx?.requestContext.getAsync(Logger)
+
     const maxPickTaskCount = this.clientConfig.maxPickTaskCount > 0
       ? this.clientConfig.maxPickTaskCount
       : initTaskClientConfig.maxPickTaskCount
@@ -108,7 +123,7 @@ export class TaskAgentService {
           message: `taskAgent stopped at ${idx} of ${maxPickTaskCount}`,
           time: genISO8601String(),
         }
-        this.logger.info(input, span)
+        logger?.info(input, span)
 
         return false
       }),
@@ -122,7 +137,7 @@ export class TaskAgentService {
         return true
       }),
       mergeMap(({ rows }) => ofrom(rows)),
-      mergeMap(task => this.sendTaskToRun(task, reqId), 2),
+      mergeMap(task => this.sendTaskToRun(task, reqId), 1),
     )
 
     const subsp = stream$.subscribe({
@@ -137,7 +152,7 @@ export class TaskAgentService {
           errStack: err.stack,
           time: genISO8601String(),
         }
-        this.logger.warn(input)
+        logger?.warn(input)
         if (span) {
           span.finish()
         }
@@ -151,7 +166,7 @@ export class TaskAgentService {
           message: 'TaskAgent complete',
           time: genISO8601String(),
         }
-        this.logger.info(input)
+        logger?.info(input)
         if (span) {
           span.finish()
         }
@@ -162,14 +177,15 @@ export class TaskAgentService {
     return true
   }
 
-  stop(): void {
+  async stop(ctx?: Context): Promise<void> {
     try {
       this.runnerSet.forEach((subsp) => {
         subsp.unsubscribe()
       })
     }
     catch (ex) {
-      this.logger.warn('stop with error', (ex as Error).message)
+      const logger = await ctx?.requestContext.getAsync(Logger)
+      logger?.warn('stop with error', (ex as Error).message)
     }
     this.runnerSet.clear()
   }
@@ -194,7 +210,7 @@ export class TaskAgentService {
 
         const res = this.fetch.fetch<TaskDTO[] | JsonResp<TaskDTO[]>>(opts)
         return res
-      }, 2),
+      }, 1),
       map((res, idx) => {
         const rows = unwrapResp<TaskDTO[]>(res)
         return { rows, idx }
@@ -250,14 +266,14 @@ export class TaskAgentService {
   ): Promise<undefined> {
 
     if (! options || ! options.url) {
-      const input: SpanLogInput = {
-        [TracerTag.logLevel]: 'error',
-        taskId,
-        message: 'invalid fetch options',
-        options,
-        time: genISO8601String(),
-      }
-      this.logger.error(input)
+      // const input: SpanLogInput = {
+      //   [TracerTag.logLevel]: 'error',
+      //   taskId,
+      //   message: 'invalid fetch options',
+      //   options,
+      //   time: genISO8601String(),
+      // }
+      // this.logger.error(input)
       return
     }
 
@@ -299,14 +315,14 @@ export class TaskAgentService {
     }
 
     if (! opts.url.startsWith('http')) {
-      const input: SpanLogInput = {
-        [TracerTag.logLevel]: 'error',
-        taskId,
-        message: 'invalid fetch options',
-        opts,
-        time: genISO8601String(),
-      }
-      this.logger.info(input)
+      // const input: SpanLogInput = {
+      //   [TracerTag.logLevel]: 'error',
+      //   taskId,
+      //   message: 'invalid fetch options',
+      //   opts,
+      //   time: genISO8601String(),
+      // }
+      // this.logger.info(input)
       return
     }
 
@@ -359,10 +375,12 @@ export class TaskAgentService {
 
     await this.fetch.fetch(opts)
       .catch((ex) => {
-        this.logger.error(ex)
+        // this.logger.error(ex)
+        console.error(ex)
       })
 
-    this.logger.error(err)
+    // this.logger.error(err)
+    console.error(err)
   }
 
   get initFetchOptions(): FetchOptions {
@@ -419,7 +437,8 @@ export class TaskAgentService {
 
     await this.fetch.fetch(opts)
       .catch((ex) => {
-        this.logger.error({ opts, ex: ex as Error })
+        // this.logger.error({ opts, ex: ex as Error })
+        console.error({ opts, ex: ex as Error })
       })
 
   }
