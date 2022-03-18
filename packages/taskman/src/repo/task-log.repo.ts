@@ -1,4 +1,3 @@
-import { IMidwayLogger } from '@midwayjs/core'
 import {
   App,
   Config,
@@ -6,7 +5,7 @@ import {
   Inject,
   Provide,
 } from '@midwayjs/decorator'
-// import { Logger } from '@mw-components/jaeger'
+import { Logger } from '@mw-components/jaeger'
 import {
   DbManager,
   KmoreComponent,
@@ -35,8 +34,7 @@ export class TaskLogRepository {
 
   @Inject() protected readonly ctx: Context
 
-  // @Inject() protected readonly logger: Logger
-  @Inject() readonly logger: IMidwayLogger
+  @Inject() protected readonly logger: Logger
 
   @Config(ConfigKey.serverConfig) protected readonly serverConfig: TaskServerConfig
 
