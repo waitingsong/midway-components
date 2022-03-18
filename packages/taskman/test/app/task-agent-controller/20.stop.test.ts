@@ -22,7 +22,7 @@ describe(filename, () => {
         .expect(200)
 
       const resp = await httpRequest
-        .get(`${ClientURL.base}/${ClientURL.hello}`)
+        .get(`${ClientURL.base}/${ClientURL.status}`)
         .expect(200)
 
       const { count } = resp.body as TaskAgentState
@@ -33,7 +33,7 @@ describe(filename, () => {
       const { httpRequest } = testConfig
 
       const resp = await httpRequest
-        .get(`${ClientURL.base}/${ClientURL.hello}`)
+        .get(`${ClientURL.base}/${ClientURL.status}`)
         .expect(200)
       const { agentId } = resp.body as TaskAgentState
       assert(agentId)

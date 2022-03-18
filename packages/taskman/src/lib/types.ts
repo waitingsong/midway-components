@@ -71,41 +71,13 @@ export enum ClientURL {
   create = 'create',
   hello = 'hello',
   stats = 'stats',
+  status = 'status',
 }
 export enum ClientMethod {
-  /** start task pick and distribution */
   start = 'start',
-  /** stop task pick and distribution */
   stop = 'stop',
-  /** Create a task recored */
-
-  create = 'create',
-  read = 'read',
-  destroy = 'destroy',
+  status = 'status',
   hello = 'hello',
-  stats = 'stats',
-  setProgress = 'setProgress',
-  setRunning = 'setRunning',
-  setFailed = 'setFailed',
-  setCancelled = 'setCancelled',
-  setSucceeded = 'setSucceeded',
-
-  getInfo = 'getInfo',
-  getProgress = 'getProgress',
-  getResult = 'getResult',
-
-  /** Retrieve task, taskId from request header */
-  retrieveTask = 'retrieveTask',
-
-  notifyProgress = 'notifyProgress',
-  notifyRunning = 'notifyRunning',
-  notifyFailed = 'notifyFailed',
-  notifyCancelled = 'notifyCancelled',
-  notifySucceeded = 'notifySucceeded',
-
-  pickTasksWaitToRun = 'pickTasksWaitToRun ',
-  getPayload = 'getPayload',
-  setState = 'setState',
 }
 /**
  * @description http request path `${base}/${action}`, eg. /taskman/create

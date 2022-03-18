@@ -9,7 +9,7 @@ import { genISO8601String } from '@waiting/shared-core'
 
 import {
   ClientURL,
-  ServerMethod,
+  ClientMethod,
   TaskAgentState,
 } from '../lib/index'
 import { TaskAgentService } from '../service/index.service'
@@ -25,12 +25,12 @@ export class AgentController {
   @Inject() protected readonly agentSvc: TaskAgentService
 
   @Get('/' + ClientURL.start)
-  async [ServerMethod.startOne](): Promise<TaskAgentState> {
+  async [ClientMethod.start](): Promise<TaskAgentState> {
     const trm = this.tracerManager
     let span: Span | undefined
 
     await this.agentSvc.run(this.ctx, span)
-    const taskAgentState = await this[ServerMethod.hello]()
+    const taskAgentState = await this[ClientMethod.status]()
 
     if (trm) {
       const inputLog: SpanLogInput = {
@@ -47,19 +47,24 @@ export class AgentController {
   }
 
   @Get('/' + ClientURL.stop + '/:agentId')
-  async [ServerMethod.stop](@Param('agentId') id: string): Promise<TaskAgentState> {
+  async [ClientMethod.stop](@Param('agentId') id: string): Promise<TaskAgentState> {
     await this.agentSvc.stop(this.ctx, id)
-    const ret = await this[ServerMethod.hello]()
+    const ret = await this[ClientMethod.status]()
     return ret
   }
 
-  @Get('/' + ClientURL.hello)
-  async [ServerMethod.hello](): Promise<TaskAgentState> {
+  @Get('/' + ClientURL.status)
+  async [ClientMethod.status](): Promise<TaskAgentState> {
     const taskAgentState: TaskAgentState = {
       agentId: this.agentSvc.id,
       count: this.agentSvc.runnerSet.size,
     }
     return taskAgentState
+  }
+
+  @Get('/' + ClientURL.hello)
+  async [ClientMethod.hello](): Promise<'OK'> {
+    return 'OK'
   }
 
 }
