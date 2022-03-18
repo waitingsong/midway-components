@@ -1,4 +1,3 @@
-import { IMidwayLogger } from '@midwayjs/core'
 import {
   Config,
   Inject,
@@ -7,7 +6,7 @@ import {
 import { FetchComponent, JsonResp, Node_Headers } from '@mw-components/fetch'
 import {
   HeadersKey,
-  // Logger,
+  Logger,
   TracerManager,
 } from '@mw-components/jaeger'
 import { retrieveHeadersItem } from '@waiting/shared-core'
@@ -37,8 +36,7 @@ export class ClientService {
 
   @Inject() protected readonly ctx: Context
 
-  // @Inject() readonly logger: Logger
-  @Inject() readonly logger: IMidwayLogger
+  @Inject() readonly logger: Logger
 
   @Inject('fetch:fetchComponent') protected readonly fetch: FetchComponent
 
