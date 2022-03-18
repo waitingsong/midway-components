@@ -108,7 +108,7 @@ export enum ClientMethod {
   setState = 'setState',
 }
 /**
- * @description http request path `${base}/${action}`, eg. /task_agent/create
+ * @description http request path `${base}/${action}`, eg. /taskman/create
  */
 export enum ServerURL {
   base = '/taskman',
