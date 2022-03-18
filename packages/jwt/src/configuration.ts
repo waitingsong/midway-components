@@ -4,9 +4,9 @@ import { join } from 'path'
 
 import { App, Config, Configuration } from '@midwayjs/decorator'
 
+import { ConfigKey, MiddlewareConfig } from './lib/index'
 import { JwtMiddleware } from './middleware/jwt.middleware'
 
-import { ConfigKey, MiddlewareConfig } from '~/index'
 import { Application } from '~/interface'
 
 

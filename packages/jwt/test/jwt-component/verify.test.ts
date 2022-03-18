@@ -1,13 +1,12 @@
 import assert from 'assert/strict'
 import { relative } from 'path'
 
-import { testConfig } from '../root.config'
+import { testConfig } from '@/root.config'
 import {
   payload1,
   secret,
   token1,
-} from '../test.config'
-
+} from '@/test.config'
 import { JwtComponent, Config } from '~/index'
 
 
@@ -43,13 +42,13 @@ describe(filename, () => {
     it('without verify secret (using signing secret)', async () => {
       const { app } = testConfig
       const jwtConfig: Config = {
-        secret: 'not used',
+        secret: 'not-used',
       }
       app.addConfigObject({ jwtConfig })
       const container = app.getApplicationContext()
       const svc = await container.getAsync(JwtComponent)
 
-      const token = svc.sign(payload1, secret)
+      const token = svc.sign(payload1, jwtConfig.secret)
       const ret = svc.verify(token)
       assert.deepStrictEqual(ret.payload, payload1)
     })
