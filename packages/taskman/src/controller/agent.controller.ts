@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Inject,
+  Param,
 } from '@midwayjs/decorator'
 import { Span, SpanLogInput, TracerManager } from '@mw-components/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
@@ -28,13 +29,8 @@ export class AgentController {
     const trm = this.tracerManager
     let span: Span | undefined
 
-    const agentId = this.agentSvc.id
     await this.agentSvc.run(this.ctx, span)
-
-    const taskAgentState: TaskAgentState = {
-      agentId,
-      count: this.agentSvc.runnerSet.size,
-    }
+    const taskAgentState = await this[ServerMethod.hello]()
 
     if (trm) {
       const inputLog: SpanLogInput = {
@@ -50,15 +46,20 @@ export class AgentController {
     return taskAgentState
   }
 
-  @Get('/' + ClientURL.stop)
-  async [ServerMethod.stop](): Promise<'OK'> {
-    await this.agentSvc.stop(this.ctx)
-    return 'OK'
+  @Get('/' + ClientURL.stop + '/:agentId')
+  async [ServerMethod.stop](@Param('agentId') id: string): Promise<TaskAgentState> {
+    await this.agentSvc.stop(this.ctx, id)
+    const ret = await this[ServerMethod.hello]()
+    return ret
   }
 
   @Get('/' + ClientURL.hello)
-  [ServerMethod.hello](): 'OK' {
-    return 'OK'
+  async [ServerMethod.hello](): Promise<TaskAgentState> {
+    const taskAgentState: TaskAgentState = {
+      agentId: this.agentSvc.id,
+      count: this.agentSvc.runnerSet.size,
+    }
+    return taskAgentState
   }
 
 }

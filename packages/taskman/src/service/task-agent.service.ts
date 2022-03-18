@@ -177,7 +177,10 @@ export class TaskAgentService {
     return true
   }
 
-  async stop(ctx?: Context): Promise<void> {
+  async stop(ctx?: Context, agentId?: string): Promise<void> {
+    if (agentId && agentId !== this.id) {
+      return
+    }
     try {
       this.runnerSet.forEach((subsp) => {
         subsp.unsubscribe()
