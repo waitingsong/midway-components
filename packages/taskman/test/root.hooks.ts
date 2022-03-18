@@ -33,6 +33,10 @@ export const mochaHooks = async () => {
     beforeAll: async () => {
       const globalConfig = {
         keys: Math.random().toString(),
+        pkg: {
+          name: 'test',
+          version: '1.0.0',
+        },
         [ConfigKey.clientConfig]: taskClientConfig,
         [ConfigKey.serverConfig]: taskServerConfig,
       }
