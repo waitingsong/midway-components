@@ -21,9 +21,14 @@ import {
   VerifyOpts,
   JwtResult,
 } from './types'
-import { validatePayload, validateSignSecret, validateTokenString, validateVerifySecret } from './util'
-
 import {
+  validatePayload,
+  validateSignSecret,
+  validateTokenString,
+  validateVerifySecret,
+} from './util'
+
+import type {
   DecodeOptions,
   JsonObject,
   SignOptions,
