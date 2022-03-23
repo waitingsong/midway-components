@@ -1,6 +1,3 @@
-import { IMidwayApplication, IMidwayContext } from '@midwayjs/core'
-import { Context as KoaContext } from '@midwayjs/koa'
-
 
 export {
   JsonObject,
@@ -15,8 +12,9 @@ export {
   IMiddleware,
   NextFunction,
 } from '@midwayjs/core'
-export type Application = IMidwayApplication<Context>
-export type Context = IMidwayContext<KoaContext>
+export {
+  Application, Context,
+} from '@midwayjs/koa'
 
 export {
   DecodeOptions,
