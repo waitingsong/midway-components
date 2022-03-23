@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [15.0.4](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@15.0.3...@mw-components/taskman@15.0.4) (2022-03-23)
+
+
+### Bug Fixes
+
+* **taskman:** injected config of ClientService ([0396c6f](https://github.com/waitingsong/midway-components/commit/0396c6f4ecde38c0a1547f093ab36203df01b170))
+
+
+
+
+
 ## 15.0.3 (2022-03-23)
 
 **Note:** Version bump only for package @mw-components/taskman
