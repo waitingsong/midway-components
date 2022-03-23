@@ -16,7 +16,8 @@ export {
   JsonType,
   NpmPkg,
 } from '@waiting/shared-types'
-declare module '@midwayjs/core/dist/interface' {
+
+declare module '@midwayjs/core' {
   // 将配置合并到 MidwayConfig 中
   interface MidwayConfig {
     [ConfigKey.clientConfig]: TaskClientConfig
@@ -24,7 +25,6 @@ declare module '@midwayjs/core/dist/interface' {
     [ConfigKey.middlewareConfig]: MiddlewareConfig
   }
 }
-
 
 export {
   IMidwayApplication,
