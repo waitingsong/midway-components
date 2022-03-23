@@ -16,14 +16,13 @@ export {
   NpmPkg,
 } from '@waiting/shared-types'
 
-declare module '@midwayjs/core/dist/interface' {
+declare module '@midwayjs/core' {
   // 将配置合并到 MidwayConfig 中
   interface MidwayConfig {
     [ConfigKey.config]: Config
     [ConfigKey.middlewareConfig]: MiddlewareConfig
   }
-}
-declare module '@midwayjs/core' {
+
   interface Context {
     tracerTags: SpanLogInput
   }
