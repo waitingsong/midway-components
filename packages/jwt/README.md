@@ -31,10 +31,10 @@ export class ContainerConfiguration implements ILifeCycle { }
 
 declare module '@midwayjs/core' {
   interface Context {
-    jwtState: JwtState<JwtUser>
+    jwtState: JwtState<User>
   }
 }
-export interface JwtUser {
+export interface User {
   uid: string
   uname: string
 }

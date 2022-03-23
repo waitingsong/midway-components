@@ -5,7 +5,6 @@ import {
   Config,
   ConfigKey,
   MiddlewareConfig,
-  JwtState,
 } from './lib/index'
 
 
@@ -23,9 +22,9 @@ declare module '@midwayjs/core' {
     [ConfigKey.middlewareConfig]: MiddlewareConfig
   }
 
-  interface Context {
-    jwtState: JwtState
-  }
+  // interface Context {
+  //   jwtState: JwtState<User>
+  // }
 }
 
 export {

@@ -63,7 +63,7 @@ export type passthroughCallback = (ctx: Context) => Promise<boolean | RedirectUR
 
 
 /** Bind on Context.jwtState */
-export interface JwtState<T = JsonObject> {
+export interface JwtState<T = unknown> {
   header?: JwtHeader
   secret?: unknown
   signature?: string
