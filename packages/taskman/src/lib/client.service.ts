@@ -17,6 +17,7 @@ import { processJsonHeaders } from './helper'
 import { CreateTaskDTO } from './tm.dto'
 
 import {
+  ConfigKey,
   CreateTaskOptions,
   SetProgressInputData,
   ServerURL,
@@ -38,11 +39,11 @@ export class ClientService {
 
   @Inject() readonly logger: Logger
 
-  @Inject('fetch:fetchComponent') protected readonly fetch: FetchComponent
-
-  @Config('taskManClientConfig') protected readonly config: TaskClientConfig
+  @Inject() protected readonly fetch: FetchComponent
 
   @Inject() readonly tracerManager: TracerManager
+
+  @Config(ConfigKey.clientConfig) protected readonly config: TaskClientConfig
 
   runningTasks = new Set<TaskDTO['taskId']>()
 
