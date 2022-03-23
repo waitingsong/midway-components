@@ -3,15 +3,13 @@ import { SpanLogInput, TracerManager } from '@mw-components/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
 
 import { Context, IMiddleware, NextFunction } from '../interface'
+import { ClientService } from '../lib/client.service'
 import { ConfigKey } from '../lib/config'
 import { TaskClientConfig, TaskServerConfig } from '../lib/index'
-
-import { ClientService } from '~/lib/client.service'
 import {
   getComponentConfig,
   matchFunc,
-} from '~/util/common'
-
+} from '../util/common'
 
 
 @Middleware()
