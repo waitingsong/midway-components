@@ -23,16 +23,15 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/validate": "^3.1.0",
-    "@mw-components/fetch": "^18.0.1",
+    "@midwayjs/validate": "^3.1.6",
+    "@mw-components/fetch": "^18.0.3",
     "@mw-components/jaeger": "^11.0.0",
     "@mw-components/kmore": "^25.1.0",
-    "@mw-components/koid": "^6.0.0",
+    "@mw-components/koid": "^7.0.0",
     "@waiting/shared-core": "^16.0.0",
     "@waiting/shared-types": "^16.0.0",
     "pg": "^8.7.3",
-    "postgres-interval": "^4.0.0",
-    "tsconfig-paths": "3"
+    "postgres-interval": "^4.0.0"
   },
   "devDependencies": {
     "cross-env": "7",
