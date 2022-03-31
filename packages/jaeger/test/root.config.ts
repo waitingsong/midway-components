@@ -10,19 +10,19 @@ import { Config, MiddlewareConfig, TestSpanInfo } from '~/lib/types'
 
 export type TestResponse = supertest.Response
 export interface TestRespBody {
+  header: IncomingHttpHeaders
+  url: string
   config: Config
   mwConfig: MiddlewareConfig
   cookies: unknown
-  header: IncomingHttpHeaders
-  url: string
   spanInfo: TestSpanInfo
 }
 
 export interface TestConfig {
-  config: Config
   app: Application
-  httpRequest: SuperTest<supertest.Test>
+  config: Config
   host: string
+  httpRequest: SuperTest<supertest.Test>
 }
 export const testConfig = {
   config,
