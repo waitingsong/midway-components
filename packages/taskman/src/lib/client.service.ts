@@ -11,13 +11,13 @@ import {
 } from '@mw-components/jaeger'
 import { retrieveHeadersItem } from '@waiting/shared-core'
 
-import { Context, FetchOptions } from '../interface'
-
-import { processJsonHeaders } from './helper'
-import { CreateTaskDTO } from './tm.dto'
-
 import {
+  initTaskClientConfig,
   ConfigKey,
+} from './config'
+import { processJsonHeaders } from './helper'
+import {
+  CreateTaskDTO,
   CreateTaskOptions,
   SetProgressInputData,
   ServerURL,
@@ -28,8 +28,9 @@ import {
   TaskProgressDTO,
   TaskProgressDetailDTO,
   TaskResultDTO,
-  initTaskClientConfig,
-} from './index'
+} from './types'
+
+import type { Context, FetchOptions } from '~/interface'
 
 
 @Provide()

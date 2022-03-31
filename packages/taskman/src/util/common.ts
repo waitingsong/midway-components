@@ -1,15 +1,16 @@
 import { isPathMatchRules } from '@waiting/shared-core'
 
-import { Config, MiddlewareConfig } from '../index'
 import {
+  Config,
   ConfigKey,
   initialMiddlewareConfig,
   initTaskServerConfig,
   initTaskClientConfig,
   initMiddlewareOptions,
-} from '../lib/config'
+  MiddlewareConfig,
+} from '../lib/index'
 
-import { Application, Context } from '~/interface'
+import type { Application, Context } from '~/interface'
 
 
 /**

@@ -11,9 +11,6 @@ import * as jaeger from '@mw-components/jaeger'
 import * as db from '@mw-components/kmore'
 import * as koid from '@mw-components/koid'
 
-import { genKmoreDbConfig } from './repo/helper'
-import { TaskAgentService } from './service/task-agent.service'
-
 import {
   ConfigKey,
   initDbConfig,
@@ -21,9 +18,11 @@ import {
   DbReplicaKeys,
   TaskClientConfig,
   TaskServerConfig,
-} from './index'
+} from './lib/index'
+import { genKmoreDbConfig } from './repo/helper'
+import { TaskAgentService } from './service/task-agent.service'
 
-import { Application } from '~/interface'
+import type { Application } from '~/interface'
 
 
 @Configuration({

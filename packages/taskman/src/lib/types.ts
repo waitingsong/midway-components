@@ -1,9 +1,13 @@
+import { Rule } from '@midwayjs/validate'
 import { KnexConfig } from '@mw-components/kmore'
-import { MiddlewareConfig as MWConfig } from '@waiting/shared-types'
+import { MiddlewareConfig as MWConfig, JsonType, RecusiveCamelKeys } from '@waiting/shared-types'
 
-import { JsonObject, FetchOptions } from '../interface'
+import { JsonObject, FetchOptions, IPostgresInterval } from '../interface'
+import { taskManValidSchemas } from '../validation-schema/index.schema'
 
 import { CreateTaskDTO, TaskDTO, TaskLogDTO, TaskProgressDTO } from './tm.dto'
+
+
 
 
 export type Config = TaskServerConfig | TaskClientConfig
@@ -299,3 +303,124 @@ export interface TaskAgentState {
   agentId: string
   count: number
 }
+
+
+/* --- tm.dto --- */
+export type TaskDTO = RecusiveCamelKeys<DO>
+export type TaskProgressDTO = RecusiveCamelKeys<TbTaskProgressDO>
+export type TaskPayloadDTO = RecusiveCamelKeys<TbTaskPayloadDO>
+export type TaskResultDTO = RecusiveCamelKeys<TbTaskResultDO>
+export type TaskLogDTO = RecusiveCamelKeys<TbTaskLogDO>
+export type TaskProgressDetailDTO = Partial<TaskProgressDTO> & Pick<TaskDTO, 'taskState' | 'taskId'>
+
+export type TaskFullDTO = TaskDTO & {
+  taskProgress: TbTaskProgressDO['task_progress'] | null,
+  json: TaskPayloadDTO['json'] | null,
+}
+
+export type InitTaskDTO = Omit<TaskDTO, 'taskId'>
+export type InitTaskPayloadDTO = Omit<TaskPayloadDTO, 'taskId' | 'json'>
+export type InitTaskLogDTO = Omit<TaskLogDTO, 'taskLogId'>
+
+export class CreateTaskDTO {
+  /**
+   * Task execution information
+   */
+  @Rule(taskManValidSchemas.json.required())
+  json: TaskPayloadDTO['json']
+
+  /**
+   * @default now
+   */
+  @Rule(taskManValidSchemas.date)
+  expectStart?: TaskDTO['expectStart']
+
+  /**
+   * Expiry interval
+   *
+   * @default 30min
+   * @example {
+   *   hours: 12
+   *   minutest: 30
+   * }
+   * @description convert
+   * - intval to string: intv.toISOString()
+   * - intval to postgres obj: intv.toPostgres()
+   */
+  @Rule(taskManValidSchemas.timeoutIntv)
+  timeoutIntv?: TaskDTO['timeoutIntv']
+}
+
+
+export class SetProgressDTO {
+  taskId: TaskDTO['taskId']
+  taskProgress: TaskProgressDTO['taskProgress']
+}
+
+
+
+
+/* --- database.do --- */
+
+export class TbTaskDO {
+  /** bigInt string */
+  task_id: string
+  task_state: TaskState
+  expect_start: Date
+  started_at: Date | null
+  is_timeout: boolean
+  /**
+   * expiry interval
+   * @example {
+   *   hours: 12
+   *   minutest: 30
+   * }
+   * @description convert
+   * - intval to string: intv.toISOString()
+   * - intval to postgres obj: intv.toPostgres()
+   */
+  timeout_intv: Partial<IPostgresInterval> | string
+  ctime: Date | 'now()'
+  mtime: Date | null
+}
+
+export class TbTaskPayloadDO {
+  /** bigInt string */
+  task_id: string
+  /** custom data */
+  json: CallTaskOptions
+  ctime: Date | 'now()'
+  mtime: Date | null
+}
+
+export class TbTaskArchiveDO extends TbTaskDO {
+}
+
+
+export class TbTaskProgressDO {
+  /** bigInt string */
+  task_id: string
+  /** 0 - 100 */
+  task_progress: number
+  ctime: Date | 'now()'
+  mtime: Date | null
+}
+
+export class TbTaskResultDO {
+  /** bigInt string */
+  task_id: string
+  json: JsonType
+  ctime: Date | 'now()'
+}
+
+export class TbTaskLogDO {
+  /** bigInt string */
+  task_log_id: string
+  /** bigInt string */
+  task_id: string
+  task_log_content: string
+  ctime: Date | 'now()'
+}
+
+export class ViTaskDO extends TbTaskDO {}
+
