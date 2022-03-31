@@ -20,7 +20,7 @@ import {
 
 import { SpanHeaderInit, SpanLogInput, TracerLog, TracerTag } from './types'
 
-import { Context } from '~/interface'
+import type { Context } from '~/interface'
 
 
 @Provide()

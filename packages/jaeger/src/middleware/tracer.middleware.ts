@@ -2,11 +2,9 @@ import { Middleware } from '@midwayjs/decorator'
 
 import { Context, IMiddleware, NextFunction } from '../interface'
 import { ConfigKey } from '../lib/config'
+import { handleTopExceptionAndNext } from '../lib/helper'
 import { TracerManager } from '../lib/tracer'
 import { matchFunc } from '../util/common'
-
-import { handleTopExceptionAndNext } from './helper'
-
 
 
 @Middleware()

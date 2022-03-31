@@ -11,14 +11,13 @@ import {
   ConfigKey,
   MiddlewareConfig,
   TracerComponent,
+} from './lib/index'
+import {
   TracerExtMiddleware,
   TracerMiddleware,
-} from './index'
+} from './middleware/index.middleware'
 
-import {
-  Application,
-  IMidwayContainer,
-} from '~/interface'
+import type { Application, IMidwayContainer } from '~/interface'
 
 
 @Configuration({

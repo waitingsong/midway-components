@@ -2,13 +2,13 @@ import { NetworkInterfaceInfo, networkInterfaces } from 'os'
 
 import { isPathMatchRules } from '@waiting/shared-core'
 
-import { Config, MiddlewareConfig } from '../index'
 import {
   ConfigKey,
   initialMiddlewareConfig,
   initialConfig,
   initMiddlewareOptions,
 } from '../lib/config'
+import { Config, MiddlewareConfig } from '../lib/index'
 
 import { Application, Context } from '~/interface'
 
