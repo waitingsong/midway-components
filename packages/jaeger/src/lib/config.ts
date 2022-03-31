@@ -1,5 +1,4 @@
-import { processCustomFailure } from '../middleware/helper'
-
+import { processCustomFailure } from './helper'
 import {
   Config,
   MiddlewareConfig,

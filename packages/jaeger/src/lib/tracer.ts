@@ -16,8 +16,7 @@ import {
   processResponseData,
   updateCtxTagsData,
   updateDetailTags,
-} from '../middleware/helper'
-
+} from './helper'
 import { SpanHeaderInit, SpanLogInput, TracerLog, TracerTag } from './types'
 
 import type { Context } from '~/interface'
