@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Context } from '../interface'
 
 import { schemePrefix } from './config'
@@ -79,8 +80,11 @@ export function resolveFromCookies(
     return ''
   }
 
-  const token = cookies && typeof cookies.get === 'function'
-    ? cookies.get(cookieKey)
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  const fn = cookies ? cookies.get : void 0
+
+  const token = typeof fn === 'function'
+    ? fn(cookieKey) as JwtToken | undefined
     : ''
   return token
 }
