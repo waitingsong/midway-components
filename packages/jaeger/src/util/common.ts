@@ -8,7 +8,7 @@ import {
   initialConfig,
   initMiddlewareOptions,
 } from '../lib/config'
-import { Config, MiddlewareConfig } from '../lib/index'
+import { Config, MiddlewareConfig } from '../lib/types'
 
 import { Application, Context } from '~/interface'
 

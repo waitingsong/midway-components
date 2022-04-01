@@ -3,10 +3,12 @@ import {
   initialConfig,
   initialMiddlewareConfig,
 } from '../lib/config'
+import { processCustomFailure } from '../lib/tracer'
 
 
 export const tracerConfig: Config = {
   ...initialConfig,
+  processCustomFailure,
   tracingConfig: {
     serviceName: 'jaeger',
     sampler: {

@@ -1,4 +1,3 @@
-import { processCustomFailure } from './helper'
 import {
   Config,
   MiddlewareConfig,
@@ -16,7 +15,7 @@ export const initialConfig: Readonly<Omit<Config, 'tracingConfig'>> = {
     'host',
     'user-agent',
   ],
-  processCustomFailure,
+  // processCustomFailure,
 }
 export const initMiddlewareOptions: MiddlewareOptions = {
   debug: false,
