@@ -5,10 +5,6 @@ import { MiddlewareConfig as MWConfig, JsonType, RecusiveCamelKeys } from '@wait
 import { JsonObject, FetchOptions, IPostgresInterval } from '../interface'
 import { taskManValidSchemas } from '../validation-schema/index.schema'
 
-import { CreateTaskDTO, TaskDTO, TaskLogDTO, TaskProgressDTO } from './tm.dto'
-
-
-
 
 export type Config = TaskServerConfig | TaskClientConfig
 
