@@ -302,7 +302,7 @@ export interface TaskAgentState {
 
 
 /* --- tm.dto --- */
-export type TaskDTO = RecusiveCamelKeys<DO>
+export type TaskDTO = RecusiveCamelKeys<TbTaskDO>
 export type TaskProgressDTO = RecusiveCamelKeys<TbTaskProgressDO>
 export type TaskPayloadDTO = RecusiveCamelKeys<TbTaskPayloadDO>
 export type TaskResultDTO = RecusiveCamelKeys<TbTaskResultDO>

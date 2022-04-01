@@ -24,10 +24,10 @@
   "license": "MIT",
   "dependencies": {
     "@midwayjs/validate": "^3.1.6",
-    "@mw-components/fetch": "^18.0.3",
+    "@mw-components/fetch": "^18.0.5",
     "@mw-components/jaeger": "^11.0.3",
-    "@mw-components/kmore": "^25.1.0",
-    "@mw-components/koid": "^7.0.0",
+    "@mw-components/kmore": "^25.1.4",
+    "@mw-components/koid": "^7.0.3",
     "@waiting/shared-core": "^16.0.0",
     "@waiting/shared-types": "^16.0.0",
     "pg": "^8.7.3",
