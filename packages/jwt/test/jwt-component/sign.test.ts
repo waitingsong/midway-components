@@ -1,14 +1,14 @@
 import assert from 'assert/strict'
 import { relative } from 'path'
 
-import { testConfig } from '@/root.config'
 import {
   payload1,
   payload2,
   secret,
   token1,
   tokenHeader2,
-} from '@/test.config'
+} from '@/config.unittest'
+import { testConfig } from '@/root.config'
 import { JwtComponent } from '~/index'
 
 

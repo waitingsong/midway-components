@@ -2,8 +2,8 @@ import { relative } from 'path'
 
 import { authShouldFailedWithNotFound, authShouldSkipped } from '../helper'
 
+import { mwConfig as mConfig } from '@/config.unittest'
 import { testConfig } from '@/root.config'
-import { mwConfig as mConfig, mwOptions } from '@/test.config'
 import { ConfigKey, MiddlewareConfig } from '~/index'
 
 

@@ -9,11 +9,16 @@ import {
 } from '~/index'
 
 
-export { jwtMiddlewareConfig as mwConfig } from '~/config/config.unittest'
-
 export const secret = '123456abc'
 export const config: Config = {
   secret,
+}
+export const mwConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
+  ...initialMiddlewareConfig,
+  ignore: [], // !
+  options: {
+    ...initMiddlewareOptions,
+  },
 }
 export const mwConfigNoOpts: Omit<MiddlewareConfig, 'match' | 'ignore' | 'options'> = {
   ...initialMiddlewareConfig,
@@ -53,5 +58,4 @@ export const payload2 = { foo: 'bar' }
 export const tokenHeader2 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
 
 export const testRedirectURL = Math.random().toString()
-
 

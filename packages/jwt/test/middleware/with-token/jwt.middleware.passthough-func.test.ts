@@ -7,12 +7,12 @@ import {
   authShouldPassthroughNotFound,
 } from '../helper'
 
-import { testConfig } from '@/root.config'
 import {
   authHeader1, payload1,
   mwConfigNoOpts,
   mwOptions,
-} from '@/test.config'
+} from '@/config.unittest'
+import { testConfig } from '@/root.config'
 import {
   ConfigKey,
   MiddlewareConfig,
