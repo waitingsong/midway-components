@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.0.6](https://github.com/waitingsong/midway-components/compare/@mw-components/jwt@11.0.5...@mw-components/jwt@11.0.6) (2022-04-02)
+
+
+### Bug Fixes
+
+* **jwt:** ConfigKey define ([c3e186a](https://github.com/waitingsong/midway-components/commit/c3e186a260a91822bec9f603fb97c2562ca5453f))
+* **jwt:** retrieve cookies ([738d1da](https://github.com/waitingsong/midway-components/commit/738d1da8e5267623c32e04de138246ae129e743d))
+
+
+
+
+
 ## 11.0.5 (2022-03-24)
 
 **Note:** Version bump only for package @mw-components/jwt

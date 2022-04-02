@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.0.4](https://github.com/waitingsong/midway-components/compare/@mw-components/jaeger@11.0.3...@mw-components/jaeger@11.0.4) (2022-04-02)
+
+
+### Bug Fixes
+
+* **jaeger:** ConfigKey define ([b584aa6](https://github.com/waitingsong/midway-components/commit/b584aa66aa048bf5c91fe6ba5fa139a87bacaf55))
+* **jaeger:** cycle dependency ([26106ad](https://github.com/waitingsong/midway-components/commit/26106adefcc782cb4bf6a61fe2b7635acd431338))
+* **jaeger:** cycle dependency ([1f2f7e5](https://github.com/waitingsong/midway-components/commit/1f2f7e5458d1e97258f243b7c644f3cfb2ba618e))
+* **jaeger:** type import ([bb925d9](https://github.com/waitingsong/midway-components/commit/bb925d9b48054e2e257b19629dec93bfed9cc0fd))
+
+
+
+
+
 ## 11.0.3 (2022-03-24)
 
 **Note:** Version bump only for package @mw-components/jaeger

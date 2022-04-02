@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [15.0.6](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@15.0.5...@mw-components/taskman@15.0.6) (2022-04-02)
+
+
+### Bug Fixes
+
+* **taskman:** ConfigKey define ([bc754e8](https://github.com/waitingsong/midway-components/commit/bc754e84af7b310123d2cd27895ee1b26eefe9ce))
+* **taskman:** cycle dependency ([ffcf2b6](https://github.com/waitingsong/midway-components/commit/ffcf2b681476c49842fa9e47382b4aa5d772855a))
+* **taskman:** types ([a569e24](https://github.com/waitingsong/midway-components/commit/a569e24bd75c055ff823703fbf85350b3621cf2f))
+* **taskman:** types ([da1a787](https://github.com/waitingsong/midway-components/commit/da1a78753ff970ef9ef194d53538e6b379b97784))
+* **taskman:** types ([62bb47c](https://github.com/waitingsong/midway-components/commit/62bb47c17e2667b1b1150077239e5c37f560254f))
+
+
+
+
+
 ## [15.0.5](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@15.0.4...@mw-components/taskman@15.0.5) (2022-03-24)
 
 **Note:** Version bump only for package @mw-components/taskman
