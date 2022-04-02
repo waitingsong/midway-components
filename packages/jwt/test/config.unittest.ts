@@ -15,7 +15,7 @@ export const config: Config = {
 }
 export const mwConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
   ...initialMiddlewareConfig,
-  ignore: [], // !
+  ignore: ['/'],
   options: {
     ...initMiddlewareOptions,
   },
