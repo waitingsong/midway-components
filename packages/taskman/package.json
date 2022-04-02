@@ -1,7 +1,7 @@
 {
   "name": "@mw-components/taskman",
   "author": "waiting",
-  "version": "15.0.6",
+  "version": "15.0.7",
   "description": "midway component task manager",
   "keywords": [
     "midway",
@@ -25,7 +25,7 @@
   "dependencies": {
     "@midwayjs/validate": "^3.1.6",
     "@mw-components/fetch": "^18.0.5",
-    "@mw-components/jaeger": "^11.0.4",
+    "@mw-components/jaeger": "^11.0.5",
     "@mw-components/kmore": "^25.1.4",
     "@mw-components/koid": "^7.0.3",
     "@waiting/shared-core": "^16.0.0",
