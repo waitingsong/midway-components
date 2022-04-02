@@ -1,8 +1,8 @@
 import assert from 'assert/strict'
 import { relative } from 'path'
 
+import { taskClientConfig } from '@/config.unittest'
 import { testConfig } from '@/root.config'
-import { taskClientConfig } from '@/test.config'
 import { ClientURL, ConfigKey, TaskAgentState, TaskClientConfig } from '~/index'
 
 

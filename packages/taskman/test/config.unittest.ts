@@ -1,22 +1,41 @@
 import {
-  Config,
   initialMiddlewareConfig,
   initMiddlewareOptions,
   MiddlewareConfig,
   MiddlewareOptions,
-  initialConfig,
 } from '~/index'
+import {
+  initTaskClientConfig,
+  initDbConfig,
+  TaskClientConfig,
+  TaskServerConfig,
+  initTaskServerConfig,
+} from '~/lib/index'
 
 
-<<<<<<<< HEAD:packages/taskman/test/test.config.ts
-export {
-  taskMiddlewareConfig as mwConfig,
-  taskClientConfig,
-  taskServerConfig,
-} from '~/config/config.unittest'
-========
-export const config: Config = {
-  ...initialConfig,
+export const taskClientConfig: TaskClientConfig = {
+  ...initTaskClientConfig,
+}
+
+/**
+ * this variable can be delete if running as client
+ */
+export const taskServerConfig: TaskServerConfig = {
+  ...initTaskServerConfig,
+  dbConfigs: {
+    ...initDbConfig,
+  },
+}
+
+export const taskMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
+  ...initialMiddlewareConfig,
+  ignore: [
+    '/',
+    '/ping',
+  ],
+  options: {
+    ...initMiddlewareOptions,
+  },
 }
 
 export const mwConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
@@ -26,7 +45,6 @@ export const mwConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
     ...initMiddlewareOptions,
   },
 }
->>>>>>>> bp/main:packages/taskman/test/config.unittest.ts
 
 export const mwOptions: MiddlewareOptions = {
   ...initMiddlewareOptions,

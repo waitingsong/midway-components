@@ -2,8 +2,7 @@ import { IncomingHttpHeaders } from 'http'
 
 import supertest, { SuperTest } from 'supertest'
 
-import { taskClientConfig } from './test.config'
-
+import { taskClientConfig } from '@/config.unittest'
 import { Application } from '~/interface'
 import { ClientService, Config, MiddlewareConfig } from '~/lib'
 import {
