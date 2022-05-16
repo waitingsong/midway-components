@@ -1,9 +1,10 @@
-import assert from 'node:assert/strict'
+import assert from 'assert/strict'
+import { relative } from 'path'
 
-import { fileShortPath } from '@waiting/shared-core'
 
+const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
-describe(fileShortPath(import.meta.url), () => {
+describe(filename, () => {
 
   describe('should work', () => {
     it('always passed', () => {
