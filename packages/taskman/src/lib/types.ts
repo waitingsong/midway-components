@@ -1,6 +1,10 @@
 import { Rule } from '@midwayjs/validate'
 import { KnexConfig } from '@mw-components/kmore'
-import { MiddlewareConfig as MWConfig, JsonType, RecusiveCamelKeys } from '@waiting/shared-types'
+import {
+  MiddlewareConfig as MWConfig,
+  JsonType,
+  RecordCamelKeys,
+} from '@waiting/shared-types'
 
 import { JsonObject, FetchOptions, IPostgresInterval } from '../interface'
 import { taskManValidSchemas } from '../validation-schema/index.schema'
@@ -302,11 +306,11 @@ export interface TaskAgentState {
 
 
 /* --- tm.dto --- */
-export type TaskDTO = RecusiveCamelKeys<TbTaskDO>
-export type TaskProgressDTO = RecusiveCamelKeys<TbTaskProgressDO>
-export type TaskPayloadDTO = RecusiveCamelKeys<TbTaskPayloadDO>
-export type TaskResultDTO = RecusiveCamelKeys<TbTaskResultDO>
-export type TaskLogDTO = RecusiveCamelKeys<TbTaskLogDO>
+export type TaskDTO = RecordCamelKeys<TbTaskDO>
+export type TaskProgressDTO = RecordCamelKeys<TbTaskProgressDO>
+export type TaskPayloadDTO = RecordCamelKeys<TbTaskPayloadDO>
+export type TaskResultDTO = RecordCamelKeys<TbTaskResultDO>
+export type TaskLogDTO = RecordCamelKeys<TbTaskLogDO>
 export type TaskProgressDetailDTO = Partial<TaskProgressDTO> & Pick<TaskDTO, 'taskState' | 'taskId'>
 
 export type TaskFullDTO = TaskDTO & {
