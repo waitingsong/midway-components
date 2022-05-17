@@ -18,7 +18,7 @@ export const initialMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'ignore' |
 }
 
 
-export const enum ConfigKey {
+export enum ConfigKey {
   namespace = 'jwt',
   config = 'jwtConfig',
   middlewareConfig = 'jwtMiddlewareConfig',

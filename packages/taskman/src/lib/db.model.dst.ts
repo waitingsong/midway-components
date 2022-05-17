@@ -8,7 +8,7 @@ import {
   TbTaskResultDO,
   TbTaskLogDO,
   ViTaskDO,
-} from './database.do'
+} from './types'
 
 
 export interface DbModel {

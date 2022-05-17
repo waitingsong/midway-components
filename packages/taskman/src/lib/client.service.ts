@@ -11,12 +11,13 @@ import {
 } from '@mw-components/jaeger'
 import { retrieveHeadersItem } from '@waiting/shared-core'
 
-import { Context, FetchOptions } from '../interface'
-
-import { processJsonHeaders } from './helper'
-import { CreateTaskDTO } from './tm.dto'
-
 import {
+  initTaskClientConfig,
+  ConfigKey,
+} from './config'
+import { processJsonHeaders } from './helper'
+import {
+  CreateTaskDTO,
   CreateTaskOptions,
   SetProgressInputData,
   ServerURL,
@@ -27,8 +28,9 @@ import {
   TaskProgressDTO,
   TaskProgressDetailDTO,
   TaskResultDTO,
-  initTaskClientConfig,
-} from './index'
+} from './types'
+
+import type { Context, FetchOptions } from '~/interface'
 
 
 @Provide()
@@ -38,11 +40,11 @@ export class ClientService {
 
   @Inject() readonly logger: Logger
 
-  @Inject('fetch:fetchComponent') protected readonly fetch: FetchComponent
-
-  @Config('taskManClientConfig') protected readonly config: TaskClientConfig
+  @Inject() protected readonly fetch: FetchComponent
 
   @Inject() readonly tracerManager: TracerManager
+
+  @Config(ConfigKey.clientConfig) protected readonly config: TaskClientConfig
 
   runningTasks = new Set<TaskDTO['taskId']>()
 

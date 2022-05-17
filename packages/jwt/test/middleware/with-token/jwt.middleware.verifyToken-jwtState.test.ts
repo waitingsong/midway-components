@@ -2,12 +2,11 @@ import { relative } from 'path'
 
 import { authShouldPassed } from '../helper'
 
-import { testConfig } from '@/root.config'
 import {
   authHeader1, payload1,
   mwConfig as mConfig,
-  mwOptions,
-} from '@/test.config'
+} from '@/config.unittest'
+import { testConfig } from '@/root.config'
 import {
   Config,
   ConfigKey,

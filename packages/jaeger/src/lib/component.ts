@@ -13,10 +13,8 @@ import {
 } from 'jaeger-client'
 import { initGlobalTracer } from 'opentracing'
 
-import {
-  Config,
-  ConfigKey,
-} from './index'
+import { ConfigKey } from './config'
+import { Config } from './types'
 
 
 @Provide()

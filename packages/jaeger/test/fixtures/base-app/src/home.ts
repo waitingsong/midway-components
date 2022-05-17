@@ -7,7 +7,7 @@ import {
 
 import { TestRespBody } from '@/root.config'
 import { Context } from '~/interface'
-import { processPriority, ProcessPriorityOpts } from '~/middleware/helper'
+import { processPriority, ProcessPriorityOpts } from '~/lib/tracer'
 import {
   Config,
   ConfigKey,

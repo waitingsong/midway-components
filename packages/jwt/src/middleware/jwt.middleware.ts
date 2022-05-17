@@ -1,23 +1,21 @@
 import { Middleware } from '@midwayjs/decorator'
 
 import {
+  ConfigKey,
+  JwtAuthenticateOptions,
   JwtComponent,
+  JwtState,
   JwtMsg,
+  VerifySecret,
+  RedirectURL,
 } from '../lib/index'
 import { retrieveToken } from '../lib/resolvers'
 import {
-  JwtAuthenticateOptions,
-  VerifySecret,
-  RedirectURL,
-  JwtState,
-} from '../lib/types'
-
-import { ConfigKey } from '~/index'
-import { Context, IMiddleware, NextFunction } from '~/interface'
-import {
   getMiddlewareConfig,
   matchFunc,
-} from '~/util/common'
+} from '../util/common'
+
+import type { Context, IMiddleware, NextFunction } from '~/interface'
 
 
 @Middleware()

@@ -8,9 +8,8 @@ import { createApp, close, createHttpRequest } from '@midwayjs/mock'
 import { TaskLogRepository, TaskQueueRepository, TaskResultRepository } from '../src/repo/index.repo'
 import { TaskAgentService, TaskQueueService } from '../src/service/index.service'
 
-import { testConfig } from './root.config'
-import { taskClientConfig, taskServerConfig } from './test.config'
-
+import { taskClientConfig, taskServerConfig } from '@/config.unittest'
+import { testConfig } from '@/root.config'
 import { ClientService, ConfigKey } from '~/index'
 import { Application } from '~/interface'
 

@@ -5,9 +5,8 @@ import { join } from 'path'
 import * as WEB from '@midwayjs/koa'
 import { createApp, close, createHttpRequest } from '@midwayjs/mock'
 
-import { testConfig } from './root.config'
-import { config, mwConfig } from './test.config'
-
+import { config, mwConfig } from '@/config.unittest'
+import { testConfig } from '@/root.config'
 import { ConfigKey } from '~/index'
 import { Application } from '~/interface'
 
@@ -43,7 +42,9 @@ export const mochaHooks = async () => {
       testConfig.httpRequest = createHttpRequest(app)
       const { url } = testConfig.httpRequest.get('/')
       testConfig.host = url
-      // console.log({ url })
+
+      const names = app.getMiddleware().getNames()
+      assert(names.includes(ConfigKey.middlewareName) === mwConfig.enableMiddleware)
 
       // https://midwayjs.org/docs/testing
     },

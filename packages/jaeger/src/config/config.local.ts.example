@@ -3,12 +3,14 @@ import {
   initialConfig,
   initialMiddlewareConfig,
 } from '../lib/config'
+import { processCustomFailure } from '../lib/tracer'
 
 
 export const tracerConfig: Config = {
   ...initialConfig,
+  processCustomFailure,
   tracingConfig: {
-    // serviceName: 'jaeger',
+    serviceName: 'jaeger',
     sampler: {
       type: 'probabilistic',
       param: 1,
@@ -26,4 +28,5 @@ export const tracerMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> =
     new RegExp('/untraced_path_reg_exp$', 'u'),
   ],
 }
+
 

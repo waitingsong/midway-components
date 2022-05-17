@@ -2,8 +2,6 @@ import {
   InitTaskDTO,
   InitTaskPayloadDTO,
   TaskProgressDTO,
-} from './tm.dto'
-import {
   DbConfig,
   MiddlewareConfig,
   MiddlewareOptions,
@@ -22,7 +20,7 @@ export const initialMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'ignore' |
   enableMiddleware: true,
 }
 
-export const enum ConfigKey {
+export enum ConfigKey {
   namespace = 'taskman',
   config = 'taskClientConfig',
   middlewareConfig = 'taskMiddlewareConfig',

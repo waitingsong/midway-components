@@ -1,13 +1,16 @@
-import { MiddlewareConfig } from '../index'
+import {
+  initialMiddlewareConfig,
+  initMiddlewareOptions,
+  MiddlewareConfig,
+  MiddlewareOptions,
+} from '~/index'
 import {
   initTaskClientConfig,
   initDbConfig,
   TaskClientConfig,
   TaskServerConfig,
   initTaskServerConfig,
-  initialMiddlewareConfig,
-  initMiddlewareOptions,
-} from '../lib/index'
+} from '~/lib/index'
 
 
 export const taskClientConfig: TaskClientConfig = {
@@ -33,5 +36,20 @@ export const taskMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
   options: {
     ...initMiddlewareOptions,
   },
+}
+
+export const mwConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
+  ...initialMiddlewareConfig,
+  ignore: [], // !
+  options: {
+    ...initMiddlewareOptions,
+  },
+}
+
+export const mwOptions: MiddlewareOptions = {
+  ...initMiddlewareOptions,
+}
+export const mwConfigNoOpts: Omit<MiddlewareConfig, 'match' | 'ignore' | 'options'> = {
+  ...initialMiddlewareConfig,
 }
 

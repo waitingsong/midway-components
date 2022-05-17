@@ -1,13 +1,3 @@
-import { IMidwayApplication, IMidwayContext } from '@midwayjs/core'
-import { Context as KoaContext } from '@midwayjs/koa'
-
-import {
-  ConfigKey,
-  MiddlewareConfig,
-  TaskClientConfig,
-  TaskServerConfig,
-} from './lib/index'
-
 
 export { TracerLog } from '@mw-components/jaeger'
 export {
@@ -16,15 +6,6 @@ export {
   JsonType,
   NpmPkg,
 } from '@waiting/shared-types'
-declare module '@midwayjs/core/dist/interface' {
-  // 将配置合并到 MidwayConfig 中
-  interface MidwayConfig {
-    [ConfigKey.clientConfig]: TaskClientConfig
-    [ConfigKey.serverConfig]: TaskServerConfig
-    [ConfigKey.middlewareConfig]: MiddlewareConfig
-  }
-}
-
 
 export {
   IMidwayApplication,
@@ -33,8 +14,9 @@ export {
   MidwayInformationService,
   NextFunction,
 } from '@midwayjs/core'
-export type Application = IMidwayApplication<Context>
-export type Context = IMidwayContext<KoaContext>
+export {
+  Application, Context,
+} from '@midwayjs/koa'
 
 export type { Options as FetchOptions } from '@mw-components/fetch'
 
