@@ -1,5 +1,4 @@
 import {
-  ALL,
   Controller,
   Get,
   Inject,
@@ -37,13 +36,13 @@ export class ServerController {
   @Inject() protected readonly queueSvc: TaskQueueService
 
   @Post('/' + ServerURL.create)
-  async [ServerMethod.create](@Body(ALL) input: CreateTaskDTO): Promise<TaskDTO> {
+  async [ServerMethod.create](@Body() input: CreateTaskDTO): Promise<TaskDTO> {
     const ret = await this.queueSvc.create(input)
     return ret
   }
 
   @Get('/' + ServerURL.getInfo)
-  async [ServerMethod.getInfo](@Query() id: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
+  async [ServerMethod.getInfo](@Query('id') id: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
     const ret = await this.queueSvc.getInfo(id)
     return ret
   }
@@ -56,7 +55,7 @@ export class ServerController {
 
   @Post('/' + ServerURL.setRunning)
   async [ServerMethod.setRunning](
-    @Body(ALL) input: CommonSetMethodInputData,
+    @Body() input: CommonSetMethodInputData,
   ): Promise<TaskDTO | undefined> {
 
     const { id, msg } = input
@@ -66,7 +65,7 @@ export class ServerController {
 
   @Post('/' + ServerURL.setCancelled)
   async [ServerMethod.setCancelled](
-    @Body(ALL) input: CommonSetMethodInputData,
+    @Body() input: CommonSetMethodInputData,
   ): Promise<TaskDTO | undefined> {
 
     const { id, msg } = input
@@ -76,7 +75,7 @@ export class ServerController {
 
   @Post('/' + ServerURL.setFailed)
   async [ServerMethod.setFailed](
-    @Body(ALL) input: CommonSetMethodInputData,
+    @Body() input: CommonSetMethodInputData,
   ): Promise<TaskDTO | undefined> {
 
     const { id, msg } = input
@@ -86,7 +85,7 @@ export class ServerController {
 
   @Post('/' + ServerURL.setSucceeded)
   async [ServerMethod.setSucceeded](
-    @Body(ALL) input: CommonSetMethodInputData,
+    @Body() input: CommonSetMethodInputData,
   ): Promise<TaskDTO | undefined> {
 
     const { id, msg: result } = input
@@ -99,7 +98,7 @@ export class ServerController {
    */
   @Post('/' + ServerURL.setProgress)
   async [ServerMethod.setProgress](
-    @Body(ALL) input: SetProgressInputData,
+    @Body() input: SetProgressInputData,
   ): Promise<TaskProgressDTO | undefined> {
 
     const info: SetProgressDTO = {
@@ -112,7 +111,7 @@ export class ServerController {
 
   @Get('/' + ServerURL.getProgress)
   async [ServerMethod.getProgress](
-    @Query() id: TaskDTO['taskId'],
+    @Query('id') id: TaskDTO['taskId'],
   ): Promise<TaskProgressDetailDTO | undefined> {
 
     const ret = await this.queueSvc.getProgress(id)
@@ -120,7 +119,10 @@ export class ServerController {
   }
 
   @Get('/' + ServerURL.getResult)
-  async [ServerMethod.getResult](@Query() id: TaskDTO['taskId']): Promise<TaskResultDTO | undefined> {
+  async [ServerMethod.getResult](
+    @Query('id') id: TaskDTO['taskId'],
+  ): Promise<TaskResultDTO | undefined> {
+
     const ret = await this.queueSvc.getResult(id)
     return ret
   }
@@ -133,7 +135,7 @@ export class ServerController {
 
   @Get('/' + ServerURL.getPayload)
   async [ServerMethod.getPayload](
-    @Query() id: TaskDTO['taskId'],
+    @Query('id') id: TaskDTO['taskId'],
   ): Promise<TaskPayloadDTO | undefined> {
 
     const ret = await this.queueSvc.getPayload(id)
@@ -142,7 +144,7 @@ export class ServerController {
 
   @Post('/' + ServerURL.setState)
   async [ServerMethod.setState](
-    @Body(ALL) input: SetStateInputData,
+    @Body() input: SetStateInputData,
   ): Promise<TaskDTO | undefined> {
 
     const { id, state, msg } = input
