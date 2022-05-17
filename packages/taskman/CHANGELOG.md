@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [16.1.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@16.0.0...@mw-components/taskman@16.1.0) (2022-05-17)
+
+
+### Features
+
+* **taskman:** move kmore from dependency to peerDependencies ([143ff12](https://github.com/waitingsong/midway-components/commit/143ff12f4eabc91feb73340f043ec0602f635889))
+
+
+
+
+
 # [16.0.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@15.0.10...@mw-components/taskman@16.0.0) (2022-05-17)
 
 
