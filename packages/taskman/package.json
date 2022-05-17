@@ -26,7 +26,7 @@
     "@midwayjs/validate": "^3.3.0",
     "@mw-components/fetch": "^19.0.1",
     "@mw-components/jaeger": "^11.0.7",
-    "@mw-components/kmore": "^25.1.4",
+    "@mw-components/kmore": "^26.0.0",
     "@mw-components/koid": "^9.0.0",
     "@waiting/shared-core": "^18.0.0",
     "@waiting/shared-types": "^18.0.0",
@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "cross-env": "7",
-    "kmore-types": "^25.1.0"
+    "kmore-types": "^26.0.0"
   },
   "peerDependencies": {
     "@midwayjs/core": ">=3",
