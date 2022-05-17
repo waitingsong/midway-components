@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [15.0.10](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@15.0.9...@mw-components/taskman@15.0.10) (2022-05-17)
+
+
+### Bug Fixes
+
+* **taskman:** retrieve request data for midwayjs v3 ([bcd06f0](https://github.com/waitingsong/midway-components/commit/bcd06f0a6376d5ba0996f897d50b1ea56e880b26))
+
+
+
+
+
 ## [15.0.9](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@15.0.8...@mw-components/taskman@15.0.9) (2022-05-16)
 
 **Note:** Version bump only for package @mw-components/taskman
