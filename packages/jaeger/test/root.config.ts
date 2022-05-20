@@ -2,10 +2,13 @@ import { IncomingHttpHeaders } from 'http'
 
 import supertest, { SuperTest } from 'supertest'
 
-import { config } from './config.unittest'
-
+import { config } from '@/config.unittest'
 import { Application } from '~/interface'
-import { Config, MiddlewareConfig, TestSpanInfo } from '~/lib/types'
+import { 
+  Config, 
+  MiddlewareConfig,
+  TestSpanInfo,
+} from '~/lib/types'
 
 
 export type TestResponse = supertest.Response

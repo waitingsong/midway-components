@@ -21,7 +21,12 @@ export class HomeController {
 
   @Get('/')
   async home(ctx: Context): Promise<TestRespBody> {
-    const { jwtState, cookies, header, url } = ctx
+    const { 
+      cookies, 
+      header, 
+      url,
+      jwtState, 
+    } = ctx
     const config = this.config
     const mwConfig = this.mwConfig
     const res = {

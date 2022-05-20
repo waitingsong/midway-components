@@ -4,7 +4,10 @@ import { join } from 'path'
 
 import { App, Config, Configuration } from '@midwayjs/decorator'
 
-import { ConfigKey, MiddlewareConfig } from './lib/index'
+import {
+  ConfigKey,
+  MiddlewareConfig,
+} from './lib/index'
 import { JwtMiddleware } from './middleware/jwt.middleware'
 
 import { Application } from '~/interface'
@@ -20,7 +23,8 @@ export class AutoConfiguration {
 
   @Config(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
 
-  async onReady(): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async onReady(_container: IMidwayContainer): Promise<void> {
     if (! this.app) {
       throw new TypeError('this.app invalid')
     }
