@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [16.4.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@16.3.0...@mw-components/taskman@16.4.0) (2022-05-26)
+
+
+### Features
+
+* **taskman:** add stop api without param ([bec5a4f](https://github.com/waitingsong/midway-components/commit/bec5a4f64385a3c6d72f0767dd4383dd7ec98b4e))
+
+
+
+
+
 # [16.3.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@16.2.1...@mw-components/taskman@16.3.0) (2022-05-26)
 
 
