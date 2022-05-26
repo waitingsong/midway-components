@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 11.0.10 (2022-05-26)
+
+
+### Bug Fixes
+
+* **jwt:** missing type ([48b7220](https://github.com/waitingsong/midway-components/commit/48b722074fb7417dc2029e19d09e2f2ffbcf1830))
+
+
+
+
+
 ## [11.0.9](https://github.com/waitingsong/midway-components/compare/@mw-components/jwt@11.0.8...@mw-components/jwt@11.0.9) (2022-05-16)
 
 **Note:** Version bump only for package @mw-components/jwt

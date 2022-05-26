@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [16.2.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@16.1.0...@mw-components/taskman@16.2.0) (2022-05-26)
+
+
+### Features
+
+* **taskman:** change DbReplica from const enum to enum ([a5db869](https://github.com/waitingsong/midway-components/commit/a5db8693f5ae05cfe1d3108df1da5f891226e039))
+
+
+
+
+
 # [16.1.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@16.0.0...@mw-components/taskman@16.1.0) (2022-05-17)
 
 
