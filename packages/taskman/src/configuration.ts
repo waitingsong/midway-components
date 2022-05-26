@@ -16,9 +16,11 @@ import {
   initDbConfig,
   DbReplica,
   DbReplicaKeys,
+  MiddlewareConfig,
   TaskClientConfig,
   TaskServerConfig,
 } from './lib/index'
+import { TaskManMiddleware } from './middleware/taskman.middleware'
 import { genKmoreDbConfig } from './repo/helper'
 import { TaskAgentService } from './service/task-agent.service'
 
@@ -41,6 +43,7 @@ export class AutoConfiguration {
 
   @Config(ConfigKey.serverConfig) protected readonly serverConfig: TaskServerConfig
   @Config(ConfigKey.clientConfig) protected readonly clientConfig: TaskClientConfig
+  @Config(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
 
   async onReady(container: IMidwayContainer): Promise<void> {
     // const container = this.app.getApplicationContext()
@@ -51,16 +54,19 @@ export class AutoConfiguration {
     const agentSvc = await container.getAsync(TaskAgentService)
     await agentSvc.run()
 
-    // registerMiddleware(this.app)
+    if (this.mwConfig.enableMiddleware) {
+      registerMiddleware(this.app)
+    }
+
   }
 
 }
 
-// export function registerMiddleware(
-//   app: Application,
-// ): void {
+export function registerMiddleware(
+  app: Application,
+): void {
 
-//   // @ts-expect-error
-//   app.getMiddleware().insertLast(TaskAgentMiddleware)
-// }
+  // @ts-expect-error
+  app.getMiddleware().insertLast(TaskManMiddleware)
+}
 
