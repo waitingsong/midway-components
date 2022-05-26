@@ -10,7 +10,7 @@ import {
 } from './lib/index'
 import { JwtMiddleware } from './middleware/jwt.middleware'
 
-import { Application } from '~/interface'
+import { Application, IMidwayContainer } from '~/interface'
 
 
 @Configuration({
