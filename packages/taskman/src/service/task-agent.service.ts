@@ -47,6 +47,7 @@ import {
   TaskPayloadDTO,
   TaskState,
   initTaskClientConfig,
+  TaskAgentState,
 } from '../lib/index'
 
 import { Context, FetchOptions } from '~/interface'
@@ -86,6 +87,14 @@ export class TaskAgentService {
   get isRunning(): boolean {
     const flag = this.runnerSet.size > 0 ? true : false
     return flag
+  }
+
+  status(): TaskAgentState {
+    const taskAgentState: TaskAgentState = {
+      agentId: this.id,
+      count: this.runnerSet.size,
+    }
+    return taskAgentState
   }
 
   /** 获取待执行任务记录，发送到任务执行服务供其执行 */
