@@ -103,14 +103,23 @@ export class TaskAgentService {
     span?: Span,
   ): Promise<boolean> {
 
+    const logger = await ctx?.requestContext.getAsync(Logger)
+
+    const taskAgentState = this.status()
+    const inputLog: SpanLogInput = {
+      event: 'TaskAgent-run',
+      taskAgentState,
+      pid: process.pid,
+      time: genISO8601String(),
+    }
+    logger?.info(inputLog, span)
+
     if (this.clientConfig.maxRunner > 0) {
       this.maxRunner = this.clientConfig.maxRunner
     }
     if (this.runnerSet.size >= this.maxRunner) {
       return true
     }
-
-    const logger = await ctx?.requestContext.getAsync(Logger)
 
     const maxPickTaskCount = this.clientConfig.maxPickTaskCount > 0
       ? this.clientConfig.maxPickTaskCount
