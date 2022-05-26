@@ -30,7 +30,7 @@ export class AgentController {
     let span: Span | undefined
 
     await this.agentSvc.run(this.ctx, span)
-    const taskAgentState = await this[ClientMethod.status]()
+    const taskAgentState = await this.status()
 
     if (trm) {
       const inputLog: SpanLogInput = {
@@ -49,7 +49,7 @@ export class AgentController {
   @Get('/' + ClientURL.stop + '/:agentId')
   async [ClientMethod.stop](@Param('agentId') id: string): Promise<TaskAgentState> {
     await this.agentSvc.stop(this.ctx, id)
-    const ret = await this[ClientMethod.status]()
+    const ret = await this.status()
     return ret
   }
 
