@@ -55,11 +55,8 @@ export class AgentController {
 
   @Get('/' + ClientURL.status)
   async [ClientMethod.status](): Promise<TaskAgentState> {
-    const taskAgentState: TaskAgentState = {
-      agentId: this.agentSvc.id,
-      count: this.agentSvc.runnerSet.size,
-    }
-    return taskAgentState
+    const status = this.agentSvc.status()
+    return status
   }
 
   @Get('/' + ClientURL.hello)
