@@ -2,14 +2,17 @@ import { Middleware } from '@midwayjs/decorator'
 import { SpanLogInput, TracerManager } from '@mw-components/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
 
+
 import { Context, IMiddleware, NextFunction } from '../interface'
 import { ClientService } from '../lib/client.service'
 import { ConfigKey } from '../lib/config'
 import { TaskClientConfig, TaskServerConfig } from '../lib/index'
+import { TaskAgentService } from '../service/index.service'
 import {
   getComponentConfig,
   matchFunc,
 } from '../util/common'
+
 
 
 @Middleware()
@@ -89,6 +92,10 @@ async function middleware(
   }
   else if (Array.isArray(taskId) && taskId.length) {
     taskId.forEach(id => clientSvc.runningTasks.add(id))
+  }
+  else {
+    const taskAgent = await ctx.requestContext.getAsync(TaskAgentService)
+    await taskAgent.run()
   }
 
   return next()
