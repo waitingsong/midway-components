@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [16.3.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@16.2.1...@mw-components/taskman@16.3.0) (2022-05-26)
+
+
+### Bug Fixes
+
+* **taskman:** start TaskAgentService when accessed via http ([c8422ed](https://github.com/waitingsong/midway-components/commit/c8422edabb16fbfcab037d07cfeba09db7b08a7f))
+
+
+### Features
+
+* **taskman:** add TaskAgentService.status() ([e05024c](https://github.com/waitingsong/midway-components/commit/e05024c795602df58c7a7b1f17e05e6ab4b616ac))
+
+
+
+
+
 ## [16.2.1](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@16.2.0...@mw-components/taskman@16.2.1) (2022-05-26)
 
 
