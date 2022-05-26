@@ -33,7 +33,7 @@ describe(filename, () => {
       const { agentId, count } = resp.body as TaskAgentState
       assert(typeof agentId === 'string', agentId)
       assert(agentId.length && agentId.includes('-')) // uuid
-      assert(count === 1)
+      assert(count === 1, `count: ${count}`)
     })
 
     it('max 2', async () => {
@@ -59,7 +59,7 @@ describe(filename, () => {
         .expect(200)
 
       const { count } = resp.body as TaskAgentState
-      assert(count === config.maxRunner)
+      assert(count === config.maxRunner, `count: ${count}`)
     })
   })
 })
