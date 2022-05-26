@@ -56,7 +56,7 @@ export interface TaskClientConfig {
    */
   maxPickTaskCount: number
   /**
-   * @default 4
+   * @default 2
    */
   maxRunner: number
 }
