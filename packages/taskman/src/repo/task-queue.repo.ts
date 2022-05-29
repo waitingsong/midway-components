@@ -16,7 +16,6 @@ import {
   initTaskProgressDTO,
   DbModel,
   DbReplica,
-  DbReplicaKeys,
   TaskDTO,
   TaskFullDTO,
   InitTaskDTO,
@@ -51,7 +50,7 @@ export class TaskQueueRepository {
   @Init()
   async init(): Promise<void> {
     const container = this.app.getApplicationContext()
-    const dbManager: DbManager<DbReplicaKeys> = await container.getAsync(DbManager)
+    const dbManager = await container.getAsync(DbManager) as DbManager
     const db = await dbManager.create<DbModel>(this.ctx, DbReplica.taskMaster, unsubscribeEventFuncOnResFinish)
     this.db = db
   }
