@@ -1,14 +1,12 @@
-import { IncomingHttpHeaders } from 'http'
+import { IncomingHttpHeaders } from 'node:http'
+import { join } from 'node:path'
 
 import supertest, { SuperTest } from 'supertest'
 
-import { config } from '@/config.unittest'
+import { aliOssConfig } from '@/config.unittest'
 import { Application } from '~/interface'
-import {
-  Config,
-  MiddlewareConfig,
-  TestSpanInfo,
-} from '~/lib/types'
+import { AliOssComponent } from '~/lib'
+import { Config } from '~/lib/types'
 
 
 const CI = !! process.env.CI
@@ -17,9 +15,7 @@ export interface TestRespBody {
   header: IncomingHttpHeaders
   url: string
   config: Config
-  mwConfig: MiddlewareConfig
   cookies: unknown
-  spanInfo: TestSpanInfo
 }
 
 export interface TestConfig {
@@ -28,10 +24,15 @@ export interface TestConfig {
   config: Config
   host: string
   httpRequest: SuperTest<supertest.Test>
+  ossClient: AliOssComponent
 }
 export const testConfig = {
   CI,
-  config,
+  config: aliOssConfig,
   host: '',
 } as TestConfig
+
+
+export const cloudUrlPrefix = 'mobileFile/debug' + Math.random().toString()
+export const src = join(__dirname, 'tsconfig.json')
 

@@ -47,6 +47,7 @@ import {
   TaskPayloadDTO,
   TaskState,
   initTaskClientConfig,
+  TaskAgentState,
 } from '../lib/index'
 
 import { Context, FetchOptions } from '~/interface'
@@ -88,11 +89,30 @@ export class TaskAgentService {
     return flag
   }
 
+  status(): TaskAgentState {
+    const taskAgentState: TaskAgentState = {
+      agentId: this.id,
+      count: this.runnerSet.size,
+    }
+    return taskAgentState
+  }
+
   /** 获取待执行任务记录，发送到任务执行服务供其执行 */
   async run(
     ctx?: Context,
     span?: Span,
   ): Promise<boolean> {
+
+    const logger = await ctx?.requestContext.getAsync(Logger)
+
+    const taskAgentState = this.status()
+    const inputLog: SpanLogInput = {
+      event: 'TaskAgent-run',
+      taskAgentState,
+      pid: process.pid,
+      time: genISO8601String(),
+    }
+    logger?.info(inputLog, span)
 
     if (this.clientConfig.maxRunner > 0) {
       this.maxRunner = this.clientConfig.maxRunner
@@ -100,8 +120,6 @@ export class TaskAgentService {
     if (this.runnerSet.size >= this.maxRunner) {
       return true
     }
-
-    const logger = await ctx?.requestContext.getAsync(Logger)
 
     const maxPickTaskCount = this.clientConfig.maxPickTaskCount > 0
       ? this.clientConfig.maxPickTaskCount

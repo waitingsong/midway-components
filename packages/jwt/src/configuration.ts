@@ -1,13 +1,16 @@
 import 'tsconfig-paths/register'
-
-import { join } from 'path'
+import assert from 'node:assert'
+import { join } from 'node:path'
 
 import { App, Config, Configuration } from '@midwayjs/decorator'
 
-import { ConfigKey, MiddlewareConfig } from './lib/index'
+import {
+  ConfigKey,
+  MiddlewareConfig,
+} from './lib/index'
 import { JwtMiddleware } from './middleware/jwt.middleware'
 
-import { Application } from '~/interface'
+import { Application, IMidwayContainer } from '~/interface'
 
 
 @Configuration({
@@ -20,10 +23,9 @@ export class AutoConfiguration {
 
   @Config(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
 
-  async onReady(): Promise<void> {
-    if (! this.app) {
-      throw new TypeError('this.app invalid')
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async onReady(_container: IMidwayContainer): Promise<void> {
+    assert(this.app, 'this.app must be set')
 
     const { enableMiddleware } = this.mwConfig
     if (enableMiddleware || typeof enableMiddleware === 'number') {

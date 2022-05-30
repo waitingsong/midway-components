@@ -1,14 +1,18 @@
 {
-  "name": "@mw-components/jaeger",
+  "name": "@mw-components/ali-oss",
   "author": "waiting",
-  "version": "11.0.9",
-  "description": "midway component for jaeger",
+  "version": "1.1.0",
+  "description": "阿里云 OSS 命令行工具 ossutil 封装 midway.js 组件，提供 TypeScript 类型定义",
   "keywords": [
     "midway",
     "IoC",
     "plugin",
-    "apm",
-    "jaeger",
+    "ali",
+    "aliyun",
+    "ali-sdk",
+    "oss",
+    "ossutil",
+    "ESM",
     "ts"
   ],
   "bin": {},
@@ -24,10 +28,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@types/jaeger-client": "^3.18.3",
     "@waiting/shared-core": "^18.0.0",
-    "jaeger-client": "^3.19.0",
-    "opentracing": "^0.14.5"
+    "@yuntools/ali-oss": "^12.0.0"
   },
   "devDependencies": {
     "@waiting/shared-types": "^18.0.0",
@@ -53,6 +55,8 @@
     "clean:cache": "rm -rf .eslintcache .vscode/.tsbuildinfo .vscode/.tsbuildinfo.*",
     "clean:lock": "rm package-lock.json -f",
     "cov": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json c8 mocha --parallel=false",
+    "dev": "cross-env TS_NODE_TYPE_CHECK=false TS_NODE_TRANSPILE_ONLY=true NODE_ENV=local ../../node_modules/.bin/midway-bin dev --ts --port=7001",
+    "db:gen": "kmore gen --project tsconfig.cjs.json --path ./src",
     "lint": "eslint --fix --cache {src,test}/**/*.ts",
     "lint:nofix": "eslint --cache {src,test}/**/*.ts",
     "purge": "npm run clean && rm node_modules -rf && rm package-lock.json -f",

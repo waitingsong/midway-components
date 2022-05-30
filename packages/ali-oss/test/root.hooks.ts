@@ -5,11 +5,13 @@ import { join } from 'path'
 import * as WEB from '@midwayjs/koa'
 import { createApp, close, createHttpRequest } from '@midwayjs/mock'
 
-import { config, mwConfig } from '@/config.unittest'
-import { testConfig } from '@/root.config'
-import { ConfigKey } from '~/index'
+import { aliOssConfig } from '@/config.unittest'
+import { cloudUrlPrefix, testConfig } from '@/root.config'
+import { AliOssComponent, ConfigKey } from '~/index'
 import { Application } from '~/interface'
 
+
+const target = `${cloudUrlPrefix}/`
 
 /**
  * @see https://mochajs.org/#root-hook-plugins
@@ -29,8 +31,7 @@ export const mochaHooks = async () => {
     beforeAll: async () => {
       const globalConfig = {
         keys: Math.random().toString(),
-        [ConfigKey.config]: config,
-        [ConfigKey.middlewareConfig]: mwConfig,
+        [ConfigKey.config]: aliOssConfig,
       }
       const opts = {
         imports: [WEB],
@@ -43,10 +44,17 @@ export const mochaHooks = async () => {
       const { url } = testConfig.httpRequest.get('/')
       testConfig.host = url
 
-      const names = app.getMiddleware().getNames()
-      assert(names.includes(ConfigKey.middlewareName) === mwConfig.enableMiddleware)
-
       // https://midwayjs.org/docs/testing
+
+
+      const container = app.getApplicationContext()
+      const ossClient = await container.getAsync(AliOssComponent)
+      testConfig.ossClient = ossClient
+
+      await ossClient.rmrf('master', target)
+      const ret = await ossClient.mkdir('master', target)
+      assert(! ret.exitCode, `mkdir ${target} failed, ${ret.stderr}`)
+      assert(ret.data)
     },
 
     beforeEach: async () => {
@@ -56,12 +64,17 @@ export const mochaHooks = async () => {
     afterEach: async () => {
       const { app } = testConfig
       app.addConfigObject({
-        [ConfigKey.config]: config,
-        [ConfigKey.middlewareConfig]: mwConfig,
+        [ConfigKey.config]: aliOssConfig,
       })
     },
 
     afterAll: async () => {
+      const { ossClient } = testConfig
+
+      const ret = await ossClient.rmrf('master', target)
+      assert(! ret.exitCode, `mkdir ${target} failed, ${ret.stderr}`)
+      assert(ret.data)
+
       if (testConfig.app) {
         await close(testConfig.app)
       }
