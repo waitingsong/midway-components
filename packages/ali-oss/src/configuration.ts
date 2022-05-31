@@ -6,7 +6,7 @@ import { App, Configuration } from '@midwayjs/decorator'
 
 import { ConfigKey } from './lib/index'
 
-import { Application, IMidwayContainer } from '~/interface'
+import type { Application, IMidwayContainer } from '~/interface'
 
 
 @Configuration({
