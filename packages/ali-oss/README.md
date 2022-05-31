@@ -51,7 +51,7 @@ Update project `src/config/config.prod.ts`
 import { Config } from '@mw-components/ali-oss'
 
 export enum ClientKey {
-  master = 'master',
+  ossmain = 'ossmain',
 }
 
 const clientConfig = {
@@ -64,11 +64,30 @@ const clientConfig = {
 }
 
 export const aliOssConfig: Readonly<Config<ClientKey>> = {
-  master: clientConfig,
+  ossmain: clientConfig,
 }
 ```
 
 ## Usage
+
+### Inject and mkdir()
+
+```ts
+import assert from 'node:assert/strict'
+import { AliOssComponent } from '@mw-components/ali-oss'
+import { App, Config, Inject } from '@midwayjs/decorator'
+
+export class RootClass {
+  @Inject() readonly ossClient: AliOssComponent
+
+  async mkdir(path: string): Promise<void> {
+    const mkdirRet = await ossClient.mkdir('ossmain', path)
+    assert(! mkdirRet.exitCode, 'mkdir failed')
+    assert(mkdirRet.data, 'mkdir failed')
+  }
+}
+
+```
 
 ### Methods
 
