@@ -174,7 +174,7 @@ export class AliOssComponent {
   async rm(
     clientId: keyof Config,
     target: string,
-    options: RmOptions,
+    options?: RmOptions,
   ): Promise<ProcessRet> {
 
     const opts = this.prepareOptions<RmOptions>(
@@ -279,7 +279,7 @@ export class AliOssComponent {
   async sign(
     clientId: keyof Config,
     src: string,
-    options: SignOptions,
+    options?: SignOptions,
   ): Promise<ProcessRet<DataSign>> {
 
     const opts = this.prepareOptions<SignOptions>(
