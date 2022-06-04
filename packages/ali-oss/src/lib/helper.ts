@@ -33,7 +33,7 @@ export async function runner<
 
   const opts = genOptions<T>(options)
 
-  // @ts-expect-error
+  // @ts-ignore
   const ret = await client[fnKey](opts) as Promise<R>
   return ret
 }

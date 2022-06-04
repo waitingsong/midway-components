@@ -34,5 +34,19 @@ export const testConfig = {
 
 
 export const cloudUrlPrefix = 'mobileFile/debug' + Math.random().toString()
-export const src = join(__dirname, 'tsconfig.json')
-
+export const nameLT = '联通€-&a\'b^c=.json'
+export const testDir = __dirname
+export const src = join(testDir, 'tsconfig.json')
+export const srcLT = join(testDir, 'files', nameLT)
+export const srcDir = join(testDir, 'files')
+export const files: string[] = [
+  nameLT,
+  '1.txt',
+  '2.txt',
+  '.nycrc.json',
+  'tsconfig.json',
+  'subdir/1.txt',
+  'subdir/2.txt',
+  'subdir/.nycrc.json',
+  'subdir/tsconfig.json',
+]

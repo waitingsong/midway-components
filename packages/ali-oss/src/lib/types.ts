@@ -43,4 +43,5 @@ export type StatOptions = Omit<Ali.StatOptions, 'target'>
 export type PathExistsOptions = Omit<Ali.PathExistsOptions, 'target'>
 export type MvOptions = Omit<Ali.MvOptions, 'target' | 'src'>
 export type SignOptions = Omit<Ali.SignOptions, 'src'>
+export type SyncOptions = Omit<Ali.SyncOptions, 'target' | 'src'>
 

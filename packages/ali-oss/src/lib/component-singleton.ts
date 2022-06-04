@@ -35,6 +35,7 @@ import {
   CpOptions,
   LinkOptions,
   SignOptions,
+  SyncOptions,
 } from './types'
 
 
@@ -290,6 +291,30 @@ export class AliOssComponent {
       src,
     )
     const ret = await runner<SignOptions, ProcessRet<DataSign>>(opts)
+    return ret
+  }
+
+  /**
+   * 同步本地文件到 OSS
+   * - force 参数默认 true
+   * - 若 force 为 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
+   * @link https://help.aliyun.com/document_detail/193394.html
+   */
+  async syncRemote(
+    clientId: keyof Config,
+    src: string,
+    target: string,
+    options?: SyncOptions,
+  ): Promise<ProcessRet<DataCp>> {
+
+    const opts = this.prepareOptions<SyncOptions>(
+      clientId,
+      FnKey.syncRemote,
+      options,
+      target,
+      src,
+    )
+    const ret = await runner<SyncOptions, ProcessRet<DataCp>>(opts)
     return ret
   }
 
