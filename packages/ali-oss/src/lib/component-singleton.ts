@@ -110,7 +110,7 @@ export class AliOssComponent {
     options?: CpOptions,
   ): Promise<ProcessRet<DataCp>> {
 
-    const opts = this.prepareOptions<UploadOptions>(
+    const opts = this.prepareOptions<CpOptions>(
       clientId,
       FnKey.cp,
       options,
@@ -292,7 +292,6 @@ export class AliOssComponent {
     const ret = await runner<SignOptions, ProcessRet<DataSign>>(opts)
     return ret
   }
-
 
 
 
