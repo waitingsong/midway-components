@@ -29,7 +29,7 @@
   "license": "MIT",
   "dependencies": {
     "@waiting/shared-types": "^18.0.0",
-    "@yuntools/ali-oss": "^12.0.0"
+    "@yuntools/ali-oss": "^13.0.1"
   },
   "devDependencies": {
     "cross-env": "7"
