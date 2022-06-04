@@ -1,12 +1,11 @@
-import assert from 'assert/strict'
-import { relative } from 'path'
+import assert from 'node:assert/strict'
+import { relative } from 'node:path'
 
 import { cloudUrlPrefix, src, testConfig } from '@/root.config'
 import { ClientKey } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-
 
 describe(filename, () => {
 
