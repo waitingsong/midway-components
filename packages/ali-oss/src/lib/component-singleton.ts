@@ -84,6 +84,7 @@ export class AliOssComponent {
    */
   async mkdir(
     clientId: keyof Config,
+    /** OSS 对象，不包括 bucket */
     target: string,
     options?: MkdirOptions,
   ): Promise<ProcessRet> {
@@ -100,13 +101,17 @@ export class AliOssComponent {
   }
 
   /**
-   * 在远程拷贝文件
+   * 拷贝文件，
+   * 拷贝本地目录文件到远程建议使用 `upload()` 或者 `syncRemote()` 方法
+   *
    * 若 force 为空或者 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
    * @link https://help.aliyun.com/document_detail/120057.html
    */
   async cp(
     clientId: keyof Config,
+    /** 本地文件、目录或者远程 OSS 对象 */
     src: string,
+    /** OSS 对象，不包括 bucket */
     target: string,
     options?: CpOptions,
   ): Promise<ProcessRet<DataCp>> {
@@ -129,7 +134,9 @@ export class AliOssComponent {
    */
   async upload(
     clientId: keyof Config,
+    /** 本地目录或文件 */
     src: string,
+    /** OSS 对象，不包括 bucket */
     target: string,
     options?: UploadOptions,
   ): Promise<ProcessRet<DataCp>> {
@@ -151,7 +158,9 @@ export class AliOssComponent {
    */
   async createSymlink(
     clientId: keyof Config,
+    /** OSS 对象，不包括 bucket */
     src: string,
+    /** OSS 软连接对象，不包括 bucket */
     target: string,
     options?: LinkOptions,
   ): Promise<ProcessRet> {
@@ -174,6 +183,7 @@ export class AliOssComponent {
    */
   async rm(
     clientId: keyof Config,
+    /** OSS 对象，不包括 bucket */
     target: string,
     options?: RmOptions,
   ): Promise<ProcessRet> {
@@ -195,6 +205,7 @@ export class AliOssComponent {
    */
   async rmrf(
     clientId: keyof Config,
+    /** OSS 对象，不包括 bucket */
     target: string,
     options?: RmrfOptions,
   ): Promise<ProcessRet> {
@@ -216,6 +227,7 @@ export class AliOssComponent {
    */
   async stat(
     clientId: keyof Config,
+    /** OSS 对象，不包括 bucket */
     target: string,
     options?: StatOptions,
   ): Promise<boolean> {
@@ -236,6 +248,7 @@ export class AliOssComponent {
    */
   async pathExists(
     clientId: keyof Config,
+    /** OSS 对象，不包括 bucket */
     target: string,
     options?: StatOptions,
   ): Promise<boolean> {
@@ -257,7 +270,9 @@ export class AliOssComponent {
    */
   async mv(
     clientId: keyof Config,
+    /** OSS 源对象，不包括 bucket */
     src: string,
+    /** OSS 目的对象，不包括 bucket */
     target: string,
     options?: MvOptions,
   ): Promise<ProcessRet<DataStat | DataBase>> {
@@ -279,6 +294,7 @@ export class AliOssComponent {
    */
   async sign(
     clientId: keyof Config,
+    /** OSS 对象，不包括 bucket */
     src: string,
     options?: SignOptions,
   ): Promise<ProcessRet<DataSign>> {
@@ -329,7 +345,9 @@ export class AliOssComponent {
    */
   async syncRemote(
     clientId: keyof Config,
+    /** 本地目录 */
     src: string,
+    /** OSS 对象，不包括 bucket */
     target: string,
     options?: SyncOptions,
   ): Promise<ProcessRet<DataCp>> {
