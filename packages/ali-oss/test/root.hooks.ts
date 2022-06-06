@@ -1,12 +1,13 @@
 import 'tsconfig-paths/register'
 import assert from 'node:assert/strict'
+import { rm } from 'node:fs/promises'
 import { join } from 'node:path'
 
 import * as WEB from '@midwayjs/koa'
 import { createApp, close, createHttpRequest } from '@midwayjs/mock'
 
 import { aliOssConfig } from '@/config.unittest'
-import { cloudUrlPrefix, testConfig } from '@/root.config'
+import { cloudUrlPrefix, testConfig, testDir } from '@/root.config'
 import { AliOssComponent, ClientKey, ConfigKey } from '~/index'
 import { Application } from '~/interface'
 
@@ -74,6 +75,13 @@ export const mochaHooks = async () => {
       const ret = await ossClient.rmrf(ClientKey.master, target)
       assert(! ret.exitCode, `mkdir ${target} failed, ${ret.stderr}`)
       assert(ret.data)
+
+      try {
+        await rm(join(testDir, 'tmp'), { recursive: true })
+      }
+      catch {
+        void 0
+      }
 
       if (testConfig.app) {
         await close(testConfig.app)

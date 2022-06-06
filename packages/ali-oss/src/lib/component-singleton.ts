@@ -295,6 +295,33 @@ export class AliOssComponent {
   }
 
   /**
+   * 同步 OSS 文件到本地
+   * - force 参数默认 true
+   * - 若 force 为 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
+   * @link https://help.aliyun.com/document_detail/256352.html
+   * @param src
+   */
+  async syncLocal(
+    clientId: keyof Config,
+    /** OSS 对象，不包括 bucket */
+    src: string,
+    /** 本地目录 */
+    target: string,
+    options?: SyncOptions, // 可选参数
+  ): Promise<ProcessRet<DataCp>> {
+
+    const opts = this.prepareOptions<SyncOptions>(
+      clientId,
+      FnKey.syncLocal,
+      options,
+      target,
+      src,
+    )
+    const ret = await runner<SyncOptions, ProcessRet<DataCp>>(opts)
+    return ret
+  }
+
+  /**
    * 同步本地文件到 OSS
    * - force 参数默认 true
    * - 若 force 为 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常

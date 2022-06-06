@@ -1,4 +1,5 @@
 import assert from 'node:assert'
+import { stat } from 'node:fs/promises'
 
 import {
   AliOssComponent,
@@ -38,3 +39,12 @@ export function assertUploadFiles(
   assert(data.uploadDirs === expectDirs, stderr)
   assert(data.uploadFiles === expectFiles, stderr)
 }
+
+export async function assertLocalFileExists(
+  file: string,
+): Promise<void> {
+
+  const exists = (await stat(file)).isFile()
+  assert(exists === true, `${file} should exists`)
+}
+
