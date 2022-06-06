@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/waitingsong/midway-components/compare/@mw-components/ali-oss@2.0.0...@mw-components/ali-oss@2.1.0) (2022-06-06)
+
+
+### Features
+
+* **ali-oss:** syncRemote() ([c0aafde](https://github.com/waitingsong/midway-components/commit/c0aafde13c600aa6d7dc214b13d54ae8679d9570))
+
+
+
+
+
 # [2.0.0](https://github.com/waitingsong/midway-components/compare/@mw-components/ali-oss@1.1.2...@mw-components/ali-oss@2.0.0) (2022-06-06)
 
 
