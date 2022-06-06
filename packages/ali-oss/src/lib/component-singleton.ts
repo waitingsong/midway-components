@@ -79,28 +79,6 @@ export class AliOssComponent {
   }
 
   /**
-   * 创建目录
-   * @link https://help.aliyun.com/document_detail/120062.html
-   */
-  async mkdir(
-    clientId: keyof Config,
-    /** OSS 对象，不包括 bucket */
-    target: string,
-    options?: MkdirOptions,
-  ): Promise<ProcessRet> {
-
-    const opts = this.prepareOptions<MkdirOptions>(
-      clientId,
-      FnKey.mkdir,
-      options,
-      target,
-      void 0,
-    )
-    const ret = await runner(opts)
-    return ret
-  }
-
-  /**
    * 拷贝文件，
    * 拷贝本地目录文件到远程建议使用 `upload()` 或者 `syncRemote()` 方法
    *
@@ -177,6 +155,74 @@ export class AliOssComponent {
   }
 
   /**
+   * 创建目录
+   * @link https://help.aliyun.com/document_detail/120062.html
+   */
+  async mkdir(
+    clientId: keyof Config,
+    /** OSS 对象，不包括 bucket */
+    target: string,
+    options?: MkdirOptions,
+  ): Promise<ProcessRet> {
+
+    const opts = this.prepareOptions<MkdirOptions>(
+      clientId,
+      FnKey.mkdir,
+      options,
+      target,
+      void 0,
+    )
+    const ret = await runner(opts)
+    return ret
+  }
+
+  /**
+   * 移动云端的 OSS 对象
+   * 流程为先 `cp()` 然后 `rm()`
+   */
+  async mv(
+    clientId: keyof Config,
+    /** OSS 源对象，不包括 bucket */
+    src: string,
+    /** OSS 目的对象，不包括 bucket */
+    target: string,
+    options?: MvOptions,
+  ): Promise<ProcessRet<DataStat | DataBase>> {
+
+    const opts = this.prepareOptions<MvOptions>(
+      clientId,
+      FnKey.mv,
+      options,
+      target,
+      src,
+    )
+    const ret = await runner<MvOptions, ProcessRet<DataStat | DataBase>>(opts)
+    return ret
+  }
+
+  /**
+   * OSS 远程路径是否存在
+   */
+  async pathExists(
+    clientId: keyof Config,
+    /** OSS 对象，不包括 bucket */
+    target: string,
+    options?: StatOptions,
+  ): Promise<boolean> {
+
+    const opts = this.prepareOptions<PathExistsOptions>(
+      clientId,
+      FnKey.pathExists,
+      options,
+      target,
+      void 0,
+    )
+    const ret = await runner<PathExistsOptions, boolean>(opts)
+    return ret
+  }
+
+
+  /**
    * 删除云对象，不支持删除 bucket 本身
    * 如果在 recusive 为 false 时删除目录，则目录参数值必须以 '/' 结尾，否则不会删除成功
    * @link https://help.aliyun.com/document_detail/120053.html
@@ -222,73 +268,6 @@ export class AliOssComponent {
   }
 
   /**
-   * 查看 Bucket 和 Object 信息
-   * @link https://help.aliyun.com/document_detail/120054.html
-   */
-  async stat(
-    clientId: keyof Config,
-    /** OSS 对象，不包括 bucket */
-    target: string,
-    options?: StatOptions,
-  ): Promise<boolean> {
-
-    const opts = this.prepareOptions<StatOptions>(
-      clientId,
-      FnKey.stat,
-      options,
-      target,
-      void 0,
-    )
-    const ret = await runner<StatOptions, boolean>(opts)
-    return ret
-  }
-
-  /**
-   * OSS 远程路径是否存在
-   */
-  async pathExists(
-    clientId: keyof Config,
-    /** OSS 对象，不包括 bucket */
-    target: string,
-    options?: StatOptions,
-  ): Promise<boolean> {
-
-    const opts = this.prepareOptions<PathExistsOptions>(
-      clientId,
-      FnKey.pathExists,
-      options,
-      target,
-      void 0,
-    )
-    const ret = await runner<PathExistsOptions, boolean>(opts)
-    return ret
-  }
-
-  /**
-   * 移动云端的 OSS 对象
-   * 流程为先 `cp()` 然后 `rm()`
-   */
-  async mv(
-    clientId: keyof Config,
-    /** OSS 源对象，不包括 bucket */
-    src: string,
-    /** OSS 目的对象，不包括 bucket */
-    target: string,
-    options?: MvOptions,
-  ): Promise<ProcessRet<DataStat | DataBase>> {
-
-    const opts = this.prepareOptions<MvOptions>(
-      clientId,
-      FnKey.mv,
-      options,
-      target,
-      src,
-    )
-    const ret = await runner<MvOptions, ProcessRet<DataStat | DataBase>>(opts)
-    return ret
-  }
-
-  /**
    * sign（生成签名URL）
    * @link https://help.aliyun.com/document_detail/120064.html
    */
@@ -307,6 +286,28 @@ export class AliOssComponent {
       src,
     )
     const ret = await runner<SignOptions, ProcessRet<DataSign>>(opts)
+    return ret
+  }
+
+  /**
+   * 查看 Bucket 和 Object 信息
+   * @link https://help.aliyun.com/document_detail/120054.html
+   */
+  async stat(
+    clientId: keyof Config,
+    /** OSS 对象，不包括 bucket */
+    target: string,
+    options?: StatOptions,
+  ): Promise<boolean> {
+
+    const opts = this.prepareOptions<StatOptions>(
+      clientId,
+      FnKey.stat,
+      options,
+      target,
+      void 0,
+    )
+    const ret = await runner<StatOptions, boolean>(opts)
     return ret
   }
 
