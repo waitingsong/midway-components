@@ -1,13 +1,13 @@
 import 'tsconfig-paths/register'
-import assert from 'assert/strict'
-import { join } from 'path'
+import assert from 'node:assert/strict'
+import { join } from 'node:path'
 
 import * as WEB from '@midwayjs/koa'
 import { createApp, close, createHttpRequest } from '@midwayjs/mock'
 
 import { aliOssConfig } from '@/config.unittest'
 import { cloudUrlPrefix, testConfig } from '@/root.config'
-import { AliOssComponent, ConfigKey } from '~/index'
+import { AliOssComponent, ClientKey, ConfigKey } from '~/index'
 import { Application } from '~/interface'
 
 
@@ -51,8 +51,8 @@ export const mochaHooks = async () => {
       const ossClient = await container.getAsync(AliOssComponent)
       testConfig.ossClient = ossClient
 
-      await ossClient.rmrf('master', target)
-      const ret = await ossClient.mkdir('master', target)
+      await ossClient.rmrf(ClientKey.master, target)
+      const ret = await ossClient.mkdir(ClientKey.master, target)
       assert(! ret.exitCode, `mkdir ${target} failed, ${ret.stderr}`)
       assert(ret.data)
     },
@@ -71,7 +71,7 @@ export const mochaHooks = async () => {
     afterAll: async () => {
       const { ossClient } = testConfig
 
-      const ret = await ossClient.rmrf('master', target)
+      const ret = await ossClient.rmrf(ClientKey.master, target)
       assert(! ret.exitCode, `mkdir ${target} failed, ${ret.stderr}`)
       assert(ret.data)
 

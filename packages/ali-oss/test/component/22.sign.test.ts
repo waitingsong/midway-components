@@ -1,5 +1,5 @@
-import assert from 'assert/strict'
-import { relative } from 'path'
+import assert from 'node:assert/strict'
+import { relative } from 'node:path'
 
 import { cloudUrlPrefix, testConfig, src } from '@/root.config'
 import { SignOptions } from '~/lib/types'
