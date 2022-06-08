@@ -18,7 +18,9 @@
       "~/*": ["./src/*"],
       "@/*": ["./test/*"]
     },
+    "preserveConstEnums": true,
     "pretty": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
@@ -33,7 +35,7 @@
     "experimentalResolver": true,
     "experimentalSpecifierResolution": "node",
     "preferTsExts": true,
-    "swc": true
+    "transpileOnly": false
   },
   "include": [
     "src/**/*.ts"
