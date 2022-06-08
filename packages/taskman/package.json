@@ -33,14 +33,14 @@
     "postgres-interval": "^4.0.0"
   },
   "devDependencies": {
-    "@mw-components/kmore": "^26.0.0",
+    "@mw-components/kmore": "^27.0.0",
     "cross-env": "7",
-    "kmore-types": "^26.0.0"
+    "kmore-types": "^27.0.0"
   },
   "peerDependencies": {
     "@midwayjs/core": ">=3",
     "@midwayjs/decorator": "*",
-    "@mw-components/kmore": ">=26"
+    "@mw-components/kmore": ">=27"
   },
   "engines": {
     "node": ">=16.13.0"

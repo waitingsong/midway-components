@@ -1,6 +1,6 @@
 import {
   DbConfig as KmoreDbConfig,
-  postProcessResponse,
+  postProcessResponseToCamel,
   wrapIdentifier,
 } from '@mw-components/kmore'
 
@@ -33,7 +33,7 @@ export function genKmoreDbConfig(
         ...serverConfig.dbConfigs.pool,
       },
       // serverConfig.dbConfigs.pool
-      postProcessResponse,
+      postProcessResponse: postProcessResponseToCamel,
       wrapIdentifier,
     },
     dict: dbDict,

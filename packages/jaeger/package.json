@@ -27,7 +27,7 @@
     "@types/jaeger-client": "^3.18.3",
     "@waiting/shared-core": "^18.0.0",
     "jaeger-client": "^3.19.0",
-    "opentracing": "^0.14.5"
+    "opentracing": "^0.14.7"
   },
   "devDependencies": {
     "@waiting/shared-types": "^18.0.0",
