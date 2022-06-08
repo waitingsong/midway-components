@@ -13,41 +13,20 @@
 
 ## Packages
 
-| Package      | Version                |
-| ------------ | ---------------------- |
-| [`demo`]     | [![main-svg]][main-ch] |
-| [`demo-cli`] | [![cli-svg]][cli-ch]   |
+| Package     | Version                      |
+| ----------- | ---------------------------- |
+| [`ali-oss`] | [![ali-oss-svg]][ali-oss-ch] |
+| [`jaeger`]  | [![jaeger-svg]][jaeger-ch]   |
+| [`jwt`]     | [![jwt-svg]][jwt-ch]         |
+| [`taskman`] | [![taskman-svg]][taskman-ch] |
+
 
 ## Initialize and install dependencies
-
-run it at first time and any time
-```sh
-npm run repo:init
-```
-
-
-## Compile
-
-Run under root folder
-```sh
-npm run build
-# specify scope
-npm run build @scope/demo-docs
-# specify scopes
-npm run build @scope/demo-docs @scope/demo-serivce
-```
-
 
 ## Update package
 
 ```sh
 npm run bootstrap
-```
-
-## Add package
-
-```sh
-npm run add:pkg new_module
 ```
 
 ## Test
@@ -80,19 +59,19 @@ npm run purge && npm run bootstrap && npm run build
 
 <br>
 
-[`demo`]: https://github.com/waitingsong/npm-mono-base/tree/main/packages/demo
-[main-svg]: https://img.shields.io/npm/v/kmore.svg?maxAge=7200
-[main-ch]: https://github.com/waitingsong/kmore/tree/main/packages/demo/CHANGELOG.md
-[main-d-svg]: https://david-dm.org/waitingsong/kmore.svg?path=packages/kmore
-[main-d-link]: https://david-dm.org/waitingsong/kmore.svg?path=packages/kmore
-[main-dd-svg]: https://david-dm.org/waitingsong/kmore/dev-status.svg?path=packages/kmore
-[main-dd-link]: https://david-dm.org/waitingsong/kmore?path=packages/kmore#info=devDependencies
+[`ali-oss`]: https://github.com/waitingsong/midway-components/tree/main/packages/ali-oss
+[ali-oss-svg]: https://img.shields.io/npm/v/@mw-components/ali-oss.svg?maxAge=7200
+[ali-oss-ch]: https://github.com/waitingsong/midway-components/tree/main/packages/ali-oss/CHANGELOG.md
 
-[`demo-cli`]: https://github.com/waitingsong/kmore/tree/main/packages/kmore-cli
-[cli-svg]: https://img.shields.io/npm/v/kmore-cli.svg?maxAge=7200
-[cli-ch]: https://github.com/waitingsong/kmore/tree/main/packages/kmore-clie/CHANGELOG.md
-[cli-d-svg]: https://david-dm.org/waitingsong/kmore.svg?path=packages/kmore-cli
-[cli-d-link]: https://david-dm.org/waitingsong/kmore.svg?path=packages/kmore-cli
-[cli-dd-svg]: https://david-dm.org/waitingsong/kmore/dev-status.svg?path=packages/kmore-cli
-[cli-dd-link]: https://david-dm.org/waitingsong/kmore?path=packages/kmore-cli#info=devDependencies
+[`jaeger`]: https://github.com/waitingsong/midway-components/tree/main/packages/jaeger
+[jaeger-svg]: https://img.shields.io/npm/v/@mw-components/jaeger.svg?maxAge=7200
+[jaeger-ch]: https://github.com/waitingsong/midway-components/tree/main/packages/jaeger/CHANGELOG.md
+
+[`jwt`]: https://github.com/waitingsong/midway-components/tree/main/packages/jwt
+[jwt-svg]: https://img.shields.io/npm/v/@mw-components/jwt.svg?maxAge=7200
+[jwt-ch]: https://github.com/waitingsong/midway-components/tree/main/packages/jwt/CHANGELOG.md
+
+[`taskman`]: https://github.com/waitingsong/midway-components/tree/main/packages/taskman
+[taskman-svg]: https://img.shields.io/npm/v/@mw-components/taskman.svg?maxAge=7200
+[taskman-ch]: https://github.com/waitingsong/midway-components/tree/main/packages/taskman/CHANGELOG.md
 
