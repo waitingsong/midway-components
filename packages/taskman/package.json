@@ -23,13 +23,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/validate": "^3.3.0",
-    "@mw-components/fetch": "^19.0.1",
-    "@mw-components/jaeger": "^12.0.1",
-    "@mw-components/koid": "^9.0.0",
     "@waiting/shared-core": "^18.0.0",
     "@waiting/shared-types": "^18.0.0",
-    "pg": "^8.7.3",
     "postgres-interval": "^4.0.0"
   },
   "devDependencies": {
@@ -40,7 +35,12 @@
   "peerDependencies": {
     "@midwayjs/core": ">=3",
     "@midwayjs/decorator": "*",
-    "@mw-components/kmore": ">=27"
+    "@midwayjs/validate": ">=3",
+    "@mw-components/fetch": ">=19",
+    "@mw-components/kmore": ">=27",
+    "@mw-components/jaeger": ">=12",
+    "@mw-components/koid": ">=9",
+    "pg": "^8.7.3"
   },
   "engines": {
     "node": ">=16.13.0"
