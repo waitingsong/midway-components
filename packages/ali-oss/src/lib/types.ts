@@ -44,4 +44,6 @@ export type PathExistsOptions = Omit<Ali.PathExistsOptions, 'target'>
 export type MvOptions = Omit<Ali.MvOptions, 'target' | 'src'>
 export type SignOptions = Omit<Ali.SignOptions, 'src'>
 export type SyncOptions = Omit<Ali.SyncOptions, 'target' | 'src'>
+export type SyncLocalOptions = Omit<Ali.SyncLocalOptions, 'target' | 'src'>
+export type SyncRemoteOptions = Omit<Ali.SyncRemoteOptions, 'target' | 'src'>
 

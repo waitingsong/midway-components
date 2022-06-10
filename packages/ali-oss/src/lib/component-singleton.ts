@@ -35,7 +35,8 @@ import {
   CpOptions,
   LinkOptions,
   SignOptions,
-  SyncOptions,
+  SyncLocalOptions,
+  SyncRemoteOptions,
 } from './types'
 
 
@@ -316,7 +317,6 @@ export class AliOssComponent {
    * - force 参数默认 true
    * - 若 force 为 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
    * @link https://help.aliyun.com/document_detail/256352.html
-   * @param src
    */
   async syncLocal(
     clientId: keyof Config,
@@ -324,17 +324,17 @@ export class AliOssComponent {
     src: string,
     /** 本地目录 */
     target: string,
-    options?: SyncOptions, // 可选参数
+    options?: SyncLocalOptions,
   ): Promise<ProcessRet<DataCp>> {
 
-    const opts = this.prepareOptions<SyncOptions>(
+    const opts = this.prepareOptions<SyncLocalOptions>(
       clientId,
       FnKey.syncLocal,
       options,
       target,
       src,
     )
-    const ret = await runner<SyncOptions, ProcessRet<DataCp>>(opts)
+    const ret = await runner<SyncLocalOptions, ProcessRet<DataCp>>(opts)
     return ret
   }
 
@@ -350,17 +350,17 @@ export class AliOssComponent {
     src: string,
     /** OSS 对象，不包括 bucket */
     target: string,
-    options?: SyncOptions,
+    options?: SyncRemoteOptions,
   ): Promise<ProcessRet<DataCp>> {
 
-    const opts = this.prepareOptions<SyncOptions>(
+    const opts = this.prepareOptions<SyncRemoteOptions>(
       clientId,
       FnKey.syncRemote,
       options,
       target,
       src,
     )
-    const ret = await runner<SyncOptions, ProcessRet<DataCp>>(opts)
+    const ret = await runner<SyncRemoteOptions, ProcessRet<DataCp>>(opts)
     return ret
   }
 
