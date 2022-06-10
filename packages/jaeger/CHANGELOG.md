@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.0.3](https://github.com/waitingsong/midway-components/compare/@mw-components/jaeger@12.0.2...@mw-components/jaeger@12.0.3) (2022-06-10)
+
+**Note:** Version bump only for package @mw-components/jaeger
+
+
+
+
+
 ## [12.0.2](https://github.com/waitingsong/midway-components/compare/@mw-components/jaeger@12.0.1...@mw-components/jaeger@12.0.2) (2022-06-08)
 
 **Note:** Version bump only for package @mw-components/jaeger
