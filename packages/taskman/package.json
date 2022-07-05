@@ -23,8 +23,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@waiting/shared-core": "^18.0.0",
-    "@waiting/shared-types": "^18.0.0",
+    "@waiting/shared-core": "^19.0.0",
+    "@waiting/shared-types": "^19.0.0",
     "postgres-interval": "^4.0.0"
   },
   "devDependencies": {
@@ -38,7 +38,7 @@
   },
   "peerDependencies": {
     "@midwayjs/core": ">=3",
-    "@midwayjs/decorator": "*",
+    "@midwayjs/decorator": ">=3",
     "@midwayjs/validate": ">=3",
     "@mw-components/fetch": ">=19",
     "@mw-components/jaeger": ">=12",

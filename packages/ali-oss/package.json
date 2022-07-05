@@ -28,7 +28,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@waiting/shared-types": "^18.0.0",
+    "@waiting/shared-types": "^19.0.0",
     "@yuntools/ali-oss": "^15.3.0"
   },
   "devDependencies": {
@@ -36,7 +36,7 @@
   },
   "peerDependencies": {
     "@midwayjs/core": ">=3",
-    "@midwayjs/decorator": "*"
+    "@midwayjs/decorator": ">=3"
   },
   "engines": {
     "node": ">=16.13.0"
