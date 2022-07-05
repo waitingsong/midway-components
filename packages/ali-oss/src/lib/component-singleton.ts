@@ -71,7 +71,9 @@ export class AliOssComponent {
       accessKeyId: options.accessKeyId,
       accessKeySecret: options.accessKeySecret,
       endpoint: options.endpoint,
-      stsToken: options.stsToken,
+    }
+    if (options.stsToken) {
+      opts.stsToken = options.stsToken
     }
 
     const client = new OssClient(opts, options.cmd)

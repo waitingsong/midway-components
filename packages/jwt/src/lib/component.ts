@@ -153,7 +153,7 @@ export class JwtComponent {
         const start = ss.slice(0, 2)
         let end = ss
         /* istanbul ignore else */
-        if (! process.env.CI) {
+        if (! process.env['CI']) {
           end = ss.length > 10 ? ss.slice(-2) : '**'
         }
         msgs.push(`Error during verify: with secret "${start}****${end}"`)
