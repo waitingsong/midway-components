@@ -263,7 +263,7 @@ export class ClientService {
     const data: SetProgressInputData = {
       id,
       progress,
-      msg,
+      msg: msg ?? '',
     }
     const opts: FetchOptions = {
       ...this.initFetchOptions(id),

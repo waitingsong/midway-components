@@ -80,7 +80,7 @@ async function middleware(
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         msg: `Task running limit: ${clientConfig.maxRunner}, now: ${count}, taskId: ${taskId}`,
       }
-      inputLog.message = ctx.body
+      inputLog['message'] = ctx.body
       trm && trm.spanLog(inputLog)
 
       return

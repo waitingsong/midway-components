@@ -26,10 +26,10 @@ export function processJsonHeaders(
     })
   })
 
-  if (typeof ctx.reqId === 'string' && ctx.reqId && typeof jsonHeaders[HeadersKey.reqId] === 'undefined') {
+  if (typeof ctx['reqId'] === 'string' && ctx['reqId'] && typeof jsonHeaders[HeadersKey.reqId] === 'undefined') {
     Object.defineProperty(jsonHeaders, HeadersKey.reqId, {
       ...defaultPropDescriptor,
-      value: ctx.reqId,
+      value: ctx['reqId'],
     })
   }
   return jsonHeaders

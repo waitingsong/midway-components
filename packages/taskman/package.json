@@ -28,7 +28,7 @@
     "postgres-interval": "^4.0.0"
   },
   "devDependencies": {
-    "@mw-components/fetch": ">=19",
+    "@mw-components/fetch": "^19.0.4",
     "@mw-components/jaeger": "^12.0.3",
     "@mw-components/kmore": "^27.0.0",
     "@mw-components/koid": ">=9",
