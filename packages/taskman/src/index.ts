@@ -18,6 +18,7 @@ export * from './repo/index.repo'
 export * from './lib/index'
 
 
+// @ts-ignore
 declare module '@midwayjs/core/dist/interface' {
   interface MidwayConfig {
     [ConfigKey.clientConfig]: PowerPartial<TaskClientConfig>

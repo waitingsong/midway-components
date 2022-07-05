@@ -23,6 +23,7 @@ export {
 } from 'jsonwebtoken'
 
 
+// @ts-ignore
 declare module '@midwayjs/core/dist/interface' {
   interface MidwayConfig {
     [ConfigKey.config]: PowerPartial<Config>

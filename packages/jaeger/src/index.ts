@@ -18,6 +18,7 @@ export {
 } from 'opentracing'
 
 
+// @ts-ignore
 declare module '@midwayjs/core/dist/interface' {
   interface MidwayConfig {
     [ConfigKey.config]: PowerPartial<Config>
