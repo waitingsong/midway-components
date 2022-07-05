@@ -31,7 +31,7 @@ export class TracerComponent {
   async init(): Promise<void> {
     const { tracingConfig } = this.config
 
-    const pkgName = this.pkg?.name
+    const pkgName = this.pkg?.name ?? `pkg-${Math.random().toString()}`
     // let name = tracingConfig.serviceName ?? `jaeger-${Date.now()}`
     let name = tracingConfig.serviceName ?? pkgName
     name = name.replace(/@/ug, '').replace(/\//ug, '-')
