@@ -1,5 +1,3 @@
-// @ts-ignore
-// import { PowerPartial } from '@midwayjs/core'
 
 import {
   Config,
