@@ -28,7 +28,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@waiting/shared-types": "^19.0.0",
+    "@waiting/shared-types": "^20.1.0",
     "@yuntools/ali-oss": "^16.0.0"
   },
   "devDependencies": {
