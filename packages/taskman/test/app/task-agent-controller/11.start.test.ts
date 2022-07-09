@@ -3,7 +3,12 @@ import { relative } from 'path'
 
 import { taskClientConfig } from '@/config.unittest'
 import { testConfig } from '@/root.config'
-import { ClientURL, ConfigKey, TaskAgentState, TaskClientConfig } from '~/index'
+import {
+  ClientURL,
+  ConfigKey,
+  TaskAgentState,
+  TaskClientConfig,
+} from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -12,7 +17,7 @@ describe(filename, () => {
 
   describe(`should ${ClientURL.base}/${ClientURL.start} work`, () => {
     it('max 1', async () => {
-      const { app, httpRequest, tm } = testConfig
+      const { app, httpRequest, tm, agent } = testConfig
 
       assert(tm.runningTasks.size === 0)
       assert(tm.runningTasks.size <= taskClientConfig.maxRunner)
@@ -43,6 +48,8 @@ describe(filename, () => {
       const { agentId, count } = resp.body as TaskAgentState
       assert(typeof agentId === 'string', agentId)
       assert(agentId.length && agentId.includes('-')) // uuid
+
+      assert(agent.isRunning === true)
 
       const nowConfig = app.getConfig(ConfigKey.clientConfig) as TaskClientConfig
       console.log({ nowConfig })
