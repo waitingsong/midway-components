@@ -47,8 +47,10 @@ export class AgentController {
   }
 
   @Get('/' + ClientURL.stop)
-  async stopNote(): Promise<string> {
-    const ret = `Access ${ClientURL.base}/${ClientURL.stop}/$id to stop, $id from api ${ClientURL.base}/${ClientURL.status}`
+  async stopNote(): Promise<TaskAgentState> {
+    // const ret = `Access ${ClientURL.base}/${ClientURL.stop}/$id to stop, $id from api ${ClientURL.base}/${ClientURL.status}`
+    await this.agentSvc.stop(this.ctx, void 0)
+    const ret = await this.status()
     return ret
   }
 

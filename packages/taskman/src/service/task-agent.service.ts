@@ -111,9 +111,18 @@ export class TaskAgentService {
       taskAgentState,
       pid: process.pid,
       time: genISO8601String(),
+      thisMaxRunner: this.maxRunner,
+      thisClientConfigMaxRunner: this.clientConfig.maxRunner,
+      thisRunnerSetSize: this.runnerSet.size,
     }
     logger?.info(inputLog, span)
 
+    // console.info({
+    //   thisMaxRunner: this.maxRunner,
+    //   thisClientConfigMaxRunner: this.clientConfig.maxRunner,
+    //   thisRunnerSetSize: this.runnerSet.size,
+    //   pid: process.pid,
+    // })
     if (this.clientConfig.maxRunner > 0) {
       this.maxRunner = this.clientConfig.maxRunner
     }

@@ -17,6 +17,10 @@ describe(filename, () => {
       assert(tm.runningTasks.size === 0)
       assert(tm.runningTasks.size <= taskClientConfig.maxRunner)
 
+      await httpRequest
+        .get(`${ClientURL.base}/${ClientURL.stop}`)
+        .expect(200)
+
       const currConfig = app.getConfig(ConfigKey.clientConfig) as TaskClientConfig
       console.log({ currConfig })
 
@@ -30,7 +34,7 @@ describe(filename, () => {
       app.addConfigObject(globalConfig)
 
       const currConfig1a = app.getConfig(ConfigKey.clientConfig) as TaskClientConfig
-      console.log({ currConfig2: currConfig1a })
+      console.log({ currConfig1a })
 
       const resp = await httpRequest
         .get(`${ClientURL.base}/${ClientURL.start}`)
