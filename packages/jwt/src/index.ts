@@ -20,7 +20,6 @@ export {
   Secret,
 } from 'jsonwebtoken'
 
-
 // @ts-ignore
 declare module '@midwayjs/core/dist/interface' {
   interface MidwayConfig {
