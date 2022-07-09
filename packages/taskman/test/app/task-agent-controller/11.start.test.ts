@@ -11,7 +11,7 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 describe(filename, () => {
 
   describe(`should ${ClientURL.base}/${ClientURL.start} work`, () => {
-    it.only('max 1', async () => {
+    it('max 1', async () => {
       const { app, httpRequest, tm } = testConfig
 
       assert(tm.runningTasks.size === 0)
@@ -29,6 +29,9 @@ describe(filename, () => {
       }
       app.addConfigObject(globalConfig)
 
+      const currConfig1a = app.getConfig(ConfigKey.clientConfig) as TaskClientConfig
+      console.log({ currConfig2: currConfig1a })
+
       const resp = await httpRequest
         .get(`${ClientURL.base}/${ClientURL.start}`)
         .expect(200)
@@ -40,11 +43,14 @@ describe(filename, () => {
       const nowConfig = app.getConfig(ConfigKey.clientConfig) as TaskClientConfig
       console.log({ nowConfig })
 
-      assert(count === 1, `count: ${count}`)
+      assert(count === 1, `count: ${count}, config: ${config.maxRunner}`)
     })
 
     it('max 2', async () => {
       const { app, httpRequest } = testConfig
+
+      const currConfig = app.getConfig(ConfigKey.clientConfig) as TaskClientConfig
+      console.log({ currConfig2: currConfig })
 
       const config: TaskClientConfig = {
         ...taskClientConfig,
@@ -54,6 +60,9 @@ describe(filename, () => {
         [ConfigKey.clientConfig]: config,
       }
       app.addConfigObject(globalConfig)
+
+      const currConfig2a = app.getConfig(ConfigKey.clientConfig) as TaskClientConfig
+      console.log({ currConfig2a })
 
       void httpRequest
         .get(`${ClientURL.base}/${ClientURL.start}`)
@@ -65,8 +74,11 @@ describe(filename, () => {
         .get(`${ClientURL.base}/${ClientURL.start}`)
         .expect(200)
 
+      const nowConfig2 = app.getConfig(ConfigKey.clientConfig) as TaskClientConfig
+      console.log({ nowConfig2 })
+
       const { count } = resp.body as TaskAgentState
-      assert(count === config.maxRunner, `count: ${count}`)
+      assert(count === config.maxRunner, `count: ${count}, config: ${config.maxRunner}`)
     })
   })
 })
