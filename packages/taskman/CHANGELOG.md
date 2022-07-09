@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [17.1.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@17.0.5...@mw-components/taskman@17.1.0) (2022-07-09)
+
+
+### Features
+
+* **taskman:** task_agent/stop will stop all runner ([27b9e5e](https://github.com/waitingsong/midway-components/commit/27b9e5e89313033116438c2eed93efcda6f1cf88))
+
+
+
+
+
 ## [17.0.5](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@17.0.4...@mw-components/taskman@17.0.5) (2022-07-07)
 
 **Note:** Version bump only for package @mw-components/taskman
