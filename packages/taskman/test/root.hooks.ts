@@ -1,6 +1,6 @@
 import 'tsconfig-paths/register'
-import assert from 'assert/strict'
-import { join } from 'path'
+import assert from 'node:assert/strict'
+import { join } from 'node:path'
 
 import * as WEB from '@midwayjs/koa'
 import { createApp, close, createHttpRequest } from '@midwayjs/mock'
@@ -24,8 +24,8 @@ import { Application } from '~/interface'
  */
 export const mochaHooks = async () => {
   // avoid run multi times
-  if (! process.env.mochaRootHookFlag) {
-    process.env.mochaRootHookFlag = 'true'
+  if (! process.env['mochaRootHookFlag']) {
+    process.env['mochaRootHookFlag'] = 'true'
   }
 
   return {
@@ -44,6 +44,7 @@ export const mochaHooks = async () => {
         globalConfig,
       }
       const app = await createApp(join(__dirname, 'fixtures', 'base-app'), opts) as Application
+      app.addConfigObject(globalConfig)
       testConfig.app = app
       testConfig.httpRequest = createHttpRequest(app)
 
@@ -69,6 +70,7 @@ export const mochaHooks = async () => {
       globalConfig[ConfigKey.serverConfig].host = host
       app.addConfigObject(globalConfig)
 
+      testConfig.container = app.getApplicationContext()
       const container = app.getApplicationContext()
       testConfig.svc = await container.getAsync(TaskQueueService)
       testConfig.repo = await container.getAsync(TaskQueueRepository)

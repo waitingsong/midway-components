@@ -8,7 +8,7 @@ import {
   Config,
   MiddlewareConfig,
   TestSpanInfo,
-} from '~/lib/types'
+} from '~/lib/index'
 
 
 const CI = !! process.env.CI

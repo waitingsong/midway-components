@@ -3,8 +3,12 @@ import { IncomingHttpHeaders } from 'node:http'
 import supertest, { SuperTest } from 'supertest'
 
 import { taskClientConfig as config } from '@/config.unittest'
-import { Application } from '~/interface'
-import { ClientService, Config, MiddlewareConfig } from '~/lib'
+import { Application, IMidwayContainer } from '~/interface'
+import {
+  ClientService,
+  Config,
+  MiddlewareConfig,
+} from '~/lib/index'
 import {
   TaskLogRepository,
   TaskQueueRepository,
@@ -26,6 +30,7 @@ export interface TestRespBody {
 export interface TestConfig {
   CI: boolean
   app: Application
+  container: IMidwayContainer
   config: Config
   host: string
   httpRequest: SuperTest<supertest.Test>
