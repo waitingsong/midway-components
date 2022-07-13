@@ -1,4 +1,4 @@
-import { MiddlewareConfig as MWConfig } from '@waiting/shared-types'
+import type { MiddlewareConfig as MWConfig } from '@waiting/shared-types'
 import * as Ali from '@yuntools/ali-oss'
 
 
