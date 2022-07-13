@@ -23,8 +23,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@waiting/shared-core": "^20.1.0",
-    "@waiting/shared-types": "^20.1.0",
+    "@waiting/shared-core": "^20.3.0",
     "postgres-interval": "^4.0.0"
   },
   "devDependencies": {
@@ -32,8 +31,10 @@
     "@mw-components/jaeger": "^12.0.6",
     "@mw-components/kmore": "^29.0.0",
     "@mw-components/koid": ">=9",
+    "@waiting/shared-types": "^20.2.0",
     "cross-env": "7",
-    "kmore-types": "^28.0.2",
+    "kmore-cli": "^29.0.0",
+    "kmore-types": "^29.0.0",
     "pg": "^8.7.3"
   },
   "peerDependencies": {
