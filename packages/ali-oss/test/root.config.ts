@@ -18,7 +18,6 @@ export interface TestRespBody {
   header: IncomingHttpHeaders
   url: string
   config: Config
-  mwConfig: MiddlewareConfig
   cookies: unknown
 }
 
