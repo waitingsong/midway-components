@@ -1,4 +1,4 @@
-import type { DbDict } from 'kmore-types'
+// import type { DbDict } from 'kmore-types'
 
 import {
   TbTaskArchiveDO,
@@ -22,6 +22,7 @@ export interface DbModel {
 }
 
 // export const dbDict = genDbDict<DbModel>()
+/*
 export const dbDict: DbDict<DbModel> = {
   tables: {
     tb_task: 'tb_task',
@@ -409,4 +410,5 @@ export const dbDict: DbDict<DbModel> = {
     },
   },
 }
+*/
 

@@ -58,7 +58,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "npm run tsc",
+    "build": "npm run tsc && npm run db:gen-cjs",
     "clean": "npm run clean:lock & npm run clean:cache & rm -rf dist/*",
     "clean:cache": "rm -rf .eslintcache .vscode/.tsbuildinfo .vscode/.tsbuildinfo.*",
     "clean:lock": "rm package-lock.json -f",

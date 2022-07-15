@@ -1,4 +1,11 @@
-// import type { DbDict } from 'kmore-types'
+import { genDbDict } from 'kmore-types'
 
-export * from './db.model.dst'
+import { DbModel } from './db.model.dst'
+
+
+export { DbModel }
+
+// export * from './db.model.dst'
+
+export const dbDict = genDbDict<DbModel>()
 
