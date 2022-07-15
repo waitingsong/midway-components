@@ -56,7 +56,7 @@ export class TaskResultRepository {
 
   async [ServerMethod.create](input: TaskResultDTO): Promise<TaskResultDTO> {
     const { db } = this
-    const ret = await db.refTables.ref_tb_task_result()
+    const ret = await db.camelTables.ref_tb_task_result()
       .insert(input)
       .returning('*')
       .then((arr) => {
@@ -67,17 +67,17 @@ export class TaskResultRepository {
         return row
       })
 
-    return ret as unknown as TaskResultDTO
+    return ret
   }
 
   async [ServerMethod.read](id: TaskDTO['taskId']): Promise<TaskResultDTO | undefined> {
     const { db } = this
-    const ret = await db.refTables.ref_tb_task_result()
-      .where('task_id', id)
+    const ret = await db.camelTables.ref_tb_task_result()
+      .where('taskId', id)
       .limit(1)
       .then(arr => arr[0])
 
-    return ret as unknown as TaskResultDTO
+    return ret
   }
 
 }

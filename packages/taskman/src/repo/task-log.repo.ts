@@ -56,7 +56,7 @@ export class TaskLogRepository {
 
   async [ServerMethod.create](input: InitTaskLogDTO): Promise<TaskLogDTO> {
     const { db } = this
-    const ret = await db.refTables.ref_tb_task_log()
+    const ret = await db.camelTables.ref_tb_task_log()
       .insert(input)
       .returning('*')
       .then((arr) => {
@@ -67,18 +67,18 @@ export class TaskLogRepository {
         return row
       })
 
-    return ret as unknown as TaskLogDTO
+    return ret
   }
 
 
   async [ServerMethod.read](id: TaskLogDTO['taskLogId']): Promise<TaskLogDTO | undefined> {
     const { db } = this
-    const ret = await db.refTables.ref_tb_task_log()
+    const ret = await db.camelTables.ref_tb_task_log()
       .where('task_log_id', id)
       .limit(1)
       .then(arr => arr[0])
 
-    return ret as unknown as TaskLogDTO
+    return ret
   }
 
 }
