@@ -1,10 +1,14 @@
-import { IncomingHttpHeaders } from 'http'
+import { IncomingHttpHeaders } from 'node:http'
 
 import supertest, { SuperTest } from 'supertest'
 
-import { taskClientConfig } from '@/config.unittest'
-import { Application } from '~/interface'
-import { ClientService, Config, MiddlewareConfig } from '~/lib'
+import { taskClientConfig as config } from '@/config.unittest'
+import { Application, IMidwayContainer } from '~/interface'
+import {
+  ClientService,
+  Config,
+  MiddlewareConfig,
+} from '~/lib/index'
 import {
   TaskLogRepository,
   TaskQueueRepository,
@@ -13,20 +17,22 @@ import {
 import { TaskAgentService, TaskQueueService } from '~/service/index.service'
 
 
+const CI = !! process.env.CI
 export type TestResponse = supertest.Response
 export interface TestRespBody {
+  header: IncomingHttpHeaders
+  url: string
   config: Config
   mwConfig: MiddlewareConfig
   cookies: unknown
-  header: IncomingHttpHeaders
-  url: string
 }
 
 export interface TestConfig {
-  config: Config
-  /** host of test process */
-  host: string
+  CI: boolean
   app: Application
+  container: IMidwayContainer
+  config: Config
+  host: string
   httpRequest: SuperTest<supertest.Test>
   agent: TaskAgentService
   svc: TaskQueueService
@@ -36,6 +42,8 @@ export interface TestConfig {
   tm: ClientService
 }
 export const testConfig = {
-  config: taskClientConfig,
+  CI,
+  config,
+  host: '',
 } as TestConfig
 

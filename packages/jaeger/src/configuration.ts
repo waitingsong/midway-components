@@ -39,12 +39,17 @@ export class AutoConfiguration {
 
     const pkgNow = this.app.getConfig('pkg') as unknown
     if (! pkgNow) {
-      const informationService = await this.app.getApplicationContext().getAsync(MidwayInformationService)
-      if (informationService) {
-        const pkg = informationService.getPkg() as NpmPkg
-        this.app.addConfigObject({
-          pkg,
-        })
+      try {
+        const informationService = await this.app.getApplicationContext().getAsync(MidwayInformationService)
+        if (informationService) {
+          const pkg = informationService.getPkg() as NpmPkg
+          this.app.addConfigObject({
+            pkg,
+          })
+        }
+      }
+      catch (ex) {
+        console.error(ex)
       }
     }
 

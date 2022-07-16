@@ -111,9 +111,18 @@ export class TaskAgentService {
       taskAgentState,
       pid: process.pid,
       time: genISO8601String(),
+      thisMaxRunner: this.maxRunner,
+      thisClientConfigMaxRunner: this.clientConfig.maxRunner,
+      thisRunnerSetSize: this.runnerSet.size,
     }
     logger?.info(inputLog, span)
 
+    // console.info({
+    //   thisMaxRunner: this.maxRunner,
+    //   thisClientConfigMaxRunner: this.clientConfig.maxRunner,
+    //   thisRunnerSetSize: this.runnerSet.size,
+    //   pid: process.pid,
+    // })
     if (this.clientConfig.maxRunner > 0) {
       this.maxRunner = this.clientConfig.maxRunner
     }
@@ -202,6 +211,7 @@ export class TaskAgentService {
         subsp.unsubscribe()
       })
     }
+    /* c8 ignore next 4 */
     catch (ex) {
       const logger = await ctx?.requestContext.getAsync(Logger)
       logger?.warn('stop with error', (ex as Error).message)
@@ -358,9 +368,9 @@ export class TaskAgentService {
         }
         return this.processHttpCallExp(taskId, reqId, opts, err as Error)
       })
-      .finally(() => {
-        // newSpan && newSpan.finish()
-      })
+      // .finally(() => {
+      //   // newSpan && newSpan.finish()
+      // })
   }
 
   private async processHttpCallExp(
@@ -393,6 +403,7 @@ export class TaskAgentService {
     }
 
     await this.fetch.fetch(opts)
+      /* c8 ignore next 4 */
       .catch((ex) => {
         // this.logger.error(ex)
         console.error(ex)
@@ -455,6 +466,7 @@ export class TaskAgentService {
     }
 
     await this.fetch.fetch(opts)
+      /* c8 ignore next 4 */
       .catch((ex) => {
         // this.logger.error({ opts, ex: ex as Error })
         console.error({ opts, ex: ex as Error })

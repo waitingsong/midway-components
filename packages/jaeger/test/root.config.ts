@@ -1,14 +1,14 @@
-import { IncomingHttpHeaders } from 'http'
+import { IncomingHttpHeaders } from 'node:http'
 
 import supertest, { SuperTest } from 'supertest'
 
 import { config } from '@/config.unittest'
-import { Application } from '~/interface'
+import { Application, IMidwayContainer } from '~/interface'
 import {
   Config,
   MiddlewareConfig,
   TestSpanInfo,
-} from '~/lib/types'
+} from '~/lib/index'
 
 
 const CI = !! process.env.CI
@@ -25,6 +25,7 @@ export interface TestRespBody {
 export interface TestConfig {
   CI: boolean
   app: Application
+  container: IMidwayContainer
   config: Config
   host: string
   httpRequest: SuperTest<supertest.Test>

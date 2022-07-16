@@ -35,6 +35,8 @@ import {
   CpOptions,
   LinkOptions,
   SignOptions,
+  SyncLocalOptions,
+  SyncRemoteOptions,
 } from './types'
 
 
@@ -69,7 +71,9 @@ export class AliOssComponent {
       accessKeyId: options.accessKeyId,
       accessKeySecret: options.accessKeySecret,
       endpoint: options.endpoint,
-      stsToken: options.stsToken,
+    }
+    if (options.stsToken) {
+      opts.stsToken = options.stsToken
     }
 
     const client = new OssClient(opts, options.cmd)
@@ -78,34 +82,17 @@ export class AliOssComponent {
   }
 
   /**
-   * 创建目录
-   * @link https://help.aliyun.com/document_detail/120062.html
-   */
-  async mkdir(
-    clientId: keyof Config,
-    target: string,
-    options?: MkdirOptions,
-  ): Promise<ProcessRet> {
-
-    const opts = this.prepareOptions<MkdirOptions>(
-      clientId,
-      FnKey.mkdir,
-      options,
-      target,
-      void 0,
-    )
-    const ret = await runner(opts)
-    return ret
-  }
-
-  /**
-   * 在远程拷贝文件
+   * 拷贝文件，
+   * 拷贝本地目录文件到远程建议使用 `upload()` 或者 `syncRemote()` 方法
+   *
    * 若 force 为空或者 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
    * @link https://help.aliyun.com/document_detail/120057.html
    */
   async cp(
     clientId: keyof Config,
+    /** 本地文件、目录或者远程 OSS 对象 */
     src: string,
+    /** OSS 对象，不包括 bucket */
     target: string,
     options?: CpOptions,
   ): Promise<ProcessRet<DataCp>> {
@@ -128,7 +115,9 @@ export class AliOssComponent {
    */
   async upload(
     clientId: keyof Config,
+    /** 本地目录或文件 */
     src: string,
+    /** OSS 对象，不包括 bucket */
     target: string,
     options?: UploadOptions,
   ): Promise<ProcessRet<DataCp>> {
@@ -150,7 +139,9 @@ export class AliOssComponent {
    */
   async createSymlink(
     clientId: keyof Config,
+    /** OSS 对象，不包括 bucket */
     src: string,
+    /** OSS 软连接对象，不包括 bucket */
     target: string,
     options?: LinkOptions,
   ): Promise<ProcessRet> {
@@ -167,12 +158,81 @@ export class AliOssComponent {
   }
 
   /**
+   * 创建目录
+   * @link https://help.aliyun.com/document_detail/120062.html
+   */
+  async mkdir(
+    clientId: keyof Config,
+    /** OSS 对象，不包括 bucket */
+    target: string,
+    options?: MkdirOptions,
+  ): Promise<ProcessRet> {
+
+    const opts = this.prepareOptions<MkdirOptions>(
+      clientId,
+      FnKey.mkdir,
+      options,
+      target,
+      void 0,
+    )
+    const ret = await runner(opts)
+    return ret
+  }
+
+  /**
+   * 移动云端的 OSS 对象
+   * 流程为先 `cp()` 然后 `rm()`
+   */
+  async mv(
+    clientId: keyof Config,
+    /** OSS 源对象，不包括 bucket */
+    src: string,
+    /** OSS 目的对象，不包括 bucket */
+    target: string,
+    options?: MvOptions,
+  ): Promise<ProcessRet<DataStat | DataBase>> {
+
+    const opts = this.prepareOptions<MvOptions>(
+      clientId,
+      FnKey.mv,
+      options,
+      target,
+      src,
+    )
+    const ret = await runner<MvOptions, ProcessRet<DataStat | DataBase>>(opts)
+    return ret
+  }
+
+  /**
+   * OSS 远程路径是否存在
+   */
+  async pathExists(
+    clientId: keyof Config,
+    /** OSS 对象，不包括 bucket */
+    target: string,
+    options?: StatOptions,
+  ): Promise<boolean> {
+
+    const opts = this.prepareOptions<PathExistsOptions>(
+      clientId,
+      FnKey.pathExists,
+      options,
+      target,
+      void 0,
+    )
+    const ret = await runner<PathExistsOptions, boolean>(opts)
+    return ret
+  }
+
+
+  /**
    * 删除云对象，不支持删除 bucket 本身
    * 如果在 recusive 为 false 时删除目录，则目录参数值必须以 '/' 结尾，否则不会删除成功
    * @link https://help.aliyun.com/document_detail/120053.html
    */
   async rm(
     clientId: keyof Config,
+    /** OSS 对象，不包括 bucket */
     target: string,
     options?: RmOptions,
   ): Promise<ProcessRet> {
@@ -194,6 +254,7 @@ export class AliOssComponent {
    */
   async rmrf(
     clientId: keyof Config,
+    /** OSS 对象，不包括 bucket */
     target: string,
     options?: RmrfOptions,
   ): Promise<ProcessRet> {
@@ -210,11 +271,34 @@ export class AliOssComponent {
   }
 
   /**
+   * sign（生成签名URL）
+   * @link https://help.aliyun.com/document_detail/120064.html
+   */
+  async sign(
+    clientId: keyof Config,
+    /** OSS 对象，不包括 bucket */
+    src: string,
+    options?: SignOptions,
+  ): Promise<ProcessRet<DataSign>> {
+
+    const opts = this.prepareOptions<SignOptions>(
+      clientId,
+      FnKey.sign,
+      options,
+      void 0,
+      src,
+    )
+    const ret = await runner<SignOptions, ProcessRet<DataSign>>(opts)
+    return ret
+  }
+
+  /**
    * 查看 Bucket 和 Object 信息
    * @link https://help.aliyun.com/document_detail/120054.html
    */
   async stat(
     clientId: keyof Config,
+    /** OSS 对象，不包括 bucket */
     target: string,
     options?: StatOptions,
   ): Promise<boolean> {
@@ -231,65 +315,54 @@ export class AliOssComponent {
   }
 
   /**
-   * OSS 远程路径是否存在
+   * 同步 OSS 文件到本地
+   * - force 参数默认 true
+   * - 若 force 为 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
+   * @link https://help.aliyun.com/document_detail/256352.html
    */
-  async pathExists(
+  async syncLocal(
     clientId: keyof Config,
-    target: string,
-    options?: StatOptions,
-  ): Promise<boolean> {
-
-    const opts = this.prepareOptions<PathExistsOptions>(
-      clientId,
-      FnKey.pathExists,
-      options,
-      target,
-      void 0,
-    )
-    const ret = await runner<PathExistsOptions, boolean>(opts)
-    return ret
-  }
-
-  /**
-   * 移动云端的 OSS 对象
-   * 流程为先 `cp()` 然后 `rm()`
-   */
-  async mv(
-    clientId: keyof Config,
+    /** OSS 对象，不包括 bucket */
     src: string,
+    /** 本地目录 */
     target: string,
-    options?: MvOptions,
-  ): Promise<ProcessRet<DataStat | DataBase>> {
+    options?: SyncLocalOptions,
+  ): Promise<ProcessRet<DataCp>> {
 
-    const opts = this.prepareOptions<MvOptions>(
+    const opts = this.prepareOptions<SyncLocalOptions>(
       clientId,
-      FnKey.mv,
+      FnKey.syncLocal,
       options,
       target,
       src,
     )
-    const ret = await runner<MvOptions, ProcessRet<DataStat | DataBase>>(opts)
+    const ret = await runner<SyncLocalOptions, ProcessRet<DataCp>>(opts)
     return ret
   }
 
   /**
-   * sign（生成签名URL）
-   * @link https://help.aliyun.com/document_detail/120064.html
+   * 同步本地文件到 OSS
+   * - force 参数默认 true
+   * - 若 force 为 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
+   * @link https://help.aliyun.com/document_detail/193394.html
    */
-  async sign(
+  async syncRemote(
     clientId: keyof Config,
+    /** 本地目录 */
     src: string,
-    options?: SignOptions,
-  ): Promise<ProcessRet<DataSign>> {
+    /** OSS 对象，不包括 bucket */
+    target: string,
+    options?: SyncRemoteOptions,
+  ): Promise<ProcessRet<DataCp>> {
 
-    const opts = this.prepareOptions<SignOptions>(
+    const opts = this.prepareOptions<SyncRemoteOptions>(
       clientId,
-      FnKey.sign,
+      FnKey.syncRemote,
       options,
-      void 0,
+      target,
       src,
     )
-    const ret = await runner<SignOptions, ProcessRet<DataSign>>(opts)
+    const ret = await runner<SyncRemoteOptions, ProcessRet<DataCp>>(opts)
     return ret
   }
 

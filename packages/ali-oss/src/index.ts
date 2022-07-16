@@ -1,5 +1,3 @@
-// @ts-ignore
-// import { PowerPartial } from '@midwayjs/core'
 
 import {
   Config,
@@ -11,6 +9,7 @@ export { AutoConfiguration as Configuration } from './configuration'
 export * from './lib/index'
 
 
+// @ts-ignore
 declare module '@midwayjs/core/dist/interface' {
   interface MidwayConfig {
     [ConfigKey.config]: Config

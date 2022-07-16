@@ -1,7 +1,7 @@
 {
   "name": "@mw-components/ali-oss",
   "author": "waiting",
-  "version": "2.0.0",
+  "version": "2.3.4",
   "description": "阿里云 OSS 命令行工具 ossutil 封装 midway.js 组件，提供 TypeScript 类型定义",
   "keywords": [
     "midway",
@@ -24,19 +24,19 @@
   "homepage": "https://github.com/waitingsong/midway-components#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/waitingsong/midway-components.git"
+    "url": "https://github.com/waitingsong/midway-components"
   },
   "license": "MIT",
   "dependencies": {
-    "@waiting/shared-types": "^18.0.0",
-    "@yuntools/ali-oss": "^15.0.0"
+    "@yuntools/ali-oss": "^16.0.0"
   },
   "devDependencies": {
+    "@waiting/shared-types": "^20.2.0",
     "cross-env": "7"
   },
   "peerDependencies": {
     "@midwayjs/core": ">=3",
-    "@midwayjs/decorator": "*"
+    "@midwayjs/decorator": ">=3"
   },
   "engines": {
     "node": ">=16.13.0"
@@ -50,7 +50,7 @@
   },
   "scripts": {
     "build": "npm run tsc",
-    "clean": "npm run clean:cache & rm -rf dist/* -rf",
+    "clean": "npm run clean:lock & npm run clean:cache & rm -rf dist/*",
     "clean:cache": "rm -rf .eslintcache .vscode/.tsbuildinfo .vscode/.tsbuildinfo.*",
     "clean:lock": "rm package-lock.json -f",
     "cov": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json c8 mocha --parallel=false",
@@ -61,6 +61,6 @@
     "purge": "npm run clean && rm node_modules -rf && rm package-lock.json -f",
     "test": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json mocha --parallel=false",
     "test:local": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json ../../node_modules/.bin/mocha --parallel=false",
-    "tsc": "tsc -p tsconfig.json"
+    "tsc": "tsc -b"
   }
 }

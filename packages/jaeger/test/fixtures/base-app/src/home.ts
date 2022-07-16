@@ -31,7 +31,7 @@ export class HomeController {
 
     this.tracerManager.addTags(ctx.tracerTags)
     const span = this.tracerManager.currentSpan()
-    console.info({ span })
+    // console.info({ span })
     if (! span) {
       throw TypeError('span undefined')
     }

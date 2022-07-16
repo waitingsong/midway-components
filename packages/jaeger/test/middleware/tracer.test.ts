@@ -39,7 +39,7 @@ describe(filename, () => {
     // assert.deepStrictEqual(spanInfo.tags, expectTags)
   })
 
-  it.only('Should work with parent span', async () => {
+  it('Should work with parent span', async () => {
     const { httpRequest } = testConfig
 
     const path = '/'

@@ -1,5 +1,5 @@
-// @ts-ignore
-import { PowerPartial } from '@midwayjs/core'
+
+// import { PowerPartial } from '@midwayjs/core'
 
 import {
   ConfigKey,
@@ -18,11 +18,12 @@ export * from './repo/index.repo'
 export * from './lib/index'
 
 
+// @ts-ignore
 declare module '@midwayjs/core/dist/interface' {
   interface MidwayConfig {
-    [ConfigKey.clientConfig]: PowerPartial<TaskClientConfig>
-    [ConfigKey.serverConfig]: PowerPartial<TaskServerConfig>
-    [ConfigKey.middlewareConfig]: PowerPartial<MiddlewareConfig>
+    [ConfigKey.clientConfig]: Partial<TaskClientConfig>
+    [ConfigKey.serverConfig]: Partial<TaskServerConfig>
+    [ConfigKey.middlewareConfig]: Partial<MiddlewareConfig>
   }
 }
 

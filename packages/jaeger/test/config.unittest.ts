@@ -26,7 +26,10 @@ export const config: Config = {
 
 export const mwConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
   ...initialMiddlewareConfig,
-  ignore: [], // !
+  ignore: [
+    '/untraced_path_string',
+    new RegExp('/untraced_path_reg_exp$', 'u'),
+  ],
   options: {
     ...initMiddlewareOptions,
   },

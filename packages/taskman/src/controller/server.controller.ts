@@ -152,5 +152,9 @@ export class ServerController {
     return ret
   }
 
+  @Get('/' + ServerURL.hello)
+  async [ServerURL.hello](): Promise<'OK'> {
+    return 'OK'
+  }
 }
 

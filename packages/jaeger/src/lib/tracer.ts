@@ -1,3 +1,4 @@
+import assert from 'assert'
 import type { IncomingHttpHeaders } from 'http'
 
 import {
@@ -17,6 +18,7 @@ import {
   SpanContext,
   globalTracer,
   Tags,
+  SpanOptions,
 } from 'opentracing'
 
 import { getComponentConfig, netInfo } from '../util/common'
@@ -114,6 +116,7 @@ export class TracerManager {
     return this.spans[this.spans.length - 1]
   }
 
+  // @ts-ignore
   @RunIfEnabled
   startSpan(name: string, parentSpan?: Span | SpanContext): void {
     const txt = name ?? Date.now().toString()
@@ -122,12 +125,15 @@ export class TracerManager {
   }
 
   genSpan(name: string, parentSpan?: Span | SpanContext): Span {
-    const span = globalTracer().startSpan(name, {
+    const opts = {
       childOf: parentSpan ?? this.currentSpan(),
-    })
+    }
+    assert(opts.childOf)
+    const span = globalTracer().startSpan(name, opts as SpanOptions)
     return span
   }
 
+  // @ts-ignore
   @RunIfEnabled
   finishSpan(): void {
     const currentSpan = this.currentSpan()
@@ -141,16 +147,19 @@ export class TracerManager {
     }
   }
 
+  // @ts-ignore
   @RunIfEnabled
   spanLog(keyValuePairs: SpanLogInput): void {
     this.currentSpan()?.log(keyValuePairs)
   }
 
+  // @ts-ignore
   @RunIfEnabled
   addTags(tags: SpanLogInput): void {
     this.currentSpan()?.addTags(tags)
   }
 
+  // @ts-ignore
   @RunIfEnabled
   setSpanTag(key: string, value: unknown): void {
     this.currentSpan()?.setTag(key, value)
@@ -182,7 +191,7 @@ function RunIfEnabled(
   _target: unknown,
   _propertyKey: string,
   descriptor: TraceMgrPropDescriptor,
-): TraceMgrPropDescriptor {
+): TraceMgrPropDescriptor | void {
   const originalMethod = descriptor.value as (...args: unknown[]) => unknown
   descriptor.value = function(...args: unknown[]): unknown {
     if (this.isTraceEnabled === true) {
@@ -207,8 +216,8 @@ function updateDetailTags(
   if (pkg.version) {
     tags[TracerTag.svcVer] = pkg.version
   }
-  if (ctx.reqId) {
-    tags[TracerTag.reqId] = ctx.reqId
+  if (ctx['reqId']) {
+    tags[TracerTag.reqId] = ctx['reqId']
   }
 
   netInfo.forEach((ipInfo) => {
