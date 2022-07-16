@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [18.0.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@17.2.1...@mw-components/taskman@18.0.0) (2022-07-16)
+
+
+### Features
+
+* **taskman:** bump kmore version and update codes ([ce911e0](https://github.com/waitingsong/midway-components/commit/ce911e0a8f924736dde2f2120c7b06343c06d371))
+
+
+
+
+
 ## [17.2.1](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@17.2.0...@mw-components/taskman@17.2.1) (2022-07-16)
 
 
