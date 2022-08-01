@@ -1,3 +1,4 @@
+import { Context } from '@midwayjs/core'
 import {
   DbConfig,
   KnexConfig,
@@ -15,8 +16,8 @@ import {
 
 export function genKmoreDbConfig(
   serverConfig: TaskServerConfig,
-  defaultDbConfig: Required<DbConfig>,
-): DbConfig<DbModel> {
+  defaultDbConfig: DbConfig,
+): DbConfig<DbModel, Context> {
 
   const serverDataSource = serverConfig.dataSource[DbReplica.taskMaster]
   const enableTracing = serverDataSource.enableTracing ?? defaultDbConfig.enableTracing ?? false
