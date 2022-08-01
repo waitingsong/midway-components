@@ -1,3 +1,6 @@
+import assert from 'node:assert'
+
+import { Context } from '@midwayjs/core'
 import {
   DbConfig,
   KnexConfig,
@@ -15,8 +18,8 @@ import {
 
 export function genKmoreDbConfig(
   serverConfig: TaskServerConfig,
-  defaultDbConfig: Required<DbConfig>,
-): DbConfig<DbModel> {
+  defaultDbConfig: DbConfig,
+): DbConfig<DbModel, Context> {
 
   const serverDataSource = serverConfig.dataSource[DbReplica.taskMaster]
   const enableTracing = serverDataSource.enableTracing ?? defaultDbConfig.enableTracing ?? false
@@ -26,12 +29,23 @@ export function genKmoreDbConfig(
     ? serverDataSource.config.acquireConnectionTimeout
     : defaultDbConfig.config.acquireConnectionTimeout) ?? 60000
 
-  const connection = {
-    ...typeof defaultDbConfig.config.connection === 'object' ? defaultDbConfig.config.connection : {},
-    ...typeof serverDataSource.config === 'object' ? serverDataSource.config : {},
+  let connection: KnexConfig['connection'] = defaultDbConfig.config.connection
+  if (typeof serverDataSource.config.connection === 'object'
+    && Object.keys(serverDataSource.config.connection).length) {
+    if (typeof connection === 'object') {
+      // @ts-expect-error
+      connection = {
+        ...connection,
+        ...serverDataSource.config.connection,
+      }
+    }
+    else {
+      connection = serverDataSource.config.connection
+    }
   }
+  assert(connection, 'value of connection undefined')
 
-  const pool = {
+  const pool: KnexConfig['pool'] = {
     ...defaultDbConfig.config.pool,
     ...serverDataSource.config.pool,
   }

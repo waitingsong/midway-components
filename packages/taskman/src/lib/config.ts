@@ -1,5 +1,6 @@
 import { DbConfig, initialKnexConfig } from '@mw-components/kmore'
 
+import { dbDict, DbModel } from './db.model'
 import {
   InitTaskDTO,
   InitTaskPayloadDTO,
@@ -86,7 +87,8 @@ export const initTaskProgressDTO: Omit<TaskProgressDTO, 'taskId'> = {
 }
 
 
-export const initDbConfig: Omit<DbConfig, 'dict' | 'eventCallbacks'> = {
+export const initDbConfig: DbConfig<DbModel> = {
+  dict: dbDict,
   config: {
     ...initialKnexConfig,
     acquireConnectionTimeout: 60000,
@@ -100,7 +102,7 @@ export const initDbConfig: Omit<DbConfig, 'dict' | 'eventCallbacks'> = {
     },
     pool: {
       min: 0,
-      max: 10,
+      max: 20,
       afterCreate: (conn: any, done: any) => {
         const TZ = process.env['PGTZ'] as string | undefined
         if (TZ) {
