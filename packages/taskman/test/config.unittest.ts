@@ -10,6 +10,8 @@ import {
   TaskClientConfig,
   TaskServerConfig,
   initTaskServerConfig,
+  DbReplica,
+  dbDict,
 } from '~/lib/index'
 
 
@@ -22,8 +24,11 @@ export const taskClientConfig: TaskClientConfig = {
  */
 export const taskServerConfig: TaskServerConfig = {
   ...initTaskServerConfig,
-  dbConfigs: {
-    ...initDbConfig,
+  dataSource: {
+    [DbReplica.taskMaster]: {
+      ...initDbConfig,
+      dict: dbDict,
+    },
   },
 }
 

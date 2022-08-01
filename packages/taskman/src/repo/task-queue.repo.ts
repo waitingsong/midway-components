@@ -1,3 +1,5 @@
+import assert from 'node:assert'
+
 import {
   App,
   Config,
@@ -5,12 +7,7 @@ import {
   Inject,
   Provide,
 } from '@midwayjs/decorator'
-import {
-  DbManager,
-  KmoreComponent,
-  TracerKmoreComponent,
-  unsubscribeEventFuncOnResFinish,
-} from '@mw-components/kmore'
+import { DbSourceManager, Kmore } from '@mw-components/kmore'
 
 import {
   initTaskProgressDTO,
@@ -45,26 +42,24 @@ export class TaskQueueRepository {
 
   @Config(ConfigKey.serverConfig) protected readonly serverConfig: TaskServerConfig
 
-  public db: KmoreComponent<DbModel> | TracerKmoreComponent<DbModel>
+  @Inject() dbManager: DbSourceManager<DbReplica, DbModel, Context>
+
+  public db: Kmore<DbModel, Context>
 
   @Init()
   async init(): Promise<void> {
-    const container = this.app.getApplicationContext()
-    const dbManager = await container.getAsync(DbManager) as DbManager
-    const db = await dbManager.create<DbModel>(this.ctx, DbReplica.taskMaster, unsubscribeEventFuncOnResFinish)
+    const db = this.dbManager.getDataSource(DbReplica.taskMaster)
+    assert(db)
     this.db = db
   }
 
-  [ServerMethod.destroy](): void {
-    if (this.db instanceof TracerKmoreComponent) {
-      this.db.unsubscribeEvent()
-    }
-    // this.db.unsubscribe()
-  }
+  // async [ServerMethod.destroy](): Promise<void> {
+  //   await this.db.dbh.destroy()
+  // }
 
   async [ServerMethod.create](input: InitTaskDTO): Promise<TaskDTO> {
     const { db } = this
-    const ret = await db.camelTables.ref_tb_task()
+    const ret = await db.camelTables.ref_tb_task(this.ctx)
       .insert(input)
       .returning('*')
       .then((arr) => {
@@ -83,7 +78,7 @@ export class TaskQueueRepository {
    */
   async addTaskPayload(input: TaskPayloadDTO): Promise<TaskPayloadDTO> {
     const { db } = this
-    const ret = await db.camelTables.ref_tb_task_payload()
+    const ret = await db.camelTables.ref_tb_task_payload(this.ctx)
       .insert(input)
       .returning('*')
       .then((arr) => {
@@ -97,11 +92,11 @@ export class TaskQueueRepository {
     return ret as unknown as TaskPayloadDTO
   }
 
-  async getInfo(id: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
+  async getInfo(taskId: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
     const { db } = this
-    const ret = await db.camelTables.ref_tb_task()
+    const ret = await db.camelTables.ref_tb_task(this.ctx)
       .select('*')
-      .where('task_id', id)
+      .where({ taskId })
       .limit(1)
       .then(arr => arr[0])
 
@@ -109,19 +104,19 @@ export class TaskQueueRepository {
   }
 
   async [ServerMethod.getProgress](
-    id: TaskDTO['taskId'],
+    taskId: TaskDTO['taskId'],
   ): Promise<TaskProgressDetailDTO | undefined> {
 
     const { db } = this
-    const task = await db.camelTables.ref_tb_task()
+    const task = await db.camelTables.ref_tb_task(this.ctx)
       .select('taskState')
-      .where('taskId', id)
+      .where({ taskId })
       .limit(1)
       .then(arr => arr[0])
     if (! task) { return }
 
     const prog = await db.camelTables.ref_tb_task_progress()
-      .where('taskId', id)
+      .where({ taskId })
       .limit(1)
       .then(arr => arr[0])
 
@@ -133,22 +128,22 @@ export class TaskQueueRepository {
       return ret
     }
     const ret: TaskProgressDetailDTO = {
-      taskId: id,
+      taskId,
       taskState: task.taskState,
     }
     return ret
   }
 
   async setState(
-    id: TaskDTO['taskId'],
+    taskId: TaskDTO['taskId'],
     taskState: TaskDTO['taskState'],
   ): Promise<TaskDTO | undefined> {
 
     const { db } = this
     const ret = await db.camelTables.ref_tb_task()
-      .update('taskState', taskState)
+      .update({ taskState })
       .update('mtime', 'now()')
-      .where('taskId', id)
+      .where({ taskId })
       .returning('*')
       .then(arr => arr[0])
 
@@ -159,16 +154,16 @@ export class TaskQueueRepository {
    * insert progress and set progress 0, FK constraint
    */
   async initProgress(
-    id: TaskDTO['taskId'],
+    taskId: TaskDTO['taskId'],
   ): Promise<TaskProgressDTO | undefined> {
 
     const { db } = this
     const trx = await db.dbh.transaction()
 
-    await db.camelTables.ref_tb_task_progress()
+    await db.camelTables.ref_tb_task_progress(this.ctx)
       .transacting(trx)
       .forUpdate()
-      .where('taskId', id)
+      .where({ taskId })
       .del()
       .catch(async (ex) => {
         await trx.rollback()
@@ -177,11 +172,11 @@ export class TaskQueueRepository {
 
     const data: TaskProgressDTO = {
       ...initTaskProgressDTO,
-      taskId: id,
+      taskId,
       taskProgress: 0,
     }
 
-    const ins = await db.camelTables.ref_tb_task_progress()
+    const ins = await db.camelTables.ref_tb_task_progress(this.ctx)
       .transacting(trx)
       .forUpdate()
       .insert(data)
@@ -202,14 +197,14 @@ export class TaskQueueRepository {
    * only when pending or init
    */
   async [ServerMethod.setRunning](
-    id: TaskDTO['taskId'],
+    taskId: TaskDTO['taskId'],
   ): Promise<TaskDTO | undefined> {
 
     const { db } = this
     const ret = await db.camelTables.ref_tb_task()
       .update('taskState', TaskState.running)
       .update('mtime', 'now()')
-      .where('taskId', id)
+      .where({ taskId })
       .whereIn('taskState', [TaskState.pending, TaskState.init])
       .returning('*')
 
@@ -221,7 +216,7 @@ export class TaskQueueRepository {
    * Not in state succeeded, cancelled
    */
   async [ServerMethod.setFailed](
-    id: TaskDTO['taskId'],
+    taskId: TaskDTO['taskId'],
   ): Promise<TaskDTO | undefined> {
 
     const { db } = this
@@ -233,7 +228,7 @@ export class TaskQueueRepository {
     const ret = await db.camelTables.ref_tb_task()
       .update('taskState', TaskState.failed)
       .update('mtime', 'now()')
-      .where('taskId', id)
+      .where({ taskId })
       .whereNotIn('taskState', whereState)
       .returning('*')
       .then((rows) => {
@@ -247,7 +242,7 @@ export class TaskQueueRepository {
    * only in init, pending, running, cancelled
    */
   async [ServerMethod.setCancelled](
-    id: TaskDTO['taskId'],
+    taskId: TaskDTO['taskId'],
   ): Promise<TaskDTO | undefined> {
 
     const { db } = this
@@ -261,7 +256,7 @@ export class TaskQueueRepository {
     const ret = await db.camelTables.ref_tb_task()
       .update('taskState', TaskState.cancelled)
       .update('mtime', 'now()')
-      .where('taskId', id)
+      .where({ taskId })
       .whereIn('taskState', whereState)
       .returning('*')
       .then((rows) => {
@@ -275,7 +270,7 @@ export class TaskQueueRepository {
    * only when running
    */
   async [ServerMethod.setSucceeded](
-    id: TaskDTO['taskId'],
+    taskId: TaskDTO['taskId'],
   ): Promise<TaskDTO | undefined> {
 
     const { db } = this
@@ -286,7 +281,7 @@ export class TaskQueueRepository {
       .forUpdate()
       .update('taskProgress', 100)
       .update('mtime', 'now()')
-      .where('taskId', id)
+      .where({ taskId })
       .catch(async (ex) => {
         await trx.rollback()
         throw ex
@@ -297,7 +292,7 @@ export class TaskQueueRepository {
       .forUpdate()
       .update('taskState', TaskState.succeeded)
       .update('mtime', 'now()')
-      .where('taskId', id)
+      .where({ taskId })
       .where('taskState', TaskState.running)
       .returning('*')
       .then(async (rows) => {
@@ -325,7 +320,7 @@ export class TaskQueueRepository {
     const ret = await db.camelTables.ref_tb_task_progress()
       .update('taskProgress', taskProgress)
       .update('mtime', 'now()')
-      .where('taskId', taskId)
+      .where({ taskId })
       .where('taskProgress', '<=', taskProgress)
       .limit(1)
       .returning('*')

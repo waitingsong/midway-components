@@ -1,5 +1,6 @@
 import { MiddlewareConfig } from '../index'
 import {
+  DbReplica,
   initTaskClientConfig,
   initDbConfig,
   TaskClientConfig,
@@ -7,6 +8,7 @@ import {
   initTaskServerConfig,
   initialMiddlewareConfig,
   initMiddlewareOptions,
+  dbDict,
 } from '../lib/index'
 
 
@@ -15,8 +17,11 @@ import {
  */
 export const taskServerConfig: TaskServerConfig = {
   ...initTaskServerConfig,
-  dbConfigs: {
-    ...initDbConfig,
+  dataSource: {
+    [DbReplica.taskMaster]: {
+      ...initDbConfig,
+      dict: dbDict,
+    },
   },
 }
 

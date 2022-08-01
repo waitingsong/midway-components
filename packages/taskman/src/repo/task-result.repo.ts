@@ -1,3 +1,5 @@
+import assert from 'node:assert'
+
 import {
   App,
   Config,
@@ -6,12 +8,7 @@ import {
   Provide,
 } from '@midwayjs/decorator'
 import { Logger } from '@mw-components/jaeger'
-import {
-  DbManager,
-  KmoreComponent,
-  TracerKmoreComponent,
-  unsubscribeEventFuncOnResFinish,
-} from '@mw-components/kmore'
+import { DbSourceManager, Kmore } from '@mw-components/kmore'
 
 import {
   DbModel,
@@ -37,26 +34,24 @@ export class TaskResultRepository {
 
   @Config(ConfigKey.serverConfig) protected readonly serverConfig: TaskServerConfig
 
-  public db: KmoreComponent<DbModel> | TracerKmoreComponent<DbModel>
+  @Inject() dbManager: DbSourceManager<DbReplica, DbModel, Context>
+
+  public db: Kmore<DbModel, Context>
 
   @Init()
   async init(): Promise<void> {
-    const container = this.app.getApplicationContext()
-    const dbManager = await container.getAsync(DbManager) as DbManager
-    const db = await dbManager.create<DbModel>(this.ctx, DbReplica.taskMaster, unsubscribeEventFuncOnResFinish)
+    const db = this.dbManager.getDataSource(DbReplica.taskMaster)
+    assert(db)
     this.db = db
   }
 
-  [ServerMethod.destroy](): void {
-    if (this.db instanceof TracerKmoreComponent) {
-      this.db.unsubscribeEvent()
-    }
-    // this.db.unsubscribe()
-  }
+  // async [ServerMethod.destroy](): Promise<void> {
+  //   await this.db.dbh.destroy()
+  // }
 
   async [ServerMethod.create](input: TaskResultDTO): Promise<TaskResultDTO> {
     const { db } = this
-    const ret = await db.camelTables.ref_tb_task_result()
+    const ret = await db.camelTables.ref_tb_task_result(this.ctx)
       .insert(input)
       .returning('*')
       .then((arr) => {
@@ -70,10 +65,10 @@ export class TaskResultRepository {
     return ret
   }
 
-  async [ServerMethod.read](id: TaskDTO['taskId']): Promise<TaskResultDTO | undefined> {
+  async [ServerMethod.read](taskId: TaskDTO['taskId']): Promise<TaskResultDTO | undefined> {
     const { db } = this
-    const ret = await db.camelTables.ref_tb_task_result()
-      .where('taskId', id)
+    const ret = await db.camelTables.ref_tb_task_result(this.ctx)
+      .where('taskId', taskId)
       .limit(1)
       .then(arr => arr[0])
 
