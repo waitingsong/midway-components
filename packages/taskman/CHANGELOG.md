@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [19.1.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@19.0.0...@mw-components/taskman@19.1.0) (2022-08-01)
+
+
+### Bug Fixes
+
+* **taskman:** connection merging within genKmoreDbConfig() ([302fdc5](https://github.com/waitingsong/midway-components/commit/302fdc5f5fa9074a562730b399f63fd3af776fa0))
+
+
+### Features
+
+* **taskman:** auto merge config with initDbConfig when onReady ([26756d4](https://github.com/waitingsong/midway-components/commit/26756d40ce752458752e7f83a34f752b3315007a))
+
+
+
+
+
 # [19.0.0](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@18.0.0...@mw-components/taskman@19.0.0) (2022-08-01)
 
 
