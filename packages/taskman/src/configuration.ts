@@ -5,26 +5,25 @@ import 'tsconfig-paths/register'
 import { join } from 'path'
 
 import { IMidwayContainer } from '@midwayjs/core'
-import { App, Config, Configuration } from '@midwayjs/decorator'
+import { App, Config, Configuration, Inject } from '@midwayjs/decorator'
 import * as fetch from '@mw-components/fetch'
 import * as jaeger from '@mw-components/jaeger'
 import * as db from '@mw-components/kmore'
+import { DbSourceManager } from '@mw-components/kmore'
 import * as koid from '@mw-components/koid'
 
 import {
   ConfigKey,
-  initDbConfig,
+  DbModel,
   DbReplica,
-  DbReplicaKeys,
   MiddlewareConfig,
   TaskClientConfig,
   TaskServerConfig,
 } from './lib/index'
 import { TaskManMiddleware } from './middleware/taskman.middleware'
-import { genKmoreDbConfig } from './repo/helper'
 import { TaskAgentService } from './service/task-agent.service'
 
-import type { Application } from '~/interface'
+import type { Application, Context } from '~/interface'
 
 
 @Configuration({
@@ -45,11 +44,17 @@ export class AutoConfiguration {
   @Config(ConfigKey.clientConfig) protected readonly clientConfig: TaskClientConfig
   @Config(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
 
+  @Inject() dbManager: DbSourceManager<DbReplica.taskMaster, DbModel, Context>
+
   async onReady(container: IMidwayContainer): Promise<void> {
     // const container = this.app.getApplicationContext()
-    const dbConfig = genKmoreDbConfig(this.serverConfig, initDbConfig)
-    const dbManager = await container.getAsync(db.DbManager) as db.DbManager<DbReplicaKeys>
-    await dbManager.connect(DbReplica.taskMaster, dbConfig)
+    // const dbConfig = genKmoreDbConfig(this.serverConfig, initDbConfig)
+
+    await this.dbManager.createInstance<DbModel>(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      this.serverConfig.dataSource[DbReplica.taskMaster],
+      DbReplica.taskMaster,
+    )
 
     const agentSvc = await container.getAsync(TaskAgentService)
     await agentSvc.run()

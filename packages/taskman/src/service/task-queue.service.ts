@@ -36,14 +36,14 @@ export class TaskQueueService {
   @Inject() protected readonly logger: Logger
   @Inject() protected readonly repo: TaskQueueRepository
   @Inject() protected readonly logRepo: TaskLogRepository
-  @Inject() protected readonly retRepo: TaskResultRepository;
+  @Inject() protected readonly retRepo: TaskResultRepository
 
 
-  [ServerMethod.destroy](): void {
-    this.repo.destroy()
-    this.logRepo.destroy()
-    this.retRepo.destroy()
-  }
+  // [ServerMethod.destroy](): void {
+  //   this.repo.destroy()
+  //   this.logRepo.destroy()
+  //   this.retRepo.destroy()
+  // }
 
   async [ServerMethod.create](input: CreateTaskDTO): Promise<TaskDTO> {
     const init: InitTaskDTO = {

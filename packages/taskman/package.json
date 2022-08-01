@@ -1,7 +1,7 @@
 {
   "name": "@mw-components/taskman",
   "author": "waiting",
-  "version": "18.0.0",
+  "version": "19.0.0",
   "description": "midway component task manager",
   "keywords": [
     "midway",
@@ -23,29 +23,25 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@midwayjs/core": "^3.4.0",
+    "@midwayjs/decorator": "^3.4.0",
+    "@midwayjs/validate": "^3.4.0",
+    "@mw-components/fetch": ">=19",
+    "@mw-components/jaeger": ">=12",
+    "@mw-components/kmore": "^31.2.0",
+    "@mw-components/koid": ">=9",
     "@waiting/shared-core": "^20.3.0",
+    "pg": "^8.7.3",
     "postgres-interval": "^4.0.0"
   },
   "devDependencies": {
     "@mw-components/fetch": "^19.0.6",
     "@mw-components/jaeger": "^12.0.7",
-    "@mw-components/kmore": "^30.0.0",
     "@mw-components/koid": ">=9",
     "@waiting/shared-types": "^20.2.0",
     "cross-env": "7",
-    "kmore-cli": "^30.0.0",
-    "kmore-types": "^30.0.0",
-    "pg": "^8.7.3"
-  },
-  "peerDependencies": {
-    "@midwayjs/core": ">=3",
-    "@midwayjs/decorator": ">=3",
-    "@midwayjs/validate": ">=3",
-    "@mw-components/fetch": ">=19",
-    "@mw-components/jaeger": ">=12",
-    "@mw-components/kmore": ">=30",
-    "@mw-components/koid": ">=9",
-    "pg": "^8.7.3"
+    "kmore-cli": "^31.0.0",
+    "kmore-types": "^31.0.0"
   },
   "engines": {
     "node": ">=16.13.0"

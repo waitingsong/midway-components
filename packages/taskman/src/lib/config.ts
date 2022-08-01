@@ -1,8 +1,9 @@
+import { DbConfig, initialKnexConfig } from '@mw-components/kmore'
+
 import {
   InitTaskDTO,
   InitTaskPayloadDTO,
   TaskProgressDTO,
-  DbConfig,
   MiddlewareConfig,
   MiddlewareOptions,
   PickInitTaskOptions,
@@ -85,31 +86,34 @@ export const initTaskProgressDTO: Omit<TaskProgressDTO, 'taskId'> = {
 }
 
 
-export const initDbConfig: Required<DbConfig> = {
-  acquireConnectionTimeout: 60000,
-  autoConnect: true,
-  connection: {
-    host: process.env['POSTGRES_HOST'] ? process.env['POSTGRES_HOST'] : 'localhost',
-    port: process.env['POSTGRES_PORT'] ? +process.env['POSTGRES_PORT'] : 5432,
-    database: process.env['POSTGRES_DB'] ? process.env['POSTGRES_DB'] : 'db_ci_mw',
-    user: process.env['POSTGRES_USER'] ? process.env['POSTGRES_USER'] : 'postgres',
-    password: process.env['POSTGRES_PASSWORD'] ? process.env['POSTGRES_PASSWORD'] : 'postgres',
-  },
-  pool: {
-    min: 0,
-    max: 10,
-    afterCreate: (conn: any, done: any) => {
-      const TZ = process.env['PGTZ'] as string | undefined
-      if (TZ) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        conn.query(`SET time zone '${TZ}';`, (err: Error | undefined) => done(err, conn))
-      }
-      else {
-        done(void 0, conn)
-      }
+export const initDbConfig: Omit<DbConfig, 'dict' | 'eventCallbacks'> = {
+  config: {
+    ...initialKnexConfig,
+    acquireConnectionTimeout: 60000,
+    client: 'pg',
+    connection: {
+      host: process.env['POSTGRES_HOST'] ? process.env['POSTGRES_HOST'] : 'localhost',
+      port: process.env['POSTGRES_PORT'] ? +process.env['POSTGRES_PORT'] : 5432,
+      database: process.env['POSTGRES_DB'] ? process.env['POSTGRES_DB'] : 'db_ci_mw',
+      user: process.env['POSTGRES_USER'] ? process.env['POSTGRES_USER'] : 'postgres',
+      password: process.env['POSTGRES_PASSWORD'] ? process.env['POSTGRES_PASSWORD'] : 'postgres',
     },
-    /** @link https://stackoverflow.com/a/67621567 */
-    propagateCreateError: false,
+    pool: {
+      min: 0,
+      max: 10,
+      afterCreate: (conn: any, done: any) => {
+        const TZ = process.env['PGTZ'] as string | undefined
+        if (TZ) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          conn.query(`SET time zone '${TZ}';`, (err: Error | undefined) => done(err, conn))
+        }
+        else {
+          done(void 0, conn)
+        }
+      },
+      /** @link https://stackoverflow.com/a/67621567 */
+      propagateCreateError: false,
+    },
   },
   enableTracing: false,
   tracingResponse: true,
@@ -124,7 +128,7 @@ export const initPickInitTasksOptions: PickInitTaskOptions = {
 }
 
 
-export const initTaskServerConfig: Omit<TaskServerConfig, 'dbConfigs'> = {
+export const initTaskServerConfig: Omit<TaskServerConfig, 'dataSource'> = {
   /** TaskMan Server host */
   host: 'http://localhost:7001',
   expInterval: '30min',

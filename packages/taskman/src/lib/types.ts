@@ -1,5 +1,5 @@
 import { Rule } from '@midwayjs/validate'
-import { KnexConfig } from '@mw-components/kmore'
+import { DataSource } from '@mw-components/kmore'
 import {
   MiddlewareConfig as MWConfig,
   JsonType,
@@ -8,6 +8,8 @@ import {
 
 import { JsonObject, FetchOptions, IPostgresInterval } from '../interface'
 import { taskManValidSchemas } from '../validation-schema/index.schema'
+
+import { DbReplica } from './config.types'
 
 
 export type Config = TaskServerConfig | TaskClientConfig
@@ -176,7 +178,7 @@ export interface TaskServerConfig {
   /** server host */
   host: string
   expInterval: TaskDTO['timeoutIntv']
-  dbConfigs: DbConfig
+  dataSource: DataSource<DbReplica.taskMaster>
   /**
    * Indicate request from task-agent
    * @default x-task-agent
@@ -188,33 +190,33 @@ export interface TaskServerConfig {
   headerKeyTaskId: string
 }
 
-export interface DbConfig {
-  connection: {
-    host: string,
-    port: number,
-    database: string,
-    user: string,
-    password: string,
-  }
-  pool: KnexConfig['pool']
-  acquireConnectionTimeout?: number
-  /**
-   * @default true
-   */
-  autoConnect?: boolean
-  /**
-   * @default true
-   */
-  enableTracing?: boolean
-  /**
-   * @default true
-   */
-  tracingResponse?: boolean
-  /**
-   * @default 300(ms)
-   */
-  sampleThrottleMs?: number
-}
+// export interface DbConfig {
+//   connection: {
+//     host: string,
+//     port: number,
+//     database: string,
+//     user: string,
+//     password: string,
+//   }
+//   pool: KnexConfig['pool']
+//   acquireConnectionTimeout?: number
+//   /**
+//    * @default true
+//    */
+//   autoConnect?: boolean
+//   /**
+//    * @default true
+//    */
+//   enableTracing?: boolean
+//   /**
+//    * @default true
+//    */
+//   tracingResponse?: boolean
+//   /**
+//    * @default 300(ms)
+//    */
+//   sampleThrottleMs?: number
+// }
 
 
 export enum TaskState {
