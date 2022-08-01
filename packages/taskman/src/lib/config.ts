@@ -102,7 +102,7 @@ export const initDbConfig: DbConfig<DbModel> = {
     },
     pool: {
       min: 0,
-      max: 10,
+      max: 20,
       afterCreate: (conn: any, done: any) => {
         const TZ = process.env['PGTZ'] as string | undefined
         if (TZ) {
