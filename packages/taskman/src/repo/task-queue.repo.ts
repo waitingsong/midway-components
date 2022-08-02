@@ -7,7 +7,7 @@ import {
   Inject,
   Provide,
 } from '@midwayjs/decorator'
-import { DbSourceManager, Kmore } from '@mw-components/kmore'
+import { DbManager, Kmore } from '@mw-components/kmore'
 
 import {
   initTaskProgressDTO,
@@ -38,11 +38,9 @@ export class TaskQueueRepository {
 
   @App() protected readonly app: Application
 
-  @Inject() protected readonly ctx: Context
-
   @Config(ConfigKey.serverConfig) protected readonly serverConfig: TaskServerConfig
 
-  @Inject() dbManager: DbSourceManager<DbReplica, DbModel, Context>
+  @Inject() dbManager: DbManager<DbReplica, DbModel, Context>
 
   public db: Kmore<DbModel, Context>
 
@@ -59,7 +57,7 @@ export class TaskQueueRepository {
 
   async [ServerMethod.create](input: InitTaskDTO): Promise<TaskDTO> {
     const { db } = this
-    const ret = await db.camelTables.ref_tb_task(this.ctx)
+    const ret = await db.camelTables.ref_tb_task()
       .insert(input)
       .returning('*')
       .then((arr) => {
@@ -78,7 +76,7 @@ export class TaskQueueRepository {
    */
   async addTaskPayload(input: TaskPayloadDTO): Promise<TaskPayloadDTO> {
     const { db } = this
-    const ret = await db.camelTables.ref_tb_task_payload(this.ctx)
+    const ret = await db.camelTables.ref_tb_task_payload()
       .insert(input)
       .returning('*')
       .then((arr) => {
@@ -94,7 +92,7 @@ export class TaskQueueRepository {
 
   async getInfo(taskId: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
     const { db } = this
-    const ret = await db.camelTables.ref_tb_task(this.ctx)
+    const ret = await db.camelTables.ref_tb_task()
       .select('*')
       .where({ taskId })
       .limit(1)
@@ -108,7 +106,7 @@ export class TaskQueueRepository {
   ): Promise<TaskProgressDetailDTO | undefined> {
 
     const { db } = this
-    const task = await db.camelTables.ref_tb_task(this.ctx)
+    const task = await db.camelTables.ref_tb_task()
       .select('taskState')
       .where({ taskId })
       .limit(1)
@@ -160,7 +158,7 @@ export class TaskQueueRepository {
     const { db } = this
     const trx = await db.dbh.transaction()
 
-    await db.camelTables.ref_tb_task_progress(this.ctx)
+    await db.camelTables.ref_tb_task_progress()
       .transacting(trx)
       .forUpdate()
       .where({ taskId })
@@ -176,7 +174,7 @@ export class TaskQueueRepository {
       taskProgress: 0,
     }
 
-    const ins = await db.camelTables.ref_tb_task_progress(this.ctx)
+    const ins = await db.camelTables.ref_tb_task_progress()
       .transacting(trx)
       .forUpdate()
       .insert(data)

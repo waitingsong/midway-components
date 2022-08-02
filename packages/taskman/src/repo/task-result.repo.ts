@@ -8,7 +8,7 @@ import {
   Provide,
 } from '@midwayjs/decorator'
 import { Logger } from '@mw-components/jaeger'
-import { DbSourceManager, Kmore } from '@mw-components/kmore'
+import { DbManager, Kmore } from '@mw-components/kmore'
 
 import {
   DbModel,
@@ -28,13 +28,11 @@ export class TaskResultRepository {
 
   @App() protected readonly app: Application
 
-  @Inject() protected readonly ctx: Context
-
   @Inject() protected readonly logger: Logger
 
   @Config(ConfigKey.serverConfig) protected readonly serverConfig: TaskServerConfig
 
-  @Inject() dbManager: DbSourceManager<DbReplica, DbModel, Context>
+  @Inject() dbManager: DbManager<DbReplica, DbModel, Context>
 
   public db: Kmore<DbModel, Context>
 
@@ -51,7 +49,7 @@ export class TaskResultRepository {
 
   async [ServerMethod.create](input: TaskResultDTO): Promise<TaskResultDTO> {
     const { db } = this
-    const ret = await db.camelTables.ref_tb_task_result(this.ctx)
+    const ret = await db.camelTables.ref_tb_task_result()
       .insert(input)
       .returning('*')
       .then((arr) => {
@@ -67,7 +65,7 @@ export class TaskResultRepository {
 
   async [ServerMethod.read](taskId: TaskDTO['taskId']): Promise<TaskResultDTO | undefined> {
     const { db } = this
-    const ret = await db.camelTables.ref_tb_task_result(this.ctx)
+    const ret = await db.camelTables.ref_tb_task_result()
       .where('taskId', taskId)
       .limit(1)
       .then(arr => arr[0])
