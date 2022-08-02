@@ -34,13 +34,15 @@ export class TaskLogRepository {
 
   @Inject() dbManager: DbManager<DbReplica, DbModel, Context>
 
-  public db: Kmore<DbModel, Context>
+  db: Kmore<DbModel, Context>
+  ref_tb_task_log: Kmore<DbModel, Context>['camelTables']['ref_tb_task_log']
 
   @Init()
   async init(): Promise<void> {
     const db = this.dbManager.getDataSource(DbReplica.taskMaster)
     assert(db)
     this.db = db
+    this.ref_tb_task_log = db.camelTables.ref_tb_task_log
   }
 
   // async [ServerMethod.destroy](): Promise<void> {
@@ -48,8 +50,7 @@ export class TaskLogRepository {
   // }
 
   async [ServerMethod.create](input: InitTaskLogDTO): Promise<TaskLogDTO> {
-    const { db } = this
-    const ret = await db.camelTables.ref_tb_task_log()
+    const ret = await this.ref_tb_task_log()
       .insert(input)
       .returning('*')
       .then((arr) => {
@@ -65,8 +66,7 @@ export class TaskLogRepository {
 
 
   async [ServerMethod.read](id: TaskLogDTO['taskLogId']): Promise<TaskLogDTO | undefined> {
-    const { db } = this
-    const ret = await db.camelTables.ref_tb_task_log()
+    const ret = await this.ref_tb_task_log()
       .where('task_log_id', id)
       .limit(1)
       .then(arr => arr[0])

@@ -5,7 +5,6 @@ import {
   CreateTaskDTO,
   TaskFullDTO,
   TaskDTO,
-  TaskPayloadDTO,
   initTaskDTO,
 } from '~/lib/index'
 import { TaskQueueRepository } from '~/repo/index.repo'
@@ -63,11 +62,11 @@ export async function createOneTask(
   const task = await svc.create(data)
   valiateTask(task)
 
-  const payload = await repo.db.refTables.ref_tb_task_payload()
+  const payload = await repo.db.camelTables.ref_tb_task_payload()
     .select('json')
-    .where('task_id', task.taskId)
+    .where('taskId', task.taskId)
     .limit(1)
-    .then(arr => arr[0]) as TaskPayloadDTO | undefined
+    .then(rows => rows[0])
 
   assert(payload && Object.keys(payload).length === 1)
   assert.deepStrictEqual(payload && payload.json, data.json)
@@ -96,16 +95,16 @@ export async function removeOneTask(
   row: TaskDTO,
 ): Promise<void> {
 
-  await repo.db.refTables.ref_tb_task()
-    .where('task_id', row.taskId)
+  await repo.db.camelTables.ref_tb_task()
+    .where('taskId', row.taskId)
     .delete()
 
-  const ret = await repo.db.refTables.ref_tb_task()
-    .where('task_id', row.taskId)
+  const ret = await repo.db.camelTables.ref_tb_task()
+    .where('taskId', row.taskId)
   assert(ret.length === 0)
 
-  const ret2 = await repo.db.refTables.ref_tb_task_progress()
-    .where('task_id', row.taskId)
+  const ret2 = await repo.db.camelTables.ref_tb_task_progress()
+    .where('taskId', row.taskId)
   assert(ret2.length === 0)
 }
 
@@ -114,12 +113,12 @@ export async function removeOneTaskPayload(
   row: TaskDTO,
 ): Promise<void> {
 
-  await repo.db.refTables.ref_tb_task_payload()
-    .where('task_id', row.taskId)
+  await repo.db.camelTables.ref_tb_task_payload()
+    .where('taskId', row.taskId)
     .delete()
 
-  const ret = await repo.db.refTables.ref_tb_task_payload()
-    .where('task_id', row.taskId)
+  const ret = await repo.db.camelTables.ref_tb_task_payload()
+    .where('taskId', row.taskId)
 
   assert(ret.length === 0)
 }

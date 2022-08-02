@@ -34,13 +34,15 @@ export class TaskResultRepository {
 
   @Inject() dbManager: DbManager<DbReplica, DbModel, Context>
 
-  public db: Kmore<DbModel, Context>
+  db: Kmore<DbModel, Context>
+  ref_tb_task_result: Kmore<DbModel, Context>['camelTables']['ref_tb_task_result']
 
   @Init()
   async init(): Promise<void> {
     const db = this.dbManager.getDataSource(DbReplica.taskMaster)
     assert(db)
     this.db = db
+    this.ref_tb_task_result = db.camelTables.ref_tb_task_result
   }
 
   // async [ServerMethod.destroy](): Promise<void> {
@@ -48,12 +50,11 @@ export class TaskResultRepository {
   // }
 
   async [ServerMethod.create](input: TaskResultDTO): Promise<TaskResultDTO> {
-    const { db } = this
-    const ret = await db.camelTables.ref_tb_task_result()
+    const ret = await this.ref_tb_task_result()
       .insert(input)
       .returning('*')
-      .then((arr) => {
-        const [row] = arr
+      .then(rows => rows[0])
+      .then((row) => {
         if (! row) {
           throw new Error('insert failed')
         }
@@ -64,11 +65,10 @@ export class TaskResultRepository {
   }
 
   async [ServerMethod.read](taskId: TaskDTO['taskId']): Promise<TaskResultDTO | undefined> {
-    const { db } = this
-    const ret = await db.camelTables.ref_tb_task_result()
+    const ret = await this.ref_tb_task_result()
       .where('taskId', taskId)
       .limit(1)
-      .then(arr => arr[0])
+      .then(rows => rows[0])
 
     return ret
   }
