@@ -1,4 +1,4 @@
-import { DbConfig, initialKnexConfig } from '@mw-components/kmore'
+import { DbConfig } from '@mw-components/kmore'
 
 import { dbDict, DbModel } from './db.model'
 import {
@@ -90,7 +90,6 @@ export const initTaskProgressDTO: Omit<TaskProgressDTO, 'taskId'> = {
 export const initDbConfig: DbConfig<DbModel> = {
   dict: dbDict,
   config: {
-    ...initialKnexConfig,
     acquireConnectionTimeout: 60000,
     client: 'pg',
     connection: {

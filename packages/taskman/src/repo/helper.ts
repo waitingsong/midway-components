@@ -4,8 +4,6 @@ import { Context } from '@midwayjs/core'
 import {
   DbConfig,
   KnexConfig,
-  postProcessResponseToCamel,
-  wrapIdentifier,
 } from '@mw-components/kmore'
 
 import {
@@ -56,8 +54,6 @@ export function genKmoreDbConfig(
     acquireConnectionTimeout,
     pool,
     // serverConfig.dbConfigs.pool
-    postProcessResponse: postProcessResponseToCamel,
-    wrapIdentifier,
   }
 
   const master: DbConfig<DbModel> = {
