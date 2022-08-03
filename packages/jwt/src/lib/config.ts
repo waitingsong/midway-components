@@ -17,6 +17,15 @@ export const initialMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'ignore' |
   enableMiddleware: true,
 }
 
+export const initPathArray = [
+  '/',
+  '/auth/login',
+  '/login',
+  '/metrics',
+  '/ping',
+  '/favicon.ico',
+  '/favicon.png',
+]
 
 export enum ConfigKey {
   namespace = 'jwt',
