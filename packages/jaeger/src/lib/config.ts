@@ -2,6 +2,7 @@ import {
   Config,
   MiddlewareConfig,
   MiddlewareOptions,
+  TracerTag,
 } from './types'
 
 /**
@@ -14,6 +15,8 @@ export const initLoggingReqHeaders: Readonly<string[]> = [
   'authorization',
   'host',
   'user-agent',
+  TracerTag.svcName,
+  TracerTag.svcVer,
 ]
 
 export const initialConfig: Readonly<Omit<Config, 'tracingConfig'>> = {
