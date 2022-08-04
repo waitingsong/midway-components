@@ -32,16 +32,10 @@ export class ContainerConfiguration implements ILifeCycle {
 
 Update project `src/config/config.prod.ts`
 ```ts
-import { TracerConfig, defaultTracerConfig } from '@mw-components/jaeger'
+import { TracerConfig } from '@mw-components/jaeger'
 
 export const tracer: TracerConfig = {
-  ...defaultTracerConfig,
-  reqThrottleMsForPriority: 300,
   tracingConfig: {
-    sampler: {
-      type: 'probabilistic',
-      param: 0.0001,
-    },
     reporter: {
       agentHost: '127.0.0.1',
     },
@@ -51,11 +45,10 @@ export const tracer: TracerConfig = {
 
 Update project `src/config/config.(local | unittest).ts`
 ```ts
-import { TracerConfig, defaultTracerConfig } from '@mw-components/jaeger'
+import { TracerConfig, initLoggingReqHeaders } from '@mw-components/jaeger'
 
 export const tracer: TracerConfig = {
-  ...defaultTracerConfig,
-  loggingOutputBody: true,
+  reqThrottleMsForPriority: 100,
   tracingConfig: {
     sampler: {
       type: 'probabilistic',
@@ -65,6 +58,11 @@ export const tracer: TracerConfig = {
       agentHost: '127.0.0.1',
     },
   },
+  loggingReqHeaders: [
+    ...initLoggingReqHeaders,
+    'header-foo',
+    'header-bar',
+  ],
 }
 ```
 
