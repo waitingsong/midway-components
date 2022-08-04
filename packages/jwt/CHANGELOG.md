@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 12.0.0 (2022-08-04)
+
+
+### Features
+
+* **jwt:** export const initPathArray ([fb88c54](https://github.com/waitingsong/midway-components/commit/fb88c54da17bcd4cda1766055812edf99586a727))
+
+
+
+
+
 ## [11.0.16](https://github.com/waitingsong/midway-components/compare/@mw-components/jwt@11.0.15...@mw-components/jwt@11.0.16) (2022-07-13)
 
 **Note:** Version bump only for package @mw-components/jwt
