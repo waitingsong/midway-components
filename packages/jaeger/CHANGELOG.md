@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 13.0.0 (2022-08-04)
+
+
+### Features
+
+* **jaeger:** export const initLoggingReqHeaders ([bf74246](https://github.com/waitingsong/midway-components/commit/bf74246cf20376981aa3bfe29bd987827374b81e))
+* **jaeger:** export const initTracerIgnoreArray ([d10388d](https://github.com/waitingsong/midway-components/commit/d10388d8574048286fd087397807ecc9deb0ca13))
+* **jaeger:** increase defulat sampler.param to 0.1 ([5ae2633](https://github.com/waitingsong/midway-components/commit/5ae2633c64fdbd99242e66ec888375e8d18a6d04))
+
+
+
+
+
 ## [12.0.7](https://github.com/waitingsong/midway-components/compare/@mw-components/jaeger@12.0.6...@mw-components/jaeger@12.0.7) (2022-07-13)
 
 **Note:** Version bump only for package @mw-components/jaeger

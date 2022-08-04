@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 22.0.0 (2022-08-04)
+
+**Note:** Version bump only for package @mw-components/taskman
+
+
+
+
+
 ## [21.0.1](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@21.0.0...@mw-components/taskman@21.0.1) (2022-08-04)
 
 **Note:** Version bump only for package @mw-components/taskman
