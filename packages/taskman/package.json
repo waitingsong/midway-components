@@ -1,7 +1,7 @@
 {
   "name": "@mw-components/taskman",
   "author": "waiting",
-  "version": "22.0.1",
+  "version": "22.0.2",
   "description": "midway component task manager",
   "keywords": [
     "midway",
@@ -27,7 +27,7 @@
     "@midwayjs/decorator": "^3.4.0",
     "@midwayjs/validate": "^3.4.0",
     "@mw-components/fetch": ">=19",
-    "@mw-components/jaeger": "^13.1.0",
+    "@mw-components/jaeger": "^13.1.1",
     "@mw-components/kmore": "^33.0.1",
     "@mw-components/koid": ">=9",
     "@waiting/shared-core": "^20.3.0",
