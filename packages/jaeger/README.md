@@ -50,10 +50,6 @@ import { TracerConfig, initLoggingReqHeaders } from '@mw-components/jaeger'
 export const tracer: TracerConfig = {
   reqThrottleMsForPriority: 100,
   tracingConfig: {
-    sampler: {
-      type: 'probabilistic',
-      param: 1,
-    },
     reporter: {
       agentHost: '127.0.0.1',
     },
