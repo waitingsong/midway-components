@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [13.1.0](https://github.com/waitingsong/midway-components/compare/@mw-components/jaeger@13.0.0...@mw-components/jaeger@13.1.0) (2022-08-04)
+
+
+### Features
+
+* **jaeger:** add configs for local and unit test ([f043752](https://github.com/waitingsong/midway-components/commit/f0437524a650bccf192fba24e44ab5e91959cdcb))
+* **jaeger:** update initLoggingReqHeaders ([9e6c6f2](https://github.com/waitingsong/midway-components/commit/9e6c6f280fba831aa25cb6e648bead5fd8b9cb1d))
+
+
+
+
+
 # 13.0.0 (2022-08-04)
 
 
