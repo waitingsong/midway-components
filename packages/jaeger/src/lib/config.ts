@@ -14,7 +14,7 @@ export const initLoggingReqHeaders: Readonly<string[]> = [
   'authorization',
   'host',
   'user-agent',
-],
+]
 
 export const initialConfig: Readonly<Omit<Config, 'tracingConfig'>> = {
   reqThrottleMsForPriority: 500,
