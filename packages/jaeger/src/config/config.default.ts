@@ -13,7 +13,7 @@ export const tracerConfig: Config = {
   tracingConfig: {
     sampler: {
       type: 'probabilistic',
-      param: 0.0001,
+      param: 0.1,
     },
     reporter: {
       agentHost: '127.0.0.1',
