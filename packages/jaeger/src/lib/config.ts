@@ -4,18 +4,24 @@ import {
   MiddlewareOptions,
 } from './types'
 
+/**
+ * Initial config, contains:
+ * - authorization
+ * - host
+ * - user-agent
+ */
+export const initLoggingReqHeaders: Readonly<string[]> = [
+  'authorization',
+  'host',
+  'user-agent',
+]
 
 export const initialConfig: Readonly<Omit<Config, 'tracingConfig'>> = {
   reqThrottleMsForPriority: 500,
   enableCatchError: true,
   logginInputQuery: true,
   loggingOutputBody: true,
-  loggingReqHeaders: [
-    'authorization',
-    'host',
-    'user-agent',
-  ],
-  // processCustomFailure,
+  loggingReqHeaders: [...initLoggingReqHeaders],
 }
 export const initMiddlewareOptions: MiddlewareOptions = {
   debug: false,
@@ -23,6 +29,15 @@ export const initMiddlewareOptions: MiddlewareOptions = {
 export const initialMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'ignore' | 'match' | 'options'>> = {
   enableMiddleware: true,
 }
+
+export const initTracerIgnoreArray: Readonly<(string|RegExp)[]> = [
+  '/favicon.ico',
+  '/favicon.png',
+  '/ping',
+  '/metrics',
+  '/untracedPath',
+  /\/unitTest[\d.]+/u,
+]
 
 export enum ConfigKey {
   namespace = 'jaeger',
