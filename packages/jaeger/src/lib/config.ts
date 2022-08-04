@@ -24,6 +24,15 @@ export const initialMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'ignore' |
   enableMiddleware: true,
 }
 
+export const initTracerIgnoreArray: Readonly<(string|RegExp)[]> = [
+  '/favicon.ico',
+  '/favicon.png',
+  '/ping',
+  '/metrics',
+  '/untracedPath',
+  /\/unitTest[\d.]+/u,
+]
+
 export enum ConfigKey {
   namespace = 'jaeger',
   config = 'tracerConfig',

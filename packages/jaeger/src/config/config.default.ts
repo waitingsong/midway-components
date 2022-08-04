@@ -2,6 +2,7 @@ import { Config, MiddlewareConfig } from '../index'
 import {
   initialConfig,
   initialMiddlewareConfig,
+  initTracerIgnoreArray,
 } from '../lib/config'
 import { processCustomFailure } from '../lib/tracer'
 
@@ -22,9 +23,6 @@ export const tracerConfig: Config = {
 
 export const tracerMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
   ...initialMiddlewareConfig,
-  ignore: [
-    '/favicon.ico',
-    '/favicon.png',
-  ],
+  ignore: [...initTracerIgnoreArray],
 }
 
