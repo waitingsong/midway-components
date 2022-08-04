@@ -48,22 +48,25 @@ export interface User {
 import {
   JwtConfig,
   JwtMiddlewareConfig,
-  initialJwtMiddlewareConfig,
+  initPathArray,
 } from '@mw-components/jwt'
 
 export const jwtConfig: JwtConfig = {
   secret: '123456abc', // 默认密钥，生产环境一定要更改!
 }
 export const jwtMiddlewareConfig: JwtMiddlewareConfig = {
-  ...initialJwtMiddlewareConfig,
   enableMiddleware: true,
 }
-// add extra ignore rules
-jwtMiddlewareConfig.ignore = jwtMiddlewareConfig.ignore?.concat([
-  '/ip',
-  '/test/sign',
-  /\/foo\/bar.+/u,
-])
+// OR add extra ignore rules
+export const jwtMiddlewareConfig: JwtMiddlewareConfig = {
+  enableMiddleware: true,
+  ignore: [
+    ...initPathArray,
+    '/ip',
+    '/test/sign',
+    /\/foo\/bar.+/u,
+  ]
+}
 ```
 
 
