@@ -11,7 +11,6 @@ export const tracerConfig: Config = {
   ...initialConfig,
   processCustomFailure,
   tracingConfig: {
-    serviceName: 'jaeger',
     sampler: {
       type: 'probabilistic',
       param: 1,
