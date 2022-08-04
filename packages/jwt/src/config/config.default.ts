@@ -3,6 +3,7 @@ import {
   initialConfig,
   initialMiddlewareConfig,
   initMiddlewareOptions,
+  initPathArray,
 } from '../lib/config'
 
 
@@ -12,15 +13,7 @@ export const jwtConfig: Config = {
 
 export const jwtMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
   ...initialMiddlewareConfig,
-  ignore: [
-    '/',
-    '/auth/login',
-    '/login',
-    '/metrics',
-    '/ping',
-    '/favicon.ico',
-    '/favicon.png',
-  ],
+  ignore: [...initPathArray],
   options: {
     ...initMiddlewareOptions,
   },
