@@ -23,25 +23,25 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/core": "^3.4.0",
-    "@midwayjs/decorator": "^3.4.0",
-    "@midwayjs/validate": "^3.4.0",
+    "@midwayjs/core": "^3.4.7",
+    "@midwayjs/decorator": "^3.4.4",
+    "@midwayjs/validate": "^3.4.7",
     "@mw-components/fetch": ">=19",
     "@mw-components/jaeger": "^13.1.2",
-    "@mw-components/kmore": "^33.1.0",
+    "@mw-components/kmore": "^34.0.0",
     "@mw-components/koid": ">=9",
     "@waiting/shared-core": "^20.3.0",
     "pg": "^8.7.3",
     "postgres-interval": "^4.0.0"
   },
   "devDependencies": {
-    "@mw-components/fetch": "^20.0.0",
+    "@mw-components/fetch": "^20.1.1",
     "@mw-components/jaeger": "^12.0.7",
     "@mw-components/koid": ">=9",
     "@waiting/shared-types": "^20.2.0",
     "cross-env": "7",
-    "kmore-cli": "^33.0.0",
-    "kmore-types": "^33.0.0"
+    "kmore-cli": "^34.0.0",
+    "kmore-types": "^34.0.0"
   },
   "engines": {
     "node": ">=16.13.0"
