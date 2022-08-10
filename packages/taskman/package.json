@@ -28,7 +28,7 @@
     "@midwayjs/validate": "^3.4.7",
     "@mw-components/fetch": ">=19",
     "@mw-components/jaeger": "^13.1.2",
-    "@mw-components/kmore": "^34.0.0",
+    "@mw-components/kmore": "^34.3.2",
     "@mw-components/koid": ">=9",
     "@waiting/shared-core": "^20.3.0",
     "pg": "^8.7.3",
