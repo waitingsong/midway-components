@@ -23,9 +23,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/core": "^3.4.7",
+    "@midwayjs/core": "^3.4.9",
     "@midwayjs/decorator": "^3.4.4",
-    "@midwayjs/validate": "^3.4.7",
+    "@midwayjs/validate": "^3.4.9",
     "@mw-components/fetch": ">=19",
     "@mw-components/jaeger": "^13.1.2",
     "@mw-components/kmore": "^34.3.2",
@@ -38,7 +38,6 @@
     "@mw-components/fetch": "^20.1.1",
     "@mw-components/jaeger": "^12.0.7",
     "@mw-components/koid": ">=9",
-    "@waiting/shared-types": "^20.2.0",
     "cross-env": "7",
     "kmore-cli": "^34.0.0",
     "kmore-types": "^34.0.0"

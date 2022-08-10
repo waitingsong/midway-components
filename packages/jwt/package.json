@@ -30,7 +30,6 @@
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^8.5.8",
-    "@waiting/shared-types": "^20.2.0",
     "cross-env": "7"
   },
   "engines": {
