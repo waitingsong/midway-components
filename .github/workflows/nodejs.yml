@@ -31,7 +31,6 @@ jobs:
           path: |
             node_modules
             package-lock.json
-            packages/*/.eslintcache
             packages/*/.vscode
             packages/*/dist
             packages/*/node_modules
