@@ -9,20 +9,18 @@ import { App, Config, Configuration, Inject } from '@midwayjs/decorator'
 import * as fetch from '@mw-components/fetch'
 import * as jaeger from '@mw-components/jaeger'
 import * as db from '@mw-components/kmore'
-import { DbSourceManager } from '@mw-components/kmore'
+import { DbConfig, DbSourceManager } from '@mw-components/kmore'
 import * as koid from '@mw-components/koid'
 
 import {
   ConfigKey,
   DbModel,
   DbReplica,
-  initDbConfig,
   MiddlewareConfig,
   TaskClientConfig,
   TaskServerConfig,
 } from './lib/index'
 import { TaskManMiddleware } from './middleware/taskman.middleware'
-import { genKmoreDbConfig } from './repo/helper'
 import { TaskAgentService } from './service/task-agent.service'
 
 import type { Application, Context } from '~/interface'
@@ -49,14 +47,12 @@ export class AutoConfiguration {
   @Inject() dbManager: DbSourceManager<DbReplica.taskMaster, DbModel, Context>
 
   async onReady(container: IMidwayContainer): Promise<void> {
-    const dbConfig = genKmoreDbConfig(
-      this.serverConfig,
-      initDbConfig,
-    )
-
+    // const dbConfig = genKmoreDbConfig(
+    //   this.serverConfig,
+    //   initDbConfig,
+    // )
+    const dbConfig = this.serverConfig.dataSource[DbReplica.taskMaster] as DbConfig<DbModel, Context>
     await this.dbManager.createInstance<DbModel>(
-      // this.serverConfig.dataSource[DbReplica.taskMaster],
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       dbConfig,
       DbReplica.taskMaster,
     )
