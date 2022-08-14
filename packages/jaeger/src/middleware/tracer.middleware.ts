@@ -15,8 +15,8 @@ export class TracerMiddleware implements IMiddleware<Context, NextFunction> {
 
   match(ctx?: Context) {
     if (ctx) {
-      if (! ctx.tracerTags) {
-        ctx.tracerTags = {}
+      if (! ctx['tracerTags']) {
+        ctx['tracerTags'] = {}
       }
     }
 
@@ -49,7 +49,7 @@ export async function middleware(
         ctx.logger.error(ex)
       })
       .finally(() => {
-        ctx.tracerTags = {}
+        ctx['tracerTags'] = {}
       })
   })
 

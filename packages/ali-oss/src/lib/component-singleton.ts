@@ -53,8 +53,8 @@ export class AliOssComponent {
 
   @Init()
   async init(): Promise<void> {
-    assert(this.config, 'config not found')
-    assert(this.ctx)
+    assert(this.config, '[AliOssComponent] config undefined')
+    assert(this.ctx, '[AliOssComponent] this.ctx undefined')
 
     Object.entries(this.config).forEach(([id, config]) => {
       const client = this.createClient(config)

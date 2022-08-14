@@ -11,7 +11,6 @@ export const tracerConfig: Config = {
   ...initialConfig,
   processCustomFailure,
   tracingConfig: {
-    serviceName: 'jaeger',
     sampler: {
       type: 'probabilistic',
       param: 1,
@@ -30,5 +29,4 @@ export const tracerMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> =
     new RegExp('/untraced_path_reg_exp$', 'u'),
   ],
 }
-
 

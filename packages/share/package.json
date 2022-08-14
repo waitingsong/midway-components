@@ -1,0 +1,80 @@
+{
+  "name": "@mw-components/share",
+  "author": "waiting",
+  "version": "1.1.0",
+  "description": "midway.js utils",
+  "keywords": [
+    "midway.js",
+    "ESM",
+    "ts"
+  ],
+  "type": "module",
+  "bin": {},
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "bugs": {
+    "url": "https://github.com/waitingsong/midway-components/issues"
+  },
+  "homepage": "https://github.com/waitingsong/midway-components",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/waitingsong/midway-components"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@midwayjs/bootstrap": "^3.4.10",
+    "@midwayjs/decorator": "^3.4.4",
+    "@midwayjs/koa": "^3.4.10",
+    "@midwayjs/prometheus": "^3.4.10",
+    "@midwayjs/redis": "^3.4.10",
+    "@midwayjs/swagger": "^3.4.10",
+    "@midwayjs/validate": "^3.4.10",
+    "@midwayjs/web": "^3.4.10",
+    "@mw-components/ali-oss": "^2.3.7",
+    "@mw-components/fetch": "^20.1.1",
+    "@mw-components/jaeger": "^13.1.3",
+    "@mw-components/jwt": "^12.0.2",
+    "@mw-components/kmore": "^35.0.1",
+    "@mw-components/koid": "^9.1.1",
+    "@waiting/base64": "^4.2.9",
+    "@waiting/shared-core": "^20.5.0",
+    "tsconfig-paths": "4"
+  },
+  "devDependencies": {
+    "@waiting/shared-types": "^20.5.0",
+    "cross-env": "7"
+  },
+  "engines": {
+    "node": ">=16.13.0"
+  },
+  "files": [
+    "tsconfig.json",
+    "Dockerfile",
+    "src/**/*.ts",
+    "bin/*.js",
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "npm run tsc && npm run rp",
+    "clean": "npm run clean:lock & npm run clean:cache & rm -rf dist/* -rf",
+    "clean:cache": "rm -rf .eslintcache .vscode/.tsbuildinfo .vscode/.tsbuildinfo.*",
+    "clean:lock": "rm package-lock.json -f",
+    "cov": "cross-env TS_NODE_PROJECT=test/tsconfig.json c8 mocha --loader=ts-node/esm --parallel=false",
+    "lint": "eslint --fix --cache {src,test}/**/*.ts",
+    "lint:nofix": "eslint --cache {src,test}/**/*.ts",
+    "purge": "npm run clean && rm node_modules -rf",
+    "rp": "rollup -c rollup.config.js --context this",
+    "test": "cross-env TS_NODE_PROJECT=test/tsconfig.json mocha --loader=ts-node/esm",
+    "test:local": "cross-env TS_NODE_PROJECT=test/tsconfig.json ../../node_modules/.bin/mocha --loader=ts-node/esm --parallel=false",
+    "tsc": "tsc -b "
+  }
+}

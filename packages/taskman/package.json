@@ -1,7 +1,7 @@
 {
   "name": "@mw-components/taskman",
   "author": "waiting",
-  "version": "22.0.0",
+  "version": "24.0.0",
   "description": "midway component task manager",
   "keywords": [
     "midway",
@@ -23,25 +23,20 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/core": "^3.4.0",
-    "@midwayjs/decorator": "^3.4.0",
-    "@midwayjs/validate": "^3.4.0",
-    "@mw-components/fetch": ">=19",
-    "@mw-components/jaeger": "^13.0.0",
-    "@mw-components/kmore": "^33.0.1",
+    "@mw-components/fetch": ">=20",
+    "@mw-components/jaeger": "^13.1.4",
+    "@mw-components/kmore": "^35.0.1",
     "@mw-components/koid": ">=9",
-    "@waiting/shared-core": "^20.3.0",
+    "@waiting/shared-core": "^20.5.0",
     "pg": "^8.7.3",
     "postgres-interval": "^4.0.0"
   },
   "devDependencies": {
-    "@mw-components/fetch": "^20.0.0",
-    "@mw-components/jaeger": "^12.0.7",
+    "@mw-components/fetch": "^20.1.1",
+    "@mw-components/jaeger": "^13.1.3",
     "@mw-components/koid": ">=9",
-    "@waiting/shared-types": "^20.2.0",
     "cross-env": "7",
-    "kmore-cli": "^33.0.0",
-    "kmore-types": "^33.0.0"
+    "kmore-cli": "^35.0.0"
   },
   "engines": {
     "node": ">=16.13.0"

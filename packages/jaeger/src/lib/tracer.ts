@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import assert from 'assert'
 import type { IncomingHttpHeaders } from 'http'
 
@@ -53,8 +55,8 @@ export class TracerManager {
     this.isTraceEnabled = false
     this.isStarted = false
     this.spans = []
-    if (! this.ctx.tracerTags) {
-      this.ctx.tracerTags = {}
+    if (! this.ctx['tracerTags']) {
+      this.ctx['tracerTags'] = {}
     }
   }
 
@@ -78,7 +80,7 @@ export class TracerManager {
       [TracerTag.svcPpid]: process.ppid,
       [TracerTag.reqStartTime]: time,
     }
-    updateCtxTagsData(this.ctx.tracerTags, data)
+    updateCtxTagsData(this.ctx['tracerTags'], data)
     this.spanLog({
       event: TracerLog.requestBegin,
       time,
@@ -103,10 +105,10 @@ export class TracerManager {
       [TracerLog.svcMemoryUsage]: humanMemoryUsage(),
     })
 
-    updateCtxTagsData(this.ctx.tracerTags, {
+    updateCtxTagsData(this.ctx['tracerTags'], {
       [TracerTag.reqEndTime]: time,
     })
-    this.addTags(this.ctx.tracerTags)
+    this.addTags(this.ctx['tracerTags'])
 
     this.finishSpan()
   }
@@ -246,7 +248,7 @@ function updateDetailTags(
   }
 
   // tracerManager.addTags(tags)
-  updateCtxTagsData(ctx.tracerTags, tags)
+  updateCtxTagsData(ctx['tracerTags'], tags)
 }
 
 
@@ -374,7 +376,7 @@ async function processHTTPStatus(
 
     tags[Tags.ERROR] = true
     // tracerManager.addTags(tags)
-    updateCtxTagsData(ctx.tracerTags, tags)
+    updateCtxTagsData(ctx['tracerTags'], tags)
   }
   else {
     if (typeof tracerConfig.processCustomFailure === 'function') {
@@ -386,7 +388,7 @@ async function processHTTPStatus(
     const opts: ProcessPriorityOpts = {
       starttime: ctx.startTime,
       trm: tracerManager,
-      tracerTags: ctx.tracerTags,
+      tracerTags: ctx['tracerTags'],
       tracerConfig,
     }
     await processPriority(opts)
@@ -432,7 +434,7 @@ export function processRequestQuery(
   }
 
   // tracerManager.addTags(tags)
-  updateCtxTagsData(ctx.tracerTags, tags)
+  updateCtxTagsData(ctx['tracerTags'], tags)
 }
 
 function processResponseData(
@@ -447,7 +449,7 @@ function processResponseData(
   }
 
   // tracerManager.addTags(tags)
-  updateCtxTagsData(ctx.tracerTags, tags)
+  updateCtxTagsData(ctx['tracerTags'], tags)
 }
 
 
@@ -465,7 +467,7 @@ export async function processCustomFailure(
   }
 
   if (bod.code !== 0) {
-    updateCtxTagsData(ctx.tracerTags, {
+    updateCtxTagsData(ctx['tracerTags'], {
       [Tags.SAMPLING_PRIORITY]: 30,
       [TracerTag.resCode]: bod.code,
     })
