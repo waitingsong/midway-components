@@ -27,3 +27,10 @@ declare module '@midwayjs/core/dist/interface' {
     [ConfigKey.middlewareConfig]: Partial<MiddlewareConfig>
   }
 }
+
+/*
+declare module '@midwayjs/koa/dist/interface' {
+  interface Context {
+    jwtState: JwtState<any>
+  }
+} */

@@ -29,7 +29,7 @@ import * as jwt from '@mw-components/jwt'
 export class ContainerConfiguration implements ILifeCycle { }
 
 
-declare module '@midwayjs/core' {
+declare module '@midwayjs/koa/dist/interface' {
   interface Context {
     jwtState: JwtState<User>
   }
