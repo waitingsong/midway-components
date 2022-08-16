@@ -1,9 +1,9 @@
-import { MidwayConfig } from '@midwayjs/core'
 import type { PrometheusConfig } from '@midwayjs/prometheus'
 
 
 export * from './lib/middleware.js'
 export * from './lib/my-error.js'
+export * from './lib/types.js'
 
 
 // @ts-ignore
@@ -20,16 +20,4 @@ declare module '@midwayjs/koa/dist/interface' {
   }
 }
 
-export {
-  IMidwayApplication,
-  IMidwayContainer,
-  IMiddleware,
-  NextFunction,
-} from '@midwayjs/core'
-
-export type AppConfig = Partial<MidwayConfig>
-export {
-  Application,
-  Context,
-} from '@midwayjs/koa'
 
