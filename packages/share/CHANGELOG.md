@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/waitingsong/midway-components/compare/@mw-components/share@1.3.1...@mw-components/share@1.4.0) (2022-08-16)
+
+
+### Features
+
+* **share:** export types ([ae5bdf5](https://github.com/waitingsong/midway-components/commit/ae5bdf57dbbfb8a7116d580cf348b660835e6edd))
+
+
+
+
+
 ## [1.3.1](https://github.com/waitingsong/midway-components/compare/@mw-components/share@1.3.0...@mw-components/share@1.3.1) (2022-08-16)
 
 **Note:** Version bump only for package @mw-components/share
