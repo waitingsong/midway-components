@@ -1,11 +1,13 @@
 import { MidwayConfig } from '@midwayjs/core'
 import { Context as KoaCtx } from '@midwayjs/koa'
+import { JwtState } from '@mw-components/jwt'
 
 
 // @ts-ignore
 declare module '@midwayjs/koa/dist/interface' {
   interface Context {
     reqId: string
+    jwtState: JwtState<any>
   }
 }
 export interface Context extends KoaCtx {
