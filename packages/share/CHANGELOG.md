@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.7.0](https://github.com/waitingsong/midway-components/compare/@mw-components/share@1.6.0...@mw-components/share@1.7.0) (2022-08-17)
+
+
+### Features
+
+* **share:** update Context merging ([36238a1](https://github.com/waitingsong/midway-components/commit/36238a16827c5f5438f98cceda081fe623a6b806))
+
+
+
+
+
 # [1.6.0](https://github.com/waitingsong/midway-components/compare/@mw-components/share@1.5.0...@mw-components/share@1.6.0) (2022-08-17)
 
 
