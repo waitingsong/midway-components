@@ -1,4 +1,13 @@
+import type { PrometheusConfig } from '@midwayjs/prometheus'
 
-export * from './lib/middleware.js'
-export * from './lib/my-error.js'
+
+export * from './lib/index.js'
+
+
+// @ts-ignore
+declare module '@midwayjs/core/dist/interface' {
+  interface MidwayConfig {
+    prometheus?: PrometheusConfig
+  }
+}
 
