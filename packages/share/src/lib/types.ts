@@ -7,7 +7,7 @@ import { JwtState } from '@mw-components/jwt'
 declare module '@midwayjs/koa/dist/interface' {
   interface Context {
     reqId: string
-    jwtState: JwtState<any>
+    jwtState: JwtState
   }
 }
 export interface Context extends KoaCtx {
