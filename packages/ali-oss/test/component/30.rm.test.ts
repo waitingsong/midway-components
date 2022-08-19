@@ -2,7 +2,6 @@ import assert from 'node:assert/strict'
 import { relative } from 'node:path'
 
 import { cloudUrlPrefix, src, testConfig } from '@/root.config'
-import { ClientKey } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -14,9 +13,9 @@ describe(filename, () => {
       const { CI, ossClient } = testConfig
 
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
-      await ossClient.upload(ClientKey.master, src, target)
+      await ossClient.upload(src, target)
 
-      const ret = await ossClient.rm(ClientKey.master, target)
+      const ret = await ossClient.rm(target)
       CI || console.log(ret)
       assert(ret.data)
       assert(typeof ret.data.elapsed === 'string')

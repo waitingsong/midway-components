@@ -28,6 +28,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@mw-components/jaeger": "^13.1.3",
     "@yuntools/ali-oss": "^16.0.0"
   },
   "devDependencies": {

@@ -3,16 +3,15 @@ import { join } from 'node:path'
 
 import supertest, { SuperTest } from 'supertest'
 
-import { aliOssConfig as config } from '@/config.unittest'
 import { Application, IMidwayContainer } from '~/interface'
 import {
   AliOssComponent,
+  AliOssManager,
   Config,
-  MiddlewareConfig,
 } from '~/lib/index'
 
 
-const CI = !! process.env.CI
+const CI = !! process.env['CI']
 export type TestResponse = supertest.Response
 export interface TestRespBody {
   header: IncomingHttpHeaders
@@ -25,14 +24,13 @@ export interface TestConfig {
   CI: boolean
   app: Application
   container: IMidwayContainer
-  config: Config
   host: string
   httpRequest: SuperTest<supertest.Test>
+  aliOssManager: AliOssManager
   ossClient: AliOssComponent
 }
 export const testConfig = {
   CI,
-  config,
   host: '',
 } as TestConfig
 

@@ -1,22 +1,9 @@
-import assert from 'node:assert/strict'
-
-import {
-  Config as _Config,
-  Init,
-  Inject,
-  Provide,
-  Scope,
-  ScopeEnum,
-} from '@midwayjs/decorator'
-import { OssClient } from '@yuntools/ali-oss'
+import { Config, OssClient } from '@yuntools/ali-oss'
 
 import type { Context } from '../interface'
 
-import { ConfigKey } from './config'
-import { runner, RunnerOptions } from './helper'
 import {
   BaseOptions,
-  Config,
   ClientConfig,
   DataBase,
   DataCp,
@@ -41,44 +28,25 @@ import {
 
 
 /** 阿里云 OSS ossutils 命令行封装组件 */
-@Provide()
-@Scope(ScopeEnum.Singleton)
 export class AliOssComponent {
 
-  @_Config(ConfigKey.config) protected readonly config: Config
+  ctx: Context | undefined
 
-  @Inject() readonly ctx: Context
+  private client: OssClient
 
-  private clients: Record<keyof Config, OssClient> = {}
-
-  @Init()
-  async init(): Promise<void> {
-    assert(this.config, '[AliOssComponent] config undefined')
-    assert(this.ctx, '[AliOssComponent] this.ctx undefined')
-
-    Object.entries(this.config).forEach(([id, config]) => {
-      const client = this.createClient(config)
-      Object.defineProperty(this.clients, id, {
-        enumerable: true,
-        writable: true,
-        value: client,
-      })
-    })
-  }
-
-  createClient(options: ClientConfig): OssClient {
+  constructor(protected readonly config: ClientConfig) {
     const opts: OssConfig = {
-      accessKeyId: options.accessKeyId,
-      accessKeySecret: options.accessKeySecret,
-      endpoint: options.endpoint,
+      accessKeyId: config.accessKeyId,
+      accessKeySecret: config.accessKeySecret,
+      endpoint: config.endpoint,
     }
-    if (options.stsToken) {
-      opts.stsToken = options.stsToken
+    if (config.stsToken) {
+      opts.stsToken = config.stsToken
     }
 
-    const client = new OssClient(opts, options.cmd)
-    client.debug = !! options.debug
-    return client
+    const client = new OssClient(opts, config.cmd)
+    client.debug = !! config.debug
+    this.client = client
   }
 
   /**
@@ -89,7 +57,6 @@ export class AliOssComponent {
    * @link https://help.aliyun.com/document_detail/120057.html
    */
   async cp(
-    clientId: keyof Config,
     /** 本地文件、目录或者远程 OSS 对象 */
     src: string,
     /** OSS 对象，不包括 bucket */
@@ -97,14 +64,13 @@ export class AliOssComponent {
     options?: CpOptions,
   ): Promise<ProcessRet<DataCp>> {
 
-    const opts = this.prepareOptions<CpOptions>(
-      clientId,
-      FnKey.cp,
+    const opts: RunnerOptions<CpOptions> = {
+      fnKey: FnKey.cp,
       options,
       target,
       src,
-    )
-    const ret = await runner<CpOptions, ProcessRet<DataCp>>(opts)
+    }
+    const ret = await this.runner<CpOptions, ProcessRet<DataCp>>(opts)
     return ret
   }
 
@@ -114,7 +80,6 @@ export class AliOssComponent {
    * @link https://help.aliyun.com/document_detail/120057.html
    */
   async upload(
-    clientId: keyof Config,
     /** 本地目录或文件 */
     src: string,
     /** OSS 对象，不包括 bucket */
@@ -122,14 +87,13 @@ export class AliOssComponent {
     options?: UploadOptions,
   ): Promise<ProcessRet<DataCp>> {
 
-    const opts = this.prepareOptions<UploadOptions>(
-      clientId,
-      FnKey.upload,
+    const opts: RunnerOptions<UploadOptions> = {
+      fnKey: FnKey.upload,
       options,
       target,
       src,
-    )
-    const ret = await runner<UploadOptions, ProcessRet<DataCp>>(opts)
+    }
+    const ret = await this.runner<UploadOptions, ProcessRet<DataCp>>(opts)
     return ret
   }
 
@@ -138,7 +102,6 @@ export class AliOssComponent {
    * @link https://help.aliyun.com/document_detail/120059.html
    */
   async createSymlink(
-    clientId: keyof Config,
     /** OSS 对象，不包括 bucket */
     src: string,
     /** OSS 软连接对象，不包括 bucket */
@@ -146,14 +109,13 @@ export class AliOssComponent {
     options?: LinkOptions,
   ): Promise<ProcessRet> {
 
-    const opts = this.prepareOptions<LinkOptions>(
-      clientId,
-      FnKey.link,
+    const opts: RunnerOptions<LinkOptions> = {
+      fnKey: FnKey.link,
       options,
       target,
       src,
-    )
-    const ret = await runner<LinkOptions>(opts)
+    }
+    const ret = await this.runner<LinkOptions>(opts)
     return ret
   }
 
@@ -162,20 +124,18 @@ export class AliOssComponent {
    * @link https://help.aliyun.com/document_detail/120062.html
    */
   async mkdir(
-    clientId: keyof Config,
     /** OSS 对象，不包括 bucket */
     target: string,
     options?: MkdirOptions,
   ): Promise<ProcessRet> {
 
-    const opts = this.prepareOptions<MkdirOptions>(
-      clientId,
-      FnKey.mkdir,
+    const opts: RunnerOptions<MkdirOptions> = {
+      fnKey: FnKey.mkdir,
       options,
       target,
-      void 0,
-    )
-    const ret = await runner(opts)
+      src: void 0,
+    }
+    const ret = await this.runner(opts)
     return ret
   }
 
@@ -184,7 +144,6 @@ export class AliOssComponent {
    * 流程为先 `cp()` 然后 `rm()`
    */
   async mv(
-    clientId: keyof Config,
     /** OSS 源对象，不包括 bucket */
     src: string,
     /** OSS 目的对象，不包括 bucket */
@@ -192,14 +151,13 @@ export class AliOssComponent {
     options?: MvOptions,
   ): Promise<ProcessRet<DataStat | DataBase>> {
 
-    const opts = this.prepareOptions<MvOptions>(
-      clientId,
-      FnKey.mv,
+    const opts: RunnerOptions<MvOptions> = {
+      fnKey: FnKey.mv,
       options,
       target,
       src,
-    )
-    const ret = await runner<MvOptions, ProcessRet<DataStat | DataBase>>(opts)
+    }
+    const ret = await this.runner<MvOptions, ProcessRet<DataStat | DataBase>>(opts)
     return ret
   }
 
@@ -207,20 +165,18 @@ export class AliOssComponent {
    * OSS 远程路径是否存在
    */
   async pathExists(
-    clientId: keyof Config,
     /** OSS 对象，不包括 bucket */
     target: string,
     options?: StatOptions,
   ): Promise<boolean> {
 
-    const opts = this.prepareOptions<PathExistsOptions>(
-      clientId,
-      FnKey.pathExists,
+    const opts: RunnerOptions<PathExistsOptions> = {
+      fnKey: FnKey.pathExists,
       options,
       target,
-      void 0,
-    )
-    const ret = await runner<PathExistsOptions, boolean>(opts)
+      src: void 0,
+    }
+    const ret = await this.runner<PathExistsOptions, boolean>(opts)
     return ret
   }
 
@@ -231,20 +187,18 @@ export class AliOssComponent {
    * @link https://help.aliyun.com/document_detail/120053.html
    */
   async rm(
-    clientId: keyof Config,
     /** OSS 对象，不包括 bucket */
     target: string,
     options?: RmOptions,
   ): Promise<ProcessRet> {
 
-    const opts = this.prepareOptions<RmOptions>(
-      clientId,
-      FnKey.rm,
+    const opts: RunnerOptions<RmOptions> = {
+      fnKey: FnKey.rm,
       options,
       target,
-      void 0,
-    )
-    const ret = await runner(opts)
+      src: void 0,
+    }
+    const ret = await this.runner(opts)
     return ret
   }
 
@@ -253,20 +207,18 @@ export class AliOssComponent {
    * @link https://help.aliyun.com/document_detail/120053.html
    */
   async rmrf(
-    clientId: keyof Config,
     /** OSS 对象，不包括 bucket */
     target: string,
     options?: RmrfOptions,
   ): Promise<ProcessRet> {
 
-    const opts = this.prepareOptions<RmrfOptions>(
-      clientId,
-      FnKey.rmrf,
+    const opts: RunnerOptions<RmrfOptions> = {
+      fnKey: FnKey.rmrf,
       options,
       target,
-      void 0,
-    )
-    const ret = await runner(opts)
+      src: void 0,
+    }
+    const ret = await this.runner(opts)
     return ret
   }
 
@@ -275,20 +227,18 @@ export class AliOssComponent {
    * @link https://help.aliyun.com/document_detail/120064.html
    */
   async sign(
-    clientId: keyof Config,
     /** OSS 对象，不包括 bucket */
     src: string,
     options?: SignOptions,
   ): Promise<ProcessRet<DataSign>> {
 
-    const opts = this.prepareOptions<SignOptions>(
-      clientId,
-      FnKey.sign,
+    const opts: RunnerOptions<SignOptions> = {
+      fnKey: FnKey.sign,
       options,
-      void 0,
+      target: void 0,
       src,
-    )
-    const ret = await runner<SignOptions, ProcessRet<DataSign>>(opts)
+    }
+    const ret = await this.runner<SignOptions, ProcessRet<DataSign>>(opts)
     return ret
   }
 
@@ -297,20 +247,18 @@ export class AliOssComponent {
    * @link https://help.aliyun.com/document_detail/120054.html
    */
   async stat(
-    clientId: keyof Config,
     /** OSS 对象，不包括 bucket */
     target: string,
     options?: StatOptions,
-  ): Promise<boolean> {
+  ): Promise<ProcessRet> {
 
-    const opts = this.prepareOptions<StatOptions>(
-      clientId,
-      FnKey.stat,
+    const opts: RunnerOptions<StatOptions> = {
+      fnKey: FnKey.stat,
       options,
       target,
-      void 0,
-    )
-    const ret = await runner<StatOptions, boolean>(opts)
+      src: void 0,
+    }
+    const ret = await this.runner<StatOptions, ProcessRet>(opts)
     return ret
   }
 
@@ -321,7 +269,6 @@ export class AliOssComponent {
    * @link https://help.aliyun.com/document_detail/256352.html
    */
   async syncLocal(
-    clientId: keyof Config,
     /** OSS 对象，不包括 bucket */
     src: string,
     /** 本地目录 */
@@ -329,14 +276,13 @@ export class AliOssComponent {
     options?: SyncLocalOptions,
   ): Promise<ProcessRet<DataCp>> {
 
-    const opts = this.prepareOptions<SyncLocalOptions>(
-      clientId,
-      FnKey.syncLocal,
+    const opts: RunnerOptions<SyncLocalOptions> = {
+      fnKey: FnKey.syncLocal,
       options,
       target,
       src,
-    )
-    const ret = await runner<SyncLocalOptions, ProcessRet<DataCp>>(opts)
+    }
+    const ret = await this.runner<SyncLocalOptions, ProcessRet<DataCp>>(opts)
     return ret
   }
 
@@ -347,7 +293,6 @@ export class AliOssComponent {
    * @link https://help.aliyun.com/document_detail/193394.html
    */
   async syncRemote(
-    clientId: keyof Config,
     /** 本地目录 */
     src: string,
     /** OSS 对象，不包括 bucket */
@@ -355,43 +300,48 @@ export class AliOssComponent {
     options?: SyncRemoteOptions,
   ): Promise<ProcessRet<DataCp>> {
 
-    const opts = this.prepareOptions<SyncRemoteOptions>(
-      clientId,
-      FnKey.syncRemote,
-      options,
-      target,
-      src,
-    )
-    const ret = await runner<SyncRemoteOptions, ProcessRet<DataCp>>(opts)
-    return ret
-  }
-
-
-
-  private prepareOptions<T extends BaseOptions>(
-    clientId: keyof Config,
-    fnKey: FnKey,
-    options: T | undefined,
-    target: string | undefined,
-    src: string | undefined,
-  ): RunnerOptions<T> {
-
-    const client = this.clients[clientId]
-    const clientConfig = this.config[clientId]
-    assert(client, `client not found for ${clientId}`)
-    assert(clientConfig, `config not found for ${clientId}`)
-
-    const ret: RunnerOptions<T> = {
-      clientId,
-      client,
-      fnKey,
-      clientConfig,
+    const opts: RunnerOptions<SyncRemoteOptions> = {
+      fnKey: FnKey.syncRemote,
       options,
       target,
       src,
     }
+    const ret = await this.runner<SyncRemoteOptions, ProcessRet<DataCp>>(opts)
     return ret
   }
 
+
+
+  protected async runner<
+    T extends BaseOptions,
+    R extends ProcessRet<DataBase> | boolean = ProcessRet<DataBase>
+  >(options: RunnerOptions<T>): Promise<R> {
+
+    const { fnKey } = options
+    const opts = this.genOptions<T>(options)
+
+    // @ts-ignore
+    const ret = await this.client[fnKey](opts) as Promise<R>
+    return ret
+  }
+
+
+  protected genOptions<T>(input: RunnerOptions<T>): T & Config {
+    const ret = {
+      ...this.config,
+      src: input.src,
+      target: input.target,
+      ...input.options,
+    }
+    return ret as unknown as T & Config
+  }
+}
+
+
+export interface RunnerOptions<T> {
+  fnKey: FnKey
+  options: T | undefined
+  src: string | undefined
+  target: string | undefined
 }
 

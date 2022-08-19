@@ -3,18 +3,16 @@ import { stat } from 'node:fs/promises'
 
 import {
   AliOssComponent,
-  ClientKey,
   DataCp,
 } from '~/index'
 
 
 export async function assertFileExists(
-  clientKey: ClientKey,
   client: AliOssComponent,
   cloudFile: string,
 ): Promise<void> {
 
-  const exists = await client.pathExists(clientKey, cloudFile)
+  const exists = await client.pathExists(cloudFile)
   assert(exists === true, `${cloudFile} should exists`)
 }
 

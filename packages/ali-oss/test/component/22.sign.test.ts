@@ -14,12 +14,12 @@ describe(filename, () => {
       const { CI, ossClient } = testConfig
 
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
-      const ret = await ossClient.cp('master', src, target)
+      const ret = await ossClient.cp(src, target)
       CI || console.log(ret)
       assert(! ret.exitCode, `cp ${src} ${target} failed, ${ret.stderr}`)
       assert(ret.data)
 
-      const sign = await ossClient.sign('master', target, { disableEncodeSlash: true })
+      const sign = await ossClient.sign(target, { disableEncodeSlash: true })
       assert(! sign.exitCode, `sign ${target} failed, ${sign.stderr}`)
       assert(sign.data)
 
@@ -45,7 +45,7 @@ describe(filename, () => {
       const { CI, ossClient } = testConfig
 
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-config.js`
-      const ret = await ossClient.cp('master', src, target)
+      const ret = await ossClient.cp(src, target)
       CI || console.log(ret)
       assert(! ret.exitCode, `cp ${src} ${target} failed, ${ret.stderr}`)
       assert(ret.data)
@@ -54,7 +54,7 @@ describe(filename, () => {
         trafficLimit: 245760,
         timeoutSec: 360,
       }
-      const sign = await ossClient.sign('master', src, opts2)
+      const sign = await ossClient.sign(src, opts2)
       assert(! sign.exitCode, `sign ${target} failed, ${sign.stderr}`)
       assert(sign.data)
 

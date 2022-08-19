@@ -2,6 +2,18 @@ import type { MiddlewareConfig as MWConfig } from '@waiting/shared-types'
 import * as Ali from '@yuntools/ali-oss'
 
 
+export enum ConfigKey {
+  namespace = 'aliOss',
+  config = 'aliOssConfig',
+  aliOssInstanceKey = 'aliOssInstanceKey',
+  componentName = 'aliOssComponent',
+  dataSourceConfig = 'aliOssDataSourceConfig',
+}
+export enum ClientKey {
+  master = 'master',
+}
+
+
 export {
   BaseOptions,
   OssClient,
@@ -15,7 +27,7 @@ export {
   Msg,
 } from '@yuntools/ali-oss'
 
-export type Config<ClientId extends string = string> = Record<ClientId, ClientConfig>
+// export type Config<ClientId extends string = string> = Record<ClientId, ClientConfig>
 
 export interface ClientConfig {
   accessKeyId: string
@@ -31,6 +43,27 @@ export interface MiddlewareOptions {
   debug: boolean
 }
 export type MiddlewareConfig = MWConfig<MiddlewareOptions>
+
+
+/** midway DataSource */
+export interface DataSourceConfig<SourceName extends string = string> {
+  dataSource: DataSource<SourceName>
+  default?: Config
+}
+export type DataSource<SourceName extends string = string> = Record<SourceName, Config>
+export interface Config extends ClientConfig {
+  /**
+   * Enable tracing via @mw-components/jaeger
+   * @default false
+   */
+  enableTracing?: boolean
+  /**
+   * 强制采样请求处理时间（毫秒）阈值
+   * 负数不采样
+   * @default 10_000
+   */
+  sampleThrottleMs?: number
+}
 
 
 export type MkdirOptions = Omit<Ali.MkdirOptions, 'target'>

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { relative } from 'node:path'
 
 import { cloudUrlPrefix, testConfig } from '@/root.config'
-import { ClientKey, MkdirOptions } from '~/index'
+import { MkdirOptions } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -14,7 +14,7 @@ describe(filename, () => {
       const { CI, ossClient } = testConfig
 
       const target = `${cloudUrlPrefix}/1${Math.random().toString()}/`
-      const ret = await ossClient.mkdir(ClientKey.master, target)
+      const ret = await ossClient.mkdir(target)
 
       CI || console.log(ret)
       assert(! ret.exitCode, `mkdir ${target} failed, ${ret.stderr}`)
@@ -26,7 +26,7 @@ describe(filename, () => {
       const { CI, ossClient } = testConfig
 
       const target = `${cloudUrlPrefix}/联通€-&a'b"c<d>e^f?g*-${Math.random().toString()}/v2/v3/`
-      const ret = await ossClient.mkdir(ClientKey.master, target)
+      const ret = await ossClient.mkdir(target)
 
       CI || console.log(ret)
       assert(! ret.exitCode, `mkdir ${target} failed, ${ret.stderr}`)
@@ -45,7 +45,7 @@ describe(filename, () => {
       }
 
       try {
-        const ret = await ossClient.mkdir(ClientKey.master, target, opts)
+        const ret = await ossClient.mkdir(target, opts)
         CI || console.log(ret)
         assert(! ret.exitCode, `mkdir ${target} failed, ${ret.stderr}`)
         assert(ret.data)
