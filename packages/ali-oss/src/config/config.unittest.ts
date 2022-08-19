@@ -1,10 +1,10 @@
-import { DataSourceConfig } from '../index'
+import { ClientKey, DataSourceConfig } from '../index'
 import { initialConfig } from '../lib/config'
 
 
-export const aliOssDataSourceConfig: DataSourceConfig<'master'> = {
+export const aliOssDataSourceConfig: DataSourceConfig<ClientKey> = {
   dataSource: {
-    master: {
+    ossMaster: {
       sampleThrottleMs: 100,
       accessKeyId: process.env['ALI_OSS_AID'] || '',
       accessKeySecret: process.env['ALI_OSS_ASECRET'] || '',

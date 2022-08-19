@@ -1,4 +1,5 @@
 import assert from 'node:assert'
+import { isProxy } from 'node:util/types'
 
 import {
   Inject,
@@ -53,6 +54,9 @@ export class AliOssManager<SourceName extends string = string, Ctx extends Conte
 
   protected createCtxProxy(inst: AliOssComponent, reqCtx: Ctx): AliOssComponent {
     assert(reqCtx)
+    if (isProxy(inst)) {
+      return inst
+    }
 
     const ret = new Proxy(inst, {
       get: (target: AliOssComponent, propKey: keyof AliOssComponent) => propKey === 'ctx'

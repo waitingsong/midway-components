@@ -1,3 +1,4 @@
+import { Span } from '@mw-components/jaeger'
 import type { MiddlewareConfig as MWConfig } from '@waiting/shared-types'
 import * as Ali from '@yuntools/ali-oss'
 
@@ -10,7 +11,7 @@ export enum ConfigKey {
   dataSourceConfig = 'aliOssDataSourceConfig',
 }
 export enum ClientKey {
-  master = 'master',
+  master = 'ossMaster',
 }
 
 
@@ -79,4 +80,10 @@ export type SignOptions = Omit<Ali.SignOptions, 'src'>
 export type SyncOptions = Omit<Ali.SyncOptions, 'target' | 'src'>
 export type SyncLocalOptions = Omit<Ali.SyncLocalOptions, 'target' | 'src'>
 export type SyncRemoteOptions = Omit<Ali.SyncRemoteOptions, 'target' | 'src'>
+
+
+export interface QuerySpanInfo {
+  span: Span
+  timestamp: number
+}
 

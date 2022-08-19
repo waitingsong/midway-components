@@ -1,10 +1,20 @@
-import { Config, OssClient } from '@yuntools/ali-oss'
+import {
+  SpanLogInput,
+  Logger as TLogger,
+  TracerManager,
+  TracerLog,
+  TracerTag,
+} from '@mw-components/jaeger'
+import { genISO8601String } from '@waiting/shared-core'
+import { OssClient, CpOptions as AliCpOptions } from '@yuntools/ali-oss'
+import { Tags } from 'opentracing'
 
 import type { Context } from '../interface'
 
 import {
   BaseOptions,
-  ClientConfig,
+  Config,
+  ConfigKey,
   DataBase,
   DataCp,
   DataSign,
@@ -24,6 +34,7 @@ import {
   SignOptions,
   SyncLocalOptions,
   SyncRemoteOptions,
+  QuerySpanInfo,
 } from './types'
 
 
@@ -33,8 +44,9 @@ export class AliOssComponent {
   ctx: Context | undefined
 
   private client: OssClient
+  private querySpanMap: WeakMap<object, QuerySpanInfo> = new WeakMap()
 
-  constructor(protected readonly config: ClientConfig) {
+  constructor(protected readonly config: Config) {
     const opts: OssConfig = {
       accessKeyId: config.accessKeyId,
       accessKeySecret: config.accessKeySecret,
@@ -320,28 +332,179 @@ export class AliOssComponent {
     const { fnKey } = options
     const opts = this.genOptions<T>(options)
 
-    // @ts-ignore
-    const ret = await this.client[fnKey](opts) as Promise<R>
-    return ret
+    const id = { time: Symbol(Date.now()) }
+    try {
+      await this.tracer('start', id, opts)
+      // @ts-ignore
+      const ret = await this.client[fnKey](opts) as Promise<R>
+      await this.tracer('finish', id, opts)
+      return ret
+    }
+    catch (ex) {
+      await this.tracer('error', id, opts, ex)
+      throw ex
+    }
   }
 
 
-  protected genOptions<T>(input: RunnerOptions<T>): T & Config {
+  protected genOptions<T>(input: RunnerOptions<T>): _RunnerOption<T> {
     const ret = {
       ...this.config,
       src: input.src,
       target: input.target,
       ...input.options,
     }
-    return ret as unknown as T & Config
+    return ret as unknown as _RunnerOption<T>
+  }
+
+  protected async tracer<T extends BaseOptions>(
+    type: 'start' | 'finish' | 'error',
+    id: { time: symbol },
+    options: _RunnerOption<T>,
+    err?: unknown,
+  ): Promise<void> {
+
+    if (! options.enableTracing) { return }
+    if (! this.ctx) { return }
+
+    const end = Date.now()
+
+    const logger = await this.ctx.requestContext.getAsync(TLogger)
+    const trm = await this.ctx.requestContext.getAsync(TracerManager)
+    if (! logger || ! trm) { return }
+
+    const tmp = options as unknown as AliCpOptions & Config
+    const opts = {
+      acl: tmp.acl ?? '',
+      src: tmp.src,
+      payer: tmp.payer ?? '',
+      recursive: tmp.recursive ?? false,
+      sampleThrottleMs: tmp.sampleThrottleMs ?? 10000,
+      target: tmp.target,
+    }
+
+    switch (type) {
+      case 'start': {
+        const currSpan = trm.currentSpan()
+        if (! currSpan) {
+          logger.warn('Get current SPAN undefined.')
+          console.warn('Get current SPAN undefined.')
+          return
+        }
+        const span = trm.genSpan(ConfigKey.componentName, currSpan)
+        const spanInfo: QuerySpanInfo = {
+          span,
+          timestamp: Date.now(),
+        }
+        this.querySpanMap.set(id, spanInfo)
+
+        span.addTags({
+          [TracerLog.queryCostThottleInMS]: opts.sampleThrottleMs,
+          qid: id.time.toString(),
+          acl: opts.acl,
+          payer: opts.payer,
+          recursive: opts.recursive,
+          src: opts.src,
+          target: opts.target,
+        })
+
+        const input: SpanLogInput = {
+          event: TracerLog.queryStart,
+          time: genISO8601String(),
+        }
+        span.log(input)
+        trm.spanLog(input)
+        break
+      }
+
+      case 'finish': {
+        const spanInfo = this.querySpanMap.get(id)
+        if (! spanInfo) {
+          console.warn('Retrieve spanInfo undefined.', opts)
+          return
+        }
+        const { span } = spanInfo
+
+        const start = spanInfo.timestamp
+        const cost = end - start
+        const tags: SpanLogInput = {
+          [TracerLog.queryCost]: cost,
+        }
+        span.addTags(tags)
+
+        const input: SpanLogInput = {
+          event: TracerLog.queryFinish,
+          time: genISO8601String(),
+          [TracerLog.queryCost]: cost,
+        }
+
+        if (typeof opts.sampleThrottleMs === 'number'
+          && opts.sampleThrottleMs > 0 && cost > opts.sampleThrottleMs) {
+
+          const tags2: SpanLogInput = {
+            [Tags.SAMPLING_PRIORITY]: 50,
+            [TracerTag.logLevel]: 'warn',
+          }
+          span.addTags(tags2)
+          input['level'] = 'warn'
+          logger.log && logger.log(input, span)
+        }
+        else {
+          span.log(input)
+        }
+
+        trm.spanLog(input)
+        span.finish()
+        break
+      }
+
+      case 'error': {
+        const spanInfo = this.querySpanMap.get(id)
+        if (! spanInfo) {
+          console.warn('Retrieve spanInfo undefined.', opts)
+          return
+        }
+        const { span } = spanInfo
+
+        const start = spanInfo.timestamp
+        const cost = end - start
+        const tags: SpanLogInput = {
+          [TracerLog.queryCost]: cost,
+        }
+        span.addTags(tags)
+
+        const input = {
+          event: TracerLog.queryError,
+          level: 'error',
+          time: genISO8601String(),
+          [TracerLog.queryCost]: cost,
+          [TracerLog.error]: err,
+        }
+
+        logger.log && logger.log(input, span)
+        trm.spanLog(input)
+
+        span.addTags({
+          [Tags.ERROR]: true,
+          [Tags.SAMPLING_PRIORITY]: 100,
+          [TracerTag.logLevel]: 'error',
+          [TracerLog.error]: err,
+        })
+        span.finish()
+        break
+      }
+    }
+
+    return
   }
 }
 
 
-export interface RunnerOptions<T> {
+interface RunnerOptions<T extends BaseOptions> {
   fnKey: FnKey
   options: T | undefined
   src: string | undefined
   target: string | undefined
 }
 
+type _RunnerOption<T extends BaseOptions> = Config & T
