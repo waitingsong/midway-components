@@ -10,6 +10,7 @@ import { Context } from '../interface'
 
 import { AliOssComponent } from './component'
 import { AliOssSourceManager } from './source-manager'
+import { Config, ConfigKey, CreateInstanceOptions } from './types'
 
 
 @Provide()
@@ -17,17 +18,28 @@ export class AliOssManager<SourceName extends string = string, Ctx extends Conte
 
   @Inject() readonly ctx: Ctx
 
-  @Inject() dbSourceManager: AliOssSourceManager<SourceName, Ctx>
+  @Inject() protected readonly sourceManager: AliOssSourceManager<SourceName>
 
-  getName(): string { return 'dbManager' }
+  getName(): string { return ConfigKey.managerName }
 
   instCacheMap: Map<SourceName, AliOssComponent> = new Map()
+
+
+  async createInstance(
+    config: Config,
+    clientName: SourceName,
+    options?: CreateInstanceOptions,
+  ): Promise<AliOssComponent | void> {
+
+    await this.sourceManager.createInstance(config, clientName, options)
+    return this.getDataSource(clientName)
+  }
 
   /**
    * Check the data source is connected
    */
   async isConnected(dataSourceName: SourceName): Promise<boolean> {
-    return this.dbSourceManager.isConnected(dataSourceName)
+    return this.sourceManager.isConnected(dataSourceName)
   }
 
 
@@ -37,7 +49,7 @@ export class AliOssManager<SourceName extends string = string, Ctx extends Conte
       return cacheInst
     }
 
-    const inst = this.dbSourceManager.getDataSource(dataSourceName)
+    const inst = this.sourceManager.getDataSource(dataSourceName)
     assert(inst)
 
     const reqCtx: Ctx | undefined = this.ctx

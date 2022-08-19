@@ -8,6 +8,8 @@ export enum ConfigKey {
   config = 'aliOssConfig',
   aliOssInstanceKey = 'aliOssInstanceKey',
   componentName = 'aliOssComponent',
+  managerName = 'aliOssManager',
+  sourceManagerName = 'aliOssSourceManager',
   dataSourceConfig = 'aliOssDataSourceConfig',
 }
 export enum ClientKey {
@@ -87,3 +89,7 @@ export interface QuerySpanInfo {
   timestamp: number
 }
 
+
+export interface CreateInstanceOptions {
+  cacheInstance?: boolean | undefined
+}

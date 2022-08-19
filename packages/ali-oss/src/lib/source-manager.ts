@@ -11,17 +11,14 @@ import {
   ScopeEnum,
 } from '@midwayjs/decorator'
 import { ILogger } from '@midwayjs/logger'
-import { Logger as TLogger, TracerManager } from '@mw-components/jaeger'
-
-import { Context } from '../interface'
 
 import { AliOssComponent } from './component'
-import { Config, ConfigKey, DataSourceConfig } from './types'
+import { Config, ConfigKey, CreateInstanceOptions, DataSourceConfig } from './types'
 
 
 @Provide()
 @Scope(ScopeEnum.Singleton)
-export class AliOssSourceManager<SourceName extends string = string, Ctx extends Context = Context>
+export class AliOssSourceManager<SourceName extends string = string>
   extends DataSourceManager<AliOssComponent | undefined> {
 
   @_Config(ConfigKey.dataSourceConfig) private readonly dataSourceconfig: DataSourceConfig<SourceName>
@@ -82,10 +79,7 @@ export class AliOssSourceManager<SourceName extends string = string, Ctx extends
     return inst
   }
 
-
-  getName(): string {
-    return 'AliOssSourceManager'
-  }
+  getName(): string { return ConfigKey.sourceManagerName }
 
   protected async checkConnected(dataSource: AliOssComponent): Promise<boolean> {
     if (! dataSource) {
@@ -112,29 +106,6 @@ export class AliOssSourceManager<SourceName extends string = string, Ctx extends
     return config
   }
 
-  protected async tracer(clientId: SourceName, ctx?: Ctx): Promise<void> {
-    if (! ctx) { return }
-
-    const config = this.getConfigByDbId(clientId)
-    assert(config, `config not found for "${clientId}"`)
-
-    if (! config.enableTracing) { return }
-
-    if (ctx.requestContext && ctx.requestContext.getAsync) {
-      if (typeof config.sampleThrottleMs === 'undefined') {
-        config.sampleThrottleMs = 10000
-      }
-      const logger = await ctx.requestContext.getAsync(TLogger)
-      const trm = await ctx.requestContext.getAsync(TracerManager)
-      void logger, trm
-
-    }
-  }
-
 }
 
-
-export interface CreateInstanceOptions {
-  cacheInstance?: boolean | undefined
-}
 
