@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 2.0.0 (2022-08-19)
+
+
+### Features
+
+* **share:** change Context['jwtState'] with generics unknown ([2b63914](https://github.com/waitingsong/midway-components/commit/2b63914492330b9fa0144fd520ea26a78163dd70))
+
+
+
+
+
 # [1.7.0](https://github.com/waitingsong/midway-components/compare/@mw-components/share@1.6.0...@mw-components/share@1.7.0) (2022-08-17)
 
 

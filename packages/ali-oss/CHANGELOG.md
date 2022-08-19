@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 3.0.0 (2022-08-19)
+
+
+### Features
+
+* **oss:** refactor for midway.js data-source-manager ([450268c](https://github.com/waitingsong/midway-components/commit/450268c603fe17a85c2cc343a316fb12035cf324))
+* **oss:** tracer ([35bfb14](https://github.com/waitingsong/midway-components/commit/35bfb145679ef1aa37a190afae1c0147ec18ec0a))
+
+
+
+
+
 ## 2.3.7 (2022-08-12)
 
 **Note:** Version bump only for package @mw-components/ali-oss
