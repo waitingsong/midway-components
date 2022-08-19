@@ -2,9 +2,9 @@ import assert from 'node:assert/strict'
 import { mkdir } from 'node:fs/promises'
 import { join, relative } from 'node:path'
 
-import { assertFileExists, assertLocalFileExists, assertUploadFiles } from '@/helper'
+import { assertLocalFileExists } from '@/helper'
 import { cloudUrlPrefix, files, src, srcDir, testConfig, testDir } from '@/root.config'
-import { ClientKey, SyncOptions } from '~/index'
+import { SyncOptions } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -17,14 +17,14 @@ describe(filename, () => {
     it('include *.txt', async () => {
       const { CI, ossClient } = testConfig
 
-      await ossClient.syncRemote(ClientKey.master, srcDir, target)
+      await ossClient.syncRemote(srcDir, target)
 
       const localDir = join(testDir, 'tmp', `files-${Math.random().toString()}/`)
       await mkdir(localDir, { recursive: true })
       const opts: SyncOptions = {
         include: '*.txt',
       }
-      const ret = await ossClient.syncLocal(ClientKey.master, target, localDir, opts)
+      const ret = await ossClient.syncLocal(target, localDir, opts)
       CI || console.log(ret)
 
       for await (const file of files) {
@@ -48,11 +48,11 @@ describe(filename, () => {
     it('all', async () => {
       const { CI, ossClient } = testConfig
 
-      await ossClient.syncRemote(ClientKey.master, srcDir, target)
+      await ossClient.syncRemote(srcDir, target)
 
       const localDir = join(testDir, 'tmp', `files-${Math.random().toString()}/`)
       await mkdir(localDir, { recursive: true })
-      const ret = await ossClient.syncLocal(ClientKey.master, target, localDir)
+      const ret = await ossClient.syncLocal(target, localDir)
       CI || console.log(ret)
 
       for await (const file of files) {

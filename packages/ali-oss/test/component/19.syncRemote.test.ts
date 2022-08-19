@@ -3,7 +3,7 @@ import { join, relative } from 'node:path'
 
 import { assertFileExists, assertUploadFiles } from '@/helper'
 import { cloudUrlPrefix, files, src, srcDir, testConfig } from '@/root.config'
-import { ClientKey, SyncOptions } from '~/index'
+import { SyncOptions } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -18,7 +18,7 @@ describe(filename, () => {
       const opts: SyncOptions = {
         include: '*.txt',
       }
-      const ret = await ossClient.syncRemote(ClientKey.master, srcDir, target, opts)
+      const ret = await ossClient.syncRemote(srcDir, target, opts)
       CI || console.log(ret)
       assert(! ret.exitCode, `upload ${srcDir} ${target} failed, ${ret.stderr}`)
       assertUploadFiles(ret.data, 5, 1, 4, ret.stderr)
@@ -27,11 +27,11 @@ describe(filename, () => {
         const d2 = join(target, file)
 
         if (file.endsWith('.txt')) {
-          await assertFileExists(ClientKey.master, ossClient, d2)
+          await assertFileExists(ossClient, d2)
         }
         else {
           try {
-            await assertFileExists(ClientKey.master, ossClient, d2)
+            await assertFileExists(ossClient, d2)
           }
           catch {
             continue
@@ -44,14 +44,14 @@ describe(filename, () => {
     it('all', async () => {
       const { CI, ossClient } = testConfig
 
-      const ret = await ossClient.syncRemote(ClientKey.master, srcDir, target)
+      const ret = await ossClient.syncRemote(srcDir, target)
       CI || console.log(ret)
       assert(! ret.exitCode, `upload ${srcDir} ${target} failed, ${ret.stderr}`)
       assertUploadFiles(ret.data, 10, 1, 9, ret.stderr)
 
       for await (const file of files) {
         const d2 = join(target, file)
-        await assertFileExists(ClientKey.master, ossClient, d2)
+        await assertFileExists(ossClient, d2)
       }
     })
   })

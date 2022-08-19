@@ -14,10 +14,10 @@ describe(filename, () => {
       const { CI, ossClient } = testConfig
 
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
-      await ossClient.cp('master', src, target)
+      await ossClient.cp(src, target)
 
       const link = `${target}-link`
-      const ret = await ossClient.createSymlink(ClientKey.master, target, link)
+      const ret = await ossClient.createSymlink(target, link)
       CI || console.log(ret)
       assert(ret.exitCode === 0)
       assert(ret.data)

@@ -5,19 +5,15 @@ import {
 } from './types'
 
 
-export enum ClientKey {
-  master = 'master',
-}
-
-export const initialConfig: Readonly<Config<ClientKey>> = {
-  master: {
-    accessKeyId: '',
-    accessKeySecret: '',
-    endpoint: '',
-    bucket: '',
-    cmd: 'ossutil',
-    debug: false,
-  },
+export const initialConfig: Readonly<Config> = {
+  accessKeyId: '',
+  accessKeySecret: '',
+  endpoint: '',
+  bucket: '',
+  cmd: 'ossutil',
+  debug: false,
+  enableTracing: false,
+  sampleThrottleMs: 10000,
 }
 
 export const initMiddlewareOptions: MiddlewareOptions = {
@@ -27,14 +23,4 @@ export const initialMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'ignore' |
   enableMiddleware: true,
 }
 
-export enum ConfigKey {
-  namespace = 'aliOss',
-  config = 'aliOssConfig',
-  aliOssInstanceKey = 'aliOssInstanceKey',
-  componentName = 'aliOssComponent',
-}
-
-// export enum Msg {
-//   AuthFailed = 'Authentication Failed',
-// }
 

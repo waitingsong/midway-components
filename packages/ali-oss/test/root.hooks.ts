@@ -6,9 +6,8 @@ import { join } from 'node:path'
 import * as WEB from '@midwayjs/koa'
 import { createApp, close, createHttpRequest } from '@midwayjs/mock'
 
-import { aliOssConfig } from '@/config.unittest'
 import { cloudUrlPrefix, testConfig, testDir } from '@/root.config'
-import { AliOssComponent, ClientKey, ConfigKey } from '~/index'
+import { AliOssComponent, AliOssManager, ClientKey, ConfigKey } from '~/index'
 import { Application } from '~/interface'
 
 
@@ -24,15 +23,14 @@ const target = `${cloudUrlPrefix}/`
  */
 export const mochaHooks = async () => {
   // avoid run multi times
-  if (! process.env.mochaRootHookFlag) {
-    process.env.mochaRootHookFlag = 'true'
+  if (! process.env['mochaRootHookFlag']) {
+    process.env['mochaRootHookFlag'] = 'true'
   }
 
   return {
     beforeAll: async () => {
       const globalConfig = {
         keys: Math.random().toString(),
-        [ConfigKey.config]: aliOssConfig,
       }
       const opts = {
         imports: [WEB],
@@ -45,15 +43,16 @@ export const mochaHooks = async () => {
       const { url } = testConfig.httpRequest.get('/')
       testConfig.host = url
 
-      // https://midwayjs.org/docs/testing
-
 
       const container = app.getApplicationContext()
-      const ossClient = await container.getAsync(AliOssComponent)
-      testConfig.ossClient = ossClient
+      const aliOssManager = await container.getAsync(AliOssManager)
+      testConfig.aliOssManager = aliOssManager
 
-      await ossClient.rmrf(ClientKey.master, target)
-      const ret = await ossClient.mkdir(ClientKey.master, target)
+      const client = aliOssManager.getDataSource(ClientKey.master)
+      testConfig.ossClient = client
+
+      await client.rmrf(target)
+      const ret = await client.mkdir(target)
       assert(! ret.exitCode, `mkdir ${target} failed, ${ret.stderr}`)
       assert(ret.data)
     },
@@ -63,16 +62,13 @@ export const mochaHooks = async () => {
     },
 
     afterEach: async () => {
-      const { app } = testConfig
-      app.addConfigObject({
-        [ConfigKey.config]: aliOssConfig,
-      })
+      return
     },
 
     afterAll: async () => {
       const { ossClient } = testConfig
 
-      const ret = await ossClient.rmrf(ClientKey.master, target)
+      const ret = await ossClient.rmrf(target)
       assert(! ret.exitCode, `mkdir ${target} failed, ${ret.stderr}`)
       assert(ret.data)
 
