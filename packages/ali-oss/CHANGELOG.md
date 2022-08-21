@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 4.2.0 (2022-08-21)
+
+
+### Features
+
+* **ali-oss:** download() ([f19f7b9](https://github.com/waitingsong/midway-components/commit/f19f7b963ed0c5a47c0d63ad137bb0446cb3b0fe))
+
+
+
+
+
 # [4.1.0](https://github.com/waitingsong/midway-components/compare/@mw-components/ali-oss@4.0.0...@mw-components/ali-oss@4.1.0) (2022-08-21)
 
 
