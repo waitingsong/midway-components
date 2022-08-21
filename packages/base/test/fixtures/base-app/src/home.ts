@@ -3,9 +3,9 @@ import {
   Controller,
   Get,
 } from '@midwayjs/decorator'
-import { Context } from '@mw-components/share'
 
 import { RespData } from '@/root.config'
+import { Context } from '~/index'
 
 
 @Controller('/')

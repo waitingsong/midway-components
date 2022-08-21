@@ -1,9 +1,10 @@
 import { Middleware } from '@midwayjs/decorator'
+
 import type {
   Context,
   IMiddleware,
   NextFunction,
-} from '@mw-components/share'
+} from '../lib/index'
 
 
 /**

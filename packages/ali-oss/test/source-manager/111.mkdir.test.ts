@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { relative } from 'node:path'
 
 import { cloudUrlPrefix, testConfig } from '@/root.config'
-import { AliOssComponent, MkdirOptions } from '~/index'
+import { AliOssComponent } from '~/index'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')

@@ -28,7 +28,7 @@ export class OssController {
 
   @Init()
   async init(): Promise<void> {
-    this.ossClient = this.aliOssManager.getDataSource(ClientKey.master)
+    this.ossClient = this.aliOssManager.getDataSource(ClientKey.unitTest)
   }
 
   @Get('/stat')

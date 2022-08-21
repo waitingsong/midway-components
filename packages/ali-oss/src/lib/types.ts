@@ -10,10 +10,10 @@ export enum ConfigKey {
   componentName = 'aliOssComponent',
   managerName = 'aliOssManager',
   sourceManagerName = 'aliOssSourceManager',
-  dataSourceConfig = 'aliOssDataSourceConfig',
 }
 export enum ClientKey {
   master = 'ossMaster',
+  unitTest = 'ossUnitTest'
 }
 
 
@@ -49,7 +49,7 @@ export type MiddlewareConfig = MWConfig<MiddlewareOptions>
 
 
 /** midway DataSource */
-export interface DataSourceConfig<SourceName extends string = string> {
+export interface AliOssSourceConfig<SourceName extends string = string> {
   dataSource: DataSource<SourceName>
   default?: Config
 }
@@ -72,6 +72,7 @@ export interface Config extends ClientConfig {
 export type MkdirOptions = Omit<Ali.MkdirOptions, 'target'>
 export type CpOptions = Omit<Ali.CpOptions, 'target' | 'src'>
 export type UploadOptions = Omit<Ali.UploadOptions, 'target' | 'src'>
+export type DownloadOptions = Omit<Ali.DownloadOptions, 'target' | 'src'>
 export type LinkOptions = Omit<Ali.LinkOptions, 'target' | 'src'>
 export type RmOptions = Omit<Ali.RmOptions, 'target'>
 export type RmrfOptions = Omit<Ali.RmrfOptions, 'target'>

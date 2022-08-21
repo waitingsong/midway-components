@@ -21,15 +21,17 @@ import * as jaeger from '@mw-components/jaeger'
 import * as jwt from '@mw-components/jwt'
 import * as db from '@mw-components/kmore'
 import * as koid from '@mw-components/koid'
+
 import type {
   Application,
   NpmPkg,
-} from '@mw-components/share'
-
-import { ErrorHandlerMiddleware } from './middleware/error-handler.middleware'
-import { RequestIdMiddleware } from './middleware/request-id.middleware'
-import { ResponseHeadersMiddleware } from './middleware/response-headers.middleware'
-import { ResponseMimeMiddleware } from './middleware/response-mime.middleware'
+} from './lib/index'
+import {
+  ErrorHandlerMiddleware,
+  RequestIdMiddleware,
+  ResponseHeadersMiddleware,
+  ResponseMimeMiddleware,
+} from './middleware/index.middleware'
 // import { customLogger } from './util/custom-logger'
 
 

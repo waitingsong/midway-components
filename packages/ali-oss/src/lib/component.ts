@@ -7,6 +7,7 @@ import {
 } from '@mw-components/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
 import { OssClient, CpOptions as AliCpOptions } from '@yuntools/ali-oss'
+import { DataDownload } from '@yuntools/ali-oss/dist/lib/method/download'
 import { Tags } from 'opentracing'
 
 import type { Context } from '../interface'
@@ -35,6 +36,7 @@ import {
   SyncLocalOptions,
   SyncRemoteOptions,
   QuerySpanInfo,
+  DownloadOptions,
 } from './types'
 
 
@@ -63,7 +65,8 @@ export class AliOssComponent {
 
   /**
    * 拷贝文件，
-   * 拷贝本地目录文件到远程建议使用 `upload()` 或者 `syncRemote()` 方法
+   * - 拷贝本地文件/目录到远程建议使用 `upload()` 或者 `syncRemote()` 方法
+   * - 拷贝远程文件/目录到本地建议使用 `download()` 或者 `syncLocal()` 方法
    *
    * 若 force 为空或者 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
    * @link https://help.aliyun.com/document_detail/120057.html
@@ -106,6 +109,29 @@ export class AliOssComponent {
       src,
     }
     const ret = await this.runner<UploadOptions, ProcessRet<DataCp>>(opts)
+    return ret
+  }
+
+  /**
+   * 下载远程文件到本地
+   * 若 force 为空或 false，且目标文件存在时会卡在命令行提示输入阶段（无显示）最后导致超时异常
+   * @link https://help.aliyun.com/document_detail/120057.html
+   */
+  async download(
+    /** OSS 对象，不包括 bucket */
+    src: string,
+    /** 本地目录或文件 */
+    target: string,
+    options?: DownloadOptions,
+  ): Promise<ProcessRet<DataDownload>> {
+
+    const opts: RunnerOptions<DownloadOptions> = {
+      fnKey: FnKey.download,
+      options,
+      target,
+      src,
+    }
+    const ret = await this.runner<DownloadOptions, ProcessRet<DataDownload>>(opts)
     return ret
   }
 

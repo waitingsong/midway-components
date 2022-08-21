@@ -1,6 +1,7 @@
 import { MidwayAppInfo, MidwayConfig } from '@midwayjs/core'
-import type { NpmPkg } from '@mw-components/share'
 import { retrieveFirstIp } from '@waiting/shared-core'
+
+import { NpmPkg } from '../lib/index'
 
 
 export default (appInfo: MidwayAppInfo): MidwayConfig => {
