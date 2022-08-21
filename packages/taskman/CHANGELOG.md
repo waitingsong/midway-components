@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 25.0.0 (2022-08-21)
+
+
+### Features
+
+* bump kmore version ([efd9a16](https://github.com/waitingsong/midway-components/commit/efd9a1690413e6e6896d9502fd0bc0316bcede03))
+
+
+
+
+
 ## 24.0.2 (2022-08-16)
 
 **Note:** Version bump only for package @mw-components/taskman

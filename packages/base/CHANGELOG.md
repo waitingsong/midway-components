@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0](https://github.com/waitingsong/midway-components/compare/@mw-components/base@3.1.2...@mw-components/base@4.0.0) (2022-08-21)
+
+
+### Features
+
+* bump kmore version ([efd9a16](https://github.com/waitingsong/midway-components/commit/efd9a1690413e6e6896d9502fd0bc0316bcede03))
+
+
+
+
+
 ## [3.1.2](https://github.com/waitingsong/midway-components/compare/@mw-components/base@3.1.1...@mw-components/base@3.1.2) (2022-08-21)
 
 **Note:** Version bump only for package @mw-components/base

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0](https://github.com/waitingsong/midway-components/compare/@mw-components/ali-oss@4.2.1...@mw-components/ali-oss@5.0.0) (2022-08-21)
+
+
+### Features
+
+* **ali-oss:** breaking changes variable name and type name ([e08af65](https://github.com/waitingsong/midway-components/commit/e08af65d0aac171117e5a60864de99313af4ee36))
+
+
+
+
+
 ## [4.2.1](https://github.com/waitingsong/midway-components/compare/@mw-components/ali-oss@4.2.0...@mw-components/ali-oss@4.2.1) (2022-08-21)
 
 
