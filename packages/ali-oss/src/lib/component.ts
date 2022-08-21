@@ -125,7 +125,7 @@ export class AliOssComponent {
     options?: DownloadOptions,
   ): Promise<ProcessRet<DataDownload>> {
 
-    const opts: RunnerOptions<UploadOptions> = {
+    const opts: RunnerOptions<DownloadOptions> = {
       fnKey: FnKey.download,
       options,
       target,
