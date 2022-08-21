@@ -13,7 +13,7 @@ import {
 import { ILogger } from '@midwayjs/logger'
 
 import { AliOssComponent } from './component'
-import { Config, ConfigKey, CreateInstanceOptions, DataSourceConfig } from './types'
+import { Config, ConfigKey, CreateInstanceOptions, AliOssSourceConfig } from './types'
 
 
 @Provide()
@@ -21,7 +21,7 @@ import { Config, ConfigKey, CreateInstanceOptions, DataSourceConfig } from './ty
 export class AliOssSourceManager<SourceName extends string = string>
   extends DataSourceManager<AliOssComponent | undefined> {
 
-  @_Config(ConfigKey.dataSourceConfig) private readonly dataSourceconfig: DataSourceConfig<SourceName>
+  @_Config(ConfigKey.config) private readonly sourceConfig: AliOssSourceConfig<SourceName>
 
   @_Logger() private readonly logger: ILogger
 
@@ -42,12 +42,12 @@ export class AliOssSourceManager<SourceName extends string = string>
 
   @Init()
   async init(): Promise<void> {
-    if (! this.dataSourceconfig || ! this.dataSourceconfig.dataSource) {
+    if (! this.sourceConfig || ! this.sourceConfig.dataSource) {
       this.logger.info('dataSourceConfig is not defined')
       return
     }
     // 需要注意的是，这里第二个参数需要传入一个实体类扫描地址
-    await this.initDataSource(this.dataSourceconfig, this.baseDir)
+    await this.initDataSource(this.sourceConfig, this.baseDir)
   }
 
 
@@ -67,8 +67,8 @@ export class AliOssSourceManager<SourceName extends string = string>
 
     const inst = new AliOssComponent(config)
     if (cacheDataSource && inst) {
-      if (! this.dataSourceconfig.dataSource[dataSourceName]) {
-        this.dataSourceconfig.dataSource[dataSourceName] = config
+      if (! this.sourceConfig.dataSource[dataSourceName]) {
+        this.sourceConfig.dataSource[dataSourceName] = config
       }
     }
 
@@ -102,7 +102,7 @@ export class AliOssSourceManager<SourceName extends string = string>
 
   protected getConfigByDbId(clientId: SourceName): Config | undefined {
     assert(clientId)
-    const config = this.dataSourceconfig?.dataSource[clientId]
+    const config = this.sourceConfig?.dataSource[clientId]
     return config
   }
 

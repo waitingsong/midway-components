@@ -48,7 +48,7 @@ export const mochaHooks = async () => {
       const aliOssManager = await container.getAsync(AliOssManager)
       testConfig.aliOssManager = aliOssManager
 
-      const client = aliOssManager.getDataSource(ClientKey.master)
+      const client = aliOssManager.getDataSource(ClientKey.unitTest)
       testConfig.ossClient = client
 
       await client.rmrf(target)

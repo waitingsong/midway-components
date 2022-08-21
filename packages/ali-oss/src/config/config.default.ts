@@ -1,8 +1,8 @@
-import { DataSourceConfig } from '../index'
+import { AliOssSourceConfig } from '../index'
 import { initialConfig } from '../lib/config'
 
 
-export const AliOssDataSourceConfig: DataSourceConfig = {
+export const aliOssConfig: AliOssSourceConfig = {
   dataSource: {},
   default: {
     ...initialConfig,

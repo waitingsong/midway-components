@@ -10,10 +10,10 @@ export enum ConfigKey {
   componentName = 'aliOssComponent',
   managerName = 'aliOssManager',
   sourceManagerName = 'aliOssSourceManager',
-  dataSourceConfig = 'aliOssDataSourceConfig',
 }
 export enum ClientKey {
   master = 'ossMaster',
+  unitTest = 'ossUnitTest'
 }
 
 
@@ -49,7 +49,7 @@ export type MiddlewareConfig = MWConfig<MiddlewareOptions>
 
 
 /** midway DataSource */
-export interface DataSourceConfig<SourceName extends string = string> {
+export interface AliOssSourceConfig<SourceName extends string = string> {
   dataSource: DataSource<SourceName>
   default?: Config
 }
