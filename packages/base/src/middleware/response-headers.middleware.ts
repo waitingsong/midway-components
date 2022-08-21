@@ -1,11 +1,12 @@
 import { Middleware } from '@midwayjs/decorator'
+
 import {
   Context,
   IMiddleware,
   NextFunction,
   NpmPkg,
   TracerTag,
-} from '@mw-components/share'
+} from '../lib/index'
 
 
 /**

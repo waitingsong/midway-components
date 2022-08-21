@@ -1,7 +1,12 @@
 import { IncomingHttpHeaders } from 'node:http'
 
-import { Application, IMidwayContainer, JsonResp } from '@mw-components/share'
 import supertest, { SuperTest } from 'supertest'
+
+import {
+  Application,
+  IMidwayContainer,
+  JsonResp,
+} from '~/index'
 
 
 const CI = !! process.env.CI

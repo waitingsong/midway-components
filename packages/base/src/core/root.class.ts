@@ -11,6 +11,8 @@ import {
 import { Logger } from '@mw-components/jaeger'
 import { JwtComponent } from '@mw-components/jwt'
 import { KoidComponent } from '@mw-components/koid'
+import { OverwriteAnyToUnknown } from '@waiting/shared-types'
+
 import {
   Application,
   Context,
@@ -19,8 +21,7 @@ import {
   MyError,
   NpmPkg,
   TracerTag,
-} from '@mw-components/share'
-import { OverwriteAnyToUnknown } from '@waiting/shared-types'
+} from '../lib/index'
 
 
 export class RootClass {
