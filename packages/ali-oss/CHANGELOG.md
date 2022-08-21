@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0](https://github.com/waitingsong/midway-components/compare/@mw-components/ali-oss@4.0.0...@mw-components/ali-oss@4.1.0) (2022-08-21)
+
+
+### Features
+
+* **ali-oss:** bump deps version ([174f9b8](https://github.com/waitingsong/midway-components/commit/174f9b881d3265ad48dab01b7e268173884f2a1d))
+
+
+
+
+
 # [4.0.0](https://github.com/waitingsong/midway-components/compare/@mw-components/ali-oss@3.0.0...@mw-components/ali-oss@4.0.0) (2022-08-19)
 
 
