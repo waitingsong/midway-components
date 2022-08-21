@@ -72,6 +72,7 @@ export interface Config extends ClientConfig {
 export type MkdirOptions = Omit<Ali.MkdirOptions, 'target'>
 export type CpOptions = Omit<Ali.CpOptions, 'target' | 'src'>
 export type UploadOptions = Omit<Ali.UploadOptions, 'target' | 'src'>
+export type DownloadOptions = Omit<Ali.DownloadOptions, 'target' | 'src'>
 export type LinkOptions = Omit<Ali.LinkOptions, 'target' | 'src'>
 export type RmOptions = Omit<Ali.RmOptions, 'target'>
 export type RmrfOptions = Omit<Ali.RmrfOptions, 'target'>
