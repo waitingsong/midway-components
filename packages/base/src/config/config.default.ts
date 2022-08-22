@@ -12,8 +12,9 @@ export default (appInfo: MidwayAppInfo): MidwayConfig => {
     port: 7001,
   }
 
-  config['ErrorCode'] = ErrorCode
+  config.welcomeMsg = 'Hello Midwayjs!'
 
+  config.globalErrorCode = ErrorCode
 
   // use for cookie sign key, should change to your own and keep security
   config.keys = '1559532739677_8888'

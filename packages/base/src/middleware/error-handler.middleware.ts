@@ -97,7 +97,7 @@ async function middleware(
     }
 
     /* c8 ignore start */
-    const ErrorCode = ctx.app.getConfig('ErrorCode') as Record<string | number, string | number> | undefined
+    const ErrorCode = ctx.app.getConfig('globalErrorCode') as Record<string | number, string | number> | undefined
     if (typeof ErrorCode === 'object') {
       if (typeof ErrorCode[status] === 'string') {
         const codeKey = ErrorCode[status]

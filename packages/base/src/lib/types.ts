@@ -1,6 +1,5 @@
 import { MidwayConfig } from '@midwayjs/core'
 import { Context as KoaCtx } from '@midwayjs/koa'
-import { JwtState } from '@mw-components/jwt'
 
 
 export enum ConfigKey {
@@ -12,18 +11,10 @@ export enum ConfigKey {
 }
 
 
-// @ts-ignore
-declare module '@midwayjs/koa/dist/interface' {
-  interface Context {
-    reqId: string
-    jwtState: JwtState
-  }
-}
 export interface Context extends KoaCtx {
   reqId: string
   _internalError?: Error
 }
-
 
 
 export {
