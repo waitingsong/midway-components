@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0](https://github.com/waitingsong/midway-components/compare/@mw-components/base@4.0.0...@mw-components/base@4.1.0) (2022-08-22)
+
+
+### Features
+
+* **base:** process ErrorCode by error-handler.middleware.ts ([eb85ef5](https://github.com/waitingsong/midway-components/commit/eb85ef50b2f077e79e2812bd10a5790d370a2a7f))
+
+
+
+
+
 # [4.0.0](https://github.com/waitingsong/midway-components/compare/@mw-components/base@3.1.2...@mw-components/base@4.0.0) (2022-08-21)
 
 
