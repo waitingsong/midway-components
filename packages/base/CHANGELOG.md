@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0](https://github.com/waitingsong/midway-components/compare/@mw-components/base@4.1.0...@mw-components/base@4.2.0) (2022-08-22)
+
+
+### Features
+
+* **base:** rename config key 'ErrorCode' to 'globalErrorCode' ([ad17667](https://github.com/waitingsong/midway-components/commit/ad17667780c646d3c9069278f184abff5ca03a2f))
+
+
+
+
+
 # [4.1.0](https://github.com/waitingsong/midway-components/compare/@mw-components/base@4.0.0...@mw-components/base@4.1.0) (2022-08-22)
 
 
