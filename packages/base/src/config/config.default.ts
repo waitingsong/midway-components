@@ -1,7 +1,7 @@
 import { MidwayAppInfo, MidwayConfig } from '@midwayjs/core'
 import { retrieveFirstIp } from '@waiting/shared-core'
 
-import { NpmPkg } from '../lib/index'
+import { ErrorCode, NpmPkg } from '../lib/index'
 
 
 export default (appInfo: MidwayAppInfo): MidwayConfig => {
@@ -11,6 +11,9 @@ export default (appInfo: MidwayAppInfo): MidwayConfig => {
   config.koa = {
     port: 7001,
   }
+
+  config['ErrorCode'] = ErrorCode
+
 
   // use for cookie sign key, should change to your own and keep security
   config.keys = '1559532739677_8888'
