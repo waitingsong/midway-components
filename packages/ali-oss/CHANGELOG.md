@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.0.1 (2022-08-23)
+
+
+### Bug Fixes
+
+* **ali-oss:** MidwayConfig mixin ([e910462](https://github.com/waitingsong/midway-components/commit/e910462f8b83ef3911ffddfbcd9e9c98249a9dc2))
+
+
+
+
+
 # [5.0.0](https://github.com/waitingsong/midway-components/compare/@mw-components/ali-oss@4.2.1...@mw-components/ali-oss@5.0.0) (2022-08-21)
 
 
