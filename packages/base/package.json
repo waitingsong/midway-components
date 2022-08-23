@@ -25,6 +25,7 @@
     "@midwayjs/core": "^3.4.12",
     "@midwayjs/decorator": "^3.4.11",
     "@midwayjs/koa": "^3.4.12",
+    "@midwayjs/logger": "^2.17.0",
     "@midwayjs/prometheus": "^3.4.12",
     "@midwayjs/redis": "^3.4.12",
     "@midwayjs/validate": "^3.4.12",
