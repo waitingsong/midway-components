@@ -10,7 +10,7 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 describe(filename, () => {
 
   it('Should work', async () => {
-    const { httpRequest } = testConfig
+    const { httpRequest, app } = testConfig
 
     const path = '/test/err'
     const resp = await httpRequest
@@ -20,6 +20,10 @@ describe(filename, () => {
     const ret = resp.body as JsonResp
     assert(ret.code === 2404)
     assert(ret.codeKey === ErrorCode[ret.code])
+
+    const globalErrorCode = app.getConfig('globalErrorCode') as Record<string | number, string | number>
+    assert.deepStrictEqual(globalErrorCode, ErrorCode)
+    assert(ret.codeKey === globalErrorCode[ret.code])
   })
 
 })

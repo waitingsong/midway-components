@@ -44,6 +44,7 @@ export class RootClass {
   @Inject() readonly jwt: JwtComponent
 
   @Config() readonly pkg: NpmPkg
+  @Config() readonly globalErrorCode: Record<string | number, string | number>
 
   /**
    * SnowFlake id Generatoror
