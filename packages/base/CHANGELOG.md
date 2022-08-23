@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.3.0](https://github.com/waitingsong/midway-components/compare/@mw-components/base@4.2.2...@mw-components/base@4.3.0) (2022-08-23)
+
+
+### Features
+
+* **base:** add RootClass.globalErrorCode ([89a376b](https://github.com/waitingsong/midway-components/commit/89a376b2022eac4f4678618715f96fc327a1b2b7))
+
+
+
+
+
 ## [4.2.2](https://github.com/waitingsong/midway-components/compare/@mw-components/base@4.2.1...@mw-components/base@4.2.2) (2022-08-23)
 
 **Note:** Version bump only for package @mw-components/base
