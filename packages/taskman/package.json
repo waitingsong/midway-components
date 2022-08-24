@@ -23,12 +23,12 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@mw-components/fetch": "^20.1.1",
+    "@mw-components/fetch": "^20.2.0",
     "@mw-components/jaeger": "^13.1.4",
-    "@mw-components/kmore": "^36.0.0",
+    "@mw-components/kmore": "^36.0.1",
     "@mw-components/koid": "^9.1.1",
     "@waiting/shared-core": "^20.5.0",
-    "pg": "^8.7.3",
+    "pg-native": "^3.0.1",
     "postgres-interval": "^4.0.0"
   },
   "devDependencies": {

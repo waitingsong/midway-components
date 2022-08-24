@@ -29,7 +29,7 @@
   "license": "MIT",
   "dependencies": {
     "@mw-components/jaeger": "^13.1.4",
-    "@yuntools/ali-oss": "^16.1.1"
+    "@yuntools/ali-oss": "^16.1.2"
   },
   "devDependencies": {
     "cross-env": "7"
