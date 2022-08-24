@@ -38,9 +38,9 @@ npm run bootstrap
 
 ```sh
 # clean build dist, cache and build
-npm run reset
+npm run clean
 # clean and remove all node_modules
-npm run purge && npm run bootstrap && npm run build
+npm run purge
 ```
 
 ## Note
