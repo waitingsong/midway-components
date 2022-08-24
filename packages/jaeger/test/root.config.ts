@@ -3,7 +3,7 @@ import { IncomingHttpHeaders } from 'node:http'
 import supertest, { SuperTest } from 'supertest'
 
 import { Application, IMidwayContainer } from '~/interface'
-import { MiddlewareConfig } from '~/lib/index'
+import { MiddlewareConfig, TestSpanInfo } from '~/lib/index'
 
 
 const CI = !! process.env.CI
