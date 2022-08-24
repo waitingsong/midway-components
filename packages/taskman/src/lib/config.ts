@@ -91,7 +91,7 @@ export const initDbConfig: DbConfig<DbModel> = {
   dict: dbDict,
   config: {
     acquireConnectionTimeout: 60000,
-    client: 'pg',
+    client: 'pgnative', // 'pg', 'pgnative'
     connection: {
       host: process.env['POSTGRES_HOST'] ? process.env['POSTGRES_HOST'] : 'localhost',
       port: process.env['POSTGRES_PORT'] ? +process.env['POSTGRES_PORT'] : 5432,
