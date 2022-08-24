@@ -30,7 +30,7 @@
     "@midwayjs/redis": "^3.4.12",
     "@midwayjs/validate": "^3.4.12",
     "@mw-components/ali-oss": "^5.0.2",
-    "@mw-components/fetch": "^20.2.0",
+    "@mw-components/fetch": "^20.2.2",
     "@mw-components/jaeger": "^13.1.5",
     "@mw-components/jwt": "^12.0.4",
     "@mw-components/kmore": "^36.0.2",
