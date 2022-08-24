@@ -18,7 +18,7 @@ import {
 
 
 @Controller('/')
-export class HomeController {
+export class JaegerController {
 
   @_Config(ConfigKey.config) protected readonly config: Config
   @_Config(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
