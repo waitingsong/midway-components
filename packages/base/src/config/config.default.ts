@@ -1,5 +1,6 @@
 import { MidwayAppInfo, MidwayConfig } from '@midwayjs/core'
 import { retrieveFirstIp } from '@waiting/shared-core'
+import { genConfigRandom } from '@mw-components/koid'
 
 import { ErrorCode, NpmPkg } from '../lib/index'
 
@@ -21,10 +22,8 @@ export default (appInfo: MidwayAppInfo): MidwayConfig => {
 
   // '2020-01-01T00:00:00Z'
   const epoch = 1577836800000
-  config.koidConfig = {
-    node: 0,
-    epoch,
-  }
+  const koidConfig = genConfigRandom(epoch)
+  config.koidConfig = koidConfig
 
   const ip = retrieveFirstIp()
   const nameNorm = (appInfo.pkg as NpmPkg).name.replace(/@/ug, '').replace(/\//ug, '-')
