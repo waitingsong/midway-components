@@ -23,10 +23,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@mw-components/fetch": "^20.2.0",
+    "@mw-components/fetch": "^20.2.2",
     "@mw-components/jaeger": "^13.1.6",
     "@mw-components/kmore": "^36.0.2",
-    "@mw-components/koid": "^9.1.1",
+    "@mw-components/koid": "^9.1.2",
     "@waiting/shared-core": "^20.5.0",
     "pg": "^8.8.0",
     "pg-native": "^3.0.1",
