@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.4.0](https://github.com/waitingsong/midway-components/compare/@mw-components/base@4.3.2...@mw-components/base@4.4.0) (2022-08-25)
+
+
+### Features
+
+* **base:** change koidConfig with random data center and worker ([7fa7847](https://github.com/waitingsong/midway-components/commit/7fa7847af28587c7937ecc38f42dbded3730d803))
+
+
+
+
+
 ## [4.3.2](https://github.com/waitingsong/midway-components/compare/@mw-components/base@4.3.1...@mw-components/base@4.3.2) (2022-08-24)
 
 **Note:** Version bump only for package @mw-components/base
