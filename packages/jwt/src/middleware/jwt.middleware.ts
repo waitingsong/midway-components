@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { Middleware } from '@midwayjs/decorator'
 
 import {
@@ -72,7 +73,7 @@ export async function middleware(
 
     const secretSet: Set<VerifySecret> = svc.genVerifySecretSet(
       // @ts-expect-error
-      ctx['jwtState'].secret ?? ctx.state?.secret,
+      ctx['jwtState'].secret ?? ctx.state.secret,
     )
     const decoded = svc.validateToken(token, secretSet)
 
@@ -113,6 +114,7 @@ export async function middleware(
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return next()
 }
 

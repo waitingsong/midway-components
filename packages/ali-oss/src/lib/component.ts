@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
+/* eslint-disable max-lines-per-function */
 import {
   SpanLogInput,
   Logger as TLogger,
@@ -8,6 +10,7 @@ import {
 import { genISO8601String } from '@waiting/shared-core'
 import { OssClient, CpOptions as AliCpOptions } from '@yuntools/ali-oss'
 import { DataDownload } from '@yuntools/ali-oss/dist/lib/method/download'
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { Tags } from 'opentracing'
 
 import type { Context } from '../interface'
@@ -45,8 +48,8 @@ export class AliOssComponent {
 
   ctx: Context | undefined
 
-  private client: OssClient
-  private querySpanMap: WeakMap<object, QuerySpanInfo> = new WeakMap()
+  private readonly client: OssClient
+  private readonly querySpanMap: WeakMap<object, QuerySpanInfo> = new WeakMap()
 
   constructor(protected readonly config: Config) {
     const opts: OssConfig = {
@@ -364,7 +367,7 @@ export class AliOssComponent {
       // @ts-ignore
       const ret = await this.client[fnKey](opts) as Promise<R>
       await this.tracer('finish', id, opts)
-      return ret
+      return await ret
     }
     catch (ex) {
       await this.tracer('error', id, opts, ex)
@@ -373,7 +376,7 @@ export class AliOssComponent {
   }
 
 
-  protected genOptions<T>(input: RunnerOptions<T>): _RunnerOption<T> {
+  protected genOptions<T extends BaseOptions>(input: RunnerOptions<T>): _RunnerOption<T> {
     const ret = {
       ...this.config,
       src: input.src,
@@ -473,7 +476,7 @@ export class AliOssComponent {
           }
           span.addTags(tags2)
           input['level'] = 'warn'
-          logger.log && logger.log(input, span)
+          logger?.log(input, span)
         }
         else {
           span.log(input)
@@ -507,7 +510,7 @@ export class AliOssComponent {
           [TracerLog.error]: err,
         }
 
-        logger.log && logger.log(input, span)
+        logger?.log(input, span)
         trm.spanLog(input)
 
         span.addTags({

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import assert from 'node:assert'
 
 import { DataSourceManager } from '@midwayjs/core'
@@ -102,7 +103,7 @@ export class AliOssSourceManager<SourceName extends string = string>
 
   protected getConfigByDbId(clientId: SourceName): Config | undefined {
     assert(clientId)
-    const config = this.sourceConfig?.dataSource[clientId]
+    const config = this.sourceConfig.dataSource[clientId]
     return config
   }
 

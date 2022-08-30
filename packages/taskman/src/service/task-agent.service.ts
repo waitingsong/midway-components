@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { randomUUID } from 'crypto'
 
 // import { IMidwayLogger } from '@midwayjs/core'
@@ -23,17 +24,16 @@ import {
 } from '@mw-components/jaeger'
 import { KoidComponent } from '@mw-components/koid'
 import { genISO8601String } from '@waiting/shared-core'
+// eslint-disable-next-line import/no-extraneous-dependencies
 import {
   timer,
   from as ofrom,
   Observable,
   Subscription,
-} from 'rxjs'
-import {
   map,
   mergeMap,
   takeWhile,
-} from 'rxjs/operators'
+} from 'rxjs'
 
 
 import {
@@ -85,7 +85,7 @@ export class TaskAgentService {
   }
 
   get isRunning(): boolean {
-    const flag = this.runnerSet.size > 0 ? true : false
+    const flag = this.runnerSet.size > 0
     return flag
   }
 
@@ -360,13 +360,17 @@ export class TaskAgentService {
         return this.processTaskDist(taskId, reqId, res)
       })
       .catch((err) => {
-        const { message } = err as Error
-        if (message && message.includes('429')
-          && message.includes('Task')
-          && message.includes(taskId)) {
-          return this.resetTaskToInitDueTo429(taskId, reqId, message)
+        if (err instanceof Error) {
+          const { message } = err as Error
+          if (message?.includes('429')
+            && message?.includes('Task')
+            && message?.includes(taskId)) {
+            return this.resetTaskToInitDueTo429(taskId, reqId, message)
+          }
+          return this.processHttpCallExp(taskId, reqId, opts, err as Error)
         }
-        return this.processHttpCallExp(taskId, reqId, opts, err as Error)
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        throw new Error(err)
       })
       // .finally(() => {
       //   // newSpan && newSpan.finish()
