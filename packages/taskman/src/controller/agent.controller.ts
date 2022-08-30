@@ -32,6 +32,7 @@ export class AgentController {
     await this.agentSvc.run(this.ctx, span)
     const taskAgentState = await this.status()
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (trm) {
       const inputLog: SpanLogInput = {
         event: 'TaskAgent-run',

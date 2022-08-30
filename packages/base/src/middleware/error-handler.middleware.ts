@@ -42,6 +42,7 @@ async function middleware(
     }
   }
   catch (err) {
+
     // 所有的异常都在 app 上触发一个 error 事件，框架会记录一条错误日志
     ctx.app.emit('error', err, ctx)
 
@@ -93,6 +94,17 @@ async function middleware(
       && myerr.message.includes('Knex')
       && myerr.message.includes('Timeout acquiring a connection')) {
       body.code = 999 // db error
+    }
+
+    /* c8 ignore start */
+    const ErrorCode = ctx.app.getConfig('globalErrorCode') as Record<string | number, string | number> | undefined
+    if (typeof ErrorCode === 'object') {
+      if (typeof ErrorCode[status] === 'string') {
+        const codeKey = ErrorCode[status]
+        if (typeof codeKey === 'string' && codeKey) {
+          body.codeKey = codeKey // like 'E_Common'
+        }
+      }
     }
 
     /* c8 ignore stop */

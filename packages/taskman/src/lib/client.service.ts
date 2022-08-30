@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import {
   Config,
   Inject,
@@ -351,7 +352,7 @@ export class ClientService {
   protected processPostHeaders(input: CreateTaskOptions): Headers {
     const headers = new Node_Headers(input.headers)
     if (! input.headers) {
-      const arr = this.config.transferHeaders && this.config.transferHeaders.length
+      const arr = this.config.transferHeaders?.length
         ? this.config.transferHeaders
         : initTaskClientConfig.transferHeaders
 
@@ -367,7 +368,7 @@ export class ClientService {
 
   protected retrieveHeadersFromContext(): Headers {
     const headers = new Node_Headers()
-    const arr = this.config.transferHeaders && this.config.transferHeaders.length
+    const arr = this.config.transferHeaders?.length
       ? this.config.transferHeaders
       : initTaskClientConfig.transferHeaders
 

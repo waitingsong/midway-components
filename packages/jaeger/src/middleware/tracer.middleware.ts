@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { Middleware } from '@midwayjs/decorator'
 
 import { Context, IMiddleware, NextFunction } from '../interface'

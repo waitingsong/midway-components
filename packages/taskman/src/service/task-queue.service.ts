@@ -60,7 +60,7 @@ export class TaskQueueService {
       json: input.json,
     }
     await this.repo.addTaskPayload(payload)
-    await this.createLog(ret?.taskId, 'create')
+    await this.createLog(ret.taskId, 'create')
     return ret
   }
 

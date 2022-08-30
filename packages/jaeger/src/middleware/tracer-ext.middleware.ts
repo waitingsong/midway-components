@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { Middleware } from '@midwayjs/decorator'
 import { humanMemoryUsage } from '@waiting/shared-core'
 
@@ -39,6 +40,7 @@ async function extMiddleware(
   const tracerManager = await ctx.requestContext.getAsync(TracerManager)
   if (! tracerManager) {
     ctx.logger.warn('tracerManager invalid')
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return next()
   }
 

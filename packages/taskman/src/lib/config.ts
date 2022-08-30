@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { DbConfig } from '@mw-components/kmore'
 
 import { dbDict, DbModel } from './db.model'
@@ -91,7 +94,7 @@ export const initDbConfig: DbConfig<DbModel> = {
   dict: dbDict,
   config: {
     acquireConnectionTimeout: 60000,
-    client: 'pg',
+    client: 'pgnative', // 'pg', 'pgnative'
     connection: {
       host: process.env['POSTGRES_HOST'] ? process.env['POSTGRES_HOST'] : 'localhost',
       port: process.env['POSTGRES_PORT'] ? +process.env['POSTGRES_PORT'] : 5432,

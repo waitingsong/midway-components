@@ -38,6 +38,7 @@ import {
 process.env['UV_THREADPOOL_SIZE'] = '96'
 
 @Configuration({
+  importConfigs: [join(__dirname, 'config')],
   imports: [
     koa,
     validate,
@@ -49,7 +50,6 @@ process.env['UV_THREADPOOL_SIZE'] = '96'
     db,
     aliOss,
   ],
-  importConfigs: [join(__dirname, 'config')],
 })
 export class ContainerConfiguration implements ILifeCycle {
 

@@ -40,9 +40,9 @@ export interface Config {
    */
   serviceName?: string
   /**
-	 * Callback to process custom failure
-	 * @default helper.ts/processCustomFailure()
-	 */
+   * Callback to process custom failure
+   * @default helper.ts/processCustomFailure()
+   */
   processCustomFailure?: (ctx: Context) => Promise<void>
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Context } from '../interface'
 
@@ -17,7 +18,7 @@ export function retrieveToken(ctx: Context, cookieKey: JwtAuthenticateOptions['c
   if (token) {
     token = token.trimEnd()
   }
-  else if (ctx.header && ctx.header.cookie) {
+  else if (ctx?.header?.cookie) {
     token = pickTokenFromHeaderCookies(ctx.header.cookie, cookieKey)
   }
 
@@ -117,7 +118,7 @@ function pickTokenFromCookie(
   key: string,
 ): string {
 
-  const re = new RegExp(`(?<=\\b${key}=)[\\w\\d.]+`)
+  const re = new RegExp(`(?<=\\b${key}=)[\\w\\d.]+`, 'u')
   const match = re.exec(cookie)
   return match && Array.isArray(match) && match[0] ? match[0] : ''
 }

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
+/* eslint-disable @typescript-eslint/prefer-optional-chain */
 import { Middleware } from '@midwayjs/decorator'
 import { SpanLogInput, TracerManager } from '@mw-components/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
@@ -98,6 +100,7 @@ async function middleware(
     await taskAgent.run()
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return next()
 }
 

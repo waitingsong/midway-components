@@ -52,15 +52,14 @@ export class AliOssManager<SourceName extends string = string, Ctx extends Conte
     const inst = this.sourceManager.getDataSource(dataSourceName)
     assert(inst)
 
-    const reqCtx: Ctx | undefined = this.ctx
+    const reqCtx = this.ctx as Ctx | undefined
     if (! reqCtx) {
       return inst
     }
 
     const db2 = this.createCtxProxy(inst, reqCtx)
-    if (db2) {
-      this.instCacheMap.set(dataSourceName, db2)
-    }
+    this.instCacheMap.set(dataSourceName, db2)
+
     return db2
   }
 
