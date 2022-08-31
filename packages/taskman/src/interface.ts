@@ -18,7 +18,7 @@ export {
   Application, Context,
 } from '@midwayjs/koa'
 
-export type { Options as FetchOptions } from '@mw-components/fetch'
+export type { Options as FetchOptions } from '@mwcp/fetch'
 
 export { IPostgresInterval } from 'postgres-interval'
 
