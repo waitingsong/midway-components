@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 13.2.0 (2022-08-31)
+
+
+### Features
+
+* **jaeger:** use new npm scope "@mwcp/" ([ddf8356](https://github.com/waitingsong/midway-components/commit/ddf8356b0838cccd797423cd37ef53fb25532608))
+
+
+
+
+
 ## 13.1.7 (2022-08-30)
 
 **Note:** Version bump only for package @mw-components/jaeger
