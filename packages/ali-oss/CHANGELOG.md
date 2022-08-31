@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 5.1.0 (2022-08-31)
+
+
+### Features
+
+* **ali-oss:** use new npm scope "[@mwcp](https://github.com/mwcp)" ([323943f](https://github.com/waitingsong/midway-components/commit/323943f05d6a32ab5e37fcc7e5eaa620f1b4ce8f))
+
+
+
+
+
 ## 5.0.4 (2022-08-30)
 
 **Note:** Version bump only for package @mw-components/ali-oss

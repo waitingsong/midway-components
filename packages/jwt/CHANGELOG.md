@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 12.1.0 (2022-08-31)
+
+
+### Features
+
+* **jwt:** use new npm scope "[@mwcp](https://github.com/mwcp)" ([029ac8f](https://github.com/waitingsong/midway-components/commit/029ac8f0bee8931d022c5779dc6fe6aa2a19b0fd))
+
+
+
+
+
 ## 12.0.5 (2022-08-30)
 
 **Note:** Version bump only for package @mw-components/jwt
