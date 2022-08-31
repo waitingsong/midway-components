@@ -14,15 +14,15 @@ import {
   FetchComponent,
   JsonResp,
   Node_Headers,
-} from '@mw-components/fetch'
+} from '@mwcp/fetch'
 import {
   HeadersKey,
   Logger,
   Span,
   SpanLogInput,
   TracerTag,
-} from '@mw-components/jaeger'
-import { KoidComponent } from '@mw-components/koid'
+} from '@mwcp/jaeger'
+import { KoidComponent } from '@mwcp/koid'
 import { genISO8601String } from '@waiting/shared-core'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import {

@@ -1,5 +1,5 @@
 import { Rule } from '@midwayjs/validate'
-import { DataSource } from '@mw-components/kmore'
+import { DataSource } from '@mwcp/kmore'
 import {
   MiddlewareConfig as MWConfig,
   JsonType,

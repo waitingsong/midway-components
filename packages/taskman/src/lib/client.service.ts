@@ -4,12 +4,12 @@ import {
   Inject,
   Provide,
 } from '@midwayjs/decorator'
-import { FetchComponent, JsonResp, Node_Headers } from '@mw-components/fetch'
+import { FetchComponent, JsonResp, Node_Headers } from '@mwcp/fetch'
 import {
   HeadersKey,
   Logger,
   TracerManager,
-} from '@mw-components/jaeger'
+} from '@mwcp/jaeger'
 import { retrieveHeadersItem } from '@waiting/shared-core'
 
 import {

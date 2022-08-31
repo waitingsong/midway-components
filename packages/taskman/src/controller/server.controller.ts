@@ -6,7 +6,7 @@ import {
   Post,
   Query,
 } from '@midwayjs/decorator'
-import { TracerManager } from '@mw-components/jaeger'
+import { TracerManager } from '@mwcp/jaeger'
 
 import {
   CommonSetMethodInputData,

@@ -7,8 +7,8 @@ import {
   Inject,
   Provide,
 } from '@midwayjs/decorator'
-import { Logger } from '@mw-components/jaeger'
-import { DbManager, Kmore } from '@mw-components/kmore'
+import { Logger } from '@mwcp/jaeger'
+import { DbManager, Kmore } from '@mwcp/kmore'
 
 import {
   DbModel,

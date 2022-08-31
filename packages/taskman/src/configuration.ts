@@ -6,11 +6,11 @@ import { join } from 'path'
 
 import { IMidwayContainer } from '@midwayjs/core'
 import { App, Config, Configuration, Inject } from '@midwayjs/decorator'
-import * as fetch from '@mw-components/fetch'
-import * as jaeger from '@mw-components/jaeger'
-import * as db from '@mw-components/kmore'
-import { DbConfig, DbSourceManager } from '@mw-components/kmore'
-import * as koid from '@mw-components/koid'
+import * as fetch from '@mwcp/fetch'
+import * as jaeger from '@mwcp/jaeger'
+import * as db from '@mwcp/kmore'
+import { DbConfig, DbSourceManager } from '@mwcp/kmore'
+import * as koid from '@mwcp/koid'
 
 import {
   ConfigKey,

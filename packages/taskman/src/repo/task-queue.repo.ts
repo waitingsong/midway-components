@@ -7,7 +7,7 @@ import {
   Inject,
   Provide,
 } from '@midwayjs/decorator'
-import { DbManager, Kmore } from '@mw-components/kmore'
+import { DbManager, Kmore } from '@mwcp/kmore'
 
 import {
   initTaskProgressDTO,

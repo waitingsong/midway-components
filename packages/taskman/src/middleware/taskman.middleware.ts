@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable @typescript-eslint/prefer-optional-chain */
 import { Middleware } from '@midwayjs/decorator'
-import { SpanLogInput, TracerManager } from '@mw-components/jaeger'
+import { SpanLogInput, TracerManager } from '@mwcp/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
 
 

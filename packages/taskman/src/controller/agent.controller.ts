@@ -4,7 +4,7 @@ import {
   Inject,
   Param,
 } from '@midwayjs/decorator'
-import { Span, SpanLogInput, TracerManager } from '@mw-components/jaeger'
+import { Span, SpanLogInput, TracerManager } from '@mwcp/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
 
 import {

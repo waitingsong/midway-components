@@ -1,5 +1,5 @@
-import { Node_Headers } from '@mw-components/fetch'
-import { HeadersKey } from '@mw-components/jaeger'
+import { Node_Headers } from '@mwcp/fetch'
+import { HeadersKey } from '@mwcp/jaeger'
 import { defaultPropDescriptor } from '@waiting/shared-core'
 
 import { CreateTaskOptions } from './types'
