@@ -1,13 +1,15 @@
-import { TracerConfig } from '../lib/types'
+import { Config, MiddlewareConfig } from '../index'
+import {
+  initialConfig,
+  initialMiddlewareConfig,
+  initTracerIgnoreArray,
+} from '../lib/config'
+import { processCustomFailure } from '../lib/tracer'
 
 
-export const tracer: TracerConfig = {
-  whiteList: ['/favicon.ico', '/favicon.png'],
-  reqThrottleMsForPriority: 10,
-  enableMiddleWare: true,
-  enableCatchError: true,
-  isLogginInputQuery: true,
-  isLoggingOutputBody: true,
+export const tracerConfig: Config = {
+  ...initialConfig,
+  processCustomFailure,
   tracingConfig: {
     sampler: {
       type: 'probabilistic',
@@ -18,3 +20,14 @@ export const tracer: TracerConfig = {
     },
   },
 }
+
+export const tracerMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
+  ...initialMiddlewareConfig,
+  ignore: [
+    ...initTracerIgnoreArray,
+    '/untraced_path_string',
+    new RegExp('/untraced_path_reg_exp$', 'u'),
+  ],
+}
+
+
