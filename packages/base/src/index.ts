@@ -1,6 +1,6 @@
 import type { PrometheusConfig } from '@midwayjs/prometheus'
-import type { JwtState } from '@mw-components/jwt'
-import type { Config as KoidConfig } from '@mw-components/koid'
+import type { JwtState } from '@mwcp/jwt'
+import type { Config as KoidConfig } from '@mwcp/koid'
 
 
 export { ContainerConfiguration as Configuration } from './configuration'

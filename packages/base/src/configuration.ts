@@ -15,12 +15,12 @@ import * as koa from '@midwayjs/koa'
 import { IMidwayLogger } from '@midwayjs/logger'
 import * as prometheus from '@midwayjs/prometheus'
 import * as validate from '@midwayjs/validate'
-import * as aliOss from '@mw-components/ali-oss'
-import * as fetch from '@mw-components/fetch'
-import * as jaeger from '@mw-components/jaeger'
-import * as jwt from '@mw-components/jwt'
-import * as db from '@mw-components/kmore'
-import * as koid from '@mw-components/koid'
+import * as aliOss from '@mwcp/ali-oss'
+import * as fetch from '@mwcp/fetch'
+import * as jaeger from '@mwcp/jaeger'
+import * as jwt from '@mwcp/jwt'
+import * as db from '@mwcp/kmore'
+import * as koid from '@mwcp/koid'
 
 import type {
   Application,

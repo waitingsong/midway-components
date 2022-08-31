@@ -27,13 +27,13 @@ export {
 export type AppConfig = Partial<MidwayConfig>
 export { Application } from '@midwayjs/koa'
 
-export { Options as FetchOptions } from '@mw-components/fetch'
+export { Options as FetchOptions } from '@mwcp/fetch'
 
 export {
   TracerTag, TracerLog, HeadersKey,
-} from '@mw-components/jaeger'
+} from '@mwcp/jaeger'
 
-export { JwtResult } from '@mw-components/jwt'
+export { JwtResult } from '@mwcp/jwt'
 
 export {
   JsonObject,

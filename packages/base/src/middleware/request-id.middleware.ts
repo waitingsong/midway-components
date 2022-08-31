@@ -1,5 +1,5 @@
 import { Middleware } from '@midwayjs/decorator'
-import { KoidComponent } from '@mw-components/koid'
+import { KoidComponent } from '@mwcp/koid'
 
 import {
   Context,

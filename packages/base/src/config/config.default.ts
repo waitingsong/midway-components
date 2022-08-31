@@ -1,5 +1,5 @@
 import { MidwayAppInfo, MidwayConfig } from '@midwayjs/core'
-import { genConfigRandom } from '@mw-components/koid'
+import { genConfigRandom } from '@mwcp/koid'
 import { retrieveFirstIp } from '@waiting/shared-core'
 
 import { ErrorCode, NpmPkg } from '../lib/index'

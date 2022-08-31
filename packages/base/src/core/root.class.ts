@@ -2,15 +2,15 @@
 import { IncomingHttpHeaders } from 'http'
 
 import { App, Config, Inject } from '@midwayjs/decorator'
-import { AliOssManager } from '@mw-components/ali-oss'
+import { AliOssManager } from '@mwcp/ali-oss'
 import {
   Node_Headers,
   FetchComponent,
   FetchResponse,
-} from '@mw-components/fetch'
-import { Logger } from '@mw-components/jaeger'
-import { JwtComponent } from '@mw-components/jwt'
-import { KoidComponent } from '@mw-components/koid'
+} from '@mwcp/fetch'
+import { Logger } from '@mwcp/jaeger'
+import { JwtComponent } from '@mwcp/jwt'
+import { KoidComponent } from '@mwcp/koid'
 import { OverwriteAnyToUnknown } from '@waiting/shared-types'
 
 import {

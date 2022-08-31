@@ -1,4 +1,4 @@
-import { initPathArray } from '@mw-components/jwt'
+import { initPathArray } from '@mwcp/jwt'
 
 import { AppConfig } from '~/index'
 
