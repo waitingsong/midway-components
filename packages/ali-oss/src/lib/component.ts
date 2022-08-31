@@ -6,7 +6,7 @@ import {
   TracerManager,
   TracerLog,
   TracerTag,
-} from '@mw-components/jaeger'
+} from '@mwcp/jaeger'
 import { genISO8601String } from '@waiting/shared-core'
 import { OssClient, CpOptions as AliCpOptions } from '@yuntools/ali-oss'
 import { DataDownload } from '@yuntools/ali-oss/dist/lib/method/download'
