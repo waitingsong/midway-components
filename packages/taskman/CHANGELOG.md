@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 26.0.0 (2022-08-31)
+
+
+### Features
+
+* **taskman:** use new npm scope "@mwcp/" instead ([978bd21](https://github.com/waitingsong/midway-components/commit/978bd2123ee92e249a12fca9f6ed16ea9555cfb2))
+
+
+
+
+
 ## [25.0.4](https://github.com/waitingsong/midway-components/compare/@mw-components/taskman@25.0.3...@mw-components/taskman@25.0.4) (2022-08-30)
 
 **Note:** Version bump only for package @mw-components/taskman
