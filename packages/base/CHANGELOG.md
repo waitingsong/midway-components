@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 4.5.0 (2022-08-31)
+
+
+### Features
+
+* **base:** use new npm scope "[@mwcp](https://github.com/mwcp)" ([4004e6b](https://github.com/waitingsong/midway-components/commit/4004e6bc62883a1916077a1f9f6d8f28279e3e7b))
+
+
+
+
+
 ## 4.4.2 (2022-08-31)
 
 **Note:** Version bump only for package @mw-components/base
