@@ -6,6 +6,7 @@ import {
 
 
 export const initialConfig: Readonly<Config> = {
+  enableDefaultRoute: false,
   accessKeyId: '',
   accessKeySecret: '',
   endpoint: '',
@@ -22,5 +23,4 @@ export const initMiddlewareOptions: MiddlewareOptions = {
 export const initialMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'ignore' | 'match' | 'options'>> = {
   enableMiddleware: true,
 }
-
 

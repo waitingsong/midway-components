@@ -1,15 +1,17 @@
+// @ts-nocheck
 import 'tsconfig-paths/register'
 import assert from 'node:assert'
 import { join } from 'node:path'
 
 import { ILifeCycle } from '@midwayjs/core'
 import { App, Config, Configuration } from '@midwayjs/decorator'
+import * as koa from '@midwayjs/koa'
 
 import {
   ConfigKey,
   MiddlewareConfig,
 } from './lib/types'
-import { JwtMiddleware } from './middleware/jwt.middleware'
+import { DemoMiddleware } from './middleware/index.middleware'
 
 import { Application, IMidwayContainer } from '~/interface'
 
@@ -17,6 +19,9 @@ import { Application, IMidwayContainer } from '~/interface'
 @Configuration({
   namespace: ConfigKey.namespace,
   importConfigs: [join(__dirname, 'config')],
+  imports: [
+    koa,
+  ],
 })
 export class AutoConfiguration implements ILifeCycle {
 
@@ -29,18 +34,18 @@ export class AutoConfiguration implements ILifeCycle {
     assert(this.app, 'this.app must be set')
 
     const { enableMiddleware } = this.mwConfig
-    if (enableMiddleware || typeof enableMiddleware === 'number') {
+    if (enableMiddleware) {
       registerMiddleware(this.app)
     }
   }
 
 }
 
-export function registerMiddleware(
+function registerMiddleware(
   app: Application,
 ): void {
 
   // @ts-ignore
-  app.getMiddleware().insertLast(JwtMiddleware)
+  app.getMiddleware().insertLast(DemoMiddleware)
 }
 

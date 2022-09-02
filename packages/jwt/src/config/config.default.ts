@@ -1,10 +1,16 @@
-import { Config, MiddlewareConfig } from '../index'
 import {
   initialConfig,
   initialMiddlewareConfig,
   initMiddlewareOptions,
   initPathArray,
 } from '../lib/config'
+import { Config, MiddlewareConfig } from '../lib/types'
+
+
+export const keys = Date.now()
+export const koa = {
+  port: 7001,
+}
 
 
 export const jwtConfig: Config = {
