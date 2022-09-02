@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/jaeger",
   "author": "waiting",
-  "version": "13.2.0",
+  "version": "13.2.1",
   "description": "midway component for jaeger",
   "keywords": [
     "midway",
