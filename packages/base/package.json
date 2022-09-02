@@ -29,7 +29,7 @@
     "@mwcp/jaeger": "^13.2.1",
     "@mwcp/jwt": "^12.1.1",
     "@mwcp/kmore": "^36.1.0",
-    "@mwcp/koid": "^9.3.0",
+    "@mwcp/koid": "^10.0.0",
     "@mwcp/share": "^1.1.0",
     "@waiting/base64": "^4.2.9",
     "@waiting/shared-core": "^20.6.3",
