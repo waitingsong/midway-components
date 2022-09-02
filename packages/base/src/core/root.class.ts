@@ -11,6 +11,7 @@ import {
 import { Logger } from '@mwcp/jaeger'
 import { JwtComponent } from '@mwcp/jwt'
 import { KoidComponent } from '@mwcp/koid'
+import { MyError } from '@mwcp/share'
 import { OverwriteAnyToUnknown } from '@waiting/shared-types'
 
 import {
@@ -18,7 +19,6 @@ import {
   Context,
   FetchOptions,
   JsonResp,
-  MyError,
   NpmPkg,
   TracerTag,
 } from '../lib/index'

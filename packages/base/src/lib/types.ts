@@ -1,31 +1,15 @@
-import { MidwayConfig } from '@midwayjs/core'
-import { Context as KoaCtx } from '@midwayjs/koa'
-
-
-export enum ConfigKey {
-  namespace = 'base',
-  config = 'baseConfig',
-  middlewareConfig = 'baseMiddlewareConfig',
-  componentName = 'baseComponent',
-  middlewareName = 'baseMiddleware',
-}
-
-
-export interface Context extends KoaCtx {
-  reqId: string
-  _internalError?: Error
-}
-
 
 export {
+  Application,
+  AppConfig,
+  AppInfomation,
+  Context,
   IMidwayApplication,
   IMidwayContainer,
   IMiddleware,
   NextFunction,
-} from '@midwayjs/core'
+} from '@mwcp/share'
 
-export type AppConfig = Partial<MidwayConfig>
-export { Application } from '@midwayjs/koa'
 
 export { Options as FetchOptions } from '@mwcp/fetch'
 
@@ -43,17 +27,6 @@ export {
 } from '@waiting/shared-types'
 
 export { KmoreTransaction as DbTransaction } from 'kmore'
-
-
-export interface AppInfomation {
-  pkgName: string
-  pkgVer: string
-  pid: number
-  ppid: number
-  ip: string
-  reqId: string
-  [key: string]: string | number
-}
 
 
 export enum ErrorCode {
