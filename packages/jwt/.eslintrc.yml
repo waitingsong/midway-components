@@ -9,6 +9,7 @@ rules:
     - 2
     - packageDir:
       - ./
+      - ../share/
       - ../base/
 
 ignorePatterns:
