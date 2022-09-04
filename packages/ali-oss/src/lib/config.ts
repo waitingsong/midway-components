@@ -1,12 +1,11 @@
 import {
-  Config,
+  InstanceConfig,
   MiddlewareConfig,
   MiddlewareOptions,
 } from './types'
 
 
-export const initialConfig: Readonly<Config> = {
-  enableDefaultRoute: false,
+export const initialConfig: Readonly<InstanceConfig> = {
   accessKeyId: '',
   accessKeySecret: '',
   endpoint: '',

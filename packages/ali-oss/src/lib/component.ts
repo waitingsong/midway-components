@@ -7,27 +7,29 @@ import {
   TracerLog,
   TracerTag,
 } from '@mwcp/jaeger'
+import type { Context } from '@mwcp/share'
 import { genISO8601String } from '@waiting/shared-core'
-import { OssClient, CpOptions as AliCpOptions } from '@yuntools/ali-oss'
-import { DataDownload } from '@yuntools/ali-oss/dist/lib/method/download'
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { Tags } from 'opentracing'
-
-import type { Context } from '../interface'
-
 import {
+  CpOptions as AliCpOptions,
   BaseOptions,
-  Config,
-  ConfigKey,
+  Config as OssConfig,
   DataBase,
   DataCp,
   DataSign,
   DataStat,
   FnKey,
-  MkdirOptions,
-  OssConfig,
-  PathExistsOptions,
+  OssClient,
   ProcessRet,
+} from '@yuntools/ali-oss'
+import { DataDownload } from '@yuntools/ali-oss/dist/lib/method/download'
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Tags } from 'opentracing'
+
+import {
+  InstanceConfig,
+  ConfigKey,
+  MkdirOptions,
+  PathExistsOptions,
   RmOptions,
   RmrfOptions,
   StatOptions,
@@ -51,7 +53,7 @@ export class AliOssComponent {
   private readonly client: OssClient
   private readonly querySpanMap: WeakMap<object, QuerySpanInfo> = new WeakMap()
 
-  constructor(protected readonly config: Config) {
+  constructor(protected readonly config: InstanceConfig) {
     const opts: OssConfig = {
       accessKeyId: config.accessKeyId,
       accessKeySecret: config.accessKeySecret,
@@ -402,7 +404,7 @@ export class AliOssComponent {
     const trm = await this.ctx.requestContext.getAsync(TracerManager)
     if (! logger || ! trm) { return }
 
-    const tmp = options as unknown as AliCpOptions & Config
+    const tmp = options as unknown as AliCpOptions & InstanceConfig
     const opts = {
       acl: tmp.acl ?? '',
       src: tmp.src,
@@ -536,4 +538,4 @@ interface RunnerOptions<T extends BaseOptions> {
   target: string | undefined
 }
 
-type _RunnerOption<T extends BaseOptions> = Config & T
+type _RunnerOption<T extends BaseOptions> = InstanceConfig & T

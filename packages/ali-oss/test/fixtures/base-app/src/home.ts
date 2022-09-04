@@ -3,13 +3,13 @@ import {
   Controller,
   Get,
 } from '@midwayjs/decorator'
+import type { Context } from '@mwcp/share'
 
 import { TestRespBody } from '@/root.config'
-import { Context } from '~/interface'
 import {
   Config,
   ConfigKey,
-} from '~/index'
+} from '~/lib/types'
 
 
 @Controller('/')

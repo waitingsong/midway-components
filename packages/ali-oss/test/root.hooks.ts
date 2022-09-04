@@ -5,10 +5,11 @@ import { join } from 'node:path'
 
 import * as WEB from '@midwayjs/koa'
 import { createApp, close, createHttpRequest } from '@midwayjs/mock'
+import type { Application } from '@mwcp/share'
 
 import { cloudUrlPrefix, testConfig, testDir } from '@/root.config'
-import { AliOssComponent, AliOssManager, ClientKey, ConfigKey } from '~/index'
-import { Application } from '~/interface'
+import { AliOssManager } from '~/index'
+import { ClientKey } from '~/lib/types'
 
 
 const target = `${cloudUrlPrefix}/`

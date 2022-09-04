@@ -1,6 +1,8 @@
 import { Span } from '@mwcp/jaeger'
+import type { BaseConfig } from '@mwcp/share'
 import type { MiddlewareConfig as MWConfig } from '@waiting/shared-types'
 import * as Ali from '@yuntools/ali-oss'
+import { Msg as _Msg } from '@yuntools/ali-oss'
 
 
 export enum ConfigKey {
@@ -11,26 +13,14 @@ export enum ConfigKey {
   managerName = 'aliOssManager',
   sourceManagerName = 'aliOssSourceManager',
 }
+
+export const Msg = { ..._Msg, hello: 'hello aliOss' } as const
+
 export enum ClientKey {
   master = 'ossMaster',
   unitTest = 'ossUnitTest'
 }
 
-
-export {
-  BaseOptions,
-  OssClient,
-  ProcessRet,
-  DataBase,
-  DataCp,
-  DataSign,
-  DataStat,
-  Config as OssConfig,
-  FnKey,
-  Msg,
-} from '@yuntools/ali-oss'
-
-// export type Config<ClientId extends string = string> = Record<ClientId, ClientConfig>
 
 export interface ClientConfig {
   accessKeyId: string
@@ -49,12 +39,12 @@ export type MiddlewareConfig = MWConfig<MiddlewareOptions>
 
 
 /** midway DataSource */
-export interface AliOssSourceConfig<SourceName extends string = string> {
+export interface Config<SourceName extends string = string> extends BaseConfig {
   dataSource: DataSource<SourceName>
-  default?: Config
+  default?: InstanceConfig
 }
-export type DataSource<SourceName extends string = string> = Record<SourceName, Config>
-export interface Config extends ClientConfig {
+export type DataSource<SourceName extends string = string> = Record<SourceName, InstanceConfig>
+export interface InstanceConfig extends ClientConfig {
   /**
    * Enable tracing via @mwcp/jaeger
    * @default false
@@ -90,7 +80,3 @@ export interface QuerySpanInfo {
   timestamp: number
 }
 
-
-export interface CreateInstanceOptions {
-  cacheInstance?: boolean | undefined
-}

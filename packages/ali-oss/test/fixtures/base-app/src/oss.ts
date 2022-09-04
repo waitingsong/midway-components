@@ -10,12 +10,14 @@ import {
   Query,
 } from '@midwayjs/decorator'
 
-import { Context } from '~/interface'
+import type { Context } from '@mwcp/share'
+import {
+  ClientKey,
+} from '~/lib/types'
 import {
   AliOssComponent,
   AliOssManager,
-  ClientKey,
-} from '~/index'
+} from '~/lib/index'
 
 
 @Controller('/oss')
