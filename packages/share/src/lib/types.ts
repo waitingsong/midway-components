@@ -1,5 +1,6 @@
 import { MidwayConfig } from '@midwayjs/core'
 import { Context as KoaCtx } from '@midwayjs/koa'
+import { MiddlewareConfig as MWConfig } from '@waiting/shared-types'
 
 
 export interface Context extends KoaCtx {
@@ -29,3 +30,14 @@ export interface AppInfomation {
   [key: string]: string | number
 }
 
+
+export interface BaseConfig {
+  /**
+   * Enable default http route, eg. /hello
+   * @default false
+   */
+  enableDefaultRoute?: boolean | undefined
+}
+
+
+export type MiddlewareConfig<T> = MWConfig<T>
