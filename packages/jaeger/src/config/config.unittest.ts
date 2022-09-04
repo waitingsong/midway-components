@@ -1,10 +1,10 @@
-import { Config, MiddlewareConfig } from '../index'
 import {
   initialConfig,
   initialMiddlewareConfig,
   initTracerIgnoreArray,
 } from '../lib/config'
 import { processCustomFailure } from '../lib/tracer'
+import { Config, MiddlewareConfig } from '../lib/types'
 
 
 export const tracerConfig: Config = {
@@ -23,6 +23,7 @@ export const tracerConfig: Config = {
 
 export const tracerMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
   ...initialMiddlewareConfig,
+  enableMiddleware: true,
   ignore: [
     ...initTracerIgnoreArray,
     '/untraced_path_string',

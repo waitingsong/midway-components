@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { Middleware } from '@midwayjs/decorator'
+import type { Context, IMiddleware, NextFunction } from '@mwcp/share'
 import { humanMemoryUsage } from '@waiting/shared-core'
 
-import { Context, IMiddleware, NextFunction } from '../interface'
-import { ConfigKey } from '../lib/config'
 import { TracerManager, handleAppExceptionAndNext, processRequestQuery } from '../lib/tracer'
-import { TracerLog } from '../lib/types'
+import { ConfigKey, TracerLog } from '../lib/types'
 import { getComponentConfig, matchFunc } from '../util/common'
-
 
 
 @Middleware()

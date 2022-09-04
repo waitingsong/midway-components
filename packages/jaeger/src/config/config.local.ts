@@ -1,10 +1,10 @@
-import { Config, MiddlewareConfig } from '../index'
 import {
   initialConfig,
   initialMiddlewareConfig,
   initTracerIgnoreArray,
 } from '../lib/config'
 import { processCustomFailure } from '../lib/tracer'
+import { Config, MiddlewareConfig } from '../lib/types'
 
 
 export const tracerConfig: Config = {

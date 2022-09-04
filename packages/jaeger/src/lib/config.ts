@@ -42,13 +42,4 @@ export const initTracerIgnoreArray: Readonly<(string|RegExp)[]> = [
   /\/unitTest[\d.]+/u,
 ]
 
-export enum ConfigKey {
-  namespace = 'jaeger',
-  config = 'tracerConfig',
-  middlewareConfig = 'tracerMiddlewareConfig',
-  componentName = 'tracerComponent',
-  middlewareName = 'tracerMiddleware',
-  extMiddlewareName = 'tracerExtMiddleware'
-}
-
 

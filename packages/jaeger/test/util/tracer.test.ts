@@ -2,7 +2,6 @@ import assert from 'assert/strict'
 import { relative } from 'path'
 
 import { testConfig } from '@/root.config'
-import { Application } from '~/interface'
 import { TracerManager } from '~/lib/tracer'
 import { HeadersKey, SpanHeaderInit } from '~/lib/types'
 

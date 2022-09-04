@@ -3,7 +3,8 @@ import { IncomingHttpHeaders } from 'node:http'
 import type { Application, IMidwayContainer } from '@mwcp/share'
 import supertest, { SuperTest } from 'supertest'
 
-import { TestSpanInfo } from '~/lib/index'
+import { TestSpanInfo } from '~/lib/types'
+
 
 const CI = !! process.env['CI']
 export type TestResponse = supertest.Response

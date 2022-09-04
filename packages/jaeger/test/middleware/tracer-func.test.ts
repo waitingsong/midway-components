@@ -2,7 +2,7 @@ import assert from 'assert/strict'
 import { relative } from 'path'
 
 import { testConfig } from '@/root.config'
-import { ConfigKey } from '~/lib/config'
+import { ConfigKey } from '~/lib/types'
 import { getComponentConfig } from '~/util/common'
 
 

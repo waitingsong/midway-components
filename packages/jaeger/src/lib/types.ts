@@ -1,13 +1,25 @@
 import type { IncomingHttpHeaders } from 'http'
 
 import type { ILogger } from '@midwayjs/logger'
+import type { BaseConfig, Context } from '@mwcp/share'
 import { MiddlewareConfig as MWConfig, KnownKeys } from '@waiting/shared-types'
 import { TracingConfig } from 'jaeger-client'
 
-import { Context } from '../interface'
 
+export enum ConfigKey {
+  namespace = 'tracer',
+  config = 'tracerConfig',
+  middlewareConfig = 'tracerMiddlewareConfig',
+  componentName = 'tracerComponent',
+  middlewareName = 'tracerMiddleware',
+  extMiddlewareName = 'tracerExtMiddleware'
+}
 
-export interface Config {
+export enum Msg {
+  hello = 'hello tracer',
+}
+
+export interface Config extends BaseConfig {
   /**
    * 强制采样请求处理时间（毫秒）阈值，
    * 负数不采样

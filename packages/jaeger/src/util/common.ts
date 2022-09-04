@@ -1,16 +1,13 @@
 import { NetworkInterfaceInfo, networkInterfaces } from 'os'
 
-import { isPathMatchRules } from '@waiting/shared-core'
+import { Application, Context, requestPathMatched } from '@mwcp/share'
 
 import {
-  ConfigKey,
   initialMiddlewareConfig,
   initialConfig,
   initMiddlewareOptions,
 } from '../lib/config'
-import { Config, MiddlewareConfig } from '../lib/types'
-
-import { Application, Context } from '~/interface'
+import { Config, ConfigKey, MiddlewareConfig } from '../lib/types'
 
 
 /**
@@ -22,23 +19,7 @@ export function matchFunc(ctx?: Context): boolean {
   }
 
   const mwConfig = getMiddlewareConfig(ctx.app)
-  const { enableMiddleware, match, ignore } = mwConfig
-
-  if (! enableMiddleware) {
-    return false
-  }
-
-  if (Array.isArray(ignore) && ignore.length) {
-    const matched = isPathMatchRules(ctx.path, ignore)
-    return ! matched
-  }
-  else if (Array.isArray(match) && match.length) {
-    const matched = isPathMatchRules(ctx.path, ignore)
-    return matched
-  }
-  else {
-    return true
-  }
+  return requestPathMatched(ctx.path, mwConfig)
 }
 
 

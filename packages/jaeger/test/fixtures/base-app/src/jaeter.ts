@@ -4,17 +4,17 @@ import {
   Get,
   Inject,
 } from '@midwayjs/decorator'
+import type { Context } from '@mwcp/share'
 
 import { TestRespBody } from '@/root.config'
-import { Context } from '~/interface'
 import { processPriority, ProcessPriorityOpts } from '~/lib/tracer'
 import {
   Config,
   ConfigKey,
   MiddlewareConfig,
   TestSpanInfo,
-  TracerManager,
-} from '~/index'
+} from '~/lib/types'
+import { TracerManager } from '~/index'
 
 
 @Controller('/')
