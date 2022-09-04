@@ -5,11 +5,11 @@ import {
   payload1,
   PayloadSig1,
   PayloadExt1,
-  secret,
   signature1,
   token1,
-} from '@/config.unittest'
+} from '@/mock-data'
 import { testConfig } from '@/root.config'
+import { jwtConfig } from '~/config/config.unittest'
 import { JwtComponent } from '~/index'
 
 
@@ -24,7 +24,7 @@ describe(filename, () => {
       const svc = await container.getAsync(JwtComponent)
 
       const input = 'fooabc' + Math.random().toString()
-      const token = svc.sign(input, secret)
+      const token = svc.sign(input, jwtConfig.secret)
       const ret = svc.decode<string>(token)
       assert(ret.payload === input)
     })
@@ -34,7 +34,7 @@ describe(filename, () => {
       const container = app.getApplicationContext()
       const svc = await container.getAsync(JwtComponent)
 
-      const token = svc.sign(payload1, secret)
+      const token = svc.sign(payload1, jwtConfig.secret)
 
       const ret1 = svc.decode<PayloadSig1>(token) // index signature
       const ret2 = svc.decode<PayloadExt1>(token) // extends from
@@ -52,7 +52,7 @@ describe(filename, () => {
       const container = app.getApplicationContext()
       const svc = await container.getAsync(JwtComponent)
 
-      const token = svc.sign(payload1, secret)
+      const token = svc.sign(payload1, jwtConfig.secret)
       const ret = svc.decode<PayloadSig1>(token)
       const { header, payload, signature } = ret
 

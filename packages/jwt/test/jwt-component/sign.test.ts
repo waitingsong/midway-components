@@ -4,11 +4,11 @@ import { relative } from 'path'
 import {
   payload1,
   payload2,
-  secret,
   token1,
   tokenHeader2,
-} from '@/config.unittest'
+} from '@/mock-data'
 import { testConfig } from '@/root.config'
+import { jwtConfig } from '~/config/config.unittest'
 import { JwtComponent } from '~/index'
 
 
@@ -32,7 +32,7 @@ describe(filename, () => {
       const container = app.getApplicationContext()
       const svc = await container.getAsync(JwtComponent)
 
-      const token = svc.sign(payload1, secret)
+      const token = svc.sign(payload1, jwtConfig.secret)
       assert(token === token1)
     })
 

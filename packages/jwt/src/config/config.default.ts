@@ -22,6 +22,8 @@ export const jwtMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
   ignore: [...initPathArray],
   options: {
     ...initMiddlewareOptions,
+    cookie: false,
+    passthrough: false,
   },
 }
 

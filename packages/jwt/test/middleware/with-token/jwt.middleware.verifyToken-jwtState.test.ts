@@ -2,16 +2,10 @@ import { relative } from 'path'
 
 import { authShouldPassed } from '../helper'
 
-import {
-  authHeader1, payload1,
-  mwConfig as mConfig,
-} from '@/config.unittest'
+import { authHeader1, payload1 } from '@/mock-data'
 import { testConfig } from '@/root.config'
-import {
-  Config,
-  ConfigKey,
-  MiddlewareConfig,
-} from '~/index'
+import { jwtMiddlewareConfig as mConfig } from '~/config/config.unittest'
+import { Config, ConfigKey, MiddlewareConfig } from '~/lib/types'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')

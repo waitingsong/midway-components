@@ -12,8 +12,9 @@ import {
   VerifyOptions,
 } from 'jsonwebtoken'
 
-import { ConfigKey, JwtMsg } from './config'
 import {
+  ConfigKey,
+  Msg,
   Config,
   JwtToken,
   VerifySecret,
@@ -138,7 +139,7 @@ export class JwtComponent {
   ): JwtResult {
 
     /* istanbul ignore next */
-    if (! secretSet.size) { throw new Error(JwtMsg.VSceretInvalid) }
+    if (! secretSet.size) { throw new Error(Msg.VSceretInvalid) }
 
     const ret: JwtResult[] = []
     const msgs: string[] = []
@@ -164,7 +165,7 @@ export class JwtComponent {
     if (ret.length) {
       return ret[0] as JwtResult
     }
-    throw new Error(JwtMsg.TokenValidFailed + ':\n' + msgs.join('\n'))
+    throw new Error(Msg.TokenValidFailed + ':\n' + msgs.join('\n'))
   }
 
   /**

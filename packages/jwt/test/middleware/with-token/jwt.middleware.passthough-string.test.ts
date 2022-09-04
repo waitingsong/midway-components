@@ -5,12 +5,8 @@ import {
   authShouldRedirect,
 } from '../helper'
 
-import {
-  mwConfigNoOpts,
-  mwOptions,
-} from '@/config.unittest'
 import { testConfig } from '@/root.config'
-import { ConfigKey, MiddlewareConfig } from '~/index'
+import { ConfigKey, MiddlewareConfig } from '~/lib/types'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -24,9 +20,8 @@ describe(filename, () => {
       const { app, httpRequest } = testConfig
       const path2 = '/redirect-' + Math.random().toString()
       const mwConfig: MiddlewareConfig = {
-        ...mwConfigNoOpts,
+        // @ts-ignore
         options: {
-          ...mwOptions,
           passthrough: path2,
         },
       }
@@ -42,9 +37,8 @@ describe(filename, () => {
     it('empty string', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: MiddlewareConfig = {
-        ...mwConfigNoOpts,
+        // @ts-ignore
         options: {
-          ...mwOptions,
           passthrough: '',
         },
       }
