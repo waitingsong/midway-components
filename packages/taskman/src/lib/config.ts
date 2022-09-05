@@ -25,16 +25,6 @@ export const initialMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'ignore' |
   enableMiddleware: true,
 }
 
-export enum ConfigKey {
-  namespace = 'taskman',
-  config = 'taskClientConfig',
-  middlewareConfig = 'taskMiddlewareConfig',
-  // componentName = 'taskmanComponent',
-  middlewareName = 'taskmanMiddleware',
-  clientConfig = 'taskClientConfig',
-  serverConfig = 'taskServerConfig'
-}
-
 export const initTaskDTO: InitTaskDTO = {
   taskState: TaskState.init,
   expectStart: new Date(),

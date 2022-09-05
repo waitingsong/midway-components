@@ -4,20 +4,20 @@ import {
   Inject,
   Provide,
 } from '@midwayjs/decorator'
+import type { FetchOptions } from '@mwcp/base'
 import { FetchComponent, JsonResp, Node_Headers } from '@mwcp/fetch'
 import {
   HeadersKey,
   Logger,
   TracerManager,
 } from '@mwcp/jaeger'
+import type { Context } from '@mwcp/share'
 import { retrieveHeadersItem } from '@waiting/shared-core'
 
-import {
-  initTaskClientConfig,
-  ConfigKey,
-} from './config'
+import { initTaskClientConfig } from './config'
 import { processJsonHeaders } from './helper'
 import {
+  ConfigKey,
   CreateTaskDTO,
   CreateTaskOptions,
   SetProgressInputData,
@@ -31,7 +31,6 @@ import {
   TaskResultDTO,
 } from './types'
 
-import type { Context, FetchOptions } from '~/interface'
 
 
 @Provide()

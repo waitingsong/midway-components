@@ -9,6 +9,7 @@ import {
 } from '@midwayjs/decorator'
 import { Logger } from '@mwcp/jaeger'
 import { DbManager, Kmore } from '@mwcp/kmore'
+import type { Application, Context } from '@mwcp/share'
 
 import {
   DbModel,
@@ -19,8 +20,6 @@ import {
   TaskLogDTO,
   ConfigKey,
 } from '../lib/index'
-
-import { Application, Context } from '~/interface'
 
 
 @Provide()

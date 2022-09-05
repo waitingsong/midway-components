@@ -5,6 +5,7 @@ import {
   Param,
 } from '@midwayjs/decorator'
 import { Span, SpanLogInput, TracerManager } from '@mwcp/jaeger'
+import type { Context } from '@mwcp/share'
 import { genISO8601String } from '@waiting/shared-core'
 
 import {
@@ -14,7 +15,6 @@ import {
 } from '../lib/index'
 import { TaskAgentService } from '../service/index.service'
 
-import { Context } from '~/interface'
 
 
 @Controller(ClientURL.base)

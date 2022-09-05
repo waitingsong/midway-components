@@ -10,19 +10,20 @@ import {
   Scope,
   ScopeEnum,
 } from '@midwayjs/decorator'
+import { FetchOptions, HeadersKey } from '@mwcp/base'
 import {
   FetchComponent,
   JsonResp,
   Node_Headers,
 } from '@mwcp/fetch'
 import {
-  HeadersKey,
   Logger,
   Span,
   SpanLogInput,
   TracerTag,
 } from '@mwcp/jaeger'
 import { KoidComponent } from '@mwcp/koid'
+import type { Context } from '@mwcp/share'
 import { genISO8601String } from '@waiting/shared-core'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import {
@@ -50,7 +51,6 @@ import {
   TaskAgentState,
 } from '../lib/index'
 
-import { Context, FetchOptions } from '~/interface'
 
 
 @Provide()

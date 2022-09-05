@@ -1,20 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-/* eslint-disable @typescript-eslint/prefer-optional-chain */
 import { Middleware } from '@midwayjs/decorator'
 import { SpanLogInput, TracerManager } from '@mwcp/jaeger'
+import type { Context, IMiddleware, NextFunction } from '@mwcp/share'
 import { genISO8601String } from '@waiting/shared-core'
 
-
-import { Context, IMiddleware, NextFunction } from '../interface'
 import { ClientService } from '../lib/client.service'
-import { ConfigKey } from '../lib/config'
-import { TaskClientConfig, TaskServerConfig } from '../lib/index'
+import { TaskClientConfig, TaskServerConfig, ConfigKey } from '../lib/types'
 import { TaskAgentService } from '../service/index.service'
 import {
   getComponentConfig,
   matchFunc,
 } from '../util/common'
-
 
 
 @Middleware()
@@ -71,7 +67,7 @@ async function middleware(
       time: genISO8601String(),
       runnerCount: count,
     }
-    trm && trm.spanLog(inputLog)
+    trm?.spanLog(inputLog)
 
     if (count > clientConfig.maxRunner) {
       ctx.status = 429
@@ -83,7 +79,7 @@ async function middleware(
         msg: `Task running limit: ${clientConfig.maxRunner}, now: ${count}, taskId: ${taskId}`,
       }
       inputLog['message'] = ctx.body
-      trm && trm.spanLog(inputLog)
+      trm?.spanLog(inputLog)
 
       return
     }

@@ -4,14 +4,13 @@ import { join } from 'node:path'
 
 import * as WEB from '@midwayjs/koa'
 import { createApp, close, createHttpRequest } from '@midwayjs/mock'
+import type { Application } from '@mwcp/share'
 
 import { TaskLogRepository, TaskQueueRepository, TaskResultRepository } from '../src/repo/index.repo'
 import { TaskAgentService, TaskQueueService } from '../src/service/index.service'
 
-import { taskClientConfig, taskServerConfig } from '@/config.unittest'
 import { testConfig } from '@/root.config'
 import { ClientService, ConfigKey } from '~/index'
-import { Application } from '~/interface'
 
 
 /**
@@ -36,8 +35,8 @@ export const mochaHooks = async () => {
           name: 'test',
           version: '1.0.0',
         },
-        [ConfigKey.clientConfig]: taskClientConfig,
-        [ConfigKey.serverConfig]: taskServerConfig,
+        // [ConfigKey.clientConfig]: taskClientConfig,
+        // [ConfigKey.serverConfig]: taskServerConfig,
       }
       const opts = {
         imports: [WEB],
@@ -66,9 +65,9 @@ export const mochaHooks = async () => {
       //     host: url.slice(0, -1),
       //   },
       // })
-      globalConfig[ConfigKey.clientConfig].host = host
-      globalConfig[ConfigKey.serverConfig].host = host
-      app.addConfigObject(globalConfig)
+      // globalConfig[ConfigKey.clientConfig].host = host
+      // globalConfig[ConfigKey.serverConfig].host = host
+      // app.addConfigObject(globalConfig)
 
       testConfig.container = app.getApplicationContext()
       const container = app.getApplicationContext()

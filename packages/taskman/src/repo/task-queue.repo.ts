@@ -8,6 +8,7 @@ import {
   Provide,
 } from '@midwayjs/decorator'
 import { DbManager, Kmore } from '@mwcp/kmore'
+import type { Application, Context } from '@mwcp/share'
 
 import {
   initTaskProgressDTO,
@@ -29,8 +30,6 @@ import {
   TaskProgressDetailDTO,
   ConfigKey,
 } from '../lib/index'
-
-import { Application, Context } from '~/interface'
 
 
 @Provide()

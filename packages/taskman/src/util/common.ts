@@ -1,3 +1,4 @@
+import type { Application, Context } from '@mwcp/share'
 import { isPathMatchRules } from '@waiting/shared-core'
 
 import {
@@ -9,8 +10,6 @@ import {
   initMiddlewareOptions,
   MiddlewareConfig,
 } from '../lib/index'
-
-import type { Application, Context } from '~/interface'
 
 
 /**

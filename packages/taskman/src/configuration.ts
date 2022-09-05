@@ -1,16 +1,13 @@
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable @typescript-eslint/no-extraneous-class */
 import 'tsconfig-paths/register'
+import { join } from 'node:path'
 
-import { join } from 'path'
-
-import { IMidwayContainer } from '@midwayjs/core'
 import { App, Config, Configuration, Inject } from '@midwayjs/decorator'
 import * as fetch from '@mwcp/fetch'
 import * as jaeger from '@mwcp/jaeger'
 import * as db from '@mwcp/kmore'
 import { DbConfig, DbSourceManager } from '@mwcp/kmore'
 import * as koid from '@mwcp/koid'
+import type { Application, Context, IMidwayContainer } from '@mwcp/share'
 
 import {
   ConfigKey,
@@ -22,8 +19,6 @@ import {
 } from './lib/index'
 import { TaskManMiddleware } from './middleware/taskman.middleware'
 import { TaskAgentService } from './service/task-agent.service'
-
-import type { Application, Context } from '~/interface'
 
 
 @Configuration({
@@ -72,7 +67,7 @@ export function registerMiddleware(
   app: Application,
 ): void {
 
-  // @ts-expect-error
+  // @ts-ignore
   app.getMiddleware().insertLast(TaskManMiddleware)
 }
 
