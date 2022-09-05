@@ -26,7 +26,6 @@ export const useDefaultRoutes: (string | RegExp)[] = [
   new RegExp(`/${aliOss.AliOssConfigKey.namespace}/.+`, 'u'),
   new RegExp(`/${db.ConfigKey.namespace}/.+`, 'u'),
   new RegExp(`/${jaeger.TracerConfigKey.namespace}/.+`, 'u'),
-  new RegExp(`/${jwt.JwtConfigKey.namespace}/.+`, 'u'),
   new RegExp(`/${koid.KoidConfigKey.namespace}/.+`, 'u'),
 ]
 
