@@ -7,6 +7,7 @@ import { stat, copyFile } from 'node:fs/promises'
 const pkgDir = argv.p ?? ''
 const httpPath = argv.api ?? ''
 const configTpl = argv.tpl ?? pkgDir
+const qps = argv.qps
 
 assert(pkgDir, 'pkg dir is required with -p')
 
@@ -56,7 +57,7 @@ echo(chalk.blue('[benchmark] build example complete'))
 let gotError = false
 try {
   echo(chalk.blue('\n[benchmark] start'))
-  await $`zx benchmark.mjs --api=${httpPath}`
+  await $`zx benchmark.mjs --api=${httpPath} --qps=${qps}`
 }
 catch (ex) {
   console.error(ex)
