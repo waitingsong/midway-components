@@ -28,7 +28,7 @@
     "@mwcp/fetch": "^20.3.1",
     "@mwcp/jaeger": "^13.2.1",
     "@mwcp/jwt": "^12.1.1",
-    "@mwcp/kmore": "^36.1.0",
+    "@mwcp/kmore": "^36.2.0",
     "@mwcp/koid": "^11.0.0",
     "@mwcp/share": "^1.1.0",
     "@waiting/base64": "^4.2.9",
@@ -40,7 +40,7 @@
     "@midwayjs/swagger": "^3.5.0",
     "@midwayjs/web": "^3.5.0",
     "cross-env": "7",
-    "kmore": "36.0.4",
+    "kmore": "36.2.0",
     "kmore-cli": "^36.0.3",
     "kmore-types": "^36.0.3"
   },
