@@ -1,5 +1,4 @@
 /* eslint-disable import/max-dependencies */
-/* eslint-disable import/no-extraneous-dependencies */
 import 'tsconfig-paths/register'
 import assert from 'node:assert/strict'
 import { join } from 'node:path'
@@ -34,8 +33,6 @@ import {
 } from './middleware/index.middleware'
 // import { customLogger } from './util/custom-logger'
 
-
-process.env['UV_THREADPOOL_SIZE'] = '96'
 
 @Configuration({
   importConfigs: [join(__dirname, 'config')],
@@ -79,6 +76,7 @@ export class ContainerConfiguration implements ILifeCycle {
     ]
     // @ts-ignore
     this.app.useMiddleware(mws)
+
     const pkg = this.informationService.getPkg() as NpmPkg | undefined
     if (pkg && Object.keys(pkg).length) {
       assert(pkg, 'retrieve package.json failed')

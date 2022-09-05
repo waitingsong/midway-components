@@ -1,9 +1,9 @@
 import { Middleware } from '@midwayjs/decorator'
+import { HeadersKey } from '@mwcp/jaeger'
 import { KoidComponent } from '@mwcp/koid'
 
 import {
   Context,
-  HeadersKey,
   IMiddleware,
   NextFunction,
 } from '../lib/index'

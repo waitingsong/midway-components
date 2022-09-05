@@ -4,8 +4,8 @@
   "version": "4.5.2",
   "description": "midway.js base",
   "keywords": [
-    "midway.js",
-    "ESM",
+    "midway",
+    "components",
     "ts"
   ],
   "bin": {},
