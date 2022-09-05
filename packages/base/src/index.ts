@@ -3,6 +3,7 @@ import type { JwtState } from '@mwcp/jwt'
 
 
 export { ContainerConfiguration as Configuration } from './configuration'
+export * from './app/index.controller'
 export * from './lib/index'
 export * from './middleware/index.middleware'
 export { RootClass } from './core/root.class'

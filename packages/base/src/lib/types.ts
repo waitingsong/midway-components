@@ -28,6 +28,18 @@ export {
 
 export { KmoreTransaction as DbTransaction } from 'kmore'
 
+export enum ConfigKey {
+  namespace = 'base',
+  config = 'baseConfig',
+  middlewareConfig = 'demoMiddlewareConfig',
+  componentName = 'baseComponent',
+  middlewareName = 'baseMiddleware'
+}
+
+export enum Msg {
+  hello = 'hello midway.js',
+}
+
 
 export enum ErrorCode {
   success = 0,
