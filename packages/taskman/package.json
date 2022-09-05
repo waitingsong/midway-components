@@ -23,9 +23,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@mwcp/fetch": "^20.3.1",
+    "@mwcp/fetch": "^20.3.2",
     "@mwcp/jaeger": "^14.0.0",
-    "@mwcp/kmore": "^36.2.0",
+    "@mwcp/kmore": "^36.2.1",
     "@mwcp/koid": "^11.0.0",
     "@waiting/shared-core": "^20.6.3",
     "pg": "^8.8.0",
@@ -36,7 +36,7 @@
     "@mwcp/base": "^5.0.0",
     "@mwcp/share": "^2.0.0",
     "cross-env": "7",
-    "kmore-cli": "^36.0.3"
+    "kmore-cli": "^36.2.1"
   },
   "engines": {
     "node": ">=16.13.0"
