@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 5.0.0 (2022-09-05)
+
+
+### Features
+
+* **base:** add app/default.controller.ts ([5c412eb](https://github.com/waitingsong/midway-components/commit/5c412ebf187c41df677f667ffecec19e68cacac9))
+* **base:** sync upstream ([c4f4a5a](https://github.com/waitingsong/midway-components/commit/c4f4a5a8902ed3875e16cbd755d3db72a1d0ce40))
+
+
+
+
+
 ## [4.5.2](https://github.com/waitingsong/midway-components/compare/@mwcp/base@4.5.1...@mwcp/base@4.5.2) (2022-09-02)
 
 **Note:** Version bump only for package @mwcp/base

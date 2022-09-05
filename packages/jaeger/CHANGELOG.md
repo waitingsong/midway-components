@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 14.0.0 (2022-09-05)
+
+
+### Features
+
+* **jaeger:** sync upstream ([7ca0d96](https://github.com/waitingsong/midway-components/commit/7ca0d964dfcd2adce84cf1a98273489204219cb1))
+* **jaeger:** sync upstream ([5c1042d](https://github.com/waitingsong/midway-components/commit/5c1042dfc85ba642715805303718f7ee84227a13))
+
+
+
+
+
 ## 13.2.1 (2022-09-02)
 
 **Note:** Version bump only for package @mwcp/jaeger

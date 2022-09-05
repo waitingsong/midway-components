@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.0.0 (2022-09-05)
+
+
+### Features
+
+* **ali-oss:** sync upstream ([de6ca4d](https://github.com/waitingsong/midway-components/commit/de6ca4d786f7c78abfd508af26959b111ef48f10))
+
+
+
+
+
 ## [5.1.2](https://github.com/waitingsong/midway-components/compare/@mwcp/ali-oss@5.1.1...@mwcp/ali-oss@5.1.2) (2022-09-02)
 
 **Note:** Version bump only for package @mwcp/ali-oss

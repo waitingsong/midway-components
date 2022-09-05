@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [27.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@26.0.3...@mwcp/taskman@27.0.0) (2022-09-05)
+
+
+### Features
+
+* **taskman:** sync upstream ([1da7cf1](https://github.com/waitingsong/midway-components/commit/1da7cf1efcd34ca7fd666584c33a3f193e52e022))
+
+
+
+
+
 ## 26.0.3 (2022-09-02)
 
 **Note:** Version bump only for package @mwcp/taskman
