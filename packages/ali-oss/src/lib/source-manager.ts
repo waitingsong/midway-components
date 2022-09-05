@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import assert from 'node:assert'
 
-import { DataSourceManager } from '@midwayjs/core'
+import {
+  DataSourceManager,
+  CreateDataSourceInstanceOptions as CreateInstanceOptions,
+} from '@midwayjs/core'
 import {
   Config as _Config,
   Init,
@@ -14,7 +17,7 @@ import {
 import { ILogger } from '@midwayjs/logger'
 
 import { AliOssComponent } from './component'
-import { Config, ConfigKey, CreateInstanceOptions, AliOssSourceConfig } from './types'
+import { InstanceConfig, ConfigKey, Config } from './types'
 
 
 @Provide()
@@ -22,7 +25,7 @@ import { Config, ConfigKey, CreateInstanceOptions, AliOssSourceConfig } from './
 export class AliOssSourceManager<SourceName extends string = string>
   extends DataSourceManager<AliOssComponent | undefined> {
 
-  @_Config(ConfigKey.config) private readonly sourceConfig: AliOssSourceConfig<SourceName>
+  @_Config(ConfigKey.config) private readonly sourceConfig: Config<SourceName>
 
   @_Logger() private readonly logger: ILogger
 
@@ -36,7 +39,7 @@ export class AliOssSourceManager<SourceName extends string = string>
   => string extends SourceName ? AliOssComponent | undefined : AliOssComponent
 
   declare createInstance: (
-    config: Config,
+    config: InstanceConfig,
     clientName: SourceName,
     options?: CreateInstanceOptions,
   ) => Promise<AliOssComponent | void>
@@ -56,7 +59,7 @@ export class AliOssSourceManager<SourceName extends string = string>
    * 创建单个实例
    */
   protected async createDataSource(
-    config: Config,
+    config: InstanceConfig,
     dataSourceName: SourceName,
     cacheDataSource = true,
   ): Promise<AliOssComponent | undefined> {
@@ -101,7 +104,7 @@ export class AliOssSourceManager<SourceName extends string = string>
   }
 
 
-  protected getConfigByDbId(clientId: SourceName): Config | undefined {
+  protected getConfigByDbId(clientId: SourceName): InstanceConfig | undefined {
     assert(clientId)
     const config = this.sourceConfig.dataSource[clientId]
     return config

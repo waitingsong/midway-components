@@ -1,7 +1,7 @@
 {
-  "name": "@mw-components/jaeger",
+  "name": "@mwcp/jaeger",
   "author": "waiting",
-  "version": "13.1.7",
+  "version": "14.0.0",
   "description": "midway component for jaeger",
   "keywords": [
     "midway",
@@ -30,6 +30,7 @@
     "opentracing": "^0.14.7"
   },
   "devDependencies": {
+    "@mwcp/share": "^2.0.0",
     "cross-env": "7"
   },
   "engines": {

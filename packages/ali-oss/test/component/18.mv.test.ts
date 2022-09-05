@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { relative } from 'node:path'
 
 import { cloudUrlPrefix, testConfig, src } from '@/root.config'
-import { Msg } from '~/index'
+import { Msg } from '~/lib/types'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')

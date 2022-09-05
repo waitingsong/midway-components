@@ -2,13 +2,10 @@ import { relative } from 'path'
 
 import { authShouldFailedWithNotFound, authShouldPassed, authShouldSkipped } from '../helper'
 
-import {
-  payload1, token1,
-  mwConfigNoOpts,
-  mwOptions,
-} from '@/config.unittest'
+import { payload1, token1 } from '@/mock-data'
 import { testConfig } from '@/root.config'
-import { ConfigKey, MiddlewareConfig } from '~/index'
+import { initialMiddlewareConfig, initPathArray } from '~/lib/config'
+import { ConfigKey, MiddlewareConfig } from '~/lib/types'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -22,10 +19,9 @@ describe(filename, () => {
       const { app, httpRequest } = testConfig
       const cookieKey = 'user'
       const mwConfig: MiddlewareConfig = {
-        ...mwConfigNoOpts,
         ignore: [path],
+        // @ts-ignore
         options: {
-          ...mwOptions,
           cookie: cookieKey,
         },
       }
@@ -48,9 +44,9 @@ describe(filename, () => {
       const { app, httpRequest } = testConfig
       const cookieKey = 'user'
       const mwConfig: MiddlewareConfig = {
-        ...mwConfigNoOpts,
+        ignore: initPathArray,
+        // @ts-ignore
         options: {
-          ...mwOptions,
           cookie: cookieKey,
         },
       }
@@ -73,10 +69,10 @@ describe(filename, () => {
       const { app, httpRequest } = testConfig
       const cookieKey = 'user'
       const mwConfig: MiddlewareConfig = {
-        ...mwConfigNoOpts,
+        ignore: initPathArray,
+        // @ts-ignore
         options: {
-          ...mwOptions,
-          cookie: false,
+          ...initialMiddlewareConfig.options,
         },
       }
       app.addConfigObject({

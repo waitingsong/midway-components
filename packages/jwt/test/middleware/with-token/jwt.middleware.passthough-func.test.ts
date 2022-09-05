@@ -1,39 +1,33 @@
 import { relative } from 'path'
 
 import {
-  authShouldFailedWithNotFound,
   authShouldFailedWithNotFound2,
   authShouldPassed,
   authShouldPassthroughNotFound,
 } from '../helper'
 
-import {
-  authHeader1, payload1,
-  mwConfigNoOpts,
-  mwOptions,
-} from '@/config.unittest'
+import { authHeader1, payload1 } from '@/mock-data'
 import { testConfig } from '@/root.config'
 import {
   ConfigKey,
   MiddlewareConfig,
-  passthroughCallback,
-} from '~/index'
+  PassthroughCallback,
+} from '~/lib/types'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
 
-  const cb: passthroughCallback = async () => true
+  const cb: PassthroughCallback = async () => true
   const path = '/test'
 
   describe('Should JwtAuthenticateOptions.passthrough work with func', () => {
     it('true: passed', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: MiddlewareConfig = {
-        ...mwConfigNoOpts,
+        // @ts-ignore
         options: {
-          ...mwOptions,
           passthrough: cb,
         },
       }
@@ -53,9 +47,8 @@ describe(filename, () => {
     it('true: token not found', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: MiddlewareConfig = {
-        ...mwConfigNoOpts,
+        // @ts-ignore
         options: {
-          ...mwOptions,
           passthrough: cb,
         },
       }
@@ -71,10 +64,8 @@ describe(filename, () => {
     it('invalid value: token not found', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: MiddlewareConfig = {
-        ...mwConfigNoOpts,
         options: {
-          ...mwOptions,
-          // @ts-expect-error
+          // @ts-ignore
           passthrough: 0,
         },
       }
@@ -90,10 +81,8 @@ describe(filename, () => {
     it('invalid value 1: token not found', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: MiddlewareConfig = {
-        ...mwConfigNoOpts,
         options: {
-          ...mwOptions,
-          // @ts-expect-error
+          // @ts-ignore
           passthrough: 1,
         },
       }

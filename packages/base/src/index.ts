@@ -1,9 +1,9 @@
 import type { PrometheusConfig } from '@midwayjs/prometheus'
-import type { JwtState } from '@mw-components/jwt'
-import type { Config as KoidConfig } from '@mw-components/koid'
+import type { JwtState } from '@mwcp/jwt'
 
 
 export { ContainerConfiguration as Configuration } from './configuration'
+export * from './app/index.controller'
 export * from './lib/index'
 export * from './middleware/index.middleware'
 export { RootClass } from './core/root.class'
@@ -12,7 +12,6 @@ export { RootClass } from './core/root.class'
 declare module '@midwayjs/core/dist/interface' {
   interface MidwayConfig {
     globalErrorCode: Record<string | number, string | number>
-    koidConfig: KoidConfig
     prometheus?: PrometheusConfig
     welcomeMsg: string
   }
@@ -24,3 +23,4 @@ declare module '@midwayjs/koa/dist/interface' {
     reqId: string
   }
 }
+

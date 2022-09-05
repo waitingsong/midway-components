@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import { Context } from '@midwayjs/koa'
 import { isPathMatchRules } from '@waiting/shared-core'
 import { MiddlewareConfig } from '@waiting/shared-types'

@@ -2,9 +2,9 @@ import { relative } from 'path'
 
 import { authShouldFailedWithNotFound, authShouldSkipped } from '../helper'
 
-import { mwConfig as mConfig } from '@/config.unittest'
 import { testConfig } from '@/root.config'
-import { ConfigKey, MiddlewareConfig } from '~/index'
+import { jwtMiddlewareConfig as mConfig } from '~/config/config.unittest'
+import { ConfigKey, MiddlewareConfig } from '~/lib/types'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')

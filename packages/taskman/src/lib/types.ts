@@ -1,15 +1,31 @@
 import { Rule } from '@midwayjs/validate'
-import { DataSource } from '@mw-components/kmore'
+import type { FetchOptions, JsonObject } from '@mwcp/base'
+import { DataSource } from '@mwcp/kmore'
 import {
   MiddlewareConfig as MWConfig,
   JsonType,
   RecordCamelKeys,
 } from '@waiting/shared-types'
 
-import { JsonObject, FetchOptions, IPostgresInterval } from '../interface'
+import { IPostgresInterval } from '../interface'
 import { taskManValidSchemas } from '../validation-schema/index.schema'
 
 import { DbReplica } from './config.types'
+
+
+export enum ConfigKey {
+  namespace = 'taskman',
+  config = 'taskClientConfig',
+  middlewareConfig = 'taskMiddlewareConfig',
+  // componentName = 'taskmanComponent',
+  middlewareName = 'taskmanMiddleware',
+  clientConfig = 'taskClientConfig',
+  serverConfig = 'taskServerConfig'
+}
+
+export enum Msg {
+  hello = 'hello taskman',
+}
 
 
 export type Config = TaskServerConfig | TaskClientConfig

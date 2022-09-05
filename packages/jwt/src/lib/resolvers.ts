@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { Context } from '../interface'
+import type { Context } from '@mwcp/share'
 
 import { schemePrefix } from './config'
 import { JwtToken, JwtAuthenticateOptions } from './types'

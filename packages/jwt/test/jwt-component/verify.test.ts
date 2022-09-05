@@ -3,16 +3,17 @@ import { relative } from 'path'
 
 import {
   payload1,
-  secret,
   token1,
-} from '@/config.unittest'
+} from '@/mock-data'
 import { testConfig } from '@/root.config'
-import { JwtComponent, Config } from '~/index'
+import { JwtComponent } from '~/index'
+import { Config } from '~/lib/types'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
+  const secret = '123456abc'
 
   describe('Should Jwt:verify() work', () => {
     it('initializ secret', async () => {

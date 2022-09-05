@@ -1,7 +1,7 @@
 import assert from 'assert'
 
-import { JwtMsg } from './config'
 import {
+  Msg,
   Config,
   JwtPayload,
   JwtToken,
@@ -13,24 +13,24 @@ export function validateTokenString(input: JwtToken): void {
     assert(input.length > 0)
   }
   else {
-    throw new TypeError(JwtMsg.InvalidInput)
+    throw new TypeError(Msg.InvalidInput)
   }
 }
 
 
 export function validatePayload(input: JwtPayload): void {
   if (typeof input === 'string') {
-    assert(input.length > 0, JwtMsg.InvalidInputString)
+    assert(input.length > 0, Msg.InvalidInputString)
     return
   }
   else if (Buffer.isBuffer(input)) {
-    assert(input.length > 0, JwtMsg.InvalidInputBuffer)
+    assert(input.length > 0, Msg.InvalidInputBuffer)
   }
   else if (typeof input === 'object') {
     assert(Object.keys(input).length > 0)
   }
   else {
-    throw new TypeError(JwtMsg.InvalidInput)
+    throw new TypeError(Msg.InvalidInput)
   }
 
 }
@@ -38,11 +38,11 @@ export function validatePayload(input: JwtPayload): void {
 
 export function validateSignSecret(input: Config['secret']): void {
   if (typeof input === 'string') {
-    assert(input.length > 0, JwtMsg.InvalidInputString)
+    assert(input.length > 0, Msg.InvalidInputString)
     return
   }
   else if (Buffer.isBuffer(input)) {
-    assert(input.length > 0, JwtMsg.InvalidInputBuffer)
+    assert(input.length > 0, Msg.InvalidInputBuffer)
   }
   else if (typeof input === 'object') {
     assert(Object.keys(input).length > 0)
@@ -50,22 +50,22 @@ export function validateSignSecret(input: Config['secret']): void {
     assert(typeof input.passphrase === 'string')
   }
   else {
-    throw new TypeError(JwtMsg.InvalidInput)
+    throw new TypeError(Msg.InvalidInput)
   }
 }
 
 
 export function validateVerifySecret(input: unknown): void {
   if (typeof input === 'string') {
-    assert(input.length > 0, JwtMsg.InvalidInputString)
+    assert(input.length > 0, Msg.InvalidInputString)
   }
   else if (Buffer.isBuffer(input)) {
-    assert(input.length > 0, JwtMsg.InvalidInputBuffer)
+    assert(input.length > 0, Msg.InvalidInputBuffer)
   }
   // else if (typeof input === 'function') { // promise callback
   //   return
   // }
   else {
-    throw new TypeError(JwtMsg.InvalidInput)
+    throw new TypeError(Msg.InvalidInput)
   }
 }

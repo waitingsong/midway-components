@@ -1,3 +1,4 @@
+import type { Context } from '@mwcp/share'
 import { MiddlewareConfig as MWConfig, JsonObject } from '@waiting/shared-types'
 import {
   DecodeOptions,
@@ -7,10 +8,37 @@ import {
   VerifyOptions,
 } from 'jsonwebtoken'
 
-import { Context } from '~/interface'
+
+export enum ConfigKey {
+  namespace = 'jwt',
+  config = 'jwtConfig',
+  middlewareConfig = 'jwtMiddlewareConfig',
+  componentName = 'jwtComponent',
+  middlewareName = 'jwtMiddleware'
+}
+
+export enum Msg {
+  hello = 'hello jwt',
+  AuthFailed = 'Authentication Failed',
+
+  InvalidInput = 'Value of input invalid',
+  InvalidInputBuffer = 'Value of input is empty Buffer',
+  InvalidInputObject = 'Value of input is invalid Object',
+  InvalidInputString = 'Value of input is blank string',
+
+  VerifyNotFunc = 'jwt.verify is not a function',
+  TokenNotFound = 'Token not found. Header format is "Authorization: Bearer <token>"',
+  TokenValidFailed = 'Token validation failed',
+  VSceretInvalid = 'VerifySecret not provided',
+}
 
 
 export interface Config {
+  /**
+   * Enable default http route, eg. /hello
+   * @default false
+   */
+  enableDefaultRoute?: boolean | undefined
   /**
    * For signing and verifying if without passing secret param,
    * Note: the type of VerifySecret without object
@@ -39,7 +67,7 @@ export interface MiddlewareOptions {
    * - <RedirectURL>: redirect and without yield next
    * @default false
    */
-  passthrough: boolean | RedirectURL | passthroughCallback
+  passthrough: boolean | RedirectURL | PassthroughCallback
 }
 export type MiddlewareConfig = MWConfig<MiddlewareOptions>
 export type JwtAuthenticateOptions = MiddlewareOptions
@@ -59,7 +87,7 @@ export type VerifyOpts = Omit<VerifyOptions, 'maxAge' | 'complete'>
 // export type MiddlewarePathPattern = (string | RegExp | PathPatternFunc)[]
 // export type PathPatternFunc = (ctx: Context) => boolean
 export type RedirectURL = string
-export type passthroughCallback = (ctx: Context) => Promise<boolean | RedirectURL>
+export type PassthroughCallback = (ctx: Context) => Promise<boolean | RedirectURL>
 
 
 /** Bind on Context.jwtState */

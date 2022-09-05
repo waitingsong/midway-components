@@ -1,32 +1,5 @@
 import { JsonObject } from '@waiting/shared-types'
 
-import {
-  Config,
-  initialMiddlewareConfig,
-  initMiddlewareOptions,
-  MiddlewareConfig,
-  MiddlewareOptions,
-} from '~/index'
-
-
-export const secret = '123456abc'
-export const config: Config = {
-  secret,
-}
-export const mwConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
-  ...initialMiddlewareConfig,
-  ignore: ['/'],
-  options: {
-    ...initMiddlewareOptions,
-  },
-}
-export const mwConfigNoOpts: Omit<MiddlewareConfig, 'match' | 'ignore' | 'options'> = {
-  ...initialMiddlewareConfig,
-}
-export const mwOptions: MiddlewareOptions = {
-  ...initMiddlewareOptions,
-}
-
 
 /** Type with index signature */
 export interface PayloadSig1 {

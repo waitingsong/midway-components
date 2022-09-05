@@ -1,8 +1,9 @@
-import { ClientKey, AliOssSourceConfig } from '../index'
 import { initialConfig } from '../lib/config'
+import { Config, ClientKey } from '../lib/types'
 
 
-export const aliOssConfig: AliOssSourceConfig<ClientKey.unitTest> = {
+export const aliOssConfig: Readonly<Config<ClientKey.unitTest>> = {
+  enableDefaultRoute: true,
   dataSource: {
     ossUnitTest: {
       sampleThrottleMs: 100,

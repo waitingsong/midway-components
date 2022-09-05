@@ -6,13 +6,9 @@ import {
   authShouldPassthroughValidFailed,
 } from '../helper'
 
-import {
-  authHeader1, payload1,
-  mwConfigNoOpts,
-  mwOptions,
-} from '@/config.unittest'
+import { authHeader1, payload1 } from '@/mock-data'
 import { testConfig } from '@/root.config'
-import { ConfigKey, MiddlewareConfig } from '~/index'
+import { ConfigKey, MiddlewareConfig } from '~/lib/types'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -25,9 +21,8 @@ describe(filename, () => {
     it('passed', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: MiddlewareConfig = {
-        ...mwConfigNoOpts,
+        // @ts-ignore
         options: {
-          ...mwOptions,
           passthrough: true,
         },
       }
@@ -45,9 +40,8 @@ describe(filename, () => {
     it('token not found', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: MiddlewareConfig = {
-        ...mwConfigNoOpts,
+        // @ts-ignore
         options: {
-          ...mwOptions,
           passthrough: true,
         },
       }
@@ -64,9 +58,8 @@ describe(filename, () => {
     it('token valid faied', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: MiddlewareConfig = {
-        ...mwConfigNoOpts,
+        // @ts-ignore
         options: {
-          ...mwOptions,
           passthrough: true,
         },
       }

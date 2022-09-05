@@ -1,16 +1,16 @@
 import assert from 'node:assert'
 import { isProxy } from 'node:util/types'
 
+import { CreateDataSourceInstanceOptions as CreateInstanceOptions } from '@midwayjs/core'
 import {
   Inject,
   Provide,
 } from '@midwayjs/decorator'
-
-import { Context } from '../interface'
+import type { Context } from '@mwcp/share'
 
 import { AliOssComponent } from './component'
 import { AliOssSourceManager } from './source-manager'
-import { Config, ConfigKey, CreateInstanceOptions } from './types'
+import { InstanceConfig, ConfigKey } from './types'
 
 
 @Provide()
@@ -26,12 +26,16 @@ export class AliOssManager<SourceName extends string = string, Ctx extends Conte
 
 
   async createInstance(
-    config: Config,
+    config: InstanceConfig,
     clientName: SourceName,
     options?: CreateInstanceOptions,
   ): Promise<AliOssComponent | void> {
 
-    await this.sourceManager.createInstance(config, clientName, options)
+    const opts: CreateInstanceOptions = {
+      validateConnection: true,
+      ...options,
+    }
+    await this.sourceManager.createInstance(config, clientName, opts)
     return this.getDataSource(clientName)
   }
 

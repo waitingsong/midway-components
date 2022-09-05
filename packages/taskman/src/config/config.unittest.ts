@@ -1,0 +1,40 @@
+import {
+  initialMiddlewareConfig,
+  initMiddlewareOptions,
+  MiddlewareConfig,
+  DbReplica,
+  initDbConfig,
+  initTaskClientConfig,
+  initTaskServerConfig,
+  TaskClientConfig,
+  TaskServerConfig,
+} from '~/lib/index'
+
+
+/**
+ * this variable can be delete if running as client
+ */
+export const taskServerConfig: TaskServerConfig = {
+  ...initTaskServerConfig,
+  dataSource: {
+    [DbReplica.taskMaster]: {
+      ...initDbConfig,
+    },
+  },
+}
+
+export const taskClientConfig: TaskClientConfig = {
+  ...initTaskClientConfig,
+}
+
+export const taskMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
+  ...initialMiddlewareConfig,
+  ignore: [
+    '/',
+    '/ping',
+  ],
+  options: {
+    ...initMiddlewareOptions,
+  },
+}
+

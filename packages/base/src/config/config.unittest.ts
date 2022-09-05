@@ -1,4 +1,4 @@
-import { initPathArray } from '@mw-components/jwt'
+import { initPathArray } from '@mwcp/jwt'
 
 import { AppConfig } from '~/index'
 
@@ -17,7 +17,7 @@ const jwtIgnoreArr = [
   '/test/sign',
   /debug\/dump\/.*/u,
   /unittest/u,
-  '/foo',
+  '/base/hello',
 ]
 export const jwtMiddlewareConfig: AppConfig['jwtMiddlewareConfig'] = {
   enableMiddleware: true,

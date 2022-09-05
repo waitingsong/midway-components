@@ -1,14 +1,10 @@
 import { IncomingHttpHeaders } from 'node:http'
 import { join } from 'node:path'
 
+import type { Application, IMidwayContainer } from '@mwcp/share'
 import supertest, { SuperTest } from 'supertest'
 
-import { Application, IMidwayContainer } from '~/interface'
-import {
-  AliOssComponent,
-  AliOssManager,
-  Config,
-} from '~/lib/index'
+import { AliOssComponent, AliOssManager } from '~/lib/index'
 
 
 const CI = !! process.env['CI']
@@ -16,7 +12,6 @@ export type TestResponse = supertest.Response
 export interface TestRespBody {
   header: IncomingHttpHeaders
   url: string
-  config: Config
   cookies: unknown
 }
 
@@ -52,3 +47,4 @@ export const files: string[] = [
   'subdir/.nycrc.json',
   'subdir/tsconfig.json',
 ]
+

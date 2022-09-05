@@ -1,7 +1,7 @@
 import assert from 'assert/strict'
 import { relative } from 'path'
 
-import { token1 } from '@/config.unittest'
+import { token1 } from '@/mock-data'
 import { validateSignSecret } from '~/index'
 
 

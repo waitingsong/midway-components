@@ -1,22 +1,20 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { Middleware } from '@midwayjs/decorator'
+import type { Context, IMiddleware, NextFunction } from '@mwcp/share'
 
+import { JwtComponent } from '../lib/component'
+import { retrieveToken } from '../lib/resolvers'
 import {
   ConfigKey,
   JwtAuthenticateOptions,
-  JwtComponent,
   JwtState,
-  JwtMsg,
+  Msg,
   VerifySecret,
   RedirectURL,
-} from '../lib/index'
-import { retrieveToken } from '../lib/resolvers'
+} from '../lib/types'
 import {
   getMiddlewareConfig,
   matchFunc,
 } from '../util/common'
-
-import type { Context, IMiddleware, NextFunction } from '~/interface'
 
 
 @Middleware()
@@ -65,7 +63,7 @@ export async function middleware(
     const token = retrieveToken(ctx, cookie)
 
     if (! token) {
-      throw new Error(JwtMsg.TokenNotFound)
+      throw new Error(Msg.TokenNotFound)
     }
 
     const container = app.getApplicationContext()
@@ -101,7 +99,7 @@ export async function middleware(
       return
     }
     else {
-      const msg = debug === true ? (ex as Error).message : JwtMsg.AuthFailed
+      const msg = debug === true ? (ex as Error).message : Msg.AuthFailed
       ctx.status = 401
       if (typeof ctx.throw === 'function') {
         ctx.throw(401, msg, { originalError: ex as unknown })

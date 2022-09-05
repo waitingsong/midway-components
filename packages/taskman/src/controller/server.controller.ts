@@ -6,7 +6,8 @@ import {
   Post,
   Query,
 } from '@midwayjs/decorator'
-import { TracerManager } from '@mw-components/jaeger'
+import { TracerManager } from '@mwcp/jaeger'
+import type { Context } from '@mwcp/share'
 
 import {
   CommonSetMethodInputData,
@@ -24,8 +25,6 @@ import {
   SetStateInputData,
 } from '../lib/index'
 import { TaskQueueService } from '../service/index.service'
-
-import { Context } from '~/interface'
 
 
 @Controller(ServerURL.base)

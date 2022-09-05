@@ -9,6 +9,7 @@ import {
   Inject,
   Provide,
 } from '@midwayjs/decorator'
+import type { Context, NextFunction } from '@mwcp/share'
 import {
   defaultPropDescriptor,
   genISO8601String,
@@ -35,8 +36,6 @@ import {
   TracerTag,
   TracerError,
 } from './types'
-
-import type { Context, NextFunction } from '~/interface'
 
 
 @Provide()

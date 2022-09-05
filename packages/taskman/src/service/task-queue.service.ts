@@ -2,8 +2,8 @@ import {
   Inject,
   Provide,
 } from '@midwayjs/decorator'
-import { Logger } from '@mw-components/jaeger'
-import { mergeDoWithInitData } from '@mw-components/kmore'
+import { Logger } from '@mwcp/jaeger'
+import { mergeDoWithInitData } from '@mwcp/kmore'
 
 import {
   CreateTaskDTO,

@@ -1,5 +1,4 @@
 import { MidwayAppInfo, MidwayConfig } from '@midwayjs/core'
-import { genConfigRandom } from '@mw-components/koid'
 import { retrieveFirstIp } from '@waiting/shared-core'
 
 import { ErrorCode, NpmPkg } from '../lib/index'
@@ -19,11 +18,6 @@ export default (appInfo: MidwayAppInfo): MidwayConfig => {
 
   // use for cookie sign key, should change to your own and keep security
   config.keys = '1559532739677_8888'
-
-  // '2020-01-01T00:00:00Z'
-  const epoch = 1577836800000
-  const koidConfig = genConfigRandom(epoch)
-  config.koidConfig = koidConfig
 
   const ip = retrieveFirstIp()
   const nameNorm = (appInfo.pkg as NpmPkg).name.replace(/@/ug, '').replace(/\//ug, '-')

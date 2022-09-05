@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { Middleware } from '@midwayjs/decorator'
+import { Context, IMiddleware, NextFunction } from '@mwcp/share'
 
-import { Context, IMiddleware, NextFunction } from '../interface'
-import { ConfigKey } from '../lib/config'
 import { TracerManager, handleTopExceptionAndNext } from '../lib/tracer'
+import { ConfigKey } from '../lib/types'
 import { matchFunc } from '../util/common'
 
 

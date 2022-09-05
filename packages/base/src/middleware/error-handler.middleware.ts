@@ -1,10 +1,10 @@
 import { Middleware } from '@midwayjs/decorator'
+import { MyError } from '@mwcp/share'
 
 import {
   Context,
   IMiddleware,
   JsonResp,
-  MyError,
   NextFunction,
 } from '../lib/index'
 

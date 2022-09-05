@@ -1,10 +1,9 @@
-import { Node_Headers } from '@mw-components/fetch'
-import { HeadersKey } from '@mw-components/jaeger'
+import { HeadersKey } from '@mwcp/base'
+import { Node_Headers } from '@mwcp/fetch'
+import type { Context } from '@mwcp/share'
 import { defaultPropDescriptor } from '@waiting/shared-core'
 
-import { CreateTaskOptions } from './types'
-
-import { Context } from '~/interface'
+import type { CreateTaskOptions } from './types'
 
 
 export function processJsonHeaders(

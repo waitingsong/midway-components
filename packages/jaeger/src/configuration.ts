@@ -1,57 +1,39 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
-/* eslint-disable @typescript-eslint/no-extraneous-class */
 import 'tsconfig-paths/register'
+import assert from 'node:assert'
+import { join } from 'node:path'
 
-import { join } from 'path'
-
-import { MidwayInformationService } from '@midwayjs/core'
+import { ILifeCycle } from '@midwayjs/core'
 import { App, Config, Configuration } from '@midwayjs/decorator'
-import { NpmPkg } from '@waiting/shared-types'
+import type { Application, IMidwayContainer } from '@mwcp/share'
 
+import { TracerComponent } from './lib/component'
 import {
+  Config as Conf,
   ConfigKey,
   MiddlewareConfig,
-  TracerComponent,
-} from './lib/index'
+} from './lib/types'
 import {
   TracerExtMiddleware,
   TracerMiddleware,
 } from './middleware/index.middleware'
-
-import type { Application, IMidwayContainer } from '~/interface'
 
 
 @Configuration({
   namespace: ConfigKey.namespace,
   importConfigs: [join(__dirname, 'config')],
 })
-export class AutoConfiguration {
+export class AutoConfiguration implements ILifeCycle {
 
   @App() readonly app: Application
 
+  @Config(ConfigKey.config) protected readonly config: Conf
   @Config(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
 
-  // @Inject() readonly informationService: MidwayInformationService
-
   async onReady(): Promise<void> {
-    if (! this.app) {
-      throw new TypeError('this.app invalid')
-    }
+    assert(this.app, 'this.app must be set')
 
-    const pkgNow = this.app.getConfig('pkg') as unknown
-    if (! pkgNow) {
-      try {
-        const informationService = await this.app.getApplicationContext().getAsync(MidwayInformationService)
-        if (informationService) {
-          const pkg = informationService.getPkg() as NpmPkg
-          this.app.addConfigObject({
-            pkg,
-          })
-        }
-      }
-      catch (ex) {
-        console.error(ex)
-      }
+    if (this.config.enableDefaultRoute && this.mwConfig.ignore) {
+      this.mwConfig.ignore.push(new RegExp(`/${ConfigKey.namespace}/.+`, 'u'))
     }
 
     await this.app.getApplicationContext().getAsync(TracerComponent)
@@ -63,7 +45,11 @@ export class AutoConfiguration {
 
   async onServerReady(): Promise<void> {
     if (this.mwConfig.enableMiddleware) {
-      // @ts-expect-error
+      const mwNames = this.app.getMiddleware().getNames()
+      if (mwNames.includes(TracerMiddleware.name)) {
+        return
+      }
+      // @ts-ignore
       this.app.getMiddleware().insertFirst(TracerMiddleware)
       void 0
     }
@@ -79,7 +65,12 @@ export function registerMiddleware(
   app: Application,
 ): void {
 
-  // @ts-expect-error
+  const mwNames = app.getMiddleware().getNames()
+  if (mwNames.includes(TracerMiddleware.name)) {
+    return
+  }
+
+  // @ts-ignore
   app.getMiddleware().insertLast(TracerExtMiddleware)
 }
 

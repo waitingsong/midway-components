@@ -5,12 +5,8 @@ import {
   authShouldPassthroughNotFound,
 } from '../helper'
 
-import {
-  mwConfigNoOpts,
-  mwOptions,
-} from '@/config.unittest'
 import { testConfig } from '@/root.config'
-import { ConfigKey, MiddlewareConfig } from '~/index'
+import { ConfigKey, MiddlewareConfig } from '~/lib/types'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -23,9 +19,8 @@ describe(filename, () => {
     it('normal', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: MiddlewareConfig = {
-        ...mwConfigNoOpts,
+        // @ts-ignore
         options: {
-          ...mwOptions,
           debug: true,
         },
       }
@@ -39,9 +34,8 @@ describe(filename, () => {
     it('ignored with passthrough:true', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: MiddlewareConfig = {
-        ...mwConfigNoOpts,
+        // @ts-ignore
         options: {
-          ...mwOptions,
           debug: true,
           passthrough: true,
         },

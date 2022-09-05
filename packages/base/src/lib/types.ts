@@ -1,39 +1,23 @@
-import { MidwayConfig } from '@midwayjs/core'
-import { Context as KoaCtx } from '@midwayjs/koa'
-
-
-export enum ConfigKey {
-  namespace = 'base',
-  config = 'baseConfig',
-  middlewareConfig = 'baseMiddlewareConfig',
-  componentName = 'baseComponent',
-  middlewareName = 'baseMiddleware',
-}
-
-
-export interface Context extends KoaCtx {
-  reqId: string
-  _internalError?: Error
-}
-
 
 export {
+  Application,
+  AppConfig,
+  AppInfomation,
+  Context,
   IMidwayApplication,
   IMidwayContainer,
   IMiddleware,
   NextFunction,
-} from '@midwayjs/core'
+} from '@mwcp/share'
 
-export type AppConfig = Partial<MidwayConfig>
-export { Application } from '@midwayjs/koa'
 
-export { Options as FetchOptions } from '@mw-components/fetch'
+export { Options as FetchOptions } from '@mwcp/fetch'
 
 export {
   TracerTag, TracerLog, HeadersKey,
-} from '@mw-components/jaeger'
+} from '@mwcp/jaeger'
 
-export { JwtResult } from '@mw-components/jwt'
+export { JwtResult } from '@mwcp/jwt'
 
 export {
   JsonObject,
@@ -44,15 +28,16 @@ export {
 
 export { KmoreTransaction as DbTransaction } from 'kmore'
 
+export enum ConfigKey {
+  namespace = 'base',
+  config = 'baseConfig',
+  middlewareConfig = 'demoMiddlewareConfig',
+  componentName = 'baseComponent',
+  middlewareName = 'baseMiddleware'
+}
 
-export interface AppInfomation {
-  pkgName: string
-  pkgVer: string
-  pid: number
-  ppid: number
-  ip: string
-  reqId: string
-  [key: string]: string | number
+export enum Msg {
+  hello = 'hello midway.js',
 }
 
 

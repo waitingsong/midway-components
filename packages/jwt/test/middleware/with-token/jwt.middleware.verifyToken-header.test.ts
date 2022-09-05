@@ -6,12 +6,10 @@ import {
   authShouldValidatFailed,
 } from '../helper'
 
-import {
-  authHeader1, payload1,
-  mwConfig as mConfig,
-} from '@/config.unittest'
+import { authHeader1, payload1 } from '@/mock-data'
 import { testConfig } from '@/root.config'
-import { ConfigKey, MiddlewareConfig } from '~/index'
+import { jwtMiddlewareConfig as mConfig } from '~/config/config.unittest'
+import { ConfigKey, MiddlewareConfig } from '~/lib/types'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -23,8 +21,8 @@ describe(filename, () => {
   describe('Should JwtComponent.validateToken() work with header', () => {
     it('auth skipped', async () => {
       const { app, httpRequest } = testConfig
+      // @ts-ignore
       const mwConfig: MiddlewareConfig = {
-        ...mConfig,
         ignore: [path],
       }
       app.addConfigObject({

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import { DbConfig } from '@mw-components/kmore'
+import { DbConfig } from '@mwcp/kmore'
 
 import { dbDict, DbModel } from './db.model'
 import {
@@ -23,16 +23,6 @@ export const initMiddlewareOptions: MiddlewareOptions = {
 }
 export const initialMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'ignore' | 'match' | 'options'>> = {
   enableMiddleware: true,
-}
-
-export enum ConfigKey {
-  namespace = 'taskman',
-  config = 'taskClientConfig',
-  middlewareConfig = 'taskMiddlewareConfig',
-  // componentName = 'taskmanComponent',
-  middlewareName = 'taskmanMiddleware',
-  clientConfig = 'taskClientConfig',
-  serverConfig = 'taskServerConfig'
 }
 
 export const initTaskDTO: InitTaskDTO = {

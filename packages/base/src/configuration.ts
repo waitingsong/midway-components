@@ -1,5 +1,4 @@
 /* eslint-disable import/max-dependencies */
-/* eslint-disable import/no-extraneous-dependencies */
 import 'tsconfig-paths/register'
 import assert from 'node:assert/strict'
 import { join } from 'node:path'
@@ -11,17 +10,10 @@ import {
   Inject,
   Logger,
 } from '@midwayjs/decorator'
-import * as koa from '@midwayjs/koa'
 import { IMidwayLogger } from '@midwayjs/logger'
-import * as prometheus from '@midwayjs/prometheus'
-import * as validate from '@midwayjs/validate'
-import * as aliOss from '@mw-components/ali-oss'
-import * as fetch from '@mw-components/fetch'
-import * as jaeger from '@mw-components/jaeger'
-import * as jwt from '@mw-components/jwt'
-import * as db from '@mw-components/kmore'
-import * as koid from '@mw-components/koid'
+import { JwtConfigKey, JwtMiddlewareConfig } from '@mwcp/jwt'
 
+import { useComponents, useDefaultRoutes } from './components'
 import type {
   Application,
   NpmPkg,
@@ -32,24 +24,11 @@ import {
   ResponseHeadersMiddleware,
   ResponseMimeMiddleware,
 } from './middleware/index.middleware'
-// import { customLogger } from './util/custom-logger'
 
-
-process.env['UV_THREADPOOL_SIZE'] = '96'
 
 @Configuration({
   importConfigs: [join(__dirname, 'config')],
-  imports: [
-    koa,
-    validate,
-    jaeger,
-    prometheus,
-    jwt,
-    koid,
-    fetch,
-    db,
-    aliOss,
-  ],
+  imports: useComponents,
 })
 export class ContainerConfiguration implements ILifeCycle {
 
@@ -79,6 +58,7 @@ export class ContainerConfiguration implements ILifeCycle {
     ]
     // @ts-ignore
     this.app.useMiddleware(mws)
+
     const pkg = this.informationService.getPkg() as NpmPkg | undefined
     if (pkg && Object.keys(pkg).length) {
       assert(pkg, 'retrieve package.json failed')
@@ -97,6 +77,18 @@ export class ContainerConfiguration implements ILifeCycle {
     const mwNames = this.app.getMiddleware().getNames()
     const mwReady = mwNames.filter(name => ! name.includes('Controller'))
     console.info({ mwReady })
+
+    const jwtMiddlewareConfig = this.app.getConfig(JwtConfigKey.middlewareConfig) as JwtMiddlewareConfig
+    assert(jwtMiddlewareConfig, 'jwt middleware config not found')
+
+    if (useDefaultRoutes.length && Array.isArray(jwtMiddlewareConfig.ignore)) {
+      const ignores = jwtMiddlewareConfig.ignore
+      useDefaultRoutes.forEach((route) => {
+        if (route && ! ignores.includes(route)) {
+          ignores.push(route)
+        }
+      })
+    }
 
     // eslint-disable-next-line no-console
     console.info('✅ midway ready', info)

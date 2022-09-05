@@ -7,8 +7,9 @@ import {
   Inject,
   Provide,
 } from '@midwayjs/decorator'
-import { Logger } from '@mw-components/jaeger'
-import { DbManager, Kmore } from '@mw-components/kmore'
+import { Logger } from '@mwcp/jaeger'
+import { DbManager, Kmore } from '@mwcp/kmore'
+import type { Application, Context } from '@mwcp/share'
 
 import {
   DbModel,
@@ -19,8 +20,6 @@ import {
   TaskDTO,
   ConfigKey,
 } from '../lib/index'
-
-import { Application, Context } from '~/interface'
 
 
 @Provide()
