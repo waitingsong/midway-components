@@ -45,6 +45,10 @@ export class AutoConfiguration implements ILifeCycle {
 
   async onServerReady(): Promise<void> {
     if (this.mwConfig.enableMiddleware) {
+      const mwNames = this.app.getMiddleware().getNames()
+      if (mwNames.includes(TracerMiddleware.name)) {
+        return
+      }
       // @ts-ignore
       this.app.getMiddleware().insertFirst(TracerMiddleware)
       void 0
@@ -60,6 +64,11 @@ export class AutoConfiguration implements ILifeCycle {
 export function registerMiddleware(
   app: Application,
 ): void {
+
+  const mwNames = app.getMiddleware().getNames()
+  if (mwNames.includes(TracerMiddleware.name)) {
+    return
+  }
 
   // @ts-ignore
   app.getMiddleware().insertLast(TracerExtMiddleware)
