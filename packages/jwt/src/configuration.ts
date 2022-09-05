@@ -46,7 +46,7 @@ export function registerMiddleware(
 ): void {
 
   const mwNames = app.getMiddleware().getNames()
-  if (mwNames.includes(DemoMiddleware.name)) {
+  if (mwNames.includes(JwtMiddleware.name)) {
     return
   }
 
