@@ -108,7 +108,7 @@ jobs:
       - name: Benchmark hello
         timeout-minutes: 10
         run: |
-          .scripts/benchmark/start-benchmark.mjs --api=demo/hello --p=mw-demo
+          .scripts/benchmark/start-benchmark.mjs --api=base/hello --p=base
 
     services:
       postgres:
