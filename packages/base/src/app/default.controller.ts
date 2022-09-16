@@ -8,7 +8,7 @@ import { ConfigKey, Msg } from '../lib/types'
 
 
 @Controller(`/_${ConfigKey.namespace}`)
-export class DefaultComponentController {
+export class DefaultBaseComponentController {
 
   @Get('/hello')
   hello(): string {
