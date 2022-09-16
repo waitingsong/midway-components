@@ -107,10 +107,10 @@ jobs:
         env:
           CI: true
 
-      - name: Benchmark demo
+      - name: Benchmark base
         timeout-minutes: 10
         run: |
-          .scripts/benchmark/start-benchmark.mjs --qps=500 --api=base/hello --p=base
+          .scripts/benchmark/start-benchmark.mjs --qps=1500 --api=_base/hello --p=base
         env:
           CI: true
           OTEL_EXPORTER_AGENT_HOST: jaeger

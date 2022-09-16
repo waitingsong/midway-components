@@ -17,7 +17,7 @@ const jwtIgnoreArr = [
   '/test/sign',
   /debug\/dump\/.*/u,
   /unittest/u,
-  '/base/hello',
+  '/_base/hello',
 ]
 export const jwtMiddlewareConfig: AppConfig['jwtMiddlewareConfig'] = {
   enableMiddleware: true,

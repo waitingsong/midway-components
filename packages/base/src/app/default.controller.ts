@@ -7,10 +7,10 @@ import {
 import { ConfigKey, Msg } from '../lib/types'
 
 
-@Controller(`/${ConfigKey.namespace}/hello`)
+@Controller(`/_${ConfigKey.namespace}`)
 export class DefaultComponentController {
 
-  @Get('/')
+  @Get('/hello')
   hello(): string {
     return Msg.hello
   }
