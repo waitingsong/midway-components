@@ -67,7 +67,9 @@ jobs:
           sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen
           locale-gen
           locale -a
+          netstat -tunpl
           chmod a+w -R .
+          dig jaeger
 
       - name: Verify
         run: |
@@ -97,8 +99,7 @@ jobs:
           # DO NOT execute: npm config set unsafe-perm=true
           export cwd=`pwd`
           .github/workflows/fix.sh
-          npm i -g c8 lerna rollup zx
-          # .github/workflows/fix.sh
+          npm i --no-audit -g c8 lerna rollup zx
           # npm run purge
           npm run bootstrap
         env:
@@ -162,6 +163,8 @@ jobs:
       #     # redis
       #     REDIS_HOST: redis
       #     REDIS_PORT: 6379
+      #     # otel
+      #     OTEL_EXPORTER_AGENT_HOST: jaeger
 
       #     ALI_ALB_IPS: ${{ secrets.ALI_ALB_IPS }}
       #     ALI_ALB_GROUPID: ${{ secrets.ALI_ALB_GROUPID }}
@@ -175,9 +178,6 @@ jobs:
       #     ALI_OSS_ASECRET: ${{ secrets.ALI_OSS_ASECRET }}
       #     ALI_OSS_ENDPOINT: ${{ secrets.ALI_OSS_ENDPOINT }}
       #     ALI_OSS_BUCKET: ${{ secrets.ALI_OSS_BUCKET }}
-
-      # - name: Upload coverage to Codecov
-      #   uses: codecov/codecov-action@v1
 
       - name: NPM Publish
         run: |
@@ -199,6 +199,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v1
+
+
+
 
 
     # services:
@@ -212,4 +217,5 @@ jobs:
     #       POSTGRES_PASSWORD: postgres
     #     # needed because the postgres container does not provide a healthcheck
     #     options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
 
