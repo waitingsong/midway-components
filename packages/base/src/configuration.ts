@@ -13,7 +13,7 @@ import {
 import { IMidwayLogger } from '@midwayjs/logger'
 import { JwtConfigKey, JwtMiddlewareConfig } from '@mwcp/jwt'
 
-import { useComponents, useDefaultRoutes } from './components'
+import { useComponents, useDefaultRoutes } from './imports'
 import type {
   Application,
   NpmPkg,
