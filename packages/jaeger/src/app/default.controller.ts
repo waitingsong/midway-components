@@ -7,8 +7,8 @@ import {
 import { Config, ConfigKey, Msg } from '../lib/types'
 
 
-@Controller(`/${ConfigKey.namespace}`)
-export class DefaultComponentController {
+@Controller(`/_${ConfigKey.namespace}`)
+export class DefaultJaegerComponentController {
 
   @_Config(ConfigKey.config) readonly config: Config
 
