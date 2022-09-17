@@ -37,7 +37,7 @@ export class RootClass {
   /**
    * jaeger Context SPAN 上下文日志
    */
-  @Inject('jaeger:logger') readonly logger: Logger
+  @Inject() readonly logger: Logger
 
   @Inject() readonly koid: KoidComponent
 
