@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [28.1.0](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@28.0.0...@mwcp/taskman@28.1.0) (2022-09-19)
+
+
+### Features
+
+* **taskman:** def type SupportTaskMapType, TaskTypeVerListType ([6645f2a](https://github.com/waitingsong/midway-components/commit/6645f2a977cd64c2e89a458adace9f34f95cfbe1))
+
+
+
+
+
 # [28.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@27.0.1...@mwcp/taskman@28.0.0) (2022-09-19)
 
 
