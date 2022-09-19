@@ -52,10 +52,6 @@ export class TaskQueueRepository {
     this.ref_tb_task = db.camelTables.ref_tb_task
   }
 
-  // async [ServerMethod.destroy](): Promise<void> {
-  //   await this.db.dbh.destroy()
-  // }
-
   async [ServerMethod.create](input: InitTaskDTO): Promise<TaskDTO> {
     const ret = await this.ref_tb_task()
       .insert(input)
@@ -364,49 +360,35 @@ export class TaskQueueRepository {
 
   async pickInitTasksToPending(options: PickInitTaskOptions): Promise<TaskDTO[]> {
     const { db } = this
+
+    assert(options.taskTypeId > 0, 'taskTypeId must > 0')
+
     const trx = await db.dbh.transaction()
 
     const where = `expect_start BETWEEN now() - interval '${options.earlierThanTimeIntv}'
       AND now() + interval '1s'`
 
-    const tasks = await this.ref_tb_task()
+    let query = this.ref_tb_task()
       .transacting(trx)
       .forUpdate()
       .select('taskId')
       .where('taskState', TaskState.init)
+      .where('taskTypeId', options.taskTypeId)
       .whereRaw(where)
       .limit(options.maxRows)
       .orderBy('expectStart', options.ord)
       .orderBy('ctime', options.ord)
       .orderBy('taskId', options.ord)
+
+    if (options.taskTypeVerList !== '*' && options.taskTypeVerList.length) {
+      query = query.whereIn('taskTypeVer', options.taskTypeVerList)
+    }
+
+    const tasks = await query
       .catch(async (ex) => {
         await trx.rollback()
         throw ex
       })
-
-    // const sql = db.camelTables.ref_tb_task()
-    //   .select('task_id')
-    //   .where('task_state', TaskState.init)
-    //   .whereRaw(where)
-    //   .limit(options.maxRows)
-    //   .orderBy('expect_start', options.ord)
-    //   .orderBy('ctime', options.ord)
-    //   .orderBy('task_id', options.ord)
-    //   .toQuery()
-    // const foo = await db.dbh.schema.raw(sql).then()
-    // const bar = await db.dbh.schema.raw('SHOW TIMEZONE;').then()
-    // console.info({
-    //   // @ts-ignore
-    //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    //   foo: foo.rows,
-    //   // @ts-ignore
-    //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    //   bar: bar.rows,
-    //   sql,
-    //   where,
-    //   options,
-    //   tasks,
-    // })
 
     if (! tasks.length) {
       await trx.rollback() // !

@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import { randomUUID } from 'crypto'
-
+import assert from 'node:assert'
+import { randomUUID } from 'node:crypto'
 // import { IMidwayLogger } from '@midwayjs/core'
+
 import {
   Config,
   Init,
@@ -27,6 +28,7 @@ import type { Context } from '@mwcp/share'
 import { genISO8601String } from '@waiting/shared-core'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import {
+  of,
   timer,
   from as ofrom,
   Observable,
@@ -35,7 +37,6 @@ import {
   mergeMap,
   takeWhile,
 } from 'rxjs'
-
 
 import {
   CallTaskOptions,
@@ -49,8 +50,9 @@ import {
   TaskState,
   initTaskClientConfig,
   TaskAgentState,
+  initPickInitTasksOptions,
+  PickInitTaskOptions,
 } from '../lib/index'
-
 
 
 @Provide()
@@ -165,9 +167,14 @@ export class TaskAgentService {
       mergeMap(task => this.sendTaskToRun(task, reqId), 1),
     )
 
-    const subsp = stream$.subscribe({
+    let subsp: Subscription | undefined
+
+    // eslint-disable-next-line prefer-const
+    subsp = stream$.subscribe({
       error: (err: Error) => {
-        this.runnerSet.delete(subsp)
+        if (subsp) {
+          this.runnerSet.delete(subsp)
+        }
 
         const input: SpanLogInput = {
           [TracerTag.logLevel]: 'error',
@@ -183,7 +190,7 @@ export class TaskAgentService {
         }
       },
       complete: () => {
-        this.runnerSet.delete(subsp)
+        subsp && this.runnerSet.delete(subsp)
 
         const input: SpanLogInput = {
           [TracerTag.logLevel]: 'info',
@@ -219,17 +226,55 @@ export class TaskAgentService {
     this.runnerSet.clear()
   }
 
+  protected pickRandomTaskTypeIdFromSupportTaskMap(
+    supportTaskMap: TaskClientConfig['supportTaskMap'],
+  ): TaskDTO['taskTypeId'] | undefined {
+
+    const { size } = supportTaskMap
+    if (size === 0) {
+      console.info(false, 'taskClientConfig.supportTaskMap is empty')
+      return
+    }
+
+    const min = 0
+    const max = size - 1
+    const rnd = Math.floor((Math.random() * (max - min + 1)) + min)
+
+    const idx = 0
+    for (const [taskTypeId] of supportTaskMap) {
+      if (rnd === idx) {
+        return taskTypeId
+      }
+    }
+
+    assert(false, `pickRandomTaskTypeIdFromSupportTaskMap failed, rnd: ${rnd}, size: ${size}`)
+  }
+
   private pickTasksWaitToRun(
     intv$: Observable<number>,
     reqId: string,
   ): Observable<{ rows: TaskDTO[], idx: number }> {
 
+    const { supportTaskMap } = this.clientConfig
+    const taskTypeId = this.pickRandomTaskTypeIdFromSupportTaskMap(supportTaskMap)
+    if (! taskTypeId) {
+      return of({ rows: [], idx: 0 })
+    }
+    const taskTypeVerList = supportTaskMap.get(taskTypeId) ?? []
+
+    const data: PickInitTaskOptions = {
+      ...initPickInitTasksOptions,
+      taskTypeId,
+      taskTypeVerList,
+    }
+
     const stream$ = intv$.pipe(
       mergeMap(() => {
         const opts: FetchOptions = {
           ...this.initFetchOptions,
-          method: 'GET',
+          method: 'POST',
           url: `${this.serverConfig.host}${ServerURL.base}/${ServerURL.pickTasksWaitToRun}`,
+          data,
         }
         const headers = new Node_Headers(opts.headers)
         opts.headers = headers

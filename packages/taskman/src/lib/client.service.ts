@@ -60,6 +60,7 @@ export class ClientService {
     const spanHeader = this.tracerManager.headerOfCurrentSpan()?.[HeadersKey.traceId] as string
     headers.set(HeadersKey.traceId, spanHeader)
     const pdata: CreateTaskDTO = {
+      taskTypeVer: 1,
       ...input.createTaskDTO,
     }
     pdata.json.headers = processJsonHeaders(this.ctx, pdata.json.headers, headers)

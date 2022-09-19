@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/taskman",
   "author": "waiting",
-  "version": "27.0.0",
+  "version": "28.0.0",
   "description": "midway component task manager",
   "keywords": [
     "midway",
@@ -23,9 +23,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@mwcp/fetch": "^20.3.1",
-    "@mwcp/jaeger": "^14.0.0",
-    "@mwcp/kmore": "^36.2.0",
+    "@mwcp/fetch": "^20.3.2",
+    "@mwcp/jaeger": "^14.0.1",
+    "@mwcp/kmore": "^36.2.1",
     "@mwcp/koid": "^11.0.0",
     "@waiting/shared-core": "^20.6.3",
     "pg": "^8.8.0",
@@ -33,10 +33,10 @@
     "postgres-interval": "^4.0.0"
   },
   "devDependencies": {
-    "@mwcp/base": "^5.0.0",
-    "@mwcp/share": "^2.0.0",
+    "@mwcp/base": "^5.0.1",
+    "@mwcp/share": "^2.0.1",
     "cross-env": "7",
-    "kmore-cli": "^36.0.3"
+    "kmore-cli": "^36.2.1"
   },
   "engines": {
     "node": ">=16.13.0"
@@ -63,6 +63,7 @@
     "purge": "npm run clean && rm node_modules -rf && rm package-lock.json -f",
     "test": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json mocha --parallel=false",
     "test:local": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json ../../node_modules/.bin/mocha --parallel=false",
+    "pretest": "npm run build",
     "tsc": "tsc -b"
   }
 }

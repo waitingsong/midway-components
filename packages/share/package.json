@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/share",
   "author": "waiting",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "midway.js share",
   "keywords": [
     "midway.js",
@@ -62,6 +62,8 @@
     "lint:nofix": "eslint --cache {src,test}/**/*.ts",
     "purge": "npm run clean && rm node_modules -rf && rm package-lock.json -f",
     "rp": "rollup -c rollup.config.js --context this",
+    "pretest": "npm run build",
+    "pretest:local": "npm run build",
     "test": "cross-env TS_NODE_PROJECT=test/tsconfig.json mocha --loader=ts-node/esm",
     "test:local": "cross-env TS_NODE_PROJECT=test/tsconfig.json ../../node_modules/.bin/mocha --loader=ts-node/esm --parallel=false",
     "tsc": "tsc -b"

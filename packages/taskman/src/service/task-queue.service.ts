@@ -39,12 +39,6 @@ export class TaskQueueService {
   @Inject() protected readonly retRepo: TaskResultRepository
 
 
-  // [ServerMethod.destroy](): void {
-  //   this.repo.destroy()
-  //   this.logRepo.destroy()
-  //   this.retRepo.destroy()
-  // }
-
   async [ServerMethod.create](input: CreateTaskDTO): Promise<TaskDTO> {
     const init: InitTaskDTO = {
       ...initTaskDTO,
@@ -193,7 +187,7 @@ export class TaskQueueService {
   }
 
   /**
-   * Pick tasks which state are init (to run),
+   * Pick tasks which state are init to run,
    * and change the state to pending
    */
   async pickTasksWaitToRun(options?: Partial<PickInitTaskOptions>): Promise<TaskDTO[]> {

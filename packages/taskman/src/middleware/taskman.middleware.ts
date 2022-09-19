@@ -5,7 +5,7 @@ import type { Context, IMiddleware, NextFunction } from '@mwcp/share'
 import { genISO8601String } from '@waiting/shared-core'
 
 import { ClientService } from '../lib/client.service'
-import { TaskClientConfig, TaskServerConfig, ConfigKey } from '../lib/types'
+import { TaskClientConfig, TaskServerConfig, ConfigKey, ClientURL, ServerURL } from '../lib/types'
 import { TaskAgentService } from '../service/index.service'
 import {
   getComponentConfig,
@@ -85,13 +85,19 @@ async function middleware(
     }
   }
 
+  const skipList = [
+    `${ClientURL.base}/${ClientURL.status}`,
+    `${ClientURL.base}/${ClientURL.stop}`,
+    `${ServerURL.base}/${ServerURL.pickTasksWaitToRun}`,
+  ]
+
   if (typeof taskId === 'string' && taskId) {
     clientSvc.runningTasks.add(taskId)
   }
   else if (Array.isArray(taskId) && taskId.length) {
     taskId.forEach(id => clientSvc.runningTasks.add(id))
   }
-  else {
+  else if (! skipList.includes(ctx.path)) {
     const taskAgent = await ctx.requestContext.getAsync(TaskAgentService)
     await taskAgent.run()
   }

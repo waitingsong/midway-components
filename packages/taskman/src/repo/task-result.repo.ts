@@ -44,10 +44,6 @@ export class TaskResultRepository {
     this.ref_tb_task_result = db.camelTables.ref_tb_task_result
   }
 
-  // async [ServerMethod.destroy](): Promise<void> {
-  //   await this.db.dbh.destroy()
-  // }
-
   async [ServerMethod.create](input: TaskResultDTO): Promise<TaskResultDTO> {
     const ret = await this.ref_tb_task_result()
       .insert(input)

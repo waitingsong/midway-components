@@ -10,7 +10,7 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 describe(filename, () => {
 
   const path = '/'
-  const helloPath = `/${ConfigKey.namespace}/hello`
+  const helloPath = `/_${ConfigKey.namespace}/hello`
 
   it(`Should ${path} work`, async () => {
     const { httpRequest } = testConfig

@@ -23,7 +23,7 @@ export const taskServerConfig: TaskServerConfig = {
   },
 }
 
-export const taskClientConfig: TaskClientConfig = {
+export const taskClientConfig: Omit<TaskClientConfig, 'supportTaskMap'> = {
   ...initTaskClientConfig,
 }
 

@@ -212,10 +212,10 @@ function updateDetailTags(
   const pkg = ctx.app.getConfig('pkg') as NpmPkg
   const tags: SpanLogInput = {
     [Tags.HTTP_METHOD]: ctx.req.method ?? 'n/a',
-    [TracerTag.svcName]: pkg.name,
+    [TracerTag.svcName]: pkg?.name ?? 'n/a',
   }
 
-  if (pkg.version) {
+  if (pkg?.version) {
     tags[TracerTag.svcVer] = pkg.version
   }
   if (ctx['reqId']) {

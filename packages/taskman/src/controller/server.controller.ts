@@ -1,3 +1,5 @@
+import assert from 'node:assert'
+
 import {
   Controller,
   Get,
@@ -23,6 +25,7 @@ import {
   TaskStatistics,
   TaskPayloadDTO,
   SetStateInputData,
+  PickInitTaskOptions,
 } from '../lib/index'
 import { TaskQueueService } from '../service/index.service'
 
@@ -126,9 +129,21 @@ export class ServerController {
     return ret
   }
 
-  @Get('/' + ServerURL.pickTasksWaitToRun)
-  async [ServerMethod.pickTasksWaitToRun](): Promise<TaskDTO[]> {
-    const ret = await this.queueSvc.pickTasksWaitToRun({ maxRows: 1 })
+  @Post('/' + ServerURL.pickTasksWaitToRun)
+  async [ServerMethod.pickTasksWaitToRun](
+    @Body() input: PickInitTaskOptions,
+  ): Promise<TaskDTO[]> {
+
+    assert(
+      Array.isArray(input.taskTypeVerList) || `${input.taskTypeVerList}` === '*',
+      'taskTypeVerList must be array or *',
+    )
+
+    if (! input.taskTypeId) {
+      throw new Error('taskTypeId is required when taskTypeVerList is not empty')
+    }
+
+    const ret = await this.queueSvc.pickTasksWaitToRun(input)
     return ret
   }
 

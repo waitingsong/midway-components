@@ -6,6 +6,7 @@ import {
   TaskFullDTO,
   TaskDTO,
   initTaskDTO,
+  ClientURL,
 } from '~/lib/index'
 import { TaskQueueRepository } from '~/repo/index.repo'
 import { TaskQueueService } from '~/service/index.service'
@@ -36,7 +37,7 @@ export function genCreateTaskDTO(
   input?: Partial<CreateTaskDTO>,
 ): CreateTaskDTO {
 
-  const dataUrl = `${testConfig.host}/task_agent/hello`
+  const dataUrl = `${testConfig.host}${ClientURL.base}/${ClientURL.hello}`
 
   const data: CreateTaskDTO = {
     json: {
@@ -47,6 +48,7 @@ export function genCreateTaskDTO(
         f2: Math.random().toString(),
       },
     },
+    taskTypeId: 1,
     ...input,
   }
   return data
@@ -82,6 +84,7 @@ export function valiateTask(task: TaskDTO): void {
 
   assert(typeof (task as TaskFullDTO).json === 'undefined', JSON.stringify(task))
 
+  assert(task.taskTypeId === 1)
   assert(task.taskState === initTaskDTO.taskState)
   assert(task.isTimeout === false, JSON.stringify(task))
   assert(task.startedAt === null, JSON.stringify(task))

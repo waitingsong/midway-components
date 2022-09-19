@@ -2,13 +2,10 @@ import 'tsconfig-paths/register'
 import { join } from 'node:path'
 
 import { App, Config, Configuration, Inject } from '@midwayjs/decorator'
-import * as fetch from '@mwcp/fetch'
-import * as jaeger from '@mwcp/jaeger'
-import * as db from '@mwcp/kmore'
 import { DbConfig, DbSourceManager } from '@mwcp/kmore'
-import * as koid from '@mwcp/koid'
 import type { Application, Context, IMidwayContainer } from '@mwcp/share'
 
+import { useComponents } from './imports'
 import {
   ConfigKey,
   DbModel,
@@ -23,13 +20,8 @@ import { TaskAgentService } from './service/task-agent.service'
 
 @Configuration({
   namespace: ConfigKey.namespace,
-  imports: [
-    koid,
-    jaeger,
-    fetch,
-    db,
-  ],
   importConfigs: [join(__dirname, 'config')],
+  imports: useComponents,
 })
 export class AutoConfiguration {
 
