@@ -19,7 +19,7 @@ jobs:
 
     strategy:
       matrix:
-        node: ['current']
+        node: ['lts/*']
         os: [ubuntu-latest]
 
     steps:
@@ -92,6 +92,7 @@ jobs:
           npm i --no-audit -g lerna zx autocannon
           # npm run purge
           npm run bootstrap
+          .githooks/link.sh
         env:
           CI: true
 

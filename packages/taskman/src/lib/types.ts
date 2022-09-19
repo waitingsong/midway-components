@@ -77,8 +77,11 @@ export interface TaskClientConfig {
    * @default 2
    */
   maxRunner: number
+  /**
+   * Support task type id:ver[] list,
+   */
+  supportTaskMap: Map<TaskDTO['taskTypeId'], TaskDTO['taskTypeVer'][]>
 }
-
 
 
 /**
@@ -280,8 +283,12 @@ export interface PickInitTaskOptions {
    * `expect_start BETWEERN now() - INTERVAL ${earlierThanTimeIntv} AND now()`
    */
   earlierThanTimeIntv: string
+  taskTypeId: TaskDTO['taskTypeId']
+  /**
+   * Empty array means no limit
+   */
+  taskTypeVerList: TaskDTO['taskTypeVer'][] | '*'
 }
-
 
 
 export interface CommonSetMethodInputData {
@@ -341,6 +348,12 @@ export type InitTaskPayloadDTO = Omit<TaskPayloadDTO, 'taskId' | 'json'>
 export type InitTaskLogDTO = Omit<TaskLogDTO, 'taskLogId'>
 
 export class CreateTaskDTO {
+  taskTypeId: number
+  /**
+   * @default 1 default task
+   */
+  taskTypeVer?: number
+
   /**
    * Task execution information
    */
@@ -377,13 +390,21 @@ export class SetProgressDTO {
 
 
 
-
 /* --- database.do --- */
+
+export class TbTaskTypeDO {
+  task_type_id: number
+  task_type_name: string
+  ctime: Date | 'now()'
+  mtime: Date | null
+}
 
 export class TbTaskDO {
   /** bigInt string */
   task_id: string
   task_state: TaskState
+  task_type_id: number
+  task_type_ver: number
   expect_start: Date
   started_at: Date | null
   is_timeout: boolean

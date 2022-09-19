@@ -26,6 +26,11 @@ export const initialMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'ignore' |
 }
 
 export const initTaskDTO: InitTaskDTO = {
+  /**
+   * default 1
+   */
+  taskTypeId: 1,
+  taskTypeVer: 1,
   taskState: TaskState.init,
   expectStart: new Date(),
   startedAt: null,
@@ -119,6 +124,8 @@ export const initPickInitTasksOptions: PickInitTaskOptions = {
   ord: 'ASC',
   maxRows: 1,
   earlierThanTimeIntv: '1 week',
+  taskTypeId: 1,
+  taskTypeVerList: [],
 }
 
 
@@ -133,13 +140,13 @@ export const initTaskServerConfig: Omit<TaskServerConfig, 'dataSource'> = {
 export const initTaskClientConfig: TaskClientConfig = {
   /** TaskMan client host */
   host: 'http://localhost:7001',
-  // clientHost: 'http://localhost:7001',
   transferHeaders: ['authorization', 'user-agent'],
   headerKeyTaskId: initTaskServerConfig.headerKeyTaskId,
   pickTaskTimer: 2000,
   minPickTaskCount: 5,
   maxPickTaskCount: 1000,
   maxRunner: 2,
+  supportTaskMap: new Map([ [1, [] ] ]),
 }
 
 export const initTaskStatistics: TaskStatistics = {

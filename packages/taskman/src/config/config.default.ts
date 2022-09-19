@@ -11,6 +11,12 @@ import {
 } from '../lib/index'
 
 
+export const keys = Math.random().toString()
+
+export const koa = {
+  port: 7001,
+}
+
 /**
  * Remove this variable if running as client
  */
@@ -23,7 +29,7 @@ export const taskServerConfig: TaskServerConfig = {
   },
 }
 
-export const taskClientConfig: TaskClientConfig = {
+export const taskClientConfig: Omit<TaskClientConfig, 'supportTaskMap'> = {
   ...initTaskClientConfig,
 }
 

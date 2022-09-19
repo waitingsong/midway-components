@@ -44,10 +44,6 @@ export class TaskLogRepository {
     this.ref_tb_task_log = db.camelTables.ref_tb_task_log
   }
 
-  // async [ServerMethod.destroy](): Promise<void> {
-  //   await this.db.dbh.destroy()
-  // }
-
   async [ServerMethod.create](input: InitTaskLogDTO): Promise<TaskLogDTO> {
     const ret = await this.ref_tb_task_log()
       .insert(input)
