@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [28.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@27.0.1...@mwcp/taskman@28.0.0) (2022-09-19)
+
+
+### Features
+
+* **taskman:** TaskDTO add properties taskTypeId, taskTypeVer ([47bcfe6](https://github.com/waitingsong/midway-components/commit/47bcfe6de0b930258b4085e6c5c9f9a57dc85e23))
+
+
+
+
+
 ## [27.0.1](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@27.0.0...@mwcp/taskman@27.0.1) (2022-09-19)
 
 **Note:** Version bump only for package @mwcp/taskman
