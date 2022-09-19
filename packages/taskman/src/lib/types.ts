@@ -80,8 +80,10 @@ export interface TaskClientConfig {
   /**
    * Support task type id:ver[] list,
    */
-  supportTaskMap: Map<TaskDTO['taskTypeId'], TaskDTO['taskTypeVer'][]>
+  supportTaskMap: SupportTaskMapType
 }
+export type SupportTaskMapType = Map<TaskDTO['taskTypeId'], TaskTypeVerListType>
+export type TaskTypeVerListType = TaskDTO['taskTypeVer'][] | '*'
 
 
 /**

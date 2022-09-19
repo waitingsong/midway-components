@@ -146,7 +146,7 @@ export const initTaskClientConfig: TaskClientConfig = {
   minPickTaskCount: 5,
   maxPickTaskCount: 1000,
   maxRunner: 2,
-  supportTaskMap: new Map([ [1, [] ] ]),
+  supportTaskMap: new Map([ [1, '*'] ]),
 }
 
 export const initTaskStatistics: TaskStatistics = {
