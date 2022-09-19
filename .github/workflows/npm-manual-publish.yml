@@ -200,8 +200,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      # - name: Upload coverage to Codecov
-      #   uses: codecov/codecov-action@v1
 
 
 
