@@ -1,24 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { IncomingHttpHeaders } from 'http'
+// import { IncomingHttpHeaders } from 'http'
 
 import { App, Config, Inject } from '@midwayjs/decorator'
 import { AliOssManager } from '@mwcp/ali-oss'
-import {
-  Node_Headers,
-  FetchComponent,
-  FetchResponse,
-} from '@mwcp/fetch'
-import { Logger } from '@mwcp/jaeger'
+// import {
+//   Node_Headers,
+//   FetchComponent,
+//   FetchResponse,
+// } from '@mwcp/fetch'
+// import { Logger } from '@mwcp/jaeger'
 import { JwtComponent } from '@mwcp/jwt'
 import { KoidComponent } from '@mwcp/koid'
 import { MyError } from '@mwcp/share'
-import { OverwriteAnyToUnknown } from '@waiting/shared-types'
+// import { OverwriteAnyToUnknown } from '@waiting/shared-types'
 
 import {
   Application,
   Context,
   FetchOptions,
-  JsonResp,
+  // JsonResp,
   NpmPkg,
   TracerTag,
 } from '../lib/index'
@@ -32,12 +32,12 @@ export class RootClass {
 
   @Inject() readonly aliOssMan: AliOssManager
 
-  @Inject() private readonly fetchService: FetchComponent
+  // @Inject() private readonly fetchService: FetchComponent
 
   /**
    * jaeger Context SPAN 上下文日志
    */
-  @Inject() readonly logger: Logger
+  // @Inject('jaeger:logger') readonly logger: Logger
 
   @Inject() readonly koid: KoidComponent
 
@@ -93,122 +93,122 @@ export class RootClass {
    * 请求和返回类型都是 JSON 格式，
    * 返回类型为 `JsonResp` 结构
    */
-  fetch<T extends FetchResponse = any>(
-    options: FetchOptions,
-  ): Promise<JsonResp<OverwriteAnyToUnknown<T>>> {
+  // fetch<T extends FetchResponse = any>(
+  //   options: FetchOptions,
+  // ): Promise<JsonResp<OverwriteAnyToUnknown<T>>> {
 
-    const opts: FetchOptions = {
-      ...this.initFetchOptions,
-      ...options,
-      headers: this.genFetchHeaders(options.headers),
-    }
-    return this.fetchService.fetch(opts) as Promise<JsonResp<OverwriteAnyToUnknown<T>>>
-  }
-
-  /**
-   * 请求和返回类型都是 JSON 格式，
-   * 返回类型为 `JsonResp` 结构
-   */
-  getJson<T extends FetchResponse = any>(
-    url: string,
-    options?: FetchOptions,
-  ): Promise<JsonResp<OverwriteAnyToUnknown<T>>> {
-
-    const opts: FetchOptions = {
-      ...this.initFetchOptions,
-      ...options,
-      headers: this.genFetchHeaders(options?.headers),
-    }
-    return this.fetchService.get(url, opts) as Promise<JsonResp<OverwriteAnyToUnknown<T>>>
-  }
+  //   const opts: FetchOptions = {
+  //     ...this.initFetchOptions,
+  //     ...options,
+  //     headers: this.genFetchHeaders(options.headers),
+  //   }
+  //   return this.fetchService.fetch(opts) as Promise<JsonResp<OverwriteAnyToUnknown<T>>>
+  // }
 
   /**
    * 请求和返回类型都是 JSON 格式，
    * 返回类型为 `JsonResp` 结构
    */
-  postJson<T extends FetchResponse = any>(
-    url: string,
-    options?: FetchOptions,
-  ): Promise<JsonResp<OverwriteAnyToUnknown<T>>> {
+  // getJson<T extends FetchResponse = any>(
+  //   url: string,
+  //   options?: FetchOptions,
+  // ): Promise<JsonResp<OverwriteAnyToUnknown<T>>> {
 
-    const opts: FetchOptions = {
-      ...this.initFetchOptions,
-      ...options,
-      headers: this.genFetchHeaders(options?.headers),
-    }
-    return this.fetchService.post(url, opts) as Promise<JsonResp<OverwriteAnyToUnknown<T>>>
-  }
+  //   const opts: FetchOptions = {
+  //     ...this.initFetchOptions,
+  //     ...options,
+  //     headers: this.genFetchHeaders(options?.headers),
+  //   }
+  //   return this.fetchService.get(url, opts) as Promise<JsonResp<OverwriteAnyToUnknown<T>>>
+  // }
+
+  /**
+   * 请求和返回类型都是 JSON 格式，
+   * 返回类型为 `JsonResp` 结构
+   */
+  // postJson<T extends FetchResponse = any>(
+  //   url: string,
+  //   options?: FetchOptions,
+  // ): Promise<JsonResp<OverwriteAnyToUnknown<T>>> {
+
+  //   const opts: FetchOptions = {
+  //     ...this.initFetchOptions,
+  //     ...options,
+  //     headers: this.genFetchHeaders(options?.headers),
+  //   }
+  //   return this.fetchService.post(url, opts) as Promise<JsonResp<OverwriteAnyToUnknown<T>>>
+  // }
 
 
   /**
    * 请求和返回类型都是 JSON 格式，
    * 返回类型为自定义结构
    */
-  fetchCustom<T>(
-    options: FetchOptions,
-  ): Promise<OverwriteAnyToUnknown<T>> {
+  // fetchCustom<T>(
+  //   options: FetchOptions,
+  // ): Promise<OverwriteAnyToUnknown<T>> {
 
-    const opts: FetchOptions = {
-      ...this.initFetchOptions,
-      ...options,
-      headers: this.genFetchHeaders(options.headers),
-    }
-    return this.fetchService.fetch(opts) as Promise<OverwriteAnyToUnknown<T>>
-  }
-
-  /**
-   * 请求和返回类型都是 JSON 格式，
-   * 返回类型为自定义结构
-   */
-  getCustomJson<T>(
-    url: string,
-    options?: FetchOptions,
-  ): Promise<OverwriteAnyToUnknown<T>> {
-
-    const opts: FetchOptions = {
-      ...this.initFetchOptions,
-      ...options,
-      headers: this.genFetchHeaders(options?.headers),
-    }
-    return this.fetchService.get(url, opts) as Promise<OverwriteAnyToUnknown<T>>
-  }
+  //   const opts: FetchOptions = {
+  //     ...this.initFetchOptions,
+  //     ...options,
+  //     headers: this.genFetchHeaders(options.headers),
+  //   }
+  //   return this.fetchService.fetch(opts) as Promise<OverwriteAnyToUnknown<T>>
+  // }
 
   /**
    * 请求和返回类型都是 JSON 格式，
    * 返回类型为自定义结构
    */
-  postCustomJson<T>(
-    url: string,
-    options?: FetchOptions,
-  ): Promise<OverwriteAnyToUnknown<T>> {
+  // getCustomJson<T>(
+  //   url: string,
+  //   options?: FetchOptions,
+  // ): Promise<OverwriteAnyToUnknown<T>> {
 
-    const opts: FetchOptions = {
-      ...this.initFetchOptions,
-      ...options,
-      headers: this.genFetchHeaders(options?.headers),
-    }
-    return this.fetchService.post(url, opts) as Promise<OverwriteAnyToUnknown<T>>
-  }
+  //   const opts: FetchOptions = {
+  //     ...this.initFetchOptions,
+  //     ...options,
+  //     headers: this.genFetchHeaders(options?.headers),
+  //   }
+  //   return this.fetchService.get(url, opts) as Promise<OverwriteAnyToUnknown<T>>
+  // }
+
+  /**
+   * 请求和返回类型都是 JSON 格式，
+   * 返回类型为自定义结构
+   */
+  // postCustomJson<T>(
+  //   url: string,
+  //   options?: FetchOptions,
+  // ): Promise<OverwriteAnyToUnknown<T>> {
+
+  //   const opts: FetchOptions = {
+  //     ...this.initFetchOptions,
+  //     ...options,
+  //     headers: this.genFetchHeaders(options?.headers),
+  //   }
+  //   return this.fetchService.post(url, opts) as Promise<OverwriteAnyToUnknown<T>>
+  // }
 
   /* c8 ignore stop */
 
   /**
    * 返回类型为字符串
    */
-  async getText<T extends string = string>(
-    url: string,
-    options?: FetchOptions,
-  ): Promise<T> {
+  // async getText<T extends string = string>(
+  //   url: string,
+  //   options?: FetchOptions,
+  // ): Promise<T> {
 
-    const opts: FetchOptions = {
-      ...this.initFetchOptions,
-      ...options,
-      headers: this.genFetchHeaders(options?.headers),
-      dataType: 'text',
-    }
-    const ret = await this.fetchService.get<T>(url, opts)
-    return ret as T
-  }
+  //   const opts: FetchOptions = {
+  //     ...this.initFetchOptions,
+  //     ...options,
+  //     headers: this.genFetchHeaders(options?.headers),
+  //     dataType: 'text',
+  //   }
+  //   const ret = await this.fetchService.get<T>(url, opts)
+  //   return ret as T
+  // }
 
   /**
    * 根据输入 http headers 生成 Headers,
@@ -217,30 +217,30 @@ export class RootClass {
    *   - connection
    *   - content-length
    */
-  genFetchHeaders(
-    headers?: HeadersInit | IncomingHttpHeaders | undefined,
-    excludes: string[] = ['host', 'connection', 'content-length'],
-  ): Headers {
+  // genFetchHeaders(
+  //   headers?: HeadersInit | IncomingHttpHeaders | undefined,
+  //   excludes: string[] = ['host', 'connection', 'content-length'],
+  // ): Headers {
 
-    const ret = new Node_Headers(this.initFetchOptions.headers)
-    const inputHeaders = new Node_Headers(headers as HeadersInit)
+  //   const ret = new Node_Headers(this.initFetchOptions.headers)
+  //   const inputHeaders = new Node_Headers(headers as HeadersInit)
 
-    inputHeaders.forEach((val, key) => {
-      if (Array.isArray(excludes) && excludes.includes(key)) {
-        return
-      }
-      ret.set(key, val)
-    })
+  //   inputHeaders.forEach((val, key) => {
+  //     if (Array.isArray(excludes) && excludes.includes(key)) {
+  //       return
+  //     }
+  //     ret.set(key, val)
+  //   })
 
-    return ret
-  }
+  //   return ret
+  // }
 
-  getJwtPayload<T = unknown>(): T {
-    if (! this.ctx.jwtState.user) {
-      this.throwError('获取 jwt payload 信息为空')
-    }
-    return this.ctx.jwtState.user as T
-  }
+  // getJwtPayload<T = unknown>(): T {
+  //   if (! this.ctx.jwtState.user) {
+  //     this.throwError('获取 jwt payload 信息为空')
+  //   }
+  //   return this.ctx.jwtState.user as T
+  // }
 
   throwError(message: string, status?: number, error?: Error): never {
     throw new MyError(message, status, error)

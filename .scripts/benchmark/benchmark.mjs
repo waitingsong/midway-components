@@ -37,8 +37,8 @@ const child = spawn('node', ['--expose-gc', 'start.js'], {
   stdio: ['inherit', 'inherit', 'inherit', 'ipc'],
   env: {
     ...process.env,
-//    NODE_ENV: 'unittest',
-//    MIDWAY_SERVER_ENV: 'unittest',
+   NODE_ENV: 'unittest',
+   MIDWAY_SERVER_ENV: 'unittest',
     FORCE_COLOR: 3,
   }
 })
