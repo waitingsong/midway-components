@@ -13,7 +13,7 @@ import type { NpmPkg } from '@waiting/shared-types'
 
 import { useComponents } from './imports'
 import { OtelComponent } from './lib/component'
-import { traceDecorator } from './lib/trace.decorator'
+import { registerMethodHandler } from './lib/trace.decorator'
 import {
   Config as Conf,
   ConfigKey,
@@ -97,7 +97,7 @@ export class AutoConfiguration implements ILifeCycle {
 
     // const decoratorService = await this.app.getApplicationContext().getAsync(MidwayDecoratorService)
     // assert(decoratorService === this.decoratorService)
-    traceDecorator(this.decoratorService, this.config)
+    registerMethodHandler(this.decoratorService, this.config)
 
     if (this.config.enable && this.mwConfig.enableMiddleware) {
       registerMiddleware(this.app, TraceMiddlewareInner, 'last')

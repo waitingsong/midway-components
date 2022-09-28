@@ -44,7 +44,7 @@ export function Trace(
   })
 }
 
-export function traceDecorator(
+export function registerMethodHandler(
   decoratorService: MidwayDecoratorService,
   config: Config,
 ): void {

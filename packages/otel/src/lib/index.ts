@@ -5,7 +5,6 @@ export {
   TRACE_KEY,
   Trace,
   TraceDecoratorOptions,
-  traceDecorator,
 } from './trace.decorator'
 export * from './trace.service'
 export {
