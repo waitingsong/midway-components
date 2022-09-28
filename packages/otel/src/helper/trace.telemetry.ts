@@ -1,6 +1,4 @@
-import assert from 'assert'
-
-import { TextMapPropagator, trace } from '@opentelemetry/api'
+import { TextMapPropagator } from '@opentelemetry/api'
 import { CompositePropagator, W3CTraceContextPropagator } from '@opentelemetry/core'
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-grpc'
 import { JaegerPropagator } from '@opentelemetry/propagator-jaeger'
