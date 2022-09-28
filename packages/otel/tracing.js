@@ -9,9 +9,6 @@ const { name, version } = require('./package.json')
 // normilize service name for ali SLS
 const serviceName = name ? name.replace(/@/g, '').replace(/\//g, '-') : 'my-service'
 
-const { Bootstrap } = require('@midwayjs/bootstrap')
-
-
 const resource = new Resource({
   [SemanticResourceAttributes.SERVICE_NAME]: serviceName,
   [SemanticResourceAttributes.SERVICE_VERSION]: version,
@@ -27,7 +24,7 @@ const sdk = new opentelemetry.NodeSDK({
 sdk.start()
   .then(() => {
     console.log('sdk ok')
-    return Bootstrap.configure().run()
+    // return Bootstrap.configure().run()
   })
 
 // 在进程关闭时，同时关闭数据采集
@@ -45,5 +42,4 @@ function shutdown() {
     .catch((error) => console.log('Error terminating tracing', error))
     .finally(() => process.exit(0));
 }
-
 

@@ -24,18 +24,21 @@ catch {
 
 let tplDir = '.'
 try {
-  const tplStat = await stat(join(__dirname, configTpl))
+  const tmpDir = join(__dirname, configTpl)
+  console.info({ tmpDir })
+  const tplStat = await stat(tmpDir)
   if (tplStat.isDirectory()) {
     tplDir = configTpl
   }
 }
-catch { void 0 }
+catch (ex) { console.warn(ex) }
 console.log({ tplDir })
 
 const files = [
-  ['start.js'],
+  // ['start.js'],
+  ['start2.js', 'start.js'],
   ['benchmark.mjs'],
-  // [`${tplDir}/configuration.ts`, `src/configuration.ts`],
+  [`${tplDir}/configuration.ts`, `src/configuration.ts`],
 ]
 for (const [file, dst] of files) {
   const filePath = join(__dirname, file)

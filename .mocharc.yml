@@ -6,6 +6,7 @@ require:
   - ts-node/register
   - tsconfig-paths/register.js
   - test/root.hooks.ts
+  #- test/bootstrap.js
 #loader:
 #  - ts-node/esm
 spec:

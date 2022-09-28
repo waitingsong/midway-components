@@ -1,11 +1,11 @@
 import { Middleware } from '@midwayjs/decorator'
+import { AttrNames } from '@mwcp/otel'
 
 import {
   Context,
   IMiddleware,
   NextFunction,
   NpmPkg,
-  TracerTag,
 } from '../lib/index'
 
 
@@ -42,12 +42,12 @@ async function middleware(
   const { headers } = ctx.response
   const pkg = ctx.app.getConfig('pkg') as NpmPkg
 
-  if (! headers[TracerTag.svcName]) {
-    ctx.set(TracerTag.svcName, pkg.name)
+  if (! headers[AttrNames.ServiceName]) {
+    ctx.set(AttrNames.ServiceName, pkg.name)
   }
 
-  if (! headers[TracerTag.svcVer] && pkg.version) {
-    ctx.set(TracerTag.svcVer, pkg.version)
+  if (! headers[AttrNames.ServiceVersion] && pkg.version) {
+    ctx.set(AttrNames.ServiceVersion, pkg.version)
   }
 }
 

@@ -9,16 +9,8 @@ export {
   IMiddleware,
   NextFunction,
 } from '@mwcp/share'
-
-
 export { Options as FetchOptions } from '@mwcp/fetch'
-
-export {
-  TracerTag, TracerLog, HeadersKey,
-} from '@mwcp/jaeger'
-
 export { JwtResult } from '@mwcp/jwt'
-
 export {
   JsonObject,
   JsonResp,
