@@ -33,8 +33,8 @@ export function initTrace(options: InitTraceOptions): InitTraceReturnType {
   const provider = new NodeTracerProvider({
     resource: resourceFull,
   })
-  const flag = trace.setGlobalTracerProvider(provider)
-  assert(flag === true, 'setGlobalTracerProvider failed')
+  // const flag = trace.setGlobalTracerProvider(provider)
+  // assert(flag === true, 'setGlobalTracerProvider failed')
   provider.register()
 
   const processors: BatchSpanProcessor[] = []
