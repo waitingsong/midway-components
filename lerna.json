@@ -25,6 +25,8 @@
       "hoist": true,
       "noCi": true,
       "nohoist": [
+        "@mwcp/fetch",
+        "@mwcp/kmore",
         "cross-env",
         "egg"
       ],
