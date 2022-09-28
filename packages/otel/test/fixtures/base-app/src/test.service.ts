@@ -16,7 +16,7 @@ export class DefaultComponentService {
 
   @Trace(void 0, { startActiveSpan: false })
   async hello(input: string): Promise<string> {
-    assert(typeof this.config.enableTrace !== 'undefined')
+    assert(typeof this.config.enable !== 'undefined')
     return input
   }
 
