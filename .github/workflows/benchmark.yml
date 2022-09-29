@@ -109,10 +109,18 @@ jobs:
         env:
           CI: true
 
+      - name: Benchmark demo
+        timeout-minutes: 10
+        run: |
+          .scripts/benchmark/start-benchmark.mjs --qps=2800 --api=demo/hello --p=mw-demo
+        env:
+          CI: true
+          OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
+
       - name: Benchmark otel
         timeout-minutes: 10
         run: |
-          .scripts/benchmark/start-benchmark.mjs --qps=900 --api=_otel/hello --p=otel
+          .scripts/benchmark/start-benchmark.mjs --qps=800 --api=_otel/hello --p=otel
         env:
           CI: true
           OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
@@ -120,7 +128,7 @@ jobs:
       - name: Benchmark base
         timeout-minutes: 10
         run: |
-          .scripts/benchmark/start-benchmark.mjs --qps=800 --api=_base/hello --p=base
+          .scripts/benchmark/start-benchmark.mjs --qps=500 --api=_base/hello --p=base
         env:
           CI: true
           OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
