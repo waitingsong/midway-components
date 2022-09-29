@@ -73,7 +73,7 @@ export class FooController {
   }
 
   /* span name will be "hello" */
-  @Trace(`hello`)
+  @Trace('hello')
   async world(): Promise<string> {
     return 'world'
   }
