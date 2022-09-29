@@ -31,13 +31,18 @@ const files = [
 ]
 for (const [file, dst] of files) {
   const filePath = join(__dirname, file)
-  const fileStat = await stat(filePath)
-  if (! fileStat.isFile()) {
-    console.warn(`"${filePath}" is not a file`)
-    continue
+  try {
+    const fileStat = await stat(filePath)
+    if (! fileStat.isFile()) {
+      console.warn(`"${filePath}" is not a file`)
+      continue
+    }
+    const dstPath = dst ? `${dir}/${dst}` : `${dir}/${basename(file)}`
+    await copyFile(filePath, dstPath)
   }
-  const dstPath = dst ? `${dir}/${dst}` : `${dir}/${basename(file)}`
-  await copyFile(filePath, dstPath)
+  catch (ex) {
+    console.warn(ex)
+  }
 }
 
 echo`[benchmark] script complete`
