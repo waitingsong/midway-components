@@ -60,6 +60,7 @@ try {
 catch (ex) {
   console.error(ex)
   gotError = true
+  throw ex
 }
 finally {
   const arr = []
