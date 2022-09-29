@@ -12,7 +12,7 @@ const format = function (bytes) {
 };
 
 const url = `http://127.0.0.1:7001/${api}`
-const connections = 5
+const connections = 1
 
 const cannon = () => {
   return new Promise((resolve, reject) => {
