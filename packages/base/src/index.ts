@@ -24,3 +24,8 @@ declare module '@midwayjs/koa/dist/interface' {
   }
 }
 
+export {
+  MyError,
+  shouldEnableMiddleware,
+} from '@mwcp/share'
+
