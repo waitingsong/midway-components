@@ -35,13 +35,14 @@ console.log({ tplDir })
 const files = [
   ['start.js'],
   ['benchmark.mjs'],
-  // [`${tplDir}/configuration.ts`, `src/configuration.ts`],
+  [`${tplDir}/configuration.ts`, `src/configuration.ts`],
 ]
 for (const [file, dst] of files) {
   const filePath = join(__dirname, file)
   const fileStat = await stat(filePath)
   if (! fileStat.isFile()) {
     console.warn(`"${filePath}" is not a file`)
+    continue
   }
   const dstPath = dst ? `${dir}/${dst}` : `${dir}/${basename(file)}`
   await copyFile(filePath, dstPath)
