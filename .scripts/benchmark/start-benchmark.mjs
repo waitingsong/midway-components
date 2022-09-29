@@ -66,14 +66,18 @@ finally {
   const arr = []
   for (const [file, dst] of files) {
     const filePath = join(__dirname, file)
-    const fileStat = await stat(filePath)
-    if (!fileStat.isFile()) {
-      throw new Error(`"${filePath}" is not a file`)
+    try {
+      const fileStat = await stat(filePath)
+      if (!fileStat.isFile()) {
+        continue
+      }
+      if (dst) {
+        arr.push(dst)
+      }
     }
-    if (dst) {
-      arr.push(dst)
-    }
+    catch { void 0 }
   }
+
   if (arr.length > 0) {
     await $`git restore ${arr}`
   }
