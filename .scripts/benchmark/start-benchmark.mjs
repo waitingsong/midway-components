@@ -22,7 +22,7 @@ catch {
   throw new Error(`Path is not exists: ${dir}`)
 }
 
-let tplDir = '.'
+let tplDir = `./${pkgDir}`
 try {
   const tplStat = await stat(join(__dirname, configTpl))
   if (tplStat.isDirectory()) {
