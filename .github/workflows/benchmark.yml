@@ -90,7 +90,7 @@ jobs:
           chown -R 1001:121 "/github/home/.npm"
           chmod a+w -R .
           export cwd=`pwd`
-          npm i --no-audit -g lerna zx autocannon
+          npm i --no-audit -g autocannon c8 lerna rollup zx
           # npm run purge
           npm run bootstrap
           .githooks/link.sh
@@ -109,10 +109,18 @@ jobs:
         env:
           CI: true
 
+      - name: Benchmark otel
+        timeout-minutes: 10
+        run: |
+          .scripts/benchmark/start-benchmark.mjs --qps=900 --api=_otel/hello --p=otel
+        env:
+          CI: true
+          OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
+
       - name: Benchmark base
         timeout-minutes: 10
         run: |
-          .scripts/benchmark/start-benchmark.mjs --qps=1500 --api=_base/hello --p=base
+          .scripts/benchmark/start-benchmark.mjs --qps=900 --api=_base/hello --p=base
         env:
           CI: true
           OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317

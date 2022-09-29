@@ -99,7 +99,7 @@ jobs:
           # DO NOT execute: npm config set unsafe-perm=true
           export cwd=`pwd`
           .github/workflows/fix.sh
-          npm i --no-audit -g c8 lerna rollup zx
+          npm i --no-audit -g autocannon c8 lerna rollup zx
           # npm run purge
           npm run bootstrap
           .githooks/link.sh
@@ -165,7 +165,7 @@ jobs:
       #     REDIS_HOST: redis
       #     REDIS_PORT: 6379
       #     # otel
-      #     OTEL_EXPORTER_AGENT_HOST: jaeger
+      #     OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
 
       #     ALI_ALB_IPS: ${{ secrets.ALI_ALB_IPS }}
       #     ALI_ALB_GROUPID: ${{ secrets.ALI_ALB_GROUPID }}
