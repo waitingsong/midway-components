@@ -73,7 +73,7 @@ export interface Config extends BaseConfig {
    * @link https://opentelemetry.io/docs/instrumentation/js/instrumentation/
    * @link https://opentelemetry.io/docs/instrumentation/js/exporters/
    */
-  spanExporters: SpanExporterList[]
+  exporters: SpanExporterList[]
   /**
    * @default pkg.name
    * @description \@ 字符将会被删除，/ 替换为 - ,便于（ali）日志服务能正常分类

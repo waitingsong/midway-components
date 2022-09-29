@@ -9,7 +9,7 @@ import { Config, MiddlewareConfig, SpanExporterList } from '../lib/types'
 export const otelConfig: Config = {
   ...initialConfig,
   enableDefaultRoute: true,
-  spanExporters: [
+  exporters: [
     // SpanExporterList.jaeger,
     SpanExporterList.console,
     SpanExporterList.otlpGrpc,

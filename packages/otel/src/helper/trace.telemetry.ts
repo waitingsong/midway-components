@@ -36,7 +36,7 @@ export function initTrace(options: InitTraceOptions): InitTraceReturnType {
   provider.register()
 
   const processors: BatchSpanProcessor[] = []
-  otelConfig.spanExporters.forEach((exporter) => {
+  otelConfig.exporters.forEach((exporter) => {
     const processor = regExporterInstrum(options, provider, exporter)
     processors.push(processor)
   })

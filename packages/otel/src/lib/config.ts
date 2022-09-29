@@ -34,11 +34,11 @@ export const initialConfig: Readonly<Omit<Config, 'tracerConfig'>> = {
   captureRequestHeaders: [...initCaptureRequestHeaders],
   captureResponseBody: true,
   logMemeoryUsage: true,
+  exporters: [SpanExporterList.otlpGrpc],
   propagators: [
     PropagatorList.w3cTraceContext,
     // PropagatorList.jaeger,
   ],
-  spanExporters: [SpanExporterList.otlpGrpc],
 }
 export const initMiddlewareOptions: MiddlewareOptions = {
 }
