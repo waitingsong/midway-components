@@ -6,7 +6,6 @@ import { stat, copyFile } from 'node:fs/promises'
 
 const pkgDir = argv.p ?? ''
 const httpPath = argv.api ?? ''
-const configTpl = argv.tpl ?? pkgDir
 const qps = argv.qps
 
 assert(pkgDir, 'pkg dir is required with -p')
@@ -22,14 +21,7 @@ catch {
   throw new Error(`Path is not exists: ${dir}`)
 }
 
-let tplDir = `./${pkgDir}`
-try {
-  const tplStat = await stat(join(__dirname, configTpl))
-  if (tplStat.isDirectory()) {
-    tplDir = configTpl
-  }
-}
-catch { void 0 }
+const tplDir = `./${pkgDir}`
 console.log({ tplDir })
 
 const files = [
