@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 5.1.0 (2022-09-29)
+
+
+### Features
+
+* **base:** export MyError, shouldEnableMiddleware() ([6111785](https://github.com/waitingsong/midway-components/commit/6111785157fff03607fba69196c53628f29f5db2))
+
+
+
+
+
 ## [5.0.1](https://github.com/waitingsong/midway-components/compare/@mwcp/base@5.0.0...@mwcp/base@5.0.1) (2022-09-19)
 
 **Note:** Version bump only for package @mwcp/base
