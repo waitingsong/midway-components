@@ -11,13 +11,14 @@ import {
   Scope,
   ScopeEnum,
 } from '@midwayjs/decorator'
-import { FetchOptions, HeadersKey } from '@mwcp/base'
+import { FetchOptions } from '@mwcp/base'
 import {
   FetchComponent,
   JsonResp,
   Node_Headers,
 } from '@mwcp/fetch'
 import {
+  HeadersKey,
   Logger,
   Span,
   SpanLogInput,
