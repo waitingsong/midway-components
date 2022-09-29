@@ -57,7 +57,9 @@ jobs:
           sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen
           locale-gen
           locale -a
+          netstat -tunpl
           chmod a+w -R .
+          dig jaeger
 
       - name: Verify
         run: |
@@ -86,6 +88,7 @@ jobs:
           npm i --no-audit -g c8 lerna rollup zx
           # npm run purge
           npm run bootstrap
+          .githooks/link.sh
         env:
           CI: true
 
@@ -111,20 +114,20 @@ jobs:
         env:
           CI: true
 
-      # - name: Init Database
-      #   run: |
-      #     export cwd=`pwd`
-      #     . .scripts/ci/ci-env.sh
-      #     .scripts/ci/ci-prepare.sh
-      #     .scripts/ci/ci-init-db.sh
-      #   env:
-      #     CI: true
-      #     POSTGRES_HOST: postgres
-      #     POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
-      #     POSTGRES_DB: db_ci_test
-      #     POSTGRES_USER: postgres
-      #     POSTGRES_PASSWORD: postgres
-      #     PGPASSWORD: postgres
+      - name: Init Database
+        run: |
+          export cwd=`pwd`
+          . .scripts/ci/ci-env.sh
+          .scripts/ci/ci-prepare.sh
+          .scripts/ci/ci-init-db.sh
+        env:
+          CI: true
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
+          POSTGRES_DB: db_ci_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          PGPASSWORD: postgres
 
       - name: Testing
         run: |
@@ -160,6 +163,7 @@ jobs:
           ALI_OSS_ENDPOINT: ${{ secrets.ALI_OSS_ENDPOINT }}
           ALI_OSS_BUCKET: ${{ secrets.ALI_OSS_BUCKET }}
 
+          # otel
           OTEL_EXPORTER_AGENT_HOST: jaeger
 
       - name: Upload coverage to Codecov
