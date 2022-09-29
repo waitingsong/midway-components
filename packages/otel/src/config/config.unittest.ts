@@ -1,10 +1,11 @@
 import {
   initialConfig,
   initialMiddlewareConfig,
+  initOtlpGrpcExporterConfig,
   initTracerIgnoreArray,
 } from '../lib/config'
 // import { processCustomFailure } from '../lib/tracer'
-import { Config, MiddlewareConfig, SpanExporterList } from '../lib/types'
+import { Config, InitTraceOptions, MiddlewareConfig, SpanExporterList } from '../lib/types'
 
 
 export const otelConfig: Config = {
@@ -25,4 +26,10 @@ export const otelMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
     new RegExp('/untraced_path_reg_exp$', 'u'),
   ],
 }
+
+
+export const otlpGrpcExporterConfig: InitTraceOptions['otlpGrpcExporterConfig'] = {
+  ...initOtlpGrpcExporterConfig,
+}
+console.info({ otlpGrpcExporterConfig })
 
