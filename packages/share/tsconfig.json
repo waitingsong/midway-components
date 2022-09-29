@@ -2,12 +2,12 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
+    "incremental": true,
     "outDir": "dist",
     "paths": {
       "~/*": ["./src/*"],
       "@/*": ["./test/*"]
     },
-    "rootDir": "src",
     "tsBuildInfoFile": ".vscode/.tsbuildinfo"
   },
   "ts-node": {
