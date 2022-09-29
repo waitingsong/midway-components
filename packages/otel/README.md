@@ -42,13 +42,9 @@ To try out the [OTLPTraceExporter][Exporter Configuration] quickly, you can run 
 ```sh
 docker run -d --name jaeger \
   -e COLLECTOR_OTLP_ENABLED=true \
-  -p 6831:6831/udp \
-  -p 6832:6832/udp \
-  -p 16686:16686 \
   -p 4317:4317 \
   -p 4318:4318 \
-  -p 14250:14250 \
-  -p 14268:14268 \
+  -p 16686:16686 \
   jaegertracing/all-in-one:latest
 ```
 
@@ -67,14 +63,17 @@ npm start
 ```ts
 import { Trace } from '@mwcp/otel'
 
+@Controller('/')
 export class FooController {
 
-  @Trace(`/hello`)
+  /* span name will be `{class name}/{method name}` => "FooController/hello" */
+  @Trace()
   async hello(): Promise<string> {
     return 'hello'
   }
 
-  @Trace()
+  /* span name will be "hello" */
+  @Trace(`hello`)
   async world(): Promise<string> {
     return 'world'
   }
