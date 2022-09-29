@@ -21,10 +21,13 @@ npm i @mwcp/otel
 
 Update project `src/configuration.ts`
 ```ts
+import { Configuration } from '@midwayjs/decorator'
+import * as koa from '@midwayjs/koa'
 import * as otel from '@mwcp/otel'
 
 @Configuration({
   imports: [
+    koa,
     otel,
   ],
   importConfigs: [join(__dirname, 'config')],
