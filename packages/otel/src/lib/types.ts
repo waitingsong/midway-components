@@ -26,6 +26,8 @@ export enum ConfigKey {
   otlpGrpcExporterConfig = 'otlpGrpcExporterConfig',
 }
 
+export const middlewareEnableCacheKey = Symbol.for(`_${ConfigKey.middlewareName}-enabled_`)
+
 export enum Msg {
   hello = 'hello otel',
 }

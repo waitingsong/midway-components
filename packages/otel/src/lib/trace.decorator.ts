@@ -85,7 +85,11 @@ export function registerMethodHandler(
       // const func = joinPoint.proceed.bind(joinPoint.target)
       const func = joinPoint.proceed.bind(void 0)
       const { args } = joinPoint
-      const traceService = await webContext.requestContext.getAsync(TraceService)
+
+      const traceService = (webContext['otelServiceInstance']
+        ?? await webContext.requestContext.getAsync(TraceService)) as TraceService
+
+      assert(traceService, 'traceService undefined on webContext')
       assert(typeof func === 'function', 'Func referencing joinPoint.proceed is not function')
 
       const startActiveSpan = spanOpts?.startActiveSpan ?? true

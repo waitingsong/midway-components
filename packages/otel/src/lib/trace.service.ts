@@ -61,7 +61,7 @@ export class TraceService {
   protected readonly traceContextArray: Context[] = []
 
   @Init()
-  async init(): Promise<void> {
+  init(): void {
     if (! this.config.enable) { return }
     this.start()
   }
@@ -285,6 +285,8 @@ export class TraceService {
     }
     this.setAttributes(this.rootSpan, attr)
     this.endRootSpan(spanStatusOptions)
+
+    this.ctx['otelServiceInstance'] = null
   }
 
 
@@ -299,6 +301,7 @@ export class TraceService {
 
     const { method } = this.ctx
     const traceCtx = propagation.extract(ROOT_CONTEXT, this.ctx.request.headers)
+
     const protocol = this.ctx.request.protocol.toLocaleUpperCase()
     const spanName = this.config.rootSpanName && typeof this.config.rootSpanName === 'function'
       ? this.config.rootSpanName(this.ctx)
@@ -309,7 +312,6 @@ export class TraceService {
       this.rootSpan = span
       this.rootContext = ctx
     }, { kind: SpanKind.SERVER }, traceCtx)
-
 
     const events: Attributes = {
       event: AttrNames.RequestBegin,
@@ -323,7 +325,6 @@ export class TraceService {
     }
 
     this.addEvent(this.rootSpan, events)
-
     setSpanWithRequestHeaders(
       this.rootSpan,
       this.otel.captureHeadersMap.get('request'),
@@ -335,6 +336,11 @@ export class TraceService {
     this.setAttributes(this.rootSpan, attrs)
 
     this.isStarted = true
+    Object.defineProperty(this.ctx, 'otelServiceInstance', {
+      enumerable: true,
+      writable: true,
+      value: this,
+    })
   }
 
 
