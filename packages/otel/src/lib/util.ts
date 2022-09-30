@@ -403,7 +403,10 @@ export function truncateString(str: string, maxLength = 2048): string {
  * Generate span name from request
  */
 export function genRequestSpanName(webContext: WebContext): string {
-  const protocol = webContext.request.protocol.toLocaleUpperCase()
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const protocol = webContext?.request?.protocol
+    ? webContext.request.protocol.toLocaleUpperCase()
+    : ''
   const method = webContext.method || ''
   const spanName = `${protocol} ${method} ${webContext.url}`
   return spanName

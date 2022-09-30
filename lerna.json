@@ -5,8 +5,8 @@
   ],
   "ignore": [
     "demo",
-    "@mw-components/demo",
-    "@mw-components/share"
+    "@mwcp/demo",
+    "@mwcp/taskman"
   ],
   "command": {
     "publish": {

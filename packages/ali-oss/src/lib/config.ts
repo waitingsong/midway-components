@@ -12,7 +12,7 @@ export const initialConfig: Readonly<InstanceConfig> = {
   bucket: '',
   cmd: 'ossutil',
   debug: false,
-  enableTracing: false,
+  enableTrace: false,
   sampleThrottleMs: 10000,
 }
 

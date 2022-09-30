@@ -31,5 +31,5 @@ export const otelMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
 export const otlpGrpcExporterConfig: InitTraceOptions['otlpGrpcExporterConfig'] = {
   ...initOtlpGrpcExporterConfig,
 }
-console.info({ otlpGrpcExporterConfig })
+console.info({ __dirname, otlpGrpcExporterConfig })
 

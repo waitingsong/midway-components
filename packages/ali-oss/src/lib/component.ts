@@ -1,12 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable max-lines-per-function */
-import {
-  SpanLogInput,
-  Logger as TLogger,
-  TracerManager,
-  TracerLog,
-  TracerTag,
-} from '@mwcp/jaeger'
+import { Attributes, AttrNames, SpanStatusCode, TraceService } from '@mwcp/otel'
 import type { Context } from '@mwcp/share'
 import { genISO8601String } from '@waiting/shared-core'
 import {
@@ -22,8 +16,6 @@ import {
   ProcessRet,
 } from '@yuntools/ali-oss'
 import { DataDownload } from '@yuntools/ali-oss/dist/lib/method/download'
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { Tags } from 'opentracing'
 
 import {
   InstanceConfig,
@@ -49,6 +41,7 @@ import {
 export class AliOssComponent {
 
   ctx: Context | undefined
+  traceService: TraceService | undefined
 
   private readonly client: OssClient
   private readonly querySpanMap: WeakMap<object, QuerySpanInfo> = new WeakMap()
@@ -354,7 +347,6 @@ export class AliOssComponent {
   }
 
 
-
   protected async runner<
     T extends BaseOptions,
     R extends ProcessRet<DataBase> | boolean = ProcessRet<DataBase>
@@ -372,8 +364,11 @@ export class AliOssComponent {
       return await ret
     }
     catch (ex) {
-      await this.tracer('error', id, opts, ex)
-      throw ex
+      const err = ex instanceof Error
+        ? ex
+        : typeof ex === 'string' ? new Error(ex) : new Error(JSON.stringify(ex))
+      await this.tracer('error', id, opts, err)
+      throw err
     }
   }
 
@@ -392,20 +387,17 @@ export class AliOssComponent {
     type: 'start' | 'finish' | 'error',
     id: { time: symbol },
     options: _RunnerOption<T>,
-    err?: unknown,
+    err?: Error,
   ): Promise<void> {
 
-    if (! options.enableTracing) { return }
+    if (! options.enableTrace) { return }
     if (! this.ctx) { return }
+    if (! this.traceService) { return }
 
     const end = Date.now()
 
-    const logger = await this.ctx.requestContext.getAsync(TLogger)
-    const trm = await this.ctx.requestContext.getAsync(TracerManager)
-    if (! logger || ! trm) { return }
-
     const tmp = options as unknown as AliCpOptions & InstanceConfig
-    const opts = {
+    const opts: Attributes = {
       acl: tmp.acl ?? '',
       src: tmp.src,
       payer: tmp.payer ?? '',
@@ -416,35 +408,29 @@ export class AliOssComponent {
 
     switch (type) {
       case 'start': {
-        const currSpan = trm.currentSpan()
-        if (! currSpan) {
-          logger.warn('Get current SPAN undefined.')
-          console.warn('Get current SPAN undefined.')
-          return
-        }
-        const span = trm.genSpan(ConfigKey.componentName, currSpan)
+        const span = this.traceService.startSpan(ConfigKey.componentName)
         const spanInfo: QuerySpanInfo = {
           span,
           timestamp: Date.now(),
         }
         this.querySpanMap.set(id, spanInfo)
 
-        span.addTags({
-          [TracerLog.queryCostThottleInMS]: opts.sampleThrottleMs,
+        const attrs: Attributes = {
+          [AttrNames.QueryCostThottleInMS]: opts['sampleThrottleMs'],
           qid: id.time.toString(),
-          acl: opts.acl,
-          payer: opts.payer,
-          recursive: opts.recursive,
-          src: opts.src,
-          target: opts.target,
-        })
+          acl: opts['acl'],
+          payer: opts['payer'],
+          recursive: opts['recursive'],
+          src: opts['src'],
+          target: opts['target'],
+        }
+        this.traceService.setAttributes(span, attrs)
 
-        const input: SpanLogInput = {
-          event: TracerLog.queryStart,
+        const event: Attributes = {
+          event: AttrNames.QueryStart,
           time: genISO8601String(),
         }
-        span.log(input)
-        trm.spanLog(input)
+        this.traceService.addEvent(span, event)
         break
       }
 
@@ -458,34 +444,32 @@ export class AliOssComponent {
 
         const start = spanInfo.timestamp
         const cost = end - start
-        const tags: SpanLogInput = {
-          [TracerLog.queryCost]: cost,
+        const tags: Attributes = {
+          [AttrNames.QueryCost]: cost,
         }
-        span.addTags(tags)
+        this.traceService.setAttributes(span, tags)
 
-        const input: SpanLogInput = {
-          event: TracerLog.queryFinish,
+        const event: Attributes = {
+          event: AttrNames.QueryFinish,
           time: genISO8601String(),
-          [TracerLog.queryCost]: cost,
+          [AttrNames.QueryCost]: cost,
         }
 
-        if (typeof opts.sampleThrottleMs === 'number'
-          && opts.sampleThrottleMs > 0 && cost > opts.sampleThrottleMs) {
+        if (typeof opts['sampleThrottleMs'] === 'number'
+          && opts['sampleThrottleMs'] > 0 && cost > opts['sampleThrottleMs']) {
 
-          const tags2: SpanLogInput = {
-            [Tags.SAMPLING_PRIORITY]: 50,
-            [TracerTag.logLevel]: 'warn',
+          const tags2: Attributes = {
+            // [AttrNames.SAMPLING_PRIORITY]: 50,
+            [AttrNames.LogLevel]: 'warn',
           }
-          span.addTags(tags2)
-          input['level'] = 'warn'
-          logger?.log(input, span)
+          this.traceService.setAttributes(span, tags2)
+          this.traceService.addEvent(span, event)
         }
         else {
-          span.log(input)
+          this.traceService.addEvent(span, event)
         }
 
-        trm.spanLog(input)
-        span.finish()
+        this.traceService.endSpan(span)
         break
       }
 
@@ -499,29 +483,23 @@ export class AliOssComponent {
 
         const start = spanInfo.timestamp
         const cost = end - start
-        const tags: SpanLogInput = {
-          [TracerLog.queryCost]: cost,
+        const attr: Attributes = {
+          [AttrNames.QueryCost]: cost,
         }
-        span.addTags(tags)
+        this.traceService.setAttributes(span, attr)
 
         const input = {
-          event: TracerLog.queryError,
-          level: 'error',
+          event: AttrNames.QueryError,
           time: genISO8601String(),
-          [TracerLog.queryCost]: cost,
-          [TracerLog.error]: err,
+          [AttrNames.LogLevel]: 'error',
+          [AttrNames.QueryCost]: cost,
+          // [AttrNames.Error]: err,
         }
-
-        logger?.log(input, span)
-        trm.spanLog(input)
-
-        span.addTags({
-          [Tags.ERROR]: true,
-          [Tags.SAMPLING_PRIORITY]: 100,
-          [TracerTag.logLevel]: 'error',
-          [TracerLog.error]: err,
+        this.traceService.addEvent(span, input)
+        this.traceService.endSpan(span, {
+          code: SpanStatusCode.ERROR,
+          error: err ?? new Error('Unknown error.'),
         })
-        span.finish()
         break
       }
     }

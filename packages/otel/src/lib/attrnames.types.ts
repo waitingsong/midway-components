@@ -48,7 +48,7 @@ export enum AttrNames {
   FetchException = 'fetch-exception',
 
   QueryResponse = 'query-response',
-  QueryError = 'error',
+  QueryError = 'query-error',
   QueryStart = 'query-start',
   QueryFinish = 'query-finish',
   QueryRowCount = 'row-count',

@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { IncomingHttpHeaders } from 'http'
+import type { IncomingHttpHeaders } from 'http'
 
 import { App, Config, Inject } from '@midwayjs/decorator'
+import { ILogger as Logger } from '@midwayjs/logger'
 import { AliOssManager } from '@mwcp/ali-oss'
 import {
   Node_Headers,
-  FetchComponent,
   FetchResponse,
+  FetchService,
 } from '@mwcp/fetch'
-import { Logger } from '@mwcp/jaeger'
 import { JwtComponent } from '@mwcp/jwt'
 import { KoidComponent } from '@mwcp/koid'
+import { AttrNames, TraceService } from '@mwcp/otel'
 import { MyError } from '@mwcp/share'
 import { OverwriteAnyToUnknown } from '@waiting/shared-types'
 
@@ -20,7 +21,6 @@ import {
   FetchOptions,
   JsonResp,
   NpmPkg,
-  TracerTag,
 } from '../lib/index'
 
 
@@ -32,16 +32,15 @@ export class RootClass {
 
   @Inject() readonly aliOssMan: AliOssManager
 
-  @Inject() private readonly fetchService: FetchComponent
+  @Inject() readonly fetchService: FetchService
 
-  /**
-   * jaeger Context SPAN 上下文日志
-   */
   @Inject() readonly logger: Logger
 
   @Inject() readonly koid: KoidComponent
 
   @Inject() readonly jwt: JwtComponent
+
+  @Inject() readonly traceService: TraceService
 
   @Config() readonly pkg: NpmPkg
   @Config() readonly globalErrorCode: Record<string | number, string | number>
@@ -73,8 +72,8 @@ export class RootClass {
   get initFetchOptions(): FetchOptions {
     const { pkg } = this
     const headers: HeadersInit = {
-      [TracerTag.svcName]: pkg.name,
-      [TracerTag.svcVer]: pkg.version ?? '',
+      [AttrNames.ServiceName]: pkg.name,
+      [AttrNames.ServiceVersion]: pkg.version ?? '',
     }
     const args: FetchOptions = {
       url: '',

@@ -11,11 +11,11 @@ export {
 } from '@mwcp/share'
 
 
-export { Options as FetchOptions } from '@mwcp/fetch'
+export { FetchOptions } from '@mwcp/fetch'
 
 export {
-  TracerTag, TracerLog, HeadersKey,
-} from '@mwcp/jaeger'
+  AttrNames, HeadersKey,
+} from '@mwcp/otel'
 
 export { JwtResult } from '@mwcp/jwt'
 

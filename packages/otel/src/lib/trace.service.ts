@@ -327,7 +327,10 @@ export class TraceService {
   }
 
   protected initRootSpan(): void {
-    const traceCtx = propagation.extract(ROOT_CONTEXT, this.ctx.request.headers)
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    const traceCtx = this.ctx.request?.headers
+      ? propagation.extract(ROOT_CONTEXT, this.ctx.request.headers)
+      : ROOT_CONTEXT
     this.startActiveSpan(this.genRootSpanName(), (span, ctx) => {
       assert(span, 'rootSpan should not be null on init')
       this.rootSpan = span

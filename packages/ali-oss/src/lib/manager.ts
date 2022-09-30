@@ -6,6 +6,7 @@ import {
   Inject,
   Provide,
 } from '@midwayjs/decorator'
+import { TraceService } from '@mwcp/otel'
 import type { Context } from '@mwcp/share'
 
 import { AliOssComponent } from './component'
@@ -17,6 +18,8 @@ import { InstanceConfig, ConfigKey } from './types'
 export class AliOssManager<SourceName extends string = string, Ctx extends Context = Context> {
 
   @Inject() readonly ctx: Ctx
+
+  @Inject() readonly traceService: TraceService
 
   @Inject() protected readonly sourceManager: AliOssSourceManager<SourceName>
 
@@ -56,27 +59,31 @@ export class AliOssManager<SourceName extends string = string, Ctx extends Conte
     const inst = this.sourceManager.getDataSource(dataSourceName)
     assert(inst)
 
-    const reqCtx = this.ctx as Ctx | undefined
-    if (! reqCtx) {
-      return inst
-    }
-
-    const db2 = this.createCtxProxy(inst, reqCtx)
+    const db2 = this.createPropertyProxy(inst)
     this.instCacheMap.set(dataSourceName, db2)
 
     return db2
   }
 
-  protected createCtxProxy(inst: AliOssComponent, reqCtx: Ctx): AliOssComponent {
-    assert(reqCtx)
+  protected createPropertyProxy(inst: AliOssComponent): AliOssComponent {
+    assert(this.ctx)
     if (isProxy(inst)) {
       return inst
     }
 
     const ret = new Proxy(inst, {
-      get: (target: AliOssComponent, propKey: keyof AliOssComponent) => propKey === 'ctx'
-        ? reqCtx
-        : target[propKey],
+      get: (target: AliOssComponent, propKey: keyof AliOssComponent) => {
+        switch (propKey) {
+          case 'ctx':
+            return this.ctx
+
+          case 'traceService':
+            return this.traceService
+
+          default:
+            return target[propKey]
+        }
+      },
     })
     return ret
   }
