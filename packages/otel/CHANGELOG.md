@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@1.0.2...@mwcp/otel@1.1.0) (2022-09-30)
+
+
+### Features
+
+* **otel:** disable trace via env DISABLE_OTEL_TRACE ([2b84691](https://github.com/waitingsong/midway-components/commit/2b84691b530b9503df1064805561a14c8f23b6ae))
+
+
+
+
+
 ## [1.0.2](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@1.0.1...@mwcp/otel@1.0.2) (2022-09-30)
 
 **Note:** Version bump only for package @mwcp/otel
