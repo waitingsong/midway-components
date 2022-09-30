@@ -1,4 +1,5 @@
 import { MidwayAppInfo, MidwayConfig } from '@midwayjs/core'
+import { initPathArray } from '@mwcp/jwt'
 import { retrieveFirstIp } from '@waiting/shared-core'
 
 import { ErrorCode, NpmPkg } from '../lib/index'
@@ -32,6 +33,15 @@ export default (appInfo: MidwayAppInfo): MidwayConfig => {
     },
   }
 
+  const jwtIgnoreArr = [
+    ...initPathArray,
+    '/hello',
+    '/_base/hello',
+  ]
+  config.jwtMiddlewareConfig = {
+    enableMiddleware: true,
+    ignore: jwtIgnoreArr,
+  }
 
   return config
 }

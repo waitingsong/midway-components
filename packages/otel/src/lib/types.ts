@@ -1,0 +1,231 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { IncomingHttpHeaders } from 'http'
+
+import type { ILogger } from '@midwayjs/logger'
+import type { BaseConfig, Context } from '@mwcp/share'
+import type { Attributes, AttributeValue, SpanStatusCode } from '@opentelemetry/api'
+import type { OTLPGRPCExporterConfigNode as OTLPGRPCExporterConfig } from '@opentelemetry/otlp-grpc-exporter-base'
+import type { TracerConfig as NodeTracerConfig } from '@opentelemetry/sdk-trace-base'
+import type { MiddlewareConfig as MWConfig, KnownKeys } from '@waiting/shared-types'
+
+import { AttrNames } from './attrnames.types'
+
+
+export {
+  AttrNames,
+  NodeTracerConfig,
+}
+
+export enum ConfigKey {
+  namespace = 'otel',
+  config = 'otelConfig',
+  middlewareConfig = 'otelMiddlewareConfig',
+  componentName = 'otelComponent',
+  middlewareName = 'otelMiddleware',
+  middlewareNameInner = 'otelMiddlewareInner',
+  otlpGrpcExporterConfig = 'otlpGrpcExporterConfig',
+}
+
+export enum Msg {
+  hello = 'hello otel',
+}
+
+export interface Config extends BaseConfig {
+  /**
+   * Enable trace
+   * @default true
+   */
+  enable: boolean
+  /**
+   * @default true
+   */
+  /**
+   * - GET: request.query
+   * - POST: request.body (only when content-type: 'application/json')
+   * @default true
+   */
+  captureIncomingQuery: boolean
+  /**
+   * @default ['authorization', 'host', 'user-agent']
+   */
+  captureRequestHeaders: (string | KnownKeys<IncomingHttpHeaders>)[]
+  /**
+   * @default false
+   */
+  captureResponseBody: boolean
+  /**
+   * @default true
+   */
+  logCpuUsage: boolean
+  /**
+   * @default true
+   */
+  logMemeoryUsage: boolean
+  /**
+   * @default [PropagatorList.w3cTraceContext]
+   */
+  propagators: PropagatorList[]
+  /**
+   * Trace Exporter
+   * @default
+   *  - [SpanExporter.otlpGrpc] for prod and unittest
+   *  - [SpanExporter.otlpGrpc, SpanExporter.console] for dev
+   * @link https://opentelemetry.io/docs/instrumentation/js/instrumentation/
+   * @link https://opentelemetry.io/docs/instrumentation/js/exporters/
+   */
+  exporters: SpanExporterList[]
+  /**
+   * @default pkg.name
+   * @description \@ 字符将会被删除，/ 替换为 - ,便于（ali）日志服务能正常分类
+   */
+  serviceName?: string
+  /**
+   * @default pkg.version
+   */
+  serviceVersion?: string
+  /**
+   * Callback to process custom failure
+   */
+  processCustomFailure?: (ctx: Context) => Promise<void>
+  /**
+   * Optional function generating root span name,
+   * if omitted, then `${ctx.protocol} ${method} ${ctx.url}`,
+   * eg. `HTTP GET /api/v1/users`
+   */
+  rootSpanName?: (ctx: Context) => string
+}
+
+export enum SpanExporterList {
+  console = 'console',
+  /**
+   * https://www.npmjs.com/package/@opentelemetry/exporter-trace-otlp-grpc
+   */
+  otlpGrpc = 'otlp-grpc',
+}
+/**
+ * https://opentelemetry.io/docs/reference/specification/context/api-propagators/#propagators-distribution
+ */
+export enum PropagatorList {
+  jaeger = 'jaeger',
+  w3cTraceContext = 'W3CTraceContext',
+}
+
+
+/** Options for middleware */
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface MiddlewareOptions {
+}
+export type MiddlewareConfig = MWConfig<MiddlewareOptions>
+
+export enum HeadersKey {
+  /**
+   * format: {trace-id}:{span-id}:{parent-span-id}:{flags}
+   */
+  traceId = 'uber-trace-id',
+  otelTraceId = 'traceparent',
+  reqId = 'x-request-id',
+  authorization = 'authorization',
+  contentType = 'content-type',
+  userAgent = 'user-agent',
+}
+
+
+export interface SpanHeaderInit extends Attributes {
+  [HeadersKey.traceId]: string
+}
+
+export interface LogInfo {
+  /**
+   * debug | info | warn | error
+   */
+  level: keyof ILogger
+  msg: unknown
+  args?: unknown[]
+  [key: string]: unknown
+}
+
+export interface SpanRawLog {
+  timestamp: number
+  fields: SpanRawLogField[]
+}
+export interface SpanRawLogField {
+  key: string
+  value: unknown
+}
+export interface SpanRawTag {
+  key: string
+  value: unknown
+}
+export interface TestSpanInfo {
+  startTime: [number, number]
+  attributes: Record<string, unknown>
+  name: string
+  status: { code: number }
+}
+
+export interface InitTraceOptions {
+  [ConfigKey.config]: Config
+  [ConfigKey.otlpGrpcExporterConfig]: OTLPGRPCExporterConfig
+}
+
+// export type CreateActiveSpanCallback = (span: Span) => unknown
+
+export interface SpanStatusOptions {
+  /**
+   * The status code of this message.
+   * @default SpanStatusCode.OK
+   */
+  code: SpanStatusCode
+  /** normal message. */
+  message?: string
+  error?: Error
+}
+
+export type AttributesMap = Map<string, AttributeValue>
+
+
+export interface JaegerTraceInfo {
+  traceID: string
+  spans: JaegerTraceInfoSpan[]
+  total: number
+  limit: number
+  offset: number
+  errors: unknown
+}
+
+export interface JaegerTraceInfoSpan {
+  traceID: string
+  spanID: string
+  flags: number
+  operationName: string
+  references: JaegerTraceInfoReferences[]
+  startTime: number
+  duration: number
+  tags: Attributes
+  logs: JaegerTraceInfoLog[]
+  processID: string
+  warnings: unknown
+}
+
+export interface JaegerTraceInfoReferences {
+  refType: 'CHILD_OF'
+  traceID: string
+  spanID: string
+}
+
+export interface JaegerTraceInfoLog {
+  timestamp: number
+  fields: JaegerTraceInfoLogField[]
+}
+
+export interface JaegerTraceInfoLogField {
+  key: string
+  type: string
+  value: AttributeValue
+}
+
+
+export interface TraceError extends Error {
+  [AttrNames.IsTraced]?: boolean
+}
+

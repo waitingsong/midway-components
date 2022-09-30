@@ -1,0 +1,26 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "incremental": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "paths": {
+      "~/*": ["./src/*"],
+      "@/*": ["./test/*"]
+    },
+    "target": "ES2022",
+    "tsBuildInfoFile": ".vscode/.tsbuildinfo"
+  },
+  "ts-node": {
+    "esm": true,
+    "experimentalResolver": true,
+    "experimentalSpecifierResolution": "node",
+    "preferTsExts": true,
+    "transpileOnly": false
+  },
+  "include": [
+    "src/**/*.ts"
+  ]
+}

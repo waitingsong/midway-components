@@ -1,0 +1,21 @@
+extends: '@waiting/eslint-config'
+parserOptions:
+  project: 'tsconfig.eslint.json'
+
+rules:
+  "@typescript-eslint/no-unused-vars": 0
+  "@typescript-eslint/prefer-ts-expect-error": 0
+  "import/no-extraneous-dependencies":
+    - 2
+    - packageDir:
+      - ./
+      - ../share/
+      - ../base/
+      - ../../node_modules/@opentelemetry/sdk-node
+      - ../../node_modules/@opentelemetry/instrumentation-http
+      - ../../node_modules/@opentelemetry/auto-instrumentations-node
+      - ../../node_modules/@opentelemetry/otlp-grpc-exporter-base
+      # - ../../node_modules/@midwayjs/core
+
+ignorePatterns:
+  - fixtures
