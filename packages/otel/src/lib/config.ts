@@ -27,8 +27,13 @@ export const initCaptureRequestHeaders: Readonly<string[]> = [
   AttrNames.ServiceVersion,
 ]
 
+const enableTrace = typeof process.env['DISABLE_OTEL_TRACE'] === 'undefined'
+  ? true
+  // @ts-expect-error
+  : ! (process.env['DISABLE_OTEL_TRACE'] === true || process.env['DISABLE_OTEL_TRACE'] === 'true')
+
 export const initialConfig: Readonly<Omit<Config, 'tracerConfig'>> = {
-  enable: true,
+  enable: enableTrace,
   logCpuUsage: true,
   captureIncomingQuery: true,
   captureRequestHeaders: [...initCaptureRequestHeaders],
