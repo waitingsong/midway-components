@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@1.1.0...@mwcp/otel@1.1.1) (2022-09-30)
+
+
+### Performance Improvements
+
+* **otel:** cache middleware match result, and traceService on context ([8f2a6b6](https://github.com/waitingsong/midway-components/commit/8f2a6b626a0b0f728b39b5642d2835df8dcd7ccc))
+
+
+
+
+
 # [1.1.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@1.0.2...@mwcp/otel@1.1.0) (2022-09-30)
 
 
