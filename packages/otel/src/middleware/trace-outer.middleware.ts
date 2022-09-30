@@ -58,7 +58,7 @@ export async function middleware(
 ): Promise<void> {
 
   // const traceSvc = await ctx.requestContext.getAsync(TraceService)
-  const traceSvc = (ctx['otelServiceInstance'] ?? await ctx.requestContext.getAsync(TraceService)) as TraceService
+  const traceSvc = (ctx[`_${ConfigKey.serviceName}`] ?? await ctx.requestContext.getAsync(TraceService)) as TraceService
 
   ctx.res.once('finish', () => finishCallback(traceSvc))
   await handleTopExceptionAndNext(traceSvc, next)

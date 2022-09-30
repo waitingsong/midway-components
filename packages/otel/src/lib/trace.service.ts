@@ -286,7 +286,7 @@ export class TraceService {
     this.setAttributes(this.rootSpan, attr)
     this.endRootSpan(spanStatusOptions)
 
-    this.ctx['otelServiceInstance'] = null
+    this.ctx[`_${ConfigKey.serviceName}`] = null
   }
 
 
@@ -336,7 +336,7 @@ export class TraceService {
     this.setAttributes(this.rootSpan, attrs)
 
     this.isStarted = true
-    Object.defineProperty(this.ctx, 'otelServiceInstance', {
+    Object.defineProperty(this.ctx, `_${ConfigKey.serviceName}`, {
       enumerable: true,
       writable: true,
       value: this,

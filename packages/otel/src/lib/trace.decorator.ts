@@ -14,7 +14,7 @@ import {
 } from '@opentelemetry/api'
 
 import { TraceService } from './trace.service'
-import { AttrNames, Config } from './types'
+import { AttrNames, Config, ConfigKey } from './types'
 
 
 export const TRACE_KEY = 'decorator:open_telemetry_trace_key'
@@ -86,7 +86,7 @@ export function registerMethodHandler(
       const func = joinPoint.proceed.bind(void 0)
       const { args } = joinPoint
 
-      const traceService = (webContext['otelServiceInstance']
+      const traceService = (webContext[`_${ConfigKey.serviceName}`]
         ?? await webContext.requestContext.getAsync(TraceService)) as TraceService
 
       assert(traceService, 'traceService undefined on webContext')

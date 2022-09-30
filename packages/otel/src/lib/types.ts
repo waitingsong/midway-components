@@ -21,6 +21,7 @@ export enum ConfigKey {
   config = 'otelConfig',
   middlewareConfig = 'otelMiddlewareConfig',
   componentName = 'otelComponent',
+  serviceName = 'otelService',
   middlewareName = 'otelMiddleware',
   middlewareNameInner = 'otelMiddlewareInner',
   otlpGrpcExporterConfig = 'otlpGrpcExporterConfig',

@@ -36,7 +36,7 @@ async function middleware(
   next: NextFunction,
 ): Promise<void> {
 
-  const traceSvc = (ctx['otelServiceInstance'] ?? await ctx.requestContext.getAsync(TraceService)) as TraceService
+  const traceSvc = (ctx[`_${ConfigKey.serviceName}`] ?? await ctx.requestContext.getAsync(TraceService)) as TraceService
   addSpanEventWithIncomingRequestData(traceSvc.rootSpan, ctx)
 
   traceSvc.addEvent(traceSvc.rootSpan, {
