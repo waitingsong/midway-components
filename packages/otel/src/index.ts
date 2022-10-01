@@ -2,6 +2,7 @@ import {
   Config,
   ConfigKey,
   MiddlewareConfig,
+  middlewareEnableCacheKey,
 } from './lib/types'
 
 
@@ -33,8 +34,9 @@ declare module '@midwayjs/core/dist/interface' {
   }
 }
 // @ts-ignore
-// declare module '@midwayjs/koa/dist/interface' {
-//   interface Context {
-//   }
-// }
+declare module '@midwayjs/koa/dist/interface' {
+  interface Context {
+    [middlewareEnableCacheKey]?: true
+  }
+}
 

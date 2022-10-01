@@ -7,7 +7,7 @@ import { SpanKind, SpanStatus } from '@opentelemetry/api'
 import { handleTopExceptionAndNext } from './helper.middleware'
 
 import { TraceService } from '~/lib/trace.service'
-import { ConfigKey, Config, MiddlewareConfig } from '~/lib/types'
+import { ConfigKey, Config, MiddlewareConfig, middlewareEnableCacheKey } from '~/lib/types'
 import {
   addSpanEventWithOutgoingResponseData,
   parseResponseStatus,
@@ -33,6 +33,11 @@ export class TraceMiddleware implements IMiddleware<Context, NextFunction> {
     }
 
     const flag = shouldEnableMiddleware(ctx, mwConfig)
+    Object.defineProperty(ctx, middlewareEnableCacheKey, {
+      enumerable: false,
+      writable: false,
+      value: flag,
+    })
     return flag
   }
 
@@ -52,19 +57,18 @@ export async function middleware(
   next: NextFunction,
 ): Promise<void> {
 
-  const traceSvc = await ctx.requestContext.getAsync(TraceService)
+  // const traceSvc = await ctx.requestContext.getAsync(TraceService)
+  const traceSvc = (ctx[`_${ConfigKey.serviceName}`] ?? await ctx.requestContext.getAsync(TraceService)) as TraceService
+
   ctx.res.once('finish', () => finishCallback(traceSvc))
-  // ctx.res.once('error', (error) => {
-  //   traceSvc.finish({ code: SpanStatusCode.ERROR, error })
-  // })
   await handleTopExceptionAndNext(traceSvc, next)
   propagateOutgoingHeader(traceSvc.rootContext, ctx.res)
+  addSpanEventWithOutgoingResponseData(traceSvc.rootSpan, ctx)
 }
 
 
-function finishCallback(traceSvc: TraceService): void {
-  addSpanEventWithOutgoingResponseData(traceSvc.rootSpan, traceSvc.ctx)
-
+function finishCallback(traceSvc: TraceService | undefined): void {
+  if (! traceSvc) { return }
   const code = parseResponseStatus(SpanKind.CLIENT, traceSvc.ctx.status)
   const spanStatus: SpanStatus = { code }
   traceSvc.finish(spanStatus)
