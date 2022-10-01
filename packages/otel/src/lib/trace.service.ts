@@ -35,6 +35,7 @@ import {
   MiddlewareConfig,
 } from './types'
 import {
+  genRequestSpanName,
   getIncomingRequestAttributesFromWebContext,
   getSpan,
   setSpan,
@@ -299,13 +300,10 @@ export class TraceService {
   protected start(): void {
     if (this.isStarted) { return }
 
-    const { method } = this.ctx
-    const traceCtx = propagation.extract(ROOT_CONTEXT, this.ctx.request.headers)
-
-    const protocol = this.ctx.request.protocol.toLocaleUpperCase()
     const spanName = this.config.rootSpanName && typeof this.config.rootSpanName === 'function'
       ? this.config.rootSpanName(this.ctx)
-      : `${protocol} ${method} ${this.ctx.url}`
+      : genRequestSpanName(this.ctx)
+    const traceCtx = propagation.extract(ROOT_CONTEXT, this.ctx.request.headers)
 
     this.startActiveSpan(spanName, (span, ctx) => {
       assert(span, 'rootSpan should not be null on init')

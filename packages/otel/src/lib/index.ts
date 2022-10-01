@@ -11,6 +11,7 @@ export {
   addSpanEventWithOutgoingResponseData,
   getIncomingRequestAttributesFromWebContext,
   genAttributesFromHeader,
+  genRequestSpanName,
   normalizeHeaderKey,
   parseResponseStatus,
   propagateOutgoingHeader,
