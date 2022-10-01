@@ -37,7 +37,7 @@
     "@waiting/shared-core": "^20.6.3"
   },
   "devDependencies": {
-    "@opentelemetry/auto-instrumentations-node": "^0.32.1",
+    "@opentelemetry/auto-instrumentations-node": "^0.33.1",
     "cross-env": "7"
   },
   "engines": {
