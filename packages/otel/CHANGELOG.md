@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@1.1.1...@mwcp/otel@1.2.0) (2022-10-01)
+
+
+### Features
+
+* **otel:** export genRequestSpanName() ([463844f](https://github.com/waitingsong/midway-components/commit/463844fa01b786efaf1e92b8df1c97fcd5439be4))
+
+
+
+
+
 ## [1.1.1](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@1.1.0...@mwcp/otel@1.1.1) (2022-09-30)
 
 
