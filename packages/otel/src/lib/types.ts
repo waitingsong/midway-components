@@ -3,7 +3,7 @@ import type { IncomingHttpHeaders } from 'http'
 
 import type { ILogger } from '@midwayjs/logger'
 import type { BaseConfig, Context } from '@mwcp/share'
-import type { Attributes, AttributeValue, SpanStatusCode } from '@opentelemetry/api'
+import type { Attributes, AttributeValue, SpanStatusCode, TimeInput } from '@opentelemetry/api'
 import type { OTLPGRPCExporterConfigNode as OTLPGRPCExporterConfig } from '@opentelemetry/otlp-grpc-exporter-base'
 import type { TracerConfig as NodeTracerConfig } from '@opentelemetry/sdk-trace-base'
 import type { MiddlewareConfig as MWConfig, KnownKeys } from '@waiting/shared-types'
@@ -57,10 +57,12 @@ export interface Config extends BaseConfig {
    */
   captureResponseBody: boolean
   /**
+   * Log cpu usage when add span event
    * @default true
    */
   logCpuUsage: boolean
   /**
+   * Log cpu usage when add span event
    * @default true
    */
   logMemeoryUsage: boolean
@@ -232,3 +234,15 @@ export interface TraceError extends Error {
   [AttrNames.IsTraced]?: boolean
 }
 
+export interface AddEventOtpions {
+  /**
+   * @default true
+   */
+  logCpuUsage?: Config['logCpuUsage']
+  /**
+   * @default true
+   */
+  logMemeoryUsage?: Config['logMemeoryUsage']
+  eventName?: string
+  startTime?: TimeInput
+}

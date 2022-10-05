@@ -18,6 +18,7 @@ import {
   SpanStatus,
   SpanStatusCode,
   context,
+  TimeInput,
 } from '@opentelemetry/api'
 import { SemanticAttributes } from '@opentelemetry/semantic-conventions'
 import {
@@ -33,6 +34,7 @@ import {
   ConfigKey,
   Config,
   MiddlewareConfig,
+  AddEventOtpions,
 } from './types'
 import {
   genRequestSpanName,
@@ -148,7 +150,11 @@ export class TraceService {
    * - set span status
    * - call span.end(), except span is root span
    */
-  endSpan(span: Span, spanStatusOptions: SpanStatusOptions = initSpanStatusOptions): void {
+  endSpan(
+    span: Span,
+    spanStatusOptions: SpanStatusOptions = initSpanStatusOptions,
+    endTime?: TimeInput,
+  ): void {
     const opts: SpanStatusOptions = {
       ...initSpanStatusOptions,
       ...spanStatusOptions,
@@ -168,13 +174,17 @@ export class TraceService {
     }
 
     if (span !== this.rootSpan) {
-      span.end()
+      span.end(endTime)
     }
   }
 
-  endRootSpan(spanStatusOptions: SpanStatusOptions = initSpanStatusOptions): void {
+  endRootSpan(
+    spanStatusOptions: SpanStatusOptions = initSpanStatusOptions,
+    endTime?: TimeInput,
+  ): void {
+
     this.endSpan(this.rootSpan, spanStatusOptions)
-    this.rootSpan.end()
+    this.rootSpan.end(endTime)
   }
 
   /**
@@ -237,14 +247,26 @@ export class TraceService {
   /**
    * Adds an event to the given span.
    */
-  addEvent(span: Span | undefined, input: Attributes, eventName?: string): void {
+  addEvent(
+    span: Span | undefined,
+    input: Attributes,
+    options?: AddEventOtpions,
+  ): void {
+
     const ename = typeof input['event'] === 'string' || typeof input['event'] === 'number'
       ? String(input['event']) : ''
-    const name = eventName ? eventName : ename
+    const name = options?.eventName ?? ename
     delete input['event']
 
+    if (options?.logMemeoryUsage || this.config.logMemeoryUsage) {
+      input[AttrNames.ServiceMemoryUsage] = JSON.stringify(humanMemoryUsage(), null, 2)
+    }
+    if (options?.logCpuUsage || this.config.logCpuUsage) {
+      input[AttrNames.ServiceCpuUsage] = JSON.stringify(process.cpuUsage(), null, 2)
+    }
+
     const span2 = span ?? this.rootSpan
-    span2.addEvent(name, input)
+    span2.addEvent(name, input, options?.startTime)
   }
 
   /**
@@ -259,33 +281,31 @@ export class TraceService {
   /**
    * Finish the root span and clean the context.
    */
-  finish(spanStatusOptions: SpanStatusOptions = initSpanStatusOptions): void {
+  finish(
+    spanStatusOptions: SpanStatusOptions = initSpanStatusOptions,
+    endTime?: TimeInput,
+  ): void {
+
     if (! this.config.enable) { return }
 
     const time = genISO8601String()
-
-    if (spanStatusOptions.code !== SpanStatusCode.ERROR) {
-      spanStatusOptions.code = SpanStatusCode.OK
-    }
 
     const events: Attributes = {
       time,
       event: AttrNames.RequestEnd,
     }
-    if (this.config.logMemeoryUsage) {
-      events[AttrNames.ServiceMemoryUsage] = JSON.stringify(humanMemoryUsage(), null, 2)
-    }
-    if (this.config.logCpuUsage) {
-      events[AttrNames.ServiceCpuUsage] = JSON.stringify(process.cpuUsage(), null, 2)
-    }
-
     this.addEvent(this.rootSpan, events)
 
     const attr: Attributes = {
       [AttrNames.RequestEndTime]: time,
     }
     this.setAttributes(this.rootSpan, attr)
-    this.endRootSpan(spanStatusOptions)
+
+    if (spanStatusOptions.code !== SpanStatusCode.ERROR) {
+      spanStatusOptions.code = SpanStatusCode.OK
+    }
+    this.endRootSpan(spanStatusOptions, endTime)
+    this.traceContextArray.length = 0
 
     this.ctx[`_${ConfigKey.serviceName}`] = null
   }
@@ -297,41 +317,31 @@ export class TraceService {
 
   /* --------------------- */
 
-  protected start(): void {
-    if (this.isStarted) { return }
-
+  protected genRootSpanName(): string {
     const spanName = this.config.rootSpanName && typeof this.config.rootSpanName === 'function'
       ? this.config.rootSpanName(this.ctx)
       : genRequestSpanName(this.ctx)
-    const traceCtx = propagation.extract(ROOT_CONTEXT, this.ctx.request.headers)
+    return spanName
+  }
 
-    this.startActiveSpan(spanName, (span, ctx) => {
+  protected initRootSpan(): void {
+    const traceCtx = propagation.extract(ROOT_CONTEXT, this.ctx.request.headers)
+    this.startActiveSpan(this.genRootSpanName(), (span, ctx) => {
       assert(span, 'rootSpan should not be null on init')
       this.rootSpan = span
       this.rootContext = ctx
     }, { kind: SpanKind.SERVER }, traceCtx)
+  }
+
+  protected start(): void {
+    if (this.isStarted) { return }
+    this.initRootSpan()
 
     const events: Attributes = {
       event: AttrNames.RequestBegin,
       time: this.startTime,
     }
-    if (this.config.logMemeoryUsage) {
-      events[AttrNames.ServiceMemoryUsage] = JSON.stringify(humanMemoryUsage(), null, 2)
-    }
-    if (this.config.logCpuUsage) {
-      events[AttrNames.ServiceCpuUsage] = JSON.stringify(process.cpuUsage(), null, 2)
-    }
-
     this.addEvent(this.rootSpan, events)
-    setSpanWithRequestHeaders(
-      this.rootSpan,
-      this.otel.captureHeadersMap.get('request'),
-      key => this.ctx.get(key),
-    )
-
-    const attrs = getIncomingRequestAttributesFromWebContext(this.ctx, this.config)
-    attrs[AttrNames.RequestStartTime] = this.startTime
-    this.setAttributes(this.rootSpan, attrs)
 
     this.isStarted = true
     Object.defineProperty(this.ctx, `_${ConfigKey.serviceName}`, {
@@ -339,6 +349,20 @@ export class TraceService {
       writable: true,
       value: this,
     })
+
+    new Promise<void>((done) => {
+      setSpanWithRequestHeaders(
+        this.rootSpan,
+        this.otel.captureHeadersMap.get('request'),
+        key => this.ctx.get(key),
+      )
+
+      const attrs = getIncomingRequestAttributesFromWebContext(this.ctx, this.config)
+      attrs[AttrNames.RequestStartTime] = this.startTime
+      this.setAttributes(this.rootSpan, attrs)
+      done()
+    })
+      .catch(console.error)
   }
 
 
@@ -359,7 +383,9 @@ export class TraceService {
       [SemanticAttributes.EXCEPTION_MESSAGE]: message,
     }
     stack && (attrs[SemanticAttributes.EXCEPTION_STACKTRACE] = stack)
-    this.addEvent(span, attrs, `${name}-Cause`) // Error-Cause
+    this.addEvent(span, attrs, {
+      eventName: `${name}-Cause`,
+    }) // Error-Cause
   }
 
 }

@@ -1,9 +1,6 @@
 import type { NextFunction } from '@mwcp/share'
 import { Attributes } from '@opentelemetry/api'
-import {
-  genISO8601String,
-  humanMemoryUsage,
-} from '@waiting/shared-core'
+import { genISO8601String } from '@waiting/shared-core'
 
 import { TraceService } from '~/lib/trace.service'
 import { AttrNames } from '~/lib/types'
@@ -43,18 +40,10 @@ export async function handleAppExceptionAndNext(
   try {
     await next()
 
-    const { config } = traceSvc
     const events: Attributes = {
       event: AttrNames.PostProcessBegin,
       time: genISO8601String(),
     }
-    if (config.logMemeoryUsage) {
-      events[AttrNames.ServiceMemoryUsage] = JSON.stringify(humanMemoryUsage(), null, 2)
-    }
-    if (config.logCpuUsage) {
-      events[AttrNames.ServiceCpuUsage] = JSON.stringify(process.cpuUsage(), null, 2)
-    }
-
     traceSvc.addEvent(traceSvc.rootSpan, events)
   }
   catch (ex) {
