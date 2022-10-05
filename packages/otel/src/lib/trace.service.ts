@@ -316,19 +316,25 @@ export class TraceService {
 
   /* --------------------- */
 
-  protected start(): void {
-    if (this.isStarted) { return }
-
+  protected genRootSpanName(): string {
     const spanName = this.config.rootSpanName && typeof this.config.rootSpanName === 'function'
       ? this.config.rootSpanName(this.ctx)
       : genRequestSpanName(this.ctx)
-    const traceCtx = propagation.extract(ROOT_CONTEXT, this.ctx.request.headers)
+    return spanName
+  }
 
-    this.startActiveSpan(spanName, (span, ctx) => {
+  protected initRootSpan(): void {
+    const traceCtx = propagation.extract(ROOT_CONTEXT, this.ctx.request.headers)
+    this.startActiveSpan(this.genRootSpanName(), (span, ctx) => {
       assert(span, 'rootSpan should not be null on init')
       this.rootSpan = span
       this.rootContext = ctx
     }, { kind: SpanKind.SERVER }, traceCtx)
+  }
+
+  protected start(): void {
+    if (this.isStarted) { return }
+    this.initRootSpan()
 
     const events: Attributes = {
       event: AttrNames.RequestBegin,
@@ -342,22 +348,26 @@ export class TraceService {
     }
 
     this.addEvent(this.rootSpan, events)
-    setSpanWithRequestHeaders(
-      this.rootSpan,
-      this.otel.captureHeadersMap.get('request'),
-      key => this.ctx.get(key),
-    )
-
-    const attrs = getIncomingRequestAttributesFromWebContext(this.ctx, this.config)
-    attrs[AttrNames.RequestStartTime] = this.startTime
-    this.setAttributes(this.rootSpan, attrs)
-
     this.isStarted = true
     Object.defineProperty(this.ctx, `_${ConfigKey.serviceName}`, {
       enumerable: true,
       writable: true,
       value: this,
     })
+
+    new Promise<void>((done) => {
+      setSpanWithRequestHeaders(
+        this.rootSpan,
+        this.otel.captureHeadersMap.get('request'),
+        key => this.ctx.get(key),
+      )
+
+      const attrs = getIncomingRequestAttributesFromWebContext(this.ctx, this.config)
+      attrs[AttrNames.RequestStartTime] = this.startTime
+      this.setAttributes(this.rootSpan, attrs)
+      done()
+    })
+      .catch(console.error)
   }
 
 
