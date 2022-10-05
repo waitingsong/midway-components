@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@1.3.0...@mwcp/otel@2.0.0) (2022-10-05)
+
+
+### Features
+
+* **otel:** addEvent() do logMemeoryUsage and logMemeoryUsage ([2eac327](https://github.com/waitingsong/midway-components/commit/2eac3277c2caf4cd5bddddf70170bdaadc5af669))
+* **otel:** breaking change parameters of addEvent() ([838df83](https://github.com/waitingsong/midway-components/commit/838df8380d39c192a7730f7547aa13b8ee1e6ee3))
+
+
+
+
+
 # [1.3.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@1.2.0...@mwcp/otel@1.3.0) (2022-10-05)
 
 
