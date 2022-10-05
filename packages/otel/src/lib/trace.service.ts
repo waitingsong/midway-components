@@ -34,6 +34,7 @@ import {
   ConfigKey,
   Config,
   MiddlewareConfig,
+  AddEventOtpions,
 } from './types'
 import {
   genRequestSpanName,
@@ -249,17 +250,16 @@ export class TraceService {
   addEvent(
     span: Span | undefined,
     input: Attributes,
-    eventName?: string,
-    startTime?: TimeInput,
+    options?: AddEventOtpions,
   ): void {
 
     const ename = typeof input['event'] === 'string' || typeof input['event'] === 'number'
       ? String(input['event']) : ''
-    const name = eventName ? eventName : ename
+    const name = options?.eventName ?? ename
     delete input['event']
 
     const span2 = span ?? this.rootSpan
-    span2.addEvent(name, input, startTime)
+    span2.addEvent(name, input, options?.startTime)
   }
 
   /**
@@ -388,7 +388,9 @@ export class TraceService {
       [SemanticAttributes.EXCEPTION_MESSAGE]: message,
     }
     stack && (attrs[SemanticAttributes.EXCEPTION_STACKTRACE] = stack)
-    this.addEvent(span, attrs, `${name}-Cause`) // Error-Cause
+    this.addEvent(span, attrs, {
+      eventName: `${name}-Cause`,
+    }) // Error-Cause
   }
 
 }
