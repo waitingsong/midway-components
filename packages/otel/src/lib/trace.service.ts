@@ -341,8 +341,8 @@ export class TraceService {
       event: AttrNames.RequestBegin,
       time: this.startTime,
     }
-
     this.addEvent(this.rootSpan, events)
+
     this.isStarted = true
     Object.defineProperty(this.ctx, `_${ConfigKey.serviceName}`, {
       enumerable: true,
