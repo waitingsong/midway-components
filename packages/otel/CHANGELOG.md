@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@2.0.0...@mwcp/otel@2.1.0) (2022-10-05)
+
+
+### Features
+
+* **otel:** add property traceEvent of Config and AddEventOtpions ([becb6b8](https://github.com/waitingsong/midway-components/commit/becb6b8a759aeaadbd63805b5c2fb1122edc3071))
+
+
+
+
+
 # [2.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@1.3.0...@mwcp/otel@2.0.0) (2022-10-05)
 
 
