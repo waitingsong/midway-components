@@ -258,6 +258,13 @@ export class TraceService {
     const name = options?.eventName ?? ename
     delete input['event']
 
+    if (options?.logMemeoryUsage || this.config.logMemeoryUsage) {
+      input[AttrNames.ServiceMemoryUsage] = JSON.stringify(humanMemoryUsage(), null, 2)
+    }
+    if (options?.logCpuUsage || this.config.logCpuUsage) {
+      input[AttrNames.ServiceCpuUsage] = JSON.stringify(process.cpuUsage(), null, 2)
+    }
+
     const span2 = span ?? this.rootSpan
     span2.addEvent(name, input, options?.startTime)
   }
@@ -290,12 +297,6 @@ export class TraceService {
     const events: Attributes = {
       time,
       event: AttrNames.RequestEnd,
-    }
-    if (this.config.logMemeoryUsage) {
-      events[AttrNames.ServiceMemoryUsage] = JSON.stringify(humanMemoryUsage(), null, 2)
-    }
-    if (this.config.logCpuUsage) {
-      events[AttrNames.ServiceCpuUsage] = JSON.stringify(process.cpuUsage(), null, 2)
     }
 
     this.addEvent(this.rootSpan, events)
@@ -339,12 +340,6 @@ export class TraceService {
     const events: Attributes = {
       event: AttrNames.RequestBegin,
       time: this.startTime,
-    }
-    if (this.config.logMemeoryUsage) {
-      events[AttrNames.ServiceMemoryUsage] = JSON.stringify(humanMemoryUsage(), null, 2)
-    }
-    if (this.config.logCpuUsage) {
-      events[AttrNames.ServiceCpuUsage] = JSON.stringify(process.cpuUsage(), null, 2)
     }
 
     this.addEvent(this.rootSpan, events)
