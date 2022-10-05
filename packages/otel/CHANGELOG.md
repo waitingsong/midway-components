@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@1.2.0...@mwcp/otel@1.3.0) (2022-10-05)
+
+
+### Features
+
+* **otel:** methods of TraceService accept parameter of startTime or endTime ([64be91e](https://github.com/waitingsong/midway-components/commit/64be91e014b4b0f315afaeccdb0c2a9143799762))
+
+
+
+
+
 # [1.2.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@1.1.1...@mwcp/otel@1.2.0) (2022-10-01)
 
 
