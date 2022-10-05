@@ -18,6 +18,7 @@ import {
   SpanStatus,
   SpanStatusCode,
   context,
+  TimeInput,
 } from '@opentelemetry/api'
 import { SemanticAttributes } from '@opentelemetry/semantic-conventions'
 import {
@@ -148,7 +149,11 @@ export class TraceService {
    * - set span status
    * - call span.end(), except span is root span
    */
-  endSpan(span: Span, spanStatusOptions: SpanStatusOptions = initSpanStatusOptions): void {
+  endSpan(
+    span: Span,
+    spanStatusOptions: SpanStatusOptions = initSpanStatusOptions,
+    endTime?: TimeInput,
+  ): void {
     const opts: SpanStatusOptions = {
       ...initSpanStatusOptions,
       ...spanStatusOptions,
@@ -168,13 +173,17 @@ export class TraceService {
     }
 
     if (span !== this.rootSpan) {
-      span.end()
+      span.end(endTime)
     }
   }
 
-  endRootSpan(spanStatusOptions: SpanStatusOptions = initSpanStatusOptions): void {
+  endRootSpan(
+    spanStatusOptions: SpanStatusOptions = initSpanStatusOptions,
+    endTime?: TimeInput,
+  ): void {
+
     this.endSpan(this.rootSpan, spanStatusOptions)
-    this.rootSpan.end()
+    this.rootSpan.end(endTime)
   }
 
   /**
@@ -237,14 +246,20 @@ export class TraceService {
   /**
    * Adds an event to the given span.
    */
-  addEvent(span: Span | undefined, input: Attributes, eventName?: string): void {
+  addEvent(
+    span: Span | undefined,
+    input: Attributes,
+    eventName?: string,
+    startTime?: TimeInput,
+  ): void {
+
     const ename = typeof input['event'] === 'string' || typeof input['event'] === 'number'
       ? String(input['event']) : ''
     const name = eventName ? eventName : ename
     delete input['event']
 
     const span2 = span ?? this.rootSpan
-    span2.addEvent(name, input)
+    span2.addEvent(name, input, startTime)
   }
 
   /**
@@ -259,7 +274,11 @@ export class TraceService {
   /**
    * Finish the root span and clean the context.
    */
-  finish(spanStatusOptions: SpanStatusOptions = initSpanStatusOptions): void {
+  finish(
+    spanStatusOptions: SpanStatusOptions = initSpanStatusOptions,
+    endTime?: TimeInput,
+  ): void {
+
     if (! this.config.enable) { return }
 
     const time = genISO8601String()
@@ -285,7 +304,7 @@ export class TraceService {
       [AttrNames.RequestEndTime]: time,
     }
     this.setAttributes(this.rootSpan, attr)
-    this.endRootSpan(spanStatusOptions)
+    this.endRootSpan(spanStatusOptions, endTime)
 
     this.ctx[`_${ConfigKey.serviceName}`] = null
   }
