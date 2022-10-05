@@ -290,22 +290,22 @@ export class TraceService {
 
     const time = genISO8601String()
 
-    if (spanStatusOptions.code !== SpanStatusCode.ERROR) {
-      spanStatusOptions.code = SpanStatusCode.OK
-    }
-
     const events: Attributes = {
       time,
       event: AttrNames.RequestEnd,
     }
-
     this.addEvent(this.rootSpan, events)
 
     const attr: Attributes = {
       [AttrNames.RequestEndTime]: time,
     }
     this.setAttributes(this.rootSpan, attr)
+
+    if (spanStatusOptions.code !== SpanStatusCode.ERROR) {
+      spanStatusOptions.code = SpanStatusCode.OK
+    }
     this.endRootSpan(spanStatusOptions, endTime)
+    this.traceContextArray.length = 0
 
     this.ctx[`_${ConfigKey.serviceName}`] = null
   }
