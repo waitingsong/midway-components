@@ -34,6 +34,7 @@ const enableTrace = typeof process.env['DISABLE_OTEL_TRACE'] === 'undefined'
 
 export const initialConfig: Readonly<Omit<Config, 'tracerConfig'>> = {
   enable: enableTrace,
+  traceEvent: true,
   logCpuUsage: true,
   captureIncomingQuery: true,
   captureRequestHeaders: [...initCaptureRequestHeaders],

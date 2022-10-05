@@ -40,6 +40,11 @@ export interface Config extends BaseConfig {
    */
   enable: boolean
   /**
+   * Whether add event to span
+   * @default true
+   */
+  traceEvent: boolean
+  /**
    * @default true
    */
   /**
@@ -235,6 +240,10 @@ export interface TraceError extends Error {
 }
 
 export interface AddEventOtpions {
+  /**
+   * false not add span event
+   */
+  traceEvent?: boolean
   /**
    * @default true
    */

@@ -253,6 +253,8 @@ export class TraceService {
     options?: AddEventOtpions,
   ): void {
 
+    if (options?.traceEvent === false || this.config.traceEvent === false) { return }
+
     const ename = typeof input['event'] === 'string' || typeof input['event'] === 'number'
       ? String(input['event']) : ''
     const name = options?.eventName ?? ename
