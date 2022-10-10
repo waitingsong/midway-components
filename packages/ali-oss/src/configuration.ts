@@ -4,6 +4,7 @@ import { join } from 'node:path'
 
 import { ILifeCycle } from '@midwayjs/core'
 import { App, Configuration } from '@midwayjs/decorator'
+import * as otel from '@mwcp/otel'
 import type { Application, IMidwayContainer } from '@mwcp/share'
 
 import { ConfigKey } from './lib/types'
@@ -12,6 +13,7 @@ import { ConfigKey } from './lib/types'
 @Configuration({
   namespace: ConfigKey.namespace,
   importConfigs: [join(__dirname, 'config')],
+  imports: [otel],
 })
 export class AutoConfiguration implements ILifeCycle {
 

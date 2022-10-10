@@ -1,4 +1,4 @@
-import { Span } from '@mwcp/jaeger'
+import type { Span } from '@mwcp/otel'
 import type { BaseConfig } from '@mwcp/share'
 import type { MiddlewareConfig as MWConfig } from '@waiting/shared-types'
 import * as Ali from '@yuntools/ali-oss'
@@ -46,10 +46,10 @@ export interface Config<SourceName extends string = string> extends BaseConfig {
 export type DataSource<SourceName extends string = string> = Record<SourceName, InstanceConfig>
 export interface InstanceConfig extends ClientConfig {
   /**
-   * Enable tracing via @mwcp/jaeger
+   * Enable tracing via @mwcp/otel
    * @default false
    */
-  enableTracing?: boolean
+  enableTrace?: boolean
   /**
    * 强制采样请求处理时间（毫秒）阈值
    * 负数不采样
@@ -73,7 +73,6 @@ export type SignOptions = Omit<Ali.SignOptions, 'src'>
 export type SyncOptions = Omit<Ali.SyncOptions, 'target' | 'src'>
 export type SyncLocalOptions = Omit<Ali.SyncLocalOptions, 'target' | 'src'>
 export type SyncRemoteOptions = Omit<Ali.SyncRemoteOptions, 'target' | 'src'>
-
 
 export interface QuerySpanInfo {
   span: Span
