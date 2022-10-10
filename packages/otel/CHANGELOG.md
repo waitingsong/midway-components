@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.1.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@3.0.0...@mwcp/otel@3.1.0) (2022-10-10)
+
+
+### Features
+
+* **otel:** change default otelConfig values ([6a8a87a](https://github.com/waitingsong/midway-components/commit/6a8a87a59f640dbab2107e9faf863a3596cd227e))
+
+
+
+
+
 # [3.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@2.1.1...@mwcp/otel@3.0.0) (2022-10-10)
 
 **Note:** Version bump only for package @mwcp/otel
