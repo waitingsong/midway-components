@@ -35,10 +35,15 @@ export enum Msg {
 
 export interface Config extends BaseConfig {
   /**
-   * Enable trace
+   * Enable tracing
    * @default true
    */
   enable: boolean
+  /**
+   * Whether add event to span
+   * @default true
+   */
+  traceEvent: boolean
   /**
    * @default true
    */
@@ -235,6 +240,10 @@ export interface TraceError extends Error {
 }
 
 export interface AddEventOtpions {
+  /**
+   * false not add span event
+   */
+  traceEvent?: boolean
   /**
    * @default true
    */
