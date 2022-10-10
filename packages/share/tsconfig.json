@@ -7,8 +7,7 @@
     "paths": {
       "~/*": ["./src/*"],
       "@/*": ["./test/*"]
-    },
-    "tsBuildInfoFile": ".vscode/.tsbuildinfo"
+    }
   },
   "ts-node": {
     "esm": true,
