@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 7.0.0 (2022-10-10)
+
+
+### Features
+
+* **ali-oss:** use OpenTelemetry instead of jaeger client ([74ac7be](https://github.com/waitingsong/midway-components/commit/74ac7be10bd4707b6b0733ab93ee06558e76d242))
+
+
+
+
+
 ## 6.0.4 (2022-10-10)
 
 **Note:** Version bump only for package @mwcp/ali-oss

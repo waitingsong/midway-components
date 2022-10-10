@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 29.0.0 (2022-10-10)
+
+**Note:** Version bump only for package @mwcp/taskman
+
+
+
+
+
 ## 28.1.7 (2022-10-10)
 
 **Note:** Version bump only for package @mwcp/taskman
