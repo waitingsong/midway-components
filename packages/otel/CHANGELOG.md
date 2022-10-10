@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.2.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@3.1.0...@mwcp/otel@3.2.0) (2022-10-10)
+
+
+### Features
+
+* **otel:** rename value of AttrNames.QueryError ([3b33354](https://github.com/waitingsong/midway-components/commit/3b333546d5b961df04b04cecc85eedcdff15c353))
+
+
+
+
+
 # [3.1.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@3.0.0...@mwcp/otel@3.1.0) (2022-10-10)
 
 
