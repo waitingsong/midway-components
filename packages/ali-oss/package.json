@@ -28,7 +28,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@mwcp/otel": "^3.2.1",
+    "@mwcp/otel": "^3.2.3",
     "@yuntools/ali-oss": "^16.1.2"
   },
   "devDependencies": {
