@@ -63,12 +63,12 @@ export interface Config extends BaseConfig {
   captureResponseBody: boolean
   /**
    * Log cpu usage when add span event
-   * @default true
+   * @default false
    */
   logCpuUsage: boolean
   /**
    * Log cpu usage when add span event
-   * @default true
+   * @default false
    */
   logMemeoryUsage: boolean
   /**
