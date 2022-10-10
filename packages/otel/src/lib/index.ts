@@ -23,10 +23,10 @@ export {
 } from './util'
 
 export {
-  Config as TracerConfig,
-  ConfigKey as TracerConfigKey,
-  MiddlewareConfig as TracerMiddlewareConfig,
-  MiddlewareOptions as TracerMiddlewareOptions,
+  Config as OtelConfig,
+  ConfigKey as OtelConfigKey,
+  MiddlewareConfig as OtelMiddlewareConfig,
+  MiddlewareOptions as OtelMiddlewareOptions,
   Msg as TracerMsg,
 
   AddEventOtpions,

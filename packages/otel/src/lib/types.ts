@@ -35,7 +35,7 @@ export enum Msg {
 
 export interface Config extends BaseConfig {
   /**
-   * Enable trace
+   * Enable tracing
    * @default true
    */
   enable: boolean
