@@ -5,8 +5,7 @@
   ],
   "ignore": [
     "demo",
-    "@mwcp/demo",
-    "@mwcp/taskman"
+    "@mwcp/demo"
   ],
   "command": {
     "publish": {
