@@ -8,7 +8,6 @@ import {
   Post,
   Query,
 } from '@midwayjs/decorator'
-import { TracerManager } from '@mwcp/jaeger'
 import type { Context } from '@mwcp/share'
 
 import {
@@ -34,7 +33,6 @@ import { TaskQueueService } from '../service/index.service'
 export class ServerController {
 
   @Inject() protected readonly ctx: Context
-  @Inject() protected readonly tracerManager: TracerManager
   @Inject() protected readonly queueSvc: TaskQueueService
 
   @Post('/' + ServerURL.create)

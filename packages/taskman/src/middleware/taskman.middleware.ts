@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { Middleware } from '@midwayjs/decorator'
-import { SpanLogInput, TracerManager } from '@mwcp/jaeger'
+import { Attributes, TraceService } from '@mwcp/otel'
 import type { Context, IMiddleware, NextFunction } from '@mwcp/share'
 import { genISO8601String } from '@waiting/shared-core'
 
@@ -52,7 +52,8 @@ async function middleware(
   const clientConfig = getComponentConfig<TaskClientConfig>(app, ConfigKey.clientConfig)
 
   const clientSvc = await ctx.requestContext.getAsync(ClientService)
-  const trm = await ctx.requestContext.getAsync(TracerManager)
+  const traceSvc = await ctx.requestContext.getAsync(TraceService)
+  void traceSvc
 
   const { headers } = ctx.request
   const taskId = headers[serverConfig.headerKeyTaskId]
@@ -60,14 +61,14 @@ async function middleware(
   /* c8 ignore else */
   if (headers[serverConfig.headerKey]) { // task distribution
     const count = clientSvc.runningTasks.size
-    const inputLog: SpanLogInput = {
+    const event: Attributes = {
       event: 'TaskMan-entry',
       taskId,
       pid: process.pid,
       time: genISO8601String(),
       runnerCount: count,
     }
-    trm?.spanLog(inputLog)
+    // traceSvc.addEvent(event)
 
     if (count > clientConfig.maxRunner) {
       ctx.status = 429
@@ -78,8 +79,8 @@ async function middleware(
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         msg: `Task running limit: ${clientConfig.maxRunner}, now: ${count}, taskId: ${taskId}`,
       }
-      inputLog['message'] = ctx.body
-      trm?.spanLog(inputLog)
+      event['message'] = JSON.stringify(ctx.body, null, 2)
+      // traceSvc?.spanLog(event)
 
       return
     }

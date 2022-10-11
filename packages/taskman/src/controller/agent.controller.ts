@@ -4,7 +4,7 @@ import {
   Inject,
   Param,
 } from '@midwayjs/decorator'
-import { Span, SpanLogInput, TracerManager } from '@mwcp/jaeger'
+import { TraceService, Attributes } from '@mwcp/otel'
 import type { Context } from '@mwcp/share'
 import { genISO8601String } from '@waiting/shared-core'
 
@@ -21,28 +21,23 @@ import { TaskAgentService } from '../service/index.service'
 export class AgentController {
 
   @Inject() protected readonly ctx: Context
-  @Inject() protected readonly tracerManager: TracerManager
+  @Inject() protected readonly traceService: TraceService
   @Inject() protected readonly agentSvc: TaskAgentService
 
   @Get('/' + ClientURL.start)
   async [ClientMethod.start](): Promise<TaskAgentState> {
-    const trm = this.tracerManager
-    let span: Span | undefined
+    const span = this.traceService.startSpan('TaskAgent')
 
     await this.agentSvc.run(this.ctx, span)
     const taskAgentState = await this.status()
 
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (trm) {
-      const inputLog: SpanLogInput = {
-        event: 'TaskAgent-run',
-        taskAgentState,
-        pid: process.pid,
-        time: genISO8601String(),
-      }
-      span = trm.genSpan('TaskAgent')
-      span.log(inputLog)
+    const event: Attributes = {
+      event: 'TaskAgent-run',
+      taskAgentState: JSON.stringify(taskAgentState, null, 2),
+      pid: process.pid,
+      time: genISO8601String(),
     }
+    this.traceService.addEvent(span, event)
 
     return taskAgentState
   }

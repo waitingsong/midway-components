@@ -114,8 +114,8 @@ export const initDbConfig: DbConfig<DbModel> = {
       propagateCreateError: false,
     },
   },
-  enableTracing: true,
-  tracingResponse: true,
+  enableTrace: true,
+  traceResponse: true,
   sampleThrottleMs: 3000,
 }
 
