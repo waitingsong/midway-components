@@ -168,12 +168,7 @@ export function getIncomingRequestAttributesFromWebContext(
   ctx: WebContext,
   config: Config,
 ): Attributes {
-  const { req: request } = ctx
-  const { headers } = request
 
-  const userAgent = headers['user-agent']
-  const ips = headers['x-forwarded-for']
-  const { httpVersion } = request
 
   const attrs: Attributes = {
     [SemanticAttributes.HTTP_URL]: ctx.href,
@@ -188,23 +183,31 @@ export function getIncomingRequestAttributesFromWebContext(
     [AttrNames.ServicePid]: process.pid,
   }
 
-  if (typeof ips === 'string') {
-    attrs[SemanticAttributes.HTTP_CLIENT_IP] = ips.split(',')[0]
+  let httpKindAttributes = {}
+  const { req } = ctx
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (req) {
+    const userAgent = req.headers['user-agent']
+    const ips = req.headers['x-forwarded-for']
+
+    if (typeof ips === 'string') {
+      attrs[SemanticAttributes.HTTP_CLIENT_IP] = ips.split(',')[0]
+    }
+
+    if (typeof userAgent !== 'undefined') {
+      attrs[SemanticAttributes.HTTP_USER_AGENT] = userAgent
+    }
+
+    // Object.defineProperty(attrs, 'http.request.header.content_type', {
+    //   enumerable: true,
+    //   writable: false,
+    //   value: headers['content-type'],
+    // })
+    setRequestContentLengthAttribute(req, attrs)
+
+    httpKindAttributes = getAttributesFromHttpKind(req.httpVersion)
   }
 
-  if (typeof userAgent !== 'undefined') {
-    attrs[SemanticAttributes.HTTP_USER_AGENT] = userAgent
-  }
-
-  // Object.defineProperty(attrs, 'http.request.header.content_type', {
-  //   enumerable: true,
-  //   writable: false,
-  //   value: headers['content-type'],
-  // })
-
-  setRequestContentLengthAttribute(request, attrs)
-
-  const httpKindAttributes = getAttributesFromHttpKind(httpVersion)
   return Object.assign(attrs, httpKindAttributes)
 }
 

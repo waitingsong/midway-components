@@ -356,7 +356,8 @@ export class TraceService {
     })
 
     new Promise<void>((done) => {
-      setSpanWithRequestHeaders(
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      this.ctx.get && setSpanWithRequestHeaders(
         this.rootSpan,
         this.otel.captureHeadersMap.get('request'),
         key => this.ctx.get(key),
