@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [29.1.0](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@29.0.1...@mwcp/taskman@29.1.0) (2022-10-11)
+
+
+### Features
+
+* **taskman:** use OpenTelemetry instead of jaeger client ([75aeba7](https://github.com/waitingsong/midway-components/commit/75aeba731d56f29de4723b24bc2fc142ce22c8c5))
+
+
+
+
+
 ## [29.0.1](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@29.0.0...@mwcp/taskman@29.0.1) (2022-10-11)
 
 **Note:** Version bump only for package @mwcp/taskman
