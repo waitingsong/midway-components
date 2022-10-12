@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.4.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@3.3.0...@mwcp/otel@3.4.0) (2022-10-12)
+
+
+### Features
+
+* **otel:** use ctx.path instead of ctx.url within genRequestSpanName() ([d2fe2ac](https://github.com/waitingsong/midway-components/commit/d2fe2acf170e6848fa4f68f1522dd806bab31588))
+
+
+
+
+
 # 3.3.0 (2022-10-12)
 
 
