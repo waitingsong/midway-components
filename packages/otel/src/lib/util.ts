@@ -411,7 +411,7 @@ export function genRequestSpanName(webContext: WebContext, maxLength = 50): stri
     ? webContext.request.protocol.toLocaleUpperCase()
     : ''
   const method = webContext.method || ''
-  const spanName = `${protocol} ${method} ${webContext.url}`
+  const spanName = `${protocol} ${method} ${webContext.path}`
   return spanName.slice(0, maxLength)
 }
 
