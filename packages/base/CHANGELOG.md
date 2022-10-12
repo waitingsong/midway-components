@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.2.0](https://github.com/waitingsong/midway-components/compare/@mwcp/base@6.1.0...@mwcp/base@6.2.0) (2022-10-12)
+
+
+### Features
+
+* **base:** export Trace, TraceService ([ff9928b](https://github.com/waitingsong/midway-components/commit/ff9928b505a2f4b252bd71f1c045bbec64804009))
+
+
+
+
+
 # [6.1.0](https://github.com/waitingsong/midway-components/compare/@mwcp/base@6.0.2...@mwcp/base@6.1.0) (2022-10-12)
 
 
