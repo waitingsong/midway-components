@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 3.3.0 (2022-10-12)
+
+
+### Features
+
+* **otel:** add parameter maxLength of genRequestSpanName() ([2ebeb0f](https://github.com/waitingsong/midway-components/commit/2ebeb0f1b5b6b4af7e4bb9a85bb669a2f3d66593))
+
+
+
+
+
 ## 3.2.5 (2022-10-11)
 
 **Note:** Version bump only for package @mwcp/otel
