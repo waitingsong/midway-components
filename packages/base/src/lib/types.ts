@@ -17,6 +17,8 @@ export {
   Attributes,
   AttrNames,
   HeadersKey,
+  Trace,
+  TraceService,
 } from '@mwcp/otel'
 
 export { JwtResult } from '@mwcp/jwt'
