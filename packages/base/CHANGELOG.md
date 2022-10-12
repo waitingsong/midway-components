@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.1.0](https://github.com/waitingsong/midway-components/compare/@mwcp/base@6.0.2...@mwcp/base@6.1.0) (2022-10-12)
+
+
+### Features
+
+* **base:** export type Attributes ([3825d1c](https://github.com/waitingsong/midway-components/commit/3825d1cb4732a78a3f940e02b11150acb880ad69))
+
+
+
+
+
 ## 6.0.2 (2022-10-11)
 
 **Note:** Version bump only for package @mwcp/base
