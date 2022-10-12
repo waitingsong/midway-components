@@ -14,7 +14,9 @@ export {
 export { FetchOptions } from '@mwcp/fetch'
 
 export {
-  AttrNames, HeadersKey,
+  Attributes,
+  AttrNames,
+  HeadersKey,
 } from '@mwcp/otel'
 
 export { JwtResult } from '@mwcp/jwt'
