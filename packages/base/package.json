@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/base",
   "author": "waiting",
-  "version": "6.2.3",
+  "version": "6.2.4",
   "description": "midway.js base",
   "keywords": [
     "midway",
@@ -24,13 +24,13 @@
     "@midwayjs/prometheus": "^3.6.0",
     "@midwayjs/redis": "^3.6.0",
     "@midwayjs/validate": "^3.6.0",
-    "@mwcp/ali-oss": "^7.0.4",
+    "@mwcp/ali-oss": "^7.0.5",
     "@mwcp/fetch": "^21.0.1",
-    "@mwcp/jwt": "^13.0.4",
+    "@mwcp/jwt": "^13.0.5",
     "@mwcp/kmore": "^37.0.1",
     "@mwcp/koid": "^11.0.0",
-    "@mwcp/otel": "^3.4.0",
-    "@mwcp/share": "^2.0.4",
+    "@mwcp/otel": "^3.4.1",
+    "@mwcp/share": "^2.0.5",
     "@waiting/base64": "^4.2.9",
     "@waiting/shared-core": "^20.6.3",
     "tsconfig-paths": "4"
