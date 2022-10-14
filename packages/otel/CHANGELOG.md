@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 3.6.0 (2022-10-14)
+
+
+### Features
+
+* **otel:** change TraceService:isStarted scope to public ([ed67c05](https://github.com/waitingsong/midway-components/commit/ed67c0517879ce1251fbe24e4e37602e4996a555))
+
+
+
+
+
 # [3.5.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@3.4.1...@mwcp/otel@3.5.0) (2022-10-14)
 
 
