@@ -2,7 +2,7 @@
 import type { IncomingHttpHeaders } from 'http'
 
 import { App, Config, Inject } from '@midwayjs/decorator'
-import { ILogger as Logger } from '@midwayjs/logger'
+// import { ILogger as Logger } from '@midwayjs/logger'
 import { AliOssManager } from '@mwcp/ali-oss'
 import {
   Node_Headers,
@@ -11,9 +11,9 @@ import {
 } from '@mwcp/fetch'
 import { JwtComponent } from '@mwcp/jwt'
 import { KoidComponent } from '@mwcp/koid'
-import { AttrNames, TraceService } from '@mwcp/otel'
+import { AttrNames, TraceLogger, TraceService } from '@mwcp/otel'
 import { MyError } from '@mwcp/share'
-import { OverwriteAnyToUnknown } from '@waiting/shared-types'
+import type { OverwriteAnyToUnknown } from '@waiting/shared-types'
 
 import {
   Application,
@@ -34,7 +34,8 @@ export class RootClass {
 
   @Inject() readonly fetchService: FetchService
 
-  @Inject() readonly logger: Logger
+  /** TraceLogger */
+  @Inject() readonly logger: TraceLogger
 
   @Inject() readonly koid: KoidComponent
 
