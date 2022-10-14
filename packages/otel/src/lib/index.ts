@@ -6,6 +6,7 @@ export {
   Trace,
   TraceDecoratorOptions,
 } from './trace.decorator'
+export * from './trace.logger'
 export * from './trace.service'
 export {
   addSpanEventWithOutgoingResponseData,
@@ -38,7 +39,7 @@ export {
   JaegerTraceInfoReferences,
   JaegerTraceInfoLog,
   JaegerTraceInfoLogField,
-  LogInfo,
+  TraceLogType as LogInfo,
   SpanHeaderInit,
   SpanStatusOptions,
   TraceError,

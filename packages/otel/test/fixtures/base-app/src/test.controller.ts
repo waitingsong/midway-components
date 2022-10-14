@@ -5,13 +5,11 @@ import {
   Controller,
   Get,
   Inject,
-  Logger,
-  Post,
 } from '@midwayjs/decorator'
-import { ILogger } from '@midwayjs/logger'
 
 import { TraceService } from '~/lib/index'
 import { Trace } from '~/lib/trace.decorator'
+import { TraceLogger } from '~/lib/trace.logger'
 import { Config, ConfigKey, Msg } from '~/lib/types'
 
 import { DefaultComponentService } from './test.service'
@@ -25,11 +23,10 @@ export class DefaultComponentController {
   @Inject() readonly svc: DefaultComponentService
   @Inject() readonly traceSvc: TraceService
 
-  @Logger() logger: ILogger
+  @Inject() readonly logger: TraceLogger
 
   @Get('/id')
   async traceId(): Promise<string> {
-    this.valiateRoute()
     const traceId = this.traceSvc.getTraceId()
     await this.svc.hello(Msg.hello)
     // ensure child span of svc.hello is sent, to keep span order for unit test validation
@@ -40,7 +37,6 @@ export class DefaultComponentController {
   @Trace()
   @Get('/id2')
   async traceId2(): Promise<string> {
-    this.valiateRoute()
     const traceId = this.traceSvc.getTraceId()
     const msg = await this.svc.hello(Msg.hello)
     assert(msg)
@@ -51,7 +47,6 @@ export class DefaultComponentController {
   @Trace()
   @Get('/error')
   async error(): Promise<string> {
-    this.valiateRoute()
     try {
       await this.svc.error(true)
     }
@@ -68,15 +63,27 @@ export class DefaultComponentController {
   @Trace()
   @Get('/trace_error')
   async traceError(): Promise<string> {
-    this.valiateRoute()
     await this.svc.traceError(true)
     return 'should not reach here'
   }
 
-  valiateRoute(): void {
-    if (! this.config.enableDefaultRoute) {
-      throw new Error('route is not enabled')
-    }
+
+  @Get('/log')
+  async log(): Promise<string> {
+    const traceId = this.traceSvc.getTraceId()
+    this.logger.log({
+      msg: traceId,
+    })
+    return traceId
+  }
+
+  @Get('/warn')
+  async warn(): Promise<string> {
+    const traceId = this.traceSvc.getTraceId()
+    this.logger.warn({
+      traceId,
+    })
+    return traceId
   }
 
 }
