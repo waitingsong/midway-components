@@ -25,7 +25,7 @@
     "@midwayjs/redis": "^3.6.0",
     "@midwayjs/validate": "^3.6.0",
     "@mwcp/ali-oss": "^7.0.5",
-    "@mwcp/fetch": "^21.0.1",
+    "@mwcp/fetch": "^21.1.0",
     "@mwcp/jwt": "^13.0.5",
     "@mwcp/kmore": "^37.0.1",
     "@mwcp/koid": "^11.0.0",
