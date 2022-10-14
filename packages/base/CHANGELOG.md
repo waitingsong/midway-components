@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.4.0](https://github.com/waitingsong/midway-components/compare/@mwcp/base@6.3.0...@mwcp/base@6.4.0) (2022-10-14)
+
+
+### Features
+
+* **base:** Inject TraceLogger instead of ILogger on RootClass ([03efd3f](https://github.com/waitingsong/midway-components/commit/03efd3f50fb5c7a13eaef13c04b275e3dfce8654))
+
+
+
+
+
 # [6.3.0](https://github.com/waitingsong/midway-components/compare/@mwcp/base@6.2.5...@mwcp/base@6.3.0) (2022-10-14)
 
 
