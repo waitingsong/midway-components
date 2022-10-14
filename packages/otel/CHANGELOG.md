@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.5.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@3.4.1...@mwcp/otel@3.5.0) (2022-10-14)
+
+
+### Features
+
+* **otel:** TraceLogger implementation ([6de2ae4](https://github.com/waitingsong/midway-components/commit/6de2ae4dbaa3c4a9c23221478ca4bb20c4003c7c))
+
+
+
+
+
 ## 3.4.1 (2022-10-13)
 
 **Note:** Version bump only for package @mwcp/otel
