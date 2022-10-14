@@ -60,39 +60,51 @@ export class TraceLogger implements ILogger {
    *  - false: 仅打印日志，不上报
    */
   log(input: TraceLogType, span?: Span | false): void {
-    const currSpan = typeof span === 'undefined'
-      ? this.traceSvc.rootSpan
-      : span
-    traceLogger(this.traceSvc, this.logger, input, currSpan)
+    traceLogger(input, this.traceSvc, span)
+    origLogger(input, this.logger)
   }
 }
 
 function traceLogger(
-  traceSvc: TraceService,
-  logger: ILogger,
   input: TraceLogType,
+  traceSvc: TraceService,
   span?: Span | false,
 ): void {
+
+  if (! traceSvc.isStarted) { return }
+
+  const currSpan = typeof span === 'undefined'
+    ? traceSvc.rootSpan
+    : span
+  if (! currSpan) { return }
 
   const { msg, args } = input
   const level = input.level ?? 'info'
 
-  if (span) {
-    const name = input['event'] && typeof input['event'] === 'string'
-      ? input['event']
-      : 'trace.log'
-    const event: Attributes = {
-      event: name,
-      [AttrNames.LogLevel]: level,
-    }
-    if (typeof msg !== 'undefined') {
-      event[AttrNames.Message] = typeof msg === 'string' ? msg : JSON.stringify(msg)
-    }
-    if (typeof args !== 'undefined') {
-      event['log.detail'] = JSON.stringify(args)
-    }
-    traceSvc.addEvent(span, event)
+  const name = input['event'] && typeof input['event'] === 'string'
+    ? input['event']
+    : 'trace.log'
+  const event: Attributes = {
+    event: name,
+    [AttrNames.LogLevel]: level,
   }
+  if (typeof msg !== 'undefined') {
+    event[AttrNames.Message] = typeof msg === 'string' ? msg : JSON.stringify(msg)
+  }
+  if (typeof args !== 'undefined') {
+    event['log.detail'] = JSON.stringify(args)
+  }
+
+  traceSvc.addEvent(currSpan, event)
+}
+
+function origLogger(
+  input: TraceLogType,
+  logger: ILogger,
+): void {
+
+  const { msg, args } = input
+  const level = input.level ?? 'info'
 
   if (typeof msg === 'undefined') {
     logger[level](input)
