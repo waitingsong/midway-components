@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.3.0](https://github.com/waitingsong/midway-components/compare/@mwcp/base@6.2.5...@mwcp/base@6.3.0) (2022-10-14)
+
+
+### Features
+
+* **base:** export TraceLogger ([750a477](https://github.com/waitingsong/midway-components/commit/750a47778bc2cfabdedde8d7b963e7b3cda3acf7))
+
+
+
+
+
 ## [6.2.5](https://github.com/waitingsong/midway-components/compare/@mwcp/base@6.2.4...@mwcp/base@6.2.5) (2022-10-14)
 
 **Note:** Version bump only for package @mwcp/base
