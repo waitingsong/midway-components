@@ -56,11 +56,11 @@ export class TraceService {
 
   rootContext: Context
   rootSpan: Span
+  isStarted = false
 
   readonly instanceId = Symbol(Date.now())
   readonly startTime = genISO8601String()
 
-  protected isStarted = false
   protected readonly traceContextArray: Context[] = []
 
   @Init()
