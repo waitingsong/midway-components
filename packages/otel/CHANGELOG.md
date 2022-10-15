@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.7.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@3.6.0...@mwcp/otel@3.7.0) (2022-10-15)
+
+
+### Features
+
+* **otel:** export type TraceContext alias of Context ([42ede1f](https://github.com/waitingsong/midway-components/commit/42ede1f763e43fe2a2896f79158739a468bbf236))
+
+
+
+
+
 # 3.6.0 (2022-10-14)
 
 
