@@ -11,6 +11,7 @@ export {
   Attributes,
   AttributeValue,
   Context,
+  Context as TraceContext,
   Span,
   SpanKind,
   SpanContext,
