@@ -38,7 +38,7 @@
   "devDependencies": {
     "@midwayjs/swagger": "^3.6.0",
     "cross-env": "7",
-    "kmore": "39.0.0",
+    "kmore": "39.0.1",
     "kmore-cli": "^39.0.0",
     "kmore-types": "^39.0.0"
   },
