@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.5.0](https://github.com/waitingsong/midway-components/compare/@mwcp/base@6.4.2...@mwcp/base@6.5.0) (2022-10-17)
+
+
+### Features
+
+* bump deps version ([1511791](https://github.com/waitingsong/midway-components/commit/1511791966ee906b39984d186bd437fb1a5d5f62))
+
+
+
+
+
 ## [6.4.2](https://github.com/waitingsong/midway-components/compare/@mwcp/base@6.4.1...@mwcp/base@6.4.2) (2022-10-15)
 
 **Note:** Version bump only for package @mwcp/base

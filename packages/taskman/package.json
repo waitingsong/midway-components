@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/taskman",
   "author": "waiting",
-  "version": "29.1.12",
+  "version": "29.2.0",
   "description": "midway component task manager",
   "keywords": [
     "midway",
@@ -33,7 +33,7 @@
     "postgres-interval": "^4.0.0"
   },
   "devDependencies": {
-    "@mwcp/base": "^6.4.2",
+    "@mwcp/base": "^6.5.0",
     "@mwcp/share": "^2.0.5",
     "cross-env": "7",
     "kmore-cli": "^38.0.0"
