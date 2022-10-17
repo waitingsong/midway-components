@@ -150,7 +150,7 @@ export class TaskQueueRepository {
   ): Promise<TaskProgressDTO | undefined> {
 
     const { db } = this
-    const trx = await db.dbh.transaction()
+    const trx = await db.transaction()
 
     await db.camelTables.ref_tb_task_progress()
       .transacting(trx)
@@ -258,7 +258,7 @@ export class TaskQueueRepository {
   ): Promise<TaskDTO | undefined> {
 
     const { db } = this
-    const trx = await db.dbh.transaction()
+    const trx = await db.transaction()
 
     await db.camelTables.ref_tb_task_progress()
       .transacting(trx)
@@ -363,7 +363,7 @@ export class TaskQueueRepository {
 
     assert(options.taskTypeId > 0, 'taskTypeId must > 0')
 
-    const trx = await db.dbh.transaction()
+    const trx = await db.transaction()
 
     const where = `expect_start BETWEEN now() - interval '${options.earlierThanTimeIntv}'
       AND now() + interval '1s'`
