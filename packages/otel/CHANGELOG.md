@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 3.8.0 (2022-10-17)
+
+
+### Features
+
+* **otel:** change AttrNames delimiter from minus to dot ([3a881d2](https://github.com/waitingsong/midway-components/commit/3a881d273ee6b0f0b99f4f9c0e093a3b12fbf16e))
+
+
+
+
+
 # [3.7.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@3.6.0...@mwcp/otel@3.7.0) (2022-10-15)
 
 
