@@ -8,6 +8,7 @@
       "~/*": ["./src/*"],
       "@/*": ["./test/*"]
     },
+    "target": "ES2022",
     "tsBuildInfoFile": ".tsbuildinfo"
   },
   "ts-node": {
