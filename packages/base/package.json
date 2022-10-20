@@ -27,7 +27,7 @@
     "@mwcp/ali-oss": "^7.0.10",
     "@mwcp/fetch": "^21.1.1",
     "@mwcp/jwt": "^13.0.6",
-    "@mwcp/kmore": "^39.0.2",
+    "@mwcp/kmore": "^40.0.0",
     "@mwcp/koid": "^11.0.0",
     "@mwcp/otel": "^3.8.1",
     "@mwcp/share": "^2.0.6",
@@ -38,9 +38,9 @@
   "devDependencies": {
     "@midwayjs/swagger": "^3.6.0",
     "cross-env": "7",
-    "kmore": "39.0.2",
-    "kmore-cli": "^39.0.2",
-    "kmore-types": "^39.0.2"
+    "kmore": "^40.0.0",
+    "kmore-cli": "^40.0.0",
+    "kmore-types": "^40.0.0"
   },
   "engines": {
     "node": ">=16.13.0"
