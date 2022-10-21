@@ -40,7 +40,7 @@
     "cross-env": "7",
     "kmore": "^40.0.0",
     "kmore-cli": "^40.0.0",
-    "kmore-types": "^40.0.0"
+    "kmore-types": "^45.0.0"
   },
   "engines": {
     "node": ">=16.13.0"
