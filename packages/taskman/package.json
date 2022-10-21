@@ -36,7 +36,7 @@
     "@mwcp/base": "^6.6.0",
     "@mwcp/share": "^2.0.6",
     "cross-env": "7",
-    "kmore-cli": "^40.0.0"
+    "kmore-cli": "^45.0.0"
   },
   "engines": {
     "node": ">=16.13.0"
