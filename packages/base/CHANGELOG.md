@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.7.0](https://github.com/waitingsong/midway-components/compare/@mwcp/base@6.6.1...@mwcp/base@6.7.0) (2022-10-26)
+
+
+### Features
+
+* **base:** trace add tag reqId ([b961f6d](https://github.com/waitingsong/midway-components/commit/b961f6d7ec167372cb7c9392b351478ec3496483))
+
+
+
+
+
 ## [6.6.1](https://github.com/waitingsong/midway-components/compare/@mwcp/base@6.6.0...@mwcp/base@6.6.1) (2022-10-25)
 
 **Note:** Version bump only for package @mwcp/base
