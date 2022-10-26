@@ -1,6 +1,6 @@
 import { Middleware } from '@midwayjs/decorator'
 import { KoidComponent } from '@mwcp/koid'
-import { HeadersKey } from '@mwcp/otel'
+import { HeadersKey, TraceService } from '@mwcp/otel'
 
 import {
   Context,
@@ -47,6 +47,13 @@ async function middleware(
   }
 
   ctx.set(key, reqId)
+
+  const traceService = await ctx.requestContext.getAsync(TraceService)
+  if (traceService.isStarted) {
+    traceService.setAttributes(traceService.rootSpan, {
+      reqId,
+    })
+  }
 
   return next()
 }
