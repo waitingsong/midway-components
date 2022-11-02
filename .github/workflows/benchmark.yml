@@ -130,10 +130,10 @@ jobs:
           CI: true
           DISABLE_OTEL_TRACE: true
 
-      - name: Benchmark base
+      - name: Benchmark boot
         timeout-minutes: 10
         run: |
-          .scripts/benchmark/start-benchmark.mjs --wait=30000 --qps=500 --api=_base/hello --p=base
+          .scripts/benchmark/start-benchmark.mjs --wait=30000 --qps=500 --api=_base/hello --p=boot
         env:
           CI: true
           OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
