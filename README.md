@@ -16,10 +16,10 @@
 | Package     | Version                      |
 | ----------- | ---------------------------- |
 | [`ali-oss`] | [![ali-oss-svg]][ali-oss-ch] |
-| [`jaeger`]  | [![jaeger-svg]][jaeger-ch]   |
 | [`jwt`]     | [![jwt-svg]][jwt-ch]         |
 | [`otel`]    | [![otel-svg]][otel-ch]       |
 | [`taskman`] | [![taskman-svg]][taskman-ch] |
+| [`boot`]    | [![boot-svg]][boot-ch]       |
 
 
 ## Initialize and install dependencies
@@ -64,10 +64,6 @@ npm run purge
 [ali-oss-svg]: https://img.shields.io/npm/v/@mwcp/ali-oss.svg?maxAge=7200
 [ali-oss-ch]: https://github.com/waitingsong/midway-components/tree/main/packages/ali-oss/CHANGELOG.md
 
-[`jaeger`]: https://github.com/waitingsong/midway-components/tree/main/packages/jaeger
-[jaeger-svg]: https://img.shields.io/npm/v/@mwcp/jaeger.svg?maxAge=7200
-[jaeger-ch]: https://github.com/waitingsong/midway-components/tree/main/packages/jaeger/CHANGELOG.md
-
 [`jwt`]: https://github.com/waitingsong/midway-components/tree/main/packages/jwt
 [jwt-svg]: https://img.shields.io/npm/v/@mwcp/jwt.svg?maxAge=7200
 [jwt-ch]: https://github.com/waitingsong/midway-components/tree/main/packages/jwt/CHANGELOG.md
@@ -79,4 +75,8 @@ npm run purge
 [`taskman`]: https://github.com/waitingsong/midway-components/tree/main/packages/taskman
 [taskman-svg]: https://img.shields.io/npm/v/@mwcp/taskman.svg?maxAge=7200
 [taskman-ch]: https://github.com/waitingsong/midway-components/tree/main/packages/taskman/CHANGELOG.md
+
+[`boot`]: https://github.com/waitingsong/midway-components/tree/main/packages/boot
+[boot-svg]: https://img.shields.io/npm/v/@mwcp/boot.svg?maxAge=7200
+[boot-ch]: https://github.com/waitingsong/midway-components/tree/main/packages/boot/CHANGELOG.md
 
