@@ -10,7 +10,7 @@ rules:
     - packageDir:
       - ./
       - ../share/
-      - ../base/
+      - ../boot/
 
 ignorePatterns:
   - fixtures

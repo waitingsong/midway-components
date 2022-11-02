@@ -10,7 +10,7 @@ rules:
     - packageDir:
       - ./
       - ../share/
-      - ../base/
+      - ../boot/
       - ../../node_modules/@opentelemetry/sdk-node
       - ../../node_modules/@opentelemetry/instrumentation-http
       - ../../node_modules/@opentelemetry/auto-instrumentations-node
