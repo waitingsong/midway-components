@@ -11,7 +11,7 @@ import {
   // ScopeEnum,
 } from '@midwayjs/decorator'
 import { ILogger } from '@midwayjs/logger'
-import { FetchOptions } from '@mwcp/base'
+import { FetchOptions } from '@mwcp/boot'
 import {
   FetchService,
   JsonResp,

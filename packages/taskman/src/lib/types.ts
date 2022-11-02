@@ -1,5 +1,5 @@
 import { Rule } from '@midwayjs/validate'
-import type { FetchOptions, JsonObject } from '@mwcp/base'
+import type { FetchOptions, JsonObject } from '@mwcp/boot'
 import { DataSource } from '@mwcp/kmore'
 import {
   MiddlewareConfig as MWConfig,

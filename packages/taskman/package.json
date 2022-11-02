@@ -33,7 +33,7 @@
     "postgres-interval": "^4.0.0"
   },
   "devDependencies": {
-    "@mwcp/base": "^6.8.1",
+    "@mwcp/boot": "^1.0.0",
     "@mwcp/share": "^2.0.7",
     "cross-env": "7",
     "kmore-cli": "^48.0.0"
