@@ -94,10 +94,11 @@ jobs:
       - name: Inatall Dependencies
         timeout-minutes: 15
         run: |
+          chown -R 1001:121 "/github/home/.npm"
           chmod a+w -R .
           # DO NOT execute: npm config set unsafe-perm=true
           export cwd=`pwd`
-          .github/workflows/fix.sh
+          # .github/workflows/fix.sh
           npm i --no-audit -g autocannon c8 lerna rollup zx
           # npm run purge
           npm run bootstrap
@@ -127,57 +128,57 @@ jobs:
         env:
           CI: true
 
-      # - name: Init Database
-      #   run: |
-      #     export cwd=`pwd`
-      #     . .scripts/ci/ci-env.sh
-      #     .scripts/ci/ci-prepare.sh
-      #     .scripts/ci/ci-init-db.sh
-      #   env:
-      #     CI: true
-      #     POSTGRES_HOST: postgres
-      #     POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
-      #     POSTGRES_DB: db_ci_test
-      #     POSTGRES_USER: postgres
-      #     POSTGRES_PASSWORD: postgres
-      #     PGPASSWORD: postgres
+      - name: Init Database
+        run: |
+          export cwd=`pwd`
+          . .scripts/ci/ci-env.sh
+          .scripts/ci/ci-prepare.sh
+          .scripts/ci/ci-init-db.sh
+        env:
+          CI: true
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
+          POSTGRES_DB: db_ci_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          PGPASSWORD: postgres
 
-      # - name: Testing
-      #   run: |
-      #     export cwd=`pwd`
-      #     . .scripts/ci/ci-env.sh
-      #     .scripts/ci/ci-prepare.sh
-      #     .scripts/init.mjs
-      #     # npm run ci
-      #     npm run test
-      #   env:
-      #     CI: true
-      #     # use `localhost` if running the job on the VM
-      #     # use `postgres` if running the job on a container
-      #     POSTGRES_HOST: postgres
-      #     POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
-      #     POSTGRES_DB: db_ci_test
-      #     POSTGRES_USER: postgres
-      #     POSTGRES_PASSWORD: postgres
-      #     PGPASSWORD: postgres
-      #     # redis
-      #     REDIS_HOST: redis
-      #     REDIS_PORT: 6379
-      #     # otel
-      #     OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
+      - name: Testing
+        run: |
+          export cwd=`pwd`
+          . .scripts/ci/ci-env.sh
+          .scripts/ci/ci-prepare.sh
+          .scripts/init.mjs
+          # npm run ci
+          npm run test
+        env:
+          CI: true
+          # use `localhost` if running the job on the VM
+          # use `postgres` if running the job on a container
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
+          POSTGRES_DB: db_ci_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          PGPASSWORD: postgres
+          # redis
+          REDIS_HOST: redis
+          REDIS_PORT: 6379
 
-      #     ALI_ALB_IPS: ${{ secrets.ALI_ALB_IPS }}
-      #     ALI_ALB_GROUPID: ${{ secrets.ALI_ALB_GROUPID }}
+          ALI_ALB_IPS: ${{ secrets.ALI_ALB_IPS }}
+          ALI_ALB_GROUPID: ${{ secrets.ALI_ALB_GROUPID }}
 
-      #     ALI_ECS_AID: ${{ secrets.ALI_ECS_AID }}
-      #     ALI_ECS_ASECRET: ${{ secrets.ALI_ECS_ASECRET }}
-      #     ALI_ECS_IDS: ${{ secrets.ALI_ECS_IDS }}
-      #     ALI_ECS_IPS: ${{ secrets.ALI_ECS_IPS }}
+          ALI_ECS_AID: ${{ secrets.ALI_ECS_AID }}
+          ALI_ECS_ASECRET: ${{ secrets.ALI_ECS_ASECRET }}
+          ALI_ECS_IDS: ${{ secrets.ALI_ECS_IDS }}
+          ALI_ECS_IPS: ${{ secrets.ALI_ECS_IPS }}
 
-      #     ALI_OSS_AID: ${{ secrets.ALI_OSS_AID }}
-      #     ALI_OSS_ASECRET: ${{ secrets.ALI_OSS_ASECRET }}
-      #     ALI_OSS_ENDPOINT: ${{ secrets.ALI_OSS_ENDPOINT }}
-      #     ALI_OSS_BUCKET: ${{ secrets.ALI_OSS_BUCKET }}
+          ALI_OSS_AID: ${{ secrets.ALI_OSS_AID }}
+          ALI_OSS_ASECRET: ${{ secrets.ALI_OSS_ASECRET }}
+          ALI_OSS_ENDPOINT: ${{ secrets.ALI_OSS_ENDPOINT }}
+          ALI_OSS_BUCKET: ${{ secrets.ALI_OSS_BUCKET }}
+
+          OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
 
       - name: NPM Publish
         run: |
@@ -200,10 +201,29 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
 
+    services:
+      postgres:
+        image: postgres:alpine
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: db_ci_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
-
-
-
-
-
+      jaeger:
+        image: jaegertracing/all-in-one
+        env:
+          TZ: 'Asia/Chongqing'
+          COLLECTOR_OTLP_ENABLED: 'true'
+        ports:
+          - 4317:4317
+          - 4318:4318
+          - 5778:5778
+          - 6831:6831/udp
+          - 6832:6832/udp
+          - 14250:14250
+          - 16686:16686
 
