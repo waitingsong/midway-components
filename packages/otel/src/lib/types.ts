@@ -144,11 +144,12 @@ export interface SpanHeaderInit extends Attributes {
   [HeadersKey.traceId]: string
 }
 
-export interface LogInfo {
+export interface TraceLogType {
   /**
    * debug | info | warn | error
+   * @defaut info
    */
-  level: keyof ILogger
+  level?: keyof ILogger
   msg: unknown
   args?: unknown[]
   [key: string]: unknown

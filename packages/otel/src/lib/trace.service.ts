@@ -56,11 +56,11 @@ export class TraceService {
 
   rootContext: Context
   rootSpan: Span
+  isStarted = false
 
   readonly instanceId = Symbol(Date.now())
   readonly startTime = genISO8601String()
 
-  protected isStarted = false
   protected readonly traceContextArray: Context[] = []
 
   @Init()
@@ -356,7 +356,8 @@ export class TraceService {
     })
 
     new Promise<void>((done) => {
-      setSpanWithRequestHeaders(
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      this.ctx.get && setSpanWithRequestHeaders(
         this.rootSpan,
         this.otel.captureHeadersMap.get('request'),
         key => this.ctx.get(key),

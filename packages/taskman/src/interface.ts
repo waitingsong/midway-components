@@ -1,5 +1,4 @@
 
-export { TracerLog } from '@mwcp/jaeger'
 export {
   JsonObject,
   JsonResp,

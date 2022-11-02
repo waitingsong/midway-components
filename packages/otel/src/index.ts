@@ -1,6 +1,7 @@
 import {
   Config,
   ConfigKey,
+  InitTraceOptions,
   MiddlewareConfig,
   middlewareEnableCacheKey,
 } from './lib/types'
@@ -10,6 +11,7 @@ export {
   Attributes,
   AttributeValue,
   Context,
+  Context as TraceContext,
   Span,
   SpanKind,
   SpanContext,
@@ -31,6 +33,7 @@ declare module '@midwayjs/core/dist/interface' {
   interface MidwayConfig {
     [ConfigKey.config]: Partial<Config>
     [ConfigKey.middlewareConfig]: Partial<MiddlewareConfig>
+    [ConfigKey.otlpGrpcExporterConfig]: Partial<InitTraceOptions['otlpGrpcExporterConfig']>
   }
 }
 // @ts-ignore

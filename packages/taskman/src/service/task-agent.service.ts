@@ -1,30 +1,24 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import assert from 'node:assert'
 import { randomUUID } from 'node:crypto'
-// import { IMidwayLogger } from '@midwayjs/core'
 
 import {
   Config,
   Init,
   Inject,
   Provide,
-  Scope,
-  ScopeEnum,
+  // Scope,
+  // ScopeEnum,
 } from '@midwayjs/decorator'
+import { ILogger } from '@midwayjs/logger'
 import { FetchOptions } from '@mwcp/base'
 import {
-  FetchComponent,
+  FetchService,
   JsonResp,
   Node_Headers,
 } from '@mwcp/fetch'
-import {
-  HeadersKey,
-  Logger,
-  Span,
-  SpanLogInput,
-  TracerTag,
-} from '@mwcp/jaeger'
 import { KoidComponent } from '@mwcp/koid'
+import { Attributes, AttrNames, HeadersKey, Span, SpanStatusCode, TraceService } from '@mwcp/otel'
 import type { Context } from '@mwcp/share'
 import { genISO8601String } from '@waiting/shared-core'
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -57,15 +51,17 @@ import {
 
 
 @Provide()
-@Scope(ScopeEnum.Singleton)
+// @Scope(ScopeEnum.Singleton)
 export class TaskAgentService {
 
-  @Inject() readonly fetch: FetchComponent
-
+  @Inject() readonly fetch: FetchService
+  @Inject() readonly traceService: TraceService
   @Inject() readonly koid: KoidComponent
+  @Inject() readonly logger: ILogger
 
   @Config(ConfigKey.clientConfig) protected readonly clientConfig: TaskClientConfig
   @Config(ConfigKey.serverConfig) protected readonly serverConfig: TaskServerConfig
+
 
   id: string
   maxRunner = 1
@@ -106,19 +102,19 @@ export class TaskAgentService {
     span?: Span,
   ): Promise<boolean> {
 
-    const logger = await ctx?.requestContext.getAsync(Logger)
+    void ctx
 
     const taskAgentState = this.status()
-    const inputLog: SpanLogInput = {
+    const event: Attributes = {
       event: 'TaskAgent-run',
-      taskAgentState,
+      taskAgentState: JSON.stringify(taskAgentState, null, 2),
       pid: process.pid,
       time: genISO8601String(),
       thisMaxRunner: this.maxRunner,
       thisClientConfigMaxRunner: this.clientConfig.maxRunner,
       thisRunnerSetSize: this.runnerSet.size,
     }
-    logger?.info(inputLog, span)
+    this.traceService.addEvent(span, event)
 
     // console.info({
     //   thisMaxRunner: this.maxRunner,
@@ -145,13 +141,13 @@ export class TaskAgentService {
         if (idx < maxPickTaskCount) {
           return true
         }
-        const input: SpanLogInput = {
-          [TracerTag.logLevel]: 'info',
+        const input: Attributes = {
+          [AttrNames.LogLevel]: 'info',
           pid: process.pid,
           message: `taskAgent stopped at ${idx} of ${maxPickTaskCount}`,
           time: genISO8601String(),
         }
-        logger?.info(input, span)
+        this.traceService.addEvent(span, input)
 
         return false
       }),
@@ -177,31 +173,33 @@ export class TaskAgentService {
           this.runnerSet.delete(subsp)
         }
 
-        const input: SpanLogInput = {
-          [TracerTag.logLevel]: 'error',
+        const input: Attributes = {
+          [AttrNames.LogLevel]: 'error',
           pid: process.pid,
           message: 'TaskAgent stopped when error',
           errMsg: err.message,
           errStack: err.stack,
           time: genISO8601String(),
         }
-        logger?.warn(input)
+        this.traceService.addEvent(span, input)
         if (span) {
-          span.finish()
+          this.traceService.endSpan(span, {
+            code: SpanStatusCode.ERROR,
+            error: err,
+          })
         }
       },
       complete: () => {
         subsp && this.runnerSet.delete(subsp)
 
-        const input: SpanLogInput = {
-          [TracerTag.logLevel]: 'info',
-          pid: process.pid,
+        const input: Attributes = {
+          [AttrNames.LogLevel]: 'info',
           message: 'TaskAgent complete',
           time: genISO8601String(),
         }
-        logger?.info(input)
+        this.traceService.addEvent(span, input)
         if (span) {
-          span.finish()
+          this.traceService.endSpan(span)
         }
       },
     })
@@ -211,6 +209,7 @@ export class TaskAgentService {
   }
 
   async stop(ctx?: Context, agentId?: string): Promise<void> {
+    void ctx
     if (agentId && agentId !== this.id) {
       return
     }
@@ -221,8 +220,7 @@ export class TaskAgentService {
     }
     /* c8 ignore next 4 */
     catch (ex) {
-      const logger = await ctx?.requestContext.getAsync(Logger)
-      logger?.warn('stop with error', (ex as Error).message)
+      this.logger.warn('stop with error', (ex as Error).message)
     }
     this.runnerSet.clear()
   }

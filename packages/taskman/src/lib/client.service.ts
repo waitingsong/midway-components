@@ -4,13 +4,10 @@ import {
   Inject,
   Provide,
 } from '@midwayjs/decorator'
+import { ILogger } from '@midwayjs/logger'
 import type { FetchOptions } from '@mwcp/base'
-import { FetchComponent, JsonResp, Node_Headers } from '@mwcp/fetch'
-import {
-  HeadersKey,
-  Logger,
-  TracerManager,
-} from '@mwcp/jaeger'
+import { FetchService, JsonResp, Node_Headers } from '@mwcp/fetch'
+import { TraceService } from '@mwcp/otel'
 import type { Context } from '@mwcp/share'
 import { retrieveHeadersItem } from '@waiting/shared-core'
 
@@ -32,17 +29,16 @@ import {
 } from './types'
 
 
-
 @Provide()
 export class ClientService {
 
   @Inject() protected readonly ctx: Context
 
-  @Inject() readonly logger: Logger
+  @Inject() readonly logger: ILogger
 
-  @Inject() protected readonly fetch: FetchComponent
+  @Inject() protected readonly fetch: FetchService
 
-  @Inject() readonly tracerManager: TracerManager
+  @Inject() readonly traceService: TraceService
 
   @Config(ConfigKey.clientConfig) protected readonly config: TaskClientConfig
 
@@ -57,8 +53,8 @@ export class ClientService {
    */
   async [ServerMethod.create](input: CreateTaskOptions): Promise<TaskDTO | undefined> {
     const headers = this.processPostHeaders(input)
-    const spanHeader = this.tracerManager.headerOfCurrentSpan()?.[HeadersKey.traceId] as string
-    headers.set(HeadersKey.traceId, spanHeader)
+    // const spanHeader = this.traceService.headerOfCurrentSpan()?.[HeadersKey.traceId] as string
+    // headers.set(HeadersKey.traceId, spanHeader)
     const pdata: CreateTaskDTO = {
       taskTypeVer: 1,
       ...input.createTaskDTO,

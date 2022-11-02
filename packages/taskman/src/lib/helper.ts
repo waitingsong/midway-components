@@ -1,5 +1,5 @@
 import { Node_Headers } from '@mwcp/fetch'
-import { HeadersKey } from '@mwcp/jaeger'
+import { HeadersKey } from '@mwcp/otel'
 import type { Context } from '@mwcp/share'
 import { defaultPropDescriptor } from '@waiting/shared-core'
 

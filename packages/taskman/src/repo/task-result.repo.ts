@@ -7,7 +7,6 @@ import {
   Inject,
   Provide,
 } from '@midwayjs/decorator'
-import { Logger } from '@mwcp/jaeger'
 import { DbManager, Kmore } from '@mwcp/kmore'
 import type { Application, Context } from '@mwcp/share'
 
@@ -27,7 +26,7 @@ export class TaskResultRepository {
 
   @App() protected readonly app: Application
 
-  @Inject() protected readonly logger: Logger
+  // @Inject() protected readonly logger: Logger
 
   @Config(ConfigKey.serverConfig) protected readonly serverConfig: TaskServerConfig
 
