@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 3.8.5 (2022-11-03)
+
+
+### Bug Fixes
+
+* **otel:** skip process if otelConfig.enable false ([c947176](https://github.com/waitingsong/midway-components/commit/c947176bb4a8535a01948d93f772b40f66dd3bcd))
+
+
+
+
+
 ## 3.8.4 (2022-11-02)
 
 **Note:** Version bump only for package @mwcp/otel
