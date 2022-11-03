@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.6](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@3.8.5...@mwcp/otel@3.8.6) (2022-11-03)
+
+
+### Performance Improvements
+
+* **otel:** refactor registerMethodHandler() ([3422af9](https://github.com/waitingsong/midway-components/commit/3422af9bfbdbed1714ba7ecea119c7baeee2ada3))
+
+
+
+
+
 ## 3.8.5 (2022-11-03)
 
 
