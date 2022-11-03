@@ -50,12 +50,9 @@ export function registerMethodHandler(
 ): void {
 
   decoratorService.registerMethodHandler(TRACE_KEY, (options: MetaDataType) => {
-    if (! config.enable) {
-      return {}
-    }
-    return {
-      around: (joinPoint: JoinPoint) => aroundFactory(joinPoint, options),
-    }
+    return config.enable
+      ? { around: (joinPoint: JoinPoint) => aroundFactory(joinPoint, options) }
+      : {}
   })
 }
 
