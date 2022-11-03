@@ -91,19 +91,23 @@ export class TraceService {
   }
 
   setActiveContext(ctx: Context): void {
+    if (! this.config.enable) { return }
+
     const currCtx = this.getActiveContext()
     if (currCtx === ctx) { return }
     this.traceContextArray.push(ctx)
   }
 
   getActiveSpan(): Span | undefined {
+    if (! this.config.enable) { return }
+
     const ctx = this.getActiveContext()
     const span = getSpan(ctx)
     return span
   }
 
   getTraceId(): string {
-    return this.rootSpan.spanContext().traceId
+    return this.isStarted ? this.rootSpan.spanContext().traceId : ''
   }
 
   /**
@@ -155,6 +159,9 @@ export class TraceService {
     spanStatusOptions: SpanStatusOptions = initSpanStatusOptions,
     endTime?: TimeInput,
   ): void {
+
+    if (! this.config.enable) { return }
+
     const opts: SpanStatusOptions = {
       ...initSpanStatusOptions,
       ...spanStatusOptions,
@@ -183,6 +190,8 @@ export class TraceService {
     endTime?: TimeInput,
   ): void {
 
+    if (! this.config.enable) { return }
+
     this.endSpan(this.rootSpan, spanStatusOptions)
     this.rootSpan.end(endTime)
   }
@@ -195,6 +204,8 @@ export class TraceService {
     error: Error | undefined,
     eventName?: string,
   ): void {
+
+    if (! this.config.enable) { return }
 
     const time = genISO8601String()
     const attrs: Attributes = {
@@ -241,6 +252,7 @@ export class TraceService {
     eventName?: string,
   ): void {
 
+    if (! this.config.enable) { return }
     this.setSpanWithError(this.rootSpan, error, eventName)
   }
 
@@ -253,6 +265,7 @@ export class TraceService {
     options?: AddEventOtpions,
   ): void {
 
+    if (! this.config.enable) { return }
     if (options?.traceEvent === false || this.config.traceEvent === false) { return }
 
     const ename = typeof input['event'] === 'string' || typeof input['event'] === 'number'
@@ -275,6 +288,8 @@ export class TraceService {
    * Sets the attributes to the given span.
    */
   setAttributes(span: Span | undefined, input: Attributes): void {
+    if (! this.config.enable) { return }
+
     const target = span ?? this.rootSpan
     target.setAttributes(input)
   }
@@ -314,6 +329,7 @@ export class TraceService {
 
 
   async flush(): Promise<void> {
+    if (! this.config.enable) { return }
     await this.otel.flush()
   }
 

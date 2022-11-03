@@ -45,6 +45,13 @@ export class DefaultComponentController {
   }
 
   @Trace()
+  @Get('/disable_trace')
+  async noTrace(): Promise<string> {
+    const traceId = this.traceSvc.getTraceId()
+    return traceId // should be empty
+  }
+
+  @Trace()
   @Get('/error')
   async error(): Promise<string> {
     try {
