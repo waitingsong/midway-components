@@ -59,7 +59,7 @@ export function registerMethodHandler(
 
 async function aroundFactory(
   joinPoint: JoinPoint,
-  options: MetaDataType,
+  metaDataOptions: MetaDataType,
 ): Promise<unknown> {
 
   // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -78,15 +78,15 @@ async function aroundFactory(
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   const webContext = instance[REQUEST_OBJ_CTX_KEY] as WebContext
 
-  let { spanName } = options.metadata
+  let { spanName } = metaDataOptions.metadata
   if (! spanName) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    const targetName: string = callerAttr[AttrNames.CallerClass] ?? options.target.name
-    spanName = `${targetName}/${options.propertyName}`
+    const targetName: string = callerAttr[AttrNames.CallerClass] ?? metaDataOptions.target.name
+    spanName = `${targetName}/${metaDataOptions.propertyName}`
   }
 
-  const spanOpts = options.metadata.spanOptions
-  const ctx = options.metadata.spanOptions?.traceContext
+  const spanOpts = metaDataOptions.metadata.spanOptions
+  const ctx = metaDataOptions.metadata.spanOptions?.traceContext
 
   // const func = joinPoint.proceed.bind(joinPoint.target)
   const func = joinPoint.proceed.bind(void 0)
