@@ -59,6 +59,14 @@ export enum AttrNames {
   TransactionCommit = 'transaction.commit',
   TransactionRollback = 'transaction.rollback',
 
+  TrxPropagated = 'trx.propagated',
+  TrxPropagationType = 'trx.propagation.type',
+  TrxPropagationClass = 'trx.propagation.class',
+  TrxPropagationIsolationLevel = 'trx.propagation.isolation.level',
+  TrxPropagationFunc = 'trx.propagation.func',
+  TrxPropagationMethod = 'trx.propagation.method',
+  TrxPropagationPath = 'trx.propagation.path',
+
   ResponseMsg = 'response.msg',
   // ErrMsg = 'err.msg',
   // ErrStack = 'err.stack',
