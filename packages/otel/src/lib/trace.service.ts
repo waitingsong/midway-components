@@ -294,6 +294,18 @@ export class TraceService {
     target.setAttributes(input)
   }
 
+  setAttributesLater(span: Span | undefined, input: Attributes): void {
+    if (! this.config.enable) { return }
+
+    new Promise<void>((done) => {
+      const target = span ?? this.rootSpan
+      target.setAttributes(input)
+
+      done()
+    }).catch(console.warn)
+
+  }
+
 
   /**
    * Finish the root span and clean the context.

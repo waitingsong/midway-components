@@ -29,6 +29,7 @@ export class DefaultComponentController {
   async traceId(): Promise<string> {
     const traceId = this.traceSvc.getTraceId()
     await this.svc.hello(Msg.hello)
+    this.traceSvc.setAttributes(void 0, {foo: 'foo'})
     // ensure child span of svc.hello is sent, to keep span order for unit test validation
     await this.traceSvc.flush()
     return traceId
@@ -38,6 +39,7 @@ export class DefaultComponentController {
   @Get('/id2')
   async traceId2(): Promise<string> {
     const traceId = this.traceSvc.getTraceId()
+    this.traceSvc.setAttributesLater(void 0, {bar: 'bar'})
     const msg = await this.svc.hello(Msg.hello)
     assert(msg)
     await this.traceSvc.flush()
