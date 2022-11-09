@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.10.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@3.9.0...@mwcp/otel@3.10.0) (2022-11-09)
+
+
+### Features
+
+* **otel:** add TraceService:setAttributesLater() ([6b1ec2d](https://github.com/waitingsong/midway-components/commit/6b1ec2dcd8fad09be4a00c8a13bb1a4ead589132))
+
+
+
+
+
 # [3.9.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@3.8.8...@mwcp/otel@3.9.0) (2022-11-09)
 
 
