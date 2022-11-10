@@ -11,6 +11,7 @@ import {
 } from '@midwayjs/decorator'
 import { ILogger } from '@midwayjs/logger'
 import {
+  Attributes,
   Context,
   Span,
   SpanKind,
@@ -23,8 +24,9 @@ import type {
   BatchSpanProcessor,
   SimpleSpanProcessor,
 } from '@opentelemetry/sdk-trace-node'
+import { humanMemoryUsage } from '@waiting/shared-core'
 
-import { Config, ConfigKey, InitTraceOptions } from './types'
+import { AddEventOtpions, AttrNames, Config, ConfigKey, InitTraceOptions } from './types'
 import { normalizeHeaderKey } from './util'
 
 import { initTrace } from '~/helper/index.opentelemetry'
@@ -140,6 +142,33 @@ export class OtelComponent {
     await this.traceProvider?.shutdown()
   }
 
+
+  /**
+   * Adds an event to the given span.
+   */
+  addEvent(
+    span: Span,
+    input: Attributes,
+    options?: AddEventOtpions,
+  ): void {
+
+    if (! this.config.enable) { return }
+    if (options?.traceEvent === false || this.config.traceEvent === false) { return }
+
+    const ename = typeof input['event'] === 'string' || typeof input['event'] === 'number'
+      ? String(input['event']) : ''
+    const name = options?.eventName ?? ename
+    delete input['event']
+
+    if (options?.logMemeoryUsage || this.config.logMemeoryUsage) {
+      input[AttrNames.ServiceMemoryUsage] = JSON.stringify(humanMemoryUsage(), null, 2)
+    }
+    if (options?.logCpuUsage || this.config.logCpuUsage) {
+      input[AttrNames.ServiceCpuUsage] = JSON.stringify(process.cpuUsage(), null, 2)
+    }
+
+    span.addEvent(name, input, options?.startTime)
+  }
 
   protected prepareCaptureHeaders(type: 'request' | 'response', headersKey: string[]) {
     const keys = normalizeHeaderKey(headersKey)

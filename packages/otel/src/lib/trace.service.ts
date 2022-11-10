@@ -21,10 +21,7 @@ import {
   TimeInput,
 } from '@opentelemetry/api'
 import { SemanticAttributes } from '@opentelemetry/semantic-conventions'
-import {
-  genISO8601String,
-  humanMemoryUsage,
-} from '@waiting/shared-core'
+import { genISO8601String } from '@waiting/shared-core'
 
 import { OtelComponent } from './component'
 import { initSpanStatusOptions } from './config'
@@ -266,22 +263,8 @@ export class TraceService {
   ): void {
 
     if (! this.config.enable) { return }
-    if (options?.traceEvent === false || this.config.traceEvent === false) { return }
-
-    const ename = typeof input['event'] === 'string' || typeof input['event'] === 'number'
-      ? String(input['event']) : ''
-    const name = options?.eventName ?? ename
-    delete input['event']
-
-    if (options?.logMemeoryUsage || this.config.logMemeoryUsage) {
-      input[AttrNames.ServiceMemoryUsage] = JSON.stringify(humanMemoryUsage(), null, 2)
-    }
-    if (options?.logCpuUsage || this.config.logCpuUsage) {
-      input[AttrNames.ServiceCpuUsage] = JSON.stringify(process.cpuUsage(), null, 2)
-    }
-
     const span2 = span ?? this.rootSpan
-    span2.addEvent(name, input, options?.startTime)
+    this.otel.addEvent(span2, input, options)
   }
 
   /**
