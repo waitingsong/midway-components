@@ -166,8 +166,7 @@ export class TraceService {
   ): void {
 
     if (! this.config.enable) { return }
-
-    this.endSpan(this.rootSpan, spanStatusOptions)
+    this.otel.endSpan(this.rootSpan, this.rootSpan, spanStatusOptions, endTime)
     this.rootSpan.end(endTime)
   }
 
