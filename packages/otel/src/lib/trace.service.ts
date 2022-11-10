@@ -103,7 +103,8 @@ export class TraceService {
   }
 
   getTraceId(): string {
-    return this.isStarted ? this.rootSpan.spanContext().traceId : ''
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    return this.isStarted || this.rootSpan ? this.rootSpan.spanContext().traceId : ''
   }
 
   /**
