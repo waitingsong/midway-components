@@ -291,6 +291,7 @@ export class TraceService {
   protected start(): void {
     if (this.isStarted) { return }
     this.initRootSpan()
+    this.isStarted = true
 
     const events: Attributes = {
       event: AttrNames.RequestBegin,
@@ -298,7 +299,6 @@ export class TraceService {
     }
     this.addEvent(this.rootSpan, events)
 
-    this.isStarted = true
     Object.defineProperty(this.ctx, `_${ConfigKey.serviceName}`, {
       enumerable: true,
       writable: true,
