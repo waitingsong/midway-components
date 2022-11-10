@@ -114,7 +114,7 @@ export class AutoConfiguration implements ILifeCycle {
   }
 
   async onStop(container: IMidwayContainer): Promise<void> {
-    this.logger.info('[otem] onStop()')
+    this.logger.info('[otel] onStop()')
     await sleep(1000)
     const inst = await container.getAsync(OtelComponent)
     await inst.shutdown()
