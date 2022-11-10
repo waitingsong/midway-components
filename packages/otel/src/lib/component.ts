@@ -18,6 +18,7 @@ import {
   SpanOptions,
   context,
   trace,
+  SpanStatusCode,
 } from '@opentelemetry/api'
 import type {
   BasicTracerProvider,
@@ -25,7 +26,7 @@ import type {
   SimpleSpanProcessor,
 } from '@opentelemetry/sdk-trace-node'
 import { SemanticAttributes } from '@opentelemetry/semantic-conventions'
-import { humanMemoryUsage } from '@waiting/shared-core'
+import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
 
 import { AddEventOtpions, AttrNames, Config, ConfigKey, InitTraceOptions } from './types'
 import { normalizeHeaderKey } from './util'
@@ -189,6 +190,55 @@ export class OtelComponent {
     this.addEvent(span, attrs, {
       eventName: `${name}-Cause`,
     }) // Error-Cause
+  }
+
+  /**
+   * Sets the span with the error passed in params, note span not ended.
+   */
+  setSpanWithError(
+    rootSpan: Span,
+    span: Span,
+    error: Error | undefined,
+    eventName?: string,
+  ): void {
+
+    if (! this.config.enable) { return }
+
+    const time = genISO8601String()
+    const attrs: Attributes = {
+      time,
+    }
+    if (eventName) {
+      attrs['event'] = eventName
+    }
+
+    if (error) {
+      attrs[AttrNames.HTTP_ERROR_NAME] = error.name
+      attrs[AttrNames.HTTP_ERROR_MESSAGE] = error.message
+      span.setAttributes(attrs)
+
+      this.addRootSpanEventWithError(span, error)
+
+      // @ts-ignore
+      if (error.cause instanceof Error || error[AttrNames.IsTraced]) {
+        if (span !== rootSpan) {
+          // error contains cause, then add events only
+          attrs[SemanticAttributes.EXCEPTION_MESSAGE] = 'skipping'
+          this.addEvent(span, attrs)
+        }
+      }
+      else { // if error contains no cause, add error stack to span
+        span.recordException(error)
+      }
+
+      Object.defineProperty(error, AttrNames.IsTraced, {
+        enumerable: false,
+        writable: false,
+        value: true,
+      })
+    }
+
+    span.setStatus({ code: SpanStatusCode.ERROR, message: error?.message ?? 'unknown error' })
   }
 
   protected prepareCaptureHeaders(type: 'request' | 'response', headersKey: string[]) {
