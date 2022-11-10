@@ -15,7 +15,6 @@ import {
   Span,
   SpanKind,
   SpanOptions,
-  SpanStatus,
   SpanStatusCode,
   context,
   TimeInput,
@@ -158,28 +157,7 @@ export class TraceService {
   ): void {
 
     if (! this.config.enable) { return }
-
-    const opts: SpanStatusOptions = {
-      ...initSpanStatusOptions,
-      ...spanStatusOptions,
-    }
-    const { code } = opts
-    if (code === SpanStatusCode.ERROR) {
-      this.setSpanWithError(span, spanStatusOptions.error)
-    }
-    else { // OK, UNSET
-      const status: SpanStatus = {
-        code,
-      }
-      if (opts.message) {
-        status.message = opts.message
-      }
-      span.setStatus(status)
-    }
-
-    if (span !== this.rootSpan) {
-      span.end(endTime)
-    }
+    this.otel.endSpan(this.rootSpan, span, spanStatusOptions, endTime)
   }
 
   endRootSpan(

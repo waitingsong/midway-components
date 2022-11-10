@@ -19,6 +19,8 @@ import {
   context,
   trace,
   SpanStatusCode,
+  SpanStatus,
+  TimeInput,
 } from '@opentelemetry/api'
 import type {
   BasicTracerProvider,
@@ -28,7 +30,8 @@ import type {
 import { SemanticAttributes } from '@opentelemetry/semantic-conventions'
 import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
 
-import { AddEventOtpions, AttrNames, Config, ConfigKey, InitTraceOptions } from './types'
+import { initSpanStatusOptions } from './config'
+import { AddEventOtpions, AttrNames, Config, ConfigKey, InitTraceOptions, SpanStatusOptions } from './types'
 import { normalizeHeaderKey } from './util'
 
 import { initTrace } from '~/helper/index.opentelemetry'
@@ -239,6 +242,44 @@ export class OtelComponent {
     }
 
     span.setStatus({ code: SpanStatusCode.ERROR, message: error?.message ?? 'unknown error' })
+  }
+
+  /**
+   * - ends the given span
+   * - set span with error if error passed in params
+   * - set span status
+   * - call span.end(), except span is root span
+   */
+  endSpan(
+    rootSpan: Span,
+    span: Span,
+    spanStatusOptions: SpanStatusOptions = initSpanStatusOptions,
+    endTime?: TimeInput,
+  ): void {
+
+    if (! this.config.enable) { return }
+
+    const opts: SpanStatusOptions = {
+      ...initSpanStatusOptions,
+      ...spanStatusOptions,
+    }
+    const { code } = opts
+    if (code === SpanStatusCode.ERROR) {
+      this.setSpanWithError(rootSpan, span, spanStatusOptions.error)
+    }
+    else { // OK, UNSET
+      const status: SpanStatus = {
+        code,
+      }
+      if (opts.message) {
+        status.message = opts.message
+      }
+      span.setStatus(status)
+    }
+
+    if (span !== rootSpan) {
+      span.end(endTime)
+    }
   }
 
   protected prepareCaptureHeaders(type: 'request' | 'response', headersKey: string[]) {
