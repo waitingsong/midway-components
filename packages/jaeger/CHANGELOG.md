@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 14.0.9 (2022-11-10)
+
+**Note:** Version bump only for package @mwcp/jaeger
+
+
+
+
+
 ## 14.0.8 (2022-11-02)
 
 **Note:** Version bump only for package @mwcp/jaeger
