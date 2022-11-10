@@ -18,7 +18,11 @@ import {
   context,
   trace,
 } from '@opentelemetry/api'
-import type { BasicTracerProvider, BatchSpanProcessor, SimpleSpanProcessor } from '@opentelemetry/sdk-trace-base'
+import type {
+  BasicTracerProvider,
+  BatchSpanProcessor,
+  SimpleSpanProcessor,
+} from '@opentelemetry/sdk-trace-node'
 
 import { Config, ConfigKey, InitTraceOptions } from './types'
 import { normalizeHeaderKey } from './util'

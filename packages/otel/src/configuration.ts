@@ -6,7 +6,7 @@ import { ILifeCycle, MidwayDecoratorService, MidwayInformationService } from '@m
 import { App, Config, Configuration, Inject, Logger } from '@midwayjs/decorator'
 import { ILogger } from '@midwayjs/logger'
 import type { Application, IMidwayContainer } from '@mwcp/share'
-import { BasicTracerProvider, BatchSpanProcessor, SimpleSpanProcessor } from '@opentelemetry/sdk-trace-base'
+import { BasicTracerProvider, BatchSpanProcessor, SimpleSpanProcessor } from '@opentelemetry/sdk-trace-node'
 import { sleep } from '@waiting/shared-core'
 import type { NpmPkg } from '@waiting/shared-types'
 
