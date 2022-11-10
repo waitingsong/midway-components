@@ -215,7 +215,7 @@ export class TraceService {
   ): void {
 
     if (! this.config.enable) { return }
-    this.setSpanWithError(this.rootSpan, error, eventName)
+    this.otel.setSpanWithError(this.rootSpan, this.rootSpan, error, eventName)
   }
 
   /**
