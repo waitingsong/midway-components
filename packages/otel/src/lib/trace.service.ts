@@ -21,7 +21,10 @@ import {
   TimeInput,
 } from '@opentelemetry/api'
 import { SemanticAttributes } from '@opentelemetry/semantic-conventions'
-import { genISO8601String } from '@waiting/shared-core'
+import {
+  genISO8601String,
+  humanMemoryUsage,
+} from '@waiting/shared-core'
 
 import { OtelComponent } from './component'
 import { initSpanStatusOptions } from './config'
@@ -217,7 +220,7 @@ export class TraceService {
       attrs[AttrNames.HTTP_ERROR_MESSAGE] = error.message
       span.setAttributes(attrs)
 
-      this.addRootSpanEventWithError(error)
+      this.otel.addRootSpanEventWithError(span, error)
 
       // @ts-ignore
       if (error.cause instanceof Error || error[AttrNames.IsTraced]) {
@@ -379,27 +382,5 @@ export class TraceService {
       .catch(console.error)
   }
 
-
-  protected addRootSpanEventWithError(error?: Error): void {
-    if (! error) { return }
-
-    const span = this.rootSpan
-    const { cause } = error
-
-    // @ts-ignore
-    if (cause instanceof Error || error[AttrNames.IsTraced]) {
-      return // avoid duplicated logs for the same error on the root span
-    }
-
-    const { name, message, stack } = error
-    const attrs: Attributes = {
-      [SemanticAttributes.EXCEPTION_TYPE]: 'exception',
-      [SemanticAttributes.EXCEPTION_MESSAGE]: message,
-    }
-    stack && (attrs[SemanticAttributes.EXCEPTION_STACKTRACE] = stack)
-    this.addEvent(span, attrs, {
-      eventName: `${name}-Cause`,
-    }) // Error-Cause
-  }
 
 }

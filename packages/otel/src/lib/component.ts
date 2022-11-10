@@ -24,6 +24,7 @@ import type {
   BatchSpanProcessor,
   SimpleSpanProcessor,
 } from '@opentelemetry/sdk-trace-node'
+import { SemanticAttributes } from '@opentelemetry/semantic-conventions'
 import { humanMemoryUsage } from '@waiting/shared-core'
 
 import { AddEventOtpions, AttrNames, Config, ConfigKey, InitTraceOptions } from './types'
@@ -170,10 +171,32 @@ export class OtelComponent {
     span.addEvent(name, input, options?.startTime)
   }
 
+  addRootSpanEventWithError(span: Span, error?: Error): void {
+    if (! error) { return }
+
+    const { cause } = error
+    // @ts-ignore
+    if (cause instanceof Error || error[AttrNames.IsTraced]) {
+      return // avoid duplicated logs for the same error on the root span
+    }
+
+    const { name, message, stack } = error
+    const attrs: Attributes = {
+      [SemanticAttributes.EXCEPTION_TYPE]: 'exception',
+      [SemanticAttributes.EXCEPTION_MESSAGE]: message,
+    }
+    stack && (attrs[SemanticAttributes.EXCEPTION_STACKTRACE] = stack)
+    this.addEvent(span, attrs, {
+      eventName: `${name}-Cause`,
+    }) // Error-Cause
+  }
+
   protected prepareCaptureHeaders(type: 'request' | 'response', headersKey: string[]) {
     const keys = normalizeHeaderKey(headersKey)
     this.captureHeadersMap.set(type, keys)
   }
+
+
 }
 
 
