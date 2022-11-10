@@ -59,6 +59,9 @@ export enum AttrNames {
   TransactionCommit = 'transaction.commit',
   TransactionRollback = 'transaction.rollback',
 
+  TransactionalStart = 'Transactional.start',
+  TransactionalEnd = 'Transactional.end',
+
   TrxPropagated = 'trx.propagated',
   TrxPropagationType = 'trx.propagation.type',
   TrxPropagationClass = 'trx.propagation.class',
