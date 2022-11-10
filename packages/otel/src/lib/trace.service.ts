@@ -363,19 +363,19 @@ export class TraceService {
       value: this,
     })
 
-    new Promise<void>((done) => {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      this.ctx.get && setSpanWithRequestHeaders(
-        this.rootSpan,
-        this.otel.captureHeadersMap.get('request'),
-        key => this.ctx.get(key),
-      )
+    void Promise.resolve()
+      .then(() => {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        this.ctx.get && setSpanWithRequestHeaders(
+          this.rootSpan,
+          this.otel.captureHeadersMap.get('request'),
+          key => this.ctx.get(key),
+        )
 
-      const attrs = getIncomingRequestAttributesFromWebContext(this.ctx, this.config)
-      attrs[AttrNames.RequestStartTime] = this.startTime
-      this.setAttributes(this.rootSpan, attrs)
-      done()
-    })
+        const attrs = getIncomingRequestAttributesFromWebContext(this.ctx, this.config)
+        attrs[AttrNames.RequestStartTime] = this.startTime
+        this.setAttributes(this.rootSpan, attrs)
+      })
       .catch(console.error)
   }
 
