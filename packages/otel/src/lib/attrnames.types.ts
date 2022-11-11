@@ -59,6 +59,7 @@ export enum AttrNames {
   TransactionCommit = 'transaction.commit',
   TransactionRollback = 'transaction.rollback',
 
+  TransactionalRegister = 'Transactional.register',
   TransactionalStart = 'Transactional.start',
   TransactionalEnd = 'Transactional.end',
 
