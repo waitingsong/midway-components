@@ -72,6 +72,8 @@ export enum AttrNames {
   TrxPropagationFunc = 'trx.propagation.func',
   TrxPropagationMethod = 'trx.propagation.method',
   TrxPropagationPath = 'trx.propagation.path',
+  TrxPropagationReadRowLockLevel = 'trx.propagation.read.rowlock.level',
+  TrxPropagationWriteRowLockLevel = 'trx.propagation.write.rowlock.level',
 
   ResponseMsg = 'response.msg',
   // ErrMsg = 'err.msg',
