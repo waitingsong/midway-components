@@ -33,7 +33,7 @@
     "@opentelemetry/otlp-grpc-exporter-base": "^0.34.0",
     "@opentelemetry/sdk-node": "^0.34.0",
     "@opentelemetry/sdk-trace-node": "^1.8.0",
-    "@waiting/shared-core": "^20.8.0"
+    "@waiting/shared-core": "^20.10.1"
   },
   "devDependencies": {
     "cross-env": "7"
