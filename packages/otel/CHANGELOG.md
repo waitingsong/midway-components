@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.13.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@3.12.0...@mwcp/otel@3.13.0) (2022-11-13)
+
+
+### Features
+
+* **otel:** add AttrNames.TransactionalEntryType ([b98570a](https://github.com/waitingsong/midway-components/commit/b98570a6fa65e1cfc4a40d8b3520c06417e4f622))
+
+
+
+
+
 # [3.12.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@3.11.2...@mwcp/otel@3.12.0) (2022-11-11)
 
 
