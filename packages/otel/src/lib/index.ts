@@ -4,7 +4,7 @@ export { OtelComponent } from './component'
 export {
   TRACE_KEY,
   Trace,
-  TraceDecoratorOptions,
+  DecoratorArgs,
 } from './trace.decorator'
 export * from './trace.logger'
 export * from './trace.service'

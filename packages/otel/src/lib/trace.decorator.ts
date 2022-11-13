@@ -27,15 +27,15 @@ export interface TraceDecoratorOptionsSpanOptions extends SpanOptions {
   traceContext: Context
 }
 
-export interface TraceDecoratorOptions {
+export interface DecoratorArgs {
   /** 若空则为 `{target.name}/{methodName}` */
   spanName: string | undefined
   spanOptions: Partial<TraceDecoratorOptionsSpanOptions>
 }
 
 export function Trace(
-  spanName?: TraceDecoratorOptions['spanName'],
-  spanOptions?: TraceDecoratorOptions['spanOptions'],
+  spanName?: DecoratorArgs['spanName'],
+  spanOptions?: DecoratorArgs['spanOptions'],
 ): MethodDecorator {
 
   return createCustomMethodDecorator(TRACE_KEY, {
@@ -155,7 +155,7 @@ async function aroundFactory(
 interface MetaDataType {
   target: new (...args: unknown[]) => unknown
   propertyName: string
-  metadata: Partial<TraceDecoratorOptions>
+  metadata: Partial<DecoratorArgs>
 }
 
 interface CreateActiveSpanCbOptions {
