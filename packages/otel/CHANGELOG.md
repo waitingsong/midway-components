@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.14.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@3.13.0...@mwcp/otel@3.14.0) (2022-11-13)
+
+
+### Features
+
+* **otel:** add properties of AttrNames ([a5afc95](https://github.com/waitingsong/midway-components/commit/a5afc95e27cf36e8523b36c7f11ca8cc1db4c448))
+
+
+
+
+
 # [3.13.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@3.12.0...@mwcp/otel@3.13.0) (2022-11-13)
 
 
