@@ -62,6 +62,8 @@ export enum AttrNames {
   TransactionalRegister = 'Transactional.register',
   TransactionalStart = 'Transactional.start',
   TransactionalEnd = 'Transactional.end',
+  /* top, child, savepoint */
+  TransactionalEntryType = 'Transactional.entry',
 
   TrxPropagated = 'trx.propagated',
   TrxPropagationType = 'trx.propagation.type',
