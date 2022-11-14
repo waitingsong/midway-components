@@ -62,7 +62,7 @@ export enum AttrNames {
   TransactionalRegister = 'Transactional.register',
   TransactionalStart = 'Transactional.start',
   TransactionalEnd = 'Transactional.end',
-  /* top, child, savepoint */
+  /** top, child, savepoint */
   TransactionalEntryType = 'Transactional.entry',
 
   TrxPropagated = 'trx.propagated',
@@ -72,8 +72,12 @@ export enum AttrNames {
   TrxPropagationFunc = 'trx.propagation.func',
   TrxPropagationMethod = 'trx.propagation.method',
   TrxPropagationPath = 'trx.propagation.path',
+  /** Setting value */
   TrxPropagationReadRowLockLevel = 'trx.propagation.read.rowlock.level',
+  /** Setting value */
   TrxPropagationWriteRowLockLevel = 'trx.propagation.write.rowlock.level',
+  /** Runtime level on builder */
+  TrxPropagationRowLockLevel = 'trx.propagation.rowlock.level',
 
   ResponseMsg = 'response.msg',
   // ErrMsg = 'err.msg',
