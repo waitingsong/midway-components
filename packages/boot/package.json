@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/boot",
   "author": "waiting",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "midway.js boot",
   "keywords": [
     "midway",
@@ -24,12 +24,12 @@
     "@midwayjs/prometheus": "^3.7.1",
     "@midwayjs/redis": "^3.7.1",
     "@midwayjs/validate": "^3.7.1",
-    "@mwcp/ali-oss": "^7.0.26",
+    "@mwcp/ali-oss": "^7.0.27",
     "@mwcp/fetch": "^21.1.1",
     "@mwcp/jwt": "^13.0.10",
     "@mwcp/kmore": "^49.0.1",
     "@mwcp/koid": "^11.0.0",
-    "@mwcp/otel": "^3.14.0",
+    "@mwcp/otel": "^3.15.0",
     "@mwcp/share": "^2.0.9",
     "@waiting/base64": "^4.2.9",
     "@waiting/shared-core": "^20.10.1",

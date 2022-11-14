@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.15.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@3.14.0...@mwcp/otel@3.15.0) (2022-11-14)
+
+
+### Features
+
+* **otel:** add property TrxPropagationRowLockLevel of AttrNames ([bd296fe](https://github.com/waitingsong/midway-components/commit/bd296feb8f47ac431a42efea45b471dd2e4aeb69))
+
+
+
+
+
 # [3.14.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@3.13.0...@mwcp/otel@3.14.0) (2022-11-13)
 
 
