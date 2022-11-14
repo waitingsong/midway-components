@@ -405,7 +405,7 @@ export function truncateString(str: string, maxLength = 2048): string {
 /**
  * Generate span name from request
  */
-export function genRequestSpanName(webContext: WebContext, maxLength = 50): string {
+export function genRequestSpanName(webContext: WebContext, maxLength = 128): string {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const protocol = webContext?.request?.protocol
     ? webContext.request.protocol.toLocaleUpperCase()
