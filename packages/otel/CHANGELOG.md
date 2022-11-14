@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.16.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@3.15.0...@mwcp/otel@3.16.0) (2022-11-14)
+
+
+### Features
+
+* **otel:** increase default maxLength to 128 of genRequestSpanName() ([f78b9a2](https://github.com/waitingsong/midway-components/commit/f78b9a25f80ede5a6241b58af44978b31b42eb6d))
+
+
+
+
+
 # [3.15.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@3.14.0...@mwcp/otel@3.15.0) (2022-11-14)
 
 
