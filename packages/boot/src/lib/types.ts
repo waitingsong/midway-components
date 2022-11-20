@@ -31,7 +31,12 @@ export {
   NpmPkg,
 } from '@waiting/shared-types'
 
-export { KmoreTransaction as DbTransaction } from '@mwcp/kmore'
+export {
+  KmorePropagationConfig,
+  KmoreTransaction as DbTransaction,
+  PropagationType,
+  Transactional,
+} from '@mwcp/kmore'
 
 export enum ConfigKey {
   namespace = 'base',
