@@ -2,11 +2,8 @@ import type { Application, Context } from '@mwcp/share'
 import { isPathMatchRules } from '@waiting/shared-core'
 
 import {
-  Config,
   ConfigKey,
   initialMiddlewareConfig,
-  initTaskServerConfig,
-  initTaskClientConfig,
   initMiddlewareOptions,
   MiddlewareConfig,
 } from '../lib/index'
@@ -41,15 +38,15 @@ export function matchFunc(ctx?: Context): boolean {
 }
 
 
-export function getComponentConfig<T extends Config = Config>(
-  app: Application,
-  key: ConfigKey = ConfigKey.config,
-): T {
+// export function getComponentConfig<T extends Config = Config>(
+//   app: Application,
+//   key: ConfigKey = ConfigKey.config,
+// ): T {
 
-  const pConfig = getConfigFromApp<T>(app, key)
-  const config = mergeConfig<T>(pConfig)
-  return config
-}
+//   const pConfig = getConfigFromApp<T>(app, key)
+//   const config = mergeConfig<T>(pConfig)
+//   return config
+// }
 
 export function getMiddlewareConfig<T extends MiddlewareConfig = MiddlewareConfig>(
   app: Application,
@@ -67,18 +64,18 @@ function getConfigFromApp<T>(app: Application, key: ConfigKey): T {
 }
 
 
-export function mergeConfig<T extends Config = Config>(input?: Partial<Config>): T {
-  const ret: T = (input === ConfigKey.serverConfig
-    ? {
-      ...initTaskServerConfig,
-      ...input,
-    }
-    : {
-      ...initTaskClientConfig,
-      ...input,
-    }) as T
-  return ret
-}
+// export function mergeConfig<T extends Config = Config>(input?: Partial<Config>): T {
+//   const ret: T = (input === ConfigKey.serverConfig
+//     ? {
+//       ...initTaskServerConfig,
+//       ...input,
+//     }
+//     : {
+//       ...initTaskClientConfig,
+//       ...input,
+//     }) as T
+//   return ret
+// }
 
 export function mergeMiddlewareConfig<T extends MiddlewareConfig = MiddlewareConfig>(input?: T): T {
   const ret = {
