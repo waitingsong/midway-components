@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 13.0.11 (2022-11-24)
+
+**Note:** Version bump only for package @mwcp/jwt
+
+
+
+
+
 ## 13.0.10 (2022-11-13)
 
 **Note:** Version bump only for package @mwcp/jwt
