@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.1.0](https://github.com/waitingsong/midway-components/compare/@mwcp/share@2.0.10...@mwcp/share@2.1.0) (2022-12-02)
+
+
+### Features
+
+* **share:** customDecoratorFactory() ([96c3146](https://github.com/waitingsong/midway-components/commit/96c31469ada398c6ae906c3fcbd2f1d8083ddb04))
+
+
+
+
+
 ## 2.0.10 (2022-11-24)
 
 **Note:** Version bump only for package @mwcp/share
