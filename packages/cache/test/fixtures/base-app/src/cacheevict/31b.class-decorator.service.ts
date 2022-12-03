@@ -2,7 +2,8 @@ import {
   Config as _Config,
 } from '@midwayjs/core'
 
-import { Cacheable, CachedResponse, CacheEvict } from '~/index'
+import { CachedResponse } from '~/lib/types'
+import { Cacheable, CacheEvict } from '~/index'
 
 
 export const cacheName = `CacheEvictService.simple`

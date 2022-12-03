@@ -1,12 +1,12 @@
 import {
-  Config,
-  MiddlewareConfig,
-} from '../index'
-import {
   initConfig,
   initialMiddlewareConfig,
   initMiddlewareOptions,
 } from '../lib/config'
+import {
+  Config,
+  MiddlewareConfig,
+} from '../lib/types'
 
 
 export const cacheConfig: Config = {

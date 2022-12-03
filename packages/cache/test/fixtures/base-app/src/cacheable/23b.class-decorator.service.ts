@@ -2,7 +2,8 @@ import {
   Config as _Config,
 } from '@midwayjs/core'
 
-import { Cacheable, CachedResponse } from '~/index'
+import { CachedResponse } from '~/lib/types'
+import { Cacheable, } from '~/index'
 
 const ttl = 1
 const cacheName = 'foo'

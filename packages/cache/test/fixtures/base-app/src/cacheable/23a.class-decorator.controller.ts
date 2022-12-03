@@ -12,7 +12,7 @@ import { apiPrefix, apiRoute } from '../api-route'
 import { validateMeta } from '../base.helper'
 import { ClassDecoratorService } from './23b.class-decorator.service'
 
-import { ConfigKey } from '~/index'
+import { ConfigKey } from '~/lib/types'
 
 
 const ttl = 1

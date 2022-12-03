@@ -13,7 +13,8 @@ import type { Context } from '@mwcp/share'
 import { apiPrefix, apiRoute } from '../api-route'
 import { validateMeta } from '../base.helper'
 
-import { Cacheable, CachedResponse, ConfigKey, DataWithCacheMeta } from '~/index'
+import { CachedResponse, ConfigKey, DataWithCacheMeta } from '~/lib/types'
+import { Cacheable, } from '~/index'
 
 
 const bigint = 1024n
