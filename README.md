@@ -16,6 +16,7 @@
 | Package     | Version                      |
 | ----------- | ---------------------------- |
 | [`ali-oss`] | [![ali-oss-svg]][ali-oss-ch] |
+| [`cache`]   | [![cache-svg]][cache-ch]     |
 | [`jwt`]     | [![jwt-svg]][jwt-ch]         |
 | [`otel`]    | [![otel-svg]][otel-ch]       |
 | [`taskman`] | [![taskman-svg]][taskman-ch] |
@@ -63,6 +64,10 @@ npm run purge
 [`ali-oss`]: https://github.com/waitingsong/midway-components/tree/main/packages/ali-oss
 [ali-oss-svg]: https://img.shields.io/npm/v/@mwcp/ali-oss.svg?maxAge=7200
 [ali-oss-ch]: https://github.com/waitingsong/midway-components/tree/main/packages/ali-oss/CHANGELOG.md
+
+[`cache`]: https://github.com/waitingsong/midway-components/tree/main/packages/cache
+[cache-svg]: https://img.shields.io/npm/v/@mwcp/cache.svg?maxAge=7200
+[cache-ch]: https://github.com/waitingsong/midway-components/tree/main/packages/cache/CHANGELOG.md
 
 [`jwt`]: https://github.com/waitingsong/midway-components/tree/main/packages/jwt
 [jwt-svg]: https://img.shields.io/npm/v/@mwcp/jwt.svg?maxAge=7200
