@@ -4,14 +4,15 @@ import {
   Get,
 } from '@midwayjs/decorator'
 
-import { ConfigKey, Msg } from '../lib/types'
+import { Cacheable, ConfigKey, Msg } from '../lib/types'
 
 
 @Controller(`/_${ConfigKey.namespace}`)
 export class DefaultBaseComponentController {
 
   @Get('/hello')
-  hello(): string {
+  @Cacheable()
+  async hello(): Promise<string> {
     return Msg.hello
   }
 
