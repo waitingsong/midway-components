@@ -152,5 +152,5 @@ export class UserService {
 [Cache-Docs]: https://midwayjs.org/en/docs/extensions/cache
 [Cache-Docs-EN]: https://midwayjs.org/en/docs/extensions/cache
 [KeyGenerator]: https://github.com/waitingsong/midway-components/blob/main/packages/cache/src/lib/types.ts#L43
-[More examples]: https://github.com/waitingsong/midway-components/tree/main/packages/cache/test
+[More examples]: https://github.com/waitingsong/midway-components/tree/main/packages/cache/test/fixtures/base-app/src
 
