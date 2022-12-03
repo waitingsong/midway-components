@@ -11,8 +11,12 @@ import { Cacheable, ConfigKey, Msg } from '../lib/types'
 export class DefaultBaseComponentController {
 
   @Get('/hello')
-  @Cacheable()
   async hello(): Promise<string> {
+    return this._hello()
+  }
+
+  @Cacheable()
+  protected async _hello(): Promise<string> {
     return Msg.hello
   }
 
