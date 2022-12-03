@@ -63,7 +63,7 @@ export class FooController {
     return this._hello()
   }
 
-  /* cacheName will be `{class name}/{method name}` => "FooController/hello" */
+  /* cacheName will be `{class name}.{method name}` => "FooController.hello" */
   @Cacheable()
   async _hello(): Promise<string> {
     return 'world'
