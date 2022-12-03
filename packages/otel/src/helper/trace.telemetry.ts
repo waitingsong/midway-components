@@ -8,8 +8,8 @@ import {
   ConsoleSpanExporter,
   BatchSpanProcessor,
   SimpleSpanProcessor,
-} from '@opentelemetry/sdk-trace-base'
-import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node'
+  NodeTracerProvider,
+} from '@opentelemetry/sdk-trace-node'
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions'
 
 import { InitTraceOptions, PropagatorList, SpanExporterList } from '../lib/types'

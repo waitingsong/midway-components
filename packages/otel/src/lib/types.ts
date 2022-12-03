@@ -5,7 +5,7 @@ import type { ILogger } from '@midwayjs/logger'
 import type { BaseConfig, Context } from '@mwcp/share'
 import type { Attributes, AttributeValue, SpanStatusCode, TimeInput } from '@opentelemetry/api'
 import type { OTLPGRPCExporterConfigNode as OTLPGRPCExporterConfig } from '@opentelemetry/otlp-grpc-exporter-base'
-import type { TracerConfig as NodeTracerConfig } from '@opentelemetry/sdk-trace-base'
+import type { TracerConfig as NodeTracerConfig } from '@opentelemetry/sdk-trace-node'
 import type { MiddlewareConfig as MWConfig, KnownKeys } from '@waiting/shared-types'
 
 import { AttrNames } from './attrnames.types'

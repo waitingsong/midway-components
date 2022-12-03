@@ -11,16 +11,27 @@ import {
 } from '@midwayjs/decorator'
 import { ILogger } from '@midwayjs/logger'
 import {
+  Attributes,
   Context,
   Span,
   SpanKind,
   SpanOptions,
   context,
   trace,
+  SpanStatusCode,
+  SpanStatus,
+  TimeInput,
 } from '@opentelemetry/api'
-import type { BasicTracerProvider, BatchSpanProcessor, SimpleSpanProcessor } from '@opentelemetry/sdk-trace-base'
+import type {
+  BasicTracerProvider,
+  BatchSpanProcessor,
+  SimpleSpanProcessor,
+} from '@opentelemetry/sdk-trace-node'
+import { SemanticAttributes } from '@opentelemetry/semantic-conventions'
+import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
 
-import { Config, ConfigKey, InitTraceOptions } from './types'
+import { initSpanStatusOptions } from './config'
+import { AddEventOtpions, AttrNames, Config, ConfigKey, InitTraceOptions, SpanStatusOptions } from './types'
 import { normalizeHeaderKey } from './util'
 
 import { initTrace } from '~/helper/index.opentelemetry'
@@ -137,10 +148,146 @@ export class OtelComponent {
   }
 
 
+  /**
+   * Adds an event to the given span.
+   */
+  addEvent(
+    span: Span,
+    input: Attributes,
+    options?: AddEventOtpions,
+  ): void {
+
+    if (! this.config.enable) { return }
+    if (options?.traceEvent === false || this.config.traceEvent === false) { return }
+
+    const ename = typeof input['event'] === 'string' || typeof input['event'] === 'number'
+      ? String(input['event']) : ''
+    const name = options?.eventName ?? ename
+    delete input['event']
+
+    if (options?.logMemeoryUsage || this.config.logMemeoryUsage) {
+      input[AttrNames.ServiceMemoryUsage] = JSON.stringify(humanMemoryUsage(), null, 2)
+    }
+    if (options?.logCpuUsage || this.config.logCpuUsage) {
+      input[AttrNames.ServiceCpuUsage] = JSON.stringify(process.cpuUsage(), null, 2)
+    }
+
+    span.addEvent(name, input, options?.startTime)
+  }
+
+  addRootSpanEventWithError(span: Span, error?: Error): void {
+    if (! error) { return }
+
+    const { cause } = error
+    // @ts-ignore
+    if (cause instanceof Error || error[AttrNames.IsTraced]) {
+      return // avoid duplicated logs for the same error on the root span
+    }
+
+    const { name, message, stack } = error
+    const attrs: Attributes = {
+      [SemanticAttributes.EXCEPTION_TYPE]: 'exception',
+      [SemanticAttributes.EXCEPTION_MESSAGE]: message,
+    }
+    stack && (attrs[SemanticAttributes.EXCEPTION_STACKTRACE] = stack)
+    this.addEvent(span, attrs, {
+      eventName: `${name}-Cause`,
+    }) // Error-Cause
+  }
+
+  /**
+   * Sets the span with the error passed in params, note span not ended.
+   */
+  setSpanWithError(
+    rootSpan: Span,
+    span: Span,
+    error: Error | undefined,
+    eventName?: string,
+  ): void {
+
+    if (! this.config.enable) { return }
+
+    const time = genISO8601String()
+    const attrs: Attributes = {
+      time,
+    }
+    if (eventName) {
+      attrs['event'] = eventName
+    }
+
+    if (error) {
+      attrs[AttrNames.HTTP_ERROR_NAME] = error.name
+      attrs[AttrNames.HTTP_ERROR_MESSAGE] = error.message
+      span.setAttributes(attrs)
+
+      this.addRootSpanEventWithError(span, error)
+
+      // @ts-ignore
+      if (error.cause instanceof Error || error[AttrNames.IsTraced]) {
+        if (span !== rootSpan) {
+          // error contains cause, then add events only
+          attrs[SemanticAttributes.EXCEPTION_MESSAGE] = 'skipping'
+          this.addEvent(span, attrs)
+        }
+      }
+      else { // if error contains no cause, add error stack to span
+        span.recordException(error)
+      }
+
+      Object.defineProperty(error, AttrNames.IsTraced, {
+        enumerable: false,
+        writable: false,
+        value: true,
+      })
+    }
+
+    span.setStatus({ code: SpanStatusCode.ERROR, message: error?.message ?? 'unknown error' })
+  }
+
+  /**
+   * - ends the given span
+   * - set span with error if error passed in params
+   * - set span status
+   * - call span.end(), except span is root span
+   */
+  endSpan(
+    rootSpan: Span,
+    span: Span,
+    spanStatusOptions: SpanStatusOptions = initSpanStatusOptions,
+    endTime?: TimeInput,
+  ): void {
+
+    if (! this.config.enable) { return }
+
+    const opts: SpanStatusOptions = {
+      ...initSpanStatusOptions,
+      ...spanStatusOptions,
+    }
+    const { code } = opts
+    if (code === SpanStatusCode.ERROR) {
+      this.setSpanWithError(rootSpan, span, spanStatusOptions.error)
+    }
+    else { // OK, UNSET
+      const status: SpanStatus = {
+        code,
+      }
+      if (opts.message) {
+        status.message = opts.message
+      }
+      span.setStatus(status)
+    }
+
+    if (span !== rootSpan) {
+      span.end(endTime)
+    }
+  }
+
   protected prepareCaptureHeaders(type: 'request' | 'response', headersKey: string[]) {
     const keys = normalizeHeaderKey(headersKey)
     this.captureHeadersMap.set(type, keys)
   }
+
+
 }
 
 

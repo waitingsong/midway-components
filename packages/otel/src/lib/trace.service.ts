@@ -15,16 +15,11 @@ import {
   Span,
   SpanKind,
   SpanOptions,
-  SpanStatus,
   SpanStatusCode,
   context,
   TimeInput,
 } from '@opentelemetry/api'
-import { SemanticAttributes } from '@opentelemetry/semantic-conventions'
-import {
-  genISO8601String,
-  humanMemoryUsage,
-} from '@waiting/shared-core'
+import { genISO8601String } from '@waiting/shared-core'
 
 import { OtelComponent } from './component'
 import { initSpanStatusOptions } from './config'
@@ -91,19 +86,24 @@ export class TraceService {
   }
 
   setActiveContext(ctx: Context): void {
+    if (! this.config.enable) { return }
+
     const currCtx = this.getActiveContext()
     if (currCtx === ctx) { return }
     this.traceContextArray.push(ctx)
   }
 
   getActiveSpan(): Span | undefined {
+    if (! this.config.enable) { return }
+
     const ctx = this.getActiveContext()
     const span = getSpan(ctx)
     return span
   }
 
   getTraceId(): string {
-    return this.rootSpan.spanContext().traceId
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    return this.isStarted || this.rootSpan ? this.rootSpan.spanContext().traceId : ''
   }
 
   /**
@@ -155,27 +155,9 @@ export class TraceService {
     spanStatusOptions: SpanStatusOptions = initSpanStatusOptions,
     endTime?: TimeInput,
   ): void {
-    const opts: SpanStatusOptions = {
-      ...initSpanStatusOptions,
-      ...spanStatusOptions,
-    }
-    const { code } = opts
-    if (code === SpanStatusCode.ERROR) {
-      this.setSpanWithError(span, spanStatusOptions.error)
-    }
-    else { // OK, UNSET
-      const status: SpanStatus = {
-        code,
-      }
-      if (opts.message) {
-        status.message = opts.message
-      }
-      span.setStatus(status)
-    }
 
-    if (span !== this.rootSpan) {
-      span.end(endTime)
-    }
+    if (! this.config.enable) { return }
+    this.otel.endSpan(this.rootSpan, span, spanStatusOptions, endTime)
   }
 
   endRootSpan(
@@ -183,7 +165,8 @@ export class TraceService {
     endTime?: TimeInput,
   ): void {
 
-    this.endSpan(this.rootSpan, spanStatusOptions)
+    if (! this.config.enable) { return }
+    this.otel.endSpan(this.rootSpan, this.rootSpan, spanStatusOptions, endTime)
     this.rootSpan.end(endTime)
   }
 
@@ -196,41 +179,8 @@ export class TraceService {
     eventName?: string,
   ): void {
 
-    const time = genISO8601String()
-    const attrs: Attributes = {
-      time,
-    }
-    if (eventName) {
-      attrs['event'] = eventName
-    }
-
-    if (error) {
-      attrs[AttrNames.HTTP_ERROR_NAME] = error.name
-      attrs[AttrNames.HTTP_ERROR_MESSAGE] = error.message
-      span.setAttributes(attrs)
-
-      this.addRootSpanEventWithError(error)
-
-      // @ts-ignore
-      if (error.cause instanceof Error || error[AttrNames.IsTraced]) {
-        if (span !== this.rootSpan) {
-          // error contains cause, then add events only
-          attrs[SemanticAttributes.EXCEPTION_MESSAGE] = 'skipping'
-          this.addEvent(span, attrs)
-        }
-      }
-      else { // if error contains no cause, add error stack to span
-        span.recordException(error)
-      }
-
-      Object.defineProperty(error, AttrNames.IsTraced, {
-        enumerable: false,
-        writable: false,
-        value: true,
-      })
-    }
-
-    span.setStatus({ code: SpanStatusCode.ERROR, message: error?.message ?? 'unknown error' })
+    if (! this.config.enable) { return }
+    this.otel.setSpanWithError(this.rootSpan, span, error, eventName)
   }
 
   /**
@@ -241,7 +191,8 @@ export class TraceService {
     eventName?: string,
   ): void {
 
-    this.setSpanWithError(this.rootSpan, error, eventName)
+    if (! this.config.enable) { return }
+    this.otel.setSpanWithError(this.rootSpan, this.rootSpan, error, eventName)
   }
 
   /**
@@ -253,32 +204,30 @@ export class TraceService {
     options?: AddEventOtpions,
   ): void {
 
-    if (options?.traceEvent === false || this.config.traceEvent === false) { return }
-
-    const ename = typeof input['event'] === 'string' || typeof input['event'] === 'number'
-      ? String(input['event']) : ''
-    const name = options?.eventName ?? ename
-    delete input['event']
-
-    if (options?.logMemeoryUsage || this.config.logMemeoryUsage) {
-      input[AttrNames.ServiceMemoryUsage] = JSON.stringify(humanMemoryUsage(), null, 2)
-    }
-    if (options?.logCpuUsage || this.config.logCpuUsage) {
-      input[AttrNames.ServiceCpuUsage] = JSON.stringify(process.cpuUsage(), null, 2)
-    }
-
+    if (! this.config.enable) { return }
     const span2 = span ?? this.rootSpan
-    span2.addEvent(name, input, options?.startTime)
+    this.otel.addEvent(span2, input, options)
   }
 
   /**
    * Sets the attributes to the given span.
    */
   setAttributes(span: Span | undefined, input: Attributes): void {
+    if (! this.config.enable) { return }
+
     const target = span ?? this.rootSpan
     target.setAttributes(input)
   }
 
+  setAttributesLater(span: Span | undefined, input: Attributes): void {
+    if (! this.config.enable) { return }
+
+    void Promise.resolve()
+      .then(() => {
+        this.setAttributes(span, input)
+      })
+      .catch(console.warn)
+  }
 
   /**
    * Finish the root span and clean the context.
@@ -314,6 +263,7 @@ export class TraceService {
 
 
   async flush(): Promise<void> {
+    if (! this.config.enable) { return }
     await this.otel.flush()
   }
 
@@ -341,6 +291,7 @@ export class TraceService {
   protected start(): void {
     if (this.isStarted) { return }
     this.initRootSpan()
+    this.isStarted = true
 
     const events: Attributes = {
       event: AttrNames.RequestBegin,
@@ -348,50 +299,27 @@ export class TraceService {
     }
     this.addEvent(this.rootSpan, events)
 
-    this.isStarted = true
     Object.defineProperty(this.ctx, `_${ConfigKey.serviceName}`, {
       enumerable: true,
       writable: true,
       value: this,
     })
 
-    new Promise<void>((done) => {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      this.ctx.get && setSpanWithRequestHeaders(
-        this.rootSpan,
-        this.otel.captureHeadersMap.get('request'),
-        key => this.ctx.get(key),
-      )
+    void Promise.resolve()
+      .then(() => {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        this.ctx.get && setSpanWithRequestHeaders(
+          this.rootSpan,
+          this.otel.captureHeadersMap.get('request'),
+          key => this.ctx.get(key),
+        )
 
-      const attrs = getIncomingRequestAttributesFromWebContext(this.ctx, this.config)
-      attrs[AttrNames.RequestStartTime] = this.startTime
-      this.setAttributes(this.rootSpan, attrs)
-      done()
-    })
+        const attrs = getIncomingRequestAttributesFromWebContext(this.ctx, this.config)
+        attrs[AttrNames.RequestStartTime] = this.startTime
+        this.setAttributes(this.rootSpan, attrs)
+      })
       .catch(console.error)
   }
 
-
-  protected addRootSpanEventWithError(error?: Error): void {
-    if (! error) { return }
-
-    const span = this.rootSpan
-    const { cause } = error
-
-    // @ts-ignore
-    if (cause instanceof Error || error[AttrNames.IsTraced]) {
-      return // avoid duplicated logs for the same error on the root span
-    }
-
-    const { name, message, stack } = error
-    const attrs: Attributes = {
-      [SemanticAttributes.EXCEPTION_TYPE]: 'exception',
-      [SemanticAttributes.EXCEPTION_MESSAGE]: message,
-    }
-    stack && (attrs[SemanticAttributes.EXCEPTION_STACKTRACE] = stack)
-    this.addEvent(span, attrs, {
-      eventName: `${name}-Cause`,
-    }) // Error-Cause
-  }
 
 }

@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/ali-oss",
   "author": "waiting",
-  "version": "7.0.11",
+  "version": "7.0.30",
   "description": "阿里云 OSS 命令行工具 ossutil 封装 midway.js 组件，提供 TypeScript 类型定义",
   "keywords": [
     "midway",
@@ -28,11 +28,11 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@mwcp/otel": "^3.8.2",
+    "@mwcp/otel": "^3.16.2",
     "@yuntools/ali-oss": "^16.1.2"
   },
   "devDependencies": {
-    "@mwcp/share": "^2.0.7",
+    "@mwcp/share": "^2.1.0",
     "cross-env": "7"
   },
   "engines": {
@@ -48,7 +48,7 @@
   "scripts": {
     "build": "npm run tsc && tsc-alias",
     "clean": "npm run clean:lock & npm run clean:cache & rm -rf dist/*",
-    "clean:cache": "rm -rf .eslintcache .vscode/.tsbuildinfo .vscode/.tsbuildinfo.*",
+    "clean:cache": "rm -rf .eslintcache .vscode/.tsbuildinfo .tsbuildinfo",
     "clean:lock": "rm package-lock.json -f",
     "cov": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json c8 mocha --parallel=false",
     "dev": "cross-env TS_NODE_TYPE_CHECK=false TS_NODE_TRANSPILE_ONLY=true NODE_ENV=local ../../node_modules/.bin/midway-bin dev --ts --port=7001",

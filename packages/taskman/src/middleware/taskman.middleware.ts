@@ -7,10 +7,7 @@ import { genISO8601String } from '@waiting/shared-core'
 import { ClientService } from '../lib/client.service'
 import { TaskClientConfig, TaskServerConfig, ConfigKey, ClientURL, ServerURL } from '../lib/types'
 import { TaskAgentService } from '../service/index.service'
-import {
-  getComponentConfig,
-  matchFunc,
-} from '../util/common'
+import { matchFunc } from '../util/common'
 
 
 @Middleware()
@@ -46,10 +43,8 @@ async function middleware(
   next: NextFunction,
 ): Promise<void> {
 
-  const { app } = ctx
-
-  const serverConfig = getComponentConfig<TaskServerConfig>(app, ConfigKey.serverConfig)
-  const clientConfig = getComponentConfig<TaskClientConfig>(app, ConfigKey.clientConfig)
+  const serverConfig = ctx.app.getConfig(ConfigKey.serverConfig) as TaskServerConfig
+  const clientConfig = ctx.app.getConfig(ConfigKey.clientConfig) as TaskClientConfig
 
   const clientSvc = await ctx.requestContext.getAsync(ClientService)
   const traceSvc = await ctx.requestContext.getAsync(TraceService)

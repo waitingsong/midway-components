@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/jaeger",
   "author": "waiting",
-  "version": "14.0.7",
+  "version": "14.0.12",
   "description": "midway component for jaeger",
   "keywords": [
     "midway",
@@ -25,12 +25,12 @@
   "license": "MIT",
   "dependencies": {
     "@types/jaeger-client": "^3.18.3",
-    "@waiting/shared-core": "^20.6.3",
+    "@waiting/shared-core": "^20.10.1",
     "jaeger-client": "^3.19.0",
     "opentracing": "^0.14.7"
   },
   "devDependencies": {
-    "@mwcp/share": "^2.0.7",
+    "@mwcp/share": "^2.1.0",
     "cross-env": "7"
   },
   "engines": {

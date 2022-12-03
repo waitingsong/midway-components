@@ -5,7 +5,7 @@ import {
   Provide,
 } from '@midwayjs/decorator'
 import { ILogger } from '@midwayjs/logger'
-import type { FetchOptions } from '@mwcp/base'
+import type { FetchOptions } from '@mwcp/boot'
 import { FetchService, JsonResp, Node_Headers } from '@mwcp/fetch'
 import { TraceService } from '@mwcp/otel'
 import type { Context } from '@mwcp/share'

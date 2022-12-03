@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/boot",
   "author": "waiting",
-  "version": "1.0.0",
+  "version": "1.0.24",
   "description": "midway.js boot",
   "keywords": [
     "midway",
@@ -21,26 +21,24 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/prometheus": "^3.7.1",
-    "@midwayjs/redis": "^3.7.1",
-    "@midwayjs/validate": "^3.7.1",
-    "@mwcp/ali-oss": "^7.0.11",
+    "@midwayjs/prometheus": "^3.8.0",
+    "@midwayjs/redis": "^3.8.0",
+    "@midwayjs/validate": "^3.8.0",
+    "@mwcp/ali-oss": "^7.0.30",
     "@mwcp/fetch": "^21.1.1",
-    "@mwcp/jwt": "^13.0.7",
-    "@mwcp/kmore": "^48.0.1",
+    "@mwcp/jwt": "^13.0.12",
+    "@mwcp/kmore": "^51.0.0",
     "@mwcp/koid": "^11.0.0",
-    "@mwcp/otel": "^3.8.2",
-    "@mwcp/share": "^2.0.7",
+    "@mwcp/otel": "^3.16.2",
+    "@mwcp/share": "^2.1.0",
     "@waiting/base64": "^4.2.9",
-    "@waiting/shared-core": "^20.6.3",
+    "@waiting/shared-core": "^20.10.1",
     "tsconfig-paths": "4"
   },
   "devDependencies": {
-    "@midwayjs/swagger": "^3.7.1",
+    "@midwayjs/swagger": "^3.8.0",
     "cross-env": "7",
-    "kmore": "^48.0.1",
-    "kmore-cli": "^48.0.0",
-    "kmore-types": "^48.0.0"
+    "kmore-cli": "^51.0.0"
   },
   "engines": {
     "node": ">=16.13.0"
@@ -57,7 +55,7 @@
   "scripts": {
     "build": "npm run tsc && tsc-alias",
     "clean": "npm run clean:lock & npm run clean:cache & rm -rf dist/*",
-    "clean:cache": "rm -rf .eslintcache .vscode/.tsbuildinfo .vscode/.tsbuildinfo.*",
+    "clean:cache": "rm -rf .eslintcache .vscode/.tsbuildinfo .tsbuildinfo",
     "clean:lock": "rm package-lock.json -f",
     "cov": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json c8 mocha --parallel=false",
     "dev": "cross-env TS_NODE_TYPE_CHECK=false TS_NODE_TRANSPILE_ONLY=true NODE_ENV=local ../../node_modules/.bin/midway-bin dev --ts --port=7001",

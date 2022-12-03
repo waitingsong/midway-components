@@ -29,14 +29,15 @@ describe(filename, () => {
     assert(traceId.length === 32)
     console.log({ traceId })
 
-    await sleep(6000)
+    await sleep(7000)
 
     const tracePath = `${agent}:16686/api/traces/${traceId}?prettyPrint=true`
     let resp2 = await makeHttpRequest(tracePath, {
       method: 'GET',
       dataType: 'json',
     })
-    if (resp2.status !== 200) {
+    if (resp2.status !== 200 || ! resp2.data) {
+      console.log('retry...')
       await sleep(5000)
       resp2 = await makeHttpRequest(tracePath, {
         method: 'GET',

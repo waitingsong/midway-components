@@ -5,7 +5,10 @@
   ],
   "ignore": [
     "demo",
-    "@mwcp/demo"
+    "@mwcp/demo",
+    "@mwcp/base",
+    "@mwcp/jaeger",
+    "@mw-components/demo"
   ],
   "command": {
     "publish": {
@@ -16,7 +19,9 @@
         ".vscode",
         "package-lock.json",
         "packages/demo",
-        "packages/mw-demo"
+        "packages/mw-demo",
+        "packages/base",
+        "packages/jaeger"
       ],
       "verifyAccess": false
     },
