@@ -9,7 +9,7 @@ import { TestRespBody } from '@/root.config'
 import {
   ConfigKey,
   MiddlewareConfig,
-} from '~/index'
+} from '~/lib/types'
 
 
 @Controller('/')

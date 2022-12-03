@@ -12,7 +12,8 @@ import { sleep } from '@waiting/shared-core'
 import { apiPrefix, apiRoute } from '../api-route'
 import { validateMeta } from '../base.helper'
 
-import { Cacheable, CachedResponse, ConfigKey } from '~/index'
+import { CachedResponse, ConfigKey } from '~/lib/types'
+import { Cacheable, } from '~/index'
 
 
 const ttl = 1

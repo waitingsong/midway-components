@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict'
 
+import { initConfig } from '~/index'
 import {
   CachedResponse,
   ConfigKey,
   DataWithCacheMeta,
-  initConfig,
-} from '~/index'
+} from '~/lib/types'
 
 
 export function validateMeta(

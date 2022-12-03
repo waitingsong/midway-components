@@ -11,7 +11,7 @@ import { apiPrefix, apiRoute } from '../api-route'
 import { validateMeta } from '../base.helper'
 import { ClassDecoratorEvictService, cacheName } from './31b.class-decorator.service'
 
-import { ConfigKey } from '~/index'
+import { ConfigKey } from '~/lib/types'
 
 
 @Controller(apiPrefix.classCacheable)

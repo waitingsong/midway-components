@@ -12,7 +12,9 @@ import {
 import { useComponents } from './imports'
 import { registerMethodHandler } from './lib/cacheable/method-decorator.cacheable'
 import { registerMethodHandlerEvict } from './lib/cacheevict/method-decorator.cacheevict'
-import { ConfigKey, Config as CacheConfig } from './lib/index'
+import { CacheConfig } from './lib/index'
+
+import { ConfigKey } from '~/lib/types'
 
 
 @Configuration({

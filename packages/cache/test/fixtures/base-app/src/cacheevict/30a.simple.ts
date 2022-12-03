@@ -11,7 +11,8 @@ import type { Context } from '@mwcp/share'
 import { apiPrefix, apiRoute } from '../api-route'
 import { validateMeta } from '../base.helper'
 
-import { Cacheable, CacheEvict, CachedResponse, ConfigKey } from '~/index'
+import { Cacheable, CacheEvict } from '~/index'
+import { CachedResponse, ConfigKey } from '~/lib/types'
 
 
 const cacheKey = `CacheEvictController.simple`
