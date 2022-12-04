@@ -1,13 +1,15 @@
 import 'tsconfig-paths/register'
+import assert from 'node:assert'
 import { join } from 'node:path'
 
 import { CacheManager } from '@midwayjs/cache'
 import {
+  App,
   Config, Configuration,
   Inject, ILifeCycle,
   MidwayDecoratorService,
 } from '@midwayjs/core'
-// import type { Application } from '@mwcp/share'
+import type { Application } from '@mwcp/share'
 
 import { useComponents } from './imports'
 import { registerMethodHandler } from './lib/cacheable/method-decorator.cacheable'
@@ -24,51 +26,48 @@ import { ConfigKey } from '~/lib/types'
 })
 export class AutoConfiguration implements ILifeCycle {
 
-  // @App() readonly app: Application
+  @App() readonly app: Application
 
-  @Config(ConfigKey.config) protected readonly config: CacheConfig
+  @Config(ConfigKey.config) protected readonly cacheConfig: CacheConfig
+  @Config() protected readonly cache: CacheConfig
 
   @Inject() decoratorService: MidwayDecoratorService
   @Inject() cacheManager: CacheManager
 
+  async onConfigLoad(): Promise<void> {
+    assert(this.cache, 'cache config is required')
+    updateCacheConfig(this.cache, this.cacheConfig)
+  }
 
   async onReady(): Promise<void> {
+    const config = this.app.getConfig('cache') as CacheConfig
+    assert.deepEqual(config, this.cacheConfig)
+
     registerMethodHandler(
       this.decoratorService,
-      this.config,
+      this.cacheConfig,
       this.cacheManager,
     )
     registerMethodHandlerEvict(
       this.decoratorService,
-      this.config,
+      this.cacheConfig,
       this.cacheManager,
     )
   }
 
 }
 
+function updateCacheConfig(
+  config: CacheConfig,
+  newConfig: CacheConfig,
+): CacheConfig {
 
-// function registerMiddleware(
-//   app: Application,
-//   middleware: { name: string },
-//   postion: 'first' | 'last' = 'last',
-// ): void {
+  assert(config, 'config is required')
+  assert(newConfig, 'newConfig is required')
 
-//   const mwNames = app.getMiddleware().getNames()
-//   if (mwNames.includes(middleware.name)) {
-//     return
-//   }
-
-//   switch (postion) {
-//     case 'first':
-//       // @ts-ignore
-//       app.getMiddleware().insertFirst(middleware)
-//       break
-//     case 'last':
-//       // @ts-ignore
-//       app.getMiddleware().insertLast(middleware)
-//       break
-//   }
-// }
-
-
+  if (newConfig.store) {
+    config.store = newConfig.store
+  }
+  Object.assign(config.options, newConfig.options)
+  return config
+}
