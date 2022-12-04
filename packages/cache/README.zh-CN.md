@@ -37,6 +37,19 @@ export class ContainerConfiguration implements ILifeCycle {
 }
 ```
 
+更改默认设置，通过文件 `src/config/config.{default | prod | unittest}.ts`
+```ts
+import { CacheConfig } from '@mwcp/cache'
+
+export const cacheConfig: CacheConfig = {
+  store: 'memory',
+  options: {
+    max: 512,
+    ttl: 10,
+  },
+}
+```
+
 ## 使用
 
 Normal [Cache-Docs]
