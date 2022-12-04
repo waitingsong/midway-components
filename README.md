@@ -1,4 +1,4 @@
-# NPM mono repository
+# [Midway.js] Components
 
 
 [![GitHub tag](https://img.shields.io/github/tag/waitingsong/midway-components)]()
@@ -15,12 +15,12 @@
 
 | Package     | Version                      |
 | ----------- | ---------------------------- |
+| [`boot`]    | [![boot-svg]][boot-ch]       |
 | [`ali-oss`] | [![ali-oss-svg]][ali-oss-ch] |
 | [`cache`]   | [![cache-svg]][cache-ch]     |
 | [`jwt`]     | [![jwt-svg]][jwt-ch]         |
 | [`otel`]    | [![otel-svg]][otel-ch]       |
 | [`taskman`] | [![taskman-svg]][taskman-ch] |
-| [`boot`]    | [![boot-svg]][boot-ch]       |
 
 
 ## Initialize and install dependencies
@@ -60,6 +60,8 @@ npm run purge
 - [中文](README.zh-CN.md)
 
 <br>
+
+[Midway.js]: https://midwayjs.org/
 
 [`ali-oss`]: https://github.com/waitingsong/midway-components/tree/main/packages/ali-oss
 [ali-oss-svg]: https://img.shields.io/npm/v/@mwcp/ali-oss.svg?maxAge=7200
