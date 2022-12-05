@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/cache",
   "author": "waiting",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "midway component for declarative cache",
   "keywords": [
     "Cacheable",
@@ -26,7 +26,7 @@
   "license": "MIT",
   "dependencies": {
     "@midwayjs/cache": "^3.8.0",
-    "@mwcp/share": "^2.0.10",
+    "@mwcp/share": "^2.1.1",
     "@waiting/shared-core": "^20.10.1",
     "cache-manager": "^5.1.3"
   },
