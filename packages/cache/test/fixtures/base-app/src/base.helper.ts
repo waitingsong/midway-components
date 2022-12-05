@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict'
 
-import { initConfig } from '~/index'
 import {
   CachedResponse,
   ConfigKey,
@@ -11,7 +10,7 @@ import {
 export function validateMeta(
   resp: CachedResponse<unknown> | DataWithCacheMeta,
   cacheKey: string,
-  ttl: number = initConfig.options.ttl,
+  ttl: number,
 ): void {
 
   assert(resp, 'resp is undefined')

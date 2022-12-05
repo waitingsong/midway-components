@@ -10,7 +10,9 @@ export const apiPrefix = {
 export const apiRoute = {
   argsOverride: 'method_override_class',
   cacheName: 'cache_name',
+  condition: 'condition',
   evictOverride: 'evict_override',
+  evictCondition: 'evict_condition',
   param: 'param',
   query: 'query',
   simple: 'simple',

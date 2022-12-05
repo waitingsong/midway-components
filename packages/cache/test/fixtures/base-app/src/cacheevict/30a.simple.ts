@@ -12,13 +12,15 @@ import { apiPrefix, apiRoute } from '../api-route'
 import { validateMeta } from '../base.helper'
 
 import { Cacheable, CacheEvict } from '~/index'
-import { CachedResponse, ConfigKey } from '~/lib/types'
+import { CachedResponse, Config, ConfigKey } from '~/lib/types'
 
 
 const cacheKey = `CacheEvictController.simple`
 
 @Controller(apiPrefix.methodCacheEvict)
 export class CacheEvictController {
+
+  @_Config(ConfigKey.config) readonly config: Config
 
   @Inject() readonly ctx: Context
 
@@ -32,10 +34,10 @@ export class CacheEvictController {
     assert(! ret[ConfigKey.CacheMetaType])
 
     const ret2 = await this._simple()
-    validateMeta(ret2, cacheKey)
+    validateMeta(ret2, cacheKey, this.config.options.ttl)
 
     const ret2a = await this._simple()
-    validateMeta(ret2a, cacheKey)
+    validateMeta(ret2a, cacheKey, this.config.options.ttl)
 
     await this._del()
     const ret3 = await this._simple()
@@ -43,7 +45,7 @@ export class CacheEvictController {
     assert(! ret3[ConfigKey.CacheMetaType])
 
     const ret3a = await this._simple()
-    validateMeta(ret3a, cacheKey)
+    validateMeta(ret3a, cacheKey, this.config.options.ttl)
 
     await this._del2()
     const ret4 = await this._simple()
@@ -51,7 +53,7 @@ export class CacheEvictController {
     assert(! ret4[ConfigKey.CacheMetaType])
 
     const ret4a = await this._simple()
-    validateMeta(ret4a, cacheKey)
+    validateMeta(ret4a, cacheKey, this.config.options.ttl)
 
     return ret3
   }

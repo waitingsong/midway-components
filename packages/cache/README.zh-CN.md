@@ -66,6 +66,7 @@ supports class and method
 | cacheName | string \| undefined                                     | {className}.{methodName} |
 | key       | string \| number \| bigint \| KeyGenerator \| undefined | undefined                |
 | ttl       | number \| undefined                                     | 10(sec)                  |
+| condition | CacheConditionFn \| boolean \| undefined                | undefined (always cache) |
 
 ```ts
 import { Cacheable } from '@mwcp/cache'
@@ -128,6 +129,7 @@ supports method
 | cacheName        | string \| undefined                                     | {className}.{methodName} |
 | key              | string \| number \| bigint \| KeyGenerator \| undefined | undefined                |
 | beforeInvocation | boolean \| undefined                                    | false                    |
+| condition        | CacheConditionFn \| boolean \| undefined                | undefined (always evict) |
 
 ```ts
 import { Cacheable, CacheEvict } from '@mwcp/cache'

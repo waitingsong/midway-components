@@ -18,7 +18,8 @@ import type { Context as WebContext } from '@mwcp/share'
 import { CLASS_KEY_Cacheable, METHOD_KEY_Cacheable } from '../config'
 import { Config, CacheableArgs } from '../types'
 
-import { DecoratorExecutorOptions, decoratorExecutor } from './helper.cacheable'
+import { decoratorExecutor } from './helper.cacheable'
+import { DecoratorExecutorOptions } from './types.cacheable'
 
 
 export function methodDecoratorPatcher<T>(
@@ -89,7 +90,12 @@ async function aroundFactory(
   const webContext = instance[REQUEST_OBJ_CTX_KEY] as WebContext
   assert(webContext, 'webContext is undefined')
 
-  const { cacheName: cacheNameArg, key: keyArg, ttl: ttlArg } = metaDataOptions.metadata
+  const {
+    cacheName: cacheNameArg,
+    key: keyArg,
+    ttl: ttlArg,
+    condition,
+  } = metaDataOptions.metadata
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   const className = (instance.constructor?.name ?? metaDataOptions.target.name) as string
   const funcName = joinPoint.methodName as string
@@ -105,6 +111,7 @@ async function aroundFactory(
     cacheName,
     key,
     ttl,
+    condition,
     // eslint-disable-next-line @typescript-eslint/unbound-method
     method: joinPoint.proceed,
     methodArgs: joinPoint.args,

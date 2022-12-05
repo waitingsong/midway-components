@@ -12,13 +12,15 @@ import { apiPrefix, apiRoute } from '../api-route'
 import { validateMeta } from '../base.helper'
 import { ClassDecoratorService } from './23b.class-decorator.service'
 
-import { ConfigKey } from '~/lib/types'
+import { Config, ConfigKey } from '~/lib/types'
 
 
 const ttl = 1
 
 @Controller(apiPrefix.classCacheable)
 export class ClassDecoratorController {
+
+  @_Config(ConfigKey.config) readonly config: Config
 
   @Inject() svc: ClassDecoratorService
 
@@ -33,12 +35,12 @@ export class ClassDecoratorController {
     assert(! ret[ConfigKey.CacheMetaType])
 
     const ret2 = await this.svc.simple()
-    validateMeta(ret2, cacheKey)
+    validateMeta(ret2, cacheKey, this.config.options.ttl)
 
     await sleep(ttl * 1001)
 
     const ret2a = await this.svc.simple()
-    validateMeta(ret2a, cacheKey)
+    validateMeta(ret2a, cacheKey, this.config.options.ttl)
 
     return 'OK'
   }

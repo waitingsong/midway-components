@@ -24,6 +24,17 @@ describe(filename, () => {
       assert(resp)
     })
 
+    it(apiRoute.evictCondition, async () => {
+      const { httpRequest } = testConfig
+      const url = `${prefix}/${apiRoute.evictCondition}`
+
+      const resp = await httpRequest
+        .get(url)
+        .expect(200)
+
+      assert(resp)
+    })
+
   })
 })
 

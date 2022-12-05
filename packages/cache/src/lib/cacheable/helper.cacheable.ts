@@ -1,20 +1,20 @@
 import assert from 'assert'
 
-import { CacheManager } from '@midwayjs/cache'
 import { INJECT_CUSTOM_METHOD, getClassMetadata } from '@midwayjs/core'
-import type { Context as WebContext } from '@mwcp/share'
 
 import { initConfig } from '../config'
-import { genCacheKey, GenCacheKeyOptions, genDataWithCacheMeta, getData, saveData } from '../helper'
+import {
+  computerConditionValue,
+  genCacheKey,
+  GenCacheKeyOptions,
+  genDataWithCacheMeta,
+  getData,
+  saveData,
+} from '../helper'
 import { CachedResponse, CacheableArgs, DecoratorMetaData } from '../types'
 
+import { DecoratorExecutorOptions } from './types.cacheable'
 
-export interface DecoratorExecutorOptions extends CacheableArgs {
-  cacheManager: CacheManager
-  method: (...args: unknown[]) => unknown
-  methodArgs: unknown[]
-  webContext: WebContext
-}
 
 export async function decoratorExecutor(
   options: DecoratorExecutorOptions,
@@ -24,6 +24,7 @@ export async function decoratorExecutor(
 
   const opts: GenCacheKeyOptions = {
     cacheName: options.cacheName,
+    condition: options.condition,
     key: options.key,
     methodArgs: options.methodArgs,
     webContext: options.webContext,
@@ -32,10 +33,19 @@ export async function decoratorExecutor(
 
   return Promise.resolve(options)
     .then(async (inputOpts) => {
-      const cacheResp = await getData(inputOpts.cacheManager, cacheKey)
-      return { inputOpts, cacheResp }
+      const tmp = computerConditionValue(inputOpts)
+      const enableCache = typeof tmp === 'boolean' ? tmp : await tmp
+      assert(typeof enableCache === 'boolean', 'condition must return boolean')
+
+      return { inputOpts, enableCache }
     })
-    .then(async ({ cacheResp, inputOpts }) => {
+    .then(async ({ inputOpts, enableCache }) => {
+      const cacheResp = enableCache
+        ? await getData(inputOpts.cacheManager, cacheKey)
+        : void 0
+      return { inputOpts, enableCache, cacheResp }
+    })
+    .then(async ({ inputOpts, enableCache, cacheResp }) => {
       if (typeof cacheResp !== 'undefined') {
         const resp = genDataWithCacheMeta(cacheResp as CachedResponse, inputOpts, inputOpts.ttl)
         return resp
@@ -44,7 +54,7 @@ export async function decoratorExecutor(
       const { cacheManager, method, methodArgs } = inputOpts
       const resp = await method(...methodArgs)
 
-      if (typeof resp !== 'undefined') {
+      if (enableCache && typeof resp !== 'undefined') {
         const ttl = typeof inputOpts.ttl === 'number' ? inputOpts.ttl : initConfig.options.ttl
         await saveData(cacheManager, cacheKey, resp, ttl)
       }

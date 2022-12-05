@@ -1,19 +1,13 @@
 import assert from 'assert'
 
-import { CacheManager } from '@midwayjs/cache'
 import { INJECT_CUSTOM_METHOD, getClassMetadata } from '@midwayjs/core'
-import type { Context as WebContext } from '@mwcp/share'
 
-import { deleteData, genCacheKey, GenCacheKeyOptions } from '../helper'
+import { METHOD_KEY_CacheEvict } from '../config'
+import { computerConditionValue, deleteData, genCacheKey, GenCacheKeyOptions } from '../helper'
 import { CacheEvictArgs, DecoratorMetaData } from '../types'
 
+import { DecoratorExecutorOptions } from './types.cacheevict'
 
-export interface DecoratorExecutorOptions extends CacheEvictArgs {
-  cacheManager: CacheManager
-  method: (...args: unknown[]) => unknown
-  methodArgs: unknown[]
-  webContext: WebContext
-}
 
 export async function decoratorExecutor(
   options: DecoratorExecutorOptions,
@@ -23,6 +17,7 @@ export async function decoratorExecutor(
 
   const opts: GenCacheKeyOptions = {
     cacheName: options.cacheName,
+    condition: options.condition,
     key: options.key,
     methodArgs: options.methodArgs,
     webContext: options.webContext,
@@ -31,14 +26,21 @@ export async function decoratorExecutor(
 
   return Promise.resolve(options)
     .then(async (inputOpts) => {
-      if (inputOpts.beforeInvocation) {
+      const tmp = computerConditionValue(inputOpts)
+      const enableEvict = typeof tmp === 'boolean' ? tmp : await tmp
+      assert(typeof enableEvict === 'boolean', 'condition must return boolean')
+
+      return { inputOpts, enableEvict }
+    })
+    .then(async ({ inputOpts, enableEvict }) => {
+      if (enableEvict && inputOpts.beforeInvocation) {
         await deleteData(inputOpts.cacheManager, cacheKey)
       }
 
       const { method, methodArgs } = inputOpts
       const resp = await method(...methodArgs)
 
-      if (! inputOpts.beforeInvocation) {
+      if (enableEvict && ! inputOpts.beforeInvocation) {
         await deleteData(inputOpts.cacheManager, cacheKey)
       }
 
@@ -85,4 +87,21 @@ export function retrieveMethodDecoratorArgs(
       return row.metadata
     }
   }
+}
+
+export function methodHasEvictDecorator(
+  methodName: string,
+  metaDataArr: DecoratorMetaData[] | undefined,
+): boolean {
+
+  if (! methodName) { return false }
+  if (! metaDataArr?.length) { return false }
+
+  for (const row of metaDataArr) {
+    if (row.key === METHOD_KEY_CacheEvict && row.propertyName === methodName) {
+      return true
+    }
+  }
+
+  return false
 }

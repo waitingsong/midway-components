@@ -17,10 +17,8 @@ import type { Context as WebContext } from '@mwcp/share'
 import { METHOD_KEY_CacheEvict } from '../config'
 import { Config, CacheEvictArgs, DecoratorMetaData } from '../types'
 
-import {
-  decoratorExecutor,
-  DecoratorExecutorOptions,
-} from './helper.cacheevict'
+import { decoratorExecutor } from './helper.cacheevict'
+import { DecoratorExecutorOptions } from './types.cacheevict'
 
 
 export function methodDecoratorPatcher<T>(
@@ -85,7 +83,12 @@ async function aroundFactoryEvict(
   const webContext = instance[REQUEST_OBJ_CTX_KEY] as WebContext
   assert(webContext, 'webContext is undefined')
 
-  const { cacheName: cacheNameArg, key: keyArg, beforeInvocation } = metaDataOptions.metadata
+  const {
+    cacheName: cacheNameArg,
+    key: keyArg,
+    beforeInvocation,
+    condition,
+  } = metaDataOptions.metadata
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   const className = (instance.constructor?.name ?? metaDataOptions.target.name) as string
   const funcName = joinPoint.methodName as string
@@ -99,6 +102,7 @@ async function aroundFactoryEvict(
     beforeInvocation: !! beforeInvocation,
     cacheManager,
     cacheName,
+    condition,
     key,
     // eslint-disable-next-line @typescript-eslint/unbound-method
     method: joinPoint.proceed,
@@ -117,20 +121,3 @@ interface MetaDataType {
   metadata: Partial<CacheEvictArgs>
 }
 
-
-export function methodHasEvictDecorator(
-  methodName: string,
-  metaDataArr: DecoratorMetaData[] | undefined,
-): boolean {
-
-  if (! methodName) { return false }
-  if (! metaDataArr?.length) { return false }
-
-  for (const row of metaDataArr) {
-    if (row.key === METHOD_KEY_CacheEvict && row.propertyName === methodName) {
-      return true
-    }
-  }
-
-  return false
-}

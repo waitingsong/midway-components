@@ -16,15 +16,15 @@ import {
 } from '@midwayjs/core'
 import type { Context as WebContext } from '@mwcp/share'
 
-import { methodHasEvictDecorator } from '../cacheevict/method-decorator.cacheevict'
+import { methodHasEvictDecorator } from '../cacheevict/helper.cacheevict'
 import { CLASS_KEY_Cacheable } from '../config'
 import { Config, CacheableArgs, DecoratorMetaData } from '../types'
 
 import {
-  DecoratorExecutorOptions,
   decoratorExecutor,
   retrieveMethodDecoratorArgs,
 } from './helper.cacheable'
+import { DecoratorExecutorOptions } from './types.cacheable'
 
 
 export function classDecoratorPatcher(
@@ -125,16 +125,18 @@ async function classDecoratorExecuctor(
   const className = instance.constructor?.name as string
   assert(className, 'this.constructor.name is undefined')
 
-  const methodMetaDataArgs = retrieveMethodDecoratorArgs(instance, methodName)
+  const methodMetaDataArgs: CacheableArgs | undefined = retrieveMethodDecoratorArgs(instance, methodName)
 
   const cacheName = methodMetaDataArgs?.cacheName ?? `${className}.${methodName}`
   const key = methodMetaDataArgs?.key
   const ttl = methodMetaDataArgs?.ttl ?? options?.ttl ?? config?.options.ttl
+  const condition = methodMetaDataArgs?.condition ?? options?.condition
   const cacheManager = await webContext.requestContext.getAsync(CacheManager)
 
   const opts: DecoratorExecutorOptions = {
     cacheManager,
     cacheName,
+    condition,
     key,
     ttl,
     method,

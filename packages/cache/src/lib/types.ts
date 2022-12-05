@@ -46,6 +46,13 @@ export type KeyGenerator = (
   args: any[] | any
 ) => string
 
+export type CacheConditionFn = (
+  this: Context,
+  /** Arguments of the method */
+  args: any[] | any
+) => boolean | Promise<boolean>
+
+
 export interface CacheMetaType {
   readonly cacheKey?: string
   readonly ttl?: number
@@ -72,6 +79,11 @@ export interface CacheableArgs {
    * @default 10(sec)
    */
   ttl: number | undefined
+  /**
+   * Returns false to skip cache
+   * @default undefined - always cache
+   */
+  condition: CacheConditionFn | boolean | undefined
 }
 
 export interface CacheEvictArgs {
@@ -85,6 +97,11 @@ export interface CacheEvictArgs {
    * @default false
    */
   beforeInvocation: boolean
+  /**
+   * Returns false to skip evict
+   * @default undefined - always evict
+   */
+  condition: CacheConditionFn | boolean | undefined
 }
 
 
