@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.5.0](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@2.4.0...@mwcp/cache@2.5.0) (2022-12-06)
+
+
+### Features
+
+* **cache:** decorator CachePut ([2888b71](https://github.com/waitingsong/midway-components/commit/2888b7174bbec3421b34956217d2b4756a3b453f))
+
+
+
+
+
 # [2.4.0](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@2.3.0...@mwcp/cache@2.4.0) (2022-12-06)
 
 
