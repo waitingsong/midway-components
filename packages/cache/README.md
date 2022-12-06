@@ -157,7 +157,7 @@ export class UserService {
 @Cacheable() 
 export class FooService {
   @Cacheable<FooService['hello']>({  // <--- pass FooService['hello'] as method type
-    key: (input) => input.uid }  // <--- type of input will be [UserDTO, string | undefined] automatically
+    key: (args) => args[0].uid }  // <--- type of args will be [UserDTO, string | undefined] automatically
   ) 
   async hello(input: UserDTO, input2?: string): Promise<string> {
     return 'world'
