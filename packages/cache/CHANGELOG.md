@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.3](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@2.5.2...@mwcp/cache@2.5.3) (2022-12-06)
+
+
+### Bug Fixes
+
+* **cache:** skip class decorator if method decorated with CachePut ([09b888b](https://github.com/waitingsong/midway-components/commit/09b888b42229c6d2c60552f7594c618ccac618c2))
+
+
+
+
+
 ## [2.5.2](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@2.5.1...@mwcp/cache@2.5.2) (2022-12-06)
 
 **Note:** Version bump only for package @mwcp/cache
