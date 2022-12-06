@@ -3,8 +3,9 @@ import assert from 'assert'
 import { CacheManager } from '@midwayjs/cache'
 import type { Context as WebContext } from '@mwcp/share'
 
-import { DecoratorExecutorOptions as DecoratorExecutorOptionsCacheable } from './cacheable/types.cacheable'
-import { DecoratorExecutorOptions as DecoratorExecutorOptionsCacheEvict } from './cacheevict/types.cacheevict'
+import { DecoratorExecutorOptions as ExecutorOptionsCacheable } from './cacheable/types.cacheable'
+import { DecoratorExecutorOptions as ExecutorOptionsCacheEvict } from './cacheevict/types.cacheevict'
+import { DecoratorExecutorOptions as ExecutorOptionsCachePut } from './cacheput/types.cacheput'
 import { initConfig } from './config'
 import { CachedResponse, ConfigKey, CacheableArgs, DataWithCacheMeta } from './types'
 
@@ -102,7 +103,7 @@ export async function getData<T = unknown>(
 }
 
 export function computerConditionValue(
-  options: DecoratorExecutorOptionsCacheable | DecoratorExecutorOptionsCacheEvict,
+  options: ExecutorOptionsCacheable | ExecutorOptionsCacheEvict | ExecutorOptionsCachePut,
 ): boolean | Promise<boolean> {
 
   switch (typeof options.condition) {

@@ -13,4 +13,5 @@ export {
 
 export * from './cacheable/cacheable'
 export * from './cacheevict/cacheevict'
+export * from './cacheput/cacheput'
 

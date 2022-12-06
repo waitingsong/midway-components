@@ -151,6 +151,31 @@ export class UserService {
 }
 ```
 
+## CachePut Decorator
+
+supports method
+
+```ts
+import { CachePut } from '@mwcp/cache'
+
+const cacheName = 'FooRepo.getOne'
+
+@Controller('/')
+export class FooRepo {
+
+  @Cacheable({ cacheName, ttl: 5 })
+  async getOne(): Promise<string> {
+    return 'world'
+  }
+
+  @CachePut({ cacheName })
+  async update(): Promise<string> {
+    return 'hello'
+  }
+
+}
+```
+
 ## Decorator Generics
 
 ```ts
@@ -164,6 +189,8 @@ export class FooService {
   }
 }
 ```
+
+
 
 [More examples]
 

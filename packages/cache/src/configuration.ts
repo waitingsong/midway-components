@@ -14,6 +14,7 @@ import type { Application } from '@mwcp/share'
 import { useComponents } from './imports'
 import { registerMethodHandler } from './lib/cacheable/method-decorator.cacheable'
 import { registerMethodHandlerEvict } from './lib/cacheevict/method-decorator.cacheevict'
+import { registerMethodHandlerPut } from './lib/cacheput/method-decorator.cacheput'
 import { CacheConfig } from './lib/index'
 
 import { ConfigKey } from '~/lib/types'
@@ -49,6 +50,11 @@ export class AutoConfiguration implements ILifeCycle {
       this.cacheManager,
     )
     registerMethodHandlerEvict(
+      this.decoratorService,
+      this.cacheConfig,
+      this.cacheManager,
+    )
+    registerMethodHandlerPut(
       this.decoratorService,
       this.cacheConfig,
       this.cacheManager,

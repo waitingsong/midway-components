@@ -5,6 +5,7 @@ export const apiPrefix = {
   keyGenerator: '/key_generator',
   methodCacheable: '/method_chacheable',
   methodCacheEvict: '/method_chacheevict',
+  methodCachePut: '/method_chacheput',
 }
 
 export const apiRoute = {
