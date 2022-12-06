@@ -57,9 +57,9 @@ describe(filename, () => {
       assert(resp)
     })
 
-    it(apiRoute.evictResultEvenAndGreaterThanZero2, async () => {
+    it(apiRoute.evictGenerics, async () => {
       const { httpRequest } = testConfig
-      const url = `${prefix}/${apiRoute.evictResultEvenAndGreaterThanZero2}`
+      const url = `${prefix}/${apiRoute.evictGenerics}`
 
       const resp = await httpRequest
         .get(url)

@@ -174,8 +174,8 @@ export class ClassDecoratorEvictController {
     return 'OK'
   }
 
-  @Get(`/${apiRoute.evictResultEvenAndGreaterThanZero2}`)
-  async evictReslutEvenAndGreaterThanZero2(): Promise<'OK'> {
+  @Get(`/${apiRoute.evictGenerics}`)
+  async evictGenerics(): Promise<'OK'> {
     const cacheKey = cacheNameSimple
 
     await this.svc.evictHello()
@@ -188,17 +188,17 @@ export class ClassDecoratorEvictController {
     const ret2 = await this.svc.simple()
     validateMeta(ret2, cacheKey, this.config.options.ttl)
 
-    await this.svc.evictResultEvenAndGreaterThanZero2(0) // (even, but not gt zero) not evict
+    await this.svc.evictResultEvenAndGreaterThanZeroGenerics(0) // (even, but not gt zero) not evict
 
     const ret3 = await this.svc.simple()
     validateMeta(ret3, cacheKey, this.config.options.ttl)
 
-    await this.svc.evictResultEvenAndGreaterThanZero2(1) // (odd) not evict
+    await this.svc.evictResultEvenAndGreaterThanZeroGenerics(1) // (odd) not evict
 
     const ret3a = await this.svc.simple()
     validateMeta(ret3a, cacheKey, this.config.options.ttl)
 
-    await this.svc.evictResultEvenAndGreaterThanZero2(2) // (even and >0) evict
+    await this.svc.evictResultEvenAndGreaterThanZeroGenerics(2) // (even and >0) evict
 
     const ret4 = await this.svc.simple()
     assert(! ret4[ConfigKey.CacheMetaType])

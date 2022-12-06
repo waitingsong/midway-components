@@ -151,6 +151,20 @@ export class UserService {
 }
 ```
 
+## Decorator Generics
+
+```ts
+@Cacheable() 
+export class FooService {
+  @Cacheable<FooService['hello']>({  // <--- pass FooService['hello'] as method type
+    key: (input) => input.uid }  // <--- type of input will be [UserDTO, string | undefined] automatically
+  ) 
+  async hello(input: UserDTO, input2?: string): Promise<string> {
+    return 'world'
+  }
+}
+```
+
 [More examples]
 
 

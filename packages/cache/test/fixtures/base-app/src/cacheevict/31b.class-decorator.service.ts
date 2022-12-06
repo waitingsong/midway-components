@@ -66,22 +66,23 @@ export class ClassDecoratorEvictService  {
     return { value: input }
   }
 
-  @CacheEvict({
+  @CacheEvict<ClassDecoratorEvictService['evictResultEvenAndGreaterThanZeroGenerics']>({
     cacheName: cacheNameSimple,
-    key: (
-      args: Parameters<ClassDecoratorEvictService['evictResultEvenAndGreaterThanZero2']>,
-      result: Awaited<ReturnType<ClassDecoratorEvictService['evictResultEvenAndGreaterThanZero2']>> | undefined) => {
-        const invalidStr = 'cache item will not exist due to this invalid string'
-        if (args[0] === 0) {
-          return invalidStr
-        }
-        return result && result.value % 2 === 0 ? void 0 : invalidStr
-      },
-      condition: (
-        _args: unknown, result: CachedResponse<number> | undefined
-      ) => result ? result.value % 2 === 0 : false,
+    key: (args, result) => {
+      const invalidStr = 'cache item will not exist due to this invalid string'
+      if (args[0] === 0) {
+        return invalidStr
+      }
+      return result && result.value % 2 === 0 ? void 0 : invalidStr
+    },
+    condition: (_args, result) => result ? result.value % 2 === 0 : false,
   })
-  async evictResultEvenAndGreaterThanZero2(input: number): Promise<CachedResponse<number>> {
+  async evictResultEvenAndGreaterThanZeroGenerics(
+    input: number,
+    notUsed?: string | number,
+  ): Promise<CachedResponse<number>> {
+
+    void notUsed
     return { value: input }
   }
 }

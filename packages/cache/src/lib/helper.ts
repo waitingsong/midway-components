@@ -33,6 +33,7 @@ export function genCacheKey(options: GenCacheKeyOptions): string {
       return `${cacheName}` // without tailing `:`
 
     case 'function': {
+      // @ts-expect-error
       const keyStr = key.call(webContext, methodArgs, methodResult)
       assert(
         typeof keyStr === 'string' || typeof keyStr === 'undefined',
@@ -115,6 +116,7 @@ export function computerConditionValue(
       return options.condition.call(
         options.webContext,
         options.methodArgs,
+        // @ts-expect-error
         options.methodResult,
       )
 

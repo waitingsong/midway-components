@@ -35,6 +35,7 @@ export interface Config {
   }
 }
 
+export type MethodType = (...input: any[]) => (any | Promise<any>)
 
 /**
  * @param ctx Koa context
@@ -42,26 +43,26 @@ export interface Config {
  * @param result Result of the method. Only for using `@CacheEvict`
  * @returns if undefined, there is no tailing ":" in cacheName
  */
-export type KeyGenerator = (
+export type KeyGenerator<M extends MethodType | undefined = undefined> = (
   this: Context,
   /** Arguments of the method */
-  args: any[] | any,
+  args: M extends MethodType ? Parameters<M> : any,
   /**
    * Result of the method(). Only for using `@CacheEvict`
    * - value always be undefined if `beforeInvocation`is true
    */
-  result: any
+  result: M extends MethodType ? Awaited<ReturnType<M>> : undefined
 ) => string | undefined
 
-export type CacheConditionFn = (
+export type CacheConditionFn<M extends MethodType | undefined = undefined> = (
   this: Context,
   /** Arguments of the method */
-  args: any[] | any,
+  args: M extends MethodType ? Parameters<M> : any,
   /**
    * Result of the method. Only for using `@CacheEvict`
    * - value always be undefined if `beforeInvocation`is true
    */
-  result: any
+  result: M extends MethodType ? Awaited<ReturnType<M>> : undefined
 ) => boolean | Promise<boolean>
 
 
@@ -79,13 +80,13 @@ export interface CachedResponse<T = unknown> {
   value: T
 }
 
-export interface CacheableArgs {
+export interface CacheableArgs<M extends MethodType | undefined = undefined> {
   /**
    * Name of the cache set
    * @default `${className}.${methodName}`
    */
   cacheName: string | undefined
-  key: string | number | bigint | KeyGenerator | undefined
+  key: string | number | bigint | KeyGenerator<M> | undefined
   /**
    * time to live in seconds
    * @default 10(sec)
@@ -95,16 +96,16 @@ export interface CacheableArgs {
    * Returns false to skip cache
    * @default undefined - always cache
    */
-  condition: CacheConditionFn | boolean | undefined
+  condition: CacheConditionFn<M> | boolean | undefined
 }
 
-export interface CacheEvictArgs {
+export interface CacheEvictArgs<M extends MethodType | undefined = undefined> {
   /**
    * Name of the cache set
    * @default `${className}.${methodName}`
    */
   cacheName: string | undefined
-  key: string | number | bigint | KeyGenerator | undefined
+  key: string | number | bigint | KeyGenerator<M> | undefined
   /**
    * @default false
    */
@@ -113,7 +114,7 @@ export interface CacheEvictArgs {
    * Returns false to skip evict
    * @default undefined - always evict
    */
-  condition: CacheConditionFn | boolean | undefined
+  condition: CacheConditionFn<M> | boolean | undefined
 }
 
 

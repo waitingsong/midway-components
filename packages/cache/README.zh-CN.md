@@ -152,6 +152,20 @@ export class UserService {
 }
 ```
 
+## 装饰器泛型
+
+```ts
+@Cacheable() 
+export class FooService {
+  @Cacheable<FooService['hello']>({  // <--- pass FooService['hello'] as method type
+    key: (input) => input.uid }  // <--- input 自动推导为类型 [UserDTO, string | undefined]
+  ) 
+  async hello(input: UserDTO, input2?: string): Promise<string> {
+    return 'world'
+  }
+}
+```
+
 [More examples]
 
 
