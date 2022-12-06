@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 2.3.0 (2022-12-06)
+
+
+### Features
+
+* **cache:** pass methodResult for @CacheEvict ([92f7da9](https://github.com/waitingsong/midway-components/commit/92f7da9b916fcf4f6b39d176e2385fc5a6207a5b))
+
+
+
+
+
 ## [2.2.1](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@2.2.0...@mwcp/cache@2.2.1) (2022-12-06)
 
 **Note:** Version bump only for package @mwcp/cache
