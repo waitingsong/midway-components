@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.2.0](https://github.com/waitingsong/midway-components/compare/@mwcp/share@2.1.1...@mwcp/share@2.2.0) (2022-12-06)
+
+
+### Features
+
+* **share:** methodHasDecorated() ([b111c9a](https://github.com/waitingsong/midway-components/commit/b111c9aa378fdd32ae31aaee25c816698f14d29a))
+
+
+
+
+
 ## 2.1.1 (2022-12-05)
 
 **Note:** Version bump only for package @mwcp/share
