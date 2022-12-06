@@ -20,9 +20,9 @@ export const initialMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'ignore' |
   enableMiddleware: true,
 }
 
-export const CLASS_KEY_Cacheable = 'decorator:decorator_class_key_cacheable'
-export const METHOD_KEY_Cacheable = 'decorator:decorator_method_key_cacheable'
-export const METHOD_KEY_CacheEvict = 'decorator:decorator_method_key_cacheevict'
+export const CLASS_KEY_Cacheable = 'decorator:class_key_cacheable'
+export const METHOD_KEY_Cacheable = 'decorator:method_key_cacheable'
+export const METHOD_KEY_CacheEvict = 'decorator:method_key_cacheevict'
 export const classDecoratorKeyMap = new Map([ [CLASS_KEY_Cacheable, 'Cacheable'] ])
 export const methodDecoratorKeyMap = new Map([
   [METHOD_KEY_Cacheable, 'Cacheable'],
