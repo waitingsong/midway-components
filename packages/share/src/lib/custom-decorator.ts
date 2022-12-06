@@ -64,3 +64,31 @@ export function customDecoratorFactory<DecoratorArgs, Target = unknown>(
   // @ts-ignore
   return DecoratorFactory
 }
+
+export function methodHasDecorated(
+  decoratorKey: string, // METHOD_KEY_CacheEvict | METHOD_KEY_Cacheable
+  methodName: string,
+  metaDataArr: DecoratorMetaData[] | undefined,
+): boolean {
+
+  assert(decoratorKey)
+
+  if (! methodName) { return false }
+  if (! metaDataArr?.length) { return false }
+
+  for (const row of metaDataArr) {
+    if (row.key === decoratorKey && row.propertyName === methodName) {
+      return true
+    }
+  }
+
+  return false
+}
+
+export interface DecoratorMetaData<T = unknown> {
+  propertyName: string
+  key: string
+  metadata: T
+  impl: boolean
+}
+
