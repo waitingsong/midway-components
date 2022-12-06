@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import assert from 'node:assert'
 
+import { INJECT_CUSTOM_METHOD, getClassMetadata } from '@midwayjs/core'
+
 
 export type CustomClassDecorator = <DecoratorArgs, TFunction extends Function>(
   target: TFunction,
@@ -92,3 +94,45 @@ export interface DecoratorMetaData<T = unknown> {
   impl: boolean
 }
 
+/**
+ * @returns {string[]} error messages
+ */
+export function checkMethodHasDecoratorKeys(
+  targetDecoratorKeyMap: Map<string, string>, // 'docorator:method_key_trx' => 'Transactional'
+  decoratorKeyMap: Map<string, string>, // 'docorator:method_key_cacheable' => 'Cacheable'
+  target: {}, // class
+  metaData: DecoratorMetaData,
+): string[] {
+
+  const ret: string[] = []
+
+  const metadataArr: DecoratorMetaData[] | undefined = getClassMetadata(INJECT_CUSTOM_METHOD, target)
+  if (! metadataArr?.length) {
+    return ret
+  }
+
+  const {
+    key, // 'docorator:method_key_trx'
+    propertyName, // 'getUser'
+  } = metaData
+
+  decoratorKeyMap.forEach((id, dkey) => {
+    if (methodHasDecorated(dkey, propertyName, metadataArr)) {
+      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      const targetName = typeof target.name === 'string' && target.name
+        // @ts-ignore
+        ? target.name as string
+        : target.constructor.name
+      const targetId = targetDecoratorKeyMap.get(key) ?? '"Unknown decorator"'
+      // assert(id, 'decorator id should be defined')
+
+      const msg = `@${targetId}() should be used after @${id}() on the same method "${propertyName}".
+target name: ${targetName}
+metadata: ${JSON.stringify(metaData, null, 2)}`
+      ret.push(msg)
+    }
+  })
+
+  return ret
+}
