@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.2.0](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@2.1.1...@mwcp/cache@2.2.0) (2022-12-06)
+
+
+### Features
+
+* **cache:** define const classDecoratorKeyMap, methodDecoratorKeyMap ([cca030c](https://github.com/waitingsong/midway-components/commit/cca030c376c572f4b10048d35344ce53e23513da))
+
+
+
+
+
 ## [2.1.1](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@2.1.0...@mwcp/cache@2.1.1) (2022-12-06)
 
 **Note:** Version bump only for package @mwcp/cache
