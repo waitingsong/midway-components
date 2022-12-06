@@ -9,14 +9,15 @@ export type CustomClassDecorator = <DecoratorArgs, TFunction extends Function>(
   args: Partial<DecoratorArgs> | undefined,
 ) => void
 
-export type CustomMethodDecorator = <DecoratorArgs, Target = unknown>(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type CustomMethodDecorator = <DecoratorArgs, Method = () => any>(
   target: {},
   propertyKey: string,
-  descriptor: TypedPropertyDescriptor<Target>,
+  descriptor: TypedPropertyDescriptor<Method>,
   args: Partial<DecoratorArgs> | undefined,
-) => TypedPropertyDescriptor<Target> | void
+) => TypedPropertyDescriptor<Method> | void
 
-export function customDecoratorFactory<DecoratorArgs, Target = unknown>(
+export function customDecoratorFactory<DecoratorArgs, Method = unknown>(
   options: Partial<DecoratorArgs> | undefined,
   /**
    * The decorator function to be called.
@@ -31,10 +32,10 @@ export function customDecoratorFactory<DecoratorArgs, Target = unknown>(
 ): MethodDecorator & ClassDecorator {
 
   const DecoratorFactory = (
-    target: Target,
+    target: {},
     propertyKey?: string,
-    descriptor?: TypedPropertyDescriptor<Target>,
-  ): TypedPropertyDescriptor<Target> | Target | void => {
+    descriptor?: TypedPropertyDescriptor<Method>,
+  ): TypedPropertyDescriptor<Method> | Method | void => {
 
     assert(target, 'target is undefined')
 
@@ -57,7 +58,7 @@ export function customDecoratorFactory<DecoratorArgs, Target = unknown>(
         throw new Error('Only async method can be decorated with @Cacheable decorator')
       }
 
-      return methodDecorator<DecoratorArgs, Target>(target, propertyKey, descriptor, options)
+      return methodDecorator<DecoratorArgs, Method>(target, propertyKey, descriptor, options)
     }
 
     assert(false, 'Invalid decorator usage')
