@@ -8,7 +8,7 @@ export interface DecoratorExecutorOptions extends CacheableArgs {
   cacheManager: CacheManager
   method: (...args: unknown[]) => unknown
   methodArgs: unknown[]
-  methodResult?: void
+  methodResult?: undefined
   webContext: WebContext
 }
 

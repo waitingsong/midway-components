@@ -125,3 +125,11 @@ export interface DecoratorMetaData <T = unknown> {
   impl: boolean
 }
 
+
+export interface MetaDataType<T extends CacheableArgs | CacheEvictArgs> {
+  /** 装饰器所在的实例 */
+  target: new (...args: unknown[]) => unknown
+  propertyName: string
+  metadata: Partial<T>
+}
+
