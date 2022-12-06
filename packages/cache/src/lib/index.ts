@@ -6,6 +6,7 @@ export {
 
   KeyGenerator,
   DataWithCacheMeta,
+  DecoratorMetaData,
   CacheableArgs,
   CacheEvictArgs,
 } from './types'
