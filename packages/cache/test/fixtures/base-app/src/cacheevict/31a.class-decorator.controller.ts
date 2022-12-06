@@ -173,5 +173,47 @@ export class ClassDecoratorEvictController {
 
     return 'OK'
   }
+
+  @Get(`/${apiRoute.evictResultEvenAndGreaterThanZero2}`)
+  async evictReslutEvenAndGreaterThanZero2(): Promise<'OK'> {
+    const cacheKey = cacheNameSimple
+
+    await this.svc.evictHello()
+    await this.svc.evictSimple()
+
+    const ret = await this.svc.simple()
+    assert(ret.value === 'OK')
+    assert(! ret[ConfigKey.CacheMetaType])
+
+    const ret2 = await this.svc.simple()
+    validateMeta(ret2, cacheKey, this.config.options.ttl)
+
+    await this.svc.evictResultEvenAndGreaterThanZero2(0) // (even, but not gt zero) not evict
+
+    const ret3 = await this.svc.simple()
+    validateMeta(ret3, cacheKey, this.config.options.ttl)
+
+    await this.svc.evictResultEvenAndGreaterThanZero2(1) // (odd) not evict
+
+    const ret3a = await this.svc.simple()
+    validateMeta(ret3a, cacheKey, this.config.options.ttl)
+
+    await this.svc.evictResultEvenAndGreaterThanZero2(2) // (even and >0) evict
+
+    const ret4 = await this.svc.simple()
+    assert(! ret4[ConfigKey.CacheMetaType])
+
+    const ret4a = await this.svc.simple()
+    validateMeta(ret4a, cacheKey, this.config.options.ttl)
+
+    await this.svc.evictHello()
+    const ret5 = await this.svc.hello()
+    assert(! ret5[ConfigKey.CacheMetaType])
+
+    const ret5a = await this.svc.hello()
+    validateMeta(ret5a, 'ClassDecoratorEvictService.hello', this.config.options.ttl)
+
+    return 'OK'
+  }
 }
 

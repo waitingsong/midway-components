@@ -57,6 +57,17 @@ describe(filename, () => {
       assert(resp)
     })
 
+    it(apiRoute.evictResultEvenAndGreaterThanZero2, async () => {
+      const { httpRequest } = testConfig
+      const url = `${prefix}/${apiRoute.evictResultEvenAndGreaterThanZero2}`
+
+      const resp = await httpRequest
+        .get(url)
+        .expect(200)
+
+      assert(resp)
+    })
+
   })
 })
 
