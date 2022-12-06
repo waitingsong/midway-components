@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 2.3.0 (2022-12-06)
+
+
+### Features
+
+* **share:** checkMethodHasDecoratorKeys() ([0015279](https://github.com/waitingsong/midway-components/commit/00152798666bb17d6480226e4b53c93961fe04b9))
+
+
+
+
+
 # [2.2.0](https://github.com/waitingsong/midway-components/compare/@mwcp/share@2.1.1...@mwcp/share@2.2.0) (2022-12-06)
 
 
