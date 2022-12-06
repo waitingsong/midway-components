@@ -19,28 +19,50 @@ export async function decoratorExecutor(
     condition: options.condition,
     key: options.key,
     methodArgs: options.methodArgs,
+    methodResult: void 0,
     webContext: options.webContext,
   }
   const cacheKey = genCacheKey(opts)
 
   return Promise.resolve(options)
     .then(async (inputOpts) => {
-      const tmp = computerConditionValue(inputOpts)
+      const ps: DecoratorExecutorOptions = inputOpts
+      const tmp = computerConditionValue(ps)
       const enableEvict = typeof tmp === 'boolean' ? tmp : await tmp
       assert(typeof enableEvict === 'boolean', 'condition must return boolean')
 
-      return { inputOpts, enableEvict }
-    })
-    .then(async ({ inputOpts, enableEvict }) => {
       if (enableEvict && inputOpts.beforeInvocation) {
         await deleteData(inputOpts.cacheManager, cacheKey)
       }
 
+      return { inputOpts, enableEvict }
+    })
+    .then(async ({ inputOpts, enableEvict }) => {
       const { method, methodArgs } = inputOpts
       const resp = await method(...methodArgs)
 
-      if (enableEvict && ! inputOpts.beforeInvocation) {
-        await deleteData(inputOpts.cacheManager, cacheKey)
+      if (! inputOpts.beforeInvocation) {
+        if (enableEvict) {
+          await deleteData(inputOpts.cacheManager, cacheKey)
+        }
+        else {
+          const ps: DecoratorExecutorOptions = {
+            ...inputOpts,
+            methodResult: resp,
+          }
+          const tmp = computerConditionValue(ps)
+          const enableEvict2 = typeof tmp === 'boolean' ? tmp : await tmp
+          assert(typeof enableEvict2 === 'boolean', 'condition must return boolean')
+          if (enableEvict2) {
+            // re-generate cache key, because CacheConditionFn use result of method
+            const opts2: GenCacheKeyOptions = {
+              ...opts,
+              methodResult: resp,
+            }
+            const cacheKey2 = genCacheKey(opts2)
+            await deleteData(inputOpts.cacheManager, cacheKey2)
+          }
+        }
       }
 
       return resp

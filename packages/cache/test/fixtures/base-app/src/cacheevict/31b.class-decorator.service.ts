@@ -37,5 +37,33 @@ export class ClassDecoratorEvictService  {
     void input
     return { value: 'OK' }
   }
+
+  @CacheEvict({
+    cacheName: cacheNameSimple,
+    condition: (
+      _args: unknown, result: CachedResponse<number> | undefined
+    ) => result ? result.value % 2 === 0 : false,
+  })
+  async evictResultEven(input: number): Promise<CachedResponse<number>> {
+    return { value: input + 1 }
+  }
+
+
+  @CacheEvict({
+    cacheName: cacheNameSimple,
+    key: (args: [number], result: CachedResponse<number> | undefined) => {
+      const invalidStr = 'cache item will not exist due to this invalid string'
+      if (args[0] === 0) {
+        return invalidStr
+      }
+      return result && result.value % 2 === 0 ? void 0 : invalidStr
+    },
+    condition: (
+      _args: unknown, result: CachedResponse<number> | undefined
+    ) => result ? result.value % 2 === 0 : false,
+  })
+  async evictResultEvenAndGreaterThanZero(input: number): Promise<CachedResponse<number>> {
+    return { value: input }
+  }
 }
 

@@ -39,17 +39,29 @@ export interface Config {
 /**
  * @param ctx Koa context
  * @param args Arguments of the method
+ * @param result Result of the method. Only for using `@CacheEvict`
+ * @returns if undefined, there is no tailing ":" in cacheName
  */
 export type KeyGenerator = (
   this: Context,
   /** Arguments of the method */
-  args: any[] | any
-) => string
+  args: any[] | any,
+  /**
+   * Result of the method(). Only for using `@CacheEvict`
+   * - value always be undefined if `beforeInvocation`is true
+   */
+  result: any
+) => string | undefined
 
 export type CacheConditionFn = (
   this: Context,
   /** Arguments of the method */
-  args: any[] | any
+  args: any[] | any,
+  /**
+   * Result of the method. Only for using `@CacheEvict`
+   * - value always be undefined if `beforeInvocation`is true
+   */
+  result: any
 ) => boolean | Promise<boolean>
 
 

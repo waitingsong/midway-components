@@ -123,12 +123,13 @@ supports method
 
 `CacheEvictArgs` Parameters
 
-| name             | type                                                    | default value            |
-| ---------------- | ------------------------------------------------------- | ------------------------ |
-| cacheName        | string \| undefined                                     | {className}.{methodName} |
-| key              | string \| number \| bigint \| KeyGenerator \| undefined | undefined                |
-| beforeInvocation | boolean \| undefined                                    | false                    |
-| condition        | CacheConditionFn \| boolean \| undefined                | undefined (always evict) |
+| name             | type                                                    | default value                             |
+| ---------------- | ------------------------------------------------------- | ----------------------------------------- |
+| cacheName        | string \| undefined                                     | {className}.{methodName}                  |
+| key              | string \| number \| bigint \| KeyGenerator \| undefined | undefined                                 |
+| beforeInvocation | boolean \| undefined                                    | false                                     |
+| condition        | CacheConditionFn \| boolean \| undefined                | undefined (always evict)                  |
+| result           | any \| undefined                                        | always undefined if beforeInvocation true |
 
 ```ts
 import { Cacheable, CacheEvict } from '@mwcp/cache'

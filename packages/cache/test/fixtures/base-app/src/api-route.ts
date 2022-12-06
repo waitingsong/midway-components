@@ -13,6 +13,8 @@ export const apiRoute = {
   condition: 'condition',
   evictOverride: 'evict_override',
   evictCondition: 'evict_condition',
+  evictResult: 'evict_result',
+  evictResultEvenAndGreaterThanZero: 'evict_result_even_and_greater_than_zero',
   param: 'param',
   query: 'query',
   simple: 'simple',

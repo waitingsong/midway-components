@@ -35,6 +35,28 @@ describe(filename, () => {
       assert(resp)
     })
 
+    it(apiRoute.evictResult, async () => {
+      const { httpRequest } = testConfig
+      const url = `${prefix}/${apiRoute.evictResult}`
+
+      const resp = await httpRequest
+        .get(url)
+        .expect(200)
+
+      assert(resp)
+    })
+
+    it(apiRoute.evictResultEvenAndGreaterThanZero, async () => {
+      const { httpRequest } = testConfig
+      const url = `${prefix}/${apiRoute.evictResultEvenAndGreaterThanZero}`
+
+      const resp = await httpRequest
+        .get(url)
+        .expect(200)
+
+      assert(resp)
+    })
+
   })
 })
 

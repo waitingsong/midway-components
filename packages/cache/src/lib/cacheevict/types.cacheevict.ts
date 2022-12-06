@@ -8,6 +8,7 @@ export interface DecoratorExecutorOptions extends CacheEvictArgs {
   cacheManager: CacheManager
   method: (...args: unknown[]) => unknown
   methodArgs: unknown[]
+  methodResult?: unknown
   webContext: WebContext
 }
 

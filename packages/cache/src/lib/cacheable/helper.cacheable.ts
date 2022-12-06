@@ -27,6 +27,7 @@ export async function decoratorExecutor(
     condition: options.condition,
     key: options.key,
     methodArgs: options.methodArgs,
+    methodResult: void 0,
     webContext: options.webContext,
   }
   const cacheKey = genCacheKey(opts)

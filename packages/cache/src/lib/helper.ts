@@ -12,10 +12,11 @@ import { CachedResponse, ConfigKey, CacheableArgs, DataWithCacheMeta } from './t
 export interface GenCacheKeyOptions extends Omit<CacheableArgs, 'ttl'> {
   webContext: WebContext
   methodArgs: unknown[]
+  methodResult?: unknown
 }
 
 export function genCacheKey(options: GenCacheKeyOptions): string {
-  const { key, cacheName, webContext, methodArgs } = options
+  const { key, cacheName, webContext, methodArgs, methodResult } = options
   assert(cacheName, 'cacheName is undefined')
 
   switch (typeof key) {
@@ -32,9 +33,14 @@ export function genCacheKey(options: GenCacheKeyOptions): string {
       return `${cacheName}` // without tailing `:`
 
     case 'function': {
-      const keyStr = key.call(webContext, methodArgs)
-      assert(typeof keyStr === 'string', 'keyGenerator function must return a string')
-      return `${cacheName}:${keyStr}`
+      const keyStr = key.call(webContext, methodArgs, methodResult)
+      assert(
+        typeof keyStr === 'string' || typeof keyStr === 'undefined',
+        'keyGenerator function must return a string or undefined',
+      )
+      return typeof keyStr === 'string'
+        ? `${cacheName}:${keyStr}`
+        : cacheName
     }
 
     default:
@@ -106,7 +112,11 @@ export function computerConditionValue(
       return options.condition
 
     case 'function':
-      return options.condition.call(options.webContext, options.methodArgs)
+      return options.condition.call(
+        options.webContext,
+        options.methodArgs,
+        options.methodResult,
+      )
 
     default:
       throw new Error(`Invalid condition type: ${typeof options.condition}`)
