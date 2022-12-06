@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.4.0](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@2.3.0...@mwcp/cache@2.4.0) (2022-12-06)
+
+
+### Features
+
+* **cache:** decorators accept generics for arguments type infer ([de7033a](https://github.com/waitingsong/midway-components/commit/de7033a05ba923e26043316921f84a10bb99359c))
+
+
+
+
+
 # 2.3.0 (2022-12-06)
 
 

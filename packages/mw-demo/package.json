@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/demo",
   "author": "waiting",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "midway component boilerplate",
   "private": true,
   "keywords": [
@@ -26,7 +26,7 @@
     "@waiting/shared-core": "^20.10.1"
   },
   "devDependencies": {
-    "@mwcp/share": "^2.3.0",
+    "@mwcp/share": "^2.3.1",
     "cross-env": "7"
   },
   "engines": {
