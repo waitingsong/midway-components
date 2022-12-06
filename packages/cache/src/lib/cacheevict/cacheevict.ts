@@ -7,7 +7,7 @@ import { methodDecoratorPatcher } from './method-decorator.cacheevict'
 
 /**
  * 声明式缓存装饰器
- * Declarative Cacheable Decorator
+ * Declarative CacheEvict Decorator
  */
 export function CacheEvict<M extends MethodType | undefined = undefined>(
   options?: Partial<CacheEvictArgs<M>>,
