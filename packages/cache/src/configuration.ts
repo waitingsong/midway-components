@@ -12,9 +12,9 @@ import {
 import type { Application } from '@mwcp/share'
 
 import { useComponents } from './imports'
-import { registerMethodHandler } from './lib/cacheable/method-decorator.cacheable'
-import { registerMethodHandlerEvict } from './lib/cacheevict/method-decorator.cacheevict'
-import { registerMethodHandlerPut } from './lib/cacheput/method-decorator.cacheput'
+import { registerMethodHandler } from './lib/cacheable/method.cacheable'
+import { registerMethodHandlerEvict } from './lib/cacheevict/method.cacheevict'
+import { registerMethodHandlerPut } from './lib/cacheput/method.cacheput'
 import { CacheConfig } from './lib/index'
 
 import { ConfigKey } from '~/lib/types'

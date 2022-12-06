@@ -2,7 +2,7 @@ import { customDecoratorFactory } from '@mwcp/share'
 
 import { CacheEvictArgs, MethodType } from '../types'
 
-import { methodDecoratorPatcher } from './method-decorator.cacheevict'
+import { methodDecoratorPatcher } from './method.cacheevict'
 
 
 /**

@@ -2,8 +2,8 @@ import { customDecoratorFactory } from '@mwcp/share'
 
 import { CacheableArgs, MethodType } from '../types'
 
-import { classDecoratorPatcher } from './class-decorator.cacheable'
-import { methodDecoratorPatcher } from './method-decorator.cacheable'
+import { classDecoratorPatcher } from './class.cacheable'
+import { methodDecoratorPatcher } from './method.cacheable'
 
 
 /**
