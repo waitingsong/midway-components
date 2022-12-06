@@ -2,7 +2,6 @@ import assert from 'assert'
 
 import { INJECT_CUSTOM_METHOD, getClassMetadata } from '@midwayjs/core'
 
-import { METHOD_KEY_CacheEvict } from '../config'
 import { computerConditionValue, deleteData, genCacheKey, GenCacheKeyOptions } from '../helper'
 import { CacheEvictArgs, DecoratorMetaData } from '../types'
 
@@ -87,21 +86,4 @@ export function retrieveMethodDecoratorArgs(
       return row.metadata
     }
   }
-}
-
-export function methodHasEvictDecorator(
-  methodName: string,
-  metaDataArr: DecoratorMetaData[] | undefined,
-): boolean {
-
-  if (! methodName) { return false }
-  if (! metaDataArr?.length) { return false }
-
-  for (const row of metaDataArr) {
-    if (row.key === METHOD_KEY_CacheEvict && row.propertyName === methodName) {
-      return true
-    }
-  }
-
-  return false
 }

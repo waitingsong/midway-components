@@ -14,10 +14,9 @@ import {
   saveClassMetadata,
   saveModule,
 } from '@midwayjs/core'
-import type { Context as WebContext } from '@mwcp/share'
+import { Context as WebContext, methodHasDecorated } from '@mwcp/share'
 
-import { methodHasEvictDecorator } from '../cacheevict/helper.cacheevict'
-import { CLASS_KEY_Cacheable } from '../config'
+import { CLASS_KEY_Cacheable, METHOD_KEY_CacheEvict } from '../config'
 import { Config, CacheableArgs, DecoratorMetaData } from '../types'
 
 import {
@@ -65,7 +64,7 @@ function wrapClassMethodOnPrototype(
   const prot = target.prototype as unknown
   for (const key of Object.getOwnPropertyNames(prot)) {
     if (key === 'constructor') { continue }
-    if (methodHasEvictDecorator(key, metadataArr)) {
+    if (methodHasDecorated(METHOD_KEY_CacheEvict, key, metadataArr)) {
       continue
     }
 
