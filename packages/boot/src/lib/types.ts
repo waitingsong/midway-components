@@ -27,6 +27,7 @@ export { JwtResult } from '@mwcp/jwt'
 export {
   Cacheable,
   CacheEvict,
+  CachePut,
   CacheConfig,
   CacheConfigKey,
   CacheManager,
