@@ -47,7 +47,7 @@ export async function decoratorExecutor(
       return { inputOpts, enableCache, cacheResp }
     })
     .then(async ({ inputOpts, enableCache, cacheResp }) => {
-      if (typeof cacheResp !== 'undefined') {
+      if (typeof cacheResp !== 'undefined' && typeof cacheResp.value !== 'undefined') {
         const resp = genDataWithCacheMeta(cacheResp as CachedResponse, inputOpts, inputOpts.ttl)
         return resp
       }
