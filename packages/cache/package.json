@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/cache",
   "author": "waiting",
-  "version": "2.5.5",
+  "version": "2.5.6",
   "description": "midway component for declarative cache",
   "keywords": [
     "Cacheable",

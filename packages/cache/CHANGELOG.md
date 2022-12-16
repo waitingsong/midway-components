@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.6](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@2.5.5...@mwcp/cache@2.5.6) (2022-12-16)
+
+
+### Bug Fixes
+
+* **cache:** not use undefined value from cache ([6bf47fe](https://github.com/waitingsong/midway-components/commit/6bf47fe5cbbe625492da329cee9c6687f1418d44))
+
+
+
+
+
 ## [2.5.5](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@2.5.4...@mwcp/cache@2.5.5) (2022-12-14)
 
 **Note:** Version bump only for package @mwcp/cache

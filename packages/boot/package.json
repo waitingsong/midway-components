@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/boot",
   "author": "waiting",
-  "version": "1.0.41",
+  "version": "1.0.42",
   "description": "midway.js boot",
   "keywords": [
     "midway",
@@ -25,7 +25,7 @@
     "@midwayjs/redis": "^3.9.0",
     "@midwayjs/validate": "^3.9.0",
     "@mwcp/ali-oss": "^7.0.35",
-    "@mwcp/cache": "^2.5.5",
+    "@mwcp/cache": "^2.5.6",
     "@mwcp/fetch": "^21.1.1",
     "@mwcp/jwt": "^13.0.17",
     "@mwcp/kmore": "^51.1.2",
