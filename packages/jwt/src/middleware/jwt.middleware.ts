@@ -55,6 +55,7 @@ export async function middleware(
   const mwConfig = getMiddlewareConfig(app)
   const { options } = mwConfig
   if (! options) {
+    console.error('[JWT] mwConfig.options undefined')
     throw new TypeError('options undefined')
   }
   const { debug, cookie, passthrough } = options
@@ -63,6 +64,7 @@ export async function middleware(
     const token = retrieveToken(ctx, cookie)
 
     if (! token) {
+      console.error(Msg.TokenNotFound)
       throw new Error(Msg.TokenNotFound)
     }
 
