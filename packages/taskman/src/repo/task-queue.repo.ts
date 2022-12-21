@@ -391,7 +391,7 @@ export class TaskQueueRepository {
       })
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (! tasks || ! tasks.length) {
+    if (! tasks?.length) {
       await trx.rollback() // !
       return []
     }
