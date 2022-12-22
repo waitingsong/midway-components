@@ -28,7 +28,7 @@
     "@mwcp/cache": "^2.5.7",
     "@mwcp/fetch": "^21.1.2",
     "@mwcp/jwt": "^13.0.17",
-    "@mwcp/kmore": "^52.0.0",
+    "@mwcp/kmore": "^52.0.2",
     "@mwcp/koid": "^11.0.1",
     "@mwcp/otel": "^3.16.7",
     "@mwcp/share": "^2.3.2",
