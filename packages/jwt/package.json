@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@mwcp/share": "^2.3.2",
-    "@types/jsonwebtoken": "^8.5.8",
+    "@types/jsonwebtoken": "^9.0.0",
     "cross-env": "7"
   },
   "engines": {
