@@ -3,6 +3,7 @@ import assert from 'assert'
 import { INJECT_CUSTOM_METHOD, getClassMetadata } from '@midwayjs/core'
 
 import { initConfig } from '../config'
+import { processEx } from '../exception'
 import {
   computerConditionValue,
   genCacheKey,
@@ -32,58 +33,41 @@ export async function decoratorExecutor(
   }
   const cacheKey = genCacheKey(opts)
 
-  return Promise.resolve(options)
-    .then(async (inputOpts) => {
-      const tmp = computerConditionValue(inputOpts)
-      const enableCache = typeof tmp === 'boolean' ? tmp : await tmp
-      assert(typeof enableCache === 'boolean', 'condition must return boolean')
+  try {
 
-      return { inputOpts, enableCache }
-    })
-    .then(async ({ inputOpts, enableCache }) => {
-      const cacheResp = enableCache
-        ? await getData(inputOpts.cacheManager, cacheKey)
-        : void 0
-      return { inputOpts, enableCache, cacheResp }
-    })
-    .then(async ({ inputOpts, enableCache, cacheResp }) => {
-      if (typeof cacheResp !== 'undefined') {
-        const resp = genDataWithCacheMeta(cacheResp as CachedResponse, inputOpts, inputOpts.ttl)
-        return resp
-      }
+    const tmp = computerConditionValue(options)
+    const enableCache = typeof tmp === 'boolean' ? tmp : await tmp
+    assert(typeof enableCache === 'boolean', 'condition must return boolean')
 
-      const { cacheManager, method, methodArgs } = inputOpts
-      const resp = await method(...methodArgs)
+    const cacheResp = enableCache
+      ? await getData(options.cacheManager, cacheKey)
+      : void 0
 
-      if (enableCache && typeof resp !== 'undefined') {
-        const ttl = typeof inputOpts.ttl === 'number' ? inputOpts.ttl : initConfig.options.ttl
-        await saveData(cacheManager, cacheKey, resp, ttl)
-      }
+    const ttl = typeof options.ttl === 'number' ? options.ttl : initConfig.options.ttl
+
+    if (typeof cacheResp !== 'undefined') {
+      const resp = genDataWithCacheMeta(cacheResp as CachedResponse, options, ttl)
       return resp
-    })
-    .catch((error: unknown) => processEx({
-      cacheKey,
+    }
+
+    const { cacheManager, method, methodArgs } = options
+    const resp = await method(...methodArgs)
+
+    if (enableCache && typeof resp !== 'undefined') {
+      await saveData(cacheManager, cacheKey, resp, ttl)
+    }
+
+    return resp
+  }
+  catch (error) {
+    return processEx({
       error,
-    }))
+      cacheKey,
+    })
+  }
+
 }
 
-interface ProcessExOptions {
-  cacheKey: string
-  error: unknown
-}
-
-function processEx(options: ProcessExOptions): Promise<never> {
-  const { cacheKey, error } = options
-
-  console.error('cache error', error)
-  const ex2Msg = error instanceof Error
-    ? error.message
-    : typeof error === 'string' ? error : JSON.stringify(error)
-
-  const ex3 = new Error(`cache error with key: "${cacheKey}" >
-  message: ${ex2Msg}`, { cause: error })
-  return Promise.reject(ex3)
-}
 
 
 export function retrieveMethodDecoratorArgs(

@@ -52,12 +52,15 @@ export function registerMethodHandlerPut(
   decoratorService.registerMethodHandler(
     METHOD_KEY_CachePut,
     (options: MetaDataType<CacheableArgs>) => ({
-      around: (joinPoint: JoinPoint) => aroundFactory(
-        joinPoint,
-        options,
-        config,
-        cacheManager,
-      ),
+      around: async (joinPoint: JoinPoint) => {
+        const ret = await aroundFactory(
+          joinPoint,
+          options,
+          config,
+          cacheManager,
+        )
+        return ret
+      },
     }),
   )
 }

@@ -2,6 +2,7 @@ import assert from 'assert'
 
 import { INJECT_CUSTOM_METHOD, getClassMetadata } from '@midwayjs/core'
 
+import { processEx } from '../exception'
 import { computerConditionValue, deleteData, genCacheKey, GenCacheKeyOptions } from '../helper'
 import { CacheEvictArgs, DecoratorMetaData } from '../types'
 
@@ -24,71 +25,52 @@ export async function decoratorExecutor(
   }
   const cacheKey = genCacheKey(opts)
 
-  return Promise.resolve(options)
-    .then(async (inputOpts) => {
-      const ps: DecoratorExecutorOptions = inputOpts
-      const tmp = computerConditionValue(ps)
-      const enableEvict = typeof tmp === 'boolean' ? tmp : await tmp
-      assert(typeof enableEvict === 'boolean', 'condition must return boolean')
+  try {
 
-      if (enableEvict && inputOpts.beforeInvocation) {
-        await deleteData(inputOpts.cacheManager, cacheKey)
+
+    const tmp = computerConditionValue(options)
+    const enableEvict = typeof tmp === 'boolean' ? tmp : await tmp
+    assert(typeof enableEvict === 'boolean', 'condition must return boolean')
+
+    if (enableEvict && options.beforeInvocation) {
+      await deleteData(options.cacheManager, cacheKey)
+    }
+
+    const { method, methodArgs } = options
+    const resp = await method(...methodArgs)
+
+    if (! options.beforeInvocation) {
+      if (enableEvict) {
+        await deleteData(options.cacheManager, cacheKey)
       }
-
-      return { inputOpts, enableEvict }
-    })
-    .then(async ({ inputOpts, enableEvict }) => {
-      const { method, methodArgs } = inputOpts
-      const resp = await method(...methodArgs)
-
-      if (! inputOpts.beforeInvocation) {
-        if (enableEvict) {
-          await deleteData(inputOpts.cacheManager, cacheKey)
+      else {
+        const ps: DecoratorExecutorOptions = {
+          ...options,
+          methodResult: resp,
         }
-        else {
-          const ps: DecoratorExecutorOptions = {
-            ...inputOpts,
+        const tmp2 = computerConditionValue(ps)
+        const enableEvict2 = typeof tmp2 === 'boolean' ? tmp2 : await tmp2
+        assert(typeof enableEvict2 === 'boolean', 'condition must return boolean')
+        if (enableEvict2) {
+        // re-generate cache key, because CacheConditionFn use result of method
+          const opts2: GenCacheKeyOptions = {
+            ...opts,
             methodResult: resp,
           }
-          const tmp = computerConditionValue(ps)
-          const enableEvict2 = typeof tmp === 'boolean' ? tmp : await tmp
-          assert(typeof enableEvict2 === 'boolean', 'condition must return boolean')
-          if (enableEvict2) {
-            // re-generate cache key, because CacheConditionFn use result of method
-            const opts2: GenCacheKeyOptions = {
-              ...opts,
-              methodResult: resp,
-            }
-            const cacheKey2 = genCacheKey(opts2)
-            await deleteData(inputOpts.cacheManager, cacheKey2)
-          }
+          const cacheKey2 = genCacheKey(opts2)
+          await deleteData(options.cacheManager, cacheKey2)
         }
       }
+    }
 
-      return resp
-    })
-    .catch((error: unknown) => processEx({
-      cacheKey,
+    return resp
+  }
+  catch (error) {
+    return processEx({
       error,
-    }))
-}
-
-interface ProcessExOptions {
-  cacheKey: string
-  error: unknown
-}
-
-function processEx(options: ProcessExOptions): Promise<never> {
-  const { cacheKey, error } = options
-
-  console.error('cache error', error)
-  const ex2Msg = error instanceof Error
-    ? error.message
-    : typeof error === 'string' ? error : JSON.stringify(error)
-
-  const ex3 = new Error(`cache error with key: "${cacheKey}" >
-  message: ${ex2Msg}`, { cause: error })
-  return Promise.reject(ex3)
+      cacheKey,
+    })
+  }
 }
 
 

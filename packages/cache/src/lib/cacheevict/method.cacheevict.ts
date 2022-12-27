@@ -52,12 +52,15 @@ export function registerMethodHandlerEvict(
   decoratorService.registerMethodHandler(
     METHOD_KEY_CacheEvict,
     (options: MetaDataType<CacheEvictArgs>) => ({
-      around: (joinPoint: JoinPoint) => aroundFactoryEvict(
-        joinPoint,
-        options,
-        config,
-        cacheManager,
-      ),
+      around: async (joinPoint: JoinPoint) => {
+        const ret = await aroundFactoryEvict(
+          joinPoint,
+          options,
+          config,
+          cacheManager,
+        )
+        return ret
+      },
     }),
   )
 }
