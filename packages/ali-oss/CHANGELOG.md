@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 7.1.0 (2022-12-27)
+
+**Note:** Version bump only for package @mwcp/ali-oss
+
+
+
+
+
 ## 7.0.35 (2022-12-14)
 
 **Note:** Version bump only for package @mwcp/ali-oss
