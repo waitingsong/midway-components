@@ -28,18 +28,18 @@
     "@mwcp/cache": "^2.5.8",
     "@mwcp/fetch": "^21.1.2",
     "@mwcp/jwt": "^13.0.18",
-    "@mwcp/kmore": "^52.0.2",
+    "@mwcp/kmore": "^52.0.3",
     "@mwcp/koid": "^11.0.1",
     "@mwcp/otel": "^3.16.7",
     "@mwcp/share": "^2.3.2",
     "@waiting/base64": "^4.2.9",
-    "@waiting/shared-core": "^20.11.0",
+    "@waiting/shared-core": "^20.11.2",
     "tsconfig-paths": "4"
   },
   "devDependencies": {
-    "@midwayjs/swagger": "^3.9.3",
+    "@midwayjs/swagger": "^3.9.8",
     "cross-env": "7",
-    "kmore-cli": "^52.0.0"
+    "kmore-cli": "^52.0.3"
   },
   "engines": {
     "node": ">=16.13.0"

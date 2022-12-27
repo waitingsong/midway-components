@@ -25,9 +25,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/cache": "^3.8.0",
+    "@midwayjs/cache": "^3.9.0",
     "@mwcp/share": "^2.3.2",
-    "@waiting/shared-core": "^20.11.0",
+    "@waiting/shared-core": "^20.11.2",
     "cache-manager": "^5.1.4"
   },
   "devDependencies": {

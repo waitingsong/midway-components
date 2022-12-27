@@ -24,10 +24,10 @@
   "license": "MIT",
   "dependencies": {
     "@mwcp/fetch": "^21.1.2",
-    "@mwcp/kmore": "^52.0.2",
+    "@mwcp/kmore": "^52.0.3",
     "@mwcp/koid": "^11.0.1",
     "@mwcp/otel": "^3.16.7",
-    "@waiting/shared-core": "^20.11.0",
+    "@waiting/shared-core": "^20.11.2",
     "pg": "^8.8.0",
     "pg-native": "^3.0.1",
     "postgres-interval": "^4.0.0"
@@ -36,7 +36,7 @@
     "@mwcp/boot": "^1.0.47",
     "@mwcp/share": "^2.3.2",
     "cross-env": "7",
-    "kmore-cli": "^52.0.0"
+    "kmore-cli": "^52.0.3"
   },
   "engines": {
     "node": ">=16.13.0"
