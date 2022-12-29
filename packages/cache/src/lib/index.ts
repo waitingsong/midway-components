@@ -19,3 +19,7 @@ export { decoratorExecutor as cacheableDecoratorExecutor } from './cacheable/hel
 export { decoratorExecutor as cacheEvictDecoratorExecutor } from './cacheevict/helper.cacheevict'
 export { decoratorExecutor as cachePutDecoratorExecutor } from './cacheput/helper.cacheput'
 
+export { DecoratorExecutorOptions as CacheableDecoratorExecutorOptions } from './cacheable/types.cacheable'
+export { DecoratorExecutorOptions as CacheEvictDecoratorExecutorOptions } from './cacheevict/types.cacheevict'
+export { DecoratorExecutorOptions as CachePutDecoratorExecutorOptions } from './cacheput/types.cacheput'
+
