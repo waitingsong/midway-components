@@ -1,5 +1,6 @@
 import assert from 'assert'
 
+import { CacheManager } from '@midwayjs/cache'
 import { INJECT_CUSTOM_METHOD, getClassMetadata } from '@midwayjs/core'
 
 import { processEx } from '../exception'
@@ -13,7 +14,9 @@ export async function decoratorExecutor(
   options: DecoratorExecutorOptions,
 ): Promise<unknown> {
 
-  assert(options.cacheManager, 'CacheManager is undefined')
+  const cacheManager = options.cacheManager
+    ?? await options.webContext.app.getApplicationContext().getAsync(CacheManager)
+  assert(cacheManager, 'CacheManager is undefined')
 
   const opts: GenCacheKeyOptions = {
     cacheName: options.cacheName,
@@ -26,14 +29,12 @@ export async function decoratorExecutor(
   const cacheKey = genCacheKey(opts)
 
   try {
-
-
     const tmp = computerConditionValue(options)
     const enableEvict = typeof tmp === 'boolean' ? tmp : await tmp
     assert(typeof enableEvict === 'boolean', 'condition must return boolean')
 
     if (enableEvict && options.beforeInvocation) {
-      await deleteData(options.cacheManager, cacheKey)
+      await deleteData(cacheManager, cacheKey)
     }
 
     const { method, methodArgs } = options
@@ -41,7 +42,7 @@ export async function decoratorExecutor(
 
     if (! options.beforeInvocation) {
       if (enableEvict) {
-        await deleteData(options.cacheManager, cacheKey)
+        await deleteData(cacheManager, cacheKey)
       }
       else {
         const ps: DecoratorExecutorOptions = {
@@ -58,7 +59,7 @@ export async function decoratorExecutor(
             methodResult: resp,
           }
           const cacheKey2 = genCacheKey(opts2)
-          await deleteData(options.cacheManager, cacheKey2)
+          await deleteData(cacheManager, cacheKey2)
         }
       }
     }

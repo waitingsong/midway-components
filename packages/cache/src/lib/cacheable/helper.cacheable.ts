@@ -22,7 +22,6 @@ export async function decoratorExecutor(
   options: DecoratorExecutorOptions,
 ): Promise<unknown> {
 
-  // const cacheMan = await options.webContext.requestContext.getAsync(TrxStatusService)
   const cacheManager = options.cacheManager
     ?? await options.webContext.app.getApplicationContext().getAsync(CacheManager)
   assert(cacheManager, 'CacheManager is undefined')

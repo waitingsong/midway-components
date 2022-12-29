@@ -1,5 +1,7 @@
 import assert from 'assert'
 
+import { CacheManager } from '@midwayjs/cache'
+
 import { initConfig } from '../config'
 import { processEx } from '../exception'
 import {
@@ -18,7 +20,9 @@ export async function decoratorExecutor(
   options: DecoratorExecutorOptions,
 ): Promise<unknown> {
 
-  assert(options.cacheManager, 'CacheManager is undefined')
+  const cacheManager = options.cacheManager
+    ?? await options.webContext.app.getApplicationContext().getAsync(CacheManager)
+  assert(cacheManager, 'CacheManager is undefined')
 
   const opts: GenCacheKeyOptions = {
     cacheName: options.cacheName,
@@ -31,7 +35,7 @@ export async function decoratorExecutor(
   const cacheKey = genCacheKey(opts)
 
   try {
-    const { cacheManager, method, methodArgs } = options
+    const { method, methodArgs } = options
     const resp = await method(...methodArgs)
 
     const cvalue = computerConditionValue({
