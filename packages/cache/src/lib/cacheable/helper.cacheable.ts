@@ -1,5 +1,6 @@
 import assert from 'assert'
 
+import { CacheManager } from '@midwayjs/cache'
 import { INJECT_CUSTOM_METHOD, getClassMetadata } from '@midwayjs/core'
 
 import { initConfig } from '../config'
@@ -21,7 +22,10 @@ export async function decoratorExecutor(
   options: DecoratorExecutorOptions,
 ): Promise<unknown> {
 
-  assert(options.cacheManager, 'CacheManager is undefined')
+  // const cacheMan = await options.webContext.requestContext.getAsync(TrxStatusService)
+  const cacheManager = options.cacheManager
+    ?? await options.webContext.app.getApplicationContext().getAsync(CacheManager)
+  assert(cacheManager, 'CacheManager is undefined')
 
   const opts: GenCacheKeyOptions = {
     cacheName: options.cacheName,
@@ -34,13 +38,12 @@ export async function decoratorExecutor(
   const cacheKey = genCacheKey(opts)
 
   try {
-
     const tmp = computerConditionValue(options)
     const enableCache = typeof tmp === 'boolean' ? tmp : await tmp
     assert(typeof enableCache === 'boolean', 'condition must return boolean')
 
     const cacheResp = enableCache
-      ? await getData(options.cacheManager, cacheKey)
+      ? await getData(cacheManager, cacheKey)
       : void 0
 
     const ttl = typeof options.ttl === 'number' ? options.ttl : initConfig.options.ttl
@@ -50,7 +53,7 @@ export async function decoratorExecutor(
       return resp
     }
 
-    const { cacheManager, method, methodArgs } = options
+    const { method, methodArgs } = options
     const resp = await method(...methodArgs)
 
     if (enableCache && typeof resp !== 'undefined') {

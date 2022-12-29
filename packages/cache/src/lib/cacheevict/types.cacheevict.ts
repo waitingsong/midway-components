@@ -6,7 +6,7 @@ import type { CacheEvictArgs } from '../types'
 
 
 export interface DecoratorExecutorOptions extends CacheEvictArgs {
-  cacheManager: CacheManager
+  cacheManager?: CacheManager | undefined
   method: (...args: unknown[]) => unknown
   methodArgs: unknown[]
   methodResult?: any

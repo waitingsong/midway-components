@@ -5,7 +5,7 @@ import type { CacheableArgs } from '../types'
 
 
 export interface DecoratorExecutorOptions extends CacheableArgs {
-  cacheManager: CacheManager
+  cacheManager?: CacheManager | undefined
   method: (...args: unknown[]) => unknown
   methodArgs: unknown[]
   methodResult?: undefined
