@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.9.0](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@2.8.0...@mwcp/cache@2.9.0) (2022-12-29)
+
+
+### Features
+
+* **cache:** export types ([83f5112](https://github.com/waitingsong/midway-components/commit/83f51129555d25a970fb781dc95df438f877f85e))
+
+
+
+
+
 # [2.8.0](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@2.7.0...@mwcp/cache@2.8.0) (2022-12-29)
 
 
