@@ -9,6 +9,10 @@ export {
   DecoratorMetaData,
   CacheableArgs,
   CacheEvictArgs,
+
+  CacheMetaType,
+  CachedResponse,
+  CacheConditionFn,
 } from './types'
 
 export * from './cacheable/cacheable'
