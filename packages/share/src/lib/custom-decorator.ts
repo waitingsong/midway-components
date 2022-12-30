@@ -117,18 +117,18 @@ export function checkMethodHasDecoratorKeys(
     propertyName, // 'getUser'
   } = metaData
 
-  decoratorKeyMap.forEach((id, dkey) => {
-    if (methodHasDecorated(dkey, propertyName, metadataArr)) {
+  decoratorKeyMap.forEach((decoratorName, decoratorKey) => {
+    if (methodHasDecorated(decoratorKey, propertyName, metadataArr)) {
       // @ts-ignore
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       const targetName = typeof target.name === 'string' && target.name
         // @ts-ignore
         ? target.name as string
         : target.constructor.name
-      const targetId = targetDecoratorKeyMap.get(key) ?? '"Unknown decorator"'
+      const targetDecoratorName = targetDecoratorKeyMap.get(key) ?? '"Unknown decorator"'
       // assert(id, 'decorator id should be defined')
 
-      const msg = `@${targetId}() should be used after @${id}() on the same method "${propertyName}".
+      const msg = `@${targetDecoratorName}() should be used after @${decoratorName}() on the same method "${propertyName}".
 target name: ${targetName}
 metadata: ${JSON.stringify(metaData, null, 2)}`
       ret.push(msg)
