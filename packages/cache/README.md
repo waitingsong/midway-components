@@ -104,13 +104,20 @@ export class FooService {
   async hello2(): Promise<string> {
     return 'world'
   }
-
+()
   @Cacheable({ key: 'bar' }) // cacheKey will be `FooService.hello2:bar`
   async hello2(): Promise<string> {
     return 'world'
   }
 
-  @Cacheable({ key: (input: UserDTO) => input.uid }) // cacheKey will be `FooService.world:${uid}`
+  @Cacheable({ key: (input: UserDTO) => input.uid.toString() }) // cacheKey will be `FooService.world:${uid}`
+  async world(input: UserDTO): Promise<string> {
+    return 'world'
+  }
+
+  @Cacheable<FooService['world']>({  // pass generics and then input will get the type automatically
+    key: input => input.uid.toString()
+  }) // cacheKey will be `FooService.world:${uid}`
   async world(input: UserDTO): Promise<string> {
     return 'world'
   }
@@ -182,8 +189,8 @@ export class FooRepo {
 @Cacheable() 
 export class FooService {
   @Cacheable<FooService['hello']>({  // <--- pass FooService['hello'] as method type
-    key: (args) => args[0].uid }  // <--- type of args will be [UserDTO, string | undefined] automatically
-  ) 
+    key: (args) => args[0].uid.toString()   // <--- type of args will be [UserDTO, string | undefined] automatically
+  }) 
   async hello(input: UserDTO, input2?: string): Promise<string> {
     return 'world'
   }
