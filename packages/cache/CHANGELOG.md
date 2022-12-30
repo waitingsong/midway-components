@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.1](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@2.9.0...@mwcp/cache@2.9.1) (2022-12-30)
+
+
+### Bug Fixes
+
+* **cache:** options.cacheManager may undefined within decoratorExecutor() ([6062e1e](https://github.com/waitingsong/midway-components/commit/6062e1e184cf0407005fe975c44c393fc4ba1e5c))
+
+
+
+
+
 # [2.9.0](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@2.8.0...@mwcp/cache@2.9.0) (2022-12-29)
 
 
