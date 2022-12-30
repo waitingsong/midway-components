@@ -24,7 +24,7 @@
   "license": "MIT",
   "dependencies": {
     "@mwcp/fetch": "^21.1.2",
-    "@mwcp/kmore": "^52.1.0",
+    "@mwcp/kmore": "^53.0.0",
     "@mwcp/koid": "^11.0.1",
     "@mwcp/otel": "^3.17.0",
     "@waiting/shared-core": "^20.11.2",
@@ -36,7 +36,7 @@
     "@mwcp/boot": "^1.1.5",
     "@mwcp/share": "^2.4.0",
     "cross-env": "7",
-    "kmore-cli": "^52.0.3"
+    "kmore-cli": "^53.0.0"
   },
   "engines": {
     "node": ">=16.13.0"
