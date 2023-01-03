@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 2.5.0 (2023-01-03)
+
+
+### Features
+
+* **share:** isMethodDecoratoredWith() ([d08c635](https://github.com/waitingsong/midway-components/commit/d08c6354336e5201dfd6ed4a60d3b4cd6a53c44b))
+
+
+
+
+
 # 2.4.0 (2022-12-27)
 
 **Note:** Version bump only for package @mwcp/share
