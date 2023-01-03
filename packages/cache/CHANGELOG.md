@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2.9.3 (2023-01-03)
+
+
+### Bug Fixes
+
+* **cache:** retrieve cacheManager ([12bf123](https://github.com/waitingsong/midway-components/commit/12bf123e23b54567ab6826f651ad67d7cf625d48))
+
+
+
+
+
 ## 2.9.2 (2023-01-03)
 
 **Note:** Version bump only for package @mwcp/cache
