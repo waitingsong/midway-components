@@ -21,7 +21,7 @@ export async function decoratorExecutor(
 ): Promise<unknown> {
 
   const cacheManager = options.cacheManager
-    ?? await options.webContext.app.getApplicationContext().getAsync(CacheManager)
+    ?? await options.webContext.requestContext.getAsync(CacheManager)
   assert(cacheManager, 'CacheManager is undefined')
 
   const opts: GenCacheKeyOptions = {
