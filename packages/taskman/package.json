@@ -24,7 +24,7 @@
   "license": "MIT",
   "dependencies": {
     "@mwcp/fetch": "^21.1.2",
-    "@mwcp/kmore": "^53.0.0",
+    "@mwcp/kmore": "^53.0.1",
     "@mwcp/koid": "^11.0.1",
     "@mwcp/otel": "^3.17.1",
     "@waiting/shared-core": "^20.11.2",
