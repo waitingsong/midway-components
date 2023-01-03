@@ -137,3 +137,29 @@ metadata: ${JSON.stringify(metaData, null, 2)}`
 
   return ret
 }
+
+
+/**
+ * @returns Set<value of decoratorKeys>
+ */
+export function isMethodDecoratoredWith(
+  target: {}, // class
+  propertyName: string, // method name
+  decoratorKeys: string[], // ['docorator:method_key_cacheable']
+): Set<string> {
+
+  const ret = new Set<string>()
+
+  const metadataArr: DecoratorMetaData[] | undefined = getClassMetadata(INJECT_CUSTOM_METHOD, target)
+  if (! metadataArr?.length) {
+    return ret
+  }
+
+  decoratorKeys.forEach((decoratorKey) => {
+    if (methodHasDecorated(decoratorKey, propertyName, metadataArr)) {
+      ret.add(decoratorKey)
+    }
+  })
+
+  return ret
+}
