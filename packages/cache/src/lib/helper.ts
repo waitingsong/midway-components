@@ -142,7 +142,6 @@ interface ExecutorOptionsCacheCommon {
   beforeInvocation: boolean
   ttl: any
   condition: any
-  cacheManager: CacheManager
   method: (...args: unknown[]) => unknown
   methodArgs: unknown[]
   methodResult?: any
