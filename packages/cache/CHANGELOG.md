@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@2.9.3...@mwcp/cache@3.0.0) (2023-01-05)
+
+
+### Features
+
+* **cache:** remove property cacheManager of ExecutorOptionsCacheCommon ([db42de1](https://github.com/waitingsong/midway-components/commit/db42de13dace445b1393dafd9bb6e418cd7b15b0))
+
+
+
+
+
 ## 2.9.3 (2023-01-03)
 
 
