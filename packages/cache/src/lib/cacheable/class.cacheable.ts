@@ -5,26 +5,20 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import assert from 'node:assert'
 
-import { CacheManager } from '@midwayjs/cache'
 import {
   INJECT_CUSTOM_METHOD,
   Provide,
-  REQUEST_OBJ_CTX_KEY,
   getClassMetadata,
   saveClassMetadata,
   saveModule,
 } from '@midwayjs/core'
-import type { Context as WebContext } from '@mwcp/share'
+import { DecoratorMetaData, methodHasDecorated } from '@mwcp/share'
 
-import { methodHasEvictDecorator } from '../cacheevict/method-decorator.cacheevict'
-import { CLASS_KEY_Cacheable } from '../config'
-import { Config, CacheableArgs, DecoratorMetaData } from '../types'
+import { CLASS_KEY_Cacheable, METHOD_KEY_CacheEvict, METHOD_KEY_CachePut, targetMethodNamePrefix } from '../config'
+import { genDecoratorExecutorOptionsCommon } from '../helper'
+import { CacheableArgs, DecoratorExecutorOptions, MethodType } from '../types'
 
-import {
-  DecoratorExecutorOptions,
-  decoratorExecutor,
-  retrieveMethodDecoratorArgs,
-} from './helper.cacheable'
+import { decoratorExecutor } from './helper.cacheable'
 
 
 export function classDecoratorPatcher(
@@ -60,20 +54,26 @@ function wrapClassMethodOnPrototype(
     return target
   }
 
-  const metadataArr: DecoratorMetaData[] | undefined = getClassMetadata(INJECT_CUSTOM_METHOD, target)
+  const metadataArr: DecoratorMetaData<CacheableArgs>[] | undefined = getClassMetadata(INJECT_CUSTOM_METHOD, target)
 
   const prot = target.prototype as unknown
   for (const key of Object.getOwnPropertyNames(prot)) {
     if (key === 'constructor') { continue }
-    if (methodHasEvictDecorator(key, metadataArr)) {
+
+    if (methodHasDecorated(METHOD_KEY_CacheEvict, key, metadataArr)) {
       continue
     }
+    else if (methodHasDecorated(METHOD_KEY_CachePut, key, metadataArr)) {
+      continue
+    }
+    // void else
 
     const descriptor = Object.getOwnPropertyDescriptor(prot, key)
     if (typeof descriptor?.value === 'function') {
       if (descriptor.value.constructor.name !== 'AsyncFunction') { continue }
 
-      const targetMethodName = `__decorator_orig_${key}`
+      const methodName = key
+      const targetMethodName = `${targetMethodNamePrefix}${methodName}`
       if (typeof target.prototype[targetMethodName] === 'function') { continue }
 
       Object.defineProperty(target.prototype, targetMethodName, {
@@ -82,20 +82,35 @@ function wrapClassMethodOnPrototype(
 
       const wrappedClassDecoratedMethod = async function(this: unknown, ...args: unknown[]): Promise<unknown> {
         // return target.prototype[targetMethodName].apply(this, args)
-        const method = target.prototype[targetMethodName].bind(this) as Method
+        const method = target.prototype[targetMethodName].bind(this) as MethodType
+        Object.defineProperty(method, 'targetMethodName', {
+          enumerable: true,
+          value: targetMethodName,
+        })
+        Object.defineProperty(method, 'origMethodName', {
+          enumerable: true,
+          value: methodName,
+        })
+
         const resp = await classDecoratorExecuctor(
           this,
           method,
-          key,
+          methodName,
           args,
           options,
         )
         return resp
       }
       Object.defineProperty(wrappedClassDecoratedMethod, 'name', {
+        enumerable: true,
         writable: true,
-        value: key,
+        value: methodName,
       })
+      Object.defineProperty(wrappedClassDecoratedMethod, 'targetMethodName', {
+        enumerable: true,
+        value: targetMethodName,
+      })
+
       target.prototype[key] = wrappedClassDecoratedMethod
     }
   }
@@ -105,7 +120,7 @@ function wrapClassMethodOnPrototype(
 
 async function classDecoratorExecuctor(
   instance: any,
-  method: Method,
+  method: MethodType,
   methodName: string,
   methodArgs: unknown[],
   options?: Partial<CacheableArgs>,
@@ -114,36 +129,15 @@ async function classDecoratorExecuctor(
   assert(instance, 'instance is required')
   assert(methodName, 'methodName is required')
 
-  const webContext = instance[REQUEST_OBJ_CTX_KEY] as WebContext
-  assert(webContext, 'webContext is undefined on this')
-
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const config = webContext?.app?.getConfig
-    ? webContext.app.getConfig('cacheConfig') as Config | undefined
-    : void 0
-
-  const className = instance.constructor?.name as string
-  assert(className, 'this.constructor.name is undefined')
-
-  const methodMetaDataArgs = retrieveMethodDecoratorArgs(instance, methodName)
-
-  const cacheName = methodMetaDataArgs?.cacheName ?? `${className}.${methodName}`
-  const key = methodMetaDataArgs?.key
-  const ttl = methodMetaDataArgs?.ttl ?? options?.ttl ?? config?.options.ttl
-  const cacheManager = await webContext.requestContext.getAsync(CacheManager)
-
-  const opts: DecoratorExecutorOptions = {
-    cacheManager,
-    cacheName,
-    key,
-    ttl,
+  const opts: DecoratorExecutorOptions<CacheableArgs> = genDecoratorExecutorOptionsCommon({
+    instance,
     method,
     methodArgs,
-    webContext,
-  }
+    methodName,
+    cacheOptions: options,
+  })
   const dat = await decoratorExecutor(opts)
   return dat
 }
 
-type Method = (...args: unknown[]) => Promise<unknown>
 

@@ -2,6 +2,7 @@ import * as koa from '@midwayjs/koa'
 import * as prometheus from '@midwayjs/prometheus'
 import * as validate from '@midwayjs/validate'
 import * as aliOss from '@mwcp/ali-oss'
+import * as cache from '@mwcp/cache'
 import * as fetch from '@mwcp/fetch'
 import * as jwt from '@mwcp/jwt'
 import * as db from '@mwcp/kmore'
@@ -20,6 +21,7 @@ export const useComponents: IComponentInfo[] = [
   fetch,
   db,
   aliOss,
+  cache,
 ]
 
 export const useDefaultRoutes: (string | RegExp)[] = [

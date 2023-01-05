@@ -2,21 +2,20 @@ import { customDecoratorFactory } from '@mwcp/share'
 
 import { CacheableArgs, MethodType } from '../types'
 
-import { classDecoratorPatcher } from './class.cacheable'
-import { methodDecoratorPatcher } from './method.cacheable'
+import { methodDecoratorPatcher } from './method.cacheput'
 
 
 /**
  * 声明式缓存装饰器
- * Declarative Cacheable Decorator
+ * Declarative CachePut Decorator
  */
-export function Cacheable<M extends MethodType | undefined = undefined>(
+export function CachePut<M extends MethodType | undefined = undefined>(
   options?: Partial<CacheableArgs<M>>,
 ): MethodDecorator & ClassDecorator {
 
   return customDecoratorFactory<CacheableArgs<M>, M>(
     options,
-    classDecoratorPatcher,
+    void 0,
     methodDecoratorPatcher,
   )
 }

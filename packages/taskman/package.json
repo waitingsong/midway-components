@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/taskman",
   "author": "waiting",
-  "version": "29.4.25",
+  "version": "30.0.0",
   "description": "midway component task manager",
   "keywords": [
     "midway",
@@ -23,20 +23,20 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@mwcp/fetch": "^21.1.1",
-    "@mwcp/kmore": "^51.0.0",
-    "@mwcp/koid": "^11.0.0",
-    "@mwcp/otel": "^3.16.2",
-    "@waiting/shared-core": "^20.10.1",
+    "@mwcp/fetch": "^21.1.2",
+    "@mwcp/kmore": "^53.0.1",
+    "@mwcp/koid": "^11.0.1",
+    "@mwcp/otel": "^3.17.1",
+    "@waiting/shared-core": "^20.11.2",
     "pg": "^8.8.0",
     "pg-native": "^3.0.1",
     "postgres-interval": "^4.0.0"
   },
   "devDependencies": {
-    "@mwcp/boot": "^1.0.24",
-    "@mwcp/share": "^2.1.0",
+    "@mwcp/boot": "^2.0.0",
+    "@mwcp/share": "^2.5.0",
     "cross-env": "7",
-    "kmore-cli": "^51.0.0"
+    "kmore-cli": "^53.0.0"
   },
   "engines": {
     "node": ">=16.13.0"

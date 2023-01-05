@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { CacheManager } from '@midwayjs/cache'
 import { Context } from '@mwcp/share'
 import type { MiddlewareConfig as MWConfig } from '@waiting/shared-types'
 
@@ -35,16 +36,36 @@ export interface Config {
   }
 }
 
+export type MethodType = (...input: any[]) => (any | Promise<any>)
 
 /**
  * @param ctx Koa context
  * @param args Arguments of the method
+ * @param result Result of the method. Only for using `@CacheEvict`
+ * @returns if undefined, there is no tailing ":" in cacheName
  */
-export type KeyGenerator = (
+export type KeyGenerator<M extends MethodType | undefined = undefined> = (
   this: Context,
   /** Arguments of the method */
-  args: any[] | any
-) => string
+  args: M extends MethodType ? Parameters<M> : any,
+  /**
+   * Result of the method(). Only for using `@CacheEvict`
+   * - value always be undefined if `beforeInvocation`is true
+   */
+  result: M extends MethodType ? Awaited<ReturnType<M>> : undefined
+) => string | undefined
+
+export type CacheConditionFn<M extends MethodType | undefined = undefined> = (
+  this: Context,
+  /** Arguments of the method */
+  args: M extends MethodType ? Parameters<M> : any,
+  /**
+   * Result of the method. Only for using `@CacheEvict`
+   * - value always be undefined if `beforeInvocation`is true
+   */
+  result: M extends MethodType ? Awaited<ReturnType<M>> : undefined
+) => boolean | Promise<boolean>
+
 
 export interface CacheMetaType {
   readonly cacheKey?: string
@@ -60,38 +81,62 @@ export interface CachedResponse<T = unknown> {
   value: T
 }
 
-export interface CacheableArgs {
+export interface CacheableArgs<M extends MethodType | undefined = undefined> {
   /**
    * Name of the cache set
    * @default `${className}.${methodName}`
    */
   cacheName: string | undefined
-  key: string | number | bigint | KeyGenerator | undefined
+  key: string | number | bigint | KeyGenerator<M> | undefined
   /**
    * time to live in seconds
    * @default 10(sec)
    */
   ttl: number | undefined
+  /**
+   * Returns false to skip cache
+   * @default undefined - always cache
+   */
+  condition: CacheConditionFn<M> | boolean | undefined
 }
 
-export interface CacheEvictArgs {
+export interface CacheEvictArgs<M extends MethodType | undefined = undefined> {
   /**
    * Name of the cache set
    * @default `${className}.${methodName}`
    */
   cacheName: string | undefined
-  key: string | number | bigint | KeyGenerator | undefined
+  key: string | number | bigint | KeyGenerator<M> | undefined
   /**
    * @default false
    */
   beforeInvocation: boolean
+  /**
+   * Returns false to skip evict
+   * @default undefined - always evict
+   */
+  condition: CacheConditionFn<M> | boolean | undefined
 }
 
 
-export interface DecoratorMetaData <T = unknown> {
+export interface MetaDataType<T extends CacheableArgs | CacheEvictArgs> {
+  /** 装饰器所在的实例 */
+  target: new (...args: unknown[]) => unknown
   propertyName: string
-  key: string
   metadata: T
-  impl: boolean
+}
+
+export type Method = (...args: unknown[]) => Promise<unknown>
+
+export interface DecoratorExecutorOptions<T extends CacheableArgs | CacheEvictArgs = any> {
+  cacheManager?: CacheManager | undefined
+  cacheOptions: T
+  config?: Config | undefined
+  /** 装饰器所在类实例 */
+  instance: new (...args: unknown[]) => unknown
+  method: Method
+  methodArgs: unknown[]
+  methodName: string
+  methodResult?: unknown
 }
 

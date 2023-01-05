@@ -12,13 +12,14 @@ import { sleep } from '@waiting/shared-core'
 import { apiPrefix, apiRoute } from '../api-route'
 import { validateMeta } from '../base.helper'
 
-import { CachedResponse, ConfigKey } from '~/lib/types'
+import { CachedResponse, Config, ConfigKey } from '~/lib/types'
 import { Cacheable, } from '~/index'
 
 
 @Controller(apiPrefix.methodCacheable)
 export class DecoratorController {
 
+  @_Config(ConfigKey.config) readonly config: Config
   @Inject() readonly ctx: Context
 
   readonly controllerName = 'DecoratorController'
@@ -32,18 +33,18 @@ export class DecoratorController {
     assert(! ret[ConfigKey.CacheMetaType])
 
     const ret2 = await this._simple()
-    validateMeta(ret2, cacheKey)
+    validateMeta(ret2, cacheKey, this.config.options.ttl)
 
     const ret2a = await this._simple()
-    validateMeta(ret2a, cacheKey)
+    validateMeta(ret2a, cacheKey, this.config.options.ttl)
 
-    await sleep(10_010)
+    await sleep(this.config.options.ttl * 1001)
     const ret3 = await this._simple()
     assert(ret3.value === 'OK')
     assert(! ret3[ConfigKey.CacheMetaType])
 
     const ret3a = await this._simple()
-    validateMeta(ret3a, cacheKey)
+    validateMeta(ret3a, cacheKey, this.config.options.ttl)
 
 
     const ret4 = await this._simple2()

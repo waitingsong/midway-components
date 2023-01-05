@@ -25,6 +25,19 @@ export {
 export { JwtResult } from '@mwcp/jwt'
 
 export {
+  Cacheable,
+  CacheEvict,
+  CachePut,
+  CacheConfig,
+  CacheConfigKey,
+  CacheManager,
+  CacheableArgs,
+  CacheEvictArgs,
+  DataWithCacheMeta,
+  KeyGenerator,
+} from '@mwcp/cache'
+
+export {
   JsonObject,
   JsonResp,
   JsonType,

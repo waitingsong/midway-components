@@ -13,7 +13,7 @@ import type { Context } from '@mwcp/share'
 import { apiPrefix, apiRoute } from '../api-route'
 import { validateMeta } from '../base.helper'
 
-import { CachedResponse, ConfigKey, DataWithCacheMeta } from '~/lib/types'
+import { CachedResponse, Config, ConfigKey, DataWithCacheMeta } from '~/lib/types'
 import { Cacheable, } from '~/index'
 
 
@@ -22,6 +22,7 @@ const bigint = 1024n
 @Controller(apiPrefix.keyGenerator)
 export class ParamController {
 
+  @_Config(ConfigKey.config) readonly config: Config
   @Inject() readonly ctx: Context
 
   readonly controllerName = 'ParamController'
@@ -39,12 +40,12 @@ export class ParamController {
     assert(! ret2[ConfigKey.CacheMetaType])
 
     const ret3 = await this._simple(uid)
-    validateMeta(ret3, cacheKey)
+    validateMeta(ret3, cacheKey, this.config.options.ttl)
 
     const cacheKey2 = `${this.controllerName}._big:${bigint.toString()}`
     await this._big(uid)
     const ret4 = await this._big(uid)
-    validateMeta(ret4, cacheKey2)
+    validateMeta(ret4, cacheKey2, this.config.options.ttl)
 
     return ret3
   }
@@ -70,7 +71,7 @@ export class ParamController {
     assert(! ret[ConfigKey.CacheMetaType])
 
     const ret2 = await this._simple2(input)
-    validateMeta(ret2, cacheKey)
+    validateMeta(ret2, cacheKey, this.config.options.ttl)
 
     return 'OK'
   }

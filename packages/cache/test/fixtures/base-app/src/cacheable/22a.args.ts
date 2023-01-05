@@ -12,8 +12,9 @@ import { sleep } from '@waiting/shared-core'
 import { apiPrefix, apiRoute } from '../api-route'
 import { validateMeta } from '../base.helper'
 
-import { CachedResponse, ConfigKey } from '~/lib/types'
+import { CachedResponse, Config, ConfigKey } from '~/lib/types'
 import { Cacheable, } from '~/index'
+import { ArgsDecoratorService } from './22b.args.service'
 
 
 const ttl = 1
@@ -22,7 +23,10 @@ const cacheName = 'foo'
 @Controller(apiPrefix.args)
 export class ArgsController {
 
+  @_Config(ConfigKey.config) readonly config: Config
+
   @Inject() readonly ctx: Context
+  @Inject() readonly svc: ArgsDecoratorService
 
   readonly controllerName = 'ArgsController'
 
@@ -77,5 +81,20 @@ export class ArgsController {
   @Cacheable({ cacheName, ttl })
   protected async _name(): Promise<CachedResponse<'OK'>> {
     return { value: 'OK' }
+  }
+
+
+  @Get(`/${apiRoute.condition}`)
+  async condition(): Promise<'OK'> {
+    await this.svc.assertUndefined()
+
+    await this.svc.assertTrue()
+    await this.svc.assertFnTrue()
+    await this.svc.assertPromiseTrue()
+
+    await this.svc.assertFalse()
+    await this.svc.assertFnFalse()
+    await this.svc.assertPromiseFalse()
+    return 'OK'
   }
 }

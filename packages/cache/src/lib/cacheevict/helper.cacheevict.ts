@@ -1,88 +1,88 @@
 import assert from 'assert'
 
 import { CacheManager } from '@midwayjs/cache'
-import { INJECT_CUSTOM_METHOD, getClassMetadata } from '@midwayjs/core'
+import { REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
 import type { Context as WebContext } from '@mwcp/share'
 
-import { deleteData, genCacheKey, GenCacheKeyOptions } from '../helper'
-import { CacheEvictArgs, DecoratorMetaData } from '../types'
+import { processEx } from '../exception'
+import { computerConditionValue, deleteData, genCacheKey, GenCacheKeyOptions, retrieveMethodDecoratorArgs } from '../helper'
+import { CacheEvictArgs, DecoratorExecutorOptions } from '../types'
 
 
-export interface DecoratorExecutorOptions extends CacheEvictArgs {
-  cacheManager: CacheManager
-  method: (...args: unknown[]) => unknown
-  methodArgs: unknown[]
-  webContext: WebContext
-}
 
 export async function decoratorExecutor(
-  options: DecoratorExecutorOptions,
+  options: DecoratorExecutorOptions<CacheEvictArgs>,
 ): Promise<unknown> {
 
-  assert(options.cacheManager, 'CacheManager is undefined')
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const webContext = options.instance[REQUEST_OBJ_CTX_KEY] as WebContext
+  assert(webContext, 'webContext is undefined')
+
+  const cacheManager = options.cacheManager ?? await webContext.requestContext.getAsync(CacheManager)
+  assert(cacheManager, 'CacheManager is undefined')
+
+  const { cacheOptions: cacheOptionsArgs } = options
+
+  const methodMetaDataArgs = retrieveMethodDecoratorArgs<CacheEvictArgs>(options.instance, options.methodName)
+  const cacheOptions = {
+    ...cacheOptionsArgs,
+    ...methodMetaDataArgs,
+  }
+  options.cacheOptions = cacheOptions
 
   const opts: GenCacheKeyOptions = {
-    cacheName: options.cacheName,
-    key: options.key,
+    ...cacheOptions,
     methodArgs: options.methodArgs,
-    webContext: options.webContext,
+    methodResult: options.methodResult,
+    webContext,
   }
   const cacheKey = genCacheKey(opts)
 
-  return Promise.resolve(options)
-    .then(async (inputOpts) => {
-      if (inputOpts.beforeInvocation) {
-        await deleteData(inputOpts.cacheManager, cacheKey)
-      }
+  try {
+    const tmp = computerConditionValue(options)
+    const enableEvict = typeof tmp === 'boolean' ? tmp : await tmp
+    assert(typeof enableEvict === 'boolean', 'condition must return boolean')
 
-      const { method, methodArgs } = inputOpts
-      const resp = await method(...methodArgs)
-
-      if (! inputOpts.beforeInvocation) {
-        await deleteData(inputOpts.cacheManager, cacheKey)
-      }
-
-      return resp
-    })
-    .catch((error: unknown) => processEx({
-      cacheKey,
-      error,
-    }))
-}
-
-interface ProcessExOptions {
-  cacheKey: string
-  error: unknown
-}
-
-function processEx(options: ProcessExOptions): Promise<never> {
-  const { cacheKey, error } = options
-
-  console.error('cache error', error)
-  const ex2Msg = error instanceof Error
-    ? error.message
-    : typeof error === 'string' ? error : JSON.stringify(error)
-
-  const ex3 = new Error(`cache error with key: "${cacheKey}" >
-  message: ${ex2Msg}`, { cause: error })
-  return Promise.reject(ex3)
-}
-
-
-export function retrieveMethodDecoratorArgs(
-  target: unknown,
-  methodName: string,
-): CacheEvictArgs | undefined {
-
-  const metaDataArr = getClassMetadata(
-    INJECT_CUSTOM_METHOD,
-    target,
-  ) as DecoratorMetaData<CacheEvictArgs | undefined>[] | undefined
-  if (! metaDataArr?.length) { return }
-
-  for (const row of metaDataArr) {
-    if (row.propertyName === methodName) {
-      return row.metadata
+    if (enableEvict && cacheOptions.beforeInvocation) {
+      await deleteData(cacheManager, cacheKey)
     }
+
+    const { method, methodArgs } = options
+    const resp = await method(...methodArgs)
+
+    if (! cacheOptions.beforeInvocation) {
+      if (enableEvict) {
+        await deleteData(cacheManager, cacheKey)
+      }
+      else {
+        const ps: DecoratorExecutorOptions = {
+          ...options,
+          methodResult: resp,
+        }
+        const tmp2 = computerConditionValue(ps)
+        const enableEvict2 = typeof tmp2 === 'boolean' ? tmp2 : await tmp2
+        assert(typeof enableEvict2 === 'boolean', 'condition must return boolean')
+        if (enableEvict2) {
+        // re-generate cache key, because CacheConditionFn use result of method
+          const opts2: GenCacheKeyOptions = {
+            ...opts,
+            methodResult: resp,
+          }
+          const cacheKey2 = genCacheKey(opts2)
+          await deleteData(cacheManager, cacheKey2)
+        }
+      }
+    }
+
+    return resp
+  }
+  catch (error) {
+    return processEx({
+      error,
+      cacheKey,
+    })
   }
 }
+
+

@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/boot",
   "author": "waiting",
-  "version": "1.0.24",
+  "version": "2.0.0",
   "description": "midway.js boot",
   "keywords": [
     "midway",
@@ -21,24 +21,25 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/prometheus": "^3.8.0",
-    "@midwayjs/redis": "^3.8.0",
-    "@midwayjs/validate": "^3.8.0",
-    "@mwcp/ali-oss": "^7.0.30",
-    "@mwcp/fetch": "^21.1.1",
-    "@mwcp/jwt": "^13.0.12",
-    "@mwcp/kmore": "^51.0.0",
-    "@mwcp/koid": "^11.0.0",
-    "@mwcp/otel": "^3.16.2",
-    "@mwcp/share": "^2.1.0",
+    "@midwayjs/prometheus": "^3.9.0",
+    "@midwayjs/redis": "^3.9.0",
+    "@midwayjs/validate": "^3.9.0",
+    "@mwcp/ali-oss": "^7.1.1",
+    "@mwcp/cache": "^3.0.0",
+    "@mwcp/fetch": "^21.1.2",
+    "@mwcp/jwt": "^13.1.1",
+    "@mwcp/kmore": "^53.0.1",
+    "@mwcp/koid": "^11.0.1",
+    "@mwcp/otel": "^3.17.1",
+    "@mwcp/share": "^2.5.0",
     "@waiting/base64": "^4.2.9",
-    "@waiting/shared-core": "^20.10.1",
+    "@waiting/shared-core": "^20.11.2",
     "tsconfig-paths": "4"
   },
   "devDependencies": {
-    "@midwayjs/swagger": "^3.8.0",
+    "@midwayjs/swagger": "^3.9.8",
     "cross-env": "7",
-    "kmore-cli": "^51.0.0"
+    "kmore-cli": "^53.0.0"
   },
   "engines": {
     "node": ">=16.13.0"
