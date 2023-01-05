@@ -130,7 +130,7 @@ export type Method = (...args: unknown[]) => Promise<unknown>
 
 export interface DecoratorExecutorOptions<T extends CacheableArgs | CacheEvictArgs = any> {
   cacheManager?: CacheManager | undefined
-  cacheOptions: T
+  cacheOptions: Partial<T>
   config?: Config | undefined
   /** 装饰器所在类实例 */
   instance: new (...args: unknown[]) => unknown

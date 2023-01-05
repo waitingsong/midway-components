@@ -1,4 +1,6 @@
 import {
+  CacheableArgs,
+  CacheEvictArgs,
   Config,
   MiddlewareConfig,
   MiddlewareOptions,
@@ -32,3 +34,19 @@ export const methodDecoratorKeyMap = new Map([
 ])
 
 export const targetMethodNamePrefix = '__decorator_orig_'
+
+export const initCacheableArgs: CacheableArgs = {
+  cacheName: void 0,
+  key: void 0,
+  ttl: initConfig.options.ttl,
+  condition: void 0,
+}
+export const initCacheEvictArgs: CacheEvictArgs = {
+  cacheName: void 0,
+  key: void 0,
+  condition: void 0,
+  beforeInvocation: false,
+}
+export const initCachePutArgs: CacheableArgs = {
+  ...initCacheableArgs,
+}
