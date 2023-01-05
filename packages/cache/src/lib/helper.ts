@@ -129,15 +129,15 @@ export function computerConditionValue(
   const webContext = options.instance[REQUEST_OBJ_CTX_KEY] as WebContext
   assert(webContext, 'webContext is undefined')
 
-  switch (typeof cacheOptions.condition) {
+  switch (typeof cacheOptions['condition']) {
     case 'undefined':
       return true
 
     case 'boolean':
-      return cacheOptions.condition
+      return cacheOptions['condition']
 
     case 'function': {
-      const fn = cacheOptions.condition as (...args: unknown[]) => boolean | Promise<boolean>
+      const fn = cacheOptions['condition'] as (...args: unknown[]) => boolean | Promise<boolean>
       return fn.call(
         webContext,
         options.methodArgs,
@@ -146,7 +146,7 @@ export function computerConditionValue(
     }
 
     default:
-      throw new Error(`Invalid condition type: ${typeof cacheOptions.condition}`)
+      throw new Error(`Invalid condition type: ${typeof cacheOptions['condition']}`)
   }
 }
 
@@ -183,9 +183,9 @@ export function genDecoratorExecutorOptions(
 }
 
 
-export function genDecoratorExecutorOptionsCommon(
-  options: DecoratorExecutorOptions,
-): DecoratorExecutorOptions {
+export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | CacheEvictArgs = any>(
+  options: DecoratorExecutorOptions<T>,
+): DecoratorExecutorOptions<T> {
 
   const {
     cacheManager,
