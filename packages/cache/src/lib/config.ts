@@ -33,7 +33,7 @@ export const methodDecoratorKeyMap = new Map([
   [METHOD_KEY_CachePut, 'CachePut'],
 ])
 
-export const targetMethodNamePrefix = '__decorator_orig_'
+export const targetMethodNamePrefix = '__kmore_decorator_orig_'
 
 export const initCacheableArgs: CacheableArgs = {
   cacheName: void 0,
