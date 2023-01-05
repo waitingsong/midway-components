@@ -13,7 +13,7 @@ import {
   getClassMetadata,
 } from '@midwayjs/core'
 
-import { CLASS_KEY_Cacheable, METHOD_KEY_Cacheable } from '../config'
+import { CLASS_KEY_Cacheable, METHOD_KEY_Cacheable, targetMethodNamePrefix } from '../config'
 import { genDecoratorExecutorOptions } from '../helper'
 import type { Config, CacheableArgs, MetaDataType, DecoratorExecutorOptions } from '../types'
 
@@ -76,14 +76,25 @@ async function aroundFactory(
 ): Promise<unknown> {
 
   // eslint-disable-next-line @typescript-eslint/unbound-method
-  assert(joinPoint.proceed, 'joinPoint.proceed is undefined')
-  assert(typeof joinPoint.proceed === 'function', 'joinPoint.proceed is not funtion')
+  const { proceed } = joinPoint
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  assert(proceed, 'joinPoint.proceed is undefined')
+  assert(typeof proceed === 'function', 'joinPoint.proceed is not funtion')
 
   // 装饰器所在的实例
   const instance = joinPoint.target
+
+  const methodName = metaDataOptions.propertyName
+  const targetMethodName = `${targetMethodNamePrefix}${methodName}`
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  if (typeof instance[targetMethodName] === 'function') {
+    const ret = await proceed(...joinPoint.args)
+    return ret
+  }
+
   const classMetaData = getClassMetadata(CLASS_KEY_Cacheable, instance)
   if (classMetaData) {
-    const ret = await joinPoint.proceed(...joinPoint.args) // must await for call stack
+    const ret = await proceed(...joinPoint.args) // must await for call stack
     return ret
   }
 

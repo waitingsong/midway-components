@@ -31,3 +31,4 @@ export const methodDecoratorKeyMap = new Map([
   [METHOD_KEY_CachePut, 'CachePut'],
 ])
 
+export const targetMethodNamePrefix = '__decorator_orig_'

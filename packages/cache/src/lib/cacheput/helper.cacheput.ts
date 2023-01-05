@@ -29,15 +29,14 @@ export async function decoratorExecutor(
   const cacheManager = options.cacheManager ?? await webContext.requestContext.getAsync(CacheManager)
   assert(cacheManager, 'CacheManager is undefined')
 
-  const { cacheOptions } = options
+  const { cacheOptions: cacheOptionsArgs } = options
 
   const methodMetaDataArgs = retrieveMethodDecoratorArgs<CacheableArgs>(options.instance, options.methodName)
-  if (typeof methodMetaDataArgs?.ttl === 'number') {
-    cacheOptions.ttl = methodMetaDataArgs.ttl
+  const cacheOptions = {
+    ...cacheOptionsArgs,
+    ...methodMetaDataArgs,
   }
-  if (typeof methodMetaDataArgs?.condition !== 'undefined') {
-    cacheOptions.condition = methodMetaDataArgs.condition
-  }
+  options.cacheOptions = cacheOptions
 
   const opts: GenCacheKeyOptions = {
     ...cacheOptions,

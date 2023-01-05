@@ -134,7 +134,6 @@ export interface DecoratorExecutorOptions<T extends CacheableArgs | CacheEvictAr
   config?: Config | undefined
   /** 装饰器所在类实例 */
   instance: new (...args: unknown[]) => unknown
-  // method: (...args: unknown[]) => unknown
   method: Method
   methodArgs: unknown[]
   methodName: string

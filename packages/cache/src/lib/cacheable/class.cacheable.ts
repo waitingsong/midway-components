@@ -14,9 +14,9 @@ import {
 } from '@midwayjs/core'
 import { DecoratorMetaData, methodHasDecorated } from '@mwcp/share'
 
-import { CLASS_KEY_Cacheable, METHOD_KEY_CacheEvict, METHOD_KEY_CachePut } from '../config'
+import { CLASS_KEY_Cacheable, METHOD_KEY_CacheEvict, METHOD_KEY_CachePut, targetMethodNamePrefix } from '../config'
 import { genDecoratorExecutorOptionsCommon } from '../helper'
-import { CacheableArgs, DecoratorExecutorOptions, Method } from '../types'
+import { CacheableArgs, DecoratorExecutorOptions, MethodType } from '../types'
 
 import { decoratorExecutor } from './helper.cacheable'
 
@@ -72,7 +72,8 @@ function wrapClassMethodOnPrototype(
     if (typeof descriptor?.value === 'function') {
       if (descriptor.value.constructor.name !== 'AsyncFunction') { continue }
 
-      const targetMethodName = `__decorator_orig_${key}`
+      const methodName = key
+      const targetMethodName = `${targetMethodNamePrefix}${methodName}`
       if (typeof target.prototype[targetMethodName] === 'function') { continue }
 
       Object.defineProperty(target.prototype, targetMethodName, {
@@ -81,20 +82,35 @@ function wrapClassMethodOnPrototype(
 
       const wrappedClassDecoratedMethod = async function(this: unknown, ...args: unknown[]): Promise<unknown> {
         // return target.prototype[targetMethodName].apply(this, args)
-        const method = target.prototype[targetMethodName].bind(this) as Method
+        const method = target.prototype[targetMethodName].bind(this) as MethodType
+        Object.defineProperty(method, 'targetMethodName', {
+          enumerable: true,
+          value: targetMethodName,
+        })
+        Object.defineProperty(method, 'origMethodName', {
+          enumerable: true,
+          value: methodName,
+        })
+
         const resp = await classDecoratorExecuctor(
           this,
           method,
-          key,
+          methodName,
           args,
           options,
         )
         return resp
       }
       Object.defineProperty(wrappedClassDecoratedMethod, 'name', {
+        enumerable: true,
         writable: true,
-        value: key,
+        value: methodName,
       })
+      Object.defineProperty(wrappedClassDecoratedMethod, 'targetMethodName', {
+        enumerable: true,
+        value: targetMethodName,
+      })
+
       target.prototype[key] = wrappedClassDecoratedMethod
     }
   }
@@ -104,7 +120,7 @@ function wrapClassMethodOnPrototype(
 
 async function classDecoratorExecuctor(
   instance: any,
-  method: Method,
+  method: MethodType,
   methodName: string,
   methodArgs: unknown[],
   options?: Partial<CacheableArgs>,

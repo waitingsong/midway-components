@@ -4,7 +4,7 @@ import { CacheManager } from '@midwayjs/cache'
 import { REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
 import type { Context as WebContext } from '@mwcp/share'
 
-import { initConfig } from '../config'
+import { initConfig, targetMethodNamePrefix } from '../config'
 import { processEx } from '../exception'
 import {
   computerConditionValue,
@@ -22,6 +22,20 @@ export async function decoratorExecutor(
   options: DecoratorExecutorOptions<CacheableArgs>,
 ): Promise<unknown> {
 
+  const targetMethodName = `${targetMethodNamePrefix}${options.methodName}`
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const targetMethodName2: string | undefined = options.method['targetMethodName']
+  if (targetMethodName2 && targetMethodName2 !== targetMethodName) {
+    // @ts-ignore
+    if (typeof options.instance[targetMethodName] === 'function') {
+      const msg = `[@mwcp/cache] method "${options.methodName}" is also decorated by @cacheable on class with method "${targetMethodName}",
+        it will cause nested calling, code must be refactored to avoid this situation.`
+      console.error(msg)
+      throw new Error(msg)
+    }
+  }
+
   // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const webContext = options.instance[REQUEST_OBJ_CTX_KEY] as WebContext
@@ -30,15 +44,14 @@ export async function decoratorExecutor(
   const cacheManager = options.cacheManager ?? await webContext.requestContext.getAsync(CacheManager)
   assert(cacheManager, 'CacheManager is undefined')
 
-  const { cacheOptions } = options
-
+  const { cacheOptions: cacheOptionsArgs } = options
   const methodMetaDataArgs = retrieveMethodDecoratorArgs<CacheableArgs>(options.instance, options.methodName)
-  if (typeof methodMetaDataArgs?.ttl === 'number') {
-    cacheOptions.ttl = methodMetaDataArgs.ttl
+
+  const cacheOptions = {
+    ...cacheOptionsArgs,
+    ...methodMetaDataArgs,
   }
-  if (typeof methodMetaDataArgs?.condition !== 'undefined') {
-    cacheOptions.condition = methodMetaDataArgs.condition
-  }
+  options.cacheOptions = cacheOptions
 
   const opts: GenCacheKeyOptions = {
     ...cacheOptions,

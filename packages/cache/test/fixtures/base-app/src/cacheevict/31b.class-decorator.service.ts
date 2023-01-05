@@ -27,6 +27,11 @@ export class ClassDecoratorEvictService  {
     return { value: 'OK' }
   }
 
+  @Cacheable({ cacheName: cacheNameSimple })
+  async simple2(input: string): Promise<CachedResponse<string>> {
+    return { value: input }
+  }
+
   @CacheEvict({ cacheName: cacheNameSimple })
   async evictSimple(): Promise<CachedResponse<'OK'>> {
     return { value: 'OK' }

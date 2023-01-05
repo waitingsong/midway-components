@@ -166,7 +166,6 @@ export function genDecoratorExecutorOptions(
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const instance = joinPoint.target
   const funcName = joinPoint.methodName as string
-  // assert(className, 'className is undefined')
   assert(funcName, 'funcName is undefined')
 
   const ret = genDecoratorExecutorOptionsCommon({
@@ -175,7 +174,7 @@ export function genDecoratorExecutorOptions(
     instance,
     // eslint-disable-next-line @typescript-eslint/unbound-method
     method: joinPoint.proceed,
-    methodName: joinPoint.methodName,
+    methodName: funcName,
     methodArgs: joinPoint.args,
     cacheOptions: metaDataOptions.metadata,
   })

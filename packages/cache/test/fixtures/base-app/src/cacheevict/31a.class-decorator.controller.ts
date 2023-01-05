@@ -36,8 +36,8 @@ export class ClassDecoratorEvictController {
 
     await this.svc.evictSimple()
 
-    const ret3 = await this.svc.simple()
-    assert(! ret3[ConfigKey.CacheMetaType])
+    const ret3 = await this.svc.simple2('hello')
+    assert(! ret3[ConfigKey.CacheMetaType], JSON.stringify(ret3[ConfigKey.CacheMetaType]))
 
     const ret4 = await this.svc.simple()
     validateMeta(ret4, cacheKey, this.config.options.ttl)
