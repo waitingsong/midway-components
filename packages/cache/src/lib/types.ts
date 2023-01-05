@@ -133,3 +133,4 @@ export interface MetaDataType<T extends CacheableArgs | CacheEvictArgs> {
   metadata: Partial<T>
 }
 
+export type Method = (...args: unknown[]) => Promise<unknown>

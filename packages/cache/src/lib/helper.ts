@@ -17,6 +17,7 @@ import {
   ConfigKey,
   DataWithCacheMeta,
   MetaDataType,
+  Method,
 } from './types'
 
 
@@ -137,6 +138,7 @@ export function computerConditionValue(
 }
 
 interface ExecutorOptionsCacheCommon {
+  cacheManager?: CacheManager | undefined
   cacheName: string | undefined
   key: any
   beforeInvocation: boolean
@@ -162,10 +164,57 @@ export function genDecoratorExecutorOptions(
   // 装饰器所在的实例
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const instance = joinPoint.target
+  const funcName = joinPoint.methodName as string
+  // assert(className, 'className is undefined')
+  assert(funcName, 'funcName is undefined')
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+  const ret = genDecoratorExecutorOptionsCommon({
+    cacheManager,
+    config,
+    instance,
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    method: joinPoint.proceed,
+    methodName: joinPoint.methodName,
+    methodArgs: joinPoint.args,
+    cacheOptions: metaDataOptions.metadata,
+  })
+
+  return ret
+}
+
+
+export interface GenDecoratorExecutorOptionsCommon {
+  /** 装饰器所在类实例 */
+  instance: new (...args: unknown[]) => unknown
+  method: Method
+  methodName: string
+  methodArgs: unknown[]
+  cacheOptions: Partial<ExecutorOptionsCacheCommon>
+  cacheManager?: CacheManager | undefined
+  config?: Config | undefined
+}
+
+export function genDecoratorExecutorOptionsCommon(
+  options: GenDecoratorExecutorOptionsCommon,
+): ExecutorOptionsCacheCommon {
+
+  const {
+    cacheManager,
+    cacheOptions,
+    config: configArgs,
+    instance,
+    method,
+    methodName,
+    methodArgs,
+  } = options
+  assert(instance, 'options.instance is undefined')
+  assert(typeof method === 'function', 'options.method is not funtion')
+
+  // @ts-ignore
   const webContext = instance[REQUEST_OBJ_CTX_KEY] as WebContext
   assert(webContext, 'webContext is undefined')
+
+  const config = (configArgs ?? webContext.app.getConfig(ConfigKey.config) ?? initConfig) as Config
 
   const {
     cacheName: cacheNameArg,
@@ -173,29 +222,26 @@ export function genDecoratorExecutorOptions(
     ttl: ttlArg,
     beforeInvocation,
     condition,
-  } = metaDataOptions.metadata
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  const className = (instance.constructor?.name ?? metaDataOptions.target.name) as string
-  const funcName = joinPoint.methodName as string
-  assert(className, 'className is undefined')
-  assert(funcName, 'funcName is undefined')
+  } = cacheOptions
+  const className = instance.constructor.name
+  assert(className, 'instance.constructor.name is undefined')
+  assert(methodName, 'methodName is undefined')
 
-  const cacheName = cacheNameArg ?? `${className}.${funcName}`
+  // const config = configInput ?? webContext.config
+  const cacheName = cacheNameArg ?? `${className}.${methodName}`
   const key = keyArg
   const ttl = ttlArg ?? config.options.ttl
 
-  const ret = {
-    beforeInvocation: !! beforeInvocation,
+  const ret: ExecutorOptionsCacheCommon = {
     cacheManager,
+    beforeInvocation: !! beforeInvocation,
     cacheName,
     key,
     ttl,
     condition,
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    method: joinPoint.proceed,
-    methodArgs: joinPoint.args,
+    method,
+    methodArgs,
     webContext,
   }
   return ret
 }
-
