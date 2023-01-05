@@ -4,7 +4,7 @@ import { CacheManager } from '@midwayjs/cache'
 import { REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
 import type { Context as WebContext } from '@mwcp/share'
 
-import { initConfig, targetMethodNamePrefix } from '../config'
+import { initCacheableArgs, initConfig, targetMethodNamePrefix } from '../config'
 import { processEx } from '../exception'
 import {
   computerConditionValue,
@@ -47,7 +47,8 @@ export async function decoratorExecutor(
   const { cacheOptions: cacheOptionsArgs } = options
   const methodMetaDataArgs = retrieveMethodDecoratorArgs<CacheableArgs>(options.instance, options.methodName)
 
-  const cacheOptions = {
+  const cacheOptions: CacheableArgs = {
+    ...initCacheableArgs,
     ...cacheOptionsArgs,
     ...methodMetaDataArgs,
   }

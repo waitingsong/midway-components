@@ -4,6 +4,7 @@ import { CacheManager } from '@midwayjs/cache'
 import { REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
 import type { Context as WebContext } from '@mwcp/share'
 
+import { initCacheEvictArgs } from '../config'
 import { processEx } from '../exception'
 import { computerConditionValue, deleteData, genCacheKey, GenCacheKeyOptions, retrieveMethodDecoratorArgs } from '../helper'
 import { CacheEvictArgs, DecoratorExecutorOptions } from '../types'
@@ -25,7 +26,8 @@ export async function decoratorExecutor(
   const { cacheOptions: cacheOptionsArgs } = options
 
   const methodMetaDataArgs = retrieveMethodDecoratorArgs<CacheEvictArgs>(options.instance, options.methodName)
-  const cacheOptions = {
+  const cacheOptions: CacheEvictArgs = {
+    ...initCacheEvictArgs,
     ...cacheOptionsArgs,
     ...methodMetaDataArgs,
   }

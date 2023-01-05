@@ -14,7 +14,7 @@ import {
 } from '@midwayjs/core'
 import { DecoratorMetaData, methodHasDecorated } from '@mwcp/share'
 
-import { CLASS_KEY_Cacheable, METHOD_KEY_CacheEvict, METHOD_KEY_CachePut, targetMethodNamePrefix } from '../config'
+import { CLASS_KEY_Cacheable, initCacheableArgs, METHOD_KEY_CacheEvict, METHOD_KEY_CachePut, targetMethodNamePrefix } from '../config'
 import { genDecoratorExecutorOptionsCommon } from '../helper'
 import { CacheableArgs, DecoratorExecutorOptions, MethodType } from '../types'
 
@@ -129,12 +129,12 @@ async function classDecoratorExecuctor(
   assert(instance, 'instance is required')
   assert(methodName, 'methodName is required')
 
-  const opts: DecoratorExecutorOptions<CacheableArgs> = genDecoratorExecutorOptionsCommon({
+  const opts: DecoratorExecutorOptions<CacheableArgs> = genDecoratorExecutorOptionsCommon<CacheableArgs>({
     instance,
     method,
     methodArgs,
     methodName,
-    cacheOptions: options,
+    cacheOptions: options ?? initCacheableArgs,
   })
   const dat = await decoratorExecutor(opts)
   return dat
