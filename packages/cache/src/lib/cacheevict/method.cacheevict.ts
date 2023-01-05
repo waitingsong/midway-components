@@ -11,13 +11,13 @@ import {
   MidwayDecoratorService,
   attachClassMetadata,
 } from '@midwayjs/core'
+import { DecoratorMetaData } from '@mwcp/share'
 
 import { METHOD_KEY_CacheEvict } from '../config'
 import { genDecoratorExecutorOptions } from '../helper'
-import type { Config, CacheEvictArgs, DecoratorMetaData, MetaDataType } from '../types'
+import type { Config, CacheEvictArgs, MetaDataType, DecoratorExecutorOptions } from '../types'
 
 import { decoratorExecutor } from './helper.cacheevict'
-import type { DecoratorExecutorOptions } from './types.cacheevict'
 
 
 export function methodDecoratorPatcher<T>(
@@ -73,7 +73,7 @@ async function aroundFactoryEvict(
   cacheManager: CacheManager,
 ): Promise<unknown> {
 
-  const opts: DecoratorExecutorOptions = genDecoratorExecutorOptions(
+  const opts: DecoratorExecutorOptions<CacheEvictArgs> = genDecoratorExecutorOptions(
     joinPoint,
     metaDataOptions,
     config,

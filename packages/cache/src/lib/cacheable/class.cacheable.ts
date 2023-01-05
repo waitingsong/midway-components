@@ -5,25 +5,20 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import assert from 'node:assert'
 
-import { CacheManager } from '@midwayjs/cache'
 import {
   INJECT_CUSTOM_METHOD,
   Provide,
-  REQUEST_OBJ_CTX_KEY,
   getClassMetadata,
   saveClassMetadata,
   saveModule,
 } from '@midwayjs/core'
-import { Context as WebContext, methodHasDecorated } from '@mwcp/share'
+import { DecoratorMetaData, methodHasDecorated } from '@mwcp/share'
 
 import { CLASS_KEY_Cacheable, METHOD_KEY_CacheEvict, METHOD_KEY_CachePut } from '../config'
-import { Config, CacheableArgs, DecoratorMetaData } from '../types'
+import { genDecoratorExecutorOptionsCommon } from '../helper'
+import { CacheableArgs, DecoratorExecutorOptions, Method } from '../types'
 
-import {
-  decoratorExecutor,
-  retrieveMethodDecoratorArgs,
-} from './helper.cacheable'
-import { DecoratorExecutorOptions } from './types.cacheable'
+import { decoratorExecutor } from './helper.cacheable'
 
 
 export function classDecoratorPatcher(
@@ -59,7 +54,7 @@ function wrapClassMethodOnPrototype(
     return target
   }
 
-  const metadataArr: DecoratorMetaData[] | undefined = getClassMetadata(INJECT_CUSTOM_METHOD, target)
+  const metadataArr: DecoratorMetaData<CacheableArgs>[] | undefined = getClassMetadata(INJECT_CUSTOM_METHOD, target)
 
   const prot = target.prototype as unknown
   for (const key of Object.getOwnPropertyNames(prot)) {
@@ -118,38 +113,15 @@ async function classDecoratorExecuctor(
   assert(instance, 'instance is required')
   assert(methodName, 'methodName is required')
 
-  const webContext = instance[REQUEST_OBJ_CTX_KEY] as WebContext
-  assert(webContext, 'webContext is undefined on this')
-
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const config = webContext?.app?.getConfig
-    ? webContext.app.getConfig('cacheConfig') as Config | undefined
-    : void 0
-
-  const className = instance.constructor?.name as string
-  assert(className, 'this.constructor.name is undefined')
-
-  const methodMetaDataArgs: CacheableArgs | undefined = retrieveMethodDecoratorArgs(instance, methodName)
-
-  const cacheName = methodMetaDataArgs?.cacheName ?? `${className}.${methodName}`
-  const key = methodMetaDataArgs?.key
-  const ttl = methodMetaDataArgs?.ttl ?? options?.ttl ?? config?.options.ttl
-  const condition = methodMetaDataArgs?.condition ?? options?.condition
-  const cacheManager = await webContext.requestContext.getAsync(CacheManager)
-
-  const opts: DecoratorExecutorOptions = {
-    cacheManager,
-    cacheName,
-    condition,
-    key,
-    ttl,
+  const opts: DecoratorExecutorOptions<CacheableArgs> = genDecoratorExecutorOptionsCommon({
+    instance,
     method,
     methodArgs,
-    webContext,
-  }
+    methodName,
+    cacheOptions: options,
+  })
   const dat = await decoratorExecutor(opts)
   return dat
 }
 
-type Method = (...args: unknown[]) => Promise<unknown>
 

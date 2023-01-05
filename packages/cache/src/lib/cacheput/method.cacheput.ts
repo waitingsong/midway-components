@@ -14,10 +14,9 @@ import {
 
 import { METHOD_KEY_CachePut } from '../config'
 import { genDecoratorExecutorOptions } from '../helper'
-import type { Config, CacheableArgs, MetaDataType } from '../types'
+import type { Config, CacheableArgs, MetaDataType, DecoratorExecutorOptions } from '../types'
 
 import { decoratorExecutor } from './helper.cacheput'
-import type { DecoratorExecutorOptions } from './types.cacheput'
 
 
 export function methodDecoratorPatcher<T>(

@@ -78,10 +78,10 @@ export class ArgsDecoratorService  {
     assert(! ret[ConfigKey.CacheMetaType], JSON.stringify(ret[ConfigKey.CacheMetaType]))
 
     const ret2 = await this.conditionFalse()
-    assert(! ret2[ConfigKey.CacheMetaType], JSON.stringify(ret[ConfigKey.CacheMetaType]))
+    assert(! ret2[ConfigKey.CacheMetaType], JSON.stringify(ret2[ConfigKey.CacheMetaType]))
 
     const ret2a = await this.conditionFalse()
-    assert(! ret2a[ConfigKey.CacheMetaType], JSON.stringify(ret[ConfigKey.CacheMetaType]))
+    assert(! ret2a[ConfigKey.CacheMetaType], JSON.stringify(ret2a[ConfigKey.CacheMetaType]))
   }
 
   async assertFnFalse(): Promise<void> {
@@ -90,10 +90,10 @@ export class ArgsDecoratorService  {
     assert(! ret[ConfigKey.CacheMetaType], JSON.stringify(ret[ConfigKey.CacheMetaType]))
 
     const ret2 = await this.conditionFnFalse()
-    assert(! ret2[ConfigKey.CacheMetaType], JSON.stringify(ret[ConfigKey.CacheMetaType]))
+    assert(! ret2[ConfigKey.CacheMetaType], JSON.stringify(ret2[ConfigKey.CacheMetaType]))
 
     const ret2a = await this.conditionFnFalse()
-    assert(! ret2a[ConfigKey.CacheMetaType], JSON.stringify(ret[ConfigKey.CacheMetaType]))
+    assert(! ret2a[ConfigKey.CacheMetaType], JSON.stringify(ret2a[ConfigKey.CacheMetaType]))
   }
 
   async assertPromiseFalse(): Promise<void> {
@@ -102,10 +102,10 @@ export class ArgsDecoratorService  {
     assert(! ret[ConfigKey.CacheMetaType], JSON.stringify(ret[ConfigKey.CacheMetaType]))
 
     const ret2 = await this.conditionPromiseFalse()
-    assert(! ret2[ConfigKey.CacheMetaType], JSON.stringify(ret[ConfigKey.CacheMetaType]))
+    assert(! ret2[ConfigKey.CacheMetaType], JSON.stringify(ret2[ConfigKey.CacheMetaType]))
 
     const ret2a = await this.conditionPromiseFalse()
-    assert(! ret2a[ConfigKey.CacheMetaType], JSON.stringify(ret[ConfigKey.CacheMetaType]))
+    assert(! ret2a[ConfigKey.CacheMetaType], JSON.stringify(ret2a[ConfigKey.CacheMetaType]))
   }
 
 

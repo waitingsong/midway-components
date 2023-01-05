@@ -1,30 +1,39 @@
 import assert from 'assert'
 
 import { CacheManager } from '@midwayjs/cache'
-import { INJECT_CUSTOM_METHOD, getClassMetadata } from '@midwayjs/core'
+import { REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
+import type { Context as WebContext } from '@mwcp/share'
 
 import { processEx } from '../exception'
-import { computerConditionValue, deleteData, genCacheKey, GenCacheKeyOptions } from '../helper'
-import { CacheEvictArgs, DecoratorMetaData } from '../types'
+import { computerConditionValue, deleteData, genCacheKey, GenCacheKeyOptions, retrieveMethodDecoratorArgs } from '../helper'
+import { CacheEvictArgs, DecoratorExecutorOptions } from '../types'
 
-import { DecoratorExecutorOptions } from './types.cacheevict'
 
 
 export async function decoratorExecutor(
-  options: DecoratorExecutorOptions,
+  options: DecoratorExecutorOptions<CacheEvictArgs>,
 ): Promise<unknown> {
 
-  const cacheManager = options.cacheManager
-    ?? await options.webContext.requestContext.getAsync(CacheManager)
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const webContext = options.instance[REQUEST_OBJ_CTX_KEY] as WebContext
+  assert(webContext, 'webContext is undefined')
+
+  const cacheManager = options.cacheManager ?? await webContext.requestContext.getAsync(CacheManager)
   assert(cacheManager, 'CacheManager is undefined')
 
+  const { cacheOptions } = options
+
+  const methodMetaDataArgs = retrieveMethodDecoratorArgs<CacheEvictArgs>(options.instance, options.methodName)
+  if (typeof methodMetaDataArgs?.condition !== 'undefined') {
+    cacheOptions.condition = methodMetaDataArgs.condition
+  }
+
   const opts: GenCacheKeyOptions = {
-    cacheName: options.cacheName,
-    condition: options.condition,
-    key: options.key,
+    ...cacheOptions,
     methodArgs: options.methodArgs,
-    methodResult: void 0,
-    webContext: options.webContext,
+    methodResult: options.methodResult,
+    webContext,
   }
   const cacheKey = genCacheKey(opts)
 
@@ -33,14 +42,14 @@ export async function decoratorExecutor(
     const enableEvict = typeof tmp === 'boolean' ? tmp : await tmp
     assert(typeof enableEvict === 'boolean', 'condition must return boolean')
 
-    if (enableEvict && options.beforeInvocation) {
+    if (enableEvict && cacheOptions.beforeInvocation) {
       await deleteData(cacheManager, cacheKey)
     }
 
     const { method, methodArgs } = options
     const resp = await method(...methodArgs)
 
-    if (! options.beforeInvocation) {
+    if (! cacheOptions.beforeInvocation) {
       if (enableEvict) {
         await deleteData(cacheManager, cacheKey)
       }
@@ -75,20 +84,3 @@ export async function decoratorExecutor(
 }
 
 
-export function retrieveMethodDecoratorArgs(
-  target: unknown,
-  methodName: string,
-): CacheEvictArgs | undefined {
-
-  const metaDataArr = getClassMetadata(
-    INJECT_CUSTOM_METHOD,
-    target,
-  ) as DecoratorMetaData<CacheEvictArgs | undefined>[] | undefined
-  if (! metaDataArr?.length) { return }
-
-  for (const row of metaDataArr) {
-    if (row.propertyName === methodName) {
-      return row.metadata
-    }
-  }
-}

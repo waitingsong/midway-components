@@ -1,7 +1,8 @@
 import assert from 'assert'
 
 import { CacheManager } from '@midwayjs/cache'
-import { INJECT_CUSTOM_METHOD, getClassMetadata } from '@midwayjs/core'
+import { REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
+import type { Context as WebContext } from '@mwcp/share'
 
 import { initConfig } from '../config'
 import { processEx } from '../exception'
@@ -11,29 +12,39 @@ import {
   GenCacheKeyOptions,
   genDataWithCacheMeta,
   getData,
+  retrieveMethodDecoratorArgs,
   saveData,
 } from '../helper'
-import { CachedResponse, CacheableArgs, DecoratorMetaData } from '../types'
-
-import { DecoratorExecutorOptions } from './types.cacheable'
+import { CachedResponse, CacheableArgs, DecoratorExecutorOptions } from '../types'
 
 
 export async function decoratorExecutor(
-  options: DecoratorExecutorOptions,
+  options: DecoratorExecutorOptions<CacheableArgs>,
 ): Promise<unknown> {
 
-  const cacheManager = options.cacheManager
-    // ?? await options.webContext.app.getApplicationContext().getAsync(CacheManager)
-    ?? await options.webContext.requestContext.getAsync(CacheManager)
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const webContext = options.instance[REQUEST_OBJ_CTX_KEY] as WebContext
+  assert(webContext, 'webContext is undefined')
+
+  const cacheManager = options.cacheManager ?? await webContext.requestContext.getAsync(CacheManager)
   assert(cacheManager, 'CacheManager is undefined')
 
+  const { cacheOptions } = options
+
+  const methodMetaDataArgs = retrieveMethodDecoratorArgs<CacheableArgs>(options.instance, options.methodName)
+  if (typeof methodMetaDataArgs?.ttl === 'number') {
+    cacheOptions.ttl = methodMetaDataArgs.ttl
+  }
+  if (typeof methodMetaDataArgs?.condition !== 'undefined') {
+    cacheOptions.condition = methodMetaDataArgs.condition
+  }
+
   const opts: GenCacheKeyOptions = {
-    cacheName: options.cacheName,
-    condition: options.condition,
-    key: options.key,
+    ...cacheOptions,
     methodArgs: options.methodArgs,
-    methodResult: void 0,
-    webContext: options.webContext,
+    methodResult: options.methodResult,
+    webContext,
   }
   const cacheKey = genCacheKey(opts)
 
@@ -46,10 +57,10 @@ export async function decoratorExecutor(
       ? await getData(cacheManager, cacheKey)
       : void 0
 
-    const ttl = typeof options.ttl === 'number' ? options.ttl : initConfig.options.ttl
+    const ttl = cacheOptions.ttl ?? initConfig.options.ttl
 
     if (typeof cacheResp !== 'undefined') {
-      const resp = genDataWithCacheMeta(cacheResp as CachedResponse, options, ttl)
+      const resp = genDataWithCacheMeta(cacheResp as CachedResponse, opts, ttl)
       return resp
     }
 
@@ -72,21 +83,3 @@ export async function decoratorExecutor(
 }
 
 
-
-export function retrieveMethodDecoratorArgs(
-  target: unknown,
-  methodName: string,
-): CacheableArgs | undefined {
-
-  const metaDataArr = getClassMetadata(
-    INJECT_CUSTOM_METHOD,
-    target,
-  ) as DecoratorMetaData<CacheableArgs | undefined>[] | undefined
-  if (! metaDataArr?.length) { return }
-
-  for (const row of metaDataArr) {
-    if (row.propertyName === methodName) {
-      return row.metadata
-    }
-  }
-}

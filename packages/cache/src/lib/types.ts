@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { CacheManager } from '@midwayjs/cache'
 import { Context } from '@mwcp/share'
 import type { MiddlewareConfig as MWConfig } from '@waiting/shared-types'
 
@@ -118,19 +119,25 @@ export interface CacheEvictArgs<M extends MethodType | undefined = undefined> {
 }
 
 
-export interface DecoratorMetaData <T = unknown> {
-  propertyName: string
-  key: string
-  metadata: T
-  impl: boolean
-}
-
-
 export interface MetaDataType<T extends CacheableArgs | CacheEvictArgs> {
   /** 装饰器所在的实例 */
   target: new (...args: unknown[]) => unknown
   propertyName: string
-  metadata: Partial<T>
+  metadata: T
 }
 
 export type Method = (...args: unknown[]) => Promise<unknown>
+
+export interface DecoratorExecutorOptions<T extends CacheableArgs | CacheEvictArgs = any> {
+  cacheManager?: CacheManager | undefined
+  cacheOptions: T
+  config?: Config | undefined
+  /** 装饰器所在类实例 */
+  instance: new (...args: unknown[]) => unknown
+  // method: (...args: unknown[]) => unknown
+  method: Method
+  methodArgs: unknown[]
+  methodName: string
+  methodResult?: unknown
+}
+
