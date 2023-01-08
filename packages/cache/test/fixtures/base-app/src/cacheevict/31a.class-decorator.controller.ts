@@ -23,9 +23,24 @@ export class ClassDecoratorEvictController {
 
   readonly controllerName = 'ClassDecoratorService'
 
+  @Get(`/${apiRoute.hello}`)
+  async hello(): Promise<'OK'> {
+    const cacheKey = 'ClassDecoratorEvictService.hello'
+
+    const ret5 = await this.svc.hello()
+    assert(! ret5[ConfigKey.CacheMetaType])
+
+    const ret5a = await this.svc.hello()
+    validateMeta(ret5a, cacheKey, this.config.options.ttl)
+
+    return 'OK'
+  }
+
   @Get(`/${apiRoute.evictOverride}`)
   async simple(): Promise<'OK'> {
     const cacheKey = cacheNameSimple
+
+    await this.svc.evictHello()
 
     const ret = await this.svc.simple()
     assert(ret.value === 'OK')

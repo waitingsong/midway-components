@@ -2,34 +2,34 @@ import assert from 'assert'
 
 import { CacheManager } from '@midwayjs/cache'
 import { REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
-import type { Context as WebContext } from '@mwcp/share'
 
+import { initCacheEvictArgs } from '../config'
 import { processEx } from '../exception'
-import { computerConditionValue, deleteData, genCacheKey, GenCacheKeyOptions, retrieveMethodDecoratorArgs } from '../helper'
+import { computerConditionValue, deleteData, genCacheKey, GenCacheKeyOptions } from '../helper'
 import { CacheEvictArgs, DecoratorExecutorOptions } from '../types'
-
 
 
 export async function decoratorExecutor(
   options: DecoratorExecutorOptions<CacheEvictArgs>,
 ): Promise<unknown> {
 
-  // @ts-ignore
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const webContext = options.instance[REQUEST_OBJ_CTX_KEY] as WebContext
+  const webContext = options.instance[REQUEST_OBJ_CTX_KEY]
   assert(webContext, 'webContext is undefined')
 
   const cacheManager = options.cacheManager ?? await webContext.requestContext.getAsync(CacheManager)
   assert(cacheManager, 'CacheManager is undefined')
 
-  const { cacheOptions: cacheOptionsArgs } = options
+  const {
+    argsFromClassDecorator,
+    argsFromMethodDecorator,
+  } = options
 
-  const methodMetaDataArgs = retrieveMethodDecoratorArgs<CacheEvictArgs>(options.instance, options.methodName)
-  const cacheOptions = {
-    ...cacheOptionsArgs,
-    ...methodMetaDataArgs,
+  const cacheOptions: CacheEvictArgs = {
+    ...initCacheEvictArgs,
+    ...argsFromClassDecorator,
+    ...argsFromMethodDecorator,
   }
-  options.cacheOptions = cacheOptions
+  options.argsFromMethodDecorator = cacheOptions
 
   const opts: GenCacheKeyOptions = {
     ...cacheOptions,
@@ -56,7 +56,7 @@ export async function decoratorExecutor(
         await deleteData(cacheManager, cacheKey)
       }
       else {
-        const ps: DecoratorExecutorOptions = {
+        const ps: DecoratorExecutorOptions<CacheEvictArgs> = {
           ...options,
           methodResult: resp,
         }

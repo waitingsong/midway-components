@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -6,12 +7,13 @@ import assert from 'node:assert'
 
 import type { CacheManager } from '@midwayjs/cache'
 import {
-  INJECT_CUSTOM_METHOD,
-  JoinPoint,
   REQUEST_OBJ_CTX_KEY,
   getClassMetadata,
 } from '@midwayjs/core'
-import type { Context as WebContext, DecoratorMetaData } from '@mwcp/share'
+import type {
+  AroundFactoryOptions,
+  Context as WebContext,
+} from '@mwcp/share'
 
 import { initConfig } from './config'
 import {
@@ -22,7 +24,6 @@ import {
   ConfigKey,
   DataWithCacheMeta,
   DecoratorExecutorOptions,
-  MetaDataType,
 } from './types'
 
 
@@ -119,25 +120,24 @@ export async function getData<T = unknown>(
 }
 
 export function computerConditionValue(
-  options: DecoratorExecutorOptions,
+  options: DecoratorExecutorOptions<CacheableArgs | CacheEvictArgs>,
 ): boolean | Promise<boolean> {
 
-  const { cacheOptions } = options
+  const { argsFromMethodDecorator: cacheOptions } = options
   assert(cacheOptions, 'cacheOptions is undefined')
 
-  // @ts-ignore
-  const webContext = options.instance[REQUEST_OBJ_CTX_KEY] as WebContext
+  const webContext = options.instance[REQUEST_OBJ_CTX_KEY]
   assert(webContext, 'webContext is undefined')
 
-  switch (typeof cacheOptions.condition) {
+  switch (typeof cacheOptions['condition']) {
     case 'undefined':
       return true
 
     case 'boolean':
-      return cacheOptions.condition
+      return cacheOptions['condition']
 
     case 'function': {
-      const fn = cacheOptions.condition as (...args: unknown[]) => boolean | Promise<boolean>
+      const fn = cacheOptions['condition'] as (...args: unknown[]) => boolean | Promise<boolean>
       return fn.call(
         webContext,
         options.methodArgs,
@@ -146,17 +146,18 @@ export function computerConditionValue(
     }
 
     default:
-      throw new Error(`Invalid condition type: ${typeof cacheOptions.condition}`)
+      throw new Error(`Invalid condition type: ${typeof cacheOptions['condition']}`)
   }
 }
 
 
-export function genDecoratorExecutorOptions(
-  joinPoint: JoinPoint,
-  metaDataOptions: MetaDataType<CacheableArgs | CacheEvictArgs>,
-  config: Config,
-  cacheManager: CacheManager,
-): DecoratorExecutorOptions {
+export function genDecoratorExecutorOptions<TDecoratorArgs extends CacheableArgs | CacheEvictArgs>(
+  options: AroundFactoryOptions<TDecoratorArgs>,
+): DecoratorExecutorOptions<TDecoratorArgs> {
+
+  const { decoratorKey, joinPoint, aopCallbackInputOptions, config, cacheManager } = options
+  assert(config, 'config is undefined')
+  assert(cacheManager, 'cacheManager is undefined')
 
   // eslint-disable-next-line @typescript-eslint/unbound-method
   assert(joinPoint.proceed, 'joinPoint.proceed is undefined')
@@ -169,6 +170,7 @@ export function genDecoratorExecutorOptions(
   assert(funcName, 'funcName is undefined')
 
   const ret = genDecoratorExecutorOptionsCommon({
+    decoratorKey,
     cacheManager,
     config,
     instance,
@@ -176,20 +178,22 @@ export function genDecoratorExecutorOptions(
     method: joinPoint.proceed,
     methodName: funcName,
     methodArgs: joinPoint.args,
-    cacheOptions: metaDataOptions.metadata,
+    argsFromClassDecorator: void 0,
+    argsFromMethodDecorator: aopCallbackInputOptions.metadata,
   })
 
   return ret
 }
 
 
-export function genDecoratorExecutorOptionsCommon(
-  options: DecoratorExecutorOptions,
-): DecoratorExecutorOptions {
+export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | CacheEvictArgs = any>(
+  options: DecoratorExecutorOptions<T>,
+): DecoratorExecutorOptions<T> {
 
   const {
+    decoratorKey,
     cacheManager,
-    cacheOptions: cacheOptionsArgs,
+    argsFromMethodDecorator,
     config: configArgs,
     instance,
     method,
@@ -199,8 +203,7 @@ export function genDecoratorExecutorOptionsCommon(
   assert(instance, 'options.instance is undefined')
   assert(typeof method === 'function', 'options.method is not funtion')
 
-  // @ts-ignore
-  const webContext = instance[REQUEST_OBJ_CTX_KEY] as WebContext
+  const webContext = instance[REQUEST_OBJ_CTX_KEY]
   assert(webContext, 'webContext is undefined')
 
   const config = (configArgs ?? webContext.app.getConfig(ConfigKey.config) ?? initConfig) as Config
@@ -212,7 +215,7 @@ export function genDecoratorExecutorOptionsCommon(
   const cacheOptions = {
     beforeInvocation: false,
     ttl: config.options.ttl,
-    ...cacheOptionsArgs,
+    ...argsFromMethodDecorator,
   }
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   if (typeof cacheOptions.cacheName === 'undefined' || ! cacheOptions.cacheName) {
@@ -221,9 +224,13 @@ export function genDecoratorExecutorOptionsCommon(
     cacheOptions.cacheName = cacheName
   }
 
+  const argsFromClassDecorator = getClassMetadata<T>(decoratorKey, instance)
+
   const ret: DecoratorExecutorOptions = {
+    decoratorKey,
     cacheManager,
-    cacheOptions,
+    argsFromClassDecorator,
+    argsFromMethodDecorator: cacheOptions,
     instance,
     method,
     methodArgs,
@@ -232,20 +239,3 @@ export function genDecoratorExecutorOptionsCommon(
   return ret
 }
 
-export function retrieveMethodDecoratorArgs<T extends CacheableArgs | CacheEvictArgs>(
-  target: unknown,
-  methodName: string,
-): T | undefined {
-
-  const metaDataArr = getClassMetadata(
-    INJECT_CUSTOM_METHOD,
-    target,
-  ) as DecoratorMetaData<T | undefined>[] | undefined
-  if (! metaDataArr?.length) { return }
-
-  for (const row of metaDataArr) {
-    if (row.propertyName === methodName) {
-      return row.metadata
-    }
-  }
-}
