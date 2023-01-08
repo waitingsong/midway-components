@@ -1,8 +1,7 @@
 import { customDecoratorFactory } from '@mwcp/share'
 
+import { METHOD_KEY_CacheEvict } from '../config'
 import { CacheEvictArgs, MethodType } from '../types'
-
-import { methodDecoratorPatcher } from './method.cacheevict'
 
 
 /**
@@ -13,10 +12,10 @@ export function CacheEvict<M extends MethodType | undefined = undefined>(
   options?: Partial<CacheEvictArgs<M>>,
 ): MethodDecorator & ClassDecorator {
 
-  return customDecoratorFactory<CacheEvictArgs<M>, M>(
-    options,
-    void 0, // not support class decorator
-    methodDecoratorPatcher,
-  )
+  return customDecoratorFactory<CacheEvictArgs<M>>({
+    decoratorArgs: options,
+    decoratorKey: METHOD_KEY_CacheEvict,
+    enableClassDecorator: false,
+  })
 }
 

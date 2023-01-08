@@ -1,8 +1,7 @@
 import { customDecoratorFactory } from '@mwcp/share'
 
+import { METHOD_KEY_CachePut } from '../config'
 import { CacheableArgs, MethodType } from '../types'
-
-import { methodDecoratorPatcher } from './method.cacheput'
 
 
 /**
@@ -13,10 +12,11 @@ export function CachePut<M extends MethodType | undefined = undefined>(
   options?: Partial<CacheableArgs<M>>,
 ): MethodDecorator & ClassDecorator {
 
-  return customDecoratorFactory<CacheableArgs<M>, M>(
-    options,
-    void 0,
-    methodDecoratorPatcher,
-  )
+  return customDecoratorFactory<CacheableArgs<M>>({
+    decoratorArgs: options,
+    decoratorKey: METHOD_KEY_CachePut,
+    enableClassDecorator: false,
+  })
+
 }
 

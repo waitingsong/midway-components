@@ -9,15 +9,20 @@ import {
   Inject, ILifeCycle,
   MidwayDecoratorService,
 } from '@midwayjs/core'
-import type { Application } from '@mwcp/share'
+import {
+  Application,
+  RegisterDecoratorHandlerOptions,
+  registerDecoratorHandler,
+} from '@mwcp/share'
 
 import { useComponents } from './imports'
-import { registerMethodHandler } from './lib/cacheable/method.cacheable'
-import { registerMethodHandlerEvict } from './lib/cacheevict/method.cacheevict'
-import { registerMethodHandlerPut } from './lib/cacheput/method.cacheput'
-import { CacheConfig } from './lib/index'
+import { decoratorExecutor } from './lib/cacheable/helper.cacheable'
+import { decoratorExecutor as decoratorExecutorEvict } from './lib/cacheevict/helper.cacheevict'
+import { decoratorExecutor as decoratorExecutorPut } from './lib/cacheput/helper.cacheput'
+import { genDecoratorExecutorOptions } from './lib/helper'
+import { CacheConfig, METHOD_KEY_Cacheable, METHOD_KEY_CacheEvict, METHOD_KEY_CachePut } from './lib/index'
 
-import { ConfigKey } from '~/lib/types'
+import { CacheableArgs, CacheEvictArgs, ConfigKey } from '~/lib/types'
 
 
 @Configuration({
@@ -44,21 +49,36 @@ export class AutoConfiguration implements ILifeCycle {
     const config = this.app.getConfig('cache') as CacheConfig
     assert.deepEqual(config, this.cacheConfig)
 
-    registerMethodHandler(
-      this.decoratorService,
-      this.cacheConfig,
-      this.cacheManager,
-    )
-    registerMethodHandlerEvict(
-      this.decoratorService,
-      this.cacheConfig,
-      this.cacheManager,
-    )
-    registerMethodHandlerPut(
-      this.decoratorService,
-      this.cacheConfig,
-      this.cacheManager,
-    )
+    const base = {
+      decoratorService: this.decoratorService,
+      genDecoratorExecutorOptionsFn: genDecoratorExecutorOptions,
+    }
+    const aroundFactoryOptions = {
+      cacheManager: this.cacheManager,
+      config: this.cacheConfig,
+    }
+
+    const optsCacheable: RegisterDecoratorHandlerOptions<CacheableArgs> = {
+      ...base,
+      decoratorKey: METHOD_KEY_Cacheable,
+      decoratorExecutor,
+    }
+    registerDecoratorHandler(optsCacheable, aroundFactoryOptions)
+
+    const optsCacheEvict: RegisterDecoratorHandlerOptions<CacheEvictArgs> = {
+      ...base,
+      decoratorKey: METHOD_KEY_CacheEvict,
+      decoratorExecutor: decoratorExecutorEvict,
+    }
+    registerDecoratorHandler(optsCacheEvict, aroundFactoryOptions)
+
+    const optsCachePut: RegisterDecoratorHandlerOptions<CacheableArgs> = {
+      ...base,
+      decoratorKey: METHOD_KEY_CachePut,
+      decoratorExecutor: decoratorExecutorPut,
+    }
+    registerDecoratorHandler(optsCachePut, aroundFactoryOptions)
+
   }
 
 }

@@ -2,9 +2,8 @@ import assert from 'assert'
 
 import { CacheManager } from '@midwayjs/cache'
 import { REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
-import type { Context as WebContext } from '@mwcp/share'
 
-import { initCacheableArgs, initConfig, targetMethodNamePrefix } from '../config'
+import { initCacheableArgs, initConfig } from '../config'
 import { processEx } from '../exception'
 import {
   computerConditionValue,
@@ -12,7 +11,6 @@ import {
   GenCacheKeyOptions,
   genDataWithCacheMeta,
   getData,
-  retrieveMethodDecoratorArgs,
   saveData,
 } from '../helper'
 import { CachedResponse, CacheableArgs, DecoratorExecutorOptions } from '../types'
@@ -22,37 +20,23 @@ export async function decoratorExecutor(
   options: DecoratorExecutorOptions<CacheableArgs>,
 ): Promise<unknown> {
 
-  const targetMethodName = `${targetMethodNamePrefix}${options.methodName}`
-  // @ts-ignore
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const targetMethodName2: string | undefined = options.method['targetMethodName']
-  if (targetMethodName2 && targetMethodName2 !== targetMethodName) {
-    // @ts-ignore
-    if (typeof options.instance[targetMethodName] === 'function') {
-      const msg = `[@mwcp/cache] method "${options.methodName}" is also decorated by @cacheable on class with method "${targetMethodName}",
-        it will cause nested calling, code must be refactored to avoid this situation.`
-      console.error(msg)
-      throw new Error(msg)
-    }
-  }
-
-  // @ts-ignore
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const webContext = options.instance[REQUEST_OBJ_CTX_KEY] as WebContext
+  const webContext = options.instance[REQUEST_OBJ_CTX_KEY]
   assert(webContext, 'webContext is undefined')
 
   const cacheManager = options.cacheManager ?? await webContext.requestContext.getAsync(CacheManager)
   assert(cacheManager, 'CacheManager is undefined')
 
-  const { cacheOptions: cacheOptionsArgs } = options
-  const methodMetaDataArgs = retrieveMethodDecoratorArgs<CacheableArgs>(options.instance, options.methodName)
+  const {
+    argsFromClassDecorator,
+    argsFromMethodDecorator,
+  } = options
 
   const cacheOptions: CacheableArgs = {
     ...initCacheableArgs,
-    ...cacheOptionsArgs,
-    ...methodMetaDataArgs,
+    ...argsFromClassDecorator,
+    ...argsFromMethodDecorator,
   }
-  options.cacheOptions = cacheOptions
+  options.argsFromMethodDecorator = cacheOptions
 
   const opts: GenCacheKeyOptions = {
     ...cacheOptions,

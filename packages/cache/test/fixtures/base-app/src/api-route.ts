@@ -17,6 +17,7 @@ export const apiRoute = {
   evictResult: 'evict_result',
   evictResultEvenAndGreaterThanZero: 'evict_result_even_and_greater_than_zero',
   evictGenerics: 'evict_generics',
+  hello: 'hello',
   param: 'param',
   query: 'query',
   simple: 'simple',

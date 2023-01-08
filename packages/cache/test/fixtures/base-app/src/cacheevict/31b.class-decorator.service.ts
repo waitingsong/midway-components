@@ -6,13 +6,15 @@ import { CachedResponse } from '~/lib/types'
 import { Cacheable, CacheEvict } from '~/index'
 
 
+// should equal to the cacheName of ClassDecoratorEvictService.hello()
 export const cacheNameHello = `ClassDecoratorEvictService.hello`
 export const cacheNameSimple = `CacheEvictService.simple`
 
-@Cacheable()
+@Cacheable({
+  condition: true,
+})
 export class ClassDecoratorEvictService  {
 
-  // value of cacheName is cacheNameHello
   async hello(): Promise<CachedResponse<'OK'>> {
     return { value: 'OK' }
   }
