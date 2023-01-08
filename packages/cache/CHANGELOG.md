@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@3.0.0...@mwcp/cache@4.0.0) (2023-01-08)
+
+
+### Features
+
+* **cache:** change DecoratorExecutorOptions['cacheOptions'] ([378742f](https://github.com/waitingsong/midway-components/commit/378742f64e3dd7e49647a97d0a379e842e0da303))
+* **cache:** genDecoratorExecutorOptionsCommon() accepts generics ([4b0a440](https://github.com/waitingsong/midway-components/commit/4b0a440bed0e5dc95a1a4f2958a038cceffba6e5))
+* **cache:** update value of targetMethodNamePrefix ([444433b](https://github.com/waitingsong/midway-components/commit/444433ba7e969a84d00906efc84461a9f56fa98a))
+
+
+
+
+
 # [3.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@2.9.3...@mwcp/cache@3.0.0) (2023-01-05)
 
 
