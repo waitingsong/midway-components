@@ -15,7 +15,7 @@ import type {
   Context as WebContext,
 } from '@mwcp/share'
 
-import { initConfig } from './config'
+import { initCacheableArgs, initCacheEvictArgs, initConfig } from './config'
 import {
   CacheableArgs,
   CachedResponse,
@@ -212,8 +212,9 @@ export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | Cach
   assert(className, 'instance.constructor.name is undefined')
   assert(methodName, 'methodName is undefined')
 
-  const cacheOptions = {
-    beforeInvocation: false,
+  const cacheOptions: CacheableArgs | CacheEvictArgs = {
+    ...initCacheableArgs,
+    ...initCacheEvictArgs,
     ttl: config.options.ttl,
     ...argsFromMethodDecorator,
   }
