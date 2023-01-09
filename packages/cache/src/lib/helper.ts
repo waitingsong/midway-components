@@ -169,7 +169,7 @@ export function genDecoratorExecutorOptions<TDecoratorArgs extends CacheableArgs
   const funcName = joinPoint.methodName as string
   assert(funcName, 'funcName is undefined')
 
-  const ret = genDecoratorExecutorOptionsCommon({
+  const ret = genDecoratorExecutorOptionsCommon<TDecoratorArgs>({
     decoratorKey,
     cacheManager,
     config,
