@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 3.2.0 (2023-01-10)
+
+
+### Features
+
+* **share:** customDecoratorFactory() accepts ignoreIfMethodDecortaorKeys ([02998b3](https://github.com/waitingsong/midway-components/commit/02998b3b8f9c5adc3e6a5bafac9ae0d647e80033))
+* **share:** methodHasDecorated() add parameter expectImpl ([614deff](https://github.com/waitingsong/midway-components/commit/614deff351629b89a0a7e8fc76607c95fee1d28c))
+* **share:** process ignoreIfMethodDecortaorKeys within descriptorDecoratorPatcher() ([1d61c49](https://github.com/waitingsong/midway-components/commit/1d61c490ebc92c0ac40e50f8cd2914251ebd9d15))
+
+
+
+
+
 ## [3.1.1](https://github.com/waitingsong/midway-components/compare/@mwcp/share@3.1.0...@mwcp/share@3.1.1) (2023-01-10)
 
 **Note:** Version bump only for package @mwcp/share
