@@ -79,6 +79,7 @@ export function customDecoratorFactory<TDecoratorArgs extends {}>(
         propertyName,
         descriptor,
         args: decoratorArgs,
+        ignoreIfMethodDecortaorKeys: options.methodIgnoreIfMethodDecortaorKeys,
       })
     }
 

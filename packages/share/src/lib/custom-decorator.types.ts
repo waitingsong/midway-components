@@ -72,6 +72,12 @@ export interface CustomMethodDecoratorOptions<TDecoratorArgs extends {}> {
   propertyName: string
   descriptor: PropertyDescriptor
   decoratedType?: 'method' | 'class'
+  /**
+   * meta.impl will set to false if the method is decorated with the decoratorKey.
+   * @description method has decorators @Transactional and @Cacheable
+   *  pass [METHOD_KEY_Cacheable], then the method decorated by @Cacheable with impl:false.
+   */
+  ignoreIfMethodDecortaorKeys?: string[] | undefined
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -96,6 +102,12 @@ export interface CustomDecoratorFactoryOptions<TDecoratorArgs extends {}> {
    *  then the method will be decorated by @Cacheable but with impl:false.
    */
   classIgnoreIfMethodDecortaorKeys?: string[]
+  /**
+   * meta.impl will set to false if the method is decorated with the decoratorKey.
+   * @description method has decorators @Transactional and @Cacheable
+   *  pass [METHOD_KEY_Cacheable], then the method decorated by @Cacheable with impl:false.
+   */
+  methodIgnoreIfMethodDecortaorKeys?: string[]
 }
 
 
