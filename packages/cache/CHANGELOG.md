@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.1](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@4.0.0...@mwcp/cache@4.0.1) (2023-01-10)
+
+
+### Bug Fixes
+
+* **cache:** types within functions ([9d1ed67](https://github.com/waitingsong/midway-components/commit/9d1ed67b24f28e78f9629104e3cc2a884cfa3d4f))
+
+
+
+
+
 # [4.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@3.0.0...@mwcp/cache@4.0.0) (2023-01-08)
 
 

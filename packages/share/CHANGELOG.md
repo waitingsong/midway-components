@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.1.0](https://github.com/waitingsong/midway-components/compare/@mwcp/share@3.0.0...@mwcp/share@3.1.0) (2023-01-10)
+
+
+### Features
+
+* **share:** change DecoratorExecutorOptionsBase['config'] to required ([8b95dc5](https://github.com/waitingsong/midway-components/commit/8b95dc52b01fe46d5b0204de7c46b8af5c5820e9))
+* **share:** change index signature of DecoratorExecutorOptionsBase to unknonw ([218c981](https://github.com/waitingsong/midway-components/commit/218c981ec89fecc8cbfe2d2d949f4e1cfc3534c1))
+
+
+
+
+
 # 3.0.0 (2023-01-08)
 
 **Note:** Version bump only for package @mwcp/share
