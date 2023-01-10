@@ -27,6 +27,7 @@ export function Cacheable<M extends MethodType | undefined = undefined>(
       METHOD_KEY_CachePut,
       METHOD_KEY_Transactional,
     ],
+    methodIgnoreIfMethodDecortaorKeys: [METHOD_KEY_Transactional],
   })
 }
 
