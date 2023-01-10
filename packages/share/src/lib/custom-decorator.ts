@@ -267,6 +267,7 @@ export function descriptorDecoratorPatcher<TDecoratorArgs extends {}>(
     target,
     propertyName,
     descriptor,
+    ignoreIfMethodDecortaorKeys,
   } = options
 
   assert(descriptor, 'descriptor is undefined')
@@ -279,6 +280,16 @@ export function descriptorDecoratorPatcher<TDecoratorArgs extends {}>(
     metadata,
     propertyName,
     impl: true,
+  }
+  if (ignoreIfMethodDecortaorKeys?.length) {
+    const arr = getClassMetadata<DecoratorMetaData[] | undefined>(INJECT_CUSTOM_METHOD, target)
+    if (arr?.length) {
+      for (const key of ignoreIfMethodDecortaorKeys) {
+        if (methodHasDecorated(key, propertyName, arr, true)) {
+          data.impl = false
+        }
+      }
+    }
   }
 
   attachClassMetadata(
