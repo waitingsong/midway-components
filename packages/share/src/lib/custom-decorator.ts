@@ -94,6 +94,11 @@ export function methodHasDecorated(
   decoratorKey: string, // METHOD_KEY_CacheEvict | METHOD_KEY_Cacheable
   methodName: string,
   metaDataArr: DecoratorMetaData[] | undefined,
+  /**
+   * skip check if value is undefined
+   * @default undefined
+   */
+  expectImpl: boolean | undefined = undefined,
 ): boolean {
 
   assert(decoratorKey)
@@ -103,7 +108,12 @@ export function methodHasDecorated(
 
   for (const row of metaDataArr) {
     if (row.key === decoratorKey && row.propertyName === methodName) {
-      return true
+      if (typeof expectImpl === 'undefined') {
+        return true
+      }
+      else if (row.impl === !! expectImpl) {
+        return true
+      }
     }
   }
 
@@ -270,12 +280,13 @@ export function descriptorDecoratorPatcher<TDecoratorArgs extends {}>(
     propertyName,
     impl: true,
   }
+
   attachClassMetadata(
     INJECT_CUSTOM_METHOD,
     data,
     target,
   )
-  // const foo2 = getClassMetadata(INJECT_CUSTOM_METHOD, target)
+  // const foo2 = getClassMetadata<DecoratorMetaData[] | undefined>(INJECT_CUSTOM_METHOD, target)
   // void foo2
   return descriptor
 }
