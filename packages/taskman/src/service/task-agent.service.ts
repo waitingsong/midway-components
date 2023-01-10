@@ -155,7 +155,7 @@ export class TaskAgentService {
     const reqId = this.koid.idGenerator.toString()
     const stream$ = this.pickTasksWaitToRun(intv$, reqId).pipe(
       takeWhile(({ rows, idx }) => {
-        if ((! rows || ! rows.length) && idx >= minPickTaskCount) {
+        if (! rows?.length && idx >= minPickTaskCount) {
           return false
         }
         return true
@@ -338,7 +338,7 @@ export class TaskAgentService {
     options?: CallTaskOptions,
   ): Promise<undefined> {
 
-    if (! options || ! options.url) {
+    if (! options?.url) {
       // const input: SpanLogInput = {
       //   [TracerTag.logLevel]: 'error',
       //   taskId,

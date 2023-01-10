@@ -46,7 +46,7 @@ export class AliOssSourceManager<SourceName extends string = string>
 
   @Init()
   async init(): Promise<void> {
-    if (! this.sourceConfig || ! this.sourceConfig.dataSource) {
+    if (! this.sourceConfig?.dataSource) {
       this.logger.info('dataSourceConfig is not defined')
       return
     }
