@@ -171,7 +171,7 @@ export function genDecoratorExecutorOptions<TDecoratorArgs extends CacheableArgs
 
   const ret = genDecoratorExecutorOptionsCommon<TDecoratorArgs>({
     decoratorKey,
-    cacheManager,
+    cacheManager: cacheManager as CacheManager,
     config,
     instance,
     // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -230,6 +230,7 @@ export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | Cach
   const ret: DecoratorExecutorOptions = {
     decoratorKey,
     cacheManager,
+    config,
     argsFromClassDecorator,
     argsFromMethodDecorator: cacheOptions,
     instance,

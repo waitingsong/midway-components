@@ -129,6 +129,6 @@ export interface DecoratorExecutorOptions<T extends CacheableArgs | CacheEvictAr
   extends DecoratorExecutorOptionsBase<T> {
 
   cacheManager?: CacheManager | undefined
-  config?: Config | undefined
+  config: Config | undefined
 }
 
