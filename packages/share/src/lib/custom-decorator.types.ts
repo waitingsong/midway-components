@@ -37,7 +37,7 @@ export interface DecoratorExecutorOptionsBase<TDecoratorArgs extends {} = {}> {
   methodArgs: unknown[]
   methodName: string
   methodResult?: unknown
-  [key: string]: any
+  [key: string]: unknown
 }
 
 export type DecoratorExecutorFn<TDecoratorArgs extends {} = {}> = (
@@ -107,7 +107,7 @@ export interface RegisterDecoratorHandlerOptions<TDecoratorArgs extends {} = {}>
   decoratorService: MidwayDecoratorService
   decoratorExecutor: DecoratorExecutorFn<TDecoratorArgs>
   genDecoratorExecutorOptionsFn: GenDecoratorExecutorOptionsFn<TDecoratorArgs>
-  [key: string]: any
+  [key: string]: unknown
 }
 
 export type AroundFactory<TDecoratorArgs extends {} = {}> = (
@@ -116,7 +116,7 @@ export type AroundFactory<TDecoratorArgs extends {} = {}> = (
 
 export interface AroundFactoryOptionsBase {
   config: any
-  [key: string]: any
+  [key: string]: unknown
 }
 export interface AroundFactoryOptions<TDecoratorArgs extends {} = {}>
   extends AroundFactoryOptionsBase {
