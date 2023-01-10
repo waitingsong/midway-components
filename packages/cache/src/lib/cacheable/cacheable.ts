@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { customDecoratorFactory } from '@mwcp/share'
 
-import { METHOD_KEY_Cacheable, METHOD_KEY_CacheEvict, METHOD_KEY_CachePut } from '../config'
+import {
+  METHOD_KEY_Cacheable,
+  METHOD_KEY_CacheEvict,
+  METHOD_KEY_CachePut,
+  METHOD_KEY_Transactional,
+} from '../config'
 import { CacheableArgs, MethodType } from '../types'
 
 
@@ -20,6 +25,7 @@ export function Cacheable<M extends MethodType | undefined = undefined>(
     classIgnoreIfMethodDecortaorKeys: [
       METHOD_KEY_CacheEvict,
       METHOD_KEY_CachePut,
+      METHOD_KEY_Transactional,
     ],
   })
 }
