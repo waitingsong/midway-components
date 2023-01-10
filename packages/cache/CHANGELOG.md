@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@4.0.3...@mwcp/cache@4.1.0) (2023-01-10)
+
+
+### Features
+
+* **cache:** class Decorator Cacheable ignored with METHOD_KEY_Transactional ([05757b4](https://github.com/waitingsong/midway-components/commit/05757b4b353d3662a8d123409abd9d557712f318))
+
+
+
+
+
 ## [4.0.3](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@4.0.2...@mwcp/cache@4.0.3) (2023-01-10)
 
 **Note:** Version bump only for package @mwcp/cache
