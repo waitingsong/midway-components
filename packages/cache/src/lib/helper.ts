@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import assert from 'node:assert'
 
 import type { CacheManager } from '@midwayjs/cache'
@@ -155,7 +150,14 @@ export function genDecoratorExecutorOptions<TDecoratorArgs extends CacheableArgs
   options: AroundFactoryOptions<TDecoratorArgs>,
 ): DecoratorExecutorOptions<TDecoratorArgs> {
 
-  const { decoratorKey, joinPoint, aopCallbackInputOptions, config, cacheManager } = options
+  const {
+    decoratorKey,
+    joinPoint,
+    aopCallbackInputOptions,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    config,
+    cacheManager,
+  } = options
   assert(config, 'config is undefined')
   assert(cacheManager, 'cacheManager is undefined')
 
@@ -172,7 +174,9 @@ export function genDecoratorExecutorOptions<TDecoratorArgs extends CacheableArgs
   const ret = genDecoratorExecutorOptionsCommon<TDecoratorArgs>({
     decoratorKey,
     cacheManager: cacheManager as CacheManager,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     config,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     instance,
     // eslint-disable-next-line @typescript-eslint/unbound-method
     method: joinPoint.proceed,
@@ -186,7 +190,7 @@ export function genDecoratorExecutorOptions<TDecoratorArgs extends CacheableArgs
 }
 
 
-export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | CacheEvictArgs = any>(
+export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | CacheEvictArgs>(
   options: DecoratorExecutorOptions<T>,
 ): DecoratorExecutorOptions<T> {
 
@@ -206,7 +210,11 @@ export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | Cach
   const webContext = instance[REQUEST_OBJ_CTX_KEY]
   assert(webContext, 'webContext is undefined')
 
-  const config = (configArgs ?? webContext.app.getConfig(ConfigKey.config) ?? initConfig) as Config
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const app = webContext.app ?? instance.app
+  assert(app, 'application undefined, may test case not set app to instance')
+  const config = (configArgs ?? app.getConfig(ConfigKey.config) ?? initConfig) as Config
 
   const className = instance.constructor.name
   assert(className, 'instance.constructor.name is undefined')
@@ -238,6 +246,6 @@ export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | Cach
     methodArgs,
     methodName,
   }
-  return ret
+  return ret as DecoratorExecutorOptions<T>
 }
 
