@@ -6,7 +6,7 @@ import {
   REQUEST_OBJ_CTX_KEY,
 } from '@midwayjs/core'
 
-import { Context } from './types.js'
+import { Context } from '../types.js'
 
 
 /** 装饰器所在的实例 */
