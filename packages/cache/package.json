@@ -27,7 +27,7 @@
   "dependencies": {
     "@midwayjs/cache": "^3.9.0",
     "@mwcp/share": "^3.2.1",
-    "@waiting/shared-core": "^20.11.2",
+    "@waiting/shared-core": "^20.11.4",
     "cache-manager": "^5.1.4"
   },
   "devDependencies": {
