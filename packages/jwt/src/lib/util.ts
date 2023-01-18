@@ -1,4 +1,5 @@
 import assert from 'assert'
+import { KeyObject } from 'crypto'
 
 import {
   Msg,
@@ -44,9 +45,15 @@ export function validateSignSecret(input: Config['secret']): void {
   else if (Buffer.isBuffer(input)) {
     assert(input.length > 0, Msg.InvalidInputBuffer)
   }
+  else if (input instanceof KeyObject) {
+    assert(input.type)
+  }
   else if (typeof input === 'object') {
     assert(Object.keys(input).length > 0)
-    assert(typeof input.key === 'string' && input.key.length > 0)
+    const prop = Object.getOwnPropertyDescriptor(input, 'key')
+    assert(prop, 'key property not found')
+    // assert(typeof input.key === 'string' && input.key.length > 0)
+    assert(typeof input.key === 'string' || Buffer.isBuffer(input.key))
     assert(typeof input.passphrase === 'string')
   }
   else {
