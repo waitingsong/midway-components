@@ -21,10 +21,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/prometheus": "^3.10.1",
-    "@midwayjs/redis": "^3.10.1",
-    "@midwayjs/static-file": "^3.10.1",
-    "@midwayjs/validate": "^3.10.1",
+    "@midwayjs/prometheus": "^3.10.3",
+    "@midwayjs/redis": "^3.10.3",
+    "@midwayjs/static-file": "^3.10.3",
+    "@midwayjs/validate": "^3.10.3",
     "@mwcp/ali-oss": "^8.0.7",
     "@mwcp/cache": "^4.2.2",
     "@mwcp/fetch": "^21.1.3",
@@ -38,7 +38,7 @@
     "tsconfig-paths": "4"
   },
   "devDependencies": {
-    "@midwayjs/swagger": "^3.10.1",
+    "@midwayjs/swagger": "^3.10.3",
     "cross-env": "7",
     "kmore-cli": "^53.2.3"
   },

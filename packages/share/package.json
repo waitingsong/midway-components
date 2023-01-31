@@ -28,10 +28,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/bootstrap": "^3.10.1",
-    "@midwayjs/core": "^3.10.1",
-    "@midwayjs/decorator": "^3.10.1",
-    "@midwayjs/koa": "^3.10.1",
+    "@midwayjs/bootstrap": "^3.10.3",
+    "@midwayjs/core": "^3.10.3",
+    "@midwayjs/decorator": "^3.10.3",
+    "@midwayjs/koa": "^3.10.3",
     "@midwayjs/logger": "^2.17.0",
     "@waiting/shared-core": "^20.11.4",
     "tsconfig-paths": "4"
