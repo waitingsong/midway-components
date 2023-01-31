@@ -32,7 +32,10 @@ export function methodHasDecorated(
       if (typeof expectImpl === 'undefined') {
         return true
       }
-      else if (row.impl === !! expectImpl) {
+      else if (typeof row.options === 'undefined') {
+        return false
+      }
+      else if (row.options.impl === !! expectImpl) {
         return true
       }
     }
@@ -156,18 +159,25 @@ export function setImplToFalseIfDecoratedWithBothClassAndMethod(
   const arr = getClassMetadata<DecoratorMetaData[]>(INJECT_CUSTOM_METHOD, target)
   arr.forEach((row) => {
     // if (row.key !== decoratorKey) { return }
-    if (! row.impl) { return }
+    if (typeof row.options === 'undefined') {
+      row.options = {
+        impl: true,
+      }
+    }
+    if (row.options.impl === false) { return }
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (! row.metadata || row.metadata.decoratedType === 'method') { return }
 
     if (instanceMethodHasMethodDecorator(target, decoratorKey, row.propertyName)) {
-      row.impl = false
+      row.options.impl = false
     }
 
     inclusiveKeysSet.forEach((key) => {
       if (instanceMethodHasMethodDecorator(target, key, row.propertyName)) {
-        row.impl = false
+        row.options = {
+          impl: false,
+        }
       }
     })
   })

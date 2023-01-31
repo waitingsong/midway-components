@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import {
   JoinPoint,
+  MethodDecoratorOptions,
   MidwayDecoratorService,
   REQUEST_OBJ_CTX_KEY,
 } from '@midwayjs/core'
@@ -23,7 +24,7 @@ export interface DecoratorMetaData<T = unknown> {
   /** decorator key */
   key: string
   metadata: T & DecoratedTypeMeta
-  impl: boolean
+  options: MethodDecoratorOptions | undefined
 }
 export type Method = (...args: unknown[]) => Promise<unknown>
 export interface DecoratorExecutorOptionsBase<TDecoratorArgs extends {} = {}> {

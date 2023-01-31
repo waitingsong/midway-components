@@ -111,18 +111,21 @@ export function descriptorDecoratorPatcher<TDecoratorArgs extends {}>(
   const metadata = args ?? {}
   Object.defineProperty(metadata, 'decoratedType', { value: decoratedType ?? 'method' })
 
-  const data = {
+  const data: DecoratorMetaData = {
     key: decoratorKey,
     metadata,
     propertyName,
-    impl: true,
+    options: {
+      impl: true,
+    },
   }
   if (ignoreIfMethodDecortaorKeys?.length) {
     const arr = getClassMetadata<DecoratorMetaData[] | undefined>(INJECT_CUSTOM_METHOD, target)
     if (arr?.length) {
       for (const key of ignoreIfMethodDecortaorKeys) {
         if (methodHasDecorated(key, propertyName, arr, true)) {
-          data.impl = false
+          // @ts-expect-error
+          data.options.impl = false
         }
       }
     }
