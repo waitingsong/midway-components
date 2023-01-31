@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.3](https://github.com/waitingsong/midway-components/compare/@mwcp/share@3.2.2...@mwcp/share@3.2.3) (2023-01-31)
+
+
+### Bug Fixes
+
+* **share:** change type DecoratorMetaData ([f0b039b](https://github.com/waitingsong/midway-components/commit/f0b039b85160dc3a093455d3c432aa9be05637bf))
+
+
+
+
+
 ## 3.2.2 (2023-01-18)
 
 **Note:** Version bump only for package @mwcp/share
