@@ -4,8 +4,6 @@ import assert from 'node:assert'
 import {
   DataSourceManager,
   CreateDataSourceInstanceOptions as CreateInstanceOptions,
-} from '@midwayjs/core'
-import {
   Config as _Config,
   Init,
   Inject,
@@ -13,7 +11,7 @@ import {
   Provide,
   Scope,
   ScopeEnum,
-} from '@midwayjs/decorator'
+} from '@midwayjs/core'
 import { ILogger } from '@midwayjs/logger'
 
 import { AliOssComponent } from './component'
