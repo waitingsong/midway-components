@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import { Middleware } from '@midwayjs/decorator'
+import { Middleware } from '@midwayjs/core'
 import { Context, IMiddleware, NextFunction, shouldEnableMiddleware } from '@mwcp/share'
 import { SpanKind, SpanStatus } from '@opentelemetry/api'
 

@@ -2,8 +2,16 @@ import 'tsconfig-paths/register'
 import assert from 'node:assert'
 import { join } from 'node:path'
 
-import { ILifeCycle, MidwayDecoratorService, MidwayInformationService } from '@midwayjs/core'
-import { App, Config, Configuration, Inject, Logger } from '@midwayjs/decorator'
+import {
+  App,
+  Config,
+  Configuration,
+  ILifeCycle,
+  Inject,
+  Logger,
+  MidwayDecoratorService,
+  MidwayInformationService,
+} from '@midwayjs/core'
 import { ILogger } from '@midwayjs/logger'
 import type { Application, IMidwayContainer } from '@mwcp/share'
 import { BasicTracerProvider, BatchSpanProcessor, SimpleSpanProcessor } from '@opentelemetry/sdk-trace-node'

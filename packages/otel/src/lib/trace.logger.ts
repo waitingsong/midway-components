@@ -1,7 +1,7 @@
 import {
   Inject,
   Provide,
-} from '@midwayjs/decorator'
+} from '@midwayjs/core'
 import { ILogger } from '@midwayjs/logger'
 import type { Attributes, Span } from '@opentelemetry/api'
 

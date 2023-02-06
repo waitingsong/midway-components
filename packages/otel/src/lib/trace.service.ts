@@ -5,7 +5,7 @@ import {
   Init,
   Inject,
   Provide,
-} from '@midwayjs/decorator'
+} from '@midwayjs/core'
 import type { Context as WebContext } from '@mwcp/share'
 import {
   Attributes,

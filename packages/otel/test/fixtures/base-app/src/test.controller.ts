@@ -5,7 +5,7 @@ import {
   Controller,
   Get,
   Inject,
-} from '@midwayjs/decorator'
+} from '@midwayjs/core'
 
 import { TraceService } from '~/lib/index'
 import { Trace } from '~/lib/trace.decorator'

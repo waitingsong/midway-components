@@ -3,8 +3,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import assert from 'assert'
 
-import { MidwayDecoratorService, REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
-import { JoinPoint, createCustomMethodDecorator } from '@midwayjs/decorator'
+import {
+  MidwayDecoratorService,
+  REQUEST_OBJ_CTX_KEY,
+  JoinPoint,
+  createCustomMethodDecorator,
+} from '@midwayjs/core'
 import type { Context as WebContext } from '@mwcp/share'
 import {
   Context,
