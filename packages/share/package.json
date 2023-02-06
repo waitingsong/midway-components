@@ -30,6 +30,7 @@
   "dependencies": {
     "@midwayjs/bootstrap": "^3.10.6",
     "@midwayjs/core": "^3.10.6",
+    "@midwayjs/decorator": "^3.10.6",
     "@midwayjs/koa": "^3.10.6",
     "@midwayjs/logger": "^2.17.0",
     "@waiting/shared-core": "^20.12.0",
