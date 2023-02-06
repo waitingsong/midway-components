@@ -2,7 +2,7 @@ import {
   Config as _Config,
   Controller,
   Get,
-} from '@midwayjs/decorator'
+} from '@midwayjs/core'
 
 import { RespData } from '@/root.config'
 import { Context } from '~/index'

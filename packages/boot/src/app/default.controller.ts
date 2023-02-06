@@ -2,7 +2,7 @@ import {
   Config as _Config,
   Controller,
   Get,
-} from '@midwayjs/decorator'
+} from '@midwayjs/core'
 
 import { Cacheable, ConfigKey, Msg } from '../lib/types'
 

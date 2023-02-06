@@ -1,4 +1,4 @@
-import { Middleware } from '@midwayjs/decorator'
+import { Middleware } from '@midwayjs/core'
 import { KoidComponent } from '@mwcp/koid'
 import { HeadersKey, TraceService } from '@mwcp/otel'
 
