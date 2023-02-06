@@ -27,7 +27,7 @@
     "@mwcp/kmore": "^53.2.3",
     "@mwcp/koid": "^11.0.2",
     "@mwcp/otel": "^4.0.7",
-    "@waiting/shared-core": "^20.11.4",
+    "@waiting/shared-core": "^20.12.0",
     "pg": "^8.8.0",
     "pg-native": "^3.0.1",
     "postgres-interval": "^4.0.0"
