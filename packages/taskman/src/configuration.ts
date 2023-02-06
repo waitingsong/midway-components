@@ -1,7 +1,12 @@
 import 'tsconfig-paths/register'
 import { join } from 'node:path'
 
-import { App, Config, Configuration, Inject } from '@midwayjs/decorator'
+import {
+  App,
+  Config,
+  Configuration,
+  Inject,
+} from '@midwayjs/core'
 import { DbConfig, DbSourceManager } from '@mwcp/kmore'
 import type { Application, Context, IMidwayContainer } from '@mwcp/share'
 

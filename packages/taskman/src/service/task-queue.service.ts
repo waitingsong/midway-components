@@ -1,7 +1,7 @@
 import {
   Inject,
   Provide,
-} from '@midwayjs/decorator'
+} from '@midwayjs/core'
 import { mergeDoWithInitData } from '@mwcp/kmore'
 
 import {

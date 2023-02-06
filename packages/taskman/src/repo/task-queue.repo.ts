@@ -6,7 +6,7 @@ import {
   Init,
   Inject,
   Provide,
-} from '@midwayjs/decorator'
+} from '@midwayjs/core'
 import { DbManager, Kmore } from '@mwcp/kmore'
 import type { Application, Context } from '@mwcp/share'
 

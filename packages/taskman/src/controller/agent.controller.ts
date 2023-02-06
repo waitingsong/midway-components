@@ -3,7 +3,7 @@ import {
   Get,
   Inject,
   Param,
-} from '@midwayjs/decorator'
+} from '@midwayjs/core'
 import { TraceService, Attributes } from '@mwcp/otel'
 import type { Context } from '@mwcp/share'
 import { genISO8601String } from '@waiting/shared-core'

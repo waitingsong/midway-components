@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import { Middleware } from '@midwayjs/decorator'
+import { Middleware } from '@midwayjs/core'
 import { Attributes, TraceService } from '@mwcp/otel'
 import type { Context, IMiddleware, NextFunction } from '@mwcp/share'
 import { genISO8601String } from '@waiting/shared-core'
