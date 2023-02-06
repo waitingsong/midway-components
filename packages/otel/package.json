@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/otel",
   "author": "waiting",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "midway component for open telemetry",
   "keywords": [
     "midway",
@@ -27,7 +27,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@mwcp/share": "^3.3.0",
+    "@mwcp/share": "^3.3.1",
     "@opentelemetry/api": "^1.4.0",
     "@opentelemetry/exporter-trace-otlp-grpc": "^0.35.1",
     "@opentelemetry/otlp-grpc-exporter-base": "^0.35.1",
