@@ -65,7 +65,7 @@ export function genCacheKey(options: GenCacheKeyOptions): string {
 export function genDataWithCacheMeta<T>(
   result: CachedResponse<T>,
   options: GenCacheKeyOptions,
-  ttl = initConfig.options.ttl,
+  defaultTTL = initConfig.options.ttl,
 ): DataWithCacheMeta<T> {
 
   const data = result.value
@@ -73,9 +73,10 @@ export function genDataWithCacheMeta<T>(
     return data as DataWithCacheMeta<T>
   }
 
+  const { CacheMetaType } = result
   const value = {
     cacheKey: genCacheKey(options),
-    ttl,
+    ttl: CacheMetaType?.ttl ?? defaultTTL,
   }
   Object.defineProperty(data, ConfigKey.CacheMetaType, {
     configurable: true, // must be true due to multiple set and object reference
