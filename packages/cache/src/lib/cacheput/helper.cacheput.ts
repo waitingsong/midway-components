@@ -3,10 +3,11 @@ import assert from 'assert'
 import { CacheManager } from '@midwayjs/cache'
 import { REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
 
-import { initCachePutArgs, initConfig } from '../config'
+import { initCachePutArgs } from '../config'
 import { processEx } from '../exception'
 import {
   computerConditionValue,
+  computerTTLValue,
   genCacheKey,
   GenCacheKeyOptions,
   genDataWithCacheMeta,
@@ -56,9 +57,9 @@ export async function decoratorExecutor(
     const enableCache = typeof cvalue === 'boolean' ? cvalue : await cvalue
     assert(typeof enableCache === 'boolean', 'condition must return boolean')
 
-    const ttl = cacheOptions.ttl ?? initConfig.options.ttl
+    const ttl = await computerTTLValue(resp as CachedResponse, options)
 
-    if (enableCache) {
+    if (enableCache && ttl > 0) {
       await saveData(cacheManager, cacheKey, resp, ttl)
     }
 

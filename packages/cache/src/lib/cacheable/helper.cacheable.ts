@@ -3,10 +3,11 @@ import assert from 'assert'
 import { CacheManager } from '@midwayjs/cache'
 import { REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
 
-import { initCacheableArgs, initConfig } from '../config'
+import { initCacheableArgs } from '../config'
 import { processEx } from '../exception'
 import {
   computerConditionValue,
+  computerTTLValue,
   genCacheKey,
   GenCacheKeyOptions,
   genDataWithCacheMeta,
@@ -55,17 +56,16 @@ export async function decoratorExecutor(
       ? await getData(cacheManager, cacheKey)
       : void 0
 
-    const ttl = cacheOptions.ttl ?? initConfig.options.ttl
-
     if (typeof cacheResp !== 'undefined') {
-      const resp = genDataWithCacheMeta(cacheResp as CachedResponse, opts, ttl)
+      const resp = genDataWithCacheMeta(cacheResp as CachedResponse, opts)
       return resp
     }
 
     const { method, methodArgs } = options
     const resp = await method(...methodArgs)
 
-    if (enableCache && typeof resp !== 'undefined') {
+    const ttl = await computerTTLValue(resp as CachedResponse, options)
+    if (enableCache && ttl > 0 && typeof resp !== 'undefined') {
       await saveData(cacheManager, cacheKey, resp, ttl)
     }
 

@@ -33,6 +33,18 @@ describe(filename, () => {
       assert(resp)
     })
 
+
+    it(apiRoute.ttlFn, async () => {
+      const { httpRequest } = testConfig
+      const url = `${prefix}/${apiRoute.ttlFn}`
+
+      const resp = await httpRequest
+        .get(url)
+        .expect(200)
+
+      assert(resp)
+    })
+
   })
 })
 

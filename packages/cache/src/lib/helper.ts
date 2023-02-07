@@ -15,6 +15,7 @@ import {
   CacheableArgs,
   CachedResponse,
   CacheEvictArgs,
+  CacheTTLFn,
   Config,
   ConfigKey,
   DataWithCacheMeta,
@@ -146,6 +147,46 @@ export function computerConditionValue(
   }
 }
 
+export function computerTTLValue(
+  result: CachedResponse<unknown>,
+  options: DecoratorExecutorOptions<CacheableArgs>,
+): number | Promise<number> {
+
+  const { argsFromMethodDecorator: cacheOptions } = options
+  assert(cacheOptions, 'cacheOptions is undefined')
+
+  const webContext = options.instance[REQUEST_OBJ_CTX_KEY]
+  assert(webContext, 'webContext is undefined')
+
+  let ttl = 10
+
+  switch (typeof cacheOptions['ttl']) {
+    case 'undefined':
+      ttl = +initConfig.options.ttl
+      break
+
+    case 'number':
+      ttl = Number.isNaN(cacheOptions['ttl']) ? ttl : +cacheOptions['ttl']
+      break
+
+    case 'function': {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const fn = cacheOptions['ttl'] as CacheTTLFn<any>
+      return fn.call(
+        webContext,
+        options.methodArgs,
+        result,
+      )
+    }
+
+    default:
+      throw new Error(`Invalid ttl type: ${typeof cacheOptions['ttl']}`)
+  }
+
+  assert(typeof ttl === 'number', 'ttl is not a number')
+  assert(ttl >= 0, 'ttl must be greater than or equal to 0')
+  return ttl
+}
 
 export function genDecoratorExecutorOptions<TDecoratorArgs extends CacheableArgs | CacheEvictArgs>(
   options: AroundFactoryOptions<TDecoratorArgs>,

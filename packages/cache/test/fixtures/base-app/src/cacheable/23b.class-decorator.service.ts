@@ -5,7 +5,8 @@ import {
 import { CachedResponse } from '~/lib/types'
 import { Cacheable, } from '~/index'
 
-const ttl = 1
+export const ttl = 1
+
 const cacheName = 'foo'
 
 @Cacheable()
@@ -18,6 +19,21 @@ export class ClassDecoratorService  {
   @Cacheable({ ttl: 1 })
   async ttl(): Promise<CachedResponse<'OK'>> {
     return { value: 'OK' }
+  }
+
+  @Cacheable<ClassDecoratorService['ttlFn']>({
+    ttl: ([input]) => input === 'foo' ? ttl : 0,
+  })
+  async ttlFn(input: string): Promise<CachedResponse<'OK'>> {
+    void input
+    return { value: 'OK' }
+  }
+
+  @Cacheable<ClassDecoratorService['ttlFn2']>({
+    ttl: ([input], resp) => input.length && resp && +resp.value > 0 ? +resp.value : 0,
+  })
+  async ttlFn2(input: string): Promise<CachedResponse<number>> {
+    return { value: +input }
   }
 
   @Cacheable({ cacheName, ttl })
