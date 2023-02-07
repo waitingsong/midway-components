@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.5.0](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@4.4.0...@mwcp/cache@4.5.0) (2023-02-07)
+
+
+### Features
+
+* **cache:** type CacheableArgs['ttl'] accepts function (type CacheTTLFn) ([488ca89](https://github.com/waitingsong/midway-components/commit/488ca89d196ad5f6a9502d1e79d4a84d36dd1611))
+
+
+
+
+
 # 4.4.0 (2023-02-07)
 
 
