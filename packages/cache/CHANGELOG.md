@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 4.4.0 (2023-02-07)
+
+
+### Features
+
+* **cache:** pick ttl value from response within genDataWithCacheMeta() ([2814873](https://github.com/waitingsong/midway-components/commit/2814873b3f05cca915c78d4124e8f2205f4e7ec5))
+
+
+
+
+
 ## [4.3.1](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@4.3.0...@mwcp/cache@4.3.1) (2023-02-06)
 
 **Note:** Version bump only for package @mwcp/cache
