@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [31.4.0](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@31.3.5...@mwcp/taskman@31.4.0) (2023-02-08)
+
+
+### Features
+
+* **taskman:** wait 10s before stop when CI ([f25ea5a](https://github.com/waitingsong/midway-components/commit/f25ea5a9d7831be550b06c04a446a8a90072a08c))
+
+
+
+
+
 ## [31.3.5](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@31.3.4...@mwcp/taskman@31.3.5) (2023-02-08)
 
 
