@@ -50,6 +50,9 @@ import {
 } from '../lib/index'
 
 
+const stopped = false
+
+
 @Provide()
 // @Scope(ScopeEnum.Singleton)
 export class TaskAgentService {
@@ -66,18 +69,29 @@ export class TaskAgentService {
   id: string
   maxRunner = 1
   runnerSet = new Set<Subscription>()
+  stopped = false
 
   protected intv$: Observable<number>
 
   @Init()
   async init(): Promise<void> {
+    if (stopped) {
+      this.stopped = true
+      this.logger.warn('taskman svc stopped on init()')
+      return
+    }
+
     this.id = randomUUID()
 
     const pickTaskTimer = this.clientConfig.pickTaskTimer > 0
       ? this.clientConfig.pickTaskTimer
       : initTaskClientConfig.pickTaskTimer
 
-    this.intv$ = timer(500, pickTaskTimer)
+    this.intv$ = timer(500, pickTaskTimer).pipe(
+      takeWhile(() => {
+        return ! this.stopped
+      }),
+    )
     if (this.clientConfig.maxRunner > 1) {
       this.maxRunner = this.clientConfig.maxRunner
     }
@@ -138,6 +152,9 @@ export class TaskAgentService {
 
     const intv$ = this.intv$.pipe(
       takeWhile((idx) => {
+        if (this.stopped) {
+          return false
+        }
         if (idx < maxPickTaskCount) {
           return true
         }
@@ -155,6 +172,9 @@ export class TaskAgentService {
     const reqId = this.koid.idGenerator.toString()
     const stream$ = this.pickTasksWaitToRun(intv$, reqId).pipe(
       takeWhile(({ rows, idx }) => {
+        if (this.stopped) {
+          return false
+        }
         if (! rows?.length && idx >= minPickTaskCount) {
           return false
         }
@@ -210,6 +230,7 @@ export class TaskAgentService {
 
   async stop(ctx?: Context, agentId?: string): Promise<void> {
     void ctx
+    this.stopped = true
     if (agentId && agentId !== this.id) {
       return
     }
@@ -268,6 +289,9 @@ export class TaskAgentService {
     }
 
     const stream$ = intv$.pipe(
+      takeWhile(() => {
+        return ! this.stopped
+      }),
       mergeMap(() => {
         const opts: FetchOptions = {
           ...this.initFetchOptions,

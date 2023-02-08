@@ -306,7 +306,7 @@ export class CommonSetMethodInputData {
   @Rule(taskManValidSchemas.taskId.required())
   id: TaskDTO['taskId']
 
-  @Rule(taskManValidSchemas.text.optional())
+  @Rule(taskManValidSchemas.text)
   msg?: TaskLogDTO['taskLogContent']
 }
 export class SetProgressInputData extends CommonSetMethodInputData {
