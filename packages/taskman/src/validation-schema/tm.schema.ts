@@ -10,7 +10,7 @@ export const taskManValidSchemas = {
   process: RuleType.number().integer().min(1).max(100),
   rows: RuleType.number().integer().min(0).max(1000),
   timeoutIntv: RuleType.string().trim().min(2).max(50),
-  text: RuleType.string().trim().max(1000000),
+  text: RuleType.string().trim().max(1000000).empty(''),
   list: RuleType.array().items(RuleType.string().trim().max(1000000)),
   // taskTypeVerList: RuleType.alternatives().try(
   //   RuleType.array().items(RuleType.number().integer().min(1)),
