@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/taskman",
   "author": "waiting",
-  "version": "31.4.0",
+  "version": "32.0.0",
   "description": "midway component task manager",
   "keywords": [
     "midway",

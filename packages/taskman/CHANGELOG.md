@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [32.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@31.4.0...@mwcp/taskman@32.0.0) (2023-02-08)
+
+
+### Bug Fixes
+
+* **taskman:** taskManValidSchemas.text ([e361394](https://github.com/waitingsong/midway-components/commit/e361394362d6286cb0e8c061d6f836ce5a2c3906))
+
+
+### Features
+
+* **taskman:** ServerURL.setSucceeded change using SetSucceededInputData ([95844da](https://github.com/waitingsong/midway-components/commit/95844daa851c80980143bce1655ec18f4f31a05e))
+
+
+
+
+
 # [31.4.0](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@31.3.5...@mwcp/taskman@31.4.0) (2023-02-08)
 
 
