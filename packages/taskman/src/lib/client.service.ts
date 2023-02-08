@@ -207,7 +207,7 @@ export class ClientService {
     const opts: FetchOptions = {
       ...this.initFetchOptions(id),
       method: 'POST',
-      data: { id, msg: result },
+      data: { id, result },
     }
     opts.url = `${opts.url}${ServerURL.base}/${ServerURL.setSucceeded}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)

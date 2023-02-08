@@ -306,7 +306,7 @@ export class CommonSetMethodInputData {
   @Rule(taskManValidSchemas.taskId.required())
   id: TaskDTO['taskId']
 
-  @Rule(taskManValidSchemas.text)
+  @Rule(taskManValidSchemas.text.optional())
   msg?: TaskLogDTO['taskLogContent']
 }
 export class SetProgressInputData extends CommonSetMethodInputData {
@@ -314,8 +314,13 @@ export class SetProgressInputData extends CommonSetMethodInputData {
   progress: TaskProgressDTO['taskProgress']
 }
 export class SetStateInputData extends CommonSetMethodInputData {
-  @Rule(taskManValidSchemas.text)
+  @Rule(taskManValidSchemas.text.optional())
   state: TaskDTO['taskState']
+}
+
+export class SetSucceededInputData extends CommonSetMethodInputData {
+  @Rule(taskManValidSchemas.json)
+  result: TaskResultDTO['json']
 }
 
 // export interface TaskRunnerState {
