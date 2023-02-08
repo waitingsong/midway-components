@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [31.3.5](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@31.3.4...@mwcp/taskman@31.3.5) (2023-02-08)
+
+
+### Bug Fixes
+
+* **taskman:** taskManValidSchemas.text ([58e5a35](https://github.com/waitingsong/midway-components/commit/58e5a35b275f18de102b88d6c16304bcb90d6066))
+
+
+
+
+
 ## [31.3.4](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@31.3.3...@mwcp/taskman@31.3.4) (2023-02-08)
 
 
