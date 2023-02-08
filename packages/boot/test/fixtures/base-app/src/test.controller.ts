@@ -1,7 +1,7 @@
 import {
   Controller,
   Get,
-} from '@midwayjs/decorator'
+} from '@midwayjs/core'
 
 import { RootClass } from '~/index'
 

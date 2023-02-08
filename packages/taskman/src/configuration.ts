@@ -1,9 +1,17 @@
 import 'tsconfig-paths/register'
 import { join } from 'node:path'
 
-import { App, Config, Configuration, Inject } from '@midwayjs/decorator'
+import {
+  App,
+  Config,
+  Configuration,
+  ILogger,
+  Inject,
+  Logger,
+} from '@midwayjs/core'
 import { DbConfig, DbSourceManager } from '@mwcp/kmore'
 import type { Application, Context, IMidwayContainer } from '@mwcp/share'
+import { sleep } from '@waiting/shared-core'
 
 import { useComponents } from './imports'
 import {
@@ -26,6 +34,8 @@ import { TaskAgentService } from './service/task-agent.service'
 export class AutoConfiguration {
 
   @App() readonly app: Application
+
+  @Logger() logger: ILogger
 
   @Config(ConfigKey.serverConfig) protected readonly serverConfig: TaskServerConfig
   @Config(ConfigKey.clientConfig) protected readonly clientConfig: TaskClientConfig
@@ -53,6 +63,22 @@ export class AutoConfiguration {
 
   }
 
+  async onStop(container: IMidwayContainer): Promise<void> {
+    this.logger.info('[taskman] onStop()')
+    const agentSvc = await container.getAsync(TaskAgentService)
+    await agentSvc.stop()
+
+    const time = 10
+    const CI = !! process.env['CI']
+    const env = this.app.getEnv()
+    if (CI || env !== 'prod') {
+      this.logger.info(`[taskman] onStop() wait ${time}s when CI`)
+      await sleep(time * 1000)
+    }
+    else {
+      await sleep(1 * 1000)
+    }
+  }
 }
 
 export function registerMiddleware(

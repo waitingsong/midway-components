@@ -7,7 +7,7 @@ import {
   Body,
   Post,
   Query,
-} from '@midwayjs/decorator'
+} from '@midwayjs/core'
 import type { Context } from '@mwcp/share'
 
 import {
@@ -25,6 +25,7 @@ import {
   TaskPayloadDTO,
   SetStateInputData,
   PickInitTaskOptions,
+  SetSucceededInputData,
 } from '../lib/index'
 import { TaskQueueService } from '../service/index.service'
 
@@ -85,10 +86,10 @@ export class ServerController {
 
   @Post('/' + ServerURL.setSucceeded)
   async [ServerMethod.setSucceeded](
-    @Body() input: CommonSetMethodInputData,
+    @Body() input: SetSucceededInputData,
   ): Promise<TaskDTO | undefined> {
 
-    const { id, msg: result } = input
+    const { id, result } = input
     const ret = await this.queueSvc.setSucceeded(id, result)
     return ret
   }

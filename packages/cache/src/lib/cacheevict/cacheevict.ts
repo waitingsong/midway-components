@@ -1,6 +1,6 @@
 import { customDecoratorFactory } from '@mwcp/share'
 
-import { METHOD_KEY_CacheEvict } from '../config'
+import { METHOD_KEY_CacheEvict, METHOD_KEY_Transactional } from '../config'
 import { CacheEvictArgs, MethodType } from '../types'
 
 
@@ -16,6 +16,7 @@ export function CacheEvict<M extends MethodType | undefined = undefined>(
     decoratorArgs: options,
     decoratorKey: METHOD_KEY_CacheEvict,
     enableClassDecorator: false,
+    methodIgnoreIfMethodDecortaorKeys: [METHOD_KEY_Transactional],
   })
 }
 

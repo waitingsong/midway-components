@@ -22,4 +22,5 @@ export const apiRoute = {
   query: 'query',
   simple: 'simple',
   ttl: 'ttl',
+  ttlFn: 'ttl_fn',
 }

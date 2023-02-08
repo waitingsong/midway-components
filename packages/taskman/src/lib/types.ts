@@ -270,38 +270,57 @@ export enum TaskState {
 
 export type TaskStatistics = Record<TaskState, number>
 
-export interface PickInitTaskOptions {
+export class PickInitTaskOptions {
   /**
    * @default ASC
    */
+  @Rule(taskManValidSchemas.text)
   ord: 'ASC' | 'DESC'
+
   /**
    * @default 1
    */
+  @Rule(taskManValidSchemas.rows)
   maxRows: number
+
   /**
    * @default '1 week'
    * @description search range
    * `expect_start BETWEERN now() - INTERVAL ${earlierThanTimeIntv} AND now()`
    */
+  @Rule(taskManValidSchemas.text)
   earlierThanTimeIntv: string
+
+  @Rule(taskManValidSchemas.taskTypeId)
   taskTypeId: TaskDTO['taskTypeId']
+
   /**
    * Empty array means no limit
    */
+  @Rule(taskManValidSchemas.taskTypeVerList)
   taskTypeVerList: TaskDTO['taskTypeVer'][] | '*'
 }
 
 
-export interface CommonSetMethodInputData {
+export class CommonSetMethodInputData {
+  @Rule(taskManValidSchemas.taskId.required())
   id: TaskDTO['taskId']
+
+  @Rule(taskManValidSchemas.text.optional())
   msg?: TaskLogDTO['taskLogContent']
 }
-export interface SetProgressInputData extends CommonSetMethodInputData {
+export class SetProgressInputData extends CommonSetMethodInputData {
+  @Rule(taskManValidSchemas.process.required())
   progress: TaskProgressDTO['taskProgress']
 }
-export interface SetStateInputData extends CommonSetMethodInputData {
+export class SetStateInputData extends CommonSetMethodInputData {
+  @Rule(taskManValidSchemas.text.optional())
   state: TaskDTO['taskState']
+}
+
+export class SetSucceededInputData extends CommonSetMethodInputData {
+  @Rule(taskManValidSchemas.json)
+  result: TaskResultDTO['json']
 }
 
 // export interface TaskRunnerState {
@@ -350,10 +369,13 @@ export type InitTaskPayloadDTO = Omit<TaskPayloadDTO, 'taskId' | 'json'>
 export type InitTaskLogDTO = Omit<TaskLogDTO, 'taskLogId'>
 
 export class CreateTaskDTO {
+  @Rule(taskManValidSchemas.taskTypeId.required())
   taskTypeId: number
+
   /**
    * @default 1 default task
    */
+  @Rule(taskManValidSchemas.taskTypeVer.optional())
   taskTypeVer?: number
 
   /**

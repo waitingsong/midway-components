@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import assert from 'node:assert'
 
 import type { CacheManager } from '@midwayjs/cache'
@@ -15,11 +10,12 @@ import type {
   Context as WebContext,
 } from '@mwcp/share'
 
-import { initConfig } from './config'
+import { initCacheableArgs, initCacheEvictArgs, initConfig } from './config'
 import {
   CacheableArgs,
   CachedResponse,
   CacheEvictArgs,
+  CacheTTLFn,
   Config,
   ConfigKey,
   DataWithCacheMeta,
@@ -70,7 +66,7 @@ export function genCacheKey(options: GenCacheKeyOptions): string {
 export function genDataWithCacheMeta<T>(
   result: CachedResponse<T>,
   options: GenCacheKeyOptions,
-  ttl = initConfig.options.ttl,
+  defaultTTL = initConfig.options.ttl,
 ): DataWithCacheMeta<T> {
 
   const data = result.value
@@ -78,9 +74,10 @@ export function genDataWithCacheMeta<T>(
     return data as DataWithCacheMeta<T>
   }
 
+  const { CacheMetaType } = result
   const value = {
     cacheKey: genCacheKey(options),
-    ttl,
+    ttl: CacheMetaType?.ttl ?? defaultTTL,
   }
   Object.defineProperty(data, ConfigKey.CacheMetaType, {
     configurable: true, // must be true due to multiple set and object reference
@@ -150,12 +147,59 @@ export function computerConditionValue(
   }
 }
 
+export function computerTTLValue(
+  result: CachedResponse<unknown>,
+  options: DecoratorExecutorOptions<CacheableArgs>,
+): number | Promise<number> {
+
+  const { argsFromMethodDecorator: cacheOptions } = options
+  assert(cacheOptions, 'cacheOptions is undefined')
+
+  const webContext = options.instance[REQUEST_OBJ_CTX_KEY]
+  assert(webContext, 'webContext is undefined')
+
+  let ttl = 10
+
+  switch (typeof cacheOptions['ttl']) {
+    case 'undefined':
+      ttl = +initConfig.options.ttl
+      break
+
+    case 'number':
+      ttl = Number.isNaN(cacheOptions['ttl']) ? ttl : +cacheOptions['ttl']
+      break
+
+    case 'function': {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const fn = cacheOptions['ttl'] as CacheTTLFn<any>
+      return fn.call(
+        webContext,
+        options.methodArgs,
+        result,
+      )
+    }
+
+    default:
+      throw new Error(`Invalid ttl type: ${typeof cacheOptions['ttl']}`)
+  }
+
+  assert(typeof ttl === 'number', 'ttl is not a number')
+  assert(ttl >= 0, 'ttl must be greater than or equal to 0')
+  return ttl
+}
 
 export function genDecoratorExecutorOptions<TDecoratorArgs extends CacheableArgs | CacheEvictArgs>(
   options: AroundFactoryOptions<TDecoratorArgs>,
 ): DecoratorExecutorOptions<TDecoratorArgs> {
 
-  const { decoratorKey, joinPoint, aopCallbackInputOptions, config, cacheManager } = options
+  const {
+    decoratorKey,
+    joinPoint,
+    aopCallbackInputOptions,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    config,
+    cacheManager,
+  } = options
   assert(config, 'config is undefined')
   assert(cacheManager, 'cacheManager is undefined')
 
@@ -169,10 +213,12 @@ export function genDecoratorExecutorOptions<TDecoratorArgs extends CacheableArgs
   const funcName = joinPoint.methodName as string
   assert(funcName, 'funcName is undefined')
 
-  const ret = genDecoratorExecutorOptionsCommon({
+  const ret = genDecoratorExecutorOptionsCommon<TDecoratorArgs>({
     decoratorKey,
-    cacheManager,
+    cacheManager: cacheManager as CacheManager,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     config,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     instance,
     // eslint-disable-next-line @typescript-eslint/unbound-method
     method: joinPoint.proceed,
@@ -186,7 +232,7 @@ export function genDecoratorExecutorOptions<TDecoratorArgs extends CacheableArgs
 }
 
 
-export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | CacheEvictArgs = any>(
+export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | CacheEvictArgs>(
   options: DecoratorExecutorOptions<T>,
 ): DecoratorExecutorOptions<T> {
 
@@ -206,14 +252,19 @@ export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | Cach
   const webContext = instance[REQUEST_OBJ_CTX_KEY]
   assert(webContext, 'webContext is undefined')
 
-  const config = (configArgs ?? webContext.app.getConfig(ConfigKey.config) ?? initConfig) as Config
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const app = webContext.app ?? instance.app
+  assert(app, 'application undefined, may test case not set app to instance')
+  const config = (configArgs ?? app.getConfig(ConfigKey.config) ?? initConfig) as Config
 
   const className = instance.constructor.name
   assert(className, 'instance.constructor.name is undefined')
   assert(methodName, 'methodName is undefined')
 
-  const cacheOptions = {
-    beforeInvocation: false,
+  const cacheOptions: CacheableArgs | CacheEvictArgs = {
+    ...initCacheableArgs,
+    ...initCacheEvictArgs,
     ttl: config.options.ttl,
     ...argsFromMethodDecorator,
   }
@@ -229,6 +280,7 @@ export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | Cach
   const ret: DecoratorExecutorOptions = {
     decoratorKey,
     cacheManager,
+    config,
     argsFromClassDecorator,
     argsFromMethodDecorator: cacheOptions,
     instance,
@@ -236,6 +288,6 @@ export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | Cach
     methodArgs,
     methodName,
   }
-  return ret
+  return ret as DecoratorExecutorOptions<T>
 }
 

@@ -67,9 +67,20 @@ export type CacheConditionFn<M extends MethodType | undefined = undefined> = (
    * Result of the method. Only for using `@CacheEvict`
    * - value always be undefined if `beforeInvocation`is true
    */
-  result: M extends MethodType ? Awaited<ReturnType<M>> : undefined
+  result: M extends MethodType ? Awaited<ReturnType<M>> | undefined : undefined
 ) => boolean | Promise<boolean>
 
+
+export type CacheTTLFn<M extends MethodType | undefined = undefined> = (
+  this: Context,
+  /** Arguments of the method */
+  args: M extends MethodType ? Parameters<M> : any,
+  /**
+   * Result of the method. Only for using `@CacheEvict`
+   * - value always be undefined if `beforeInvocation`is true
+   */
+  result: M extends MethodType ? Awaited<ReturnType<M>> | undefined : undefined
+) => number | Promise<number>
 
 export interface CacheMetaType {
   readonly cacheKey?: string
@@ -96,7 +107,7 @@ export interface CacheableArgs<M extends MethodType | undefined = undefined> {
    * time to live in seconds
    * @default 10(sec)
    */
-  ttl: number | undefined
+  ttl: number | undefined | CacheTTLFn<M>
   /**
    * Returns false to skip cache
    * @default undefined - always cache
@@ -129,6 +140,6 @@ export interface DecoratorExecutorOptions<T extends CacheableArgs | CacheEvictAr
   extends DecoratorExecutorOptionsBase<T> {
 
   cacheManager?: CacheManager | undefined
-  config?: Config | undefined
+  config: Config | undefined
 }
 

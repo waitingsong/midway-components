@@ -1,6 +1,6 @@
 import { customDecoratorFactory } from '@mwcp/share'
 
-import { METHOD_KEY_CachePut } from '../config'
+import { METHOD_KEY_CachePut, METHOD_KEY_Transactional } from '../config'
 import { CacheableArgs, MethodType } from '../types'
 
 
@@ -16,6 +16,7 @@ export function CachePut<M extends MethodType | undefined = undefined>(
     decoratorArgs: options,
     decoratorKey: METHOD_KEY_CachePut,
     enableClassDecorator: false,
+    methodIgnoreIfMethodDecortaorKeys: [METHOD_KEY_Transactional],
   })
 
 }

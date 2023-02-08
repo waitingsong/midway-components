@@ -3,7 +3,7 @@ import assert from 'assert'
 import {
   Config as _Config,
   Provide,
-} from '@midwayjs/decorator'
+} from '@midwayjs/core'
 
 import { Trace } from '~/lib/trace.decorator'
 import { Config, ConfigKey } from '~/lib/types'

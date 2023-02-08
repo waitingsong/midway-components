@@ -5,7 +5,7 @@ import {
   Inject,
   Logger,
   Post,
-} from '@midwayjs/decorator'
+} from '@midwayjs/core'
 import { ILogger } from '@midwayjs/logger'
 
 import { TraceService } from '../lib/index'

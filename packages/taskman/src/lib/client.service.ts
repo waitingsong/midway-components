@@ -3,7 +3,7 @@ import {
   Config,
   Inject,
   Provide,
-} from '@midwayjs/decorator'
+} from '@midwayjs/core'
 import { ILogger } from '@midwayjs/logger'
 import type { FetchOptions } from '@mwcp/boot'
 import { FetchService, JsonResp, Node_Headers } from '@mwcp/fetch'
@@ -207,7 +207,7 @@ export class ClientService {
     const opts: FetchOptions = {
       ...this.initFetchOptions(id),
       method: 'POST',
-      data: { id, msg: result },
+      data: { id, result },
     }
     opts.url = `${opts.url}${ServerURL.base}/${ServerURL.setSucceeded}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)

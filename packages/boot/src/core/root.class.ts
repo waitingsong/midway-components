@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { IncomingHttpHeaders } from 'http'
 
-import { App, Config, Inject } from '@midwayjs/decorator'
+import { App, Config, Inject } from '@midwayjs/core'
 // import { ILogger as Logger } from '@midwayjs/logger'
 import { AliOssManager } from '@mwcp/ali-oss'
 import {

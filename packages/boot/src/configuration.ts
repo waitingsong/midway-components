@@ -3,13 +3,14 @@ import 'tsconfig-paths/register'
 import assert from 'node:assert/strict'
 import { join } from 'node:path'
 
-import { ILifeCycle, MidwayInformationService } from '@midwayjs/core'
 import {
   App,
   Configuration,
+  ILifeCycle,
   Inject,
   Logger,
-} from '@midwayjs/decorator'
+  MidwayInformationService,
+} from '@midwayjs/core'
 import { IMidwayLogger } from '@midwayjs/logger'
 import { JwtConfigKey, JwtMiddlewareConfig } from '@mwcp/jwt'
 

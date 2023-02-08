@@ -1,11 +1,11 @@
 import assert from 'node:assert'
 import { isProxy } from 'node:util/types'
 
-import { CreateDataSourceInstanceOptions as CreateInstanceOptions } from '@midwayjs/core'
 import {
+  CreateDataSourceInstanceOptions as CreateInstanceOptions,
   Inject,
   Provide,
-} from '@midwayjs/decorator'
+} from '@midwayjs/core'
 import { TraceService } from '@mwcp/otel'
 import type { Context } from '@mwcp/share'
 
