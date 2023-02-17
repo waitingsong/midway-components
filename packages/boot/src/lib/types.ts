@@ -47,6 +47,10 @@ export {
 export {
   KmorePropagationConfig,
   KmoreTransaction as DbTransaction,
+  PageRawType,
+  PageWrapType,
+  PagingMeta,
+  PagingOptions,
   PropagationType,
   Transactional,
 } from '@mwcp/kmore'

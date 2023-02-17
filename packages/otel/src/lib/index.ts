@@ -40,6 +40,7 @@ export {
   JaegerTraceInfoLog,
   JaegerTraceInfoLogField,
   TraceLogType as LogInfo,
+  SpanExporterList,
   SpanHeaderInit,
   SpanStatusOptions,
   TraceError,

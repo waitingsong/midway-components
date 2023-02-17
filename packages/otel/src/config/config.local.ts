@@ -11,7 +11,7 @@ export const otelConfig: Config = {
   enableDefaultRoute: true,
   exporters: [
     // SpanExporterList.jaeger,
-    SpanExporterList.console,
+    // SpanExporterList.console,
     SpanExporterList.otlpGrpc,
   ],
 }

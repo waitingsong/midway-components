@@ -84,6 +84,7 @@ export type CacheTTLFn<M extends MethodType | undefined = undefined> = (
 
 export interface CacheMetaType {
   readonly cacheKey?: string
+  readonly cacheKeyHash?: string | undefined
   readonly ttl?: number
 }
 

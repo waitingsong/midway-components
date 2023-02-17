@@ -1,10 +1,13 @@
 import assert from 'node:assert'
+import { createHash } from 'node:crypto'
 
 import type { CacheManager } from '@midwayjs/cache'
 import {
+  // INJECT_CUSTOM_METHOD,
   REQUEST_OBJ_CTX_KEY,
   getClassMetadata,
 } from '@midwayjs/core'
+import type { TraceService } from '@mwcp/otel'
 import type {
   AroundFactoryOptions,
   Context as WebContext,
@@ -63,6 +66,29 @@ export function genCacheKey(options: GenCacheKeyOptions): string {
   }
 }
 
+export interface HashedCacheKey {
+  cacheKey: string
+  cacheKeyHash: string | undefined
+}
+export function hashCacheKey(key: string, activeLength = 48): HashedCacheKey {
+  assert(key && key.length > 0, 'key is empty')
+
+  const ret: HashedCacheKey = { cacheKey: key, cacheKeyHash: void 0 }
+  if (key.length <= activeLength) {
+    return ret
+  }
+  const md5 = createHash('md5')
+  const hash = md5.update(key).digest('hex')
+
+  const str = key.split('.').at(0)
+  const input = str && str.length < 16
+    ? str
+    : key.slice(0, 15)
+
+  ret.cacheKeyHash = `${input}.${hash}`
+  return ret
+}
+
 export function genDataWithCacheMeta<T>(
   result: CachedResponse<T>,
   options: GenCacheKeyOptions,
@@ -94,26 +120,40 @@ export async function saveData<T>(
   ttl: number,
 ): Promise<CachedResponse<T>> {
 
+  const keys = hashCacheKey(cacheKey)
+
   const data: CachedResponse<T> = {
     CacheMetaType: {
-      cacheKey,
+      ...keys,
       ttl,
     },
     value: result,
   }
-  return cacheManager.set(cacheKey, data, { ttl })
+  return cacheManager.set(keys.cacheKeyHash ?? keys.cacheKey, data, { ttl })
 }
 
 export async function deleteData(cacheManager: CacheManager, cacheKey: string): Promise<void> {
-  await cacheManager.del(cacheKey)
+  const keys = hashCacheKey(cacheKey)
+  await cacheManager.del(keys.cacheKeyHash ?? keys.cacheKey)
 }
 
 export async function getData<T = unknown>(
   cacheManager: CacheManager,
   cacheKey: string,
+  traceService?: TraceService,
 ): Promise<CachedResponse<T>> {
 
-  return cacheManager.get(cacheKey)
+  const keys = hashCacheKey(cacheKey)
+
+  const ret = await cacheManager.get(keys.cacheKeyHash ?? keys.cacheKey) as CachedResponse<T> | undefined
+  if (traceService?.isStarted && ret?.CacheMetaType) {
+    traceService.addEvent(void 0, {
+      event: 'cache.hit',
+      library: '@mwcp/cache',
+      CacheMetaType: JSON.stringify(ret.CacheMetaType),
+    })
+  }
+  return ret as CachedResponse<T>
 }
 
 export function computerConditionValue(
@@ -262,10 +302,16 @@ export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | Cach
   assert(className, 'instance.constructor.name is undefined')
   assert(methodName, 'methodName is undefined')
 
+
+  const argsFromClassDecorator = getClassMetadata<T>(decoratorKey, instance)
+  // const arr = getClassMetadata<T>(INJECT_CUSTOM_METHOD, instance)
+  // void arr
+
   const cacheOptions: CacheableArgs | CacheEvictArgs = {
     ...initCacheableArgs,
     ...initCacheEvictArgs,
     ttl: config.options.ttl,
+    ...argsFromClassDecorator,
     ...argsFromMethodDecorator,
   }
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -274,8 +320,6 @@ export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | Cach
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     cacheOptions.cacheName = cacheName
   }
-
-  const argsFromClassDecorator = getClassMetadata<T>(decoratorKey, instance)
 
   const ret: DecoratorExecutorOptions = {
     decoratorKey,
