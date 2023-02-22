@@ -2,6 +2,7 @@ import assert from 'assert'
 
 import { CacheManager } from '@midwayjs/cache'
 import { REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
+import { TraceService } from '@mwcp/otel'
 
 import { initCacheableArgs } from '../config'
 import { processEx } from '../exception'
@@ -52,9 +53,14 @@ export async function decoratorExecutor(
     const enableCache = typeof tmp === 'boolean' ? tmp : await tmp
     assert(typeof enableCache === 'boolean', 'condition must return boolean')
 
-    const cacheResp = enableCache
-      ? await getData(cacheManager, cacheKey)
-      : void 0
+    // const cacheResp = enableCache
+    //   ? await getData(cacheManager, cacheKey)
+    //   : void 0
+    let cacheResp: CachedResponse | undefined = void 0
+    if (enableCache) {
+      const traceService = await webContext.requestContext.getAsync(TraceService)
+      cacheResp = await getData(cacheManager, cacheKey, traceService)
+    }
 
     if (typeof cacheResp !== 'undefined') {
       const resp = genDataWithCacheMeta(cacheResp as CachedResponse, opts)

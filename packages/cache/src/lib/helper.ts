@@ -5,6 +5,7 @@ import {
   REQUEST_OBJ_CTX_KEY,
   getClassMetadata,
 } from '@midwayjs/core'
+import type { TraceService } from '@mwcp/otel'
 import type {
   AroundFactoryOptions,
   Context as WebContext,
@@ -111,9 +112,18 @@ export async function deleteData(cacheManager: CacheManager, cacheKey: string): 
 export async function getData<T = unknown>(
   cacheManager: CacheManager,
   cacheKey: string,
+  traceService?: TraceService,
 ): Promise<CachedResponse<T>> {
 
-  return cacheManager.get(cacheKey)
+  const ret = await cacheManager.get(cacheKey) as CachedResponse<T> | undefined
+  if (traceService?.isStarted && ret?.CacheMetaType) {
+    traceService.addEvent(void 0, {
+      event: 'cache.hit',
+      library: '@mwcp/cache',
+      CacheMetaType: JSON.stringify(ret.CacheMetaType),
+    })
+  }
+  return ret as CachedResponse<T>
 }
 
 export function computerConditionValue(
