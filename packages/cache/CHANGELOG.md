@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@4.6.1...@mwcp/cache@5.0.0) (2023-02-27)
+
+
+### Features
+
+* **cache:** hashCacheKey() ([8d1e406](https://github.com/waitingsong/midway-components/commit/8d1e40693833f0742613e87b8b2f7025beec127a))
+* **cache:** using cacheKeyHash if available ([e04d3d3](https://github.com/waitingsong/midway-components/commit/e04d3d38ff1499957f86d0568188cbc521b20d58))
+
+
+
+
+
 ## 4.6.1 (2023-02-27)
 
 
