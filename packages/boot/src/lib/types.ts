@@ -47,6 +47,8 @@ export {
 export {
   KmorePropagationConfig,
   KmoreTransaction as DbTransaction,
+  PageRawType,
+  PageWrapType,
   PagingMeta,
   PagingOptions,
   PropagationType,
