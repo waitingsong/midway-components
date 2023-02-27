@@ -1,4 +1,5 @@
 import assert from 'node:assert'
+import { createHash } from 'node:crypto'
 
 import type { CacheManager } from '@midwayjs/cache'
 import {
@@ -24,6 +25,8 @@ import {
   DecoratorExecutorOptions,
 } from './types'
 
+
+const md5 = createHash('md5')
 
 export interface GenCacheKeyOptions extends Omit<CacheableArgs, 'ttl'> {
   webContext: WebContext
@@ -63,6 +66,28 @@ export function genCacheKey(options: GenCacheKeyOptions): string {
     default:
       return cacheName
   }
+}
+
+export interface HashedCacheKey {
+  cacheKey: string
+  cacheKeyHash: string | undefined
+}
+export function hashCacheKey(key: string, activeLength = 48): HashedCacheKey {
+  assert(key && key.length > 0, 'key is empty')
+
+  const ret: HashedCacheKey = { cacheKey: key, cacheKeyHash: void 0 }
+  if (key.length <= activeLength) {
+    return ret
+  }
+  const hash = md5.update(key).digest('hex')
+
+  const str = key.split('.').at(0)
+  const input = str && str.length < 16
+    ? str
+    : key.slice(0, 15)
+
+  ret.cacheKeyHash = `${input}.${hash}`
+  return ret
 }
 
 export function genDataWithCacheMeta<T>(
