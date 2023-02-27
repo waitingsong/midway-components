@@ -26,8 +26,6 @@ import {
 } from './types'
 
 
-const md5 = createHash('md5')
-
 export interface GenCacheKeyOptions extends Omit<CacheableArgs, 'ttl'> {
   webContext: WebContext
   methodArgs: unknown[]
@@ -79,6 +77,7 @@ export function hashCacheKey(key: string, activeLength = 48): HashedCacheKey {
   if (key.length <= activeLength) {
     return ret
   }
+  const md5 = createHash('md5')
   const hash = md5.update(key).digest('hex')
 
   const str = key.split('.').at(0)
@@ -121,18 +120,21 @@ export async function saveData<T>(
   ttl: number,
 ): Promise<CachedResponse<T>> {
 
+  const keys = hashCacheKey(cacheKey)
+
   const data: CachedResponse<T> = {
     CacheMetaType: {
-      cacheKey,
+      ...keys,
       ttl,
     },
     value: result,
   }
-  return cacheManager.set(cacheKey, data, { ttl })
+  return cacheManager.set(keys.cacheKeyHash ?? keys.cacheKey, data, { ttl })
 }
 
 export async function deleteData(cacheManager: CacheManager, cacheKey: string): Promise<void> {
-  await cacheManager.del(cacheKey)
+  const keys = hashCacheKey(cacheKey)
+  await cacheManager.del(keys.cacheKeyHash ?? keys.cacheKey)
 }
 
 export async function getData<T = unknown>(
@@ -141,7 +143,9 @@ export async function getData<T = unknown>(
   traceService?: TraceService,
 ): Promise<CachedResponse<T>> {
 
-  const ret = await cacheManager.get(cacheKey) as CachedResponse<T> | undefined
+  const keys = hashCacheKey(cacheKey)
+
+  const ret = await cacheManager.get(keys.cacheKeyHash ?? keys.cacheKey) as CachedResponse<T> | undefined
   if (traceService?.isStarted && ret?.CacheMetaType) {
     traceService.addEvent(void 0, {
       event: 'cache.hit',
