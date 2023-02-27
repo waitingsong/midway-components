@@ -2,6 +2,7 @@ import assert from 'node:assert'
 
 import type { CacheManager } from '@midwayjs/cache'
 import {
+  // INJECT_CUSTOM_METHOD,
   REQUEST_OBJ_CTX_KEY,
   getClassMetadata,
 } from '@midwayjs/core'
@@ -272,10 +273,16 @@ export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | Cach
   assert(className, 'instance.constructor.name is undefined')
   assert(methodName, 'methodName is undefined')
 
+
+  const argsFromClassDecorator = getClassMetadata<T>(decoratorKey, instance)
+  // const arr = getClassMetadata<T>(INJECT_CUSTOM_METHOD, instance)
+  // void arr
+
   const cacheOptions: CacheableArgs | CacheEvictArgs = {
     ...initCacheableArgs,
     ...initCacheEvictArgs,
     ttl: config.options.ttl,
+    ...argsFromClassDecorator,
     ...argsFromMethodDecorator,
   }
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -284,8 +291,6 @@ export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | Cach
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     cacheOptions.cacheName = cacheName
   }
-
-  const argsFromClassDecorator = getClassMetadata<T>(decoratorKey, instance)
 
   const ret: DecoratorExecutorOptions = {
     decoratorKey,
