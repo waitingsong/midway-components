@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [32.0.6](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@32.0.5...@mwcp/taskman@32.0.6) (2023-02-27)
+
+**Note:** Version bump only for package @mwcp/taskman
+
+
+
+
+
 ## [32.0.5](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@32.0.4...@mwcp/taskman@32.0.5) (2023-02-27)
 
 **Note:** Version bump only for package @mwcp/taskman

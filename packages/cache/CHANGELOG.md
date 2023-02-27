@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 4.6.1 (2023-02-27)
+
+
+### Bug Fixes
+
+* **cache:** argsFromClassDecorator not be merged ([dd919aa](https://github.com/waitingsong/midway-components/commit/dd919aa235259d03968f393f4e2137a001dd9759))
+
+
+
+
+
 # 4.6.0 (2023-02-22)
 
 
