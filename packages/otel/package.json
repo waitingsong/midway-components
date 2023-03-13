@@ -31,7 +31,7 @@
     "@opentelemetry/api": "^1.4.0",
     "@opentelemetry/exporter-trace-otlp-grpc": "^0.35.1",
     "@opentelemetry/otlp-grpc-exporter-base": "^0.35.1",
-    "@opentelemetry/sdk-node": "^0.35.1",
+    "@opentelemetry/sdk-node": "^0.36.0",
     "@opentelemetry/sdk-trace-node": "^1.9.1",
     "@waiting/shared-core": "^20.12.0"
   },
