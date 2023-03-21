@@ -6,7 +6,7 @@ import {
 } from '@midwayjs/core'
 import { ILogger } from '@midwayjs/logger'
 import type { FetchOptions } from '@mwcp/boot'
-import { FetchService, JsonResp, Node_Headers } from '@mwcp/fetch'
+import { FetchService, JsonResp, Headers, pickUrlStrFromRequestInfo } from '@mwcp/fetch'
 import { TraceService } from '@mwcp/otel'
 import type { Context } from '@mwcp/share'
 import { retrieveHeadersItem } from '@waiting/shared-core'
@@ -73,7 +73,8 @@ export class ClientService {
     if (! opts.url) {
       throw new Error('host of opts.url empty')
     }
-    opts.url = `${opts.url}${ServerURL.base}/${ServerURL.create}`
+    const url = pickUrlStrFromRequestInfo(opts.url)
+    opts.url = `${url}${ServerURL.base}/${ServerURL.create}`
 
     const res = await this.fetch.fetch<JsonResp<TaskDTO>>(opts)
     if (res.code) {
@@ -91,7 +92,7 @@ export class ClientService {
   async [ServerMethod.retrieveTask](taskId?: string): Promise<TaskDTO | undefined> {
     let id = taskId
     if (! id) {
-      // const headers = new Node_Headers(this.ctx.request.headers)
+      // const headers = new Headers(this.ctx.request.headers)
       const key = this.config.headerKeyTaskId ? this.config.headerKeyTaskId : 'x-task-id'
       const val = this.ctx.request.headers[key]
       if (typeof val !== 'string') {
@@ -128,7 +129,8 @@ export class ClientService {
       opts.headers = headers
     }
 
-    opts.url = `${opts.url}${ServerURL.base}/${ServerURL.getInfo}`
+    const url = pickUrlStrFromRequestInfo(opts.url)
+    opts.url = `${url}${ServerURL.base}/${ServerURL.getInfo}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO>>(opts)
     if (res.code) {
       return
@@ -147,7 +149,8 @@ export class ClientService {
       data: { id, msg },
     }
 
-    opts.url = `${opts.url}${ServerURL.base}/${ServerURL.setRunning}`
+    const url = pickUrlStrFromRequestInfo(opts.url)
+    opts.url = `${url}${ServerURL.base}/${ServerURL.setRunning}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
     if (res.code) {
       return
@@ -169,7 +172,8 @@ export class ClientService {
       data: { id, msg },
     }
 
-    opts.url = `${opts.url}${ServerURL.base}/${ServerURL.setCancelled}`
+    const url = pickUrlStrFromRequestInfo(opts.url)
+    opts.url = `${url}${ServerURL.base}/${ServerURL.setCancelled}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
     if (res.code) {
       return
@@ -189,7 +193,9 @@ export class ClientService {
       method: 'POST',
       data: { id, msg },
     }
-    opts.url = `${opts.url}${ServerURL.base}/${ServerURL.setFailed}`
+
+    const url = pickUrlStrFromRequestInfo(opts.url)
+    opts.url = `${url}${ServerURL.base}/${ServerURL.setFailed}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
     if (res.code) {
       return
@@ -209,7 +215,9 @@ export class ClientService {
       method: 'POST',
       data: { id, result },
     }
-    opts.url = `${opts.url}${ServerURL.base}/${ServerURL.setSucceeded}`
+
+    const url = pickUrlStrFromRequestInfo(opts.url)
+    opts.url = `${url}${ServerURL.base}/${ServerURL.setSucceeded}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO | undefined>>(opts)
     if (res.code) {
       return
@@ -226,7 +234,9 @@ export class ClientService {
       method: 'GET',
       data: { id },
     }
-    opts.url = `${opts.url}${ServerURL.base}/${ServerURL.getProgress}`
+
+    const url = pickUrlStrFromRequestInfo(opts.url)
+    opts.url = `${url}${ServerURL.base}/${ServerURL.getProgress}`
     const res = await this.fetch.fetch<JsonResp<TaskProgressDetailDTO | undefined>>(opts)
     if (res.code) {
       return
@@ -243,7 +253,9 @@ export class ClientService {
       method: 'GET',
       data: { id },
     }
-    opts.url = `${opts.url}${ServerURL.base}/${ServerURL.getResult}`
+
+    const url = pickUrlStrFromRequestInfo(opts.url)
+    opts.url = `${url}${ServerURL.base}/${ServerURL.getResult}`
     const res = await this.fetch.fetch<JsonResp<TaskResultDTO | undefined>>(opts)
     if (res.code) {
       return
@@ -267,7 +279,9 @@ export class ClientService {
       method: 'POST',
       data,
     }
-    opts.url = `${opts.url}${ServerURL.base}/${ServerURL.setProgress}`
+
+    const url = pickUrlStrFromRequestInfo(opts.url)
+    opts.url = `${url}${ServerURL.base}/${ServerURL.setProgress}`
     const res = await this.fetch.fetch<JsonResp<TaskDTO>>(opts)
     if (res.code) {
       return
@@ -346,7 +360,7 @@ export class ClientService {
   }
 
   protected processPostHeaders(input: CreateTaskOptions): Headers {
-    const headers = new Node_Headers(input.headers)
+    const headers = new Headers(input.headers)
     if (! input.headers) {
       const arr = this.config.transferHeaders?.length
         ? this.config.transferHeaders
@@ -363,7 +377,7 @@ export class ClientService {
   }
 
   protected retrieveHeadersFromContext(): Headers {
-    const headers = new Node_Headers()
+    const headers = new Headers()
     const arr = this.config.transferHeaders?.length
       ? this.config.transferHeaders
       : initTaskClientConfig.transferHeaders

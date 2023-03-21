@@ -15,7 +15,8 @@ import { FetchOptions } from '@mwcp/boot'
 import {
   FetchService,
   JsonResp,
-  Node_Headers,
+  Headers,
+  pickUrlStrFromRequestInfo,
 } from '@mwcp/fetch'
 import { KoidComponent } from '@mwcp/koid'
 import { Attributes, AttrNames, HeadersKey, Span, SpanStatusCode, TraceService } from '@mwcp/otel'
@@ -299,7 +300,7 @@ export class TaskAgentService {
           url: `${this.serverConfig.host}${ServerURL.base}/${ServerURL.pickTasksWaitToRun}`,
           data,
         }
-        const headers = new Node_Headers(opts.headers)
+        const headers = new Headers(opts.headers)
         opts.headers = headers
         if (! opts.headers.has(HeadersKey.reqId)) {
           opts.headers.set(HeadersKey.reqId, reqId)
@@ -340,7 +341,7 @@ export class TaskAgentService {
         id: taskId,
       },
     }
-    const headers = new Node_Headers(opts.headers)
+    const headers = new Headers(opts.headers)
     opts.headers = headers
     if (! opts.headers.has(HeadersKey.reqId)) {
       opts.headers.set(HeadersKey.reqId, reqId)
@@ -378,7 +379,7 @@ export class TaskAgentService {
       ...this.initFetchOptions,
       ...options,
     }
-    const headers = new Node_Headers(opts.headers)
+    const headers = new Headers(opts.headers)
     const key: string = this.serverConfig.headerKey ? this.serverConfig.headerKey : 'x-task-agent'
     headers.set(key, '1')
     const taskIdKey = this.serverConfig.headerKeyTaskId ? this.serverConfig.headerKeyTaskId : 'x-task-id'
@@ -407,11 +408,12 @@ export class TaskAgentService {
 
     opts.headers = headers
 
-    if (opts.url.includes(`${ClientURL.base}/${ClientURL.hello}`)) {
+    const url = pickUrlStrFromRequestInfo(opts.url)
+    if (url.includes(`${ClientURL.base}/${ClientURL.hello}`)) {
       opts.dataType = 'text'
     }
 
-    if (! opts.url.startsWith('http')) {
+    if (! url.startsWith('http')) {
       // const input: SpanLogInput = {
       //   [TracerTag.logLevel]: 'error',
       //   taskId,
@@ -468,7 +470,7 @@ export class TaskAgentService {
         msg: JSON.stringify(msg),
       },
     }
-    const headers = new Node_Headers(opts.headers)
+    const headers = new Headers(opts.headers)
     opts.headers = headers
     if (! headers.has(HeadersKey.reqId)) {
       headers.set(HeadersKey.reqId, reqId)
@@ -531,7 +533,7 @@ export class TaskAgentService {
         msg: JSON.stringify(msg),
       },
     }
-    const headers = new Node_Headers(opts.headers)
+    const headers = new Headers(opts.headers)
     opts.headers = headers
     if (! headers.has(HeadersKey.reqId)) {
       headers.set(HeadersKey.reqId, reqId)
