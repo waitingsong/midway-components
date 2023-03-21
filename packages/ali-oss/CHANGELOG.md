@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 9.0.0 (2023-03-21)
+
+**Note:** Version bump only for package @mwcp/ali-oss
+
+
+
+
+
 ## [8.1.3](https://github.com/waitingsong/midway-components/compare/@mwcp/ali-oss@8.1.2...@mwcp/ali-oss@8.1.3) (2023-02-20)
 
 **Note:** Version bump only for package @mwcp/ali-oss
