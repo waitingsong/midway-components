@@ -38,6 +38,15 @@ export {
 } from '@mwcp/cache'
 
 export {
+  FormData,
+  Headers,
+  Response,
+  ResponseData,
+  RequestInfo,
+  RequestInit,
+} from '@mwcp/fetch'
+
+export {
   JsonObject,
   JsonResp,
   JsonType,
