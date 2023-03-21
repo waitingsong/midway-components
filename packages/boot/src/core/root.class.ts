@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { IncomingHttpHeaders } from 'http'
 
 import { App, Config, Inject } from '@midwayjs/core'
 // import { ILogger as Logger } from '@midwayjs/logger'
 import { AliOssManager } from '@mwcp/ali-oss'
 import {
-  Node_Headers,
-  FetchResponse,
   FetchService,
+  Headers,
+  HeadersInit,
+  ResponseData,
 } from '@mwcp/fetch'
 import { JwtComponent } from '@mwcp/jwt'
 import { KoidComponent } from '@mwcp/koid'
@@ -93,7 +93,7 @@ export class RootClass {
    * 请求和返回类型都是 JSON 格式，
    * 返回类型为 `JsonResp` 结构
    */
-  fetch<T extends FetchResponse = any>(
+  fetch<T extends ResponseData = any>(
     options: FetchOptions,
   ): Promise<JsonResp<OverwriteAnyToUnknown<T>>> {
 
@@ -109,7 +109,7 @@ export class RootClass {
    * 请求和返回类型都是 JSON 格式，
    * 返回类型为 `JsonResp` 结构
    */
-  getJson<T extends FetchResponse = any>(
+  getJson<T extends ResponseData = any>(
     url: string,
     options?: FetchOptions,
   ): Promise<JsonResp<OverwriteAnyToUnknown<T>>> {
@@ -126,7 +126,7 @@ export class RootClass {
    * 请求和返回类型都是 JSON 格式，
    * 返回类型为 `JsonResp` 结构
    */
-  postJson<T extends FetchResponse = any>(
+  postJson<T extends ResponseData = any>(
     url: string,
     options?: FetchOptions,
   ): Promise<JsonResp<OverwriteAnyToUnknown<T>>> {
@@ -218,12 +218,12 @@ export class RootClass {
    *   - content-length
    */
   genFetchHeaders(
-    headers?: HeadersInit | IncomingHttpHeaders | undefined,
+    headers?: HeadersInit | undefined,
     excludes: string[] = ['host', 'connection', 'content-length'],
   ): Headers {
 
-    const ret = new Node_Headers(this.initFetchOptions.headers)
-    const inputHeaders = new Node_Headers(headers as HeadersInit)
+    const ret = new Headers(this.initFetchOptions.headers)
+    const inputHeaders = new Headers(headers)
 
     inputHeaders.forEach((val, key) => {
       if (Array.isArray(excludes) && excludes.includes(key)) {
