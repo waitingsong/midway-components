@@ -375,6 +375,7 @@ export class TaskAgentService {
       return
     }
 
+    // @ts-ignore
     const opts: FetchOptions = {
       ...this.initFetchOptions,
       ...options,
