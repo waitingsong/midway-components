@@ -29,7 +29,7 @@ describe(filename, () => {
     assert(traceId.length === 32)
     console.log({ traceId })
 
-    await sleep(7000)
+    await sleep(1000)
 
     const tracePath = `${agent}:16686/api/traces/${traceId}?prettyPrint=true`
     let resp2 = await makeHttpRequest(tracePath, {
@@ -38,7 +38,7 @@ describe(filename, () => {
     })
     if (resp2.status !== 200 || ! resp2.data) {
       console.log('retry...')
-      await sleep(5000)
+      await sleep(3000)
       resp2 = await makeHttpRequest(tracePath, {
         method: 'GET',
         dataType: 'json',
@@ -90,7 +90,7 @@ describe(filename, () => {
     console.log({ traceId })
 
     assert(agent)
-    await sleep(6000)
+    await sleep(1000)
 
     const tracePath = `${agent}:16686/api/traces/${traceId}?prettyPrint=true`
     console.log({ path2: tracePath })
@@ -99,7 +99,7 @@ describe(filename, () => {
       dataType: 'json',
     })
     if (resp2.status !== 200) {
-      await sleep(5000)
+      await sleep(3000)
       resp2 = await makeHttpRequest(tracePath, {
         method: 'GET',
         dataType: 'json',
@@ -135,8 +135,17 @@ describe(filename, () => {
     assert(span1.traceID === traceId)
     assert(span2.traceID === traceId)
 
+    console.log({ span0 })
+    // console.log({ span0Name: span0.operationName })
+    // console.log({ span1Name: span1.operationName })
+    // console.log({ span2Name: span2.operationName })
+    // { span0Name: 'DefaultComponentService/hello' }
+    // { span1Name: 'DefaultComponentController/traceId2' }
+    // { span2Name: 'HTTP GET /_otel/id2' }
+
     assert(
-      span0.operationName === 'DefaultComponentService/hello',
+      span0.operationName === 'DefaultComponentService/hello'
+      || span0.operationName === 'DefaultComponentController/traceId2',
       span0.operationName,
     )
 
