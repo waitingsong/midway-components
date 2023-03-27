@@ -146,7 +146,7 @@ describe(filename, () => {
     assert(
       span0.operationName === 'DefaultComponentService/hello'
       || span0.operationName === 'DefaultComponentController/traceId2'
-      || span0.operationName === '/_otel/id2',
+      || span0.operationName === 'HTTP GET /_otel/id2',
       span0.operationName,
     )
 
