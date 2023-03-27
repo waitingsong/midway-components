@@ -29,7 +29,7 @@ describe(filename, () => {
     assert(traceId.length === 32)
     console.log({ traceId })
 
-    await sleep(1000)
+    await sleep(2000)
 
     const tracePath = `${agent}:16686/api/traces/${traceId}?prettyPrint=true`
     let resp2 = await makeHttpRequest(tracePath, {
@@ -90,7 +90,7 @@ describe(filename, () => {
     console.log({ traceId })
 
     assert(agent)
-    await sleep(1000)
+    await sleep(2000)
 
     const tracePath = `${agent}:16686/api/traces/${traceId}?prettyPrint=true`
     console.log({ path2: tracePath })
