@@ -2,15 +2,7 @@ import { TextMapPropagator } from '@opentelemetry/api'
 import { CompositePropagator, W3CTraceContextPropagator } from '@opentelemetry/core'
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-grpc'
 import { JaegerPropagator } from '@opentelemetry/propagator-jaeger'
-import { alibabaCloudEcsDetector } from '@opentelemetry/resource-detector-alibaba-cloud'
-import {
-  Resource,
-  detectResourcesSync,
-  envDetector,
-  hostDetector,
-  osDetector,
-  processDetector,
-} from '@opentelemetry/resources'
+import { Resource } from '@opentelemetry/resources'
 import {
   SpanExporter,
   ConsoleSpanExporter,
@@ -23,6 +15,8 @@ import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions'
 
 import { InitTraceOptions, PropagatorList, SpanExporterList } from '../lib/types'
 
+import { detectorResources } from './resource.detector'
+
 
 interface InitTraceReturnType {
   provider: NodeTracerProvider
@@ -32,22 +26,12 @@ interface InitTraceReturnType {
 export function initTrace(options: InitTraceOptions): InitTraceReturnType {
   const { otelConfig } = options
 
-  const detectorRes = detectResourcesSync({
-    detectors: [
-      envDetector,
-      hostDetector,
-      osDetector,
-      processDetector,
-      alibabaCloudEcsDetector,
-    ],
-  })
-
   const resource = new Resource({
     [SemanticResourceAttributes.SERVICE_NAME]: otelConfig.serviceName,
     [SemanticResourceAttributes.SERVICE_VERSION]: otelConfig.serviceVersion,
   })
   const resourceDefault = Resource.default()
-  const resourceFull = resourceDefault.merge(resource).merge(detectorRes)
+  const resourceFull = resourceDefault.merge(resource).merge(detectorResources)
 
   const provider = new NodeTracerProvider({
     resource: resourceFull,
