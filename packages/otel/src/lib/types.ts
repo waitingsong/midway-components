@@ -177,6 +177,11 @@ export interface TestSpanInfo {
 export interface InitTraceOptions {
   [ConfigKey.config]: Config
   [ConfigKey.otlpGrpcExporterConfig]: OTLPGRPCExporterConfig
+  /**
+   * - true: using SimpleSpanProcessor
+   * - false: using BatchSpanProcessor
+   */
+  isDevelopmentEnvironment: boolean
 }
 
 // export type CreateActiveSpanCallback = (span: Span) => unknown

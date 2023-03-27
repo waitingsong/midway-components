@@ -4,7 +4,9 @@ import assert from 'node:assert'
 import {
   Config as _Config,
   Init,
+  Inject,
   Logger,
+  MidwayEnvironmentService,
   Provide,
   Scope,
   ScopeEnum,
@@ -24,8 +26,7 @@ import {
 } from '@opentelemetry/api'
 import type {
   BasicTracerProvider,
-  BatchSpanProcessor,
-  SimpleSpanProcessor,
+  SpanProcessor,
 } from '@opentelemetry/sdk-trace-node'
 import { SemanticAttributes } from '@opentelemetry/semantic-conventions'
 import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
@@ -50,6 +51,9 @@ export class OtelComponent {
   @_Config(ConfigKey.otlpGrpcExporterConfig)
   protected readonly otlpGrpcExporterConfig: InitTraceOptions['otlpGrpcExporterConfig']
 
+  @Inject()
+  environmentService: MidwayEnvironmentService
+
   @Logger() protected readonly logger: ILogger
 
   otelLibraryName: string
@@ -58,14 +62,16 @@ export class OtelComponent {
   readonly captureHeadersMap = new Map<string, Map<string, string>>()
 
   protected traceProvider: BasicTracerProvider | undefined
-  protected spanProcessors: (BatchSpanProcessor | SimpleSpanProcessor)[] = []
+  protected spanProcessors: SpanProcessor[] = []
 
   @Init()
   async init(): Promise<void> {
+
     const { processors, provider } = initTrace({
       otelConfig: this.config,
       // jaegerExporterConfig: this.jaegerExporterConfig,
       otlpGrpcExporterConfig: this.otlpGrpcExporterConfig,
+      isDevelopmentEnvironment: this.environmentService.isDevelopmentEnvironment(),
     })
     this.traceProvider = provider
     this.spanProcessors = processors
@@ -144,7 +150,7 @@ export class OtelComponent {
       this.logger.warn(ex)
     }
     await this.flush()
-    await this.traceProvider?.shutdown()
+    // await this.traceProvider?.shutdown()
   }
 
 
