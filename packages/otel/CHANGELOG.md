@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@5.1.0...@mwcp/otel@5.2.0) (2023-03-27)
+
+
+### Features
+
+* **otel:** add more resource detectors ([9b82e28](https://github.com/waitingsong/midway-components/commit/9b82e28b30ecce7332a31b87579745cf39f37c86))
+
+
+
+
+
 # [5.1.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@5.0.0...@mwcp/otel@5.1.0) (2023-03-27)
 
 
