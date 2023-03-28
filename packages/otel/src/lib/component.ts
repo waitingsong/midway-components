@@ -24,10 +24,7 @@ import {
   SpanStatus,
   TimeInput,
 } from '@opentelemetry/api'
-import type {
-  BasicTracerProvider,
-  SpanProcessor,
-} from '@opentelemetry/sdk-trace-node'
+import { node } from '@opentelemetry/sdk-node'
 import { SemanticAttributes } from '@opentelemetry/semantic-conventions'
 import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
 
@@ -61,8 +58,8 @@ export class OtelComponent {
   /* request|response -> Map<lower,norm> */
   readonly captureHeadersMap = new Map<string, Map<string, string>>()
 
-  protected traceProvider: BasicTracerProvider | undefined
-  protected spanProcessors: SpanProcessor[] = []
+  protected traceProvider: node.NodeTracerProvider | undefined
+  protected spanProcessors: node.SpanProcessor[] = []
 
   @Init()
   async init(): Promise<void> {
