@@ -64,16 +64,32 @@ describe(filename, () => {
     assert(span0.traceID === traceId)
     assert(span1.traceID === traceId)
 
-    assert(span0.operationName === 'DefaultComponentService/hello')
-    const [ref0] = span0.references
-    assert(ref0)
+    const op = 'DefaultComponentService/hello'
 
-    assert(span1.operationName === `HTTP GET ${path}`)
-    assert(! span1.references.length)
+    if (span0.operationName === op) {
+      assert(span1.operationName === `HTTP GET ${path}`)
+      assert(! span1.references.length)
 
-    assert(ref0.refType === 'CHILD_OF')
-    assert(ref0.traceID === traceId)
-    assert(ref0.spanID === span1.spanID)
+      const [ref] = span0.references
+      assert(ref)
+      assert(ref.refType === 'CHILD_OF')
+      assert(ref.traceID === traceId)
+      assert(ref.spanID === span1.spanID)
+    }
+    else if (span0.operationName === `HTTP GET ${path}`) {
+      assert(span1.operationName === op)
+      assert(span1.references.length === 1)
+
+      const [ref] = span1.references
+      assert(ref)
+      assert(ref.refType === 'CHILD_OF')
+      assert(ref.traceID === traceId)
+      assert(ref.spanID === span0.spanID)
+    }
+    else {
+      assert(false, `span0.operationName: ${span0.operationName}`)
+    }
+
 
   })
 
