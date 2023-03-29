@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/jwt",
   "author": "waiting",
-  "version": "15.0.1",
+  "version": "16.0.0",
   "description": "midway component jwt",
   "keywords": [
     "midway",
@@ -29,7 +29,7 @@
     "jsonwebtoken": "^9.0.0"
   },
   "devDependencies": {
-    "@mwcp/share": "^3.3.2",
+    "@mwcp/share": "^4.0.0",
     "@types/jsonwebtoken": "^9.0.1",
     "cross-env": "7"
   },

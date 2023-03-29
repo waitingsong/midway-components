@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@5.2.1...@mwcp/otel@6.0.0) (2023-03-29)
+
+
+### Features
+
+* **otel:** `Trace` decorator supports sync method ([419b594](https://github.com/waitingsong/midway-components/commit/419b594d073fa1b670b59ed69878e7680efd548b))
+
+
+
+
+
 ## [5.2.1](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@5.2.0...@mwcp/otel@5.2.1) (2023-03-28)
 
 **Note:** Version bump only for package @mwcp/otel
