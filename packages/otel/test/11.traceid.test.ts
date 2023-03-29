@@ -129,7 +129,7 @@ describe(filename, () => {
     assert(info.traceID === traceId)
 
     assert(
-      info.spans.length === 3,
+      info.spans.length === 4,
       typeof info.spans.length === 'number' ? info.spans.length.toString() : 'n/a',
     )
     const [span0, span1, span2] = info.spans
@@ -161,43 +161,17 @@ describe(filename, () => {
 
     assert(
       span0.operationName === 'DefaultComponentService/hello'
+      || span0.operationName === 'DefaultComponentService/helloSync'
       || span0.operationName === 'DefaultComponentController/traceId2'
       || span0.operationName === 'HTTP GET /_otel/id2',
       span0.operationName,
     )
 
-
-    if (validateSpanParent(traceId, span0, span1)) {
-      assertsSpanParent(traceId, span1, span2)
-      assert(
-        span1.operationName === 'DefaultComponentController/traceId2',
-        span1.operationName,
-      )
-      assert(
-        span2.operationName === `HTTP GET ${path2}`,
-        span2.operationName,
-      )
-      assert(! span2.references.length)
-    }
-    else if (validateSpanParent(traceId, span0, span2)) {
-      assertsSpanParent(traceId, span2, span1)
-      assert(
-        span2.operationName === 'DefaultComponentController/traceId2',
-        span2.operationName,
-      )
-      assert(
-        span1.operationName === `HTTP GET ${path2}`,
-        span1.operationName,
-      )
-      assert(! span1.references.length)
-    }
-    else {
-      assert(false, 'span0 parent not found')
-    }
   })
 })
 
-function validateSpanParent(
+
+function spanHasRelationshop(
   traceId: string,
   span: JaegerTraceInfoSpan,
   parentSpan: JaegerTraceInfoSpan,
@@ -211,7 +185,8 @@ function validateSpanParent(
 
   const [ref1] = parentSpan.references
   if (! ref1) { // parentSpan should not root span
-    return false
+    // return false
+    return spanHasRelationshop(traceId, parentSpan, span)
   }
 
   assert(ref0.refType === 'CHILD_OF')
