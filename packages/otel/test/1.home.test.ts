@@ -34,7 +34,7 @@ describe(filename, () => {
       .expect(200)
 
     const ret = resp.text as string
-    assert(ret === Msg.hello)
+    assert(ret.startsWith(Msg.hello), ret)
   })
 
 })

@@ -30,7 +30,9 @@ export class DefaultOtelComponentController {
   @Post('/hello')
   async hello(): Promise<string> {
     this.valiateRoute()
-    const ret = await this.svc.hello(Msg.hello)
+    const traceId = this.traceSvc.getTraceId()
+    const msg = await this.svc.hello(Msg.hello)
+    const ret = `${msg}: ${traceId}`
     return ret
   }
 

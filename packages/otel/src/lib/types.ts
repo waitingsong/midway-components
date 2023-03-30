@@ -3,7 +3,14 @@ import type { IncomingHttpHeaders } from 'http'
 
 import type { ILogger } from '@midwayjs/logger'
 import type { BaseConfig, Context } from '@mwcp/share'
-import type { Attributes, AttributeValue, SpanStatusCode, TimeInput } from '@opentelemetry/api'
+import type {
+  Attributes,
+  AttributeValue,
+  Context as TraceContext,
+  SpanOptions,
+  SpanStatusCode,
+  TimeInput,
+} from '@opentelemetry/api'
 import type { OTLPGRPCExporterConfigNode as OTLPGRPCExporterConfig } from '@opentelemetry/otlp-grpc-exporter-base'
 import { node } from '@opentelemetry/sdk-node'
 import type { MiddlewareConfig as MWConfig, KnownKeys } from '@waiting/shared-types'
@@ -12,7 +19,9 @@ import { AttrNames } from './attrnames.types'
 
 
 export type NodeTracerConfig = node.TracerConfig
-export { AttrNames }
+export {
+  AttrNames, TraceContext,
+}
 
 
 export enum ConfigKey {
@@ -260,3 +269,31 @@ export interface AddEventOtpions {
   eventName?: string
   startTime?: TimeInput
 }
+
+export type MethodType = (...input: any[]) => (any | Promise<any>)
+
+export type TraceDecoratorArg<M extends MethodType | void = void> =
+  Partial<TraceDecoratorOptions<M>> | string
+
+export interface TraceDecoratorOptionsSpanOptions extends SpanOptions {
+  /**
+   * @default true
+   */
+  startActiveSpan: boolean
+  traceContext: TraceContext | undefined
+}
+
+export interface TraceDecoratorOptions<M extends MethodType | void = void>
+  extends TraceDecoratorOptionsSpanOptions {
+  /** 若空则为 `{target.name}/{methodName}` */
+  spanName: string | KeyGenerator<M> | undefined
+}
+
+export type KeyGenerator<M extends MethodType | void = void> = (
+  /** WebContext */
+  this: Context,
+  /** Arguments of the method */
+  args: M extends MethodType ? Parameters<M> : any,
+) => string | undefined
+
+

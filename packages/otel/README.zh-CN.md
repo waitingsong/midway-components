@@ -73,6 +73,8 @@ import { Trace } from '@mwcp/otel'
 @Controller('/')
 export class FooController {
 
+  @Inject() readonly svc: FooService
+
   /* span name will be `{class name}/{method name}` => "FooController/hello" */
   @Trace()
   async hello(): Promise<string> {
@@ -83,6 +85,29 @@ export class FooController {
   @Trace('hello')
   async world(): Promise<string> {
     return 'world'
+  }
+
+  @Trace({
+    spanName: 'hello'
+  })
+  async world2(): Promise<string> {
+    return 'world'
+  }
+
+  async world3(): Promise<string> {
+    // spanName should be 'foo-124-abc' here
+    const msg = this.svc.concat(123, 'abc')
+    return msg
+  }
+}
+
+@Provide()
+export class FooService {
+  @Trace<FooService['world4']>({
+    spanName: (args) => `foo-${args[0] + 1}-${args[1]}`,
+  })
+  concat(v1: number, v2: string): string {
+    return `${v1.toString()}-${v2}`
   }
 }
 ```

@@ -98,6 +98,7 @@ export class OtelComponent {
     const tracer = trace.getTracer(this.otelLibraryName, this.otelLibraryVersion)
     const opts: SpanOptions = {
       kind: SpanKind.CLIENT,
+      // startTime: Date.now(),
       ...options,
     }
     const span = tracer.startSpan(name, opts, traceContext)
@@ -122,6 +123,7 @@ export class OtelComponent {
     const tracer = trace.getTracer(this.otelLibraryName, this.otelLibraryVersion)
     const opts: SpanOptions = {
       kind: SpanKind.CLIENT,
+      // startTime: Date.now(),
       ...options,
     }
     return traceContext
@@ -238,8 +240,6 @@ export class OtelComponent {
       }
 
       Object.defineProperty(error, AttrNames.IsTraced, {
-        enumerable: false,
-        writable: false,
         value: true,
       })
     }
@@ -292,5 +292,4 @@ export class OtelComponent {
 
 
 }
-
 

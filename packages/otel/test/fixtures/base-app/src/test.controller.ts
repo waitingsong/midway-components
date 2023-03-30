@@ -52,6 +52,20 @@ export class DefaultComponentController {
   }
 
   @Trace()
+  @Get('/decorator_arg')
+  async arg(): Promise<string> {
+    const traceId = this.traceSvc.getTraceId()
+    const rnd = Math.random()
+    const msg = this.svc.testArg(rnd)
+    assert(msg)
+
+    // await this.traceSvc.flush()
+    const ret = `${traceId}:${rnd}`
+    return ret
+  }
+
+
+  @Trace()
   @Get('/disable_trace')
   async noTrace(): Promise<string> {
     const traceId = this.traceSvc.getTraceId()

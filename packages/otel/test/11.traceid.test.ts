@@ -17,6 +17,7 @@ describe(filename, () => {
 
   const path = '/_otel/id'
   const path2 = '/_otel/id2'
+  const path3 = '/_otel/decorator_arg'
 
   it(`Should ${path} work`, async () => {
     const { app, httpRequest } = testConfig
@@ -89,7 +90,6 @@ describe(filename, () => {
     else {
       assert(false, `span0.operationName: ${span0.operationName}`)
     }
-
 
   })
 
@@ -168,6 +168,46 @@ describe(filename, () => {
     )
 
   })
+
+
+  it(`Should ${path3} work`, async () => {
+    const { httpRequest } = testConfig
+
+    const resp = await httpRequest
+      .get(path3)
+      .expect(200)
+
+    const [traceId, rnd] = resp.text.split(':')
+    assert(traceId)
+    assert(traceId.length === 32)
+    assert(rnd)
+    console.log({ traceId, rnd })
+
+    await sleep(2000)
+
+    const tracePath = `${agent}:16686/api/traces/${traceId}?prettyPrint=true`
+    const resp2 = await makeHttpRequest(tracePath, {
+      method: 'GET',
+      dataType: 'json',
+    })
+
+    const { data } = resp2.data as {data: [JaegerTraceInfo]}
+    assert(Array.isArray(data))
+    assert(data.length === 1)
+    const [info] = data
+    assert(info)
+    assert(info.traceID)
+    assert(info.traceID === traceId, info.traceID)
+
+    const { spans } = info
+    const found = spans.some((span) => {
+      if (span.operationName === `foo-${rnd}`) {
+        return true
+      }
+    })
+    assert(found, `foo-${rnd} not found`)
+  })
+
 })
 
 

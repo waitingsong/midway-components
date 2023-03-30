@@ -4,7 +4,6 @@ export { OtelComponent } from './component'
 export {
   TRACE_KEY,
   Trace,
-  DecoratorArgs,
 } from './trace.decorator'
 export * from './trace.logger'
 export * from './trace.service'
@@ -39,11 +38,13 @@ export {
   JaegerTraceInfoReferences,
   JaegerTraceInfoLog,
   JaegerTraceInfoLogField,
-  TraceLogType as LogInfo,
   SpanExporterList,
   SpanHeaderInit,
   SpanStatusOptions,
+  TraceDecoratorArg,
+  TraceDecoratorOptions,
   TraceError,
+  TraceLogType as LogInfo,
 } from './types'
 
 
