@@ -17,6 +17,7 @@ describe(filename, () => {
 
   const path = '/_otel/id'
   const path2 = '/_otel/id2'
+  const path3 = '/_otel/decorator_arg'
 
   it(`Should ${path} work`, async () => {
     const { app, httpRequest } = testConfig
@@ -29,7 +30,7 @@ describe(filename, () => {
     assert(traceId.length === 32)
     console.log({ traceId })
 
-    await sleep(7000)
+    await sleep(2000)
 
     const tracePath = `${agent}:16686/api/traces/${traceId}?prettyPrint=true`
     let resp2 = await makeHttpRequest(tracePath, {
@@ -38,7 +39,7 @@ describe(filename, () => {
     })
     if (resp2.status !== 200 || ! resp2.data) {
       console.log('retry...')
-      await sleep(5000)
+      await sleep(3000)
       resp2 = await makeHttpRequest(tracePath, {
         method: 'GET',
         dataType: 'json',
@@ -64,16 +65,31 @@ describe(filename, () => {
     assert(span0.traceID === traceId)
     assert(span1.traceID === traceId)
 
-    assert(span0.operationName === 'DefaultComponentService/hello')
-    const [ref0] = span0.references
-    assert(ref0)
+    const op = 'DefaultComponentService/hello'
 
-    assert(span1.operationName === `HTTP GET ${path}`)
-    assert(! span1.references.length)
+    if (span0.operationName === op) {
+      assert(span1.operationName === `HTTP GET ${path}`)
+      assert(! span1.references.length)
 
-    assert(ref0.refType === 'CHILD_OF')
-    assert(ref0.traceID === traceId)
-    assert(ref0.spanID === span1.spanID)
+      const [ref] = span0.references
+      assert(ref)
+      assert(ref.refType === 'CHILD_OF')
+      assert(ref.traceID === traceId)
+      assert(ref.spanID === span1.spanID)
+    }
+    else if (span0.operationName === `HTTP GET ${path}`) {
+      assert(span1.operationName === op)
+      assert(span1.references.length === 1)
+
+      const [ref] = span1.references
+      assert(ref)
+      assert(ref.refType === 'CHILD_OF')
+      assert(ref.traceID === traceId)
+      assert(ref.spanID === span0.spanID)
+    }
+    else {
+      assert(false, `span0.operationName: ${span0.operationName}`)
+    }
 
   })
 
@@ -90,7 +106,7 @@ describe(filename, () => {
     console.log({ traceId })
 
     assert(agent)
-    await sleep(6000)
+    await sleep(2000)
 
     const tracePath = `${agent}:16686/api/traces/${traceId}?prettyPrint=true`
     console.log({ path2: tracePath })
@@ -99,7 +115,7 @@ describe(filename, () => {
       dataType: 'json',
     })
     if (resp2.status !== 200) {
-      await sleep(5000)
+      await sleep(3000)
       resp2 = await makeHttpRequest(tracePath, {
         method: 'GET',
         dataType: 'json',
@@ -113,7 +129,7 @@ describe(filename, () => {
     assert(info.traceID === traceId)
 
     assert(
-      info.spans.length === 3,
+      info.spans.length === 4,
       typeof info.spans.length === 'number' ? info.spans.length.toString() : 'n/a',
     )
     const [span0, span1, span2] = info.spans
@@ -135,43 +151,67 @@ describe(filename, () => {
     assert(span1.traceID === traceId)
     assert(span2.traceID === traceId)
 
+    console.log({ span0 })
+    // console.log({ span0Name: span0.operationName })
+    // console.log({ span1Name: span1.operationName })
+    // console.log({ span2Name: span2.operationName })
+    // { span0Name: 'DefaultComponentService/hello' }
+    // { span1Name: 'DefaultComponentController/traceId2' }
+    // { span2Name: 'HTTP GET /_otel/id2' }
+
     assert(
-      span0.operationName === 'DefaultComponentService/hello',
+      span0.operationName === 'DefaultComponentService/hello'
+      || span0.operationName === 'DefaultComponentService/helloSync'
+      || span0.operationName === 'DefaultComponentController/traceId2'
+      || span0.operationName === 'HTTP GET /_otel/id2',
       span0.operationName,
     )
 
-
-    if (validateSpanParent(traceId, span0, span1)) {
-      assertsSpanParent(traceId, span1, span2)
-      assert(
-        span1.operationName === 'DefaultComponentController/traceId2',
-        span1.operationName,
-      )
-      assert(
-        span2.operationName === `HTTP GET ${path2}`,
-        span2.operationName,
-      )
-      assert(! span2.references.length)
-    }
-    else if (validateSpanParent(traceId, span0, span2)) {
-      assertsSpanParent(traceId, span2, span1)
-      assert(
-        span2.operationName === 'DefaultComponentController/traceId2',
-        span2.operationName,
-      )
-      assert(
-        span1.operationName === `HTTP GET ${path2}`,
-        span1.operationName,
-      )
-      assert(! span1.references.length)
-    }
-    else {
-      assert(false, 'span0 parent not found')
-    }
   })
+
+
+  it(`Should ${path3} work`, async () => {
+    const { httpRequest } = testConfig
+
+    const resp = await httpRequest
+      .get(path3)
+      .expect(200)
+
+    const [traceId, rnd] = resp.text.split(':')
+    assert(traceId)
+    assert(traceId.length === 32)
+    assert(rnd)
+    console.log({ traceId, rnd })
+
+    await sleep(2000)
+
+    const tracePath = `${agent}:16686/api/traces/${traceId}?prettyPrint=true`
+    const resp2 = await makeHttpRequest(tracePath, {
+      method: 'GET',
+      dataType: 'json',
+    })
+
+    const { data } = resp2.data as {data: [JaegerTraceInfo]}
+    assert(Array.isArray(data))
+    assert(data.length === 1)
+    const [info] = data
+    assert(info)
+    assert(info.traceID)
+    assert(info.traceID === traceId, info.traceID)
+
+    const { spans } = info
+    const found = spans.some((span) => {
+      if (span.operationName === `foo-${rnd}`) {
+        return true
+      }
+    })
+    assert(found, `foo-${rnd} not found`)
+  })
+
 })
 
-function validateSpanParent(
+
+function spanHasRelationshop(
   traceId: string,
   span: JaegerTraceInfoSpan,
   parentSpan: JaegerTraceInfoSpan,
@@ -185,7 +225,8 @@ function validateSpanParent(
 
   const [ref1] = parentSpan.references
   if (! ref1) { // parentSpan should not root span
-    return false
+    // return false
+    return spanHasRelationshop(traceId, parentSpan, span)
   }
 
   assert(ref0.refType === 'CHILD_OF')

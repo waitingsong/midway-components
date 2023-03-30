@@ -24,7 +24,6 @@ export { SemanticAttributes } from '@opentelemetry/semantic-conventions'
 
 export { AutoConfiguration as Configuration } from './configuration'
 export * from './app/index.controller'
-// export * from './helper/index.instrum'
 export * from './lib/index'
 export * from './middleware/index.middleware'
 

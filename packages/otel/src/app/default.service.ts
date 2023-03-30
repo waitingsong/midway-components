@@ -14,7 +14,7 @@ export class DefaultOtelComponentService {
 
   @_Config(ConfigKey.config) readonly config: Config
 
-  @Trace(void 0, { startActiveSpan: false })
+  @Trace({ startActiveSpan: false })
   async hello(input: string): Promise<string> {
     assert(typeof this.config.enable !== 'undefined')
     return input

@@ -2,54 +2,62 @@ import { TextMapPropagator } from '@opentelemetry/api'
 import { CompositePropagator, W3CTraceContextPropagator } from '@opentelemetry/core'
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-grpc'
 import { JaegerPropagator } from '@opentelemetry/propagator-jaeger'
-import { Resource } from '@opentelemetry/resources'
-import {
-  SpanExporter,
-  ConsoleSpanExporter,
-  BatchSpanProcessor,
-  SimpleSpanProcessor,
-  NodeTracerProvider,
-} from '@opentelemetry/sdk-trace-node'
+import { node, resources } from '@opentelemetry/sdk-node'
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions'
 
 import { InitTraceOptions, PropagatorList, SpanExporterList } from '../lib/types'
 
+import { detectorResources } from './resource.detector'
+
 
 interface InitTraceReturnType {
-  provider: NodeTracerProvider
-  processors: (BatchSpanProcessor | SimpleSpanProcessor)[]
+  provider: node.NodeTracerProvider
+  processors: node.SpanProcessor[]
 }
 
 export function initTrace(options: InitTraceOptions): InitTraceReturnType {
   const { otelConfig } = options
-  const resource = new Resource({
+
+  const resource = new resources.Resource({
     [SemanticResourceAttributes.SERVICE_NAME]: otelConfig.serviceName,
     [SemanticResourceAttributes.SERVICE_VERSION]: otelConfig.serviceVersion,
   })
-  const resourceFull = Resource.default().merge(resource)
+  const resourceDefault = resources.Resource.default()
+  const resourceFull = resourceDefault.merge(resource).merge(detectorResources)
 
-  const provider = new NodeTracerProvider({
+  const provider = new node.NodeTracerProvider({
     resource: resourceFull,
+    spanLimits: {
+      linkCountLimit: 127,
+    },
   })
-  // const flag = trace.setGlobalTracerProvider(provider)
-  // assert(flag === true, 'setGlobalTracerProvider failed')
-  provider.register()
 
-  const processors: BatchSpanProcessor[] = []
+  const processors: node.SpanProcessor[] = []
   otelConfig.exporters.forEach((exporter) => {
-    const processor = regExporterInstrum(options, provider, exporter)
+    const processor = genExporterInstrum(options, exporter, options.isDevelopmentEnvironment)
     processors.push(processor)
+    provider.addSpanProcessor(processor)
   })
-  regPropagators(otelConfig.propagators, provider)
+
+  const propagators = genPropagators(otelConfig.propagators)
+  provider.register({
+    propagator: new CompositePropagator({ propagators }),
+  })
+
+  // const globalProvider = trace.getTracerProvider()
+  // console.info({ globalProvider })
+  // const spanProcessor = provider.activeSpanProcessor
+  // const spanProcessor2 = provider.getActiveSpanProcessor()
+  // void spanProcessor
+  // void spanProcessor2
 
   const ret = { provider, processors }
   return ret
 }
 
-function regPropagators(
+function genPropagators(
   list: PropagatorList[],
-  tracerProvider: NodeTracerProvider,
-): void {
+): TextMapPropagator[] {
 
   const propagators: TextMapPropagator[] = []
 
@@ -71,25 +79,22 @@ function regPropagators(
       }
     }
   })
-  if (! propagators.length) { return }
-
-  tracerProvider.register({
-    propagator: new CompositePropagator({ propagators }),
-  })
+  return propagators
 }
 
 
-function regExporterInstrum(
+function genExporterInstrum(
   options: InitTraceOptions,
-  provider: NodeTracerProvider,
   exporterName: SpanExporterList,
-): BatchSpanProcessor {
+  isDevelopmentEnvironment: boolean,
+): node.SpanProcessor {
 
   switch (exporterName) {
     case SpanExporterList.console: {
-      const exporter: SpanExporter = new ConsoleSpanExporter()
-      const processor = new BatchSpanProcessor(exporter)
-      provider.addSpanProcessor(processor)
+      const exporter: node.SpanExporter = new node.ConsoleSpanExporter()
+      const processor = isDevelopmentEnvironment
+        ? new node.SimpleSpanProcessor(exporter)
+        : new node.BatchSpanProcessor(exporter)
       return processor
     }
 
@@ -101,9 +106,10 @@ function regExporterInstrum(
     // }
 
     case SpanExporterList.otlpGrpc: {
-      const exporter: SpanExporter = new OTLPTraceExporter(options.otlpGrpcExporterConfig)
-      const processor = new BatchSpanProcessor(exporter)
-      provider.addSpanProcessor(processor)
+      const exporter: node.SpanExporter = new OTLPTraceExporter(options.otlpGrpcExporterConfig)
+      const processor = isDevelopmentEnvironment
+        ? new node.SimpleSpanProcessor(exporter)
+        : new node.BatchSpanProcessor(exporter)
       return processor
     }
 

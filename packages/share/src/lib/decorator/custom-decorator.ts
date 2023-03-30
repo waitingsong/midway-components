@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
 import assert from 'node:assert'
+import { isAsyncFunction } from 'node:util/types'
 
 import {
   INJECT_CUSTOM_METHOD,
@@ -196,8 +197,9 @@ function decoratorClassMethodsOnPrototype<TDecoratorArgs extends {}>(
     if (! descriptor) { continue }
 
     if (typeof descriptor.value === 'function') {
+      if (! isAsyncFunction(descriptor.value)) { continue }
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      if (descriptor.value.constructor.name !== 'AsyncFunction') { continue }
+      // if (descriptor.value.constructor.name !== 'AsyncFunction') { continue }
 
       descriptorDecoratorPatcher<TDecoratorArgs>({
         target,

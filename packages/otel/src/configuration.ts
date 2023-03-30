@@ -14,7 +14,7 @@ import {
 } from '@midwayjs/core'
 import { ILogger } from '@midwayjs/logger'
 import type { Application, IMidwayContainer } from '@mwcp/share'
-import { BasicTracerProvider, BatchSpanProcessor, SimpleSpanProcessor } from '@opentelemetry/sdk-trace-node'
+import { node } from '@opentelemetry/sdk-node'
 import { sleep } from '@waiting/shared-core'
 import type { NpmPkg } from '@waiting/shared-types'
 
@@ -51,8 +51,8 @@ export class AutoConfiguration implements ILifeCycle {
   @Inject() decoratorService: MidwayDecoratorService
   @Logger() logger: ILogger
 
-  protected spanProcessors: (BatchSpanProcessor | SimpleSpanProcessor)[] = []
-  protected provider: BasicTracerProvider | undefined
+  protected spanProcessors: node.SpanProcessor[] = []
+  protected provider: node.BasicTracerProvider | undefined
 
   protected otelLibraryName: string
   protected otelLibraryVersion: string

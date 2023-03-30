@@ -42,9 +42,28 @@ export class DefaultComponentController {
     this.traceSvc.setAttributesLater(void 0, {bar: 'bar'})
     const msg = await this.svc.hello(Msg.hello)
     assert(msg)
+
+    const msg2 = this.svc.helloSync(Msg.hello)
+    assert(typeof msg2 === 'string')
+    assert(msg2)
+
     await this.traceSvc.flush()
     return traceId
   }
+
+  @Trace()
+  @Get('/decorator_arg')
+  async arg(): Promise<string> {
+    const traceId = this.traceSvc.getTraceId()
+    const rnd = Math.random()
+    const msg = this.svc.testArg(rnd)
+    assert(msg)
+
+    // await this.traceSvc.flush()
+    const ret = `${traceId}:${rnd}`
+    return ret
+  }
+
 
   @Trace()
   @Get('/disable_trace')

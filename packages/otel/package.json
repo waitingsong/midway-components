@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/otel",
   "author": "waiting",
-  "version": "5.0.0",
+  "version": "7.0.0",
   "description": "midway component for open telemetry",
   "keywords": [
     "midway",
@@ -27,13 +27,14 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@mwcp/share": "^3.3.1",
-    "@opentelemetry/api": "^1.4.0",
-    "@opentelemetry/exporter-trace-otlp-grpc": "^0.36.0",
-    "@opentelemetry/otlp-grpc-exporter-base": "^0.36.0",
-    "@opentelemetry/sdk-node": "^0.36.0",
-    "@opentelemetry/sdk-trace-node": "^1.9.1",
-    "@waiting/shared-core": "^20.12.0"
+    "@mwcp/share": "^5.0.0",
+    "@opentelemetry/api": "^1.4.1",
+    "@opentelemetry/resource-detector-alibaba-cloud": "^0.27.4",
+    "@opentelemetry/resource-detector-aws": "^1.2.2",
+    "@opentelemetry/resource-detector-container": "^0.2.2",
+    "@opentelemetry/resource-detector-gcp": "^0.28.0",
+    "@opentelemetry/sdk-node": "^0.36.1",
+    "@waiting/shared-core": "^21.0.0"
   },
   "devDependencies": {
     "cross-env": "7"
@@ -64,7 +65,7 @@
     "pretest": "npm run build",
     "pretest:local": "npm run build",
     "start": "node bootstrap.js",
-    "test": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json mocha --parallel=false -r=tracing.js",
+    "test": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json mocha --parallel=false",
     "test:local": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json ../../node_modules/.bin/mocha --parallel=false",
     "tsc": "tsc -b"
   }
