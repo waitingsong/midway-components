@@ -24,11 +24,11 @@
   "license": "MIT",
   "dependencies": {
     "@mwcp/fetch": "^22.0.5",
-    "@mwcp/kmore": "^55.2.0",
+    "@mwcp/kmore": "^55.2.2",
     "@mwcp/koid": "^11.1.1",
     "@mwcp/otel": "^6.0.0",
     "@waiting/shared-core": "^21.0.0",
-    "pg": "^8.8.0",
+    "pg": "^8.10.0",
     "pg-native": "^3.0.1",
     "postgres-interval": "^4.0.0"
   },
