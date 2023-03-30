@@ -90,6 +90,7 @@ jobs:
           npm i --no-audit -g autocannon c8 lerna rollup zx
           # npm run purge
           npm run bootstrap
+          .githooks/link.sh
         env:
           CI: true
 
@@ -112,6 +113,31 @@ jobs:
         env:
           CI: true
           OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
+
+      - name: Benchmark otel
+        timeout-minutes: 10
+        run: |
+          .scripts/benchmark/start-benchmark.mjs --wait=30000 --qps=500 --api=_otel/hello --p=otel
+        env:
+          CI: true
+          OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
+
+      - name: Benchmark otel no trace
+        timeout-minutes: 10
+        run: |
+          .scripts/benchmark/start-benchmark.mjs --wait=30000 --qps=500 --api=_otel/hello --p=otel
+        env:
+          CI: true
+          DISABLE_OTEL_TRACE: true
+
+      - name: Benchmark boot
+        timeout-minutes: 10
+        run: |
+          .scripts/benchmark/start-benchmark.mjs --wait=30000 --qps=500 --api=_base/hello --p=boot
+        env:
+          CI: true
+          OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
+
 
     services:
       postgres:
