@@ -1,15 +1,9 @@
 {
-  "version": "independent",
+  "version": "0.0.0",
   "packages": [
     "packages/*"
   ],
-  "ignore": [
-    "demo",
-    "@mwcp/demo",
-    "@mwcp/base",
-    "@mwcp/jaeger",
-    "@mw-components/demo"
-  ],
+  "ignore": [],
   "command": {
     "publish": {
       "ignoreChanges": [
@@ -19,9 +13,7 @@
         ".vscode",
         "package-lock.json",
         "packages/demo",
-        "packages/mw-demo",
-        "packages/base",
-        "packages/jaeger"
+        "packages/mw-demo"
       ],
       "verifyAccess": false
     },
