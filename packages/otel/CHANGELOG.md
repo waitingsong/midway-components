@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@6.0.0...@mwcp/otel@7.0.0) (2023-03-30)
+
+
+### Features
+
+* **otel:** breaking change type of parameter of `Trace` decorator ([50912ba](https://github.com/waitingsong/midway-components/commit/50912baad6ed2251d7757f3f77276cecbc7b3e5f))
+
+
+
+
+
 # [6.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@5.2.1...@mwcp/otel@6.0.0) (2023-03-29)
 
 
