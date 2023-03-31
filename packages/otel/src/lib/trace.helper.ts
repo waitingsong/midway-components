@@ -110,7 +110,7 @@ export function prepareAroundFactory(
   }
 
   const { metadata } = metaDataOptions
-  const mdata: SpanOptions = metadata && typeof metadata === 'object'
+  const mdata: TraceDecoratorArg = metadata && typeof metadata === 'object'
     ? metadata
     : {}
 
@@ -133,14 +133,12 @@ export function prepareAroundFactory(
   assert(traceService, `traceService undefined on webContext[_${ConfigKey.serviceName}]`)
   assert(typeof func === 'function', 'Func referencing joinPoint.proceed is not function')
 
-  const traceDecoratorArg = args[1] as TraceDecoratorArg | undefined
-
-  const startActiveSpan = typeof traceDecoratorArg === 'object'
-    ? traceDecoratorArg.startActiveSpan ?? true
+  const startActiveSpan = typeof mdata === 'object'
+    ? mdata.startActiveSpan ?? true
     : true
 
-  const traceContext = typeof traceDecoratorArg === 'object'
-    ? traceDecoratorArg.traceContext
+  const traceContext = typeof mdata === 'object'
+    ? mdata.traceContext
     : void 0
 
   // if (! mdata.startTime) {
