@@ -73,7 +73,7 @@ function genKey(options: GenKeyOptions): string {
   return name
 }
 
-export interface PrepareAroundFactoryReturn {
+export interface AroundFactoryOptions {
   func: (...args: unknown[]) => unknown
   funcArgs: unknown[]
   callerAttr: Attributes
@@ -88,7 +88,7 @@ export interface PrepareAroundFactoryReturn {
 export function prepareAroundFactory(
   joinPoint: JoinPoint,
   metaDataOptions: MetaDataType,
-): PrepareAroundFactoryReturn {
+): AroundFactoryOptions {
 
   // eslint-disable-next-line @typescript-eslint/unbound-method
   assert(joinPoint.proceed, 'joinPoint.proceed is undefined')
@@ -146,7 +146,7 @@ export function prepareAroundFactory(
   //   mdata.startTime = now
   // }
 
-  const opts: PrepareAroundFactoryReturn = {
+  const opts: AroundFactoryOptions = {
     func,
     // index:0 may webcontext
     funcArgs: args,

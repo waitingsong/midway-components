@@ -11,7 +11,7 @@ import {
   SpanStatusCode,
 } from '@opentelemetry/api'
 
-import { MetaDataType, PrepareAroundFactoryReturn, prepareAroundFactory } from './trace.helper'
+import { MetaDataType, AroundFactoryOptions, prepareAroundFactory } from './trace.helper'
 import { TraceService } from './trace.service'
 import {
   Config,
@@ -38,7 +38,7 @@ export function registerMethodHandler(
     return config.enable
       ? {
         around: (joinPoint: JoinPoint) => {
-          const aroundFactoryOptions: PrepareAroundFactoryReturn = prepareAroundFactory(joinPoint, options)
+          const aroundFactoryOptions: AroundFactoryOptions = prepareAroundFactory(joinPoint, options)
 
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           if (isAsyncFunction(joinPoint.target[joinPoint.methodName])) {
@@ -57,7 +57,7 @@ export function registerMethodHandler(
 
 
 async function aroundFactory(
-  options: PrepareAroundFactoryReturn,
+  options: AroundFactoryOptions,
 ): Promise<unknown> {
 
   const {
@@ -100,7 +100,7 @@ async function aroundFactory(
 }
 
 function aroundFactorySync(
-  options: PrepareAroundFactoryReturn,
+  options: AroundFactoryOptions,
 ): unknown {
 
   const {
