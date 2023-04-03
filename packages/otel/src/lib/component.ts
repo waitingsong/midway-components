@@ -64,11 +64,14 @@ export class OtelComponent {
   @Init()
   async init(): Promise<void> {
 
+    const isDevelopmentEnvironment = this.environmentService.isDevelopmentEnvironment()
+      && ! process.env['CI_BENCHMARK']
+
     const { processors, provider } = initTrace({
       otelConfig: this.config,
       // jaegerExporterConfig: this.jaegerExporterConfig,
       otlpGrpcExporterConfig: this.otlpGrpcExporterConfig,
-      isDevelopmentEnvironment: this.environmentService.isDevelopmentEnvironment(),
+      isDevelopmentEnvironment,
     })
     this.traceProvider = provider
     this.spanProcessors = processors

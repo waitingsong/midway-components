@@ -128,6 +128,7 @@ jobs:
           .scripts/benchmark/start-benchmark.mjs --wait=30000 --qps=500 --api=_otel/hello --p=otel
         env:
           CI: true
+          CI_BENCHMARK: true
           OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
 
       - name: Benchmark boot
