@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.3](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@7.0.2...@mwcp/otel@7.0.3) (2023-04-03)
+
+
+### Bug Fixes
+
+* **otel:** traceService may undefined ([8ad0924](https://github.com/waitingsong/midway-components/commit/8ad092422131f56ae9d4d569ffa4a58fe0bffda0))
+
+
+
+
+
 ## [7.0.2](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@7.0.1...@mwcp/otel@7.0.2) (2023-03-31)
 
 
