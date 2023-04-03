@@ -93,9 +93,19 @@ export class FooController {
   async world2(): Promise<string> {
     return 'world'
   }
+}
+```
 
-  async world3(): Promise<string> {
-    // spanName should be 'foo-124-abc' here
+### Auto parameter type of keyGenerator from generics
+
+```ts
+@Controller('/')
+export class FooController {
+
+  @Inject() readonly svc: FooService
+
+  hello(): string {
+    // spanName should be 'foo-124-abc'
     const msg = this.svc.concat(123, 'abc')
     return msg
   }
@@ -103,10 +113,17 @@ export class FooController {
 
 @Provide()
 export class FooService {
-  @Trace<FooService['world4']>({
-    spanName: (args) => `foo-${args[0] + 1}-${args[1]}`,
+  @Trace<FooService['concat']>({
+    spanName: ([v1, v2]) => `foo-${v1 + 1}-${v2}`,
   })
   concat(v1: number, v2: string): string {
+    return `${v1.toString()}-${v2}`
+  }
+
+  @Trace<FooService['concat2']>({
+    spanName: (args) => `foo-${args[0] + 1}-${args[1]}`,
+  })
+  concat2(v1: number, v2: string): string {
     return `${v1.toString()}-${v2}`
   }
 }
