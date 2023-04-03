@@ -23,6 +23,7 @@ export enum AttrNames {
   CallerMethod = 'caller.method',
 
   reqId = 'reqId',
+  traceId = 'traceId',
   ServicePid = 'service.pid',
   ServicePpid = 'service.ppid',
   ServiceMemoryUsage = 'service.memory.usage',
