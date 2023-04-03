@@ -1,4 +1,4 @@
-# [@mw-components/jwt](https://www.npmjs.com/package/@mw-components/jwt) 
+# [@mwcp/jwt](https://www.npmjs.com/package/@mwcp/jwt) 
 Siging, verifying and authentication for midway framework.
 
 
