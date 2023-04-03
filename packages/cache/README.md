@@ -104,7 +104,7 @@ export class FooService {
   async hello2(): Promise<string> {
     return 'world'
   }
-()
+
   @Cacheable({ key: 'bar' }) // cacheKey will be `FooService.hello2:bar`
   async hello2(): Promise<string> {
     return 'world'
@@ -115,12 +115,24 @@ export class FooService {
     return 'world'
   }
 
+}
+```
+
+### Auto parameter type of keyGenerator from generics
+
+```ts
+import { Cacheable } from '@mwcp/cache'
+
+@Cacheable() 
+export class FooService {
+
   @Cacheable<FooService['world']>({  // pass generics and then input will get the type automatically
     key: input => input.uid.toString()
   }) // cacheKey will be `FooService.world:${uid}`
   async world(input: UserDTO): Promise<string> {
     return 'world'
   }
+
 }
 ```
 

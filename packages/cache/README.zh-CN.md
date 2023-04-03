@@ -116,12 +116,24 @@ export class FooService {
     return 'world'
   }
 
+}
+```
+
+### 从泛型参数自动获取方法调用参数类型
+
+```ts
+import { Cacheable } from '@mwcp/cache'
+
+@Cacheable() 
+export class FooService {
+
   @Cacheable<FooService['world']>({  // pass generics and then input will get the type automatically
     key: input => input.uid.toString()
   }) // cacheKey will be `FooService.world:${uid}`
   async world(input: UserDTO): Promise<string> {
     return 'world'
   }
+
 }
 ```
 
