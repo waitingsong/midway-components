@@ -25,11 +25,11 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/cache": "^3.10.6",
+    "@midwayjs/cache": "^3.11.1",
     "@mwcp/otel": "^7.0.3",
     "@mwcp/share": "^5.0.0",
     "@waiting/shared-core": "^21.0.0",
-    "cache-manager": "^5.1.5"
+    "cache-manager": "^5.2.0"
   },
   "devDependencies": {
     "@types/cache-manager": "^4.0.2",
