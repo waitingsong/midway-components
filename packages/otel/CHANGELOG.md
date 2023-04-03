@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 7.1.0 (2023-04-03)
+
+
+### Features
+
+* **otel:** log AttrNames.traceId withon getIncomingRequestAttributesFromWebContext() ([7a9f4b3](https://github.com/waitingsong/midway-components/commit/7a9f4b37e7ece9fba11dcdb02753440cd5438b75))
+
+
+
+
+
 ## [7.0.3](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@7.0.2...@mwcp/otel@7.0.3) (2023-04-03)
 
 
