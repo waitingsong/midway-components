@@ -82,7 +82,7 @@ export interface PrepareAroundFactoryReturn {
   startActiveSpan: boolean
   target: unknown
   traceContext: TraceContext | undefined
-  traceService: TraceService
+  traceService: TraceService | undefined
 }
 
 export function prepareAroundFactory(
@@ -129,8 +129,8 @@ export function prepareAroundFactory(
 
   // const traceService = (webContext[`_${ConfigKey.serviceName}`]
   //   ?? await webContext.requestContext.getAsync(TraceService)) as TraceService
-  const traceService = webContext[`_${ConfigKey.serviceName}`] as TraceService
-  assert(traceService, `traceService undefined on webContext[_${ConfigKey.serviceName}]`)
+  const traceService = webContext[`_${ConfigKey.serviceName}`] as TraceService | undefined
+  // assert(traceService, `traceService undefined on webContext[_${ConfigKey.serviceName}]`)
   assert(typeof func === 'function', 'Func referencing joinPoint.proceed is not function')
 
   const startActiveSpan = typeof mdata === 'object'

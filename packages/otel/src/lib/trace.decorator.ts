@@ -70,6 +70,11 @@ async function aroundFactory(
     traceService,
   } = prepareAroundFactory(joinPoint, metaDataOptions)
 
+  if (! traceService) {
+    const ret = await func(...funcArgs)
+    return ret
+  }
+
   if (startActiveSpan) {
     // 记录开始时间
     return traceService.startActiveSpan(
@@ -108,6 +113,10 @@ function aroundFactorySync(
     spanOptions,
     traceService,
   } = prepareAroundFactory(joinPoint, metaDataOptions)
+
+  if (! traceService) {
+    return func(...funcArgs)
+  }
 
   if (startActiveSpan) {
     // 记录开始时间
