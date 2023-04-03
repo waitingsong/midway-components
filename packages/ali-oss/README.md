@@ -1,8 +1,8 @@
-# [@mw-components/ali-oss](https://www.npmjs.com/package/@mw-components/ali-oss)
+# [@mwcp/ali-oss](https://www.npmjs.com/package/@mwcp/ali-oss)
 
 Ali Oss ossutil client component for midway.js
 
-[![Version](https://img.shields.io/npm/v/@mw-components/ali-oss.svg)](https://www.npmjs.com/package/@mw-components/ali-oss)
+[![Version](https://img.shields.io/npm/v/@mwcp/ali-oss.svg)](https://www.npmjs.com/package/@mwcp/ali-oss)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![](https://img.shields.io/badge/lang-TypeScript-blue.svg)]()
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
