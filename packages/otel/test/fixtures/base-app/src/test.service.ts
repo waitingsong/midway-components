@@ -43,6 +43,15 @@ export class DefaultComponentService {
     return ret
   }
 
+  @Trace<DefaultComponentService['testArg2']>({
+    spanName: ([v1, v2]) => `foo-${v1 + 1}-${v2}`,
+  })
+  async testArg2(v1: number, v2: string): Promise<string> {
+    void v2
+    const ret = await v1.toString()
+    return ret
+  }
+
   async error(triggerError: boolean): Promise<string> {
     if (triggerError) {
       throw new Error('debug for DefaultComponentService.error()')
