@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.1.0](https://github.com/waitingsong/midway-components/compare/@mwcp/boot@7.0.5...@mwcp/boot@7.1.0) (2023-04-04)
+
+
+### Features
+
+* **boot:** RootClass:genFetchHeaders() accepts IncomingHttpHeaders ([440e35e](https://github.com/waitingsong/midway-components/commit/440e35e7c04ab73a24e22a6cdc59397278874b11))
+
+
+
+
+
 ## [7.0.5](https://github.com/waitingsong/midway-components/compare/@mwcp/boot@7.0.4...@mwcp/boot@7.0.5) (2023-04-03)
 
 **Note:** Version bump only for package @mwcp/boot
