@@ -96,6 +96,7 @@ export class FooController {
 }
 ```
 
+## 装饰器泛型参数
 ### 从泛型参数自动获取方法调用参数类型
 
 ```ts

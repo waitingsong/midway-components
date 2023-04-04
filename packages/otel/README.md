@@ -96,6 +96,7 @@ export class FooController {
 }
 ```
 
+## Decorator Generics
 ### Auto parameter type of keyGenerator from generics
 
 ```ts
