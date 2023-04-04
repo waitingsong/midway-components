@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { IncomingHttpHeaders } from 'node:http'
 
 import { App, Config, Inject } from '@midwayjs/core'
 // import { ILogger as Logger } from '@midwayjs/logger'
@@ -218,19 +219,42 @@ export class RootClass {
    *   - content-length
    */
   genFetchHeaders(
-    headers?: HeadersInit | undefined,
+    headers?: HeadersInit | IncomingHttpHeaders | undefined,
     excludes: string[] = ['host', 'connection', 'content-length'],
   ): Headers {
 
     const ret = new Headers(this.initFetchOptions.headers)
-    const inputHeaders = new Headers(headers)
+    if (! headers) {
+      return ret
+    }
 
-    inputHeaders.forEach((val, key) => {
-      if (Array.isArray(excludes) && excludes.includes(key)) {
-        return
-      }
-      ret.set(key, val)
-    })
+    if (headers instanceof Headers) {
+      headers.forEach((val, key) => {
+        if (Array.isArray(excludes) && excludes.includes(key)) { return }
+        ret.set(key, val)
+      })
+      return ret
+    }
+    else if (Array.isArray(headers)) { // [string, string][]
+      headers.forEach(([key, val]) => {
+        if (! key) { return }
+        if (Array.isArray(excludes) && excludes.includes(key)) { return }
+        if (typeof val === 'undefined') { return }
+        ret.set(key, val)
+      })
+      return ret
+    }
+    else if (typeof headers === 'object') { // IncomingHttpHeaders
+      Object.keys(headers).forEach((key) => {
+        if (Array.isArray(excludes) && excludes.includes(key)) { return }
+        const data = headers[key]
+        if (typeof data === 'undefined') { return }
+        const value = Array.isArray(data) || typeof data === 'object' // last for ReadonlyArray
+          ? data.join(',')
+          : data
+        ret.set(key, value)
+      })
+    }
 
     return ret
   }
