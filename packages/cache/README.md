@@ -118,24 +118,6 @@ export class FooService {
 }
 ```
 
-### Auto parameter type of keyGenerator from generics
-
-```ts
-import { Cacheable } from '@mwcp/cache'
-
-@Cacheable() 
-export class FooService {
-
-  @Cacheable<FooService['world']>({  // pass generics and then input will get the type automatically
-    key: input => input.uid.toString()
-  }) // cacheKey will be `FooService.world:${uid}`
-  async world(input: UserDTO): Promise<string> {
-    return 'world'
-  }
-
-}
-```
-
 ## CacheEvict Decorator
 
 supports method
@@ -196,19 +178,35 @@ export class FooRepo {
 ```
 
 ## Decorator Generics
+### Auto parameter type of keyGenerator from generics
+
+```ts
+import { Cacheable } from '@mwcp/cache'
+
+@Cacheable() 
+export class FooService {
+
+  @Cacheable<FooService['world']>({  // pass generics and then input will get the type automatically
+    key: ([input]) => input.uid.toString()
+  }) // cacheKey will be `FooService.world:${uid}`
+  async world(input: UserDTO): Promise<string> {
+    return 'world'
+  }
+
+}
+```
 
 ```ts
 @Cacheable() 
 export class FooService {
   @Cacheable<FooService['hello']>({  // <--- pass FooService['hello'] as method type
-    key: (args) => args[0].uid.toString()   // <--- type of args will be [UserDTO, string | undefined] automatically
+    key: (args) => args[0].uid.toString()   // <--- args 自动推导为类型 [UserDTO, string | undefined]
   }) 
   async hello(input: UserDTO, input2?: string): Promise<string> {
     return 'world'
   }
 }
 ```
-
 
 
 [More examples]
