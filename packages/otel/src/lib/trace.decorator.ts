@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import { isAsyncFunction, isPromise } from 'node:util/types'
+import { isPromise } from 'node:util/types'
 
 import {
   MidwayDecoratorService,
@@ -39,9 +39,7 @@ export function registerMethodHandler(
       ? {
         around: (joinPoint: JoinPoint) => {
           const aroundFactoryOptions: AroundFactoryOptions = prepareAroundFactory(joinPoint, options)
-
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          if (isAsyncFunction(joinPoint.target[joinPoint.methodName])) {
+          if (joinPoint.proceedIsAsyncFunction) {
             const ret = aroundFactory(aroundFactoryOptions)
             return ret
           }
