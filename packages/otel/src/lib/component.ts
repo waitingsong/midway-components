@@ -60,10 +60,18 @@ export class OtelComponent {
 
   protected traceProvider: node.NodeTracerProvider | undefined
   protected spanProcessors: node.SpanProcessor[] = []
+  protected appInitProcessSpan: Span | undefined
+
+  constructor(options?: { name: string, version: string }) {
+    if (options) {
+      const { name, version } = options
+      this.otelLibraryName = name ?? ''
+      this.otelLibraryVersion = version ?? ''
+    }
+  }
 
   @Init()
   async init(): Promise<void> {
-
     const isDevelopmentEnvironment = this.environmentService.isDevelopmentEnvironment()
       && ! process.env['CI_BENCHMARK']
 
@@ -76,6 +84,17 @@ export class OtelComponent {
     this.traceProvider = provider
     this.spanProcessors = processors
 
+    const opts = {
+      root: true,
+    }
+    const spanName = 'APP INIT'
+    this.appInitProcessSpan = this.startSpan(spanName, opts)
+    // this.startActiveSpan(spanName, (
+    //   span,
+    // ) => {
+    //   this.initProcessSpan = span
+    // })
+
     this.prepareCaptureHeaders('request', this.config.captureRequestHeaders)
     this.prepareCaptureHeaders('response', this.config.captureRequestHeaders)
   }
@@ -86,10 +105,12 @@ export class OtelComponent {
   }
 
   getGlobalCurrentSpan(traceContext?: Context): Span | undefined {
+    if (! this.config.enable) { return }
     return trace.getSpan(traceContext ?? context.active())
   }
 
   getTraceId(): string | undefined {
+    if (! this.config.enable) { return }
     return this.getGlobalCurrentSpan()?.spanContext().traceId
   }
 
@@ -129,9 +150,10 @@ export class OtelComponent {
       // startTime: Date.now(),
       ...options,
     }
-    return traceContext
+    const ret = traceContext
       ? tracer.startActiveSpan(name, opts, traceContext, callback)
       : tracer.startActiveSpan(name, opts, callback)
+    return ret
   }
 
   async flush(): Promise<void> {
@@ -184,6 +206,7 @@ export class OtelComponent {
   }
 
   addRootSpanEventWithError(span: Span, error?: Error): void {
+    if (! this.config.enable) { return }
     if (! error) { return }
 
     const { cause } = error
@@ -287,6 +310,42 @@ export class OtelComponent {
       span.end(endTime)
     }
   }
+
+  endRootSpan(
+    rootSpan: Span,
+    spanStatusOptions: SpanStatusOptions = initSpanStatusOptions,
+    endTime?: TimeInput,
+  ): void {
+
+    if (! this.config.enable) { return }
+    this.endSpan(rootSpan, rootSpan, spanStatusOptions, endTime)
+    rootSpan.end(endTime)
+  }
+
+  addAppInitEvent(
+    input: Attributes,
+    options?: AddEventOtpions,
+  ): void {
+
+    if (this.appInitProcessSpan) {
+      const addEventOtpions = {
+        traceEvent: true,
+        logCpuUsage: true,
+        logMemeoryUsage: true,
+        ...options,
+      }
+      this.addEvent(this.appInitProcessSpan, input, addEventOtpions)
+    }
+  }
+
+  endAppInitEvent(): void {
+    if (this.appInitProcessSpan) {
+      this.endRootSpan(this.appInitProcessSpan)
+      this.appInitProcessSpan = void 0
+    }
+  }
+
+
 
   protected prepareCaptureHeaders(type: 'request' | 'response', headersKey: string[]) {
     const keys = normalizeHeaderKey(headersKey)

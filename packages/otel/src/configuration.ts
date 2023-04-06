@@ -98,10 +98,8 @@ export class AutoConfiguration implements ILifeCycle {
       this.mwConfig.ignore.push(new RegExp(`/${ConfigKey.namespace}/.+`, 'u'))
     }
 
-    const otel = await this.app.getApplicationContext().getAsync(OtelComponent)
+    const otel = await this.app.getApplicationContext().getAsync(OtelComponent, [ { name, version } ])
     assert(otel, 'otel must be set')
-    otel.otelLibraryName = name
-    otel.otelLibraryVersion = version
 
     // const decoratorService = await this.app.getApplicationContext().getAsync(MidwayDecoratorService)
     // assert(decoratorService === this.decoratorService)
@@ -110,22 +108,35 @@ export class AutoConfiguration implements ILifeCycle {
     if (this.config.enable && this.mwConfig.enableMiddleware) {
       registerMiddleware(this.app, TraceMiddlewareInner, 'last')
     }
+
+    otel.addAppInitEvent({
+      event: `${ConfigKey.componentName}.onReady.end`,
+    })
   }
 
-  async onServerReady(): Promise<void> {
+  async onServerReady(container: IMidwayContainer): Promise<void> {
     if (this.config.enable && this.mwConfig.enableMiddleware) {
       registerMiddleware(this.app, TraceMiddleware, 'first')
     }
 
-    // const mwNames = this.app.getMiddleware().getNames()
-    // console.log({ mwNames })
+    const mwNames = this.app.getMiddleware().getNames()
+
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    void setTimeout(async () => {
+      const otel = await container.getAsync(OtelComponent)
+      otel.addAppInitEvent({
+        event: `${ConfigKey.componentName}.onServerReady.end`,
+        mwNames: JSON.stringify(mwNames),
+      })
+      otel.endAppInitEvent()
+    }, 0)
   }
 
   async onStop(container: IMidwayContainer): Promise<void> {
     this.logger.info('[otel] onStop()')
+    const otel = await container.getAsync(OtelComponent)
     await sleep(1000)
-    const inst = await container.getAsync(OtelComponent)
-    await inst.shutdown()
+    await otel.shutdown()
   }
 
 }
