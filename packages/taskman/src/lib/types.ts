@@ -17,7 +17,7 @@ export enum ConfigKey {
   namespace = 'taskman',
   config = 'taskClientConfig',
   middlewareConfig = 'taskMiddlewareConfig',
-  // componentName = 'taskmanComponent',
+  componentName = 'taskmanComponent',
   middlewareName = 'taskmanMiddleware',
   clientConfig = 'taskClientConfig',
   serverConfig = 'taskServerConfig'

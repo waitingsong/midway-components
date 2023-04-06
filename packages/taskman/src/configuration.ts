@@ -10,6 +10,7 @@ import {
   Logger,
 } from '@midwayjs/core'
 import { DbConfig, DbSourceManager } from '@mwcp/kmore'
+import { OtelComponent } from '@mwcp/otel'
 import type { Application, Context, IMidwayContainer } from '@mwcp/share'
 import { sleep } from '@waiting/shared-core'
 
@@ -44,6 +45,11 @@ export class AutoConfiguration {
   @Inject() dbManager: DbSourceManager<DbReplica.taskMaster, DbModel, Context>
 
   async onReady(container: IMidwayContainer): Promise<void> {
+    const otel = await container.getAsync(OtelComponent)
+    otel.addAppInitEvent({
+      event: `${ConfigKey.componentName}.onReady.begin`,
+    })
+
     // const dbConfig = genKmoreDbConfig(
     //   this.serverConfig,
     //   initDbConfig,
@@ -61,6 +67,9 @@ export class AutoConfiguration {
       registerMiddleware(this.app)
     }
 
+    otel.addAppInitEvent({
+      event: `${ConfigKey.componentName}.onReady.end`,
+    })
   }
 
   async onStop(container: IMidwayContainer): Promise<void> {
