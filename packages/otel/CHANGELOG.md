@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.2.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@7.1.2...@mwcp/otel@7.2.0) (2023-04-06)
+
+
+### Features
+
+* **otel:** addAppInitEvent() ([fe9ae3d](https://github.com/waitingsong/midway-components/commit/fe9ae3d058fd02e8ae530b35c0a854f94bb90211))
+
+
+
+
+
 ## [7.1.2](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@7.1.1...@mwcp/otel@7.1.2) (2023-04-04)
 
 **Note:** Version bump only for package @mwcp/otel

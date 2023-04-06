@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.2.0](https://github.com/waitingsong/midway-components/compare/@mwcp/boot@7.1.1...@mwcp/boot@7.2.0) (2023-04-06)
+
+
+### Features
+
+* **boot:** export ConfigKey as BootConfigKey ([29384bc](https://github.com/waitingsong/midway-components/commit/29384bc81c52013d7abdc9bd7a43f00190378d66))
+
+
+
+
+
 ## [7.1.1](https://github.com/waitingsong/midway-components/compare/@mwcp/boot@7.1.0...@mwcp/boot@7.1.1) (2023-04-04)
 
 **Note:** Version bump only for package @mwcp/boot
