@@ -9,8 +9,10 @@ import {
   Inject, ILifeCycle,
   MidwayDecoratorService,
 } from '@midwayjs/core'
+import { OtelComponent } from '@mwcp/otel'
 import {
   Application,
+  IMidwayContainer,
   RegisterDecoratorHandlerOptions,
   registerDecoratorHandler,
 } from '@mwcp/share'
@@ -45,7 +47,12 @@ export class AutoConfiguration implements ILifeCycle {
     updateCacheConfig(this.cache, this.cacheConfig)
   }
 
-  async onReady(): Promise<void> {
+  async onReady(container: IMidwayContainer): Promise<void> {
+    const otel = await container.getAsync(OtelComponent)
+    otel.addAppInitEvent({
+      event: `${ConfigKey.componentName}.onReady.begin`,
+    })
+
     const config = this.app.getConfig('cache') as CacheConfig
     assert.deepEqual(config, this.cacheConfig)
 
@@ -79,6 +86,9 @@ export class AutoConfiguration implements ILifeCycle {
     }
     registerDecoratorHandler(optsCachePut, aroundFactoryOptions)
 
+    otel.addAppInitEvent({
+      event: `${ConfigKey.componentName}.onReady.end`,
+    })
   }
 
 }
