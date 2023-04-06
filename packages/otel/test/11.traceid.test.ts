@@ -209,7 +209,7 @@ describe(filename, () => {
     assert(found, `foo-${rnd} not found`)
   })
 
-  it.only(`Should ${path4} work`, async () => {
+  it(`Should ${path4} work`, async () => {
     const { httpRequest } = testConfig
 
     const resp = await httpRequest
