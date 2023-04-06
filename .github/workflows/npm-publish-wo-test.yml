@@ -84,13 +84,15 @@ jobs:
       - name: Inatall Dependencies
         timeout-minutes: 15
         run: |
+          chown -R 1001:121 "/github/home/.npm"
           chmod a+w -R .
           # DO NOT execute: npm config set unsafe-perm=true
           export cwd=`pwd`
-          .github/workflows/fix.sh
+          # .github/workflows/fix.sh
           npm i --no-audit -g autocannon c8 lerna rollup zx
           # npm run purge
           npm run bootstrap
+          .githooks/link.sh
         env:
           CI: true
 
