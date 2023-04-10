@@ -24,7 +24,6 @@ import {
   DecoratorExecutorOptionsBase,
   DecoratorExecutorFn,
   DecoratorMetaData,
-  GenDecoratorExecutorOptionsFn,
   RegisterDecoratorHandlerOptions,
 } from './custom-decorator.types.js'
 
@@ -236,36 +235,55 @@ export function registerDecoratorHandler<TDecoratorArgs extends {} = {}>(
   decoratorService.registerMethodHandler(
     decoratorKey,
     aopCallbackInputOptions => ({
-      around: async (joinPoint: JoinPoint) => {
-        const opts = {
+      around: (joinPoint: JoinPoint) => {
+        const opts: AroundFactoryOptions<TDecoratorArgs> = {
           ...aroundFactoryOptions,
           decoratorKey,
           aopCallbackInputOptions,
           joinPoint,
         }
-        const ret = await aroundFactory(
+        const opts2: DecoratorExecutorOptionsBase<TDecoratorArgs> = genDecoratorExecutorOptionsFn(opts)
+
+        if (typeof opts2.methodIsAsyncFunction === 'undefined') {
+          opts2.methodIsAsyncFunction = !! joinPoint.proceedIsAsyncFunction
+        }
+
+        if (opts2.methodIsAsyncFunction === true) {
+          const ret = aroundFactory(
+            decoratorExecutor,
+            opts2,
+          )
+          return ret
+        }
+
+        const ret = aroundFactorySync(
           decoratorExecutor,
-          genDecoratorExecutorOptionsFn,
-          opts,
+          opts2,
         )
         return ret
       },
     }),
   )
+
 }
 
 
 async function aroundFactory<TDecoratorArgs extends {} = {}>(
   decoratorExecutor: DecoratorExecutorFn,
-  genDecoratorExecutorOptionsFn: GenDecoratorExecutorOptionsFn<TDecoratorArgs>,
-  options: AroundFactoryOptions<TDecoratorArgs>,
+  options: DecoratorExecutorOptionsBase<TDecoratorArgs>,
 ): Promise<unknown> {
 
-  assert(typeof decoratorExecutor === 'function', 'decoratorExecutor is not function')
-  assert(typeof genDecoratorExecutorOptionsFn === 'function', 'genDecoratorExecutorOptionsFn is not function')
-
-  const opts: DecoratorExecutorOptionsBase<TDecoratorArgs> = genDecoratorExecutorOptionsFn(options)
   // not return directly, https://v8.dev/blog/fast-async#improved-developer-experience
-  const dat = await decoratorExecutor(opts)
+  const dat = await decoratorExecutor(options)
+  return dat
+}
+
+function aroundFactorySync<TDecoratorArgs extends {} = {}>(
+  decoratorExecutor: DecoratorExecutorFn,
+  options: DecoratorExecutorOptionsBase<TDecoratorArgs>,
+): unknown {
+
+  // not return directly, https://v8.dev/blog/fast-async#improved-developer-experience
+  const dat: unknown = decoratorExecutor(options)
   return dat
 }

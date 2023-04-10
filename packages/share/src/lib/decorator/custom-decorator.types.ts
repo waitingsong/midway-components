@@ -38,12 +38,13 @@ export interface DecoratorExecutorOptionsBase<TDecoratorArgs extends {} = {}> {
   methodArgs: unknown[]
   methodName: string
   methodResult?: unknown
+  methodIsAsyncFunction?: boolean
   [key: string]: unknown
 }
 
 export type DecoratorExecutorFn<TDecoratorArgs extends {} = {}> = (
   options: DecoratorExecutorOptionsBase<TDecoratorArgs>,
-) => Promise<unknown>
+) => Promise<unknown> | unknown
 
 
 export interface CustomClassDecoratorOptions<TDecoratorArgs extends {}> {
