@@ -7,6 +7,7 @@ export {
 } from './trace.decorator'
 export * from './trace.logger'
 export * from './trace.service'
+export * from './trace-init/trace-init'
 export {
   addSpanEventWithOutgoingResponseData,
   getIncomingRequestAttributesFromWebContext,

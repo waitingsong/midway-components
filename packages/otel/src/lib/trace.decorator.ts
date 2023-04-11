@@ -11,7 +11,7 @@ import {
   SpanStatusCode,
 } from '@opentelemetry/api'
 
-import { MetaDataType, AroundFactoryOptions, prepareAroundFactory } from './trace.helper'
+import { MetaDataType, DecoratorExecutorOptions, prepareAroundFactory } from './trace.helper'
 import { TraceService } from './trace.service'
 import {
   Config,
@@ -38,7 +38,7 @@ export function registerMethodHandler(
     return config.enable
       ? {
         around: (joinPoint: JoinPoint) => {
-          const aroundFactoryOptions: AroundFactoryOptions = prepareAroundFactory(joinPoint, options)
+          const aroundFactoryOptions: DecoratorExecutorOptions = prepareAroundFactory(joinPoint, options)
           if (joinPoint.proceedIsAsyncFunction) {
             const ret = aroundFactory(aroundFactoryOptions)
             return ret
@@ -55,12 +55,12 @@ export function registerMethodHandler(
 
 
 async function aroundFactory(
-  options: AroundFactoryOptions,
+  options: DecoratorExecutorOptions,
 ): Promise<unknown> {
 
   const {
-    func,
-    funcArgs,
+    method: func,
+    methodArgs: funcArgs,
     callerAttr,
     spanName,
     startActiveSpan,
@@ -98,12 +98,12 @@ async function aroundFactory(
 }
 
 function aroundFactorySync(
-  options: AroundFactoryOptions,
+  options: DecoratorExecutorOptions,
 ): unknown {
 
   const {
-    func,
-    funcArgs,
+    method: func,
+    methodArgs: funcArgs,
     callerAttr,
     spanName,
     startActiveSpan,

@@ -5,7 +5,12 @@ import {
   REQUEST_OBJ_CTX_KEY,
   JoinPoint,
 } from '@midwayjs/core'
-import type { Context as WebContext } from '@mwcp/share'
+import type {
+  AopCallbackInputArgsType,
+  AroundFactoryOptions,
+  DecoratorExecutorOptionsBase,
+  Context as WebContext,
+} from '@mwcp/share'
 import { Attributes, SpanOptions } from '@opentelemetry/api'
 
 import { TraceService } from './trace.service'
@@ -18,14 +23,16 @@ import {
 } from './types'
 
 
-export interface MetaDataType {
-  target: new (...args: unknown[]) => unknown
-  propertyName: string
-  metadata: TraceDecoratorArg | undefined
-}
+// export interface MetaDataType {
+//   target: new (...args: unknown[]) => unknown
+//   propertyName: string
+//   metadata: TraceDecoratorArg | undefined
+// }
+export type MetaDataType = AopCallbackInputArgsType<TraceDecoratorArg>
+
 
 interface GenKeyOptions extends Partial<TraceDecoratorOptions> {
-  webContext: WebContext
+  webContext: WebContext | undefined
   methodArgs: unknown[]
   callerClass: string
   callerMethod: string
@@ -52,6 +59,7 @@ function genKey(options: GenKeyOptions): string {
     }
 
     case 'function': {
+      assert(webContext, 'webContext is required when spanName is a function')
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       const keyStr = spanName.call(webContext, methodArgs)
       assert(
@@ -73,22 +81,48 @@ function genKey(options: GenKeyOptions): string {
   return name
 }
 
-export interface AroundFactoryOptions {
-  func: (...args: unknown[]) => unknown
-  funcArgs: unknown[]
+export function genDecoratorExecutorOptions<TDecoratorArgs extends TraceDecoratorArg = TraceDecoratorArg>(
+  options: AroundFactoryOptions<TDecoratorArgs>,
+): DecoratorExecutorOptions<TDecoratorArgs> {
+
+  const {
+    joinPoint,
+    aopCallbackInputOptions,
+    config,
+    decoratorKey,
+    webApplication,
+  } = options
+  assert(webApplication, 'webApplication is required')
+
+  const opts = prepareAroundFactory<TDecoratorArgs>(joinPoint, aopCallbackInputOptions)
+  if (typeof opts.config === 'undefined') {
+    opts.config = config
+  }
+  if (typeof opts.decoratorKey === 'undefined') {
+    opts.decoratorKey = decoratorKey
+  }
+  if (typeof opts.webApplication === 'undefined') {
+    opts.webApplication = webApplication
+  }
+
+  return opts
+}
+
+
+export interface DecoratorExecutorOptions<T extends TraceDecoratorArg = TraceDecoratorArg>
+  extends DecoratorExecutorOptionsBase<T> {
   callerAttr: Attributes
   spanName: string
   spanOptions: Partial<SpanOptions>
   startActiveSpan: boolean
-  target: unknown
   traceContext: TraceContext | undefined
   traceService: TraceService | undefined
 }
 
-export function prepareAroundFactory(
+export function prepareAroundFactory<TDecoratorArgs extends TraceDecoratorArg = TraceDecoratorArg>(
   joinPoint: JoinPoint,
   metaDataOptions: MetaDataType,
-): AroundFactoryOptions {
+): DecoratorExecutorOptions<TDecoratorArgs> {
 
   // eslint-disable-next-line @typescript-eslint/unbound-method
   assert(joinPoint.proceed, 'joinPoint.proceed is undefined')
@@ -97,7 +131,7 @@ export function prepareAroundFactory(
   // 装饰器所在的实例
   const instance = joinPoint.target
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-  const webContext = instance[REQUEST_OBJ_CTX_KEY] as WebContext
+  const webContext = instance[REQUEST_OBJ_CTX_KEY] as WebContext | undefined
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   const callerClass = instance.constructor?.name ?? metaDataOptions.target.name
@@ -110,6 +144,7 @@ export function prepareAroundFactory(
   }
 
   const { metadata } = metaDataOptions
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const mdata: TraceDecoratorArg = metadata && typeof metadata === 'object'
     ? metadata
     : {}
@@ -129,7 +164,7 @@ export function prepareAroundFactory(
 
   // const traceService = (webContext[`_${ConfigKey.serviceName}`]
   //   ?? await webContext.requestContext.getAsync(TraceService)) as TraceService
-  const traceService = webContext[`_${ConfigKey.serviceName}`] as TraceService | undefined
+  const traceService = webContext?.[`_${ConfigKey.serviceName}`] as TraceService | undefined
   // assert(traceService, `traceService undefined on webContext[_${ConfigKey.serviceName}]`)
   assert(typeof func === 'function', 'Func referencing joinPoint.proceed is not function')
 
@@ -141,20 +176,22 @@ export function prepareAroundFactory(
     ? mdata.traceContext
     : void 0
 
-  // if (! mdata.startTime) {
-  //   const now = Date.now()
-  //   mdata.startTime = now
-  // }
-
-  const opts: AroundFactoryOptions = {
-    func,
+  const opts: DecoratorExecutorOptions<TDecoratorArgs> = {
+    argsFromClassDecorator: void 0,
+    argsFromMethodDecorator: void 0,
+    decoratorKey: '',
+    config: void 0,
+    instance: target,
+    method: func,
     // index:0 may webcontext
-    funcArgs: args,
+    methodArgs: args,
+    methodName: callerMethod,
+    methodIsAsyncFunction: !! joinPoint.proceedIsAsyncFunction,
+
     callerAttr,
     spanName,
     spanOptions: mdata,
     startActiveSpan,
-    target,
     traceContext,
     traceService,
   }

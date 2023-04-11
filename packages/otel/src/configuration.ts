@@ -13,7 +13,13 @@ import {
   MidwayInformationService,
 } from '@midwayjs/core'
 import { ILogger } from '@midwayjs/logger'
-import type { Application, IMidwayContainer } from '@mwcp/share'
+import {
+  Application,
+  AroundFactoryOptionsBase,
+  IMidwayContainer,
+  RegisterDecoratorHandlerOptions,
+  registerDecoratorHandler,
+} from '@mwcp/share'
 import { node } from '@opentelemetry/sdk-node'
 import { sleep } from '@waiting/shared-core'
 import type { NpmPkg } from '@waiting/shared-types'
@@ -21,11 +27,15 @@ import type { NpmPkg } from '@waiting/shared-types'
 
 import { useComponents } from './imports'
 import { OtelComponent } from './lib/component'
+import { decoratorExecutor } from './lib/trace-init/helper.trace-init'
+import { METHOD_KEY_TraceInit } from './lib/trace-init/trace-init'
 import { registerMethodHandler } from './lib/trace.decorator'
+import { genDecoratorExecutorOptions } from './lib/trace.helper'
 import {
   Config as Conf,
   ConfigKey,
   MiddlewareConfig,
+  TraceDecoratorArg,
 } from './lib/types'
 import {
   TraceMiddlewareInner,
@@ -104,6 +114,21 @@ export class AutoConfiguration implements ILifeCycle {
     // const decoratorService = await this.app.getApplicationContext().getAsync(MidwayDecoratorService)
     // assert(decoratorService === this.decoratorService)
     registerMethodHandler(this.decoratorService, this.config)
+
+
+    const aroundFactoryOptions: AroundFactoryOptionsBase = {
+      config: this.config,
+      webApplication: this.app,
+    }
+    const optsTraceInit: RegisterDecoratorHandlerOptions<TraceDecoratorArg> = {
+      decoratorKey: METHOD_KEY_TraceInit,
+      decoratorService: this.decoratorService,
+      // @ts-expect-error
+      decoratorExecutor,
+      genDecoratorExecutorOptionsFn: genDecoratorExecutorOptions,
+    }
+    registerDecoratorHandler(optsTraceInit, aroundFactoryOptions)
+
 
     if (this.config.enable && this.mwConfig.enableMiddleware) {
       registerMiddleware(this.app, TraceMiddlewareInner, 'last')

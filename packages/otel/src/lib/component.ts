@@ -30,7 +30,7 @@ import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
 
 import { initSpanStatusOptions } from './config'
 import { AddEventOtpions, AttrNames, Config, ConfigKey, InitTraceOptions, SpanStatusOptions } from './types'
-import { normalizeHeaderKey } from './util'
+import { normalizeHeaderKey, setSpan } from './util'
 
 import { initTrace } from '~/helper/index.opentelemetry'
 
@@ -60,7 +60,11 @@ export class OtelComponent {
 
   protected traceProvider: node.NodeTracerProvider | undefined
   protected spanProcessors: node.SpanProcessor[] = []
-  protected appInitProcessSpan: Span | undefined
+
+  /** Active during Midway Lifecyle between onReady and onServerReady */
+  appInitProcessContext: Context | undefined
+  /** Active during Midway Lifecyle between onReady and onServerReady */
+  appInitProcessSpan: Span | undefined
 
   constructor(options?: { name: string, version: string }) {
     if (options) {
@@ -84,16 +88,25 @@ export class OtelComponent {
     this.traceProvider = provider
     this.spanProcessors = processors
 
-    const opts = {
+    const opts: SpanOptions = {
       root: true,
+      kind: SpanKind.INTERNAL,
     }
     const spanName = 'APP INIT'
-    this.appInitProcessSpan = this.startSpan(spanName, opts)
-    // this.startActiveSpan(spanName, (
-    //   span,
-    // ) => {
-    //   this.initProcessSpan = span
-    // })
+    const traceCtx = this.getGlobalCurrentContext()
+
+    // this.appInitProcessSpan = this.startSpan(spanName, opts)
+    this.startActiveSpan(spanName, (
+      span,
+    ) => {
+      this.appInitProcessSpan = span
+      const ctxWithSpanSet = setSpan(traceCtx, span)
+      this.appInitProcessContext = ctxWithSpanSet
+    }, opts)
+
+    const span = this.getGlobalCurrentSpan(this.appInitProcessContext)
+    void traceCtx
+    void span
 
     this.prepareCaptureHeaders('request', this.config.captureRequestHeaders)
     this.prepareCaptureHeaders('response', this.config.captureRequestHeaders)
@@ -325,22 +338,27 @@ export class OtelComponent {
   addAppInitEvent(
     input: Attributes,
     options?: AddEventOtpions,
+    /** if omit, use this.appInitProcessSpan */
+    span?: Span,
   ): void {
 
-    if (this.appInitProcessSpan) {
+    const spanToUse = span ?? this.appInitProcessSpan
+
+    if (spanToUse) {
       const addEventOtpions = {
         traceEvent: true,
         logCpuUsage: true,
         logMemeoryUsage: true,
         ...options,
       }
-      this.addEvent(this.appInitProcessSpan, input, addEventOtpions)
+      this.addEvent(spanToUse, input, addEventOtpions)
     }
   }
 
   endAppInitEvent(): void {
     if (this.appInitProcessSpan) {
       this.endRootSpan(this.appInitProcessSpan)
+      this.appInitProcessContext = void 0
       this.appInitProcessSpan = void 0
     }
   }
