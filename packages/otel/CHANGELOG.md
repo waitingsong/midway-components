@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.3.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@7.2.0...@mwcp/otel@7.3.0) (2023-04-11)
+
+
+### Features
+
+* **otel:** decorator TraceInit ([de6a2af](https://github.com/waitingsong/midway-components/commit/de6a2af079325a55524d742bc6ea2c09f9a5129b))
+
+
+### Performance Improvements
+
+* **otel:** store OtelComponent instance on application ([777a433](https://github.com/waitingsong/midway-components/commit/777a433c6386a3a46fd2c6f8badf1c6f7d72c45d))
+
+
+
+
+
 # [7.2.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@7.1.2...@mwcp/otel@7.2.0) (2023-04-06)
 
 

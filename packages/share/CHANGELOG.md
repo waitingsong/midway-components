@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 5.1.0 (2023-04-11)
+
+
+### Features
+
+* **share:** registerMethodHandler() supports sync callback ([ecbde48](https://github.com/waitingsong/midway-components/commit/ecbde48398f8daef427c7bd4e60fadd622d81b22))
+* **share:** update decorator types ([5a48fd3](https://github.com/waitingsong/midway-components/commit/5a48fd38fbe62ad8d908d4a692ecc08c7634e339))
+
+
+
+
+
 ## 5.0.1 (2023-04-03)
 
 **Note:** Version bump only for package @mwcp/share
