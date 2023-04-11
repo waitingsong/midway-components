@@ -134,7 +134,7 @@ jobs:
       - name: Benchmark boot
         timeout-minutes: 10
         run: |
-          .scripts/benchmark/start-benchmark.mjs --wait=30000 --qps=500 --api=_base/hello --p=boot
+          .scripts/benchmark/start-benchmark.mjs --wait=30000 --qps=500 --api=_boot/hello --p=boot
         env:
           CI: true
           OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
