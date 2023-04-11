@@ -22,7 +22,7 @@ export const METHOD_KEY_TraceInit = 'decorator:method_key_TraceInit'
  * }
  * ```
  */
-export function TraceInit<M extends MethodType | undefined = undefined>(
+export function TraceInit<M extends MethodType | void = void>(
   options: TraceDecoratorArg<M>,
 ): MethodDecorator & ClassDecorator {
 

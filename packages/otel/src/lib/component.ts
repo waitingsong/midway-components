@@ -53,6 +53,11 @@ export class OtelComponent {
 
   @Logger() protected readonly logger: ILogger
 
+  /** Active during Midway Lifecyle between onReady and onServerReady */
+  appInitProcessContext: Context | undefined
+  /** Active during Midway Lifecyle between onReady and onServerReady */
+  appInitProcessSpan: Span | undefined
+
   otelLibraryName: string
   otelLibraryVersion: string
   /* request|response -> Map<lower,norm> */
@@ -61,10 +66,6 @@ export class OtelComponent {
   protected traceProvider: node.NodeTracerProvider | undefined
   protected spanProcessors: node.SpanProcessor[] = []
 
-  /** Active during Midway Lifecyle between onReady and onServerReady */
-  appInitProcessContext: Context | undefined
-  /** Active during Midway Lifecyle between onReady and onServerReady */
-  appInitProcessSpan: Span | undefined
 
   constructor(options?: { name: string, version: string }) {
     if (options) {
