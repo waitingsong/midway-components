@@ -13,12 +13,12 @@ import {
 } from '@midwayjs/core'
 import { IMidwayLogger } from '@midwayjs/logger'
 import { JwtConfigKey, JwtMiddlewareConfig } from '@mwcp/jwt'
-import { OtelComponent } from '@mwcp/otel'
+import { TraceInit } from '@mwcp/otel'
 
 import { useComponents, useDefaultRoutes } from './imports'
 import {
   Application,
-  BootConfigKey,
+  ConfigKey,
   IMidwayContainer,
   NpmPkg,
 } from './lib/index'
@@ -43,11 +43,9 @@ export class ContainerConfiguration implements ILifeCycle {
   @Inject() readonly informationService: MidwayInformationService
 
   // 启动前处理
+  @TraceInit(`INIT ${ConfigKey.componentName}.onReady`)
   async onReady(container: IMidwayContainer): Promise<void> {
-    const otel = await container.getAsync(OtelComponent)
-    otel.addAppInitEvent({
-      event: `${BootConfigKey.componentName}.onReady.begin`,
-    })
+    void container
 
     // 定制化日志
     // customLogger(this.logger, this.app)
@@ -72,19 +70,12 @@ export class ContainerConfiguration implements ILifeCycle {
       assert(pkg, 'retrieve package.json failed')
       this.app.addConfigObject({ pkg })
     }
-
-    otel.addAppInitEvent({
-      event: `${BootConfigKey.componentName}.onReady.end`,
-    })
   }
 
 
+  @TraceInit(`INIT ${ConfigKey.componentName}.onServerReady`)
   async onServerReady(container: IMidwayContainer): Promise<void> {
-    const otel = await container.getAsync(OtelComponent)
-    otel.addAppInitEvent({
-      event: `${BootConfigKey.componentName}.onServerReady.begin`,
-    })
-
+    void container
     const pkg = this.informationService.getPkg() as NpmPkg | undefined
     const info = {
       pkgName: pkg?.name,
@@ -109,9 +100,6 @@ export class ContainerConfiguration implements ILifeCycle {
 
     // eslint-disable-next-line no-console
     console.info('✅ midway ready', info)
-    otel.addAppInitEvent({
-      event: `${BootConfigKey.componentName}.onServerReady.end`,
-    })
   }
 
   // async onStop(): Promise<void> {
