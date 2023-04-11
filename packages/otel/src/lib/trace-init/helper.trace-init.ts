@@ -4,7 +4,7 @@ import { Attributes, SpanKind, SpanOptions } from '@opentelemetry/api'
 
 import { OtelComponent } from '../component'
 import { DecoratorExecutorOptions } from '../trace.helper'
-import { TraceDecoratorArg } from '../types'
+import { ConfigKey, TraceDecoratorArg } from '../types'
 
 
 export async function decoratorExecutor(
@@ -15,7 +15,12 @@ export async function decoratorExecutor(
   assert(webApplication, 'webApplication is required')
   assert(methodIsAsyncFunction === true, 'decorated method must be AsyncFunction')
 
-  const otel = await webApplication.getApplicationContext().getAsync(OtelComponent)
+  const key = `_${ConfigKey.componentName}`
+  // @ts-ignore
+  let otel = webApplication[key] as OtelComponent | undefined
+  if (! otel) {
+    otel = await webApplication.getApplicationContext().getAsync(OtelComponent)
+  }
   assert(otel, 'otel component must be valid')
 
   const {

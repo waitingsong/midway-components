@@ -45,7 +45,6 @@ import {
 
 const otelPkgPath = join(__dirname, '../package.json')
 
-
 @Configuration({
   namespace: ConfigKey.namespace,
   importConfigs: [join(__dirname, 'config')],
@@ -110,6 +109,16 @@ export class AutoConfiguration implements ILifeCycle {
 
     const otel = await this.app.getApplicationContext().getAsync(OtelComponent, [ { name, version } ])
     assert(otel, 'otel must be set')
+    const key = `_${ConfigKey.componentName}`
+    // @ts-ignore
+    if (typeof this.app[key] === 'undefined') {
+      // @ts-ignore
+      this.app[key] = otel
+    }
+    // @ts-ignore
+    else if (this.app[key] !== otel) {
+      throw new Error(`this.app.${key} not equal to otel`)
+    }
 
     // const decoratorService = await this.app.getApplicationContext().getAsync(MidwayDecoratorService)
     // assert(decoratorService === this.decoratorService)
