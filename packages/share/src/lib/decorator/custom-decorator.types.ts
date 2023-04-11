@@ -7,7 +7,7 @@ import {
   REQUEST_OBJ_CTX_KEY,
 } from '@midwayjs/core'
 
-import { Context } from '../types.js'
+import { Application, Context } from '../types.js'
 
 
 /** 装饰器所在的实例 */
@@ -26,7 +26,7 @@ export interface DecoratorMetaData<T = unknown> {
   metadata: T & DecoratedTypeMeta
   options: MethodDecoratorOptions | undefined
 }
-export type Method = (...args: unknown[]) => Promise<unknown>
+export type Method = (...args: unknown[]) => unknown | Promise<unknown>
 export interface DecoratorExecutorOptionsBase<TDecoratorArgs extends {} = {}> {
   argsFromClassDecorator: (Partial<TDecoratorArgs> & DecoratedTypeMeta) | undefined
   argsFromMethodDecorator: (Partial<TDecoratorArgs> & DecoratedTypeMeta) | undefined
@@ -39,6 +39,7 @@ export interface DecoratorExecutorOptionsBase<TDecoratorArgs extends {} = {}> {
   methodName: string
   methodResult?: unknown
   methodIsAsyncFunction?: boolean
+  webApplication?: Application
   [key: string]: unknown
 }
 
@@ -130,6 +131,7 @@ export type AroundFactory<TDecoratorArgs extends {} = {}> = (
 
 export interface AroundFactoryOptionsBase {
   config: any
+  webApplication?: Application
   [key: string]: unknown
 }
 export interface AroundFactoryOptions<TDecoratorArgs extends {} = {}>

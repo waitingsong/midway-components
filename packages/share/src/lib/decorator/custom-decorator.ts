@@ -107,7 +107,10 @@ export function descriptorDecoratorPatcher<TDecoratorArgs extends {}>(
   } = options
 
   assert(descriptor, 'descriptor is undefined')
-  assert(typeof args === 'object' || typeof args === 'undefined', 'args is not an object or undefined')
+  assert(
+    typeof args === 'object' || typeof args === 'undefined',
+    'args is not an object or undefined',
+  )
   const metadata = args ?? {}
   Object.defineProperty(metadata, 'decoratedType', { value: decoratedType ?? 'method' })
 
