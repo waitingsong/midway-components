@@ -65,7 +65,7 @@ npm start
 > http://localhost:16686/
 
 
-## Trace Decorator
+## `Trace` Decorator
 
 ```ts
 import { Trace } from '@mwcp/otel'
@@ -95,6 +95,21 @@ export class FooController {
   }
 }
 ```
+
+## `TraceInit` Decorator
+
+```ts
+// src/configuration.ts
+import { TraceInit } from '@mwcp/otel'
+
+export class AutoConfiguration implements ILifeCycle {
+  @TraceInit('INIT Foo.onReady')
+  async onReady(container: IMidwayContainer): Promise<void> {
+    // some code
+  }
+}
+```
+
 
 ## Decorator Generics
 ### Auto parameter type of keyGenerator from generics

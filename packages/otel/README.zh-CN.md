@@ -65,7 +65,7 @@ Jaeger Web UI address:
 > http://localhost:16686/
 
 
-## Trace 装饰器
+## `Trace` 装饰器
 
 ```ts
 import { Trace } from '@mwcp/otel'
@@ -95,6 +95,24 @@ export class FooController {
   }
 }
 ```
+
+## `TraceInit` 装饰器
+
+```ts
+// src/configuration.ts
+import { TraceInit } from '@mwcp/otel'
+
+export class AutoConfiguration implements ILifeCycle {
+  @TraceInit('INIT Foo.onReady')
+  async onReady(container: IMidwayContainer): Promise<void> {
+    // some code
+  }
+}
+```
+
+
+
+
 
 ## 装饰器泛型参数
 ### 从泛型参数自动获取方法调用参数类型
