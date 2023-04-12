@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.0.9](https://github.com/waitingsong/midway-components/compare/@mwcp/ali-oss@11.0.8...@mwcp/ali-oss@11.0.9) (2023-04-12)
+
+**Note:** Version bump only for package @mwcp/ali-oss
+
+
+
+
+
 ## [11.0.8](https://github.com/waitingsong/midway-components/compare/@mwcp/ali-oss@11.0.7...@mwcp/ali-oss@11.0.8) (2023-04-11)
 
 **Note:** Version bump only for package @mwcp/ali-oss

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.4.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@7.3.0...@mwcp/otel@7.4.0) (2023-04-12)
+
+
+### Features
+
+* **otel:** register decorator as early as possible during instance creation ([98247fe](https://github.com/waitingsong/midway-components/commit/98247fec4ed9f3d18a0b086770677b1cd3a75270))
+
+
+
+
+
 # [7.3.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@7.2.0...@mwcp/otel@7.3.0) (2023-04-11)
 
 
