@@ -18,7 +18,7 @@
   "bugs": {
     "url": "https://github.com/waitingsong/midway-components/issues"
   },
-  "homepage": "https://github.com/waitingsong/midway-components#readme",
+  "homepage": "https://github.com/waitingsong/midway-components/tree/main/packages/jwt#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/waitingsong/midway-components"
