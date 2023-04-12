@@ -17,11 +17,11 @@ export async function decoratorExecutor(
 
   const key = `_${ConfigKey.componentName}`
   // @ts-ignore
-  let otel = webApplication[key] as OtelComponent | undefined
-  if (! otel) {
-    otel = await webApplication.getApplicationContext().getAsync(OtelComponent)
-  }
-  assert(otel, 'otel component must be valid')
+  const otel = webApplication[key] as OtelComponent | undefined
+  // if (! otel) {
+  //   otel = await webApplication.getApplicationContext().getAsync(OtelComponent)
+  // }
+  assert(otel, 'OtelComponent is not initialized. (OTEL 尚未初始化。)')
 
   const {
     callerAttr,
