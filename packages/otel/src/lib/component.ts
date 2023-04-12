@@ -94,15 +94,14 @@ export class OtelComponent extends AbstractOtelComponent {
   protected traceProvider: node.NodeTracerProvider | undefined
   protected spanProcessors: node.SpanProcessor[] = []
 
-
-  constructor(options?: { name: string, version: string }) {
-    super()
-    if (options?.name) {
-      const { name, version } = options
-      this.otelLibraryName = name
-      this.otelLibraryVersion = version ?? ''
-    }
-  }
+  // constructor(options?: { name: string, version: string }) {
+  //   super()
+  //   if (options?.name) {
+  //     const { name, version } = options
+  //     this.otelLibraryName = name
+  //     this.otelLibraryVersion = version ?? ''
+  //   }
+  // }
 
   @Init()
   async init(): Promise<void> {
