@@ -21,6 +21,7 @@ import {
 } from '@opentelemetry/api'
 import { genISO8601String } from '@waiting/shared-core'
 
+import { AbstractTraceService } from './abstract'
 import { OtelComponent } from './component'
 import { initSpanStatusOptions } from './config'
 import {
@@ -41,7 +42,7 @@ import {
 
 
 @Provide()
-export class TraceService {
+export class TraceService extends AbstractTraceService {
 
   @_Config(ConfigKey.config) readonly config: Config
   @_Config(ConfigKey.middlewareConfig) readonly mwConfig: MiddlewareConfig

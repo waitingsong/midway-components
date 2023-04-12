@@ -13,7 +13,7 @@ import type {
 } from '@mwcp/share'
 import { Attributes, SpanOptions } from '@opentelemetry/api'
 
-import { TraceService } from './trace.service'
+import type { AbstractTraceService } from './abstract'
 import {
   AttrNames,
   ConfigKey,
@@ -116,7 +116,7 @@ export interface DecoratorExecutorOptions<T extends TraceDecoratorArg = TraceDec
   spanOptions: Partial<SpanOptions>
   startActiveSpan: boolean
   traceContext: TraceContext | undefined
-  traceService: TraceService | undefined
+  traceService: AbstractTraceService | undefined
 }
 
 export function prepareAroundFactory<TDecoratorArgs extends TraceDecoratorArg = TraceDecoratorArg>(
@@ -164,7 +164,7 @@ export function prepareAroundFactory<TDecoratorArgs extends TraceDecoratorArg = 
 
   // const traceService = (webContext[`_${ConfigKey.serviceName}`]
   //   ?? await webContext.requestContext.getAsync(TraceService)) as TraceService
-  const traceService = webContext?.[`_${ConfigKey.serviceName}`] as TraceService | undefined
+  const traceService = webContext?.[`_${ConfigKey.serviceName}`] as AbstractTraceService | undefined
   // assert(traceService, `traceService undefined on webContext[_${ConfigKey.serviceName}]`)
   assert(typeof func === 'function', 'Func referencing joinPoint.proceed is not function')
 

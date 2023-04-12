@@ -2,8 +2,8 @@ import assert from 'assert'
 
 import { Attributes, SpanKind, SpanOptions } from '@opentelemetry/api'
 
-import { OtelComponent } from '../component'
-import { DecoratorExecutorOptions } from '../trace.helper'
+import type { AbstractOtelComponent } from '../abstract'
+import type { DecoratorExecutorOptions } from '../trace.helper'
 import { ConfigKey, TraceDecoratorArg } from '../types'
 
 
@@ -17,7 +17,7 @@ export async function decoratorExecutor(
 
   const key = `_${ConfigKey.componentName}`
   // @ts-ignore
-  const otel = webApplication[key] as OtelComponent | undefined
+  const otel = webApplication[key] as AbstractOtelComponent | undefined
   // if (! otel) {
   //   otel = await webApplication.getApplicationContext().getAsync(OtelComponent)
   // }

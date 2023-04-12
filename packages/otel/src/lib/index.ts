@@ -2,6 +2,9 @@
 export * from './config'
 export { OtelComponent } from './component'
 export {
+  AbstractOtelComponent, AbstractTraceService,
+} from './abstract'
+export {
   TRACE_KEY,
   Trace,
 } from './trace.decorator'

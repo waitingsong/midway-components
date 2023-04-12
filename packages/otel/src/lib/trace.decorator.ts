@@ -11,8 +11,8 @@ import {
   SpanStatusCode,
 } from '@opentelemetry/api'
 
+import type { AbstractTraceService } from './abstract'
 import { MetaDataType, DecoratorExecutorOptions, prepareAroundFactory } from './trace.helper'
-import { TraceService } from './trace.service'
 import {
   Config,
   MethodType,
@@ -143,7 +143,7 @@ interface CreateActiveSpanCbOptions {
   func: (...args: unknown[]) => unknown
   funcArgs: unknown[]
   span: Span
-  traceService: TraceService
+  traceService: AbstractTraceService
 }
 async function createActiveSpanCb(options: CreateActiveSpanCbOptions): Promise<unknown> {
   const { func, funcArgs, span, traceService } = options

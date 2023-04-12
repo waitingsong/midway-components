@@ -40,6 +40,7 @@ import { SemanticAttributes } from '@opentelemetry/semantic-conventions'
 import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
 import type { NpmPkg } from '@waiting/shared-types'
 
+import { AbstractOtelComponent } from './abstract'
 import { initSpanStatusOptions } from './config'
 import { decoratorExecutor } from './trace-init/helper.trace-init'
 import { METHOD_KEY_TraceInit } from './trace-init/trace-init'
@@ -56,7 +57,6 @@ import {
 } from './types'
 import { normalizeHeaderKey, setSpan } from './util'
 
-
 import { initTrace } from '~/helper/index.opentelemetry'
 
 
@@ -64,7 +64,7 @@ import { initTrace } from '~/helper/index.opentelemetry'
 @Autoload()
 @Provide()
 @Scope(ScopeEnum.Singleton)
-export class OtelComponent {
+export class OtelComponent extends AbstractOtelComponent {
 
   @App() app: Application
 
@@ -96,6 +96,7 @@ export class OtelComponent {
 
 
   constructor(options?: { name: string, version: string }) {
+    super()
     if (options?.name) {
       const { name, version } = options
       this.otelLibraryName = name
