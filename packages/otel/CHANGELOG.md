@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@7.4.0...@mwcp/otel@8.0.0) (2023-04-13)
+
+
+### Features
+
+* **otel:** KeyGenerator['this'] may undefined ([32caa1b](https://github.com/waitingsong/midway-components/commit/32caa1b186781426c2b057959f676afd474ce9ee))
+
+
+
+
+
 # [7.4.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@7.3.0...@mwcp/otel@7.4.0) (2023-04-12)
 
 
