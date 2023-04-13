@@ -9,8 +9,10 @@ import {
   Inject, ILifeCycle,
   MidwayDecoratorService,
 } from '@midwayjs/core'
+import { TraceInit } from '@mwcp/otel'
 import {
   Application,
+  IMidwayContainer,
   RegisterDecoratorHandlerOptions,
   registerDecoratorHandler,
 } from '@mwcp/share'
@@ -45,7 +47,10 @@ export class AutoConfiguration implements ILifeCycle {
     updateCacheConfig(this.cache, this.cacheConfig)
   }
 
-  async onReady(): Promise<void> {
+  @TraceInit(`INIT ${ConfigKey.componentName}.onReady`)
+  async onReady(container: IMidwayContainer): Promise<void> {
+    void container
+
     const config = this.app.getConfig('cache') as CacheConfig
     assert.deepEqual(config, this.cacheConfig)
 

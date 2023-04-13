@@ -27,11 +27,29 @@ export class DefaultComponentService {
     return input
   }
 
-  @Trace<DefaultComponentService['testArg']>({
+  @Trace<DefaultComponentService['testArgSync']>({
     spanName: (args) => `foo-${args[0]}`,
   })
-  testArg(input: number): string {
+  testArgSync(input: number): string {
     return input.toString()
+  }
+
+  @Trace<DefaultComponentService['testArg']>({
+    startActiveSpan: false,
+    spanName: (args) => `foo-${args[0]}`,
+  })
+  async testArg(input: number): Promise<string> {
+    const ret = await input.toString()
+    return ret
+  }
+
+  @Trace<DefaultComponentService['testArg2']>({
+    spanName: ([v1, v2]) => `foo-${v1 + 1}-${v2}`,
+  })
+  async testArg2(v1: number, v2: string): Promise<string> {
+    void v2
+    const ret = await v1.toString()
+    return ret
   }
 
   async error(triggerError: boolean): Promise<string> {

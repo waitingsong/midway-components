@@ -185,4 +185,3 @@ export function setImplToFalseIfDecoratedWithBothClassAndMethod(
   const arr2 = getClassMetadata<DecoratorMetaData[]>(INJECT_CUSTOM_METHOD, target)
   void arr2
 }
-

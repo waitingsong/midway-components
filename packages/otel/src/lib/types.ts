@@ -291,7 +291,7 @@ export interface TraceDecoratorOptions<M extends MethodType | void = void>
 
 export type KeyGenerator<M extends MethodType | void = void> = (
   /** WebContext */
-  this: Context,
+  this: Context | undefined,
   /** Arguments of the method */
   args: M extends MethodType ? Parameters<M> : any,
 ) => string | undefined

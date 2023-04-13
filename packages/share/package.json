@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/share",
   "author": "waiting",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "description": "midway.js share",
   "keywords": [
     "midway.js",
@@ -28,16 +28,16 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/bootstrap": "^3.11.0",
-    "@midwayjs/core": "^3.11.0",
-    "@midwayjs/decorator": "^3.11.0",
-    "@midwayjs/koa": "^3.11.0",
+    "@midwayjs/bootstrap": "^3.11.1",
+    "@midwayjs/core": "^3.11.1",
+    "@midwayjs/decorator": "^3.11.1",
+    "@midwayjs/koa": "^3.11.3",
     "@midwayjs/logger": "^2.17.0",
-    "@waiting/shared-core": "^21.0.0",
+    "@waiting/shared-core": "^21.1.0",
     "tsconfig-paths": "4"
   },
   "devDependencies": {
-    "@waiting/shared-types": "^21.0.0",
+    "@waiting/shared-types": "^21.1.0",
     "cross-env": "7"
   },
   "engines": {

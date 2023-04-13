@@ -50,7 +50,7 @@ export class ParamController {
     return ret3
   }
 
-  @Cacheable({ key: (args) => `arg-${args[0]}` })
+  @Cacheable<ParamController['_simple']>({ key: (args) => `arg-${args[0]}` })
   protected async _simple<T>(value: T, input: string = 'abc'): Promise<CachedResponse<T>> {
     void input // default param not support
     return { value }

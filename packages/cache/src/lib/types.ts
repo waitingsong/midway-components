@@ -12,6 +12,7 @@ export enum ConfigKey {
   config = 'cacheConfig',
   middlewareConfig = 'cacheMiddlewareConfig',
   namespace = 'cache',
+  componentName = 'cacheComponent',
   CacheMetaType = 'CacheMetaType',
 }
 

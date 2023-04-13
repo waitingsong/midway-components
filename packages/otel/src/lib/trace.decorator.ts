@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import { isAsyncFunction, isPromise } from 'node:util/types'
+import { isPromise } from 'node:util/types'
 
 import {
   MidwayDecoratorService,
@@ -11,8 +11,8 @@ import {
   SpanStatusCode,
 } from '@opentelemetry/api'
 
-import { MetaDataType, prepareAroundFactory } from './trace.helper'
-import { TraceService } from './trace.service'
+import type { AbstractTraceService } from './abstract'
+import { MetaDataType, DecoratorExecutorOptions, prepareAroundFactory } from './trace.helper'
 import {
   Config,
   MethodType,
@@ -38,13 +38,13 @@ export function registerMethodHandler(
     return config.enable
       ? {
         around: (joinPoint: JoinPoint) => {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          if (isAsyncFunction(joinPoint.target[joinPoint.methodName])) {
-            const ret = aroundFactory(joinPoint, options)
+          const aroundFactoryOptions: DecoratorExecutorOptions = prepareAroundFactory(joinPoint, options)
+          if (joinPoint.proceedIsAsyncFunction) {
+            const ret = aroundFactory(aroundFactoryOptions)
             return ret
           }
           else {
-            const ret = aroundFactorySync(joinPoint, options)
+            const ret = aroundFactorySync(aroundFactoryOptions)
             return ret
           }
         },
@@ -55,20 +55,24 @@ export function registerMethodHandler(
 
 
 async function aroundFactory(
-  joinPoint: JoinPoint,
-  metaDataOptions: MetaDataType,
+  options: DecoratorExecutorOptions,
 ): Promise<unknown> {
 
   const {
-    func,
-    funcArgs,
+    method: func,
+    methodArgs: funcArgs,
     callerAttr,
     spanName,
     startActiveSpan,
     traceContext,
     spanOptions,
     traceService,
-  } = prepareAroundFactory(joinPoint, metaDataOptions)
+  } = options
+
+  if (! traceService) {
+    const ret = await func(...funcArgs)
+    return ret
+  }
 
   if (startActiveSpan) {
     // 记录开始时间
@@ -94,20 +98,23 @@ async function aroundFactory(
 }
 
 function aroundFactorySync(
-  joinPoint: JoinPoint,
-  metaDataOptions: MetaDataType,
+  options: DecoratorExecutorOptions,
 ): unknown {
 
   const {
-    func,
-    funcArgs,
+    method: func,
+    methodArgs: funcArgs,
     callerAttr,
     spanName,
     startActiveSpan,
     traceContext,
     spanOptions,
     traceService,
-  } = prepareAroundFactory(joinPoint, metaDataOptions)
+  } = options
+
+  if (! traceService) {
+    return func(...funcArgs)
+  }
 
   if (startActiveSpan) {
     // 记录开始时间
@@ -136,7 +143,7 @@ interface CreateActiveSpanCbOptions {
   func: (...args: unknown[]) => unknown
   funcArgs: unknown[]
   span: Span
-  traceService: TraceService
+  traceService: AbstractTraceService
 }
 async function createActiveSpanCb(options: CreateActiveSpanCbOptions): Promise<unknown> {
   const { func, funcArgs, span, traceService } = options

@@ -1,6 +1,9 @@
+import type { IncomingHttpHeaders } from 'node:http'
+
 import { SpanStatusCode } from '@opentelemetry/api'
 import { CompressionAlgorithm } from '@opentelemetry/otlp-exporter-base'
 import type { OTLPGRPCExporterConfigNode } from '@opentelemetry/otlp-grpc-exporter-base'
+import type { KnownKeys } from '@waiting/shared-types'
 
 import {
   AttrNames,
@@ -19,7 +22,7 @@ import {
  * - host
  * - user-agent
  */
-export const initCaptureRequestHeaders: Readonly<string[]> = [
+export const initCaptureRequestHeaders: (string | KnownKeys<IncomingHttpHeaders>)[] = [
   HeadersKey.authorization,
   HeadersKey.contentType,
   HeadersKey.userAgent,

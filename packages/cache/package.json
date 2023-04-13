@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/cache",
   "author": "waiting",
-  "version": "8.0.0",
+  "version": "9.0.0",
   "description": "midway component for declarative cache",
   "keywords": [
     "Cacheable",
@@ -18,18 +18,18 @@
   "bugs": {
     "url": "https://github.com/waitingsong/midway-components/issues"
   },
-  "homepage": "https://github.com/waitingsong/midway-components#readme",
+  "homepage": "https://github.com/waitingsong/midway-components/tree/main/packages/cache#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/waitingsong/midway-components"
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/cache": "^3.10.6",
-    "@mwcp/otel": "^7.0.0",
-    "@mwcp/share": "^5.0.0",
-    "@waiting/shared-core": "^21.0.0",
-    "cache-manager": "^5.1.5"
+    "@midwayjs/cache": "^3.11.3",
+    "@mwcp/otel": "^8.0.0",
+    "@mwcp/share": "^5.1.0",
+    "@waiting/shared-core": "^21.1.0",
+    "cache-manager": "^5.2.0"
   },
   "devDependencies": {
     "@types/cache-manager": "^4.0.2",

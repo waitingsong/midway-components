@@ -1,17 +1,28 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import assert from 'node:assert'
+import { join } from 'node:path'
 
 import {
+  App,
+  Autoload,
   Config as _Config,
+  MidwayDecoratorService,
   Init,
   Inject,
   Logger,
   MidwayEnvironmentService,
+  MidwayInformationService,
   Provide,
   Scope,
   ScopeEnum,
 } from '@midwayjs/core'
 import { ILogger } from '@midwayjs/logger'
+import {
+  Application,
+  AroundFactoryOptionsBase,
+  RegisterDecoratorHandlerOptions,
+  registerDecoratorHandler,
+} from '@mwcp/share'
 import {
   Attributes,
   Context,
@@ -27,18 +38,35 @@ import {
 import { node } from '@opentelemetry/sdk-node'
 import { SemanticAttributes } from '@opentelemetry/semantic-conventions'
 import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
+import type { NpmPkg } from '@waiting/shared-types'
 
+import { AbstractOtelComponent } from './abstract'
 import { initSpanStatusOptions } from './config'
-import { AddEventOtpions, AttrNames, Config, ConfigKey, InitTraceOptions, SpanStatusOptions } from './types'
-import { normalizeHeaderKey } from './util'
+import { decoratorExecutor } from './trace-init/helper.trace-init'
+import { METHOD_KEY_TraceInit } from './trace-init/trace-init'
+import { registerMethodHandler } from './trace.decorator'
+import { genDecoratorExecutorOptions } from './trace.helper'
+import {
+  AddEventOtpions,
+  AttrNames,
+  Config,
+  ConfigKey,
+  InitTraceOptions,
+  SpanStatusOptions,
+  TraceDecoratorArg,
+} from './types'
+import { normalizeHeaderKey, setSpan } from './util'
 
 import { initTrace } from '~/helper/index.opentelemetry'
 
 
 /** OpenTelemetry Component */
+@Autoload()
 @Provide()
 @Scope(ScopeEnum.Singleton)
-export class OtelComponent {
+export class OtelComponent extends AbstractOtelComponent {
+
+  @App() app: Application
 
   @_Config(ConfigKey.config) protected readonly config: Config
 
@@ -48,10 +76,15 @@ export class OtelComponent {
   @_Config(ConfigKey.otlpGrpcExporterConfig)
   protected readonly otlpGrpcExporterConfig: InitTraceOptions['otlpGrpcExporterConfig']
 
-  @Inject()
-  environmentService: MidwayEnvironmentService
+  @Inject() protected readonly decoratorService: MidwayDecoratorService
+  @Inject() protected readonly environmentService: MidwayEnvironmentService
 
   @Logger() protected readonly logger: ILogger
+
+  /** Active during Midway Lifecyle between onReady and onServerReady */
+  appInitProcessContext: Context | undefined
+  /** Active during Midway Lifecyle between onReady and onServerReady */
+  appInitProcessSpan: Span | undefined
 
   otelLibraryName: string
   otelLibraryVersion: string
@@ -61,20 +94,58 @@ export class OtelComponent {
   protected traceProvider: node.NodeTracerProvider | undefined
   protected spanProcessors: node.SpanProcessor[] = []
 
+  // constructor(options?: { name: string, version: string }) {
+  //   super()
+  //   if (options?.name) {
+  //     const { name, version } = options
+  //     this.otelLibraryName = name
+  //     this.otelLibraryVersion = version ?? ''
+  //   }
+  // }
+
   @Init()
   async init(): Promise<void> {
+    await this._init()
+
+    const isDevelopmentEnvironment = this.environmentService.isDevelopmentEnvironment()
+      && ! process.env['CI_BENCHMARK']
 
     const { processors, provider } = initTrace({
       otelConfig: this.config,
       // jaegerExporterConfig: this.jaegerExporterConfig,
       otlpGrpcExporterConfig: this.otlpGrpcExporterConfig,
-      isDevelopmentEnvironment: this.environmentService.isDevelopmentEnvironment(),
+      isDevelopmentEnvironment,
     })
     this.traceProvider = provider
     this.spanProcessors = processors
 
+    const opts: SpanOptions = {
+      root: true,
+      kind: SpanKind.INTERNAL,
+    }
+    const spanName = 'APP INIT'
+    const traceCtx = this.getGlobalCurrentContext()
+
+    // this.appInitProcessSpan = this.startSpan(spanName, opts)
+    this.startActiveSpan(spanName, (
+      span,
+    ) => {
+      this.appInitProcessSpan = span
+      const ctxWithSpanSet = setSpan(traceCtx, span)
+      this.appInitProcessContext = ctxWithSpanSet
+    }, opts)
+
+    const span = this.getGlobalCurrentSpan(this.appInitProcessContext)
+    void traceCtx
+    void span
+
     this.prepareCaptureHeaders('request', this.config.captureRequestHeaders)
     this.prepareCaptureHeaders('response', this.config.captureRequestHeaders)
+
+    this.addAppInitEvent({
+      event: `${ConfigKey.componentName}.init.end`,
+    })
+
   }
 
   getGlobalCurrentContext(): Context {
@@ -83,10 +154,12 @@ export class OtelComponent {
   }
 
   getGlobalCurrentSpan(traceContext?: Context): Span | undefined {
+    if (! this.config.enable) { return }
     return trace.getSpan(traceContext ?? context.active())
   }
 
   getTraceId(): string | undefined {
+    if (! this.config.enable) { return }
     return this.getGlobalCurrentSpan()?.spanContext().traceId
   }
 
@@ -126,9 +199,10 @@ export class OtelComponent {
       // startTime: Date.now(),
       ...options,
     }
-    return traceContext
+    const ret = traceContext
       ? tracer.startActiveSpan(name, opts, traceContext, callback)
       : tracer.startActiveSpan(name, opts, callback)
+    return ret
   }
 
   async flush(): Promise<void> {
@@ -181,6 +255,7 @@ export class OtelComponent {
   }
 
   addRootSpanEventWithError(span: Span, error?: Error): void {
+    if (! this.config.enable) { return }
     if (! error) { return }
 
     const { cause } = error
@@ -285,11 +360,122 @@ export class OtelComponent {
     }
   }
 
+  endRootSpan(
+    rootSpan: Span,
+    spanStatusOptions: SpanStatusOptions = initSpanStatusOptions,
+    endTime?: TimeInput,
+  ): void {
+
+    if (! this.config.enable) { return }
+    this.endSpan(rootSpan, rootSpan, spanStatusOptions, endTime)
+    rootSpan.end(endTime)
+  }
+
+  addAppInitEvent(
+    input: Attributes,
+    options?: AddEventOtpions,
+    /** if omit, use this.appInitProcessSpan */
+    span?: Span,
+  ): void {
+
+    const spanToUse = span ?? this.appInitProcessSpan
+
+    if (spanToUse) {
+      const addEventOtpions = {
+        traceEvent: true,
+        logCpuUsage: true,
+        logMemeoryUsage: true,
+        ...options,
+      }
+      this.addEvent(spanToUse, input, addEventOtpions)
+    }
+  }
+
+  endAppInitEvent(): void {
+    if (this.appInitProcessSpan) {
+      this.endRootSpan(this.appInitProcessSpan)
+      this.appInitProcessContext = void 0
+      this.appInitProcessSpan = void 0
+    }
+  }
+
+
+
   protected prepareCaptureHeaders(type: 'request' | 'response', headersKey: string[]) {
     const keys = normalizeHeaderKey(headersKey)
     this.captureHeadersMap.set(type, keys)
   }
 
+  protected async _init(): Promise<void> {
+    assert(
+      this.app,
+      'this.app undefined. If start for development, please set env first like `export MIDWAY_SERVER_ENV=local`',
+    )
+
+    let pkg: NpmPkg | undefined
+    const informationService = await this.app.getApplicationContext().getAsync(MidwayInformationService)
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (informationService) {
+      pkg = informationService.getPkg() as NpmPkg
+    }
+    let serviceName = this.config.serviceName
+      ? this.config.serviceName
+      : pkg?.name ?? `unknown-${new Date().toLocaleDateString()}`
+    serviceName = serviceName.replace('@', '').replace(/\//ug, '-')
+
+    const ver = this.config.serviceVersion
+      ? this.config.serviceVersion
+      : pkg?.version ?? ''
+
+    // for registerDecoratorHandler
+    this.config.serviceName = serviceName
+    this.config.serviceVersion = ver
+
+
+    if (! this.otelLibraryName) {
+      const otelPkgPath = join(__dirname, '../../package.json')
+      try {
+        const { name, version } = await import(otelPkgPath) as NpmPkg
+        if (name) {
+          this.otelLibraryName = name
+        }
+        if (version) {
+          this.otelLibraryVersion = version
+        }
+      }
+      catch (ex) {
+        this.logger.warn('Failed to load package.json: %s', otelPkgPath)
+      }
+    }
+
+    const key = `_${ConfigKey.componentName}`
+    // @ts-ignore
+    if (typeof this.app[key] === 'undefined') {
+      // @ts-ignore
+      this.app[key] = this
+    }
+    // @ts-ignore
+    else if (this.app[key] !== this) {
+      throw new Error(`this.app.${key} not equal to otel`)
+    }
+
+    registerMethodHandler(this.decoratorService, this.config)
+
+
+    const aroundFactoryOptions: AroundFactoryOptionsBase = {
+      config: this.config,
+      webApplication: this.app,
+    }
+    const optsTraceInit: RegisterDecoratorHandlerOptions<TraceDecoratorArg> = {
+      decoratorKey: METHOD_KEY_TraceInit,
+      decoratorService: this.decoratorService,
+      // @ts-expect-error
+      decoratorExecutor,
+      genDecoratorExecutorOptionsFn: genDecoratorExecutorOptions,
+    }
+    registerDecoratorHandler(optsTraceInit, aroundFactoryOptions)
+
+  }
 
 }
 

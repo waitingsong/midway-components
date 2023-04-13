@@ -12,9 +12,9 @@ import * as otel from '@mwcp/otel'
 
 
 export const useComponents: IComponentInfo[] = [
+  otel,
   koa,
   validate,
-  otel,
   prometheus,
   jwt,
   koid,

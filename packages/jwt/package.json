@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/jwt",
   "author": "waiting",
-  "version": "17.0.0",
+  "version": "17.0.3",
   "description": "midway component jwt",
   "keywords": [
     "midway",
@@ -18,18 +18,18 @@
   "bugs": {
     "url": "https://github.com/waitingsong/midway-components/issues"
   },
-  "homepage": "https://github.com/waitingsong/midway-components#readme",
+  "homepage": "https://github.com/waitingsong/midway-components/tree/main/packages/jwt#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/waitingsong/midway-components"
   },
   "license": "MIT",
   "dependencies": {
-    "@waiting/shared-core": "^21.0.0",
+    "@waiting/shared-core": "^21.1.0",
     "jsonwebtoken": "^9.0.0"
   },
   "devDependencies": {
-    "@mwcp/share": "^5.0.0",
+    "@mwcp/share": "^5.1.0",
     "@types/jsonwebtoken": "^9.0.1",
     "cross-env": "7"
   },

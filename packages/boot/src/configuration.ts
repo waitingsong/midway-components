@@ -13,10 +13,13 @@ import {
 } from '@midwayjs/core'
 import { IMidwayLogger } from '@midwayjs/logger'
 import { JwtConfigKey, JwtMiddlewareConfig } from '@mwcp/jwt'
+import { TraceInit } from '@mwcp/otel'
 
 import { useComponents, useDefaultRoutes } from './imports'
-import type {
+import {
   Application,
+  ConfigKey,
+  IMidwayContainer,
   NpmPkg,
 } from './lib/index'
 import {
@@ -40,7 +43,9 @@ export class ContainerConfiguration implements ILifeCycle {
   @Inject() readonly informationService: MidwayInformationService
 
   // 启动前处理
-  async onReady(): Promise<void> {
+  @TraceInit(`INIT ${ConfigKey.componentName}.onReady`)
+  async onReady(container: IMidwayContainer): Promise<void> {
+    void container
 
     // 定制化日志
     // customLogger(this.logger, this.app)
@@ -68,7 +73,9 @@ export class ContainerConfiguration implements ILifeCycle {
   }
 
 
-  async onServerReady(): Promise<void> {
+  @TraceInit(`INIT ${ConfigKey.componentName}.onServerReady`)
+  async onServerReady(container: IMidwayContainer): Promise<void> {
+    void container
     const pkg = this.informationService.getPkg() as NpmPkg | undefined
     const info = {
       pkgName: pkg?.name,

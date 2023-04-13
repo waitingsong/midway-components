@@ -56,11 +56,27 @@ export class DefaultComponentController {
   async arg(): Promise<string> {
     const traceId = this.traceSvc.getTraceId()
     const rnd = Math.random()
-    const msg = this.svc.testArg(rnd)
+    const msg = await this.svc.testArg(rnd)
     assert(msg)
+    const msg2 = this.svc.helloSync(Msg.hello)
+    assert(msg2)
 
     // await this.traceSvc.flush()
     const ret = `${traceId}:${rnd}`
+    return ret
+  }
+
+  @Trace()
+  @Get('/decorator_arg2')
+  async arg2(): Promise<string> {
+    const traceId = this.traceSvc.getTraceId()
+    const rnd = Math.round(Math.random() * 100)
+    const str = 'bar'
+    const msg = await this.svc.testArg2(rnd, str)
+    assert(msg)
+
+    // await this.traceSvc.flush()
+    const ret = `${traceId}:${rnd}:${str}`
     return ret
   }
 

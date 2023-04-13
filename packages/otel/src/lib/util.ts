@@ -169,7 +169,6 @@ export function getIncomingRequestAttributesFromWebContext(
   config: Config,
 ): Attributes {
 
-
   const attrs: Attributes = {
     [SemanticAttributes.HTTP_URL]: ctx.href,
     [SemanticAttributes.HTTP_HOST]: ctx.host,
@@ -180,10 +179,15 @@ export function getIncomingRequestAttributesFromWebContext(
     [SemanticAttributes.HTTP_SERVER_NAME]: config.serviceName ?? 'unknown',
     [AttrNames.ServiceName]: config.serviceName ?? 'unknown',
     [AttrNames.ServiceVersion]: config.serviceVersion ?? 'unknown',
-    [AttrNames.ServicePid]: process.pid,
+    // [AttrNames.ServicePid]: process.pid,
   }
 
   let httpKindAttributes = {}
+
+  if (typeof ctx[AttrNames.traceId] === 'string') {
+    attrs[AttrNames.traceId] = ctx[AttrNames.traceId]
+  }
+
   const { req } = ctx
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (req) {

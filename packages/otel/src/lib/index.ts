@@ -2,11 +2,15 @@
 export * from './config'
 export { OtelComponent } from './component'
 export {
+  AbstractOtelComponent, AbstractTraceService,
+} from './abstract'
+export {
   TRACE_KEY,
   Trace,
 } from './trace.decorator'
 export * from './trace.logger'
 export * from './trace.service'
+export * from './trace-init/trace-init'
 export {
   addSpanEventWithOutgoingResponseData,
   getIncomingRequestAttributesFromWebContext,

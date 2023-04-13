@@ -65,11 +65,11 @@ export {
 } from '@mwcp/kmore'
 
 export enum ConfigKey {
-  namespace = 'base',
-  config = 'baseConfig',
-  middlewareConfig = 'demoMiddlewareConfig',
-  componentName = 'baseComponent',
-  middlewareName = 'baseMiddleware'
+  namespace = 'boot',
+  config = 'bootConfig',
+  middlewareConfig = 'bootMiddlewareConfig',
+  componentName = 'bootComponent',
+  middlewareName = 'bootMiddleware'
 }
 
 export enum Msg {
