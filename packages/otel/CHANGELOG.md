@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@8.0.1...@mwcp/otel@9.0.0) (2023-04-13)
+
+
+### Features
+
+* **otel:** set ctx.status to 500 and body within handleTopExceptionAndNext() ([8afffc8](https://github.com/waitingsong/midway-components/commit/8afffc865553193df4d57610a8b105dfdfb96994))
+
+
+
+
+
 ## 8.0.1 (2023-04-13)
 
 
