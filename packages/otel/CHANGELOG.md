@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.0.1 (2023-04-13)
+
+
+### Bug Fixes
+
+* **otel:** update OtelComponent:init() ([9d4c8e0](https://github.com/waitingsong/midway-components/commit/9d4c8e025990629ce4bb8c5ea35a89eb866fb92b))
+
+
+
+
+
 # [8.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@7.4.0...@mwcp/otel@8.0.0) (2023-04-13)
 
 
