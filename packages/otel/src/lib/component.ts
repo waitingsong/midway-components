@@ -94,6 +94,8 @@ export class OtelComponent extends AbstractOtelComponent {
   protected traceProvider: node.NodeTracerProvider | undefined
   protected spanProcessors: node.SpanProcessor[] = []
 
+  instId = Symbol(Date.now())
+
   // constructor(options?: { name: string, version: string }) {
   //   super()
   //   if (options?.name) {
@@ -105,6 +107,22 @@ export class OtelComponent extends AbstractOtelComponent {
 
   @Init()
   async init(): Promise<void> {
+
+    const key = `_${ConfigKey.componentName}`
+    // @ts-ignore
+    if (typeof this.app[key] === 'undefined') {
+      // @ts-ignore
+      this.app[key] = this
+    }
+    // @ts-ignore
+    else if (this.app[key] !== this) {
+      // @ts-ignore
+      const id = (this.app[key] as OtelComponent).instId.toString()
+      const currentId = this.instId.toString()
+      throw new Error(`this.app.${key} not equal to otel, id: ${id}, currentId: ${currentId}.
+      Check if you have multiple otel instances in your project.`)
+    }
+
     await this._init()
 
     const isDevelopmentEnvironment = this.environmentService.isDevelopmentEnvironment()
@@ -446,17 +464,6 @@ export class OtelComponent extends AbstractOtelComponent {
       catch (ex) {
         this.logger.warn('Failed to load package.json: %s', otelPkgPath)
       }
-    }
-
-    const key = `_${ConfigKey.componentName}`
-    // @ts-ignore
-    if (typeof this.app[key] === 'undefined') {
-      // @ts-ignore
-      this.app[key] = this
-    }
-    // @ts-ignore
-    else if (this.app[key] !== this) {
-      throw new Error(`this.app.${key} not equal to otel`)
     }
 
     registerMethodHandler(this.decoratorService, this.config)
