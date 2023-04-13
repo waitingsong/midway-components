@@ -59,7 +59,7 @@ function genKey(options: GenKeyOptions): string {
     }
 
     case 'function': {
-      assert(webContext, 'webContext is required when spanName is a function')
+      // assert(webContext, 'webContext is required when spanName is a function')
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       const keyStr = spanName.call(webContext, methodArgs)
       assert(
