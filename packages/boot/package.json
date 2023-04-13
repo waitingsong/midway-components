@@ -27,7 +27,7 @@
     "@midwayjs/validate": "^3.11.3",
     "@mwcp/ali-oss": "^12.0.0",
     "@mwcp/cache": "^9.0.0",
-    "@mwcp/fetch": "^22.0.5",
+    "@mwcp/fetch": "^22.1.0",
     "@mwcp/jwt": "^17.0.3",
     "@mwcp/kmore": "^55.2.8",
     "@mwcp/koid": "^11.1.1",
