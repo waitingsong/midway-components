@@ -8,7 +8,7 @@ const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 
 describe(filename, () => {
 
-  const path = '/_otel/error'
+  const path = '/_otel/error' // exception will be caught
   const pathTrace = '/_otel/trace_error'
 
   it(`Should ${path} work`, async () => {
@@ -28,11 +28,11 @@ describe(filename, () => {
 
     const resp = await httpRequest
       .get(pathTrace)
-      .expect(204)
+      .expect(500)
 
     const ret = resp.text as string
-    assert(! ret)
-    // assert(ret.startsWith('debug for'))
+    // assert(! ret, ret)
+    assert(ret.includes('debug for DefaultComponentService.error()'), ret)
   })
 
 })

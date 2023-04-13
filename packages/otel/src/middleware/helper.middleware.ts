@@ -24,6 +24,11 @@ export async function handleTopExceptionAndNext(
       : typeof ex === 'string' ? new Error(ex) : new Error('unknown error')
 
     traceSvc.setRootSpanWithError(err)
+    const { ctx } = traceSvc
+    ctx.status = 500
+    if (typeof ctx.body === 'undefined' && err.message) {
+      ctx.body = err.message
+    }
   }
 }
 
