@@ -12,6 +12,7 @@ import { Application, Context } from '../types.js'
 
 /** 装饰器所在的实例 */
 export type InstanceOfDecorator = (new (...args: unknown[]) => unknown) & {
+  /** web context */
   [REQUEST_OBJ_CTX_KEY]?: Context,
 }
 export type DecoratedType = 'class' | 'method'

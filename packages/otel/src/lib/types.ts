@@ -276,7 +276,7 @@ export type TraceDecoratorArg<M extends MethodType | void = void> =
   Partial<TraceDecoratorOptions<M>> | string
 
 export interface TraceDecoratorOptions<M extends MethodType | void = void> extends SpanOptions {
-  /** 若空则为 `{target.name}/{methodName}` */
+  /** @default `{target.name}/{methodName}` */
   spanName: string | KeyGenerator<M> | undefined
   /**
    * @default true
