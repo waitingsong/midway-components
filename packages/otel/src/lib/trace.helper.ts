@@ -17,6 +17,7 @@ import type { AbstractTraceService } from './abstract'
 import {
   AttrNames,
   ConfigKey,
+  MethodAppendArgType,
   TraceContext,
   TraceDecoratorArg,
   TraceDecoratorOptions,
@@ -32,16 +33,16 @@ export type MetaDataType = AopCallbackInputArgsType<TraceDecoratorArg>
 
 
 interface GenKeyOptions extends Partial<TraceDecoratorOptions> {
-  webContext: WebContext | undefined
   methodArgs: unknown[]
+  appendArg: MethodAppendArgType
   callerClass: string
   callerMethod: string
 }
 
 function genKey(options: GenKeyOptions): string {
   const {
-    webContext,
     methodArgs,
+    appendArg,
     spanName,
   } = options
 
@@ -59,9 +60,7 @@ function genKey(options: GenKeyOptions): string {
     }
 
     case 'function': {
-      // assert(webContext, 'webContext is required when spanName is a function')
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      const keyStr = spanName.call(webContext, methodArgs)
+      const keyStr = spanName(methodArgs as [], appendArg)
       assert(
         typeof keyStr === 'string' || typeof keyStr === 'undefined',
         'keyGenerator function must return a string or undefined',
@@ -132,6 +131,7 @@ export function prepareAroundFactory<TDecoratorArgs extends TraceDecoratorArg = 
   const instance = joinPoint.target
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   const webContext = instance[REQUEST_OBJ_CTX_KEY] as WebContext | undefined
+  const traceService = webContext?.[`_${ConfigKey.serviceName}`] as AbstractTraceService | undefined
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   const callerClass = instance.constructor?.name ?? metaDataOptions.target.name
@@ -149,10 +149,27 @@ export function prepareAroundFactory<TDecoratorArgs extends TraceDecoratorArg = 
     ? metadata
     : {}
 
+  const startActiveSpan = typeof mdata === 'object'
+    ? mdata.startActiveSpan ?? true
+    : true
+
+  const traceContext = typeof mdata === 'object'
+    ? mdata.traceContext
+    : void 0
+
+  const appendArg: MethodAppendArgType = {
+    webApp: webContext?.app,
+    webContext: webContext ?? void 0,
+    traceService: traceService ?? void 0,
+    traceContext: traceContext ?? void 0,
+    traceSpan: void 0,
+  }
+
   const keyOpts: GenKeyOptions = {
     ...mdata,
+    startActiveSpan,
     methodArgs: args,
-    webContext,
+    appendArg,
     callerClass,
     callerMethod,
   }
@@ -162,19 +179,7 @@ export function prepareAroundFactory<TDecoratorArgs extends TraceDecoratorArg = 
   // const func = joinPoint.proceed.bind(joinPoint.target)
   const func = joinPoint.proceed.bind(void 0)
 
-  // const traceService = (webContext[`_${ConfigKey.serviceName}`]
-  //   ?? await webContext.requestContext.getAsync(TraceService)) as TraceService
-  const traceService = webContext?.[`_${ConfigKey.serviceName}`] as AbstractTraceService | undefined
-  // assert(traceService, `traceService undefined on webContext[_${ConfigKey.serviceName}]`)
   assert(typeof func === 'function', 'Func referencing joinPoint.proceed is not function')
-
-  const startActiveSpan = typeof mdata === 'object'
-    ? mdata.startActiveSpan ?? true
-    : true
-
-  const traceContext = typeof mdata === 'object'
-    ? mdata.traceContext
-    : void 0
 
   const opts: DecoratorExecutorOptions<TDecoratorArgs> = {
     argsFromClassDecorator: void 0,

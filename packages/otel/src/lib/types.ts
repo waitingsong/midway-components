@@ -2,7 +2,7 @@
 import type { IncomingHttpHeaders } from 'http'
 
 import type { ILogger } from '@midwayjs/logger'
-import type { BaseConfig, Context } from '@mwcp/share'
+import type { Application, BaseConfig, Context } from '@mwcp/share'
 import type {
   Attributes,
   AttributeValue,
@@ -10,11 +10,13 @@ import type {
   SpanOptions,
   SpanStatusCode,
   TimeInput,
+  Span,
 } from '@opentelemetry/api'
 import type { OTLPGRPCExporterConfigNode as OTLPGRPCExporterConfig } from '@opentelemetry/otlp-grpc-exporter-base'
 import { node } from '@opentelemetry/sdk-node'
 import type { MiddlewareConfig as MWConfig, KnownKeys } from '@waiting/shared-types'
 
+import { AbstractTraceService } from './abstract'
 import { AttrNames } from './attrnames.types'
 
 
@@ -270,26 +272,45 @@ export interface AddEventOtpions {
   startTime?: TimeInput
 }
 
-export type MethodType = (...input: any[]) => (any | Promise<any>)
+// export type MethodType = (...input: any[]) => (any | Promise<any>)
+export type MethodType<
+  ArgsType extends any[] = any[],
+  ReturnType = any,
+> = (...input: ArgsType) => ReturnType
 
 export type TraceDecoratorArg<M extends MethodType | void = void> =
   Partial<TraceDecoratorOptions<M>> | string
 
-export interface TraceDecoratorOptions<M extends MethodType | void = void> extends SpanOptions {
+export interface TraceDecoratorOptions<
+  /** Decorated method */
+  M extends MethodType | void = void,
+  /** Arguments of decorated method */
+  MArgsType = M extends MethodType<infer A> ? A : [],
+> extends SpanOptions {
+
   /** @default `{target.name}/{methodName}` */
-  spanName: string | KeyGenerator<M> | undefined
+  spanName: string | KeyGenerator<MArgsType> | undefined
   /**
    * @default true
    */
   startActiveSpan: boolean
   traceContext: TraceContext | undefined
+  // before: MethodType | undefined
+  // after: MethodType | undefined
 }
 
-export type KeyGenerator<M extends MethodType | void = void> = (
-  /** WebContext */
-  this: Context | undefined,
+export type KeyGenerator<ArgsType = any[], AppendArgType extends MethodAppendArgType = MethodAppendArgType> = (
   /** Arguments of the method */
-  args: M extends MethodType ? Parameters<M> : any,
+  args: ArgsType,
+  appendArg: AppendArgType,
 ) => string | undefined
+
+export interface MethodAppendArgType {
+  webApp: Application | undefined
+  webContext: Context | undefined
+  traceService: AbstractTraceService | undefined
+  traceContext: TraceContext | undefined
+  traceSpan: Span | undefined
+}
 
 
