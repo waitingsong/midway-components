@@ -275,13 +275,9 @@ export type MethodType = (...input: any[]) => (any | Promise<any>)
 export type TraceDecoratorArg<M extends MethodType | void = void> =
   Partial<TraceDecoratorOptions<M>> | string
 
-export interface TraceDecoratorOptions<M extends MethodType | void = void>
-  extends TraceDecoratorOptionsSpanOptions {
+export interface TraceDecoratorOptions<M extends MethodType | void = void> extends SpanOptions {
   /** 若空则为 `{target.name}/{methodName}` */
   spanName: string | KeyGenerator<M> | undefined
-}
-
-export interface TraceDecoratorOptionsSpanOptions extends SpanOptions {
   /**
    * @default true
    */
