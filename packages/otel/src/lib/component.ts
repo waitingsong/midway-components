@@ -475,7 +475,6 @@ export class OtelComponent extends AbstractOtelComponent {
     const TraceOpts: RegisterDecoratorHandlerOptions<TraceDecoratorArg> = {
       decoratorKey: KEY_Trace,
       decoratorService: this.decoratorService,
-      // @ts-expect-error
       decoratorExecutor: decoratorExecutorTrace,
       genDecoratorExecutorOptionsFn: genDecoratorExecutorOptions,
     }
@@ -487,7 +486,6 @@ export class OtelComponent extends AbstractOtelComponent {
     const TraceInitOpts: RegisterDecoratorHandlerOptions<TraceDecoratorArg> = {
       decoratorKey: METHOD_KEY_TraceInit,
       decoratorService: this.decoratorService,
-      // @ts-expect-error
       decoratorExecutor: decoratorExecutorTraceInit,
       genDecoratorExecutorOptionsFn: genDecoratorExecutorOptions,
     }
