@@ -70,6 +70,7 @@ async function aroundFactory(
   } = options
 
   if (! traceService) {
+    console.warn('traceService is not initialized. (traceService 尚未初始化。)')
     const ret = await func(...funcArgs)
     return ret
   }
