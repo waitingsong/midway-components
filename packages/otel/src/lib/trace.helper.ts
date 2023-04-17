@@ -24,11 +24,6 @@ import {
 } from './types'
 
 
-// export interface MetaDataType {
-//   target: new (...args: unknown[]) => unknown
-//   propertyName: string
-//   metadata: TraceDecoratorArg | undefined
-// }
 export type MetaDataType = AopCallbackInputArgsType<TraceDecoratorArg>
 
 
