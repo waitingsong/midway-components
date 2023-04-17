@@ -32,7 +32,9 @@ export function customDecoratorFactory<TDecoratorArgs extends {}>(
   options: CustomDecoratorFactoryOptions<TDecoratorArgs>,
 ): MethodDecorator & ClassDecorator {
 
-  const { enableClassDecorator } = options
+  const { decoratorName, enableClassDecorator } = options
+
+  assert(decoratorName, 'decoratorName is undefined')
 
   const DecoratorFactory = (
     target: {},
@@ -65,13 +67,16 @@ export function customDecoratorFactory<TDecoratorArgs extends {}>(
       assert(descriptor, 'descriptor is undefined')
 
       if (typeof descriptor.value !== 'function') {
-        throw new Error('Only method can be decorated with @Cacheable decorator')
+        throw new Error(`Only method can be decorated with decorator "${decoratorName}",
+        target: ${target.constructor.name},
+        ${propertyName} is not a method}`)
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      if (descriptor.value.constructor.name !== 'AsyncFunction') {
-        throw new Error('Only async method can be decorated with @Cacheable decorator')
-      }
+      // // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      // if (descriptor.value.constructor.name !== 'AsyncFunction') {
+      //   throw new Error(`Only async method can be decorated with decorator "${decoratorName}"
+      //   target: ${target.constructor.name}, propertyName: ${propertyName}`)
+      // }
 
       return methodDecoratorPatcher({
         decoratorKey,
