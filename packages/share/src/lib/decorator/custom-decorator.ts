@@ -12,10 +12,15 @@ import {
   saveClassMetadata,
   saveModule,
   Provide,
+  REQUEST_OBJ_CTX_KEY,
 } from '@midwayjs/core'
+
+import type { Context as WebContext } from '../index.js'
 
 import { methodHasDecorated, setImplToFalseIfDecoratedWithBothClassAndMethod } from './custom-decorator.helper.js'
 import {
+
+  AopCallbackInputArgsType,
   AroundFactoryOptions,
   AroundFactoryOptionsBase,
   CustomClassDecoratorOptions,
@@ -26,6 +31,7 @@ import {
   DecoratorMetaData,
   RegisterDecoratorHandlerOptions,
 } from './custom-decorator.types.js'
+
 
 
 export function customDecoratorFactory<TDecoratorArgs extends {}>(
@@ -292,4 +298,48 @@ function aroundFactorySync<TDecoratorArgs extends {} = {}>(
   // not return directly, https://v8.dev/blog/fast-async#improved-developer-experience
   const dat: unknown = decoratorExecutor(options)
   return dat
+}
+
+
+export function genDecoratorExecutorOptionsBase<TDecoratorArgs extends {} = {}>(
+  joinPoint: JoinPoint,
+  aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorArgs>,
+  baseOptions: Partial<DecoratorExecutorOptionsBase<TDecoratorArgs>> = {},
+): DecoratorExecutorOptionsBase<TDecoratorArgs> {
+
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  assert(joinPoint.proceed, 'joinPoint.proceed is undefined')
+  assert(typeof joinPoint.proceed === 'function', 'joinPoint.proceed is not funtion')
+
+  // 装饰器所在的实例
+  const instance = joinPoint.target
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+  const webContext = baseOptions.webContext ?? instance[REQUEST_OBJ_CTX_KEY] as WebContext | undefined
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  const callerClass = instance.constructor?.name ?? aopCallbackInputOptions.target.name ?? ''
+  const callerMethod = joinPoint.methodName
+  const { args, target } = joinPoint
+
+  // const func = joinPoint.proceed.bind(joinPoint.target)
+  const func = joinPoint.proceed.bind(void 0)
+
+  assert(typeof func === 'function', 'Func referencing joinPoint.proceed is not function')
+
+  const opts: DecoratorExecutorOptionsBase<TDecoratorArgs> = {
+    argsFromClassDecorator: void 0,
+    argsFromMethodDecorator: void 0,
+    decoratorKey: baseOptions.decoratorKey ?? '',
+    config: baseOptions.config ?? void 0,
+    instance: target,
+    instanceName: callerClass,
+    method: func,
+    // index:0 may webcontext
+    methodArgs: args,
+    methodName: callerMethod,
+    methodIsAsyncFunction: !! joinPoint.proceedIsAsyncFunction,
+    webApp: baseOptions.webApp ?? void 0,
+    webContext,
+  }
+  return opts
 }
