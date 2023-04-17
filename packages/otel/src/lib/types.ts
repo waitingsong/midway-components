@@ -16,7 +16,7 @@ import type { OTLPGRPCExporterConfigNode as OTLPGRPCExporterConfig } from '@open
 import { node } from '@opentelemetry/sdk-node'
 import type { MiddlewareConfig as MWConfig, KnownKeys } from '@waiting/shared-types'
 
-import { AbstractTraceService } from './abstract'
+import { AbstractOtelComponent, AbstractTraceService } from './abstract'
 import { AttrNames } from './attrnames.types'
 
 
@@ -272,9 +272,8 @@ export interface AddEventOtpions {
   startTime?: TimeInput
 }
 
-// export type MethodType = (...input: any[]) => (any | Promise<any>)
 export type MethodType<
-  ArgsType extends unknown[] = unknown[],
+  ArgsType extends unknown[] = any[],
   ReturnType = unknown,
 > = (...input: ArgsType) => ReturnType
 
@@ -299,7 +298,7 @@ export interface TraceDecoratorOptions<
   // after: MethodType | undefined
 }
 
-export type KeyGenerator<ArgsType = any[], AppendArgType extends MethodAppendArgType = MethodAppendArgType> = (
+export type KeyGenerator<ArgsType = unknown[], AppendArgType extends MethodAppendArgType = MethodAppendArgType> = (
   /** Arguments of the method */
   args: ArgsType,
   appendArg: AppendArgType,
@@ -308,6 +307,7 @@ export type KeyGenerator<ArgsType = any[], AppendArgType extends MethodAppendArg
 export interface MethodAppendArgType {
   webApp: Application | undefined
   webContext: Context | undefined
+  otelComponent: AbstractOtelComponent | undefined
   traceService: AbstractTraceService | undefined
   traceContext: TraceContext | undefined
   traceSpan: Span | undefined

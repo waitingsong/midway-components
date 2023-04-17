@@ -48,7 +48,7 @@ export class TraceService extends AbstractTraceService {
   @_Config(ConfigKey.middlewareConfig) readonly mwConfig: MiddlewareConfig
 
   @Inject() readonly ctx: WebContext
-  @Inject() protected readonly otel: OtelComponent
+  @Inject() readonly otel: OtelComponent
 
   rootContext: Context
   rootSpan: Span

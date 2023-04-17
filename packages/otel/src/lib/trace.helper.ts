@@ -13,7 +13,7 @@ import type {
 } from '@mwcp/share'
 import { Attributes, SpanOptions } from '@opentelemetry/api'
 
-import type { AbstractTraceService } from './abstract'
+import type { AbstractOtelComponent, AbstractTraceService } from './abstract'
 import {
   AttrNames,
   ConfigKey,
@@ -157,9 +157,16 @@ export function prepareAroundFactory<TDecoratorArgs extends TraceDecoratorArg = 
     ? mdata.traceContext
     : void 0
 
+  const app = webContext?.app
+
+  const otelKey = `_${ConfigKey.componentName}`
+  // @ts-expect-error
+  const otel: AbstractOtelComponent | undefined = traceService?.otel ?? app?.[otelKey] ?? void 0,
+
   const appendArg: MethodAppendArgType = {
-    webApp: webContext?.app,
+    webApp: app,
     webContext: webContext ?? void 0,
+    otelComponent: otel,
     traceService: traceService ?? void 0,
     traceContext: traceContext ?? void 0,
     traceSpan: void 0,
