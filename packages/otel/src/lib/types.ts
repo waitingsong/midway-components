@@ -2,21 +2,18 @@
 import type { IncomingHttpHeaders } from 'http'
 
 import type { ILogger } from '@midwayjs/logger'
-import type { Application, BaseConfig, Context } from '@mwcp/share'
+import type { BaseConfig, Context } from '@mwcp/share'
 import type {
   Attributes,
   AttributeValue,
   Context as TraceContext,
-  SpanOptions,
   SpanStatusCode,
   TimeInput,
-  Span,
 } from '@opentelemetry/api'
 import type { OTLPGRPCExporterConfigNode as OTLPGRPCExporterConfig } from '@opentelemetry/otlp-grpc-exporter-base'
 import { node } from '@opentelemetry/sdk-node'
 import type { MiddlewareConfig as MWConfig, KnownKeys } from '@waiting/shared-types'
 
-import { AbstractOtelComponent, AbstractTraceService } from './abstract'
 import { AttrNames } from './attrnames.types'
 
 
@@ -271,46 +268,3 @@ export interface AddEventOtpions {
   eventName?: string
   startTime?: TimeInput
 }
-
-export type MethodType<
-  ArgsType extends unknown[] = any[],
-  ReturnType = unknown,
-> = (...input: ArgsType) => ReturnType
-
-export type TraceDecoratorArg<M extends MethodType | void = void> =
-  Partial<TraceDecoratorOptions<M>> | string
-
-export interface TraceDecoratorOptions<
-  /** Decorated method */
-  M extends MethodType | void = void,
-  /** Arguments of decorated method */
-  MArgsType = M extends MethodType<infer A> ? A : [],
-> extends SpanOptions {
-
-  /** @default `{target.name}/{methodName}` */
-  spanName: string | KeyGenerator<MArgsType> | undefined
-  /**
-   * @default true
-   */
-  startActiveSpan: boolean
-  traceContext: TraceContext | undefined
-  // before: MethodType | undefined
-  // after: MethodType | undefined
-}
-
-export type KeyGenerator<ArgsType = unknown[], DContext extends DecoatorContext = DecoatorContext> = (
-  /** Arguments of the method */
-  args: ArgsType,
-  context: DContext,
-) => string | undefined
-
-export interface DecoatorContext {
-  webApp: Application | undefined
-  webContext: Context | undefined
-  otelComponent: AbstractOtelComponent | undefined
-  traceService: AbstractTraceService | undefined
-  traceContext: TraceContext | undefined
-  traceSpan: Span | undefined
-}
-
-

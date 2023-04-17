@@ -46,6 +46,7 @@ import { KEY_Trace } from './decorator.trace/trace'
 import { decoratorExecutor as decoratorExecutorTrace } from './decorator.trace/trace.helper'
 import { METHOD_KEY_TraceInit } from './decorator.trace-init/trace-init'
 import { decoratorExecutor as decoratorExecutorTraceInit } from './decorator.trace-init/trace-init.helper'
+import { TraceDecoratorArg } from './decorator.types'
 import { genDecoratorExecutorOptions } from './trace.helper'
 import {
   AddEventOtpions,
@@ -54,10 +55,10 @@ import {
   ConfigKey,
   InitTraceOptions,
   SpanStatusOptions,
-  TraceDecoratorArg,
 } from './types'
 import { normalizeHeaderKey, setSpan } from './util'
 
+// eslint-disable-next-line import/max-dependencies
 import { initTrace } from '~/helper/index.opentelemetry'
 
 

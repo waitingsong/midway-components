@@ -42,11 +42,14 @@ export {
   SpanExporterList,
   SpanHeaderInit,
   SpanStatusOptions,
-  TraceDecoratorArg,
-  TraceDecoratorOptions,
   TraceError,
   TraceLogType as LogInfo,
 } from './types'
+
+export {
+  TraceDecoratorArg,
+  TraceDecoratorOptions,
+} from './decorator.types'
 
 
 export { AttrNames } from './attrnames.types'
