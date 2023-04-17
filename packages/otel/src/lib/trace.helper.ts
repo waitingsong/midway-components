@@ -11,12 +11,14 @@ import { Attributes, SpanOptions } from '@opentelemetry/api'
 
 import type { AbstractOtelComponent, AbstractTraceService } from './abstract'
 import {
-  AttrNames,
-  ConfigKey,
   DecoatorContext,
-  TraceContext,
   TraceDecoratorArg,
   TraceDecoratorOptions,
+} from './decorator.types'
+import {
+  AttrNames,
+  ConfigKey,
+  TraceContext,
 } from './types'
 
 

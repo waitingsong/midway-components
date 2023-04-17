@@ -4,8 +4,8 @@ import { isPromise } from 'node:util/types'
 import { Span, SpanStatusCode } from '@opentelemetry/api'
 
 import type { AbstractTraceService } from '../abstract'
+import type { TraceDecoratorArg } from '../decorator.types'
 import type { DecoratorExecutorOptions } from '../trace.helper'
-import { TraceDecoratorArg } from '../types'
 
 
 export function decoratorExecutor(

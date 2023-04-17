@@ -3,8 +3,9 @@ import assert from 'assert'
 import { Attributes, SpanKind, SpanOptions } from '@opentelemetry/api'
 
 import type { AbstractOtelComponent } from '../abstract'
+import type { TraceDecoratorArg } from '../decorator.types'
 import type { DecoratorExecutorOptions } from '../trace.helper'
-import { ConfigKey, TraceDecoratorArg } from '../types'
+import { ConfigKey } from '../types'
 
 
 export async function decoratorExecutor(

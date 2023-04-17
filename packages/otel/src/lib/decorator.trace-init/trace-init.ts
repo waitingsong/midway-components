@@ -3,7 +3,7 @@ import assert from 'assert'
 
 import { customDecoratorFactory } from '@mwcp/share'
 
-import { MethodType, TraceDecoratorArg } from '../types'
+import { MethodType, TraceDecoratorArg } from '../decorator.types'
 
 
 export const METHOD_KEY_TraceInit = 'decorator:method_key_TraceInit'
