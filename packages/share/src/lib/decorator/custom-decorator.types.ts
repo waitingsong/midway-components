@@ -35,12 +35,15 @@ export interface DecoratorExecutorOptionsBase<TDecoratorArgs extends {} = {}> {
   config: any
   /** 装饰器所在类实例 */
   instance: InstanceOfDecorator
+  /** Caller Class name */
+  instanceName: string
   method: Method
   methodArgs: unknown[]
   methodName: string
   methodResult?: unknown
   methodIsAsyncFunction?: boolean
-  webApplication?: Application
+  webApp?: Application | undefined
+  webContext?: Context | undefined
   [key: string]: unknown
 }
 
@@ -132,7 +135,7 @@ export type AroundFactory<TDecoratorArgs extends {} = {}> = (
 
 export interface AroundFactoryOptionsBase {
   config: any
-  webApplication?: Application
+  webApp?: Application
   [key: string]: unknown
 }
 export interface AroundFactoryOptions<TDecoratorArgs extends {} = {}>
