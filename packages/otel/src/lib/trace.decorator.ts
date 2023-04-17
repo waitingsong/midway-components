@@ -20,7 +20,7 @@ import {
 } from './types'
 
 
-export const TRACE_KEY = 'decorator:open_telemetry_trace_key'
+export const TRACE_KEY = 'decorator:key_Trace'
 
 export function Trace<M extends MethodType | void = void>(
   options?: TraceDecoratorArg<M>,

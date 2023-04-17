@@ -274,8 +274,8 @@ export interface AddEventOtpions {
 
 // export type MethodType = (...input: any[]) => (any | Promise<any>)
 export type MethodType<
-  ArgsType extends any[] = any[],
-  ReturnType = any,
+  ArgsType extends unknown[] = unknown[],
+  ReturnType = unknown,
 > = (...input: ArgsType) => ReturnType
 
 export type TraceDecoratorArg<M extends MethodType | void = void> =
