@@ -129,28 +129,31 @@ export interface RegisterDecoratorHandlerOptions<TDecoratorArgs extends {} = {}>
   [key: string]: unknown
 }
 
-export type AroundFactory<TDecoratorArgs extends {} = {}> = (
-  options: AroundFactoryOptions<TDecoratorArgs>,
-) => Promise<unknown>
+// export type AroundFactory<TDecoratorArgs extends {} = {}> = (
+//   options: AroundFactoryOptions<TDecoratorArgs>,
+// ) => Promise<unknown>
 
 export interface AroundFactoryOptionsBase {
   config: any
   webApp?: Application
   [key: string]: unknown
 }
-export interface AroundFactoryOptions<TDecoratorArgs extends {} = {}>
-  extends AroundFactoryOptionsBase {
+// export interface AroundFactoryOptions<TDecoratorArgs extends {} = {}>
+//   extends AroundFactoryOptionsBase {
 
-  /**
-   * @example METHOD_KEY_Cacaeable
-   */
-  decoratorKey: string
-  aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorArgs>
-  joinPoint: JoinPoint
-}
+//   /**
+//    * @example METHOD_KEY_Cacaeable
+//    */
+//   decoratorKey: string
+//   aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorArgs>
+//   joinPoint: JoinPoint
+// }
 
 export type GenDecoratorExecutorOptionsFn<TDecoratorArgs extends {} = {}> = (
-  options: AroundFactoryOptions<TDecoratorArgs>,
+  // options: AroundFactoryOptions<TDecoratorArgs>,
+  joinPoint: JoinPoint,
+  aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorArgs>,
+  baseOptions: Partial<DecoratorExecutorOptionsBase<TDecoratorArgs>>,
 ) => DecoratorExecutorOptionsBase<TDecoratorArgs>
 
 export interface AopCallbackInputArgsType<TDecoratorArgs extends {} = {}> {

@@ -19,9 +19,7 @@ import type { Context as WebContext } from '../index.js'
 
 import { methodHasDecorated, setImplToFalseIfDecoratedWithBothClassAndMethod } from './custom-decorator.helper.js'
 import {
-
   AopCallbackInputArgsType,
-  AroundFactoryOptions,
   AroundFactoryOptionsBase,
   CustomClassDecoratorOptions,
   CustomDecoratorFactoryOptions,
@@ -248,13 +246,11 @@ export function registerDecoratorHandler<TDecoratorArgs extends {} = {}>(
     decoratorKey,
     aopCallbackInputOptions => ({
       around: (joinPoint: JoinPoint) => {
-        const opts: AroundFactoryOptions<TDecoratorArgs> = {
-          ...aroundFactoryOptions,
-          decoratorKey,
-          aopCallbackInputOptions,
+        const opts2: DecoratorExecutorOptionsBase<TDecoratorArgs> = genDecoratorExecutorOptionsFn(
           joinPoint,
-        }
-        const opts2: DecoratorExecutorOptionsBase<TDecoratorArgs> = genDecoratorExecutorOptionsFn(opts)
+          aopCallbackInputOptions,
+          aroundFactoryOptions,
+        )
 
         if (typeof opts2.methodIsAsyncFunction === 'undefined') {
           opts2.methodIsAsyncFunction = !! joinPoint.proceedIsAsyncFunction
@@ -307,6 +303,7 @@ export function genDecoratorExecutorOptionsBase<TDecoratorArgs extends {} = {}>(
   baseOptions: Partial<DecoratorExecutorOptionsBase<TDecoratorArgs>> = {},
 ): DecoratorExecutorOptionsBase<TDecoratorArgs> {
 
+  assert(baseOptions, 'baseOptions is required')
   // eslint-disable-next-line @typescript-eslint/unbound-method
   assert(joinPoint.proceed, 'joinPoint.proceed is undefined')
   assert(typeof joinPoint.proceed === 'function', 'joinPoint.proceed is not funtion')
