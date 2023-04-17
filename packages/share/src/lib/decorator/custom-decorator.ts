@@ -327,10 +327,14 @@ export function genDecoratorExecutorOptionsBase<TDecoratorArgs extends {} = {}>(
 
   assert(typeof func === 'function', 'Func referencing joinPoint.proceed is not function')
 
+  const decoratorKey = baseOptions.decoratorKey ?? ''
+  const argsFromClassDecorator = getClassMetadata(decoratorKey, instance)
+  const argsFromMethodDecorator = aopCallbackInputOptions.metadata
+
   const opts: DecoratorExecutorOptionsBase<TDecoratorArgs> = {
-    argsFromClassDecorator: void 0,
-    argsFromMethodDecorator: void 0,
-    decoratorKey: baseOptions.decoratorKey ?? '',
+    argsFromClassDecorator,
+    argsFromMethodDecorator,
+    decoratorKey,
     config: baseOptions.config ?? void 0,
     instance: target,
     instanceName: callerClass,
