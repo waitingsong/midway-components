@@ -42,9 +42,10 @@ import type { NpmPkg } from '@waiting/shared-types'
 
 import { AbstractOtelComponent } from './abstract'
 import { initSpanStatusOptions } from './config'
-import { decoratorExecutor } from './trace-init/helper.trace-init'
-import { METHOD_KEY_TraceInit } from './trace-init/trace-init'
-import { TRACE_KEY, registerMethodHandler } from './trace.decorator'
+import { KEY_Trace } from './decorator.trace/trace'
+import { decoratorExecutor as decoratorExecutorTrace } from './decorator.trace/trace.helper'
+import { METHOD_KEY_TraceInit } from './decorator.trace-init/trace-init'
+import { decoratorExecutor as decoratorExecutorTraceInit } from './decorator.trace-init/trace-init.helper'
 import { genDecoratorExecutorOptions } from './trace.helper'
 import {
   AddEventOtpions,
@@ -472,22 +473,23 @@ export class OtelComponent extends AbstractOtelComponent {
     }
 
     const TraceOpts: RegisterDecoratorHandlerOptions<TraceDecoratorArg> = {
-      decoratorKey: TRACE_KEY,
+      decoratorKey: KEY_Trace,
       decoratorService: this.decoratorService,
       // @ts-expect-error
-      decoratorExecutor,
+      decoratorExecutor: decoratorExecutorTrace,
       genDecoratorExecutorOptionsFn: genDecoratorExecutorOptions,
     }
 
     // registerMethodHandler(this.decoratorService, this.config)
-    registerDecoratorHandler(TraceOpts, aroundFactoryOptions)
+    // registerDecoratorHandler(TraceOpts, aroundFactoryOptions)
+    void TraceOpts
 
 
     const TraceInitOpts: RegisterDecoratorHandlerOptions<TraceDecoratorArg> = {
       decoratorKey: METHOD_KEY_TraceInit,
       decoratorService: this.decoratorService,
       // @ts-expect-error
-      decoratorExecutor,
+      decoratorExecutor: decoratorExecutorTraceInit,
       genDecoratorExecutorOptionsFn: genDecoratorExecutorOptions,
     }
     registerDecoratorHandler(TraceInitOpts, aroundFactoryOptions)

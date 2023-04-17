@@ -8,8 +8,7 @@ import {
 } from '@midwayjs/core'
 import { ILogger } from '@midwayjs/logger'
 
-import { TraceService } from '../lib/index'
-import { Trace } from '../lib/trace.decorator'
+import { Trace, TraceService } from '../lib/index'
 import { Config, ConfigKey, Msg } from '../lib/types'
 
 import { DefaultOtelComponentService } from './default.service'
