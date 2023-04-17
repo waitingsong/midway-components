@@ -96,7 +96,7 @@ export function genDecoratorExecutorOptions(
     decoratorKey,
     webApp,
   } = options
-  assert(webApp, 'webApplication is required')
+  assert(webApp, 'webApp is required')
 
   const baseOps: Partial<DecoratorExecutorOptionsBase<TraceDecoratorArg>> = {
     config,
