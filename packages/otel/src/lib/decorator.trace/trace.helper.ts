@@ -1,71 +1,29 @@
-import assert from 'node:assert'
+import assert from 'assert'
 import { isPromise } from 'node:util/types'
 
-import {
-  MidwayDecoratorService,
-  JoinPoint,
-  createCustomMethodDecorator,
-} from '@midwayjs/core'
-import { AopCallbackInputArgsType, AroundFactoryOptions } from '@mwcp/share'
-import {
-  Span,
-  SpanStatusCode,
-} from '@opentelemetry/api'
+import { Span, SpanStatusCode } from '@opentelemetry/api'
 
-import type { AbstractTraceService } from './abstract'
-import {
-  DecoratorExecutorOptions,
-  genDecoratorExecutorOptions,
-} from './trace.helper'
-import {
-  Config,
-  MethodType,
-  TraceDecoratorArg,
-} from './types'
+import type { AbstractTraceService } from '../abstract'
+import type { DecoratorExecutorOptions } from '../trace.helper'
+import { TraceDecoratorArg } from '../types'
 
 
-export const TRACE_KEY = 'decorator:key_Trace'
+export function decoratorExecutor(
+  options: DecoratorExecutorOptions<TraceDecoratorArg>,
+): unknown {
 
-export function Trace<M extends MethodType | void = void>(
-  options?: TraceDecoratorArg<M>,
-): MethodDecorator {
-
-  return createCustomMethodDecorator(TRACE_KEY, options)
-}
-
-export function registerMethodHandler(
-  decoratorService: MidwayDecoratorService,
-  config: Config,
-): void {
-
-  decoratorService.registerMethodHandler(TRACE_KEY, (options: AopCallbackInputArgsType<TraceDecoratorArg>) => {
-    return config.enable
-      ? {
-        around: (joinPoint: JoinPoint) => {
-
-          const aroundFactoryOpts: AroundFactoryOptions = {
-            config,
-            decoratorKey: TRACE_KEY,
-            aopCallbackInputOptions: options,
-            joinPoint,
-          }
-          const executorOpts: DecoratorExecutorOptions = genDecoratorExecutorOptions(aroundFactoryOpts)
-          if (joinPoint.proceedIsAsyncFunction) {
-            const ret = aroundFactory(executorOpts)
-            return ret
-          }
-          else {
-            const ret = aroundFactorySync(executorOpts)
-            return ret
-          }
-        },
-      }
-      : {}
-  })
+  if (options.methodIsAsyncFunction) {
+    const ret = run(options)
+    return ret
+  }
+  else {
+    const ret = runSync(options)
+    return ret
+  }
 }
 
 
-async function aroundFactory(
+async function run(
   options: DecoratorExecutorOptions,
 ): Promise<unknown> {
 
@@ -109,7 +67,7 @@ async function aroundFactory(
   }
 }
 
-function aroundFactorySync(
+function runSync(
   options: DecoratorExecutorOptions,
 ): unknown {
 
@@ -193,4 +151,3 @@ function createActiveSpanCbSync(options: CreateActiveSpanCbOptions): unknown {
     throw new Error(err.message, { cause: err.cause ?? err })
   }
 }
-

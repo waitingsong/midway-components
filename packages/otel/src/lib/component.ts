@@ -44,7 +44,7 @@ import { AbstractOtelComponent } from './abstract'
 import { initSpanStatusOptions } from './config'
 import { decoratorExecutor } from './trace-init/helper.trace-init'
 import { METHOD_KEY_TraceInit } from './trace-init/trace-init'
-import { registerMethodHandler } from './trace.decorator'
+import { TRACE_KEY, registerMethodHandler } from './trace.decorator'
 import { genDecoratorExecutorOptions } from './trace.helper'
 import {
   AddEventOtpions,
@@ -466,21 +466,31 @@ export class OtelComponent extends AbstractOtelComponent {
       }
     }
 
-    registerMethodHandler(this.decoratorService, this.config)
-
-
     const aroundFactoryOptions: AroundFactoryOptionsBase = {
       config: this.config,
       webApp: this.app,
     }
-    const optsTraceInit: RegisterDecoratorHandlerOptions<TraceDecoratorArg> = {
+
+    const TraceOpts: RegisterDecoratorHandlerOptions<TraceDecoratorArg> = {
+      decoratorKey: TRACE_KEY,
+      decoratorService: this.decoratorService,
+      // @ts-expect-error
+      decoratorExecutor,
+      genDecoratorExecutorOptionsFn: genDecoratorExecutorOptions,
+    }
+
+    // registerMethodHandler(this.decoratorService, this.config)
+    registerDecoratorHandler(TraceOpts, aroundFactoryOptions)
+
+
+    const TraceInitOpts: RegisterDecoratorHandlerOptions<TraceDecoratorArg> = {
       decoratorKey: METHOD_KEY_TraceInit,
       decoratorService: this.decoratorService,
       // @ts-expect-error
       decoratorExecutor,
       genDecoratorExecutorOptionsFn: genDecoratorExecutorOptions,
     }
-    registerDecoratorHandler(optsTraceInit, aroundFactoryOptions)
+    registerDecoratorHandler(TraceInitOpts, aroundFactoryOptions)
 
   }
 
