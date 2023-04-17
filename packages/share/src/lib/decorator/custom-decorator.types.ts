@@ -47,9 +47,7 @@ export interface DecoratorExecutorOptionsBase<TDecoratorArgs extends {} = {}> {
   [key: string]: unknown
 }
 
-export type DecoratorExecutorFn<TDecoratorArgs extends {} = {}> = (
-  options: DecoratorExecutorOptionsBase<TDecoratorArgs>,
-) => Promise<unknown> | unknown
+export type DecoratorExecutorFn = (options: any) => unknown
 
 
 export interface CustomClassDecoratorOptions<TDecoratorArgs extends {}> {
@@ -124,7 +122,7 @@ export interface RegisterDecoratorHandlerOptions<TDecoratorArgs extends {} = {}>
    */
   decoratorKey: string
   decoratorService: MidwayDecoratorService
-  decoratorExecutor: DecoratorExecutorFn<TDecoratorArgs>
+  decoratorExecutor: DecoratorExecutorFn
   genDecoratorExecutorOptionsFn: GenDecoratorExecutorOptionsFn<TDecoratorArgs>
   [key: string]: unknown
 }
