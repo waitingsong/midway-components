@@ -246,10 +246,14 @@ export function registerDecoratorHandler<TDecoratorArgs extends {} = {}>(
     decoratorKey,
     aopCallbackInputOptions => ({
       around: (joinPoint: JoinPoint) => {
+        const baseOpts = {
+          ...aroundFactoryOptions,
+          decoratorKey,
+        }
         const opts2: DecoratorExecutorOptionsBase<TDecoratorArgs> = genDecoratorExecutorOptionsFn(
           joinPoint,
           aopCallbackInputOptions,
-          aroundFactoryOptions,
+          baseOpts,
         )
 
         if (typeof opts2.methodIsAsyncFunction === 'undefined') {

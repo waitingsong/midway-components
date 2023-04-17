@@ -150,7 +150,6 @@ export interface AroundFactoryOptionsBase {
 // }
 
 export type GenDecoratorExecutorOptionsFn<TDecoratorArgs extends {} = {}> = (
-  // options: AroundFactoryOptions<TDecoratorArgs>,
   joinPoint: JoinPoint,
   aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorArgs>,
   baseOptions: Partial<DecoratorExecutorOptionsBase<TDecoratorArgs>>,
