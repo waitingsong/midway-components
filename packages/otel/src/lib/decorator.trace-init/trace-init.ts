@@ -33,7 +33,6 @@ export function TraceInit<M extends MethodType | void = void>(
   assert(opts.spanName, 'spanName is required for TraceInit decorator. (TraceInit 装饰器需要 spanName 参数)')
 
   return customDecoratorFactory<TraceDecoratorArg<M>>({
-    decoratorName: 'TraceInit',
     decoratorArgs: opts,
     decoratorKey: METHOD_KEY_TraceInit,
     enableClassDecorator: false,

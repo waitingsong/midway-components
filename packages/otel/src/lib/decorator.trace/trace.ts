@@ -19,7 +19,6 @@ export function Trace<M extends MethodType | void = void>(
     : options
 
   return customDecoratorFactory<TraceDecoratorArg<M>>({
-    decoratorName: 'Trace',
     decoratorArgs: opts,
     decoratorKey: KEY_Trace,
     enableClassDecorator: false,
