@@ -471,7 +471,7 @@ export class OtelComponent extends AbstractOtelComponent {
 
     const aroundFactoryOptions: AroundFactoryOptionsBase = {
       config: this.config,
-      webApplication: this.app,
+      webApp: this.app,
     }
     const optsTraceInit: RegisterDecoratorHandlerOptions<TraceDecoratorArg> = {
       decoratorKey: METHOD_KEY_TraceInit,

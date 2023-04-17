@@ -6,13 +6,17 @@ import {
   JoinPoint,
   createCustomMethodDecorator,
 } from '@midwayjs/core'
+import { AopCallbackInputArgsType, AroundFactoryOptions } from '@mwcp/share'
 import {
   Span,
   SpanStatusCode,
 } from '@opentelemetry/api'
 
 import type { AbstractTraceService } from './abstract'
-import { MetaDataType, DecoratorExecutorOptions, prepareAroundFactory } from './trace.helper'
+import {
+  DecoratorExecutorOptions,
+  genDecoratorExecutorOptions,
+} from './trace.helper'
 import {
   Config,
   MethodType,
@@ -34,17 +38,24 @@ export function registerMethodHandler(
   config: Config,
 ): void {
 
-  decoratorService.registerMethodHandler(TRACE_KEY, (options: MetaDataType) => {
+  decoratorService.registerMethodHandler(TRACE_KEY, (options: AopCallbackInputArgsType<TraceDecoratorArg>) => {
     return config.enable
       ? {
         around: (joinPoint: JoinPoint) => {
-          const aroundFactoryOptions: DecoratorExecutorOptions = prepareAroundFactory(joinPoint, options)
+
+          const aroundFactoryOpts: AroundFactoryOptions = {
+            config,
+            decoratorKey: TRACE_KEY,
+            aopCallbackInputOptions: options,
+            joinPoint,
+          }
+          const executorOpts: DecoratorExecutorOptions = genDecoratorExecutorOptions(aroundFactoryOpts)
           if (joinPoint.proceedIsAsyncFunction) {
-            const ret = aroundFactory(aroundFactoryOptions)
+            const ret = aroundFactory(executorOpts)
             return ret
           }
           else {
-            const ret = aroundFactorySync(aroundFactoryOptions)
+            const ret = aroundFactorySync(executorOpts)
             return ret
           }
         },

@@ -11,13 +11,13 @@ export async function decoratorExecutor(
   options: DecoratorExecutorOptions<TraceDecoratorArg>,
 ): Promise<unknown> {
 
-  const { webApplication, methodIsAsyncFunction } = options
-  assert(webApplication, 'webApplication is required')
+  const { webApp, methodIsAsyncFunction } = options
+  assert(webApp, 'webApplication is required')
   assert(methodIsAsyncFunction === true, 'decorated method must be AsyncFunction')
 
   const key = `_${ConfigKey.componentName}`
   // @ts-ignore
-  const otel = webApplication[key] as AbstractOtelComponent | undefined
+  const otel = webApp[key] as AbstractOtelComponent | undefined
   // if (! otel) {
   //   otel = await webApplication.getApplicationContext().getAsync(OtelComponent)
   // }

@@ -298,13 +298,13 @@ export interface TraceDecoratorOptions<
   // after: MethodType | undefined
 }
 
-export type KeyGenerator<ArgsType = unknown[], AppendArgType extends MethodAppendArgType = MethodAppendArgType> = (
+export type KeyGenerator<ArgsType = unknown[], DContext extends DecoatorContext = DecoatorContext> = (
   /** Arguments of the method */
   args: ArgsType,
-  appendArg: AppendArgType,
+  context: DContext,
 ) => string | undefined
 
-export interface MethodAppendArgType {
+export interface DecoatorContext {
   webApp: Application | undefined
   webContext: Context | undefined
   otelComponent: AbstractOtelComponent | undefined

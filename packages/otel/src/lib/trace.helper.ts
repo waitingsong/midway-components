@@ -17,7 +17,7 @@ import type { AbstractOtelComponent, AbstractTraceService } from './abstract'
 import {
   AttrNames,
   ConfigKey,
-  MethodAppendArgType,
+  DecoatorContext,
   TraceContext,
   TraceDecoratorArg,
   TraceDecoratorOptions,
@@ -34,7 +34,7 @@ export type MetaDataType = AopCallbackInputArgsType<TraceDecoratorArg>
 
 interface GenKeyOptions extends Partial<TraceDecoratorOptions> {
   methodArgs: unknown[]
-  appendArg: MethodAppendArgType
+  appendArg: DecoatorContext
   callerClass: string
   callerMethod: string
 }
@@ -80,34 +80,6 @@ function genKey(options: GenKeyOptions): string {
   return name
 }
 
-export function genDecoratorExecutorOptions<TDecoratorArgs extends TraceDecoratorArg = TraceDecoratorArg>(
-  options: AroundFactoryOptions<TDecoratorArgs>,
-): DecoratorExecutorOptions<TDecoratorArgs> {
-
-  const {
-    joinPoint,
-    aopCallbackInputOptions,
-    config,
-    decoratorKey,
-    webApplication,
-  } = options
-  assert(webApplication, 'webApplication is required')
-
-  const opts = prepareAroundFactory<TDecoratorArgs>(joinPoint, aopCallbackInputOptions)
-  if (typeof opts.config === 'undefined') {
-    opts.config = config
-  }
-  if (typeof opts.decoratorKey === 'undefined') {
-    opts.decoratorKey = decoratorKey
-  }
-  if (typeof opts.webApplication === 'undefined') {
-    opts.webApplication = webApplication
-  }
-
-  return opts
-}
-
-
 export interface DecoratorExecutorOptions<T extends TraceDecoratorArg = TraceDecoratorArg>
   extends DecoratorExecutorOptionsBase<T> {
   callerAttr: Attributes
@@ -118,54 +90,56 @@ export interface DecoratorExecutorOptions<T extends TraceDecoratorArg = TraceDec
   traceService: AbstractTraceService | undefined
 }
 
-export function prepareAroundFactory<TDecoratorArgs extends TraceDecoratorArg = TraceDecoratorArg>(
-  joinPoint: JoinPoint,
-  metaDataOptions: MetaDataType,
-): DecoratorExecutorOptions<TDecoratorArgs> {
+export function genDecoratorExecutorOptions(
+  options: AroundFactoryOptions<TraceDecoratorArg>,
+): DecoratorExecutorOptions<TraceDecoratorArg> {
 
-  // eslint-disable-next-line @typescript-eslint/unbound-method
-  assert(joinPoint.proceed, 'joinPoint.proceed is undefined')
-  assert(typeof joinPoint.proceed === 'function', 'joinPoint.proceed is not funtion')
+  const {
+    joinPoint,
+    aopCallbackInputOptions,
+    config,
+    decoratorKey,
+    webApp,
+  } = options
+  assert(webApp, 'webApplication is required')
 
-  // 装饰器所在的实例
-  const instance = joinPoint.target
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-  const webContext = instance[REQUEST_OBJ_CTX_KEY] as WebContext | undefined
-  const traceService = webContext?.[`_${ConfigKey.serviceName}`] as AbstractTraceService | undefined
-
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  const callerClass = instance.constructor?.name ?? metaDataOptions.target.name
-  const callerMethod = joinPoint.methodName
-  const { args, target } = joinPoint
-
-  const callerAttr: Attributes = {
-    [AttrNames.CallerClass]: callerClass,
-    [AttrNames.CallerMethod]: callerMethod,
+  const baseOps: Partial<DecoratorExecutorOptionsBase<TraceDecoratorArg>> = {
+    config,
+    decoratorKey,
+    webApp,
   }
 
-  const { metadata } = metaDataOptions
+  const opts = prepareAroundFactory<TraceDecoratorArg>(joinPoint, aopCallbackInputOptions, baseOps)
+  assert(webApp, 'webApp is undefined')
+  assert(config, 'config is undefined')
+  assert(decoratorKey, 'decoratorKey is undefined')
+
+  const traceService = opts.webContext?.[`_${ConfigKey.serviceName}`] as AbstractTraceService | undefined
+
+  const callerAttr: Attributes = {
+    [AttrNames.CallerClass]: opts.instanceName,
+    [AttrNames.CallerMethod]: opts.methodName,
+  }
+
+  const { metadata } = aopCallbackInputOptions
+
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const mdata: TraceDecoratorArg = metadata && typeof metadata === 'object'
+  const mdata: Partial<TraceDecoratorArg> = metadata && typeof metadata === 'object'
     ? metadata
-    : {}
+    : { spanName: metadata }
 
-  const startActiveSpan = typeof mdata === 'object'
-    ? mdata.startActiveSpan ?? true
+  const startActiveSpan = typeof mdata.startActiveSpan === 'boolean'
+    ? mdata.startActiveSpan
     : true
-
-  const traceContext = typeof mdata === 'object'
-    ? mdata.traceContext
-    : void 0
-
-  const app = webContext?.app
+  const { traceContext } = mdata
 
   const otelKey = `_${ConfigKey.componentName}`
   // @ts-expect-error
-  const otel: AbstractOtelComponent | undefined = traceService?.otel ?? app?.[otelKey] ?? void 0,
+  const otel: AbstractOtelComponent | undefined = traceService?.otel ?? opts.webApp[otelKey] ?? void 0,
 
-  const appendArg: MethodAppendArgType = {
-    webApp: app,
-    webContext: webContext ?? void 0,
+  const appendArg: DecoatorContext = {
+    webApp: opts.webApp,
+    webContext: opts.webContext,
     otelComponent: otel,
     traceService: traceService ?? void 0,
     traceContext: traceContext ?? void 0,
@@ -175,37 +149,67 @@ export function prepareAroundFactory<TDecoratorArgs extends TraceDecoratorArg = 
   const keyOpts: GenKeyOptions = {
     ...mdata,
     startActiveSpan,
-    methodArgs: args,
+    methodArgs: opts.methodArgs,
     appendArg,
-    callerClass,
-    callerMethod,
+    callerClass: opts.instanceName,
+    callerMethod: opts.methodName,
   }
   const spanName = genKey(keyOpts)
   assert(spanName, 'spanName is undefined')
 
-  // const func = joinPoint.proceed.bind(joinPoint.target)
-  const func = joinPoint.proceed.bind(void 0)
-
-  assert(typeof func === 'function', 'Func referencing joinPoint.proceed is not function')
-
-  const opts: DecoratorExecutorOptions<TDecoratorArgs> = {
-    argsFromClassDecorator: void 0,
-    argsFromMethodDecorator: void 0,
-    decoratorKey: '',
-    config: void 0,
-    instance: target,
-    method: func,
-    // index:0 may webcontext
-    methodArgs: args,
-    methodName: callerMethod,
-    methodIsAsyncFunction: !! joinPoint.proceedIsAsyncFunction,
-
+  const ret: DecoratorExecutorOptions<TraceDecoratorArg> = {
+    ...opts,
     callerAttr,
     spanName,
     spanOptions: mdata,
     startActiveSpan,
     traceContext,
     traceService,
+  }
+
+  return ret
+}
+
+
+function prepareAroundFactory<TDecoratorArgs extends TraceDecoratorArg = TraceDecoratorArg>(
+  joinPoint: JoinPoint,
+  metaDataOptions: MetaDataType,
+  baseOptions: Partial<DecoratorExecutorOptionsBase<TDecoratorArgs>> = {},
+): DecoratorExecutorOptionsBase<TDecoratorArgs> {
+
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  assert(joinPoint.proceed, 'joinPoint.proceed is undefined')
+  assert(typeof joinPoint.proceed === 'function', 'joinPoint.proceed is not funtion')
+
+  // 装饰器所在的实例
+  const instance = joinPoint.target
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+  const webContext = baseOptions.webContext ?? instance[REQUEST_OBJ_CTX_KEY] as WebContext | undefined
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  const callerClass = instance.constructor?.name ?? metaDataOptions.target.name ?? ''
+  const callerMethod = joinPoint.methodName
+  const { args, target } = joinPoint
+
+  // const func = joinPoint.proceed.bind(joinPoint.target)
+  const func = joinPoint.proceed.bind(void 0)
+
+  assert(typeof func === 'function', 'Func referencing joinPoint.proceed is not function')
+
+  const opts: DecoratorExecutorOptionsBase<TDecoratorArgs> = {
+    argsFromClassDecorator: void 0,
+    argsFromMethodDecorator: void 0,
+    decoratorKey: baseOptions.decoratorKey ?? '',
+    config: baseOptions.config ?? void 0,
+    instance: target,
+    instanceName: callerClass,
+    method: func,
+    // index:0 may webcontext
+    methodArgs: args,
+    methodName: callerMethod,
+    methodIsAsyncFunction: !! joinPoint.proceedIsAsyncFunction,
+    webApp: baseOptions.webApp ?? void 0,
+    webContext,
   }
   return opts
 }
