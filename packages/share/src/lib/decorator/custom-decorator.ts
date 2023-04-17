@@ -73,7 +73,7 @@ export function customDecoratorFactory<TDecoratorArgs extends {}>(
         throw new Error('Only async method can be decorated with @Cacheable decorator')
       }
 
-      return descriptorDecoratorPatcher({
+      return methodDecoratorPatcher({
         decoratorKey,
         target,
         propertyName,
@@ -91,7 +91,7 @@ export function customDecoratorFactory<TDecoratorArgs extends {}>(
 }
 
 
-export function descriptorDecoratorPatcher<TDecoratorArgs extends {}>(
+function methodDecoratorPatcher<TDecoratorArgs extends {}>(
   options: CustomMethodDecoratorOptions<TDecoratorArgs>,
 ): PropertyDescriptor {
 
@@ -145,7 +145,7 @@ export function descriptorDecoratorPatcher<TDecoratorArgs extends {}>(
 }
 
 
-export function classDecoratorPatcher<TDecoratorArgs extends {}>(
+function classDecoratorPatcher<TDecoratorArgs extends {}>(
   options: CustomClassDecoratorOptions<TDecoratorArgs>,
 ): void {
 
@@ -203,7 +203,7 @@ function decoratorClassMethodsOnPrototype<TDecoratorArgs extends {}>(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       // if (descriptor.value.constructor.name !== 'AsyncFunction') { continue }
 
-      descriptorDecoratorPatcher<TDecoratorArgs>({
+      methodDecoratorPatcher<TDecoratorArgs>({
         target,
         propertyName,
         descriptor,
