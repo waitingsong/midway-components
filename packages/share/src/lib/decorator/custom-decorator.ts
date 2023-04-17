@@ -15,7 +15,7 @@ import {
   REQUEST_OBJ_CTX_KEY,
 } from '@midwayjs/core'
 
-import type { Context as WebContext } from '../index.js'
+import type { Context as WebContext } from '../types.js'
 
 import { methodHasDecorated, setImplToFalseIfDecoratedWithBothClassAndMethod } from './custom-decorator.helper.js'
 import {
