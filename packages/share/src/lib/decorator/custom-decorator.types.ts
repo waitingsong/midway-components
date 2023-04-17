@@ -94,10 +94,6 @@ export type CustomMethodDecorator<TDecoratorArgs extends {} = any> = (
 
 export interface CustomDecoratorFactoryOptions<TDecoratorArgs extends {}> {
   /**
-   * @example Cacheable
-   */
-  decoratorName: string
-  /**
    * @example METHOD_KEY_Cacheable
    */
   decoratorKey: string
