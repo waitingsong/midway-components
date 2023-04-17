@@ -6,7 +6,6 @@ import {
   JoinPoint,
   // INJECT_CUSTOM_METHOD,
   REQUEST_OBJ_CTX_KEY,
-  getClassMetadata,
 } from '@midwayjs/core'
 import type { TraceService } from '@mwcp/otel'
 import {
@@ -22,7 +21,6 @@ import {
   CachedResponse,
   CacheEvictArgs,
   CacheTTLFn,
-  Config,
   ConfigKey,
   DataWithCacheMeta,
   DecoratorExecutorOptions,
@@ -240,10 +238,6 @@ export function genDecoratorExecutorOptions<TDecoratorArgs extends CacheableArgs
   assert(baseOptions.webApp, 'baseOptions.webApp is undefined')
 
   const opts = genDecoratorExecutorOptionsBase<TDecoratorArgs>(joinPoint, aopCallbackInputOptions, baseOptions)
-  const { webApp, config } = opts
-  assert(webApp, 'webApp is undefined')
-  assert(config, 'config is undefined')
-
   // const {
   //   decoratorKey,
   //   joinPoint,
@@ -276,19 +270,25 @@ export function genDecoratorExecutorOptions<TDecoratorArgs extends CacheableArgs
 
 
 export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | CacheEvictArgs>(
-  options: DecoratorExecutorOptions<T>,
+  options: Partial<DecoratorExecutorOptions<T>>,
 ): DecoratorExecutorOptions<T> {
 
   const {
+    webApp,
     decoratorKey,
     cacheManager,
+    argsFromClassDecorator,
     argsFromMethodDecorator,
-    config: configArgs,
+    config,
     instance,
     method,
     methodName,
     methodArgs,
   } = options
+
+  assert(webApp, 'webApp is undefined')
+  assert(decoratorKey, 'decoratorKey is undefined')
+  assert(config, 'config is undefined')
   assert(instance, 'options.instance is undefined')
   assert(typeof method === 'function', 'options.method is not funtion')
 
@@ -299,16 +299,11 @@ export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | Cach
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const app = webContext.app ?? instance.app
   assert(app, 'application undefined, may test case not set app to instance')
-  const config = (configArgs ?? app.getConfig(ConfigKey.config) ?? initConfig) as Config
+  // const config = (configArgs ?? app.getConfig(ConfigKey.config) ?? initConfig) as Config
 
   const className = instance.constructor.name
   assert(className, 'instance.constructor.name is undefined')
   assert(methodName, 'methodName is undefined')
-
-
-  const argsFromClassDecorator = getClassMetadata<T>(decoratorKey, instance)
-  // const arr = getClassMetadata<T>(INJECT_CUSTOM_METHOD, instance)
-  // void arr
 
   const cacheOptions: CacheableArgs | CacheEvictArgs = {
     ...initCacheableArgs,
@@ -324,15 +319,16 @@ export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | Cach
     cacheOptions.cacheName = cacheName
   }
 
-  const ret: DecoratorExecutorOptions = {
+  const ret: DecoratorExecutorOptions<T> = {
     decoratorKey,
     cacheManager,
     config,
     argsFromClassDecorator,
+    // @ts-expect-error
     argsFromMethodDecorator: cacheOptions,
     instance,
     method,
-    methodArgs,
+    methodArgs: methodArgs ?? [],
     methodName,
   }
   return ret as DecoratorExecutorOptions<T>
