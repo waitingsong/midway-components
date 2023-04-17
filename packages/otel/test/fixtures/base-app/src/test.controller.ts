@@ -7,8 +7,7 @@ import {
   Inject,
 } from '@midwayjs/core'
 
-import { TraceService } from '~/lib/index'
-import { Trace } from '~/lib/trace.decorator'
+import { Trace, TraceService } from '~/lib/index'
 import { TraceLogger } from '~/lib/trace.logger'
 import { Config, ConfigKey, Msg } from '~/lib/types'
 
