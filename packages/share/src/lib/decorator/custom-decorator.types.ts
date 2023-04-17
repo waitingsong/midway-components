@@ -32,7 +32,7 @@ export interface DecoratorExecutorOptionsBase<TDecoratorArgs extends {} = {}> {
   argsFromClassDecorator: (Partial<TDecoratorArgs> & DecoratedTypeMeta) | undefined
   argsFromMethodDecorator: (Partial<TDecoratorArgs> & DecoratedTypeMeta) | undefined
   decoratorKey: string
-  config: any
+  config: unknown
   /** 装饰器所在类实例 */
   instance: InstanceOfDecorator
   /** Caller Class name */
