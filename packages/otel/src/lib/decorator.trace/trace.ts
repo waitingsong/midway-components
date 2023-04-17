@@ -11,7 +11,7 @@ export const KEY_Trace = 'decorator:key_Trace'
  * ```
  */
 export function Trace<M extends MethodType | void = void>(
-  options: TraceDecoratorArg<M>,
+  options?: TraceDecoratorArg<M>,
 ): MethodDecorator {
 
   const opts = typeof options === 'string'

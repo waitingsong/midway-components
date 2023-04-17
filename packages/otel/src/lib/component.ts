@@ -481,8 +481,7 @@ export class OtelComponent extends AbstractOtelComponent {
     }
 
     // registerMethodHandler(this.decoratorService, this.config)
-    // registerDecoratorHandler(TraceOpts, aroundFactoryOptions)
-    void TraceOpts
+    registerDecoratorHandler(TraceOpts, aroundFactoryOptions)
 
 
     const TraceInitOpts: RegisterDecoratorHandlerOptions<TraceDecoratorArg> = {
