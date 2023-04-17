@@ -3,14 +3,17 @@ import { createHash } from 'node:crypto'
 
 import type { CacheManager } from '@midwayjs/cache'
 import {
+  JoinPoint,
   // INJECT_CUSTOM_METHOD,
   REQUEST_OBJ_CTX_KEY,
   getClassMetadata,
 } from '@midwayjs/core'
 import type { TraceService } from '@mwcp/otel'
-import type {
-  AroundFactoryOptions,
+import {
+  AopCallbackInputArgsType,
+  DecoratorExecutorOptionsBase,
   Context as WebContext,
+  genDecoratorExecutorOptionsBase,
 } from '@mwcp/share'
 
 import { initCacheableArgs, initCacheEvictArgs, initConfig } from './config'
@@ -229,45 +232,45 @@ export function computerTTLValue(
 }
 
 export function genDecoratorExecutorOptions<TDecoratorArgs extends CacheableArgs | CacheEvictArgs>(
-  options: AroundFactoryOptions<TDecoratorArgs>,
+  joinPoint: JoinPoint,
+  aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorArgs>,
+  baseOptions: Partial<DecoratorExecutorOptionsBase<TDecoratorArgs>>,
 ): DecoratorExecutorOptions<TDecoratorArgs> {
 
-  const {
-    decoratorKey,
-    joinPoint,
-    aopCallbackInputOptions,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    config,
-    cacheManager,
-  } = options
+  assert(baseOptions.webApp, 'baseOptions.webApp is undefined')
+
+  const opts = genDecoratorExecutorOptionsBase<TDecoratorArgs>(joinPoint, aopCallbackInputOptions, baseOptions)
+  const { webApp, config } = opts
+  assert(webApp, 'webApp is undefined')
   assert(config, 'config is undefined')
-  assert(cacheManager, 'cacheManager is undefined')
 
-  // eslint-disable-next-line @typescript-eslint/unbound-method
-  assert(joinPoint.proceed, 'joinPoint.proceed is undefined')
-  assert(typeof joinPoint.proceed === 'function', 'joinPoint.proceed is not funtion')
+  // const {
+  //   decoratorKey,
+  //   joinPoint,
+  //   aopCallbackInputOptions,
+  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  //   config,
+  //   cacheManager,
+  // } = options
+  // assert(config, 'config is undefined')
+  // assert(cacheManager, 'cacheManager is undefined')
 
-  // 装饰器所在的实例
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const instance = joinPoint.target
-  const funcName = joinPoint.methodName as string
-  assert(funcName, 'funcName is undefined')
 
-  const ret = genDecoratorExecutorOptionsCommon<TDecoratorArgs>({
-    decoratorKey,
-    cacheManager: cacheManager as CacheManager,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    config,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    instance,
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    method: joinPoint.proceed,
-    methodName: funcName,
-    methodArgs: joinPoint.args,
-    argsFromClassDecorator: void 0,
-    argsFromMethodDecorator: aopCallbackInputOptions.metadata,
-  })
-
+  // const ret = genDecoratorExecutorOptionsCommon<TDecoratorArgs>({
+  //   decoratorKey,
+  //   cacheManager: cacheManager as CacheManager,
+  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  //   config,
+  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  //   instance,
+  //   // eslint-disable-next-line @typescript-eslint/unbound-method
+  //   method: joinPoint.proceed,
+  //   methodName: funcName,
+  //   methodArgs: joinPoint.args,
+  //   argsFromClassDecorator: void 0,
+  //   argsFromMethodDecorator: aopCallbackInputOptions.metadata,
+  // })
+  const ret = genDecoratorExecutorOptionsCommon<TDecoratorArgs>(opts)
   return ret
 }
 
