@@ -238,19 +238,20 @@ export function genDecoratorExecutorOptions<TDecoratorArgs extends CacheableArgs
   assert(baseOptions.webApp, 'baseOptions.webApp is undefined')
 
   const opts = genDecoratorExecutorOptionsBase<TDecoratorArgs>(joinPoint, aopCallbackInputOptions, baseOptions)
-  const ret = _genDecoratorExecutorOptions<TDecoratorArgs>(opts)
+  const ret = genDecoratorExecutorOptionsCommon<TDecoratorArgs>(opts)
   assert(ret.config, 'ret.config is undefined')
   assert(ret.cacheManager, 'ret.cacheManager is undefined')
   return ret
 }
 
 
-function _genDecoratorExecutorOptions<T extends CacheableArgs | CacheEvictArgs>(
+export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | CacheEvictArgs>(
   options: Partial<DecoratorExecutorOptions<T>>,
 ): DecoratorExecutorOptions<T> {
 
   const {
     webApp,
+    webContext,
     decoratorKey,
     cacheManager,
     argsFromClassDecorator,
@@ -260,25 +261,16 @@ function _genDecoratorExecutorOptions<T extends CacheableArgs | CacheEvictArgs>(
     method,
     methodName,
     methodArgs,
+    instanceName,
   } = options
 
   assert(webApp, 'webApp is undefined')
+  assert(webContext, 'webContext is undefined')
   assert(decoratorKey, 'decoratorKey is undefined')
   assert(config, 'config is undefined')
   assert(instance, 'options.instance is undefined')
   assert(typeof method === 'function', 'options.method is not funtion')
-
-  const webContext = instance[REQUEST_OBJ_CTX_KEY]
-  assert(webContext, 'webContext is undefined')
-
-  // @ts-ignore
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const app = webContext.app ?? instance.app
-  assert(app, 'application undefined, may test case not set app to instance')
-  // const config = (configArgs ?? app.getConfig(ConfigKey.config) ?? initConfig) as Config
-
-  const className = instance.constructor.name
-  assert(className, 'instance.constructor.name is undefined')
+  assert(instanceName, 'instanceName is undefined')
   assert(methodName, 'methodName is undefined')
 
   const cacheOptions: CacheableArgs | CacheEvictArgs = {
@@ -290,7 +282,7 @@ function _genDecoratorExecutorOptions<T extends CacheableArgs | CacheEvictArgs>(
   }
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   if (typeof cacheOptions.cacheName === 'undefined' || ! cacheOptions.cacheName) {
-    const cacheName = `${className}.${methodName}`
+    const cacheName = `${instanceName}.${methodName}`
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     cacheOptions.cacheName = cacheName
   }
