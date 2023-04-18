@@ -138,7 +138,7 @@ export interface RegisterDecoratorHandlerOptions<TDecoratorArgs extends {} = any
 
 
 export type GenDecoratorExecutorOptionsFn2<T extends {} = any>
-= (options: Partial<DecoratorExecutorOptionsBase<T>>) => DecoratorExecutorOptionsBase<T>
+= (options: DecoratorExecutorOptionsBase<T>) => DecoratorExecutorOptionsBase<T>
 
 export type GenDecoratorExecutorOptionsFn<
   TDecoratorArgs extends {} = {},
