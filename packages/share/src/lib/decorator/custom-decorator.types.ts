@@ -124,17 +124,21 @@ export interface CustomDecoratorFactoryOptions<TDecoratorArgs extends {}> {
 }
 
 
-export interface RegisterDecoratorHandlerOptions<TDecoratorArgs extends {} = {}> {
+export interface RegisterDecoratorHandlerOptions<TDecoratorArgs extends {} = any> {
   /**
    * @example 'decorator:cacheable'
    */
   decoratorKey: string
   decoratorService: MidwayDecoratorService
   decoratorExecutor: DecoratorExecutorFn
-  genDecoratorExecutorOptionsFn: GenDecoratorExecutorOptionsFn<TDecoratorArgs>
+  // genDecoratorExecutorOptionsFn: GenDecoratorExecutorOptionsFn<TDecoratorArgs>
+  genDecoratorExecutorOptionsFn?: GenDecoratorExecutorOptionsFn2<TDecoratorArgs> | undefined
   [key: string]: unknown
 }
 
+
+export type GenDecoratorExecutorOptionsFn2<T extends {} = any>
+= (options: Partial<DecoratorExecutorOptionsBase<T>>) => DecoratorExecutorOptionsBase<T>
 
 export type GenDecoratorExecutorOptionsFn<
   TDecoratorArgs extends {} = {},

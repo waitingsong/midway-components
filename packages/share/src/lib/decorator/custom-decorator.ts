@@ -225,7 +225,7 @@ function decoratorClassMethodsOnPrototype<TDecoratorArgs extends {}>(
 }
 
 
-export function registerDecoratorHandler<TDecoratorArgs extends {} = {}>(
+export function registerDecoratorHandler<TDecoratorArgs extends {} = any>(
   options: RegisterDecoratorHandlerOptions<TDecoratorArgs>,
   aroundFactoryOptions: AroundFactoryOptionsBase,
 ): void {
@@ -240,7 +240,7 @@ export function registerDecoratorHandler<TDecoratorArgs extends {} = {}>(
   assert(decoratorKey, 'decoratorKey is required')
   assert(decoratorService, 'decoratorService is required')
   assert(typeof decoratorExecutor === 'function', 'decoratorExecutor is required')
-  assert(typeof genDecoratorExecutorOptionsFn === 'function', 'genDecoratorExecutorOptionsFn is required')
+  // assert(typeof genDecoratorExecutorOptionsFn === 'function', 'genDecoratorExecutorOptionsFn is required')
 
   decoratorService.registerMethodHandler(
     decoratorKey,
@@ -250,27 +250,27 @@ export function registerDecoratorHandler<TDecoratorArgs extends {} = {}>(
           ...aroundFactoryOptions,
           decoratorKey,
         }
-        const opts2: DecoratorExecutorOptionsBase<TDecoratorArgs> = genDecoratorExecutorOptionsFn(
-          joinPoint,
-          aopCallbackInputOptions,
-          baseOpts,
-        )
 
-        if (typeof opts2.methodIsAsyncFunction === 'undefined') {
-          opts2.methodIsAsyncFunction = !! joinPoint.proceedIsAsyncFunction
+        const opts2 = genDecoratorExecutorOptionsBase(joinPoint, aopCallbackInputOptions, baseOpts)
+        const opts3 = typeof genDecoratorExecutorOptionsFn === 'function'
+          ? genDecoratorExecutorOptionsFn(opts2)
+          : opts2
+
+        if (typeof opts3.methodIsAsyncFunction === 'undefined') {
+          opts3.methodIsAsyncFunction = !! joinPoint.proceedIsAsyncFunction
         }
 
-        if (opts2.methodIsAsyncFunction === true) {
+        if (opts3.methodIsAsyncFunction === true) {
           const ret = aroundFactory(
             decoratorExecutor,
-            opts2,
+            opts3,
           )
           return ret
         }
 
         const ret = aroundFactorySync(
           decoratorExecutor,
-          opts2,
+          opts3,
         )
         return ret
       },
