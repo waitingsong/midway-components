@@ -71,6 +71,7 @@ export interface DecoratorExecutorOptions<T extends TraceDecoratorArg = TraceDec
   spanName: string
   spanOptions: Partial<SpanOptions>
   startActiveSpan: boolean
+  otelComponent: AbstractOtelComponent
   traceContext: TraceContext | undefined
   traceService: AbstractTraceService | undefined
 }
@@ -85,6 +86,12 @@ export function genDecoratorExecutorOptions(
 
   const traceService = options.webContext?.[`_${ConfigKey.serviceName}`] as AbstractTraceService | undefined
 
+  const otelKey = `_${ConfigKey.componentName}`
+  // @ts-ignore
+  const otel: AbstractOtelComponent | undefined = traceService?.otel ?? options.webApp[otelKey] ?? void 0
+  assert(otel, 'OtelComponent is not initialized. (OTEL 尚未初始化。)')
+
+
   const callerAttr: Attributes = {
     [AttrNames.CallerClass]: options.instanceName,
     [AttrNames.CallerMethod]: options.methodName,
@@ -97,9 +104,7 @@ export function genDecoratorExecutorOptions(
     mergedDecoratorParam.startActiveSpan = true
   }
 
-  const otelKey = `_${ConfigKey.componentName}`
-  // @ts-expect-error
-  const otel: AbstractOtelComponent | undefined = traceService?.otel ?? options.webApp[otelKey] ?? void 0,
+
 
   const decoratorContext: DecoratorContext = {
     webApp: options.webApp,
@@ -120,12 +125,14 @@ export function genDecoratorExecutorOptions(
   const spanName = genKey(keyOpts)
   assert(spanName, 'spanName is undefined')
 
+
   const ret: DecoratorExecutorOptions<TraceDecoratorOptions> = {
     ...options,
     callerAttr,
     spanName,
     spanOptions: mergedDecoratorParam,
     startActiveSpan: mergedDecoratorParam.startActiveSpan,
+    otelComponent: otel,
     traceContext: mergedDecoratorParam.traceContext,
     traceService,
   }
