@@ -1,7 +1,5 @@
 import assert from 'assert'
 
-import { CacheManager } from '@midwayjs/cache'
-
 import { initCachePutArgs } from '../config'
 import { processEx } from '../exception'
 import {
@@ -19,15 +17,13 @@ export async function decoratorExecutor(
   options: DecoratorExecutorOptions<CacheableArgs>,
 ): Promise<unknown> {
 
-  const { webContext } = options
-  assert(webContext, 'webContext is undefined')
-
-  const cacheManager = options.cacheManager ?? await webContext.requestContext.getAsync(CacheManager)
-  assert(cacheManager, 'CacheManager is undefined')
-
   const {
+    webContext,
+    cacheManager,
     mergedDecoratorParam,
   } = options
+
+  assert(webContext, 'webContext is undefined')
 
   const cacheOptions: CacheableArgs = {
     ...initCachePutArgs,

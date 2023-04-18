@@ -143,6 +143,6 @@ export interface DecoratorExecutorOptions<T extends CacheableArgs | CacheEvictAr
   extends DecoratorExecutorOptionsBase<T, Config> {
 
   traceService: AbstractTraceService | undefined
-  cacheManager?: CacheManager | undefined
+  cacheManager: CacheManager
 }
 

@@ -1,7 +1,7 @@
 import assert from 'node:assert'
 import { createHash } from 'node:crypto'
 
-import type { CacheManager } from '@midwayjs/cache'
+import { CacheManager } from '@midwayjs/cache'
 import {
   // INJECT_CUSTOM_METHOD,
   REQUEST_OBJ_CTX_KEY,
@@ -261,10 +261,14 @@ export function genDecoratorExecutorOptions(
     cacheOptions.cacheName = cacheName
   }
 
+  const { cacheManager } = options
+  assert(cacheManager, 'CacheManager is undefined')
   const traceService = webContext[`_${OtelConfigKey.componentName}`] as AbstractTraceService | undefined
+
   const ret: DecoratorExecutorOptions<CacheableArgs | CacheEvictArgs> = {
     ...options,
     mergedDecoratorParam: cacheOptions,
+    cacheManager: cacheManager as CacheManager,
     traceService,
   }
   assert(ret.config, 'ret.config is undefined')
