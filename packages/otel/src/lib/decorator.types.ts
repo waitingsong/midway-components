@@ -39,6 +39,10 @@ export interface TraceDecoratorOptions<
    *   and the Caller MethodName is event name, such as `onReady` | `onServerReady`,
    */
   namespace: string | undefined
+  /**
+   * @default `/`
+   */
+  spanNameDelimiter: string | undefined
   before: MethodType<[MArgsType, DecoratorContext]> | undefined
   after: MethodType<[MArgsType], DecoratorContext> | undefined
 }

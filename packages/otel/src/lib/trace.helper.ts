@@ -28,7 +28,10 @@ function genKey(options: GenKeyOptions): string {
     methodArgs,
     decoratorContext,
     spanName,
+    spanNameDelimiter,
   } = options
+
+  const delimiter = spanNameDelimiter ?? '/'
 
   switch (typeof spanName) {
     case 'string': {
@@ -41,7 +44,7 @@ function genKey(options: GenKeyOptions): string {
     case 'undefined': {
       let name = genEventKeyWhenSpanNameEmpty(options)
       if (! name) {
-        name = `${options.callerClass.toString()}/${options.callerMethod.toString()}`
+        name = `${options.callerClass.toString()}${delimiter}${options.callerMethod.toString()}`
       }
       return name
     }
@@ -63,7 +66,7 @@ function genKey(options: GenKeyOptions): string {
     }
   }
 
-  const name = `${options.callerClass.toString()}/${options.callerMethod.toString()}`
+  const name = `${options.callerClass.toString()}${delimiter}${options.callerMethod.toString()}`
   return name
 }
 
@@ -79,6 +82,7 @@ function genEventKeyWhenSpanNameEmpty(options: GenKeyOptions): string {
   } = options
 
   assert(! spanName, 'spanName is not empty')
+
   let name = ''
 
   if (callerClass === 'AutoConfiguration' && namespace) {

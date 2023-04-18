@@ -1,6 +1,6 @@
 import { customDecoratorFactory } from '@mwcp/share'
 
-import { MethodType, TraceDecoratorArg } from '../decorator.types'
+import { MethodType, TraceDecoratorArg, TraceDecoratorOptions } from '../decorator.types'
 
 
 export const METHOD_KEY_TraceInit = 'decorator:method_key_TraceInit'
@@ -23,13 +23,15 @@ export function TraceInit<M extends MethodType | void = void>(
   options?: TraceDecoratorArg<M>,
 ): MethodDecorator & ClassDecorator {
 
-  const opts = typeof options === 'string'
+  const opts: Partial<TraceDecoratorOptions<M>> = typeof options === 'string'
     ? { spanName: options }
     : options ?? {}
 
-  // assert(opts.spanName, 'spanName is required for TraceInit decorator. (TraceInit 装饰器需要 spanName 参数)')
+  if (! opts.spanNameDelimiter) {
+    opts.spanNameDelimiter = '.'
+  }
 
-  return customDecoratorFactory<TraceDecoratorArg<M>>({
+  return customDecoratorFactory < TraceDecoratorOptions<M>>({
     decoratorArgs: opts,
     decoratorKey: METHOD_KEY_TraceInit,
     enableClassDecorator: false,
