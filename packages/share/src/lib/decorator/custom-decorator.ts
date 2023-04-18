@@ -311,6 +311,7 @@ export function genDecoratorExecutorOptionsBase<
 ): DecoratorExecutorOptionsBase<TDecoratorArgs, TConfig> {
 
   assert(baseOptions, 'baseOptions is required')
+  assert(typeof baseOptions === 'object', 'baseOptions is not object')
   // eslint-disable-next-line @typescript-eslint/unbound-method
   assert(joinPoint.proceed, 'joinPoint.proceed is undefined')
   assert(typeof joinPoint.proceed === 'function', 'joinPoint.proceed is not funtion')
@@ -336,10 +337,10 @@ export function genDecoratorExecutorOptionsBase<
   const argsFromMethodDecorator = aopCallbackInputOptions.metadata
 
   const opts: DecoratorExecutorOptionsBase<TDecoratorArgs, TConfig> = {
+    ...baseOptions,
     argsFromClassDecorator,
     argsFromMethodDecorator,
     decoratorKey,
-    config: baseOptions.config ?? void 0,
     instance: target,
     instanceName: callerClass,
     method: func,
@@ -347,7 +348,6 @@ export function genDecoratorExecutorOptionsBase<
     methodArgs: args,
     methodName: callerMethod,
     methodIsAsyncFunction: !! joinPoint.proceedIsAsyncFunction,
-    webApp: baseOptions.webApp ?? void 0,
     webContext,
   }
 

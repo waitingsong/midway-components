@@ -30,7 +30,7 @@ export interface DecoratorMetaData<T = unknown> {
 export type Method = (...args: unknown[]) => unknown | Promise<unknown>
 
 export interface AroundFactoryOptionsBase<TConfig extends {} = any> {
-  config: TConfig | undefined
+  config?: TConfig | undefined
   webApp?: Application | undefined
   [key: string]: unknown
 }
