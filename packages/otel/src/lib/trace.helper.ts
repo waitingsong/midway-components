@@ -31,7 +31,9 @@ function genKey(options: GenKeyOptions): string {
     spanNameDelimiter,
   } = options
 
-  const delimiter = spanNameDelimiter ?? '/'
+  const delimiter = spanNameDelimiter
+    ? spanNameDelimiter
+    : '/'
 
   switch (typeof spanName) {
     case 'string': {
