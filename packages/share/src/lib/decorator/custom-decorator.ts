@@ -14,6 +14,8 @@ import {
   Provide,
   REQUEST_OBJ_CTX_KEY,
 } from '@midwayjs/core'
+import deepmerge from 'deepmerge'
+
 
 import type { Context as WebContext } from '../types.js'
 
@@ -337,12 +339,9 @@ export function genDecoratorExecutorOptionsBase<
 
   const decoratorKey = baseOptions.decoratorKey ?? ''
   assert(decoratorKey, 'decoratorKey is undefined')
-  const argsFromClassDecorator = getClassMetadata(decoratorKey, instance)
+  const argsFromClassDecorator = getClassMetadata(decoratorKey, instance) as Partial<TDecoratorArgs> | undefined
   const argsFromMethodDecorator = aopCallbackInputOptions.metadata
-  const mergedDecoratorParam = {
-    ...argsFromClassDecorator,
-    ...argsFromMethodDecorator,
-  }
+  const mergedDecoratorParam = deepmerge(argsFromClassDecorator ?? {}, argsFromMethodDecorator)
 
   const opts: DecoratorExecutorOptionsBase<TDecoratorArgs, TConfig> = {
     ...baseOptions,
