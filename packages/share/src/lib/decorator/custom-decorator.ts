@@ -341,12 +341,16 @@ export function genDecoratorExecutorOptionsBase<
   assert(decoratorKey, 'decoratorKey is undefined')
   const argsFromClassDecorator = getClassMetadata(decoratorKey, instance) as Partial<TDecoratorArgs> | undefined
   const argsFromMethodDecorator = aopCallbackInputOptions.metadata
-  const mergedDecoratorParam = deepmerge(argsFromClassDecorator ?? {}, argsFromMethodDecorator)
+  const mergedDecoratorParam = deepmerge.all([
+    argsFromClassDecorator ?? {},
+    argsFromMethodDecorator,
+  ])
 
   const opts: DecoratorExecutorOptionsBase<TDecoratorArgs, TConfig> = {
     ...baseOptions,
     argsFromClassDecorator,
     argsFromMethodDecorator,
+    // @ts-expect-error
     mergedDecoratorParam,
     decoratorKey,
     instance: target,
