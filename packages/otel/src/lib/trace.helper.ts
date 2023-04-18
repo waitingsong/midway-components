@@ -125,9 +125,6 @@ export function genDecoratorExecutorOptions(
   const spanName = genKey(keyOpts)
   assert(spanName, 'spanName is undefined')
 
-  assert(options.argsFromClassDecorator, 'options.argsFromClassDecorator is undefined')
-  assert(options.argsFromMethodDecorator, 'options.argsFromMethodDecorator is undefined')
-
   const ret: DecoratorExecutorOptions<TraceDecoratorArg> = {
     ...options,
     callerAttr,
