@@ -91,20 +91,12 @@ export function genDecoratorExecutorOptions(
   const otel: AbstractOtelComponent | undefined = traceService?.otel ?? options.webApp[otelKey] ?? void 0
   assert(otel, 'OtelComponent is not initialized. (OTEL 尚未初始化。)')
 
-
-  const callerAttr: Attributes = {
-    [AttrNames.CallerClass]: options.instanceName,
-    [AttrNames.CallerMethod]: options.methodName,
-  }
-
   const { mergedDecoratorParam } = options
   assert(mergedDecoratorParam, 'mergedDecoratorParam is undefined')
 
   if (typeof mergedDecoratorParam.startActiveSpan !== 'boolean') {
     mergedDecoratorParam.startActiveSpan = true
   }
-
-
 
   const decoratorContext: DecoratorContext = {
     webApp: options.webApp,
@@ -125,6 +117,10 @@ export function genDecoratorExecutorOptions(
   const spanName = genKey(keyOpts)
   assert(spanName, 'spanName is undefined')
 
+  const callerAttr: Attributes = {
+    [AttrNames.CallerClass]: options.instanceName,
+    [AttrNames.CallerMethod]: options.methodName,
+  }
 
   const ret: DecoratorExecutorOptions<TraceDecoratorOptions> = {
     ...options,
