@@ -1,4 +1,5 @@
 import assert from 'assert'
+import { isAsyncFunction } from 'node:util/types'
 
 import { Attributes, SpanKind, SpanOptions } from '@opentelemetry/api'
 
@@ -61,17 +62,31 @@ export async function decoratorExecutor(
   const { before, after } = mergedDecoratorParam
 
   if (before && typeof before === 'function') {
-    // @ts-expect-error
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    await before(methodArgs, decoratorContext)
+    if (isAsyncFunction(before)) {
+      // @ts-expect-error
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      await before(methodArgs, decoratorContext)
+    }
+    else {
+      // @ts-expect-error
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      before(methodArgs, decoratorContext)
+    }
   }
 
   const resp = await method(...methodArgs)
 
   if (after && typeof after === 'function') {
-    // @ts-expect-error
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    await after(methodArgs, decoratorContext)
+    if (isAsyncFunction(after)) {
+      // @ts-expect-error
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      await after(methodArgs, decoratorContext)
+    }
+    else {
+      // @ts-expect-error
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      after(methodArgs, decoratorContext)
+    }
   }
 
   const events2: Attributes = {
