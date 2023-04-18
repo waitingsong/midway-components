@@ -76,8 +76,8 @@ export interface DecoratorExecutorOptions<T extends TraceDecoratorArg = TraceDec
 }
 
 export function genDecoratorExecutorOptions(
-  options: DecoratorExecutorOptionsBase<TraceDecoratorArg>,
-): DecoratorExecutorOptions<TraceDecoratorArg> {
+  options: DecoratorExecutorOptionsBase<TraceDecoratorOptions>,
+): DecoratorExecutorOptions<TraceDecoratorOptions> {
 
   assert(options.webApp, 'options.webApp is undefined')
   assert(options.instanceName, 'options.instanceName is undefined')
@@ -90,16 +90,12 @@ export function genDecoratorExecutorOptions(
     [AttrNames.CallerMethod]: options.methodName,
   }
 
-  const { argsFromMethodDecorator } = options
+  const { mergedDecoratorParam } = options
+  assert(mergedDecoratorParam, 'mergedDecoratorParam is undefined')
 
-  const mdata: Partial<TraceDecoratorArg> = argsFromMethodDecorator && typeof argsFromMethodDecorator === 'object'
-    ? argsFromMethodDecorator
-    : { spanName: argsFromMethodDecorator }
-
-  const startActiveSpan = typeof mdata.startActiveSpan === 'boolean'
-    ? mdata.startActiveSpan
-    : true
-  const { traceContext } = mdata
+  if (typeof mergedDecoratorParam.startActiveSpan !== 'boolean') {
+    mergedDecoratorParam.startActiveSpan = true
+  }
 
   const otelKey = `_${ConfigKey.componentName}`
   // @ts-expect-error
@@ -110,28 +106,27 @@ export function genDecoratorExecutorOptions(
     webContext: options.webContext,
     otelComponent: otel,
     traceService: traceService ?? void 0,
-    traceContext: traceContext ?? void 0,
+    traceContext: mergedDecoratorParam.traceContext,
     traceSpan: void 0,
   }
 
   const keyOpts: GenKeyOptions = {
-    ...mdata,
+    ...mergedDecoratorParam,
     callerClass: options.instanceName,
     callerMethod: options.methodName,
     decoratorContext,
     methodArgs: options.methodArgs,
-    startActiveSpan,
   }
   const spanName = genKey(keyOpts)
   assert(spanName, 'spanName is undefined')
 
-  const ret: DecoratorExecutorOptions<TraceDecoratorArg> = {
+  const ret: DecoratorExecutorOptions<TraceDecoratorOptions> = {
     ...options,
     callerAttr,
     spanName,
-    spanOptions: mdata,
-    startActiveSpan,
-    traceContext,
+    spanOptions: mergedDecoratorParam,
+    startActiveSpan: mergedDecoratorParam.startActiveSpan,
+    traceContext: mergedDecoratorParam.traceContext,
     traceService,
   }
 

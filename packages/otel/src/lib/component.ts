@@ -46,7 +46,7 @@ import { KEY_Trace } from './decorator.trace/trace'
 import { decoratorExecutor as decoratorExecutorTrace } from './decorator.trace/trace.helper'
 import { METHOD_KEY_TraceInit } from './decorator.trace-init/trace-init'
 import { decoratorExecutor as decoratorExecutorTraceInit } from './decorator.trace-init/trace-init.helper'
-import { TraceDecoratorArg } from './decorator.types'
+import { TraceDecoratorOptions } from './decorator.types'
 import { genDecoratorExecutorOptions } from './trace.helper'
 import {
   AddEventOtpions,
@@ -473,7 +473,7 @@ export class OtelComponent extends AbstractOtelComponent {
       webApp: this.app,
     }
 
-    const TraceOpts: RegisterDecoratorHandlerOptions<TraceDecoratorArg> = {
+    const TraceOpts: RegisterDecoratorHandlerOptions<TraceDecoratorOptions> = {
       decoratorKey: KEY_Trace,
       decoratorService: this.decoratorService,
       decoratorExecutor: decoratorExecutorTrace,
@@ -484,7 +484,7 @@ export class OtelComponent extends AbstractOtelComponent {
     registerDecoratorHandler(TraceOpts, aroundFactoryOptions)
 
 
-    const TraceInitOpts: RegisterDecoratorHandlerOptions<TraceDecoratorArg> = {
+    const TraceInitOpts: RegisterDecoratorHandlerOptions<TraceDecoratorOptions> = {
       decoratorKey: METHOD_KEY_TraceInit,
       decoratorService: this.decoratorService,
       decoratorExecutor: decoratorExecutorTraceInit,
