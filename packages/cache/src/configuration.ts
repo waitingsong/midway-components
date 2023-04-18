@@ -12,6 +12,7 @@ import {
 import { TraceInit } from '@mwcp/otel'
 import {
   Application,
+  AroundFactoryOptionsBase,
   IMidwayContainer,
   RegisterDecoratorHandlerOptions,
   registerDecoratorHandler,
@@ -58,7 +59,8 @@ export class AutoConfiguration implements ILifeCycle {
       decoratorService: this.decoratorService,
       genDecoratorExecutorOptionsFn: genDecoratorExecutorOptions,
     }
-    const aroundFactoryOptions = {
+    const aroundFactoryOptions: AroundFactoryOptionsBase = {
+      webApp: this.app,
       cacheManager: this.cacheManager,
       config: this.cacheConfig,
     }

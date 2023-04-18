@@ -238,33 +238,9 @@ export function genDecoratorExecutorOptions<TDecoratorArgs extends CacheableArgs
   assert(baseOptions.webApp, 'baseOptions.webApp is undefined')
 
   const opts = genDecoratorExecutorOptionsBase<TDecoratorArgs>(joinPoint, aopCallbackInputOptions, baseOptions)
-  // const {
-  //   decoratorKey,
-  //   joinPoint,
-  //   aopCallbackInputOptions,
-  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  //   config,
-  //   cacheManager,
-  // } = options
-  // assert(config, 'config is undefined')
-  // assert(cacheManager, 'cacheManager is undefined')
-
-
-  // const ret = genDecoratorExecutorOptionsCommon<TDecoratorArgs>({
-  //   decoratorKey,
-  //   cacheManager: cacheManager as CacheManager,
-  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  //   config,
-  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  //   instance,
-  //   // eslint-disable-next-line @typescript-eslint/unbound-method
-  //   method: joinPoint.proceed,
-  //   methodName: funcName,
-  //   methodArgs: joinPoint.args,
-  //   argsFromClassDecorator: void 0,
-  //   argsFromMethodDecorator: aopCallbackInputOptions.metadata,
-  // })
   const ret = genDecoratorExecutorOptionsCommon<TDecoratorArgs>(opts)
+  assert(ret.config, 'ret.config is undefined')
+  assert(ret.cacheManager, 'ret.cacheManager is undefined')
   return ret
 }
 
