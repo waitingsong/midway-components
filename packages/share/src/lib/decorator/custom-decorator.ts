@@ -301,11 +301,14 @@ function aroundFactorySync<TDecoratorArgs extends {} = {}>(
 }
 
 
-export function genDecoratorExecutorOptionsBase<TDecoratorArgs extends {} = {}>(
+export function genDecoratorExecutorOptionsBase<
+  TDecoratorArgs extends {} = {},
+  TConfig extends {} = any,
+>(
   joinPoint: JoinPoint,
   aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorArgs>,
-  baseOptions: Partial<DecoratorExecutorOptionsBase<TDecoratorArgs>> = {},
-): DecoratorExecutorOptionsBase<TDecoratorArgs> {
+  baseOptions: Partial<DecoratorExecutorOptionsBase<TDecoratorArgs, TConfig>> = {},
+): DecoratorExecutorOptionsBase<TDecoratorArgs, TConfig> {
 
   assert(baseOptions, 'baseOptions is required')
   // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -332,7 +335,7 @@ export function genDecoratorExecutorOptionsBase<TDecoratorArgs extends {} = {}>(
   const argsFromClassDecorator = getClassMetadata(decoratorKey, instance)
   const argsFromMethodDecorator = aopCallbackInputOptions.metadata
 
-  const opts: DecoratorExecutorOptionsBase<TDecoratorArgs> = {
+  const opts: DecoratorExecutorOptionsBase<TDecoratorArgs, TConfig> = {
     argsFromClassDecorator,
     argsFromMethodDecorator,
     decoratorKey,

@@ -28,11 +28,21 @@ export interface DecoratorMetaData<T = unknown> {
   options: MethodDecoratorOptions | undefined
 }
 export type Method = (...args: unknown[]) => unknown | Promise<unknown>
-export interface DecoratorExecutorOptionsBase<TDecoratorArgs extends {} = {}> {
+
+export interface AroundFactoryOptionsBase<TConfig extends {} = any> {
+  config: TConfig | undefined
+  webApp?: Application | undefined
+  [key: string]: unknown
+}
+
+export interface DecoratorExecutorOptionsBase<
+  TDecoratorArgs extends {} = {},
+  TConfig extends {} = any,
+> extends AroundFactoryOptionsBase<TConfig> {
+
   argsFromClassDecorator: (Partial<TDecoratorArgs> & DecoratedTypeMeta) | undefined
   argsFromMethodDecorator: (Partial<TDecoratorArgs> & DecoratedTypeMeta) | undefined
   decoratorKey: string
-  config: any
   /** 装饰器所在类实例 */
   instance: InstanceOfDecorator
   /** Caller Class name */
@@ -42,9 +52,7 @@ export interface DecoratorExecutorOptionsBase<TDecoratorArgs extends {} = {}> {
   methodName: string
   methodResult?: unknown
   methodIsAsyncFunction?: boolean
-  webApp?: Application | undefined
   webContext?: Context | undefined
-  [key: string]: unknown
 }
 
 export type DecoratorExecutorFn = (options: any) => unknown
@@ -127,31 +135,15 @@ export interface RegisterDecoratorHandlerOptions<TDecoratorArgs extends {} = {}>
   [key: string]: unknown
 }
 
-// export type AroundFactory<TDecoratorArgs extends {} = {}> = (
-//   options: AroundFactoryOptions<TDecoratorArgs>,
-// ) => Promise<unknown>
 
-export interface AroundFactoryOptionsBase {
-  config: any
-  webApp?: Application
-  [key: string]: unknown
-}
-// export interface AroundFactoryOptions<TDecoratorArgs extends {} = {}>
-//   extends AroundFactoryOptionsBase {
-
-//   /**
-//    * @example METHOD_KEY_Cacaeable
-//    */
-//   decoratorKey: string
-//   aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorArgs>
-//   joinPoint: JoinPoint
-// }
-
-export type GenDecoratorExecutorOptionsFn<TDecoratorArgs extends {} = {}> = (
+export type GenDecoratorExecutorOptionsFn<
+  TDecoratorArgs extends {} = {},
+  TConfig extends {} = any,
+> = (
   joinPoint: JoinPoint,
   aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorArgs>,
-  baseOptions: Partial<DecoratorExecutorOptionsBase<TDecoratorArgs>>,
-) => DecoratorExecutorOptionsBase<TDecoratorArgs>
+  baseOptions: Partial<DecoratorExecutorOptionsBase<TDecoratorArgs, TConfig>>,
+) => DecoratorExecutorOptionsBase<TDecoratorArgs, TConfig>
 
 export interface AopCallbackInputArgsType<TDecoratorArgs extends {} = {}> {
   /** 装饰器所在的实例 */
