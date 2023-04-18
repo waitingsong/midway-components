@@ -19,10 +19,12 @@ export async function decoratorExecutor(
     callerAttr,
     spanName,
     spanOptions,
+    method,
+    methodArgs,
+    otelComponent,
     // startActiveSpan,
   } = options
 
-  const { method, methodArgs, otelComponent } = options
   const traceCtx = otelComponent.appInitProcessContext
   if (! otelComponent.appInitProcessSpan || ! traceCtx) {
     const resp = await method(...methodArgs)
@@ -47,7 +49,7 @@ export async function decoratorExecutor(
   }
   otelComponent.addEvent(span, events, addEventOtpions)
 
-  const resp = await method(...methodArgs, span)
+  const resp = await method(...methodArgs)
 
   const events2: Attributes = {
     event: `${spanName}.end`,

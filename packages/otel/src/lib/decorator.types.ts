@@ -32,8 +32,8 @@ export interface TraceDecoratorOptions<
    */
   startActiveSpan: boolean
   traceContext: TraceContext | undefined
-  // before: MethodType | undefined
-  // after: MethodType | undefined
+  // before: MethodType<[MArgsType, DecoratorContext]> | undefined
+  // after: MethodType<[MArgsType], DecoratorContext> | undefined
 }
 
 export type KeyGenerator<ArgsType = unknown[], DContext extends DecoratorContext = DecoratorContext> = (
