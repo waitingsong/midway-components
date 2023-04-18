@@ -50,7 +50,8 @@ export class AutoConfiguration implements ILifeCycle {
   //   return
   // }
 
-  @TraceInit(`INIT ${ConfigKey.componentName}.onReady`)
+  // @TraceInit(`INIT ${ConfigKey.componentName}.onReady`)
+  @TraceInit({ namespace: ConfigKey.componentName })
   async onReady(container: IMidwayContainer): Promise<void> {
     void container
     assert(
@@ -71,7 +72,8 @@ export class AutoConfiguration implements ILifeCycle {
 
   }
 
-  @TraceInit(`INIT ${ConfigKey.componentName}.onServerReady`)
+  // @TraceInit()
+  @TraceInit({ namespace: ConfigKey.componentName })
   async onServerReady(container: IMidwayContainer): Promise<void> {
     void container
     if (this.config.enable && this.mwConfig.enableMiddleware) {

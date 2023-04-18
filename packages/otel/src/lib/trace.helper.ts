@@ -39,7 +39,10 @@ function genKey(options: GenKeyOptions): string {
     }
 
     case 'undefined': {
-      const name = `${options.callerClass.toString()}/${options.callerMethod.toString()}`
+      let name = genEventKeyWhenSpanNameEmpty(options)
+      if (! name) {
+        name = `${options.callerClass.toString()}/${options.callerMethod.toString()}`
+      }
       return name
     }
 
@@ -61,6 +64,32 @@ function genKey(options: GenKeyOptions): string {
   }
 
   const name = `${options.callerClass.toString()}/${options.callerMethod.toString()}`
+  return name
+}
+
+/**
+ * For TraceInit used on AutoConfiguration
+ */
+function genEventKeyWhenSpanNameEmpty(options: GenKeyOptions): string {
+  const {
+    callerClass,
+    callerMethod,
+    namespace,
+    spanName,
+  } = options
+
+  assert(! spanName, 'spanName is not empty')
+  let name = ''
+
+  if (callerClass === 'AutoConfiguration' && namespace) {
+    switch (callerMethod) {
+      case 'onReady':
+      case 'onServerReady': {
+        name = `INIT ${namespace}.${options.callerMethod.toString()}`
+      }
+    }
+  }
+
   return name
 }
 

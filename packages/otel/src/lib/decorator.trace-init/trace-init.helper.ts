@@ -2,7 +2,7 @@ import assert from 'assert'
 
 import { Attributes, SpanKind, SpanOptions } from '@opentelemetry/api'
 
-import type { TraceDecoratorOptions } from '../decorator.types'
+import type { DecoratorContext, TraceDecoratorOptions } from '../decorator.types'
 import type { DecoratorExecutorOptions } from '../trace.helper'
 
 
@@ -14,13 +14,13 @@ export async function decoratorExecutor(
   assert(webApp, 'webApplication is required')
   assert(methodIsAsyncFunction === true, 'decorated method must be AsyncFunction')
 
-
   const {
     callerAttr,
     spanName,
     spanOptions,
     method,
     methodArgs,
+    mergedDecoratorParam,
     otelComponent,
     // startActiveSpan,
   } = options
@@ -49,7 +49,30 @@ export async function decoratorExecutor(
   }
   otelComponent.addEvent(span, events, addEventOtpions)
 
+  const decoratorContext: DecoratorContext = {
+    webApp,
+    webContext: options.webContext,
+    otelComponent: options.otelComponent,
+    traceService: options.traceService,
+    traceContext: options.traceContext,
+    traceSpan: span,
+  }
+
+  const { before, after } = mergedDecoratorParam
+
+  if (before && typeof before === 'function') {
+    // @ts-expect-error
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    await before(methodArgs, decoratorContext)
+  }
+
   const resp = await method(...methodArgs)
+
+  if (after && typeof after === 'function') {
+    // @ts-expect-error
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    await after(methodArgs, decoratorContext)
+  }
 
   const events2: Attributes = {
     event: `${spanName}.end`,

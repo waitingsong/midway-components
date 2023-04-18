@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import assert from 'assert'
-
 import { customDecoratorFactory } from '@mwcp/share'
 
 import { MethodType, TraceDecoratorArg } from '../decorator.types'
@@ -15,7 +12,7 @@ export const METHOD_KEY_TraceInit = 'decorator:method_key_TraceInit'
  * @description 可用于 AutoConfiguration 类中
  * @example ```ts
  * export class AutoConfiguration implements ILifeCycle {
- *   \@TraceInit('INIT Foo.onReady')
+ *   \@TraceInit('INIT Foo.onReady') OR \@TraceInit({ namespace: 'Foo' })
  *   async onReady(container: IMidwayContainer): Promise<void> {
  *     // some code
  *   }
@@ -23,14 +20,14 @@ export const METHOD_KEY_TraceInit = 'decorator:method_key_TraceInit'
  * ```
  */
 export function TraceInit<M extends MethodType | void = void>(
-  options: TraceDecoratorArg<M>,
+  options?: TraceDecoratorArg<M>,
 ): MethodDecorator & ClassDecorator {
 
   const opts = typeof options === 'string'
     ? { spanName: options }
-    : options
+    : options ?? {}
 
-  assert(opts.spanName, 'spanName is required for TraceInit decorator. (TraceInit 装饰器需要 spanName 参数)')
+  // assert(opts.spanName, 'spanName is required for TraceInit decorator. (TraceInit 装饰器需要 spanName 参数)')
 
   return customDecoratorFactory<TraceDecoratorArg<M>>({
     decoratorArgs: opts,

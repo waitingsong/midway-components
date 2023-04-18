@@ -32,6 +32,13 @@ export interface TraceDecoratorOptions<
    */
   startActiveSpan: boolean
   traceContext: TraceContext | undefined
+  /**
+   * Used as the prefix of the span name,
+   * if spanName is not provided,
+   *   and the Caller ClassName is `AutoConfiguration`,
+   *   and the Caller MethodName is event name, such as `onReady` | `onServerReady`,
+   */
+  namespace: string | undefined
   before: MethodType<[MArgsType, DecoratorContext]> | undefined
   after: MethodType<[MArgsType], DecoratorContext> | undefined
 }
