@@ -251,7 +251,11 @@ export function registerDecoratorHandler<TDecoratorArgs extends {} = any>(
           decoratorKey,
         }
 
-        const opts2 = genDecoratorExecutorOptionsBase(joinPoint, aopCallbackInputOptions, baseOpts)
+        const opts2 = genDecoratorExecutorOptionsBase<TDecoratorArgs>(
+          joinPoint,
+          aopCallbackInputOptions,
+          baseOpts,
+        )
         const opts3 = typeof genDecoratorExecutorOptionsFn === 'function'
           ? genDecoratorExecutorOptionsFn(opts2)
           : opts2
@@ -335,11 +339,16 @@ export function genDecoratorExecutorOptionsBase<
   assert(decoratorKey, 'decoratorKey is undefined')
   const argsFromClassDecorator = getClassMetadata(decoratorKey, instance)
   const argsFromMethodDecorator = aopCallbackInputOptions.metadata
+  const mergedDecoratorParam = {
+    ...argsFromClassDecorator,
+    ...argsFromMethodDecorator,
+  }
 
   const opts: DecoratorExecutorOptionsBase<TDecoratorArgs, TConfig> = {
     ...baseOptions,
     argsFromClassDecorator,
     argsFromMethodDecorator,
+    mergedDecoratorParam,
     decoratorKey,
     instance: target,
     instanceName: callerClass,

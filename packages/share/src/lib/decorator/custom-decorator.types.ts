@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
 import {
-  JoinPoint,
   MethodDecoratorOptions,
   MidwayDecoratorService,
   REQUEST_OBJ_CTX_KEY,
@@ -42,6 +41,8 @@ export interface DecoratorExecutorOptionsBase<
 
   argsFromClassDecorator: (Partial<TDecoratorArgs> & DecoratedTypeMeta) | undefined
   argsFromMethodDecorator: (Partial<TDecoratorArgs> & DecoratedTypeMeta) | undefined
+  /** Merged from argsFromClassDecorator and argsFromMethodDecorator */
+  mergedDecoratorParam: TDecoratorArgs
   decoratorKey: string
   /** 装饰器所在类实例 */
   instance: InstanceOfDecorator
