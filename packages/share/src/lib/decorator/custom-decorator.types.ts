@@ -131,23 +131,22 @@ export interface RegisterDecoratorHandlerOptions<TDecoratorArgs extends {} = any
   decoratorKey: string
   decoratorService: MidwayDecoratorService
   decoratorExecutor: DecoratorExecutorFn
-  // genDecoratorExecutorOptionsFn: GenDecoratorExecutorOptionsFn<TDecoratorArgs>
-  genDecoratorExecutorOptionsFn?: GenDecoratorExecutorOptionsFn2<TDecoratorArgs> | undefined
+  genDecoratorExecutorOptionsFn?: GenDecoratorExecutorOptionsFn<TDecoratorArgs> | undefined
   [key: string]: unknown
 }
 
 
-export type GenDecoratorExecutorOptionsFn2<T extends {} = any>
+export type GenDecoratorExecutorOptionsFn<T extends {} = any>
 = (options: DecoratorExecutorOptionsBase<T>) => DecoratorExecutorOptionsBase<T>
 
-export type GenDecoratorExecutorOptionsFn<
-  TDecoratorArgs extends {} = {},
-  TConfig extends {} = any,
-> = (
-  joinPoint: JoinPoint,
-  aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorArgs>,
-  baseOptions: Partial<DecoratorExecutorOptionsBase<TDecoratorArgs, TConfig>>,
-) => DecoratorExecutorOptionsBase<TDecoratorArgs, TConfig>
+// export type GenDecoratorExecutorOptionsFn<
+//   TDecoratorArgs extends {} = {},
+//   TConfig extends {} = any,
+// > = (
+//   joinPoint: JoinPoint,
+//   aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorArgs>,
+//   baseOptions: Partial<DecoratorExecutorOptionsBase<TDecoratorArgs, TConfig>>,
+// ) => DecoratorExecutorOptionsBase<TDecoratorArgs, TConfig>
 
 export interface AopCallbackInputArgsType<TDecoratorArgs extends {} = {}> {
   /** 装饰器所在的实例 */
