@@ -48,9 +48,6 @@ export async function decoratorExecutor(
     const enableCache = typeof tmp === 'boolean' ? tmp : await tmp
     assert(typeof enableCache === 'boolean', 'condition must return boolean')
 
-    // const cacheResp = enableCache
-    //   ? await getData(cacheManager, cacheKey)
-    //   : void 0
     let cacheResp: CachedResponse | undefined = void 0
     if (enableCache) {
       cacheResp = await getData(cacheManager, cacheKey, opts2.traceService)
