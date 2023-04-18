@@ -42,7 +42,7 @@ export interface DecoratorExecutorOptionsBase<
   argsFromClassDecorator: (Partial<TDecoratorArgs> & DecoratedTypeMeta) | undefined
   argsFromMethodDecorator: (Partial<TDecoratorArgs> & DecoratedTypeMeta) | undefined
   /** Merged from argsFromClassDecorator and argsFromMethodDecorator */
-  mergedDecoratorParam: TDecoratorArgs
+  mergedDecoratorParam: TDecoratorArgs & DecoratedTypeMeta
   decoratorKey: string
   /** 装饰器所在类实例 */
   instance: InstanceOfDecorator
