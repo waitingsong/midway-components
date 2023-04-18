@@ -2,10 +2,8 @@ import assert from 'assert'
 
 import { Attributes, SpanKind, SpanOptions } from '@opentelemetry/api'
 
-import type { AbstractOtelComponent } from '../abstract'
 import type { TraceDecoratorArg } from '../decorator.types'
 import type { DecoratorExecutorOptions } from '../trace.helper'
-import { ConfigKey } from '../types'
 
 
 export async function decoratorExecutor(
@@ -16,13 +14,6 @@ export async function decoratorExecutor(
   assert(webApp, 'webApplication is required')
   assert(methodIsAsyncFunction === true, 'decorated method must be AsyncFunction')
 
-  const key = `_${ConfigKey.componentName}`
-  // @ts-ignore
-  const otel = webApp[key] as AbstractOtelComponent | undefined
-  // if (! otel) {
-  //   otel = await webApplication.getApplicationContext().getAsync(OtelComponent)
-  // }
-  assert(otel, 'OtelComponent is not initialized. (OTEL 尚未初始化。)')
 
   const {
     callerAttr,
@@ -31,9 +22,9 @@ export async function decoratorExecutor(
     // startActiveSpan,
   } = options
 
-  const { method, methodArgs } = options
-  const traceCtx = otel.appInitProcessContext
-  if (! otel.appInitProcessSpan || ! traceCtx) {
+  const { method, methodArgs, otelComponent } = options
+  const traceCtx = otelComponent.appInitProcessContext
+  if (! otelComponent.appInitProcessSpan || ! traceCtx) {
     const resp = await method(...methodArgs)
     return resp
   }
@@ -42,7 +33,7 @@ export async function decoratorExecutor(
     ...spanOptions,
     kind: SpanKind.INTERNAL,
   }
-  const span = otel.startSpan(spanName, spanOpts, traceCtx)
+  const span = otelComponent.startSpan(spanName, spanOpts, traceCtx)
 
   span.setAttributes(callerAttr)
 
@@ -54,16 +45,16 @@ export async function decoratorExecutor(
     logCpuUsage: true,
     logMemeoryUsage: true,
   }
-  otel.addEvent(span, events, addEventOtpions)
+  otelComponent.addEvent(span, events, addEventOtpions)
 
   const resp = await method(...methodArgs, span)
 
   const events2: Attributes = {
     event: `${spanName}.end`,
   }
-  otel.addEvent(span, events2, addEventOtpions)
+  otelComponent.addEvent(span, events2, addEventOtpions)
 
-  otel.endSpan(otel.appInitProcessSpan, span)
+  otelComponent.endSpan(otelComponent.appInitProcessSpan, span)
 
   return resp
 }
