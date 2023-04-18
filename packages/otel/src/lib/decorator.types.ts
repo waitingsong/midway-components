@@ -44,7 +44,7 @@ export interface TraceDecoratorOptions<
    */
   spanNameDelimiter: string | undefined
   before: MethodType<[MArgsType, DecoratorContext]> | undefined
-  after: MethodType<[MArgsType], DecoratorContext> | undefined
+  after: MethodType<[MArgsType, DecoratorContext]> | undefined
 }
 
 export type KeyGenerator<ArgsType = unknown[], DContext extends DecoratorContext = DecoratorContext> = (
