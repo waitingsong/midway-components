@@ -2,12 +2,12 @@ import assert from 'assert'
 
 import { Attributes, SpanKind, SpanOptions } from '@opentelemetry/api'
 
-import type { TraceDecoratorArg } from '../decorator.types'
+import type { TraceDecoratorOptions } from '../decorator.types'
 import type { DecoratorExecutorOptions } from '../trace.helper'
 
 
 export async function decoratorExecutor(
-  options: DecoratorExecutorOptions<TraceDecoratorArg>,
+  options: DecoratorExecutorOptions<TraceDecoratorOptions>,
 ): Promise<unknown> {
 
   const { webApp, methodIsAsyncFunction } = options

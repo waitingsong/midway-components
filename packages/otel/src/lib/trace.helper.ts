@@ -7,7 +7,6 @@ import { Attributes, SpanOptions } from '@opentelemetry/api'
 import type { AbstractOtelComponent, AbstractTraceService } from './abstract'
 import {
   DecoratorContext,
-  TraceDecoratorArg,
   TraceDecoratorOptions,
 } from './decorator.types'
 import {
@@ -65,8 +64,10 @@ function genKey(options: GenKeyOptions): string {
   return name
 }
 
-export interface DecoratorExecutorOptions<T extends TraceDecoratorArg = TraceDecoratorArg>
-  extends DecoratorExecutorOptionsBase<T> {
+type ExecutorOptionsBase<T extends TraceDecoratorOptions = TraceDecoratorOptions> = DecoratorExecutorOptionsBase<T>
+
+export interface DecoratorExecutorOptions<T extends TraceDecoratorOptions = TraceDecoratorOptions>
+  extends ExecutorOptionsBase<T> {
   callerAttr: Attributes
   spanName: string
   spanOptions: Partial<SpanOptions>
@@ -77,8 +78,8 @@ export interface DecoratorExecutorOptions<T extends TraceDecoratorArg = TraceDec
 }
 
 export function genDecoratorExecutorOptions(
-  options: DecoratorExecutorOptionsBase<TraceDecoratorOptions>,
-): DecoratorExecutorOptions<TraceDecoratorOptions> {
+  options: ExecutorOptionsBase,
+): DecoratorExecutorOptions {
 
   assert(options.webApp, 'options.webApp is undefined')
   assert(options.instanceName, 'options.instanceName is undefined')
@@ -121,6 +122,7 @@ export function genDecoratorExecutorOptions(
     [AttrNames.CallerClass]: options.instanceName,
     [AttrNames.CallerMethod]: options.methodName,
   }
+
 
   const ret: DecoratorExecutorOptions<TraceDecoratorOptions> = {
     ...options,
