@@ -22,34 +22,35 @@ export async function decoratorExecutor(
   options: DecoratorExecutorOptions<CacheableArgs>,
 ): Promise<unknown> {
 
-  const webContext = options.instance[REQUEST_OBJ_CTX_KEY]
+  const { webContext } = options
   assert(webContext, 'webContext is undefined')
 
   const cacheManager = options.cacheManager ?? await webContext.requestContext.getAsync(CacheManager)
   assert(cacheManager, 'CacheManager is undefined')
 
   const {
-    argsFromClassDecorator,
-    argsFromMethodDecorator,
+    mergedDecoratorParam,
   } = options
 
   const cacheOptions: CacheableArgs = {
     ...initCacheableArgs,
-    ...argsFromClassDecorator,
-    ...argsFromMethodDecorator,
+    ...mergedDecoratorParam,
   }
-  options.argsFromMethodDecorator = cacheOptions
+  const opts2 = {
+    ...options,
+    mergedDecoratorParam: cacheOptions,
+  }
 
-  const opts: GenCacheKeyOptions = {
+  const opts3: GenCacheKeyOptions = {
     ...cacheOptions,
-    methodArgs: options.methodArgs,
-    methodResult: options.methodResult,
+    methodArgs: opts2.methodArgs,
+    methodResult: opts2.methodResult,
     webContext,
   }
-  const cacheKey = genCacheKey(opts)
+  const cacheKey = genCacheKey(opts3)
 
   try {
-    const tmp = computerConditionValue(options)
+    const tmp = computerConditionValue(opts2)
     const enableCache = typeof tmp === 'boolean' ? tmp : await tmp
     assert(typeof enableCache === 'boolean', 'condition must return boolean')
 
@@ -63,14 +64,14 @@ export async function decoratorExecutor(
     }
 
     if (typeof cacheResp !== 'undefined') {
-      const resp = genDataWithCacheMeta(cacheResp as CachedResponse, opts)
+      const resp = genDataWithCacheMeta(cacheResp as CachedResponse, opts3)
       return resp
     }
 
-    const { method, methodArgs } = options
+    const { method, methodArgs } = opts2
     const resp = await method(...methodArgs)
 
-    const ttl = await computerTTLValue(resp as CachedResponse, options)
+    const ttl = await computerTTLValue(resp as CachedResponse, opts2)
     if (enableCache && ttl > 0 && typeof resp !== 'undefined') {
       await saveData(cacheManager, cacheKey, resp, ttl)
     }

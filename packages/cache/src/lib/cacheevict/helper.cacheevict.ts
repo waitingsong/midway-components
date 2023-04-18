@@ -1,7 +1,6 @@
 import assert from 'assert'
 
 import { CacheManager } from '@midwayjs/cache'
-import { REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
 
 import { initCacheEvictArgs } from '../config'
 import { processEx } from '../exception'
@@ -13,34 +12,35 @@ export async function decoratorExecutor(
   options: DecoratorExecutorOptions<CacheEvictArgs>,
 ): Promise<unknown> {
 
-  const webContext = options.instance[REQUEST_OBJ_CTX_KEY]
+  const { webContext } = options
   assert(webContext, 'webContext is undefined')
 
   const cacheManager = options.cacheManager ?? await webContext.requestContext.getAsync(CacheManager)
   assert(cacheManager, 'CacheManager is undefined')
 
   const {
-    argsFromClassDecorator,
-    argsFromMethodDecorator,
+    mergedDecoratorParam,
   } = options
 
   const cacheOptions: CacheEvictArgs = {
     ...initCacheEvictArgs,
-    ...argsFromClassDecorator,
-    ...argsFromMethodDecorator,
+    ...mergedDecoratorParam,
   }
-  options.argsFromMethodDecorator = cacheOptions
+  const opts2 = {
+    ...options,
+    mergedDecoratorParam: cacheOptions,
+  }
 
-  const opts: GenCacheKeyOptions = {
+  const opts3: GenCacheKeyOptions = {
     ...cacheOptions,
-    methodArgs: options.methodArgs,
-    methodResult: options.methodResult,
+    methodArgs: opts2.methodArgs,
+    methodResult: opts2.methodResult,
     webContext,
   }
-  const cacheKey = genCacheKey(opts)
+  const cacheKey = genCacheKey(opts3)
 
   try {
-    const tmp = computerConditionValue(options)
+    const tmp = computerConditionValue(opts2)
     const enableEvict = typeof tmp === 'boolean' ? tmp : await tmp
     assert(typeof enableEvict === 'boolean', 'condition must return boolean')
 
@@ -48,7 +48,7 @@ export async function decoratorExecutor(
       await deleteData(cacheManager, cacheKey)
     }
 
-    const { method, methodArgs } = options
+    const { method, methodArgs } = opts2
     const resp = await method(...methodArgs)
 
     if (! cacheOptions.beforeInvocation) {
@@ -57,7 +57,7 @@ export async function decoratorExecutor(
       }
       else {
         const ps: DecoratorExecutorOptions<CacheEvictArgs> = {
-          ...options,
+          ...opts2,
           methodResult: resp,
         }
         const tmp2 = computerConditionValue(ps)
@@ -65,11 +65,11 @@ export async function decoratorExecutor(
         assert(typeof enableEvict2 === 'boolean', 'condition must return boolean')
         if (enableEvict2) {
         // re-generate cache key, because CacheConditionFn use result of method
-          const opts2: GenCacheKeyOptions = {
-            ...opts,
+          const opts4: GenCacheKeyOptions = {
+            ...opts3,
             methodResult: resp,
           }
-          const cacheKey2 = genCacheKey(opts2)
+          const cacheKey2 = genCacheKey(opts4)
           await deleteData(cacheManager, cacheKey2)
         }
       }
