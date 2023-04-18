@@ -11,7 +11,7 @@ import { Attributes, SpanOptions } from '@opentelemetry/api'
 
 import type { AbstractOtelComponent, AbstractTraceService } from './abstract'
 import {
-  DecoatorContext,
+  DecoratorContext,
   TraceDecoratorArg,
   TraceDecoratorOptions,
 } from './decorator.types'
@@ -24,7 +24,7 @@ import {
 
 interface GenKeyOptions extends Partial<TraceDecoratorOptions> {
   methodArgs: unknown[]
-  appendArg: DecoatorContext
+  decoratorContext: DecoratorContext
   callerClass: string
   callerMethod: string
 }
@@ -32,7 +32,7 @@ interface GenKeyOptions extends Partial<TraceDecoratorOptions> {
 function genKey(options: GenKeyOptions): string {
   const {
     methodArgs,
-    appendArg,
+    decoratorContext,
     spanName,
   } = options
 
@@ -50,7 +50,7 @@ function genKey(options: GenKeyOptions): string {
     }
 
     case 'function': {
-      const keyStr = spanName(methodArgs as [], appendArg)
+      const keyStr = spanName(methodArgs as [], decoratorContext)
       assert(
         typeof keyStr === 'string' || typeof keyStr === 'undefined',
         'keyGenerator function must return a string or undefined',
@@ -117,7 +117,7 @@ export function genDecoratorExecutorOptions(
   // @ts-expect-error
   const otel: AbstractOtelComponent | undefined = traceService?.otel ?? opts.webApp[otelKey] ?? void 0,
 
-  const appendArg: DecoatorContext = {
+  const decoratorContext: DecoratorContext = {
     webApp: opts.webApp,
     webContext: opts.webContext,
     otelComponent: otel,
@@ -130,7 +130,7 @@ export function genDecoratorExecutorOptions(
     ...mdata,
     startActiveSpan,
     methodArgs: opts.methodArgs,
-    appendArg,
+    decoratorContext,
     callerClass: opts.instanceName,
     callerMethod: opts.methodName,
   }
