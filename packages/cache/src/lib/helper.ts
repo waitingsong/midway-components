@@ -3,17 +3,11 @@ import { createHash } from 'node:crypto'
 
 import type { CacheManager } from '@midwayjs/cache'
 import {
-  JoinPoint,
   // INJECT_CUSTOM_METHOD,
   REQUEST_OBJ_CTX_KEY,
 } from '@midwayjs/core'
 import type { TraceService } from '@mwcp/otel'
-import {
-  AopCallbackInputArgsType,
-  DecoratorExecutorOptionsBase,
-  Context as WebContext,
-  genDecoratorExecutorOptionsBase,
-} from '@mwcp/share'
+import { Context as WebContext } from '@mwcp/share'
 
 import { initCacheableArgs, initCacheEvictArgs, initConfig } from './config'
 import {
@@ -230,24 +224,8 @@ export function computerTTLValue(
 }
 
 export function genDecoratorExecutorOptions<TDecoratorArgs extends CacheableArgs | CacheEvictArgs>(
-  joinPoint: JoinPoint,
-  aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorArgs>,
-  baseOptions: Partial<DecoratorExecutorOptionsBase<TDecoratorArgs>>,
+  options: Partial<DecoratorExecutorOptions<TDecoratorArgs>>,
 ): DecoratorExecutorOptions<TDecoratorArgs> {
-
-  assert(baseOptions.webApp, 'baseOptions.webApp is undefined')
-
-  const opts = genDecoratorExecutorOptionsBase<TDecoratorArgs>(joinPoint, aopCallbackInputOptions, baseOptions)
-  const ret = genDecoratorExecutorOptionsCommon<TDecoratorArgs>(opts)
-  assert(ret.config, 'ret.config is undefined')
-  assert(ret.cacheManager, 'ret.cacheManager is undefined')
-  return ret
-}
-
-
-export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | CacheEvictArgs>(
-  options: Partial<DecoratorExecutorOptions<T>>,
-): DecoratorExecutorOptions<T> {
 
   const {
     webApp,
@@ -287,7 +265,7 @@ export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | Cach
     cacheOptions.cacheName = cacheName
   }
 
-  const ret: DecoratorExecutorOptions<T> = {
+  const ret: DecoratorExecutorOptions<TDecoratorArgs> = {
     decoratorKey,
     cacheManager,
     config,
@@ -299,6 +277,8 @@ export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | Cach
     methodArgs: methodArgs ?? [],
     methodName,
   }
-  return ret as DecoratorExecutorOptions<T>
+  assert(ret.config, 'ret.config is undefined')
+  assert(ret.cacheManager, 'ret.cacheManager is undefined')
+  return ret
 }
 

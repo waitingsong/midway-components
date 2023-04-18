@@ -24,5 +24,5 @@ export { decoratorExecutor as cacheableDecoratorExecutor } from './cacheable/hel
 export { decoratorExecutor as cacheEvictDecoratorExecutor } from './cacheevict/helper.cacheevict'
 export { decoratorExecutor as cachePutDecoratorExecutor } from './cacheput/helper.cacheput'
 
-export { genDecoratorExecutorOptionsCommon } from './helper'
+export { genDecoratorExecutorOptions } from './helper'
 
