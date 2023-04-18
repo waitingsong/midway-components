@@ -48,7 +48,8 @@ export async function decoratorExecutor(
       await deleteData(cacheManager, cacheKey)
     }
 
-    const { method, methodArgs } = opts2
+    const { method, methodArgs, methodIsAsyncFunction } = opts2
+    assert(methodIsAsyncFunction, 'decorated method must be async function')
     const resp = await method(...methodArgs)
 
     if (! cacheOptions.beforeInvocation) {

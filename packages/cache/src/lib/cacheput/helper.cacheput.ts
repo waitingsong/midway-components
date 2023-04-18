@@ -1,7 +1,6 @@
 import assert from 'assert'
 
 import { CacheManager } from '@midwayjs/cache'
-import { REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
 
 import { initCachePutArgs } from '../config'
 import { processEx } from '../exception'

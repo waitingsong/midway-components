@@ -1,7 +1,6 @@
 import assert from 'assert'
 
 import { CacheManager } from '@midwayjs/cache'
-import { REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
 import { TraceService } from '@mwcp/otel'
 
 import { initCacheableArgs } from '../config'
@@ -68,7 +67,9 @@ export async function decoratorExecutor(
       return resp
     }
 
-    const { method, methodArgs } = opts2
+    const { method, methodArgs, methodIsAsyncFunction } = opts2
+    assert(methodIsAsyncFunction, 'decorated method must be async function')
+
     const resp = await method(...methodArgs)
 
     const ttl = await computerTTLValue(resp as CachedResponse, opts2)
