@@ -7,7 +7,7 @@ import {
   REQUEST_OBJ_CTX_KEY,
 } from '@midwayjs/core'
 import type { TraceService } from '@mwcp/otel'
-import { Context as WebContext } from '@mwcp/share'
+import { DecoratorExecutorOptionsBase, Context as WebContext } from '@mwcp/share'
 
 import { initCacheableArgs, initCacheEvictArgs, initConfig } from './config'
 import {
@@ -15,6 +15,7 @@ import {
   CachedResponse,
   CacheEvictArgs,
   CacheTTLFn,
+  Config,
   ConfigKey,
   DataWithCacheMeta,
   DecoratorExecutorOptions,
@@ -223,22 +224,19 @@ export function computerTTLValue(
   return ttl
 }
 
-export function genDecoratorExecutorOptions<TDecoratorArgs extends CacheableArgs | CacheEvictArgs>(
-  options: Partial<DecoratorExecutorOptions<TDecoratorArgs>>,
-): DecoratorExecutorOptions<TDecoratorArgs> {
+export function genDecoratorExecutorOptions(
+  options: DecoratorExecutorOptionsBase<CacheableArgs | CacheEvictArgs, Config>,
+): DecoratorExecutorOptions<CacheableArgs | CacheEvictArgs> {
 
   const {
     webApp,
     webContext,
     decoratorKey,
-    cacheManager,
-    argsFromClassDecorator,
-    argsFromMethodDecorator,
     config,
     instance,
     method,
     methodName,
-    methodArgs,
+    mergedDecoratorParam,
     instanceName,
   } = options
 
@@ -254,28 +252,18 @@ export function genDecoratorExecutorOptions<TDecoratorArgs extends CacheableArgs
   const cacheOptions: CacheableArgs | CacheEvictArgs = {
     ...initCacheableArgs,
     ...initCacheEvictArgs,
+    ...mergedDecoratorParam,
     ttl: config.options.ttl,
-    ...argsFromClassDecorator,
-    ...argsFromMethodDecorator,
   }
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+
   if (typeof cacheOptions.cacheName === 'undefined' || ! cacheOptions.cacheName) {
     const cacheName = `${instanceName}.${methodName}`
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     cacheOptions.cacheName = cacheName
   }
 
-  const ret: DecoratorExecutorOptions<TDecoratorArgs> = {
-    decoratorKey,
-    cacheManager,
-    config,
-    argsFromClassDecorator,
-    // @ts-expect-error
-    argsFromMethodDecorator: cacheOptions,
-    instance,
-    method,
-    methodArgs: methodArgs ?? [],
-    methodName,
+  const ret: DecoratorExecutorOptions<CacheableArgs | CacheEvictArgs> = {
+    ...options,
+    mergedDecoratorParam: cacheOptions,
   }
   assert(ret.config, 'ret.config is undefined')
   assert(ret.cacheManager, 'ret.cacheManager is undefined')

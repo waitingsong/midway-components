@@ -139,9 +139,8 @@ export interface CacheEvictArgs<M extends MethodType | undefined = undefined> {
 export type Method = (...args: unknown[]) => Promise<unknown>
 
 export interface DecoratorExecutorOptions<T extends CacheableArgs | CacheEvictArgs = any>
-  extends DecoratorExecutorOptionsBase<T> {
+  extends DecoratorExecutorOptionsBase<T, Config> {
 
   cacheManager?: CacheManager | undefined
-  config: Config | undefined
 }
 
