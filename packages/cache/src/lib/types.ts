@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CacheManager } from '@midwayjs/cache'
+import type { AbstractTraceService } from '@mwcp/otel'
 import {
   Context,
   DecoratorExecutorOptionsBase,
@@ -141,6 +142,7 @@ export type Method = (...args: unknown[]) => Promise<unknown>
 export interface DecoratorExecutorOptions<T extends CacheableArgs | CacheEvictArgs = any>
   extends DecoratorExecutorOptionsBase<T, Config> {
 
+  traceService: AbstractTraceService | undefined
   cacheManager?: CacheManager | undefined
 }
 

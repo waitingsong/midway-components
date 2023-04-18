@@ -1,7 +1,6 @@
 import assert from 'assert'
 
 import { CacheManager } from '@midwayjs/cache'
-import { TraceService } from '@mwcp/otel'
 
 import { initCacheableArgs } from '../config'
 import { processEx } from '../exception'
@@ -58,8 +57,7 @@ export async function decoratorExecutor(
     //   : void 0
     let cacheResp: CachedResponse | undefined = void 0
     if (enableCache) {
-      const traceService = await webContext.requestContext.getAsync(TraceService)
-      cacheResp = await getData(cacheManager, cacheKey, traceService)
+      cacheResp = await getData(cacheManager, cacheKey, opts2.traceService)
     }
 
     if (typeof cacheResp !== 'undefined') {

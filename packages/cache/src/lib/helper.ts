@@ -6,7 +6,7 @@ import {
   // INJECT_CUSTOM_METHOD,
   REQUEST_OBJ_CTX_KEY,
 } from '@midwayjs/core'
-import type { TraceService } from '@mwcp/otel'
+import { AbstractTraceService, OtelConfigKey } from '@mwcp/otel'
 import { DecoratorExecutorOptionsBase, Context as WebContext } from '@mwcp/share'
 
 import { initCacheableArgs, initCacheEvictArgs, initConfig } from './config'
@@ -136,7 +136,7 @@ export async function deleteData(cacheManager: CacheManager, cacheKey: string): 
 export async function getData<T = unknown>(
   cacheManager: CacheManager,
   cacheKey: string,
-  traceService?: TraceService,
+  traceService?: AbstractTraceService | undefined,
 ): Promise<CachedResponse<T>> {
 
   const keys = hashCacheKey(cacheKey)
@@ -261,9 +261,11 @@ export function genDecoratorExecutorOptions(
     cacheOptions.cacheName = cacheName
   }
 
+  const traceService = webContext[`_${OtelConfigKey.componentName}`] as AbstractTraceService | undefined
   const ret: DecoratorExecutorOptions<CacheableArgs | CacheEvictArgs> = {
     ...options,
     mergedDecoratorParam: cacheOptions,
+    traceService,
   }
   assert(ret.config, 'ret.config is undefined')
   assert(ret.cacheManager, 'ret.cacheManager is undefined')
