@@ -74,6 +74,7 @@ export async function decoratorExecutor(
     }
   }
 
+
   const resp = await method(...methodArgs)
 
   if (after && typeof after === 'function') {
