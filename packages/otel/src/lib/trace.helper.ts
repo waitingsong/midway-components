@@ -1,12 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import assert from 'node:assert'
 
-import { JoinPoint } from '@midwayjs/core'
-import {
-  AopCallbackInputArgsType,
-  DecoratorExecutorOptionsBase,
-  genDecoratorExecutorOptionsBase,
-} from '@mwcp/share'
+import { DecoratorExecutorOptionsBase } from '@mwcp/share'
 import { Attributes, SpanOptions } from '@opentelemetry/api'
 
 import type { AbstractOtelComponent, AbstractTraceService } from './abstract'
@@ -81,32 +76,25 @@ export interface DecoratorExecutorOptions<T extends TraceDecoratorArg = TraceDec
 }
 
 export function genDecoratorExecutorOptions(
-  joinPoint: JoinPoint,
-  aopCallbackInputOptions: AopCallbackInputArgsType<TraceDecoratorArg>,
-  baseOptions: Partial<DecoratorExecutorOptionsBase<TraceDecoratorArg>> = {},
+  options: DecoratorExecutorOptionsBase<TraceDecoratorArg>,
 ): DecoratorExecutorOptions<TraceDecoratorArg> {
 
-  assert(baseOptions.webApp, 'baseOptions.webApp is undefined')
+  assert(options.webApp, 'options.webApp is undefined')
+  assert(options.instanceName, 'options.instanceName is undefined')
+  assert(options.methodName, 'options.methodName is undefined')
 
-  const baseOpts = genDecoratorExecutorOptionsBase<TraceDecoratorArg>(joinPoint, aopCallbackInputOptions, baseOptions)
-  const { webApp, config, decoratorKey } = baseOpts
-  assert(webApp, 'webApp is undefined')
-  assert(config, 'config is undefined')
-  assert(decoratorKey, 'decoratorKey is undefined')
-
-  const traceService = baseOpts.webContext?.[`_${ConfigKey.serviceName}`] as AbstractTraceService | undefined
+  const traceService = options.webContext?.[`_${ConfigKey.serviceName}`] as AbstractTraceService | undefined
 
   const callerAttr: Attributes = {
-    [AttrNames.CallerClass]: baseOpts.instanceName,
-    [AttrNames.CallerMethod]: baseOpts.methodName,
+    [AttrNames.CallerClass]: options.instanceName,
+    [AttrNames.CallerMethod]: options.methodName,
   }
 
-  const { metadata } = aopCallbackInputOptions
+  const { argsFromMethodDecorator } = options
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const mdata: Partial<TraceDecoratorArg> = metadata && typeof metadata === 'object'
-    ? metadata
-    : { spanName: metadata }
+  const mdata: Partial<TraceDecoratorArg> = argsFromMethodDecorator && typeof argsFromMethodDecorator === 'object'
+    ? argsFromMethodDecorator
+    : { spanName: argsFromMethodDecorator }
 
   const startActiveSpan = typeof mdata.startActiveSpan === 'boolean'
     ? mdata.startActiveSpan
@@ -115,11 +103,11 @@ export function genDecoratorExecutorOptions(
 
   const otelKey = `_${ConfigKey.componentName}`
   // @ts-expect-error
-  const otel: AbstractOtelComponent | undefined = traceService?.otel ?? baseOpts.webApp[otelKey] ?? void 0,
+  const otel: AbstractOtelComponent | undefined = traceService?.otel ?? options.webApp[otelKey] ?? void 0,
 
   const decoratorContext: DecoratorContext = {
-    webApp: baseOpts.webApp,
-    webContext: baseOpts.webContext,
+    webApp: options.webApp,
+    webContext: options.webContext,
     otelComponent: otel,
     traceService: traceService ?? void 0,
     traceContext: traceContext ?? void 0,
@@ -128,17 +116,20 @@ export function genDecoratorExecutorOptions(
 
   const keyOpts: GenKeyOptions = {
     ...mdata,
-    startActiveSpan,
-    methodArgs: baseOpts.methodArgs,
+    callerClass: options.instanceName,
+    callerMethod: options.methodName,
     decoratorContext,
-    callerClass: baseOpts.instanceName,
-    callerMethod: baseOpts.methodName,
+    methodArgs: options.methodArgs,
+    startActiveSpan,
   }
   const spanName = genKey(keyOpts)
   assert(spanName, 'spanName is undefined')
 
+  assert(options.argsFromClassDecorator, 'options.argsFromClassDecorator is undefined')
+  assert(options.argsFromMethodDecorator, 'options.argsFromMethodDecorator is undefined')
+
   const ret: DecoratorExecutorOptions<TraceDecoratorArg> = {
-    ...baseOpts,
+    ...options,
     callerAttr,
     spanName,
     spanOptions: mdata,

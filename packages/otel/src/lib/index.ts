@@ -51,6 +51,7 @@ export {
   TraceDecoratorOptions,
 } from './decorator.types'
 
+export { genDecoratorExecutorOptions } from './trace.helper'
 
 export { AttrNames } from './attrnames.types'
 
