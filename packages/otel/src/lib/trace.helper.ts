@@ -88,17 +88,17 @@ export function genDecoratorExecutorOptions(
 
   assert(baseOptions.webApp, 'baseOptions.webApp is undefined')
 
-  const opts = genDecoratorExecutorOptionsBase<TraceDecoratorArg>(joinPoint, aopCallbackInputOptions, baseOptions)
-  const { webApp, config, decoratorKey } = opts
+  const baseOpts = genDecoratorExecutorOptionsBase<TraceDecoratorArg>(joinPoint, aopCallbackInputOptions, baseOptions)
+  const { webApp, config, decoratorKey } = baseOpts
   assert(webApp, 'webApp is undefined')
   assert(config, 'config is undefined')
   assert(decoratorKey, 'decoratorKey is undefined')
 
-  const traceService = opts.webContext?.[`_${ConfigKey.serviceName}`] as AbstractTraceService | undefined
+  const traceService = baseOpts.webContext?.[`_${ConfigKey.serviceName}`] as AbstractTraceService | undefined
 
   const callerAttr: Attributes = {
-    [AttrNames.CallerClass]: opts.instanceName,
-    [AttrNames.CallerMethod]: opts.methodName,
+    [AttrNames.CallerClass]: baseOpts.instanceName,
+    [AttrNames.CallerMethod]: baseOpts.methodName,
   }
 
   const { metadata } = aopCallbackInputOptions
@@ -115,11 +115,11 @@ export function genDecoratorExecutorOptions(
 
   const otelKey = `_${ConfigKey.componentName}`
   // @ts-expect-error
-  const otel: AbstractOtelComponent | undefined = traceService?.otel ?? opts.webApp[otelKey] ?? void 0,
+  const otel: AbstractOtelComponent | undefined = traceService?.otel ?? baseOpts.webApp[otelKey] ?? void 0,
 
   const decoratorContext: DecoratorContext = {
-    webApp: opts.webApp,
-    webContext: opts.webContext,
+    webApp: baseOpts.webApp,
+    webContext: baseOpts.webContext,
     otelComponent: otel,
     traceService: traceService ?? void 0,
     traceContext: traceContext ?? void 0,
@@ -129,16 +129,16 @@ export function genDecoratorExecutorOptions(
   const keyOpts: GenKeyOptions = {
     ...mdata,
     startActiveSpan,
-    methodArgs: opts.methodArgs,
+    methodArgs: baseOpts.methodArgs,
     decoratorContext,
-    callerClass: opts.instanceName,
-    callerMethod: opts.methodName,
+    callerClass: baseOpts.instanceName,
+    callerMethod: baseOpts.methodName,
   }
   const spanName = genKey(keyOpts)
   assert(spanName, 'spanName is undefined')
 
   const ret: DecoratorExecutorOptions<TraceDecoratorArg> = {
-    ...opts,
+    ...baseOpts,
     callerAttr,
     spanName,
     spanOptions: mdata,
