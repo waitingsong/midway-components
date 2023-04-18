@@ -238,14 +238,14 @@ export function genDecoratorExecutorOptions<TDecoratorArgs extends CacheableArgs
   assert(baseOptions.webApp, 'baseOptions.webApp is undefined')
 
   const opts = genDecoratorExecutorOptionsBase<TDecoratorArgs>(joinPoint, aopCallbackInputOptions, baseOptions)
-  const ret = genDecoratorExecutorOptionsCommon<TDecoratorArgs>(opts)
+  const ret = _genDecoratorExecutorOptions<TDecoratorArgs>(opts)
   assert(ret.config, 'ret.config is undefined')
   assert(ret.cacheManager, 'ret.cacheManager is undefined')
   return ret
 }
 
 
-export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | CacheEvictArgs>(
+function _genDecoratorExecutorOptions<T extends CacheableArgs | CacheEvictArgs>(
   options: Partial<DecoratorExecutorOptions<T>>,
 ): DecoratorExecutorOptions<T> {
 
