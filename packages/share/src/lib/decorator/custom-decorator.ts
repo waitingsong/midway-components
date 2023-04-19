@@ -37,7 +37,6 @@ export function customDecoratorFactory<TDecoratorParam extends {}>(
   options: CustomDecoratorFactoryParam<TDecoratorParam>,
 ): MethodDecorator & ClassDecorator {
 
-
   const DecoratorFactory = (
     target: {},
     propertyName?: string,
@@ -45,6 +44,17 @@ export function customDecoratorFactory<TDecoratorParam extends {}>(
   ): PropertyDescriptor | Function | void => {
 
     assert(target, 'target is undefined')
+
+    if (typeof options.before === 'function') {
+      const opts = {
+        decoratorKey: options.decoratorKey,
+        decoratorArgs: options.decoratorArgs,
+        enableClassDecorator: options.enableClassDecorator,
+        classIgnoreIfMethodDecortaorKeys: options.classIgnoreIfMethodDecortaorKeys,
+        methodIgnoreIfMethodDecortaorKeys: options.methodIgnoreIfMethodDecortaorKeys,
+      }
+      options.before(target, propertyName, descriptor, opts)
+    }
 
     const { enableClassDecorator } = options
 
@@ -55,15 +65,15 @@ export function customDecoratorFactory<TDecoratorParam extends {}>(
       assert(decoratorKey, 'decoratorKey is undefined')
       assert(typeof descriptor === 'undefined', 'descriptor is not undefined')
 
-      return regClassDecorator({
+      const opts = {
         decoratorKey,
         target,
         args: decoratorArgs,
         ignoreIfMethodDecortaorKeys: options.classIgnoreIfMethodDecortaorKeys,
-      })
+      }
+      regClassDecorator(opts)
     }
-
-    if (typeof target === 'object') { // Method Decorator, target is class instance
+    else if (typeof target === 'object') { // Method Decorator, target is class instance
       const { decoratorKey, decoratorArgs } = options
 
       assert(decoratorKey, 'decoratorKey is undefined')
@@ -85,19 +95,31 @@ export function customDecoratorFactory<TDecoratorParam extends {}>(
       // }
 
       const obj = target as InstanceOfDecorator
-
-      regMethodDecorator({
+      const opts = {
         decoratorKey,
         target: obj,
         propertyName,
         args: decoratorArgs,
         method: descriptor.value,
         ignoreIfMethodDecortaorKeys: options.methodIgnoreIfMethodDecortaorKeys,
-      })
-      return descriptor
+      }
+
+      regMethodDecorator(opts)
+      // return descriptor
     }
 
-    assert(false, 'Invalid decorator usage')
+    if (typeof options.after === 'function') {
+      const opts = {
+        decoratorKey: options.decoratorKey,
+        decoratorArgs: options.decoratorArgs,
+        enableClassDecorator: options.enableClassDecorator,
+        classIgnoreIfMethodDecortaorKeys: options.classIgnoreIfMethodDecortaorKeys,
+        methodIgnoreIfMethodDecortaorKeys: options.methodIgnoreIfMethodDecortaorKeys,
+      }
+      options.after(target, propertyName, descriptor, opts)
+    }
+
+    // assert(false, 'Invalid decorator usage')
   }
 
   // @ts-ignore
@@ -105,7 +127,7 @@ export function customDecoratorFactory<TDecoratorParam extends {}>(
 }
 
 
-export function regMethodDecorator<TDecoratorParam extends {}>(
+export function regMethodDecorator<TDecoratorParam extends {} = any>(
   options: CustomMethodDecoratorParam<TDecoratorParam>,
 ): void {
 
