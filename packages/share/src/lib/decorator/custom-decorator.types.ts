@@ -28,14 +28,14 @@ export interface DecoratorMetaData<T = unknown> {
 }
 export type Method = (...args: unknown[]) => unknown | Promise<unknown>
 
-export interface AroundFactoryOptionsBase {
+export interface AroundFactoryParamBase {
   webApp: Application
   [key: string]: unknown
 }
 
-export interface DecoratorExecutorOptionsBase<
+export interface DecoratorExecutorParamBase<
   TDecoratorParam extends {} = {}
-> extends AroundFactoryOptionsBase {
+> extends AroundFactoryParamBase {
 
   argsFromClassDecorator: (Partial<TDecoratorParam> & DecoratedTypeMeta) | undefined
   argsFromMethodDecorator: (Partial<TDecoratorParam> & DecoratedTypeMeta) | undefined
@@ -54,10 +54,10 @@ export interface DecoratorExecutorOptionsBase<
   webContext?: Context | undefined
 }
 
-export type DecoratorExecutorFn = (options: any) => unknown
+export type FnDecoratorExecutor = (options: any) => unknown
 
 
-export interface CustomClassDecoratorOptions<TDecoratorParam extends {}> {
+export interface CustomClassDecoratorParam<TDecoratorParam extends {}> {
   decoratorKey: string
   target: Function
   args: Partial<TDecoratorParam> | undefined
@@ -70,10 +70,10 @@ export interface CustomClassDecoratorOptions<TDecoratorParam extends {}> {
   ignoreIfMethodDecortaorKeys?: string[] | undefined
 }
 export type CustomClassDecorator<TDecoratorParam extends {} = any> = (
-  options: CustomClassDecoratorOptions<TDecoratorParam>,
+  options: CustomClassDecoratorParam<TDecoratorParam>,
 ) => void
 
-export interface CustomMethodDecoratorOptions<TDecoratorParam extends {}> {
+export interface CustomMethodDecoratorParam<TDecoratorParam extends {}> {
   /**
    * @example METHOD_KEY_Cacheable
    */
@@ -94,10 +94,10 @@ export interface CustomMethodDecoratorOptions<TDecoratorParam extends {}> {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type CustomMethodDecorator<TDecoratorParam extends {} = any> = (
-  options: CustomMethodDecoratorOptions<TDecoratorParam>,
+  options: CustomMethodDecoratorParam<TDecoratorParam>,
 ) => PropertyDescriptor | void
 
-export interface CustomDecoratorFactoryOptions<TDecoratorParam extends {}> {
+export interface CustomDecoratorFactoryParam<TDecoratorParam extends {}> {
   /**
    * @example METHOD_KEY_Cacheable
    */
@@ -123,20 +123,20 @@ export interface CustomDecoratorFactoryOptions<TDecoratorParam extends {}> {
 }
 
 
-export interface RegisterDecoratorHandlerOptions<TDecoratorParam extends {} = any> {
+export interface RegisterDecoratorHandlerParam<TDecoratorParam extends {} = any> {
   /**
    * @example 'decorator:cacheable'
    */
   decoratorKey: string
   decoratorService: MidwayDecoratorService
-  decoratorExecutor: DecoratorExecutorFn
-  genDecoratorExecutorOptionsFn?: GenDecoratorExecutorOptionsFn<TDecoratorParam> | undefined
+  fnDecoratorExecutor: FnDecoratorExecutor
+  fnGenDecoratorExecutorParam?: FnGenDecoratorExecutorParam<TDecoratorParam> | undefined
   [key: string]: unknown
 }
 
 
-export type GenDecoratorExecutorOptionsFn<T extends {} = any>
-= (options: DecoratorExecutorOptionsBase<T>) => DecoratorExecutorOptionsBase<T>
+export type FnGenDecoratorExecutorParam<T extends {} = any>
+= (options: DecoratorExecutorParamBase<T>) => DecoratorExecutorParamBase<T>
 
 
 export interface AopCallbackInputArgsType<TDecoratorParam extends {} = {}> {
