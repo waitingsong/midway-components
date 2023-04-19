@@ -130,7 +130,7 @@ export interface RegisterDecoratorHandlerParam<TDecoratorParam extends {} = any>
   decoratorKey: string
   decoratorService: MidwayDecoratorService
   fnDecoratorExecutor: FnDecoratorExecutor
-  fnGenDecoratorExecutorParam?: FnGenDecoratorExecutorParam<TDecoratorParam> | undefined
+  fnGenDecoratorExecutorParam: FnGenDecoratorExecutorParam<TDecoratorParam> | void
   [key: string]: unknown
 }
 
