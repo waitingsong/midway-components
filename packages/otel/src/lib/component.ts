@@ -477,18 +477,15 @@ export class OtelComponent extends AbstractOtelComponent {
       decoratorKey: KEY_Trace,
       decoratorService: this.decoratorService,
       fnDecoratorExecutor: decoratorExecutorTrace,
-      fnGenDecoratorExecutorOptions: genDecoratorExecutorOptions,
+      fnGenDecoratorExecutorParam: genDecoratorExecutorOptions,
     }
-
-    // registerMethodHandler(this.decoratorService, this.config)
     registerDecoratorHandler(TraceOpts, aroundFactoryOptions)
-
 
     const TraceInitOpts: RegisterDecoratorHandlerParam<TraceDecoratorOptions> = {
       decoratorKey: METHOD_KEY_TraceInit,
       decoratorService: this.decoratorService,
       fnDecoratorExecutor: decoratorExecutorTraceInit,
-      fnGenDecoratorExecutorOptions: genDecoratorExecutorOptions,
+      fnGenDecoratorExecutorParam: genDecoratorExecutorOptions,
     }
     registerDecoratorHandler(TraceInitOpts, aroundFactoryOptions)
 
