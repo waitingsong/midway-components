@@ -105,7 +105,7 @@ export function customDecoratorFactory<TDecoratorParam extends {}>(
 }
 
 
-function regMethodDecorator<TDecoratorParam extends {}>(
+export function regMethodDecorator<TDecoratorParam extends {}>(
   options: CustomMethodDecoratorParam<TDecoratorParam>,
 ): void {
 
@@ -158,7 +158,7 @@ function regMethodDecorator<TDecoratorParam extends {}>(
 }
 
 
-function regClassDecorator<TDecoratorParam extends {}>(
+export function regClassDecorator<TDecoratorParam extends {}>(
   options: CustomClassDecoratorParam<TDecoratorParam>,
 ): void {
 
@@ -168,6 +168,7 @@ function regClassDecorator<TDecoratorParam extends {}>(
     target,
     ignoreIfMethodDecortaorKeys,
   } = options
+
   assert(target)
   assert(decoratorKey)
 
