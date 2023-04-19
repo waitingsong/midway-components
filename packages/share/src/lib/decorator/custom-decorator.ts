@@ -53,6 +53,7 @@ export function customDecoratorFactory<TDecoratorParam extends {}>(
 
       const { decoratorArgs, decoratorKey } = options
       assert(decoratorKey, 'decoratorKey is undefined')
+      assert(typeof descriptor === 'undefined', 'descriptor is not undefined')
 
       return regClassDecorator({
         decoratorKey,
@@ -70,6 +71,7 @@ export function customDecoratorFactory<TDecoratorParam extends {}>(
       assert(propertyName, 'propertyName is undefined')
       assert(descriptor, 'descriptor is undefined')
 
+      // descriptor.value is the method being decorated
       if (typeof descriptor.value !== 'function') {
         throw new Error(`Only method can be decorated with decorator "${decoratorKey}",
         target: ${target.constructor.name},
