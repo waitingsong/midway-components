@@ -29,6 +29,7 @@ import type {
   FnDecoratorExecutor,
   DecoratorMetaData,
   RegisterDecoratorHandlerParam,
+  InstanceOfDecorator,
 } from './custom-decorator.types.js'
 
 
@@ -80,9 +81,11 @@ export function customDecoratorFactory<TDecoratorParam extends {}>(
       //   target: ${target.constructor.name}, propertyName: ${propertyName}`)
       // }
 
+      const obj = target as InstanceOfDecorator
+
       return methodDecoratorPatcher({
         decoratorKey,
-        target,
+        target: obj,
         propertyName,
         descriptor,
         args: decoratorArgs,
@@ -106,7 +109,6 @@ function methodDecoratorPatcher<TDecoratorParam extends {}>(
     decoratorKey,
     decoratedType,
     args,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     target,
     propertyName,
     descriptor,

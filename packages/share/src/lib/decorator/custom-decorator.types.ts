@@ -80,7 +80,7 @@ export interface CustomMethodDecoratorParam<TDecoratorParam extends {}> {
   decoratorKey: string
   decoratorType?: string
   args: Partial<TDecoratorParam> | undefined
-  target: any
+  target: InstanceOfDecorator | Function
   propertyName: string
   descriptor: PropertyDescriptor
   decoratedType?: 'method' | 'class'
