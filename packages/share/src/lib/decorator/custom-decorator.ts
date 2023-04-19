@@ -235,13 +235,13 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
   const {
     decoratorKey,
     decoratorService,
-    fnDecoratorExecutor: decoratorExecutor,
-    fnGenDecoratorExecutorParam: genDecoratorExecutorOptionsFn,
+    fnDecoratorExecutor,
+    fnGenDecoratorExecutorParam,
   } = options
 
   assert(decoratorKey, 'decoratorKey is required')
   assert(decoratorService, 'decoratorService is required')
-  assert(typeof decoratorExecutor === 'function', 'decoratorExecutor is required')
+  assert(typeof fnDecoratorExecutor === 'function', 'decoratorExecutor is required')
   // assert(typeof genDecoratorExecutorOptionsFn === 'function', 'genDecoratorExecutorOptionsFn is required')
 
   decoratorService.registerMethodHandler(
@@ -258,8 +258,8 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
           aopCallbackInputOptions,
           baseOpts,
         )
-        const opts3 = typeof genDecoratorExecutorOptionsFn === 'function'
-          ? genDecoratorExecutorOptionsFn(opts2)
+        const opts3 = typeof fnGenDecoratorExecutorParam === 'function'
+          ? fnGenDecoratorExecutorParam(opts2)
           : opts2
 
         if (typeof opts3.methodIsAsyncFunction === 'undefined') {
@@ -267,15 +267,15 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
         }
 
         if (opts3.methodIsAsyncFunction === true) {
-          const ret = aroundFactory(
-            decoratorExecutor,
+          const ret = run(
+            fnDecoratorExecutor,
             opts3,
           )
           return ret
         }
 
-        const ret = aroundFactorySync(
-          decoratorExecutor,
+        const ret = runSync(
+          fnDecoratorExecutor,
           opts3,
         )
         return ret
@@ -286,7 +286,7 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
 }
 
 
-async function aroundFactory<TDecoratorParam extends {} = {}>(
+async function run<TDecoratorParam extends {} = {}>(
   decoratorExecutor: FnDecoratorExecutor,
   options: DecoratorExecutorParamBase<TDecoratorParam>,
 ): Promise<unknown> {
@@ -296,12 +296,11 @@ async function aroundFactory<TDecoratorParam extends {} = {}>(
   return dat
 }
 
-function aroundFactorySync<TDecoratorParam extends {} = {}>(
+function runSync<TDecoratorParam extends {} = {}>(
   decoratorExecutor: FnDecoratorExecutor,
   options: DecoratorExecutorParamBase<TDecoratorParam>,
 ): unknown {
 
-  // not return directly, https://v8.dev/blog/fast-async#improved-developer-experience
   const dat = decoratorExecutor(options)
   return dat
 }
