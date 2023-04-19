@@ -28,16 +28,14 @@ export interface DecoratorMetaData<T = unknown> {
 }
 export type Method = (...args: unknown[]) => unknown | Promise<unknown>
 
-export interface AroundFactoryOptionsBase<TConfig extends {} = any> {
-  config?: TConfig | undefined
-  webApp?: Application | undefined
+export interface AroundFactoryOptionsBase {
+  webApp: Application
   [key: string]: unknown
 }
 
 export interface DecoratorExecutorOptionsBase<
-  TDecoratorArgs extends {} = {},
-  TConfig extends {} = any,
-> extends AroundFactoryOptionsBase<TConfig> {
+  TDecoratorArgs extends {} = {}
+> extends AroundFactoryOptionsBase {
 
   argsFromClassDecorator: (Partial<TDecoratorArgs> & DecoratedTypeMeta) | undefined
   argsFromMethodDecorator: (Partial<TDecoratorArgs> & DecoratedTypeMeta) | undefined
@@ -140,14 +138,6 @@ export interface RegisterDecoratorHandlerOptions<TDecoratorArgs extends {} = any
 export type GenDecoratorExecutorOptionsFn<T extends {} = any>
 = (options: DecoratorExecutorOptionsBase<T>) => DecoratorExecutorOptionsBase<T>
 
-// export type GenDecoratorExecutorOptionsFn<
-//   TDecoratorArgs extends {} = {},
-//   TConfig extends {} = any,
-// > = (
-//   joinPoint: JoinPoint,
-//   aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorArgs>,
-//   baseOptions: Partial<DecoratorExecutorOptionsBase<TDecoratorArgs, TConfig>>,
-// ) => DecoratorExecutorOptionsBase<TDecoratorArgs, TConfig>
 
 export interface AopCallbackInputArgsType<TDecoratorArgs extends {} = {}> {
   /** 装饰器所在的实例 */

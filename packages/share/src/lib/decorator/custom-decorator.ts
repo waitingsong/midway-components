@@ -253,7 +253,7 @@ export function registerDecoratorHandler<TDecoratorArgs extends {} = any>(
           decoratorKey,
         }
 
-        const opts2 = genDecoratorExecutorOptionsBase<TDecoratorArgs>(
+        const opts2 = genDecoratorExecutorOptionsCommon<TDecoratorArgs>(
           joinPoint,
           aopCallbackInputOptions,
           baseOpts,
@@ -307,14 +307,11 @@ function aroundFactorySync<TDecoratorArgs extends {} = {}>(
 }
 
 
-export function genDecoratorExecutorOptionsBase<
-  TDecoratorArgs extends {} = {},
-  TConfig extends {} = any,
->(
+export function genDecoratorExecutorOptionsCommon<TDecoratorArgs extends {} = {}>(
   joinPoint: JoinPoint,
   aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorArgs>,
-  baseOptions: Partial<DecoratorExecutorOptionsBase<TDecoratorArgs, TConfig>> = {},
-): DecoratorExecutorOptionsBase<TDecoratorArgs, TConfig> {
+  baseOptions: Partial<DecoratorExecutorOptionsBase<TDecoratorArgs>> = {},
+): DecoratorExecutorOptionsBase<TDecoratorArgs> {
 
   assert(baseOptions, 'baseOptions is required')
   assert(typeof baseOptions === 'object', 'baseOptions is not object')
@@ -346,7 +343,7 @@ export function genDecoratorExecutorOptionsBase<
     argsFromMethodDecorator,
   ])
 
-  const opts: DecoratorExecutorOptionsBase<TDecoratorArgs, TConfig> = {
+  const opts: DecoratorExecutorOptionsBase<TDecoratorArgs> = {
     ...baseOptions,
     argsFromClassDecorator,
     argsFromMethodDecorator,
