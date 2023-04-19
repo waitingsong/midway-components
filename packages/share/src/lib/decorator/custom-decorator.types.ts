@@ -34,13 +34,13 @@ export interface AroundFactoryOptionsBase {
 }
 
 export interface DecoratorExecutorOptionsBase<
-  TDecoratorArgs extends {} = {}
+  TDecoratorParam extends {} = {}
 > extends AroundFactoryOptionsBase {
 
-  argsFromClassDecorator: (Partial<TDecoratorArgs> & DecoratedTypeMeta) | undefined
-  argsFromMethodDecorator: (Partial<TDecoratorArgs> & DecoratedTypeMeta) | undefined
+  argsFromClassDecorator: (Partial<TDecoratorParam> & DecoratedTypeMeta) | undefined
+  argsFromMethodDecorator: (Partial<TDecoratorParam> & DecoratedTypeMeta) | undefined
   /** Merged from argsFromClassDecorator and argsFromMethodDecorator */
-  mergedDecoratorParam: TDecoratorArgs & DecoratedTypeMeta
+  mergedDecoratorParam: TDecoratorParam & DecoratedTypeMeta
   decoratorKey: string
   /** 装饰器所在类实例 */
   instance: InstanceOfDecorator
@@ -57,10 +57,10 @@ export interface DecoratorExecutorOptionsBase<
 export type DecoratorExecutorFn = (options: any) => unknown
 
 
-export interface CustomClassDecoratorOptions<TDecoratorArgs extends {}> {
+export interface CustomClassDecoratorOptions<TDecoratorParam extends {}> {
   decoratorKey: string
   target: Function
-  args: Partial<TDecoratorArgs> | undefined
+  args: Partial<TDecoratorParam> | undefined
   /**
    * meta.impl will set to false if the method is decorated with the decoratorKey.
    * Always contains the decoratorKey
@@ -69,17 +69,17 @@ export interface CustomClassDecoratorOptions<TDecoratorArgs extends {}> {
    */
   ignoreIfMethodDecortaorKeys?: string[] | undefined
 }
-export type CustomClassDecorator<TDecoratorArgs extends {} = any> = (
-  options: CustomClassDecoratorOptions<TDecoratorArgs>,
+export type CustomClassDecorator<TDecoratorParam extends {} = any> = (
+  options: CustomClassDecoratorOptions<TDecoratorParam>,
 ) => void
 
-export interface CustomMethodDecoratorOptions<TDecoratorArgs extends {}> {
+export interface CustomMethodDecoratorOptions<TDecoratorParam extends {}> {
   /**
    * @example METHOD_KEY_Cacheable
    */
   decoratorKey: string
   decoratorType?: string
-  args: Partial<TDecoratorArgs> | undefined
+  args: Partial<TDecoratorParam> | undefined
   target: any
   propertyName: string
   descriptor: PropertyDescriptor
@@ -93,16 +93,16 @@ export interface CustomMethodDecoratorOptions<TDecoratorArgs extends {}> {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type CustomMethodDecorator<TDecoratorArgs extends {} = any> = (
-  options: CustomMethodDecoratorOptions<TDecoratorArgs>,
+export type CustomMethodDecorator<TDecoratorParam extends {} = any> = (
+  options: CustomMethodDecoratorOptions<TDecoratorParam>,
 ) => PropertyDescriptor | void
 
-export interface CustomDecoratorFactoryOptions<TDecoratorArgs extends {}> {
+export interface CustomDecoratorFactoryOptions<TDecoratorParam extends {}> {
   /**
    * @example METHOD_KEY_Cacheable
    */
   decoratorKey: string
-  decoratorArgs: Partial<TDecoratorArgs> | undefined
+  decoratorArgs: Partial<TDecoratorParam> | undefined
   /**
    * @default false
    */
@@ -123,14 +123,14 @@ export interface CustomDecoratorFactoryOptions<TDecoratorArgs extends {}> {
 }
 
 
-export interface RegisterDecoratorHandlerOptions<TDecoratorArgs extends {} = any> {
+export interface RegisterDecoratorHandlerOptions<TDecoratorParam extends {} = any> {
   /**
    * @example 'decorator:cacheable'
    */
   decoratorKey: string
   decoratorService: MidwayDecoratorService
   decoratorExecutor: DecoratorExecutorFn
-  genDecoratorExecutorOptionsFn?: GenDecoratorExecutorOptionsFn<TDecoratorArgs> | undefined
+  genDecoratorExecutorOptionsFn?: GenDecoratorExecutorOptionsFn<TDecoratorParam> | undefined
   [key: string]: unknown
 }
 
@@ -139,11 +139,11 @@ export type GenDecoratorExecutorOptionsFn<T extends {} = any>
 = (options: DecoratorExecutorOptionsBase<T>) => DecoratorExecutorOptionsBase<T>
 
 
-export interface AopCallbackInputArgsType<TDecoratorArgs extends {} = {}> {
+export interface AopCallbackInputArgsType<TDecoratorParam extends {} = {}> {
   /** 装饰器所在的实例 */
   target: InstanceOfDecorator
   propertyName: string
-  metadata: Partial<TDecoratorArgs> & DecoratedTypeMeta
+  metadata: Partial<TDecoratorParam> & DecoratedTypeMeta
 }
 
 

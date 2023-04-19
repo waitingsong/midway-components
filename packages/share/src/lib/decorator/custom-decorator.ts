@@ -34,8 +34,8 @@ import {
 
 
 
-export function customDecoratorFactory<TDecoratorArgs extends {}>(
-  options: CustomDecoratorFactoryOptions<TDecoratorArgs>,
+export function customDecoratorFactory<TDecoratorParam extends {}>(
+  options: CustomDecoratorFactoryOptions<TDecoratorParam>,
 ): MethodDecorator & ClassDecorator {
 
   const { enableClassDecorator } = options
@@ -100,8 +100,8 @@ export function customDecoratorFactory<TDecoratorArgs extends {}>(
 }
 
 
-function methodDecoratorPatcher<TDecoratorArgs extends {}>(
-  options: CustomMethodDecoratorOptions<TDecoratorArgs>,
+function methodDecoratorPatcher<TDecoratorParam extends {}>(
+  options: CustomMethodDecoratorOptions<TDecoratorParam>,
 ): PropertyDescriptor {
 
   const {
@@ -154,8 +154,8 @@ function methodDecoratorPatcher<TDecoratorArgs extends {}>(
 }
 
 
-function classDecoratorPatcher<TDecoratorArgs extends {}>(
-  options: CustomClassDecoratorOptions<TDecoratorArgs>,
+function classDecoratorPatcher<TDecoratorParam extends {}>(
+  options: CustomClassDecoratorOptions<TDecoratorParam>,
 ): void {
 
   const {
@@ -190,8 +190,8 @@ function classDecoratorPatcher<TDecoratorArgs extends {}>(
   Provide()(target)
 }
 
-function decoratorClassMethodsOnPrototype<TDecoratorArgs extends {}>(
-  options: CustomClassDecoratorOptions<TDecoratorArgs>,
+function decoratorClassMethodsOnPrototype<TDecoratorParam extends {}>(
+  options: CustomClassDecoratorOptions<TDecoratorParam>,
 ): unknown {
 
   const { target, decoratorKey, args } = options
@@ -212,7 +212,7 @@ function decoratorClassMethodsOnPrototype<TDecoratorArgs extends {}>(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       // if (descriptor.value.constructor.name !== 'AsyncFunction') { continue }
 
-      methodDecoratorPatcher<TDecoratorArgs>({
+      methodDecoratorPatcher<TDecoratorParam>({
         target,
         propertyName,
         descriptor,
@@ -227,8 +227,8 @@ function decoratorClassMethodsOnPrototype<TDecoratorArgs extends {}>(
 }
 
 
-export function registerDecoratorHandler<TDecoratorArgs extends {} = any>(
-  options: RegisterDecoratorHandlerOptions<TDecoratorArgs>,
+export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
+  options: RegisterDecoratorHandlerOptions<TDecoratorParam>,
   aroundFactoryOptions: AroundFactoryOptionsBase,
 ): void {
 
@@ -253,7 +253,7 @@ export function registerDecoratorHandler<TDecoratorArgs extends {} = any>(
           decoratorKey,
         }
 
-        const opts2 = genDecoratorExecutorOptionsCommon<TDecoratorArgs>(
+        const opts2 = genDecoratorExecutorOptionsCommon<TDecoratorParam>(
           joinPoint,
           aopCallbackInputOptions,
           baseOpts,
@@ -286,9 +286,9 @@ export function registerDecoratorHandler<TDecoratorArgs extends {} = any>(
 }
 
 
-async function aroundFactory<TDecoratorArgs extends {} = {}>(
+async function aroundFactory<TDecoratorParam extends {} = {}>(
   decoratorExecutor: DecoratorExecutorFn,
-  options: DecoratorExecutorOptionsBase<TDecoratorArgs>,
+  options: DecoratorExecutorOptionsBase<TDecoratorParam>,
 ): Promise<unknown> {
 
   // not return directly, https://v8.dev/blog/fast-async#improved-developer-experience
@@ -296,9 +296,9 @@ async function aroundFactory<TDecoratorArgs extends {} = {}>(
   return dat
 }
 
-function aroundFactorySync<TDecoratorArgs extends {} = {}>(
+function aroundFactorySync<TDecoratorParam extends {} = {}>(
   decoratorExecutor: DecoratorExecutorFn,
-  options: DecoratorExecutorOptionsBase<TDecoratorArgs>,
+  options: DecoratorExecutorOptionsBase<TDecoratorParam>,
 ): unknown {
 
   // not return directly, https://v8.dev/blog/fast-async#improved-developer-experience
@@ -307,11 +307,11 @@ function aroundFactorySync<TDecoratorArgs extends {} = {}>(
 }
 
 
-export function genDecoratorExecutorOptionsCommon<TDecoratorArgs extends {} = {}>(
+export function genDecoratorExecutorOptionsCommon<TDecoratorParam extends {} = {}>(
   joinPoint: JoinPoint,
-  aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorArgs>,
-  baseOptions: Partial<DecoratorExecutorOptionsBase<TDecoratorArgs>> = {},
-): DecoratorExecutorOptionsBase<TDecoratorArgs> {
+  aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorParam>,
+  baseOptions: Partial<DecoratorExecutorOptionsBase<TDecoratorParam>> = {},
+): DecoratorExecutorOptionsBase<TDecoratorParam> {
 
   assert(baseOptions, 'baseOptions is required')
   assert(typeof baseOptions === 'object', 'baseOptions is not object')
@@ -336,14 +336,14 @@ export function genDecoratorExecutorOptionsCommon<TDecoratorArgs extends {} = {}
 
   const decoratorKey = baseOptions.decoratorKey ?? ''
   assert(decoratorKey, 'decoratorKey is undefined')
-  const argsFromClassDecorator = getClassMetadata(decoratorKey, instance) as Partial<TDecoratorArgs> | undefined
+  const argsFromClassDecorator = getClassMetadata(decoratorKey, instance) as Partial<TDecoratorParam> | undefined
   const argsFromMethodDecorator = aopCallbackInputOptions.metadata
   const mergedDecoratorParam = deepmerge.all([
     argsFromClassDecorator ?? {},
     argsFromMethodDecorator,
   ])
 
-  const opts: DecoratorExecutorOptionsBase<TDecoratorArgs> = {
+  const opts: DecoratorExecutorOptionsBase<TDecoratorParam> = {
     ...baseOptions,
     argsFromClassDecorator,
     argsFromMethodDecorator,
