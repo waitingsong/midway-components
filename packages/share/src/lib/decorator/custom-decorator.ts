@@ -54,7 +54,7 @@ export function customDecoratorFactory<TDecoratorParam extends {}>(
       const { decoratorArgs, decoratorKey } = options
       assert(decoratorKey, 'decoratorKey is undefined')
 
-      return classDecoratorPatcher({
+      return regClassDecorator({
         decoratorKey,
         target,
         args: decoratorArgs,
@@ -84,7 +84,7 @@ export function customDecoratorFactory<TDecoratorParam extends {}>(
 
       const obj = target as InstanceOfDecorator
 
-      return methodDecoratorPatcher({
+      return regMethodDecorator({
         decoratorKey,
         target: obj,
         propertyName,
@@ -102,7 +102,7 @@ export function customDecoratorFactory<TDecoratorParam extends {}>(
 }
 
 
-function methodDecoratorPatcher<TDecoratorParam extends {}>(
+function regMethodDecorator<TDecoratorParam extends {}>(
   options: CustomMethodDecoratorParam<TDecoratorParam>,
 ): PropertyDescriptor {
 
@@ -155,7 +155,7 @@ function methodDecoratorPatcher<TDecoratorParam extends {}>(
 }
 
 
-function classDecoratorPatcher<TDecoratorParam extends {}>(
+function regClassDecorator<TDecoratorParam extends {}>(
   options: CustomClassDecoratorParam<TDecoratorParam>,
 ): void {
 
@@ -213,7 +213,7 @@ function decoratorClassMethodsOnPrototype<TDecoratorParam extends {}>(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       // if (descriptor.value.constructor.name !== 'AsyncFunction') { continue }
 
-      methodDecoratorPatcher<TDecoratorParam>({
+      regMethodDecorator<TDecoratorParam>({
         target,
         propertyName,
         descriptor,
