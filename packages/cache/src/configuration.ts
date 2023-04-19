@@ -13,9 +13,9 @@ import {
 import { TraceInit } from '@mwcp/otel'
 import {
   Application,
-  AroundFactoryOptionsBase,
+  AroundFactoryParamBase,
   IMidwayContainer,
-  RegisterDecoratorHandlerOptions,
+  RegisterDecoratorHandlerParam,
   registerDecoratorHandler,
 } from '@mwcp/share'
 
@@ -26,7 +26,7 @@ import { decoratorExecutor as decoratorExecutorPut } from './lib/cacheput/helper
 import { genDecoratorExecutorOptions } from './lib/helper'
 import { CacheConfig, METHOD_KEY_Cacheable, METHOD_KEY_CacheEvict, METHOD_KEY_CachePut } from './lib/index'
 
-import { Config, ConfigKey } from '~/lib/types'
+import { ConfigKey } from '~/lib/types'
 
 
 @Configuration({
@@ -58,34 +58,33 @@ export class AutoConfiguration implements ILifeCycle {
     const config = this.app.getConfig('cache') as CacheConfig
     assert.deepEqual(config, this.cacheConfig)
 
-    const aroundFactoryOptions: AroundFactoryOptionsBase<Config> = {
+    const aroundFactoryOptions: AroundFactoryParamBase = {
       webApp: this.app,
       cacheManager: this.cacheManager,
-      config: this.cacheConfig,
     }
     const base = {
       decoratorService: this.decoratorService,
-      genDecoratorExecutorOptionsFn: genDecoratorExecutorOptions,
+      fnGenDecoratorExecutorParam: genDecoratorExecutorOptions,
     }
 
-    const optsCacheable: RegisterDecoratorHandlerOptions = {
+    const optsCacheable: RegisterDecoratorHandlerParam = {
       ...base,
       decoratorKey: METHOD_KEY_Cacheable,
-      decoratorExecutor,
+      fnDecoratorExecutor: decoratorExecutor,
     }
     registerDecoratorHandler(optsCacheable, aroundFactoryOptions)
 
-    const optsCacheEvict: RegisterDecoratorHandlerOptions = {
+    const optsCacheEvict: RegisterDecoratorHandlerParam = {
       ...base,
       decoratorKey: METHOD_KEY_CacheEvict,
-      decoratorExecutor: decoratorExecutorEvict,
+      fnDecoratorExecutor: decoratorExecutorEvict,
     }
     registerDecoratorHandler(optsCacheEvict, aroundFactoryOptions)
 
-    const optsCachePut: RegisterDecoratorHandlerOptions = {
+    const optsCachePut: RegisterDecoratorHandlerParam = {
       ...base,
       decoratorKey: METHOD_KEY_CachePut,
-      decoratorExecutor: decoratorExecutorPut,
+      fnDecoratorExecutor: decoratorExecutorPut,
     }
     registerDecoratorHandler(optsCachePut, aroundFactoryOptions)
 

@@ -7,7 +7,7 @@ import {
   REQUEST_OBJ_CTX_KEY,
 } from '@midwayjs/core'
 import { AbstractTraceService, OtelConfigKey } from '@mwcp/otel'
-import { DecoratorExecutorOptionsBase, Context as WebContext } from '@mwcp/share'
+import { DecoratorExecutorParamBase, Context as WebContext } from '@mwcp/share'
 
 import { initCacheableArgs, initCacheEvictArgs, initConfig } from './config'
 import {
@@ -225,14 +225,13 @@ export function computerTTLValue(
 }
 
 export function genDecoratorExecutorOptions(
-  options: DecoratorExecutorOptionsBase<CacheableArgs | CacheEvictArgs, Config>,
+  options: DecoratorExecutorParamBase<CacheableArgs | CacheEvictArgs>,
 ): DecoratorExecutorOptions<CacheableArgs | CacheEvictArgs> {
 
   const {
     webApp,
     webContext,
     decoratorKey,
-    config,
     instance,
     method,
     methodName,
@@ -243,16 +242,13 @@ export function genDecoratorExecutorOptions(
   assert(webApp, 'webApp is undefined')
   assert(webContext, 'webContext is undefined')
   assert(decoratorKey, 'decoratorKey is undefined')
-  assert(config, 'config is undefined')
   assert(instance, 'options.instance is undefined')
   assert(typeof method === 'function', 'options.method is not funtion')
   assert(instanceName, 'instanceName is undefined')
   assert(methodName, 'methodName is undefined')
 
-  const conf1 = webApp.getConfig(ConfigKey.config) as unknown
-  const conf2 = webApp.getConfig('cache') as unknown
-  void conf1
-  void conf2
+  const config = webApp.getConfig('cache') as Config
+  assert(config, 'cache config is undefined')
 
   const cacheOptions: CacheableArgs | CacheEvictArgs = {
     ...initCacheableArgs,
@@ -272,12 +268,11 @@ export function genDecoratorExecutorOptions(
 
   const ret: DecoratorExecutorOptions<CacheableArgs | CacheEvictArgs> = {
     ...options,
-    mergedDecoratorParam: cacheOptions,
     cacheManager: cacheManager as CacheManager,
+    config,
+    mergedDecoratorParam: cacheOptions,
     traceService,
   }
-  assert(ret.config, 'ret.config is undefined')
-  assert(ret.cacheManager, 'ret.cacheManager is undefined')
   return ret
 }
 
