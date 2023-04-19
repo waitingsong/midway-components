@@ -1,6 +1,6 @@
 import { customDecoratorFactory } from '@mwcp/share'
 
-import { MethodType, TraceDecoratorArg, TraceDecoratorOptions } from '../decorator.types'
+import { MethodType, TraceDecoratorParam, TraceDecoratorOptions } from '../decorator.types'
 
 
 export const METHOD_KEY_TraceInit = 'decorator:method_key_TraceInit'
@@ -20,7 +20,7 @@ export const METHOD_KEY_TraceInit = 'decorator:method_key_TraceInit'
  * ```
  */
 export function TraceInit<M extends MethodType | void = void>(
-  options?: TraceDecoratorArg<M>,
+  options?: TraceDecoratorParam<M>,
 ): MethodDecorator & ClassDecorator {
 
   const opts: Partial<TraceDecoratorOptions<M>> = typeof options === 'string'

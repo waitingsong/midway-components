@@ -8,14 +8,13 @@ import type {
 import { AbstractOtelComponent, AbstractTraceService } from './abstract'
 
 
-
 export type MethodType<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ArgsType extends unknown[] = any[],
   ReturnType = unknown,
 > = (...input: ArgsType) => ReturnType
 
-export type TraceDecoratorArg<M extends MethodType | void = void> =
+export type TraceDecoratorParam<M extends MethodType | void = void> =
   Partial<TraceDecoratorOptions<M>> | string
 
 export interface TraceDecoratorOptions<

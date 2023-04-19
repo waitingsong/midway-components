@@ -5,11 +5,11 @@ import { Span, SpanStatusCode } from '@opentelemetry/api'
 
 import type { AbstractTraceService } from '../abstract'
 import type { TraceDecoratorOptions } from '../decorator.types'
-import type { DecoratorExecutorOptions } from '../trace.helper'
+import type { DecoratorExecutorParam } from '../trace.helper'
 
 
 export function decoratorExecutor(
-  options: DecoratorExecutorOptions<TraceDecoratorOptions>,
+  options: DecoratorExecutorParam<TraceDecoratorOptions>,
 ): unknown {
 
   if (options.methodIsAsyncFunction) {
@@ -24,7 +24,7 @@ export function decoratorExecutor(
 
 
 async function run(
-  options: DecoratorExecutorOptions,
+  options: DecoratorExecutorParam,
 ): Promise<unknown> {
 
   const {
@@ -68,7 +68,7 @@ async function run(
 }
 
 function runSync(
-  options: DecoratorExecutorOptions,
+  options: DecoratorExecutorParam,
 ): unknown {
 
   const {

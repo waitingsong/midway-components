@@ -4,11 +4,11 @@ import { isAsyncFunction } from 'node:util/types'
 import { Attributes, SpanKind, SpanOptions } from '@opentelemetry/api'
 
 import type { DecoratorContext, TraceDecoratorOptions } from '../decorator.types'
-import type { DecoratorExecutorOptions } from '../trace.helper'
+import type { DecoratorExecutorParam } from '../trace.helper'
 
 
 export async function decoratorExecutor(
-  options: DecoratorExecutorOptions<TraceDecoratorOptions>,
+  options: DecoratorExecutorParam<TraceDecoratorOptions>,
 ): Promise<unknown> {
 
   const { webApp, methodIsAsyncFunction } = options
@@ -74,7 +74,7 @@ export async function decoratorExecutor(
     }
   }
 
-
+  // execute method
   const resp = await method(...methodArgs)
 
   if (after && typeof after === 'function') {
@@ -94,7 +94,6 @@ export async function decoratorExecutor(
     event: `${spanName}.end`,
   }
   otelComponent.addEvent(span, events2, addEventOtpions)
-
   otelComponent.endSpan(otelComponent.appInitProcessSpan, span)
 
   return resp

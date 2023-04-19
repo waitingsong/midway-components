@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import assert from 'node:assert'
 
-import { DecoratorExecutorOptionsBase } from '@mwcp/share'
+import { DecoratorExecutorParamBase } from '@mwcp/share'
 import { Attributes, SpanOptions } from '@opentelemetry/api'
 
 import type { AbstractOtelComponent, AbstractTraceService } from './abstract'
 import {
   DecoratorContext,
-  TraceDecoratorOptions,
+  TraceDecoratorOptions as TraceDecoratorParam,
 } from './decorator.types'
 import {
   AttrNames,
@@ -16,7 +16,7 @@ import {
 } from './types'
 
 
-interface GenKeyOptions extends Partial<TraceDecoratorOptions> {
+interface GenKeyOptions extends Partial<TraceDecoratorParam> {
   methodArgs: unknown[]
   decoratorContext: DecoratorContext
   callerClass: string
@@ -99,10 +99,10 @@ function genEventKeyWhenSpanNameEmpty(options: GenKeyOptions): string {
   return name
 }
 
-type ExecutorOptionsBase<T extends TraceDecoratorOptions = TraceDecoratorOptions> = DecoratorExecutorOptionsBase<T>
+type ExecutorParamBase<T extends TraceDecoratorParam = TraceDecoratorParam> = DecoratorExecutorParamBase<T>
 
-export interface DecoratorExecutorOptions<T extends TraceDecoratorOptions = TraceDecoratorOptions>
-  extends ExecutorOptionsBase<T> {
+export interface DecoratorExecutorParam<T extends TraceDecoratorParam = TraceDecoratorParam>
+  extends ExecutorParamBase<T> {
   callerAttr: Attributes
   spanName: string
   spanOptions: Partial<SpanOptions>
@@ -113,8 +113,8 @@ export interface DecoratorExecutorOptions<T extends TraceDecoratorOptions = Trac
 }
 
 export function genDecoratorExecutorOptions(
-  options: ExecutorOptionsBase,
-): DecoratorExecutorOptions {
+  options: ExecutorParamBase,
+): DecoratorExecutorParam {
 
   assert(options.webApp, 'options.webApp is undefined')
   assert(options.instanceName, 'options.instanceName is undefined')
@@ -159,7 +159,7 @@ export function genDecoratorExecutorOptions(
   }
 
 
-  const ret: DecoratorExecutorOptions<TraceDecoratorOptions> = {
+  const ret: DecoratorExecutorParam<TraceDecoratorParam> = {
     ...options,
     callerAttr,
     spanName,

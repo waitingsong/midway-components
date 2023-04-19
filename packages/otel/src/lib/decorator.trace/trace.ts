@@ -1,6 +1,6 @@
 import { customDecoratorFactory } from '@mwcp/share'
 
-import { MethodType, TraceDecoratorArg } from '../decorator.types'
+import { MethodType, TraceDecoratorParam } from '../decorator.types'
 
 
 export const KEY_Trace = 'decorator:key_Trace'
@@ -11,14 +11,14 @@ export const KEY_Trace = 'decorator:key_Trace'
  * ```
  */
 export function Trace<M extends MethodType | void = void>(
-  options?: TraceDecoratorArg<M>,
+  options?: TraceDecoratorParam<M>,
 ): MethodDecorator {
 
   const opts = typeof options === 'string'
     ? { spanName: options }
     : options
 
-  return customDecoratorFactory<TraceDecoratorArg<M>>({
+  return customDecoratorFactory<TraceDecoratorParam<M>>({
     decoratorArgs: opts,
     decoratorKey: KEY_Trace,
     enableClassDecorator: false,

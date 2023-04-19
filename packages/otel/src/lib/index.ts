@@ -47,7 +47,7 @@ export {
 } from './types'
 
 export {
-  TraceDecoratorArg,
+  TraceDecoratorParam as TraceDecoratorArg,
   TraceDecoratorOptions,
 } from './decorator.types'
 
