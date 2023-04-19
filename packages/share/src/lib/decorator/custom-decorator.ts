@@ -148,6 +148,8 @@ export function regMethodDecorator<TDecoratorParam extends {}>(
     }
   }
 
+  // const foo1 = getClassMetadata<DecoratorMetaData[] | undefined>(INJECT_CUSTOM_METHOD, target)
+  // void foo1
   attachClassMetadata(
     INJECT_CUSTOM_METHOD,
     data,
@@ -246,8 +248,23 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
 
   assert(decoratorKey, 'decoratorKey is required')
   assert(decoratorService, 'decoratorService is required')
-  assert(typeof fnDecoratorExecutor === 'function', 'decoratorExecutor is required')
-  // assert(typeof genDecoratorExecutorOptionsFn === 'function', 'genDecoratorExecutorOptionsFn is required')
+
+  let executor = fnDecoratorExecutor
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (! fnDecoratorExecutor && typeof options['decoratorExecutor'] === 'function') {
+    // @ts-ignore
+    executor = options['decoratorExecutor']
+  }
+  else {
+    assert(typeof fnDecoratorExecutor === 'function', 'fnDecoratorExecutor is required')
+  }
+
+  let genDecoratorExecutorParam = fnGenDecoratorExecutorParam
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (! fnGenDecoratorExecutorParam && typeof options['genDecoratorExecutorParam'] === 'function') {
+    // @ts-ignore
+    genDecoratorExecutorParam = options['genDecoratorExecutorParam']
+  }
 
   decoratorService.registerMethodHandler(
     decoratorKey,
@@ -263,8 +280,8 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
           aopCallbackInputOptions,
           baseOpts,
         )
-        const opts3 = typeof fnGenDecoratorExecutorParam === 'function'
-          ? fnGenDecoratorExecutorParam(opts2)
+        const opts3 = typeof genDecoratorExecutorParam === 'function'
+          ? genDecoratorExecutorParam(opts2)
           : opts2
 
         if (typeof opts3.methodIsAsyncFunction === 'undefined') {
@@ -273,14 +290,14 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
 
         if (opts3.methodIsAsyncFunction === true) {
           const ret = run(
-            fnDecoratorExecutor,
+            executor,
             opts3,
           )
           return ret
         }
 
         const ret = runSync(
-          fnDecoratorExecutor,
+          executor,
           opts3,
         )
         return ret
