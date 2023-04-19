@@ -21,11 +21,11 @@ export interface TraceDecoratorOptions<
   /** Decorated method */
   M extends MethodType | void = void,
   /** Arguments of decorated method */
-  MArgsType = M extends MethodType<infer A> ? A : [],
+  MParamType = M extends MethodType<infer P> ? P : [],
 > extends SpanOptions {
 
   /** @default `{target.name}/{methodName}` */
-  spanName: string | KeyGenerator<MArgsType> | undefined
+  spanName: string | KeyGenerator<MParamType> | undefined
   /**
    * @default true
    */
@@ -42,8 +42,8 @@ export interface TraceDecoratorOptions<
    * @default `/`
    */
   spanNameDelimiter: string | undefined
-  before: MethodType<[MArgsType, DecoratorContext]> | undefined
-  after: MethodType<[MArgsType, DecoratorContext]> | undefined
+  before: MethodType<[MParamType, DecoratorContext]> | undefined
+  after: MethodType<[MParamType, DecoratorContext]> | undefined
 }
 
 export type KeyGenerator<ArgsType = unknown[], DContext extends DecoratorContext = DecoratorContext> = (
