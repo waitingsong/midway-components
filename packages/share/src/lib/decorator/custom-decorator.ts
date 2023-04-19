@@ -302,7 +302,7 @@ function aroundFactorySync<TDecoratorArgs extends {} = {}>(
 ): unknown {
 
   // not return directly, https://v8.dev/blog/fast-async#improved-developer-experience
-  const dat: unknown = decoratorExecutor(options)
+  const dat = decoratorExecutor(options)
   return dat
 }
 
