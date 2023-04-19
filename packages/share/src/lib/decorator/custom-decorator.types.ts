@@ -5,6 +5,7 @@ import {
   MidwayDecoratorService,
   REQUEST_OBJ_CTX_KEY,
 } from '@midwayjs/core'
+import { MethodType } from '@waiting/shared-types'
 
 import { Application, Context } from '../types.js'
 
@@ -82,7 +83,8 @@ export interface CustomMethodDecoratorParam<TDecoratorParam extends {}> {
   args: Partial<TDecoratorParam> | undefined
   target: InstanceOfDecorator | Function
   propertyName: string
-  descriptor: PropertyDescriptor
+  // descriptor: PropertyDescriptor
+  method: MethodType
   decoratedType?: 'method' | 'class'
   /**
    * meta.impl will set to false if the method is decorated with the decoratorKey.

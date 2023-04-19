@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
 import assert from 'node:assert'
-import { isAsyncFunction } from 'node:util/types'
+// import { isAsyncFunction } from 'node:util/types'
 
 import {
   INJECT_CUSTOM_METHOD,
@@ -86,14 +86,15 @@ export function customDecoratorFactory<TDecoratorParam extends {}>(
 
       const obj = target as InstanceOfDecorator
 
-      return regMethodDecorator({
+      regMethodDecorator({
         decoratorKey,
         target: obj,
         propertyName,
-        descriptor,
         args: decoratorArgs,
+        method: descriptor.value,
         ignoreIfMethodDecortaorKeys: options.methodIgnoreIfMethodDecortaorKeys,
       })
+      return descriptor
     }
 
     assert(false, 'Invalid decorator usage')
@@ -106,7 +107,7 @@ export function customDecoratorFactory<TDecoratorParam extends {}>(
 
 function regMethodDecorator<TDecoratorParam extends {}>(
   options: CustomMethodDecoratorParam<TDecoratorParam>,
-): PropertyDescriptor {
+): void {
 
   const {
     decoratorKey,
@@ -114,11 +115,12 @@ function regMethodDecorator<TDecoratorParam extends {}>(
     args,
     target,
     propertyName,
-    descriptor,
+    method,
     ignoreIfMethodDecortaorKeys,
   } = options
 
-  assert(descriptor, 'descriptor is undefined')
+  assert(method, 'method is undefined')
+  assert(typeof method === 'function', 'method is not a function')
   assert(
     typeof args === 'object' || typeof args === 'undefined',
     'args is not an object or undefined',
@@ -153,7 +155,6 @@ function regMethodDecorator<TDecoratorParam extends {}>(
   )
   // const foo2 = getClassMetadata<DecoratorMetaData[] | undefined>(INJECT_CUSTOM_METHOD, target)
   // void foo2
-  return descriptor
 }
 
 
@@ -211,14 +212,14 @@ function decoratorClassMethodsOnPrototype<TDecoratorParam extends {}>(
     if (! descriptor) { continue }
 
     if (typeof descriptor.value === 'function') {
-      if (! isAsyncFunction(descriptor.value)) { continue }
+      // if (! isAsyncFunction(descriptor.value)) { continue }
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       // if (descriptor.value.constructor.name !== 'AsyncFunction') { continue }
 
       regMethodDecorator<TDecoratorParam>({
         target,
         propertyName,
-        descriptor,
+        method: descriptor.value,
         decoratorKey, // METHOD_KEY_Cacheable,
         args,
         decoratedType: 'class',
