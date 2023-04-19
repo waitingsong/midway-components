@@ -149,14 +149,14 @@ export function regMethodDecorator<TDecoratorParam extends {}>(
   }
 
   // const foo1 = getClassMetadata<DecoratorMetaData[] | undefined>(INJECT_CUSTOM_METHOD, target)
-  // void foo1
+  // console.log({ foo1 })
   attachClassMetadata(
     INJECT_CUSTOM_METHOD,
     data,
     target,
   )
   // const foo2 = getClassMetadata<DecoratorMetaData[] | undefined>(INJECT_CUSTOM_METHOD, target)
-  // void foo2
+  // console.log({ foo2 })
 }
 
 
