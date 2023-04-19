@@ -38,7 +38,9 @@ export class AutoConfiguration implements ILifeCycle {
 
   @App() readonly app: Application
 
+  /** component config */
   @_Config(ConfigKey.config) protected readonly cacheConfig: CacheConfig
+  /** original config */
   @_Config() protected readonly cache: CacheConfig
 
   @Inject() decoratorService: MidwayDecoratorService
