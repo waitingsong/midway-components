@@ -16,11 +16,10 @@ import {
 } from '@midwayjs/core'
 import deepmerge from 'deepmerge'
 
-
 import type { Context as WebContext } from '../types.js'
 
 import { methodHasDecorated, setImplToFalseIfDecoratedWithBothClassAndMethod } from './custom-decorator.helper.js'
-import {
+import type {
   AopCallbackInputArgsType,
   AroundFactoryParamBase,
   CustomClassDecoratorParam,
@@ -31,7 +30,6 @@ import {
   DecoratorMetaData,
   RegisterDecoratorHandlerParam,
 } from './custom-decorator.types.js'
-
 
 
 export function customDecoratorFactory<TDecoratorParam extends {}>(
@@ -48,7 +46,7 @@ export function customDecoratorFactory<TDecoratorParam extends {}>(
 
     assert(target, 'target is undefined')
 
-    if (typeof target === 'function') { // Class Decorator
+    if (typeof target === 'function') { // Class Decorator, target is class constructor
       if (! enableClassDecorator) { return }
 
       const { decoratorArgs, decoratorKey } = options
@@ -62,7 +60,7 @@ export function customDecoratorFactory<TDecoratorParam extends {}>(
       })
     }
 
-    if (typeof target === 'object') { // Method Decorator
+    if (typeof target === 'object') { // Method Decorator, target is class instance
       const { decoratorKey, decoratorArgs } = options
 
       assert(decoratorKey, 'decoratorKey is undefined')
