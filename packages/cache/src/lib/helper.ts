@@ -249,6 +249,11 @@ export function genDecoratorExecutorOptions(
   assert(instanceName, 'instanceName is undefined')
   assert(methodName, 'methodName is undefined')
 
+  const conf1 = webApp.getConfig(ConfigKey.config) as unknown
+  const conf2 = webApp.getConfig('cache') as unknown
+  void conf1
+  void conf2
+
   const cacheOptions: CacheableArgs | CacheEvictArgs = {
     ...initCacheableArgs,
     ...initCacheEvictArgs,
