@@ -37,7 +37,6 @@ export function customDecoratorFactory<TDecoratorParam extends {}>(
   options: CustomDecoratorFactoryParam<TDecoratorParam>,
 ): MethodDecorator & ClassDecorator {
 
-  const { enableClassDecorator } = options
 
   const DecoratorFactory = (
     target: {},
@@ -46,6 +45,8 @@ export function customDecoratorFactory<TDecoratorParam extends {}>(
   ): PropertyDescriptor | Function | void => {
 
     assert(target, 'target is undefined')
+
+    const { enableClassDecorator } = options
 
     if (typeof target === 'function') { // Class Decorator, target is class constructor
       if (! enableClassDecorator) { return }
