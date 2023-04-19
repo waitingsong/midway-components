@@ -19,8 +19,8 @@ import {
 import { ILogger } from '@midwayjs/logger'
 import {
   Application,
-  AroundFactoryOptionsBase,
-  RegisterDecoratorHandlerOptions,
+  AroundFactoryParamBase,
+  RegisterDecoratorHandlerParam,
   registerDecoratorHandler,
 } from '@mwcp/share'
 import {
@@ -468,27 +468,27 @@ export class OtelComponent extends AbstractOtelComponent {
       }
     }
 
-    const aroundFactoryOptions: AroundFactoryOptionsBase = {
+    const aroundFactoryOptions: AroundFactoryParamBase = {
       config: this.config,
       webApp: this.app,
     }
 
-    const TraceOpts: RegisterDecoratorHandlerOptions<TraceDecoratorOptions> = {
+    const TraceOpts: RegisterDecoratorHandlerParam<TraceDecoratorOptions> = {
       decoratorKey: KEY_Trace,
       decoratorService: this.decoratorService,
-      decoratorExecutor: decoratorExecutorTrace,
-      genDecoratorExecutorOptionsFn: genDecoratorExecutorOptions,
+      fnDecoratorExecutor: decoratorExecutorTrace,
+      fnGenDecoratorExecutorOptions: genDecoratorExecutorOptions,
     }
 
     // registerMethodHandler(this.decoratorService, this.config)
     registerDecoratorHandler(TraceOpts, aroundFactoryOptions)
 
 
-    const TraceInitOpts: RegisterDecoratorHandlerOptions<TraceDecoratorOptions> = {
+    const TraceInitOpts: RegisterDecoratorHandlerParam<TraceDecoratorOptions> = {
       decoratorKey: METHOD_KEY_TraceInit,
       decoratorService: this.decoratorService,
-      decoratorExecutor: decoratorExecutorTraceInit,
-      genDecoratorExecutorOptionsFn: genDecoratorExecutorOptions,
+      fnDecoratorExecutor: decoratorExecutorTraceInit,
+      fnGenDecoratorExecutorOptions: genDecoratorExecutorOptions,
     }
     registerDecoratorHandler(TraceInitOpts, aroundFactoryOptions)
 

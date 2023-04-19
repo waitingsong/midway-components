@@ -26,6 +26,8 @@ export async function decoratorExecutor(
     // startActiveSpan,
   } = options
 
+  assert(otelComponent, 'otelComponent is required')
+
   const traceCtx = otelComponent.appInitProcessContext
   if (! otelComponent.appInitProcessSpan || ! traceCtx) {
     const resp = await method(...methodArgs)
