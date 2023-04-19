@@ -4,7 +4,7 @@ import { CacheManager } from '@midwayjs/cache'
 import type { AbstractTraceService } from '@mwcp/otel'
 import {
   Context,
-  DecoratorExecutorOptionsBase,
+  DecoratorExecutorParamBase,
 } from '@mwcp/share'
 import type { MiddlewareConfig as MWConfig } from '@waiting/shared-types'
 
@@ -140,9 +140,10 @@ export interface CacheEvictArgs<M extends MethodType | undefined = undefined> {
 export type Method = (...args: unknown[]) => Promise<unknown>
 
 export interface DecoratorExecutorOptions<T extends CacheableArgs | CacheEvictArgs = any>
-  extends DecoratorExecutorOptionsBase<T, Config> {
+  extends DecoratorExecutorParamBase<T> {
 
   traceService: AbstractTraceService | undefined
   cacheManager: CacheManager
+  config: Config
 }
 
