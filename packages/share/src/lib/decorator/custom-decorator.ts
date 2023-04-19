@@ -43,87 +43,96 @@ export function customDecoratorFactory<TDecoratorParam extends {}>(
     descriptor?: PropertyDescriptor,
   ): PropertyDescriptor | Function | void => {
 
-    assert(target, 'target is undefined')
-
-    if (typeof options.before === 'function') {
-      const opts = {
-        decoratorKey: options.decoratorKey,
-        decoratorArgs: options.decoratorArgs,
-        enableClassDecorator: options.enableClassDecorator,
-        classIgnoreIfMethodDecortaorKeys: options.classIgnoreIfMethodDecortaorKeys,
-        methodIgnoreIfMethodDecortaorKeys: options.methodIgnoreIfMethodDecortaorKeys,
-      }
-      options.before(target, propertyName, descriptor, opts)
-    }
-
-    const { enableClassDecorator } = options
-
-    if (typeof target === 'function') { // Class Decorator, target is class constructor
-      if (! enableClassDecorator) { return }
-
-      const { decoratorArgs, decoratorKey } = options
-      assert(decoratorKey, 'decoratorKey is undefined')
-      assert(typeof descriptor === 'undefined', 'descriptor is not undefined')
-
-      const opts = {
-        decoratorKey,
-        target,
-        args: decoratorArgs,
-        ignoreIfMethodDecortaorKeys: options.classIgnoreIfMethodDecortaorKeys,
-      }
-      regClassDecorator(opts)
-    }
-    else if (typeof target === 'object') { // Method Decorator, target is class instance
-      const { decoratorKey, decoratorArgs } = options
-
-      assert(decoratorKey, 'decoratorKey is undefined')
-      assert(target, 'target is undefined')
-      assert(propertyName, 'propertyName is undefined')
-      assert(descriptor, 'descriptor is undefined')
-
-      // descriptor.value is the method being decorated
-      if (typeof descriptor.value !== 'function') {
-        throw new Error(`Only method can be decorated with decorator "${decoratorKey}",
-        target: ${target.constructor.name},
-        ${propertyName} is not a method}`)
-      }
-
-      // // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      // if (descriptor.value.constructor.name !== 'AsyncFunction') {
-      //   throw new Error(`Only async method can be decorated with decorator "${decoratorKey}"
-      //   target: ${target.constructor.name}, propertyName: ${propertyName}`)
-      // }
-
-      const obj = target as InstanceOfDecorator
-      const opts = {
-        decoratorKey,
-        target: obj,
-        propertyName,
-        args: decoratorArgs,
-        method: descriptor.value,
-        ignoreIfMethodDecortaorKeys: options.methodIgnoreIfMethodDecortaorKeys,
-      }
-
-      regMethodDecorator(opts)
-      // return descriptor
-    }
-
-    if (typeof options.after === 'function') {
-      const opts = {
-        decoratorKey: options.decoratorKey,
-        decoratorArgs: options.decoratorArgs,
-        enableClassDecorator: options.enableClassDecorator,
-        classIgnoreIfMethodDecortaorKeys: options.classIgnoreIfMethodDecortaorKeys,
-        methodIgnoreIfMethodDecortaorKeys: options.methodIgnoreIfMethodDecortaorKeys,
-      }
-      options.after(target, propertyName, descriptor, opts)
-    }
-
-    // assert(false, 'Invalid decorator usage')
+    return regCustomDecorator(options, target, propertyName, descriptor)
   }
 
   // @ts-ignore
   return DecoratorFactory
+}
+
+export function regCustomDecorator<TDecoratorParam extends {}>(
+  options: CustomDecoratorFactoryParam<TDecoratorParam>,
+  target: {},
+  propertyName?: string,
+  descriptor?: PropertyDescriptor,
+): PropertyDescriptor | Function | void {
+
+  assert(target, 'target is undefined')
+
+  if (typeof options.before === 'function') {
+    const opts = {
+      decoratorKey: options.decoratorKey,
+      decoratorArgs: options.decoratorArgs,
+      enableClassDecorator: options.enableClassDecorator,
+      classIgnoreIfMethodDecortaorKeys: options.classIgnoreIfMethodDecortaorKeys,
+      methodIgnoreIfMethodDecortaorKeys: options.methodIgnoreIfMethodDecortaorKeys,
+    }
+    options.before(target, propertyName, descriptor, opts)
+  }
+
+  const { enableClassDecorator } = options
+
+  if (typeof target === 'function') { // Class Decorator, target is class constructor
+    if (! enableClassDecorator) { return }
+
+    const { decoratorArgs, decoratorKey } = options
+    assert(decoratorKey, 'decoratorKey is undefined')
+    assert(typeof descriptor === 'undefined', 'descriptor is not undefined')
+
+    const opts = {
+      decoratorKey,
+      target,
+      args: decoratorArgs,
+      ignoreIfMethodDecortaorKeys: options.classIgnoreIfMethodDecortaorKeys,
+    }
+    regClassDecorator(opts)
+  }
+  else if (typeof target === 'object') { // Method Decorator, target is class instance
+    const { decoratorKey, decoratorArgs } = options
+
+    assert(decoratorKey, 'decoratorKey is undefined')
+    assert(target, 'target is undefined')
+    assert(propertyName, 'propertyName is undefined')
+    assert(descriptor, 'descriptor is undefined')
+
+    // descriptor.value is the method being decorated
+    if (typeof descriptor.value !== 'function') {
+      throw new Error(`Only method can be decorated with decorator "${decoratorKey}",
+        target: ${target.constructor.name},
+        ${propertyName} is not a method`)
+    }
+
+    // // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    // if (descriptor.value.constructor.name !== 'AsyncFunction') {
+    //   throw new Error(`Only async method can be decorated with decorator "${decoratorKey}"
+    //   target: ${target.constructor.name}, propertyName: ${propertyName}`)
+    // }
+
+    const obj = target as InstanceOfDecorator
+    const opts = {
+      decoratorKey,
+      target: obj,
+      propertyName,
+      args: decoratorArgs,
+      method: descriptor.value,
+      ignoreIfMethodDecortaorKeys: options.methodIgnoreIfMethodDecortaorKeys,
+    }
+
+    regMethodDecorator(opts)
+    // return descriptor
+  }
+
+  if (typeof options.after === 'function') {
+    const opts = {
+      decoratorKey: options.decoratorKey,
+      decoratorArgs: options.decoratorArgs,
+      enableClassDecorator: options.enableClassDecorator,
+      classIgnoreIfMethodDecortaorKeys: options.classIgnoreIfMethodDecortaorKeys,
+      methodIgnoreIfMethodDecortaorKeys: options.methodIgnoreIfMethodDecortaorKeys,
+    }
+    options.after(target, propertyName, descriptor, opts)
+  }
+
 }
 
 
