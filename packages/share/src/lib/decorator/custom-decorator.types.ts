@@ -45,7 +45,7 @@ export interface DecoratorExecutorParamBase<
   argsFromClassDecorator: Partial<DecoratorMetaDataPayload<TDecoratorParam>> | undefined
   argsFromMethodDecorator: Partial<DecoratorMetaDataPayload<TDecoratorParam>> | undefined
   /** Merged from argsFromClassDecorator and argsFromMethodDecorator */
-  mergedDecoratorParam: DecoratorMetaDataPayload<TDecoratorParam>
+  mergedDecoratorParam: DecoratorMetaDataPayload<TDecoratorParam> | undefined
   decoratorKey: string
   /** 装饰器所在类实例 */
   instance: InstanceOfDecorator
@@ -157,7 +157,7 @@ export interface AopCallbackInputArgsType<TDecoratorParam extends {} = {}> {
   /** 装饰器所在的类原型 */
   target: Function
   propertyName: string
-  metadata: Partial<TDecoratorParam> & DecoratedTypeMeta
+  metadata: DecoratorMetaDataPayload<TDecoratorParam>
 }
 
 

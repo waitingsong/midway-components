@@ -289,21 +289,21 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
 
   decoratorService.registerMethodHandler(
     decoratorKey,
-    (aopCallbackInputOptions: AopCallbackInputArgsType) => {
-      const argsFromClassDecoratorArray = retrieveMetadataPayloadsOnClass(
+    (aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorParam>) => {
+      const argsFromClassDecoratorArray = retrieveMetadataPayloadsOnClass<TDecoratorParam>(
         aopCallbackInputOptions.target,
         decoratorKey,
         aopCallbackInputOptions.propertyName,
       )
-      const mergedDecoratorParam = mergeDecoratorMetaDataPayload(
+      const mergedDecoratorParam = mergeDecoratorMetaDataPayload<TDecoratorParam>(
         argsFromClassDecoratorArray,
         aopCallbackInputOptions.metadata,
       )
-      const { metadata } = aopCallbackInputOptions
+      // const { metadata } = aopCallbackInputOptions
 
       return {
         around: (joinPoint: JoinPoint) => {
-          const baseOpts: Partial<DecoratorExecutorParamBase<any>> = {
+          const baseOpts: Partial<DecoratorExecutorParamBase<TDecoratorParam>> = {
             ...aroundFactoryOptions,
             decoratorKey,
           }
@@ -314,12 +314,12 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
           const opts2 = genDecoratorExecutorOptionsCommon<TDecoratorParam>(
             joinPoint,
             baseOpts,
-            metadata,
+            // metadata,
+            void 0,
           )
           const executorParamBase: DecoratorExecutorParamBase<TDecoratorParam> = {
             ...opts2,
-            // @ts-expect-error
-            mergedDecoratorParam: mergedDecoratorParam ?? {},
+            mergedDecoratorParam,
           }
 
           const executorParam = typeof genDecoratorExecutorParam === 'function'
@@ -402,7 +402,7 @@ export function genDecoratorExecutorOptionsCommon<TDecoratorParam extends {} = {
   assert(decoratorKey, 'decoratorKey is undefined')
 
   let { mergedDecoratorParam } = baseOptions
-  if (! mergedDecoratorParam) {
+  if (! mergedDecoratorParam && metaData) {
     const argsFromClassDecoratorArray = retrieveMetadataPayloadsOnClass<TDecoratorParam>(
       instance,
       decoratorKey,
@@ -410,15 +410,14 @@ export function genDecoratorExecutorOptionsCommon<TDecoratorParam extends {} = {
     )
     mergedDecoratorParam = mergeDecoratorMetaDataPayload<TDecoratorParam>(
       argsFromClassDecoratorArray,
-      // @ts-expect-error
       metaData,
     )
   }
 
+  // @ts-expect-error
   const opts: DecoratorExecutorParamBase<TDecoratorParam> = {
     ...baseOptions,
-    // @ts-expect-error
-    mergedDecoratorParam: {},
+    mergedDecoratorParam,
     decoratorKey,
     instance: target,
     instanceName: callerClass,
