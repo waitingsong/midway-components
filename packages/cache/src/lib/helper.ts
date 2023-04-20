@@ -156,8 +156,8 @@ export function computerConditionValue(
   options: DecoratorExecutorOptions<CacheableArgs | CacheEvictArgs>,
 ): boolean | Promise<boolean> {
 
-  const { argsFromMethodDecorator: cacheOptions } = options
-  assert(cacheOptions, 'cacheOptions is undefined')
+  const { mergedDecoratorParam: cacheOptions } = options
+  assert(cacheOptions, 'cacheOptions is undefined within computerConditionValue()')
 
   const webContext = options.instance[REQUEST_OBJ_CTX_KEY]
   assert(webContext, 'webContext is undefined')
@@ -188,8 +188,8 @@ export function computerTTLValue(
   options: DecoratorExecutorOptions<CacheableArgs>,
 ): number | Promise<number> {
 
-  const { argsFromMethodDecorator: cacheOptions } = options
-  assert(cacheOptions, 'cacheOptions is undefined')
+  const { mergedDecoratorParam: cacheOptions } = options
+  assert(cacheOptions, 'cacheOptions is undefined within computerTTLValue()')
 
   const webContext = options.instance[REQUEST_OBJ_CTX_KEY]
   assert(webContext, 'webContext is undefined')
