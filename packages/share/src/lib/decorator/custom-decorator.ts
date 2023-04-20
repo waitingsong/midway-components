@@ -35,12 +35,12 @@ import type {
 
 export function customDecoratorFactory<TDecoratorParam extends {}>(
   options: CustomDecoratorFactoryParam<TDecoratorParam>,
-): MethodDecorator | ClassDecorator {
+): MethodDecorator & ClassDecorator {
 
   const DecoratorFactory = (
     target: Object | Function,
     propertyName: PropertyKey,
-    descriptor: TypedPropertyDescriptor<any>,
+    descriptor?: TypedPropertyDescriptor<any>,
   ) => regCustomDecorator(options, target, propertyName, descriptor)
 
   // @ts-expect-error
@@ -51,7 +51,7 @@ export function regCustomDecorator<TDecoratorParam extends {}>(
   options: CustomDecoratorFactoryParam<TDecoratorParam>,
   target: Object | Function,
   propertyName: PropertyKey,
-  descriptor: TypedPropertyDescriptor<any>,
+  descriptor?: TypedPropertyDescriptor<any>,
 ): TypedPropertyDescriptor<any> | Function | void {
 
   assert(target, 'target is undefined')
@@ -116,7 +116,6 @@ export function regCustomDecorator<TDecoratorParam extends {}>(
     }
 
     regMethodDecorator(opts)
-    // return descriptor
   }
 
   if (typeof options.after === 'function') {
