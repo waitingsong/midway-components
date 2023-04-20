@@ -22,21 +22,21 @@ export async function decoratorExecutor(
     ...initCacheEvictArgs,
     ...mergedDecoratorParam,
   }
-  const opts2 = {
-    ...options,
-    mergedDecoratorParam: cacheOptions,
-  }
-
-  const opts3: GenCacheKeyOptions = {
+  const opts2: GenCacheKeyOptions = {
     ...cacheOptions,
-    methodArgs: opts2.methodArgs,
-    methodResult: opts2.methodResult,
+    methodArgs: options.methodArgs,
+    methodResult: options.methodResult,
     webContext,
   }
-  const cacheKey = genCacheKey(opts3)
+  const cacheKey = genCacheKey(opts2)
 
   try {
-    const tmp = computerConditionValue(opts2)
+    const opts3 = {
+      ...options,
+      mergedDecoratorParam: cacheOptions,
+    }
+
+    const tmp = computerConditionValue(opts3)
     const enableEvict = typeof tmp === 'boolean' ? tmp : await tmp
     assert(typeof enableEvict === 'boolean', 'condition must return boolean')
 
@@ -44,7 +44,7 @@ export async function decoratorExecutor(
       await deleteData(cacheManager, cacheKey)
     }
 
-    const { method, methodArgs, methodIsAsyncFunction } = opts2
+    const { method, methodArgs, methodIsAsyncFunction } = opts3
     assert(methodIsAsyncFunction, 'decorated method must be async function')
     const resp = await method(...methodArgs)
 
@@ -54,7 +54,7 @@ export async function decoratorExecutor(
       }
       else {
         const ps: DecoratorExecutorOptions<CacheEvictArgs> = {
-          ...opts2,
+          ...opts3,
           methodResult: resp,
         }
         const tmp2 = computerConditionValue(ps)
@@ -63,7 +63,7 @@ export async function decoratorExecutor(
         if (enableEvict2) {
         // re-generate cache key, because CacheConditionFn use result of method
           const opts4: GenCacheKeyOptions = {
-            ...opts3,
+            ...opts2,
             methodResult: resp,
           }
           const cacheKey2 = genCacheKey(opts4)

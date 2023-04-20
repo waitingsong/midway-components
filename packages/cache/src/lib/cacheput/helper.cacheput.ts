@@ -29,38 +29,39 @@ export async function decoratorExecutor(
     ...initCachePutArgs,
     ...mergedDecoratorParam,
   }
-  const opts2 = {
-    ...options,
-    mergedDecoratorParam: cacheOptions,
-  }
 
-  const opts3: GenCacheKeyOptions = {
+  const opts2: GenCacheKeyOptions = {
     ...cacheOptions,
-    methodArgs: opts2.methodArgs,
-    methodResult: opts2.methodResult,
+    methodArgs: options.methodArgs,
+    methodResult: options.methodResult,
     webContext,
   }
-  const cacheKey = genCacheKey(opts3)
+  const cacheKey = genCacheKey(opts2)
 
   try {
-    const { method, methodArgs } = opts2
+    const opts3 = {
+      ...options,
+      mergedDecoratorParam: cacheOptions,
+    }
+    const { method, methodArgs } = opts3
     const resp = await method(...methodArgs)
 
     const cvalue = computerConditionValue({
-      ...opts2,
+      ...opts3,
       methodResult: resp,
     })
+
     const enableCache = typeof cvalue === 'boolean' ? cvalue : await cvalue
     assert(typeof enableCache === 'boolean', 'condition must return boolean')
 
-    const ttl = await computerTTLValue(resp as CachedResponse, opts2)
+    const ttl = await computerTTLValue(resp as CachedResponse, opts3)
 
     if (enableCache && ttl > 0) {
       await saveData(cacheManager, cacheKey, resp, ttl)
     }
 
     if (typeof resp === 'object' && resp) {
-      const resp2 = genDataWithCacheMeta(resp as CachedResponse, opts3, ttl)
+      const resp2 = genDataWithCacheMeta(resp as CachedResponse, opts2, ttl)
       return resp2
     }
 

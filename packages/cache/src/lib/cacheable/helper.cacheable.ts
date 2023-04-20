@@ -30,40 +30,40 @@ export async function decoratorExecutor(
     ...initCacheableArgs,
     ...mergedDecoratorParam,
   }
-  const opts2 = {
-    ...options,
-    mergedDecoratorParam: cacheOptions,
-  }
-
-  const opts3: GenCacheKeyOptions = {
+  const opts2: GenCacheKeyOptions = {
     ...cacheOptions,
-    methodArgs: opts2.methodArgs,
-    methodResult: opts2.methodResult,
+    methodArgs: options.methodArgs,
+    methodResult: options.methodResult,
     webContext,
   }
-  const cacheKey = genCacheKey(opts3)
+  const cacheKey = genCacheKey(opts2)
 
   try {
-    const tmp = computerConditionValue(opts2)
+    const opts4 = {
+      ...options,
+      mergedDecoratorParam: cacheOptions,
+    }
+
+    const tmp = computerConditionValue(opts4)
     const enableCache = typeof tmp === 'boolean' ? tmp : await tmp
     assert(typeof enableCache === 'boolean', 'condition must return boolean')
 
     let cacheResp: CachedResponse | undefined = void 0
     if (enableCache) {
-      cacheResp = await getData(cacheManager, cacheKey, opts2.traceService)
+      cacheResp = await getData(cacheManager, cacheKey, opts4.traceService)
     }
 
     if (typeof cacheResp !== 'undefined') {
-      const resp = genDataWithCacheMeta(cacheResp as CachedResponse, opts3)
+      const resp = genDataWithCacheMeta(cacheResp as CachedResponse, opts2)
       return resp
     }
 
-    const { method, methodArgs, methodIsAsyncFunction } = opts2
+    const { method, methodArgs, methodIsAsyncFunction } = opts4
     assert(methodIsAsyncFunction, 'decorated method must be async function')
 
     const resp = await method(...methodArgs)
 
-    const ttl = await computerTTLValue(resp as CachedResponse, opts2)
+    const ttl = await computerTTLValue(resp as CachedResponse, opts4)
     if (enableCache && ttl > 0 && typeof resp !== 'undefined') {
       await saveData(cacheManager, cacheKey, resp, ttl)
     }
