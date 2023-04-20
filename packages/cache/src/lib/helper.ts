@@ -250,11 +250,13 @@ export function genDecoratorExecutorOptions(
   const config = webApp.getConfig('cache') as Config
   assert(config, 'cache config is undefined')
 
-  const cacheOptions: CacheableArgs | CacheEvictArgs = {
+  const cacheOptions: CacheableArgs = {
     ...initCacheableArgs,
     ...initCacheEvictArgs,
     ...mergedDecoratorParam,
-    ttl: config.options.ttl,
+  }
+  if (typeof cacheOptions.ttl === 'undefined') {
+    cacheOptions.ttl = config.options.ttl
   }
 
   if (typeof cacheOptions.cacheName === 'undefined' || ! cacheOptions.cacheName) {
