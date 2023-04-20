@@ -48,8 +48,7 @@ export function customDecoratorFactory<TDecoratorParam extends {}>(
 }
 
 export function regCustomDecorator<TDecoratorParam extends {}>(
-  /** Object | Function */
-  target: unknown,
+  target: Object | Function,
   propertyName: PropertyKey,
   descriptor: TypedPropertyDescriptor<any> | undefined,
   options: CustomDecoratorFactoryParam<TDecoratorParam>,
@@ -123,7 +122,7 @@ export function regCustomDecorator<TDecoratorParam extends {}>(
 }
 
 
-export function regMethodDecorator<TDecoratorParam extends {} = any>(
+function regMethodDecorator<TDecoratorParam extends {} = any>(
   options: CustomMethodDecoratorParam<TDecoratorParam>,
 ): void {
 
@@ -178,7 +177,7 @@ export function regMethodDecorator<TDecoratorParam extends {} = any>(
 }
 
 
-export function regClassDecorator<TDecoratorParam extends {}>(
+function regClassDecorator<TDecoratorParam extends {}>(
   options: CustomClassDecoratorParam<TDecoratorParam>,
 ): void {
 

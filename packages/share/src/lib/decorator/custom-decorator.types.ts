@@ -127,8 +127,7 @@ export interface CustomDecoratorFactoryParam<TDecoratorParam extends {}> {
 }
 
 export type FnRegCustomDecorator<TDecoratorParam extends {}> = (
-  /** Object | Function */
-  target: unknown,
+  target: Object | Function,
   propertyName: PropertyKey,
   descriptor: TypedPropertyDescriptor<any> | undefined,
   options: CustomDecoratorFactoryParam<TDecoratorParam>,
