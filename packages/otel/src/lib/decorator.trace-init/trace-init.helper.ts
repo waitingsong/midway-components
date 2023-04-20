@@ -61,34 +61,39 @@ export async function decoratorExecutor(
     traceSpan: span,
   }
 
-  const { before, after } = mergedDecoratorParam
+  if (mergedDecoratorParam) {
+    const { before } = mergedDecoratorParam
 
-  if (before && typeof before === 'function') {
-    if (isAsyncFunction(before)) {
+    if (before && typeof before === 'function') {
+      if (isAsyncFunction(before)) {
       // @ts-expect-error
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      await before(methodArgs, decoratorContext)
-    }
-    else {
+        await before(methodArgs, decoratorContext)
+      }
+      else {
       // @ts-expect-error
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      before(methodArgs, decoratorContext)
+        before(methodArgs, decoratorContext)
+      }
     }
   }
 
   // execute method
   const resp = await method(...methodArgs)
 
-  if (after && typeof after === 'function') {
-    if (isAsyncFunction(after)) {
+  if (mergedDecoratorParam) {
+    const { after } = mergedDecoratorParam
+    if (after && typeof after === 'function') {
+      if (isAsyncFunction(after)) {
       // @ts-expect-error
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      await after(methodArgs, decoratorContext)
-    }
-    else {
+        await after(methodArgs, decoratorContext)
+      }
+      else {
       // @ts-expect-error
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      after(methodArgs, decoratorContext)
+        after(methodArgs, decoratorContext)
+      }
     }
   }
 
