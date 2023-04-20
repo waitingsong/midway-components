@@ -35,27 +35,24 @@ import type {
 
 export function customDecoratorFactory<TDecoratorParam extends {}>(
   options: CustomDecoratorFactoryParam<TDecoratorParam>,
-): MethodDecorator & ClassDecorator {
+): MethodDecorator | ClassDecorator {
 
   const DecoratorFactory = (
-    target: {},
-    propertyName?: string,
-    descriptor?: PropertyDescriptor,
-  ): PropertyDescriptor | Function | void => {
+    target: Object | Function,
+    propertyName: PropertyKey,
+    descriptor: TypedPropertyDescriptor<any>,
+  ) => regCustomDecorator(options, target, propertyName, descriptor)
 
-    return regCustomDecorator(options, target, propertyName, descriptor)
-  }
-
-  // @ts-ignore
+  // @ts-expect-error
   return DecoratorFactory
 }
 
 export function regCustomDecorator<TDecoratorParam extends {}>(
   options: CustomDecoratorFactoryParam<TDecoratorParam>,
-  target: {},
-  propertyName?: string,
-  descriptor?: PropertyDescriptor,
-): PropertyDescriptor | Function | void {
+  target: Object | Function,
+  propertyName: PropertyKey,
+  descriptor: TypedPropertyDescriptor<any>,
+): TypedPropertyDescriptor<any> | Function | void {
 
   assert(target, 'target is undefined')
 
@@ -99,7 +96,7 @@ export function regCustomDecorator<TDecoratorParam extends {}>(
     if (typeof descriptor.value !== 'function') {
       throw new Error(`Only method can be decorated with decorator "${decoratorKey}",
         target: ${target.constructor.name},
-        ${propertyName} is not a method`)
+        ${propertyName.toString()} is not a method`)
     }
 
     // // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -112,7 +109,7 @@ export function regCustomDecorator<TDecoratorParam extends {}>(
     const opts = {
       decoratorKey,
       target: obj,
-      propertyName,
+      propertyName: propertyName.toString(),
       args: decoratorArgs,
       method: descriptor.value,
       ignoreIfMethodDecortaorKeys: options.methodIgnoreIfMethodDecortaorKeys,
