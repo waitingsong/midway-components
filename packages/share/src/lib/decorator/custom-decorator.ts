@@ -299,6 +299,7 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
         argsFromClassDecoratorArray,
         aopCallbackInputOptions.metadata,
       )
+      const { metadata } = aopCallbackInputOptions
 
       return {
         around: (joinPoint: JoinPoint) => {
@@ -310,6 +311,7 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
           const opts2 = genDecoratorExecutorOptionsCommon<TDecoratorParam>(
             joinPoint,
             baseOpts,
+            metadata,
           )
           const executorParamBase: DecoratorExecutorParamBase<TDecoratorParam> = {
             ...opts2,
@@ -369,6 +371,7 @@ function runSync<TDecoratorParam extends {} = {}>(
 export function genDecoratorExecutorOptionsCommon<TDecoratorParam extends {} = {}>(
   joinPoint: JoinPoint,
   baseOptions: Partial<DecoratorExecutorParamBase<TDecoratorParam>> = {},
+  metaData?: AopCallbackInputArgsType<TDecoratorParam>['metadata'] | undefined,
 ): DecoratorExecutorParamBase<TDecoratorParam> {
 
   assert(baseOptions, 'baseOptions is required')
@@ -378,12 +381,12 @@ export function genDecoratorExecutorOptionsCommon<TDecoratorParam extends {} = {
   assert(typeof joinPoint.proceed === 'function', 'joinPoint.proceed is not funtion')
 
   // 装饰器所在的类实例
-  const instance = joinPoint.target
+  const instance = joinPoint.target as InstanceOfDecorator
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   const webContext = baseOptions.webContext ?? instance[REQUEST_OBJ_CTX_KEY] as WebContext | undefined
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  const callerClass = instance.constructor?.name ?? ''
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unnecessary-condition
+  const callerClass = instance.constructor.name ?? ''
   const callerMethod = joinPoint.methodName
   const { args, target } = joinPoint
 
@@ -395,21 +398,19 @@ export function genDecoratorExecutorOptionsCommon<TDecoratorParam extends {} = {
   const decoratorKey = baseOptions.decoratorKey ?? ''
   assert(decoratorKey, 'decoratorKey is undefined')
 
-  // if (! baseOptions.argsFromClassDecorator) {
-  //   baseOptions.argsFromClassDecorator = getClassMetadata(
-  //     decoratorKey,
-  //     instance,
-  //   ) as Partial<TDecoratorParam> | undefined
-  // }
-
-  // if (! baseOptions.argsFromMethodDecorator) {
-  //   baseOptions.argsFromMethodDecorator = metaData
-  // }
-
-  // const mergedDecoratorParam = deepmerge.all([
-  //   baseOptions.argsFromClassDecorator ?? {},
-  //   baseOptions.argsFromMethodDecorator,
-  // ])
+  let { mergedDecoratorParam } = baseOptions
+  if (! mergedDecoratorParam) {
+    const argsFromClassDecoratorArray = retrieveMetadataPayloadsOnClass<TDecoratorParam>(
+      instance,
+      decoratorKey,
+      callerMethod,
+    )
+    mergedDecoratorParam = mergeDecoratorMetaDataPayload<TDecoratorParam>(
+      argsFromClassDecoratorArray,
+      // @ts-expect-error
+      metaData,
+    )
+  }
 
   const opts: DecoratorExecutorParamBase<TDecoratorParam> = {
     ...baseOptions,
