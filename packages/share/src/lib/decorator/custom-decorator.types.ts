@@ -122,10 +122,17 @@ export interface CustomDecoratorFactoryParam<TDecoratorParam extends {}> {
    *  pass [METHOD_KEY_Cacheable], then the method decorated by @Cacheable with impl:false.
    */
   methodIgnoreIfMethodDecortaorKeys?: string[]
-  before?: Method
-  after?: Method
+  before?: FnRegCustomDecorator<TDecoratorParam>
+  after?: FnRegCustomDecorator<TDecoratorParam>
 }
 
+export type FnRegCustomDecorator<TDecoratorParam extends {}> = (
+  /** Object | Function */
+  target: unknown,
+  propertyName: PropertyKey,
+  descriptor: TypedPropertyDescriptor<any> | undefined,
+  options: CustomDecoratorFactoryParam<TDecoratorParam>,
+) => void
 
 export interface RegisterDecoratorHandlerParam<TDecoratorParam extends {} = any> {
   /**

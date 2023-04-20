@@ -40,37 +40,35 @@ export function customDecoratorFactory<TDecoratorParam extends {}>(
   const DecoratorFactory = (
     target: Object | Function,
     propertyName: PropertyKey,
-    descriptor?: TypedPropertyDescriptor<any>,
-  ) => regCustomDecorator(options, target, propertyName, descriptor)
+    descriptor?: TypedPropertyDescriptor<any> | undefined,
+  ) => regCustomDecorator(target, propertyName, descriptor, options)
 
   // @ts-expect-error
   return DecoratorFactory
 }
 
 export function regCustomDecorator<TDecoratorParam extends {}>(
-  options: CustomDecoratorFactoryParam<TDecoratorParam>,
-  target: Object | Function,
+  /** Object | Function */
+  target: unknown,
   propertyName: PropertyKey,
-  descriptor?: TypedPropertyDescriptor<any>,
+  descriptor: TypedPropertyDescriptor<any> | undefined,
+  options: CustomDecoratorFactoryParam<TDecoratorParam>,
 ): void {
 
   assert(target, 'target is undefined')
 
+  const beforeAfterOpts: CustomDecoratorFactoryParam<TDecoratorParam> = {
+    ...options,
+  }
+  delete beforeAfterOpts.before
+  delete beforeAfterOpts.after
+
   if (typeof options.before === 'function') {
-    const opts = {
-      decoratorKey: options.decoratorKey,
-      decoratorArgs: options.decoratorArgs,
-      enableClassDecorator: options.enableClassDecorator,
-      classIgnoreIfMethodDecortaorKeys: options.classIgnoreIfMethodDecortaorKeys,
-      methodIgnoreIfMethodDecortaorKeys: options.methodIgnoreIfMethodDecortaorKeys,
-    }
-    options.before(target, propertyName, descriptor, opts)
+    options.before(target, propertyName, descriptor, beforeAfterOpts)
   }
 
-  const { enableClassDecorator } = options
-
   if (typeof target === 'function') { // Class Decorator, target is class constructor
-    if (! enableClassDecorator) { return }
+    if (! options.enableClassDecorator) { return }
 
     const { decoratorArgs, decoratorKey } = options
     assert(decoratorKey, 'decoratorKey is undefined')
@@ -119,14 +117,7 @@ export function regCustomDecorator<TDecoratorParam extends {}>(
   }
 
   if (typeof options.after === 'function') {
-    const opts = {
-      decoratorKey: options.decoratorKey,
-      decoratorArgs: options.decoratorArgs,
-      enableClassDecorator: options.enableClassDecorator,
-      classIgnoreIfMethodDecortaorKeys: options.classIgnoreIfMethodDecortaorKeys,
-      methodIgnoreIfMethodDecortaorKeys: options.methodIgnoreIfMethodDecortaorKeys,
-    }
-    options.after(target, propertyName, descriptor, opts)
+    options.after(target, propertyName, descriptor, beforeAfterOpts)
   }
 
 }
