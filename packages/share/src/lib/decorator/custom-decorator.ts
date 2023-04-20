@@ -383,6 +383,9 @@ export function genDecoratorExecutorOptionsCommon<TDecoratorParam extends {} = {
   assert(joinPoint.proceed, 'joinPoint.proceed is undefined')
   assert(typeof joinPoint.proceed === 'function', 'joinPoint.proceed is not funtion')
 
+  const decoratorKey = baseOptions.decoratorKey ?? ''
+  assert(decoratorKey, 'baseOptions.decoratorKey is undefined')
+
   // 装饰器所在的类实例
   const instance = joinPoint.target as InstanceOfDecorator
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
@@ -397,9 +400,6 @@ export function genDecoratorExecutorOptionsCommon<TDecoratorParam extends {} = {
   const func = joinPoint.proceed.bind(void 0)
 
   assert(typeof func === 'function', 'Func referencing joinPoint.proceed is not function')
-
-  const decoratorKey = baseOptions.decoratorKey ?? ''
-  assert(decoratorKey, 'decoratorKey is undefined')
 
   let { mergedDecoratorParam } = baseOptions
   if (! mergedDecoratorParam && metaData) {
