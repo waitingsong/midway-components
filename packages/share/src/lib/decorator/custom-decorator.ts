@@ -52,7 +52,7 @@ export function regCustomDecorator<TDecoratorParam extends {}>(
   target: Object | Function,
   propertyName: PropertyKey,
   descriptor?: TypedPropertyDescriptor<any>,
-): TypedPropertyDescriptor<any> | Function | void {
+): void {
 
   assert(target, 'target is undefined')
 
