@@ -303,9 +303,12 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
 
       return {
         around: (joinPoint: JoinPoint) => {
-          const baseOpts = {
+          const baseOpts: Partial<DecoratorExecutorParamBase<any>> = {
             ...aroundFactoryOptions,
             decoratorKey,
+          }
+          if (mergedDecoratorParam) {
+            baseOpts.mergedDecoratorParam = mergedDecoratorParam
           }
 
           const opts2 = genDecoratorExecutorOptionsCommon<TDecoratorParam>(
