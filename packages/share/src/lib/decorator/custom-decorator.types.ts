@@ -17,14 +17,18 @@ export type InstanceOfDecorator = (new (...args: unknown[]) => unknown) & {
 }
 export type DecoratedType = 'class' | 'method'
 export interface DecoratedTypeMeta {
+  /** 装饰器应用类型(不可枚举) */
   decoratedType?: DecoratedType
 }
 
-export interface DecoratorMetaData<T = unknown> {
+export type DecoratorMetaDataPayload<TDecoratorParam extends {} = {}>
+= TDecoratorParam & DecoratedTypeMeta
+
+export interface DecoratorMetaData<T extends {} = {}> {
   propertyName: string
   /** decorator key */
   key: string
-  metadata: T & DecoratedTypeMeta
+  metadata: DecoratorMetaDataPayload<T>
   options: MethodDecoratorOptions | undefined
 }
 export type Method = (...args: unknown[]) => unknown | Promise<unknown>
@@ -38,10 +42,10 @@ export interface DecoratorExecutorParamBase<
   TDecoratorParam extends {} = {}
 > extends AroundFactoryParamBase {
 
-  argsFromClassDecorator: (Partial<TDecoratorParam> & DecoratedTypeMeta) | undefined
-  argsFromMethodDecorator: (Partial<TDecoratorParam> & DecoratedTypeMeta) | undefined
+  argsFromClassDecorator: Partial<DecoratorMetaDataPayload<TDecoratorParam>> | undefined
+  argsFromMethodDecorator: Partial<DecoratorMetaDataPayload<TDecoratorParam>> | undefined
   /** Merged from argsFromClassDecorator and argsFromMethodDecorator */
-  mergedDecoratorParam: TDecoratorParam & DecoratedTypeMeta
+  mergedDecoratorParam: DecoratorMetaDataPayload<TDecoratorParam>
   decoratorKey: string
   /** 装饰器所在类实例 */
   instance: InstanceOfDecorator
@@ -150,8 +154,8 @@ export type FnGenDecoratorExecutorParam<T extends {} = any>
 
 
 export interface AopCallbackInputArgsType<TDecoratorParam extends {} = {}> {
-  /** 装饰器所在的实例 */
-  target: InstanceOfDecorator
+  /** 装饰器所在的类原型 */
+  target: Function
   propertyName: string
   metadata: Partial<TDecoratorParam> & DecoratedTypeMeta
 }
