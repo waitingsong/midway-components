@@ -65,26 +65,27 @@ export class AutoConfiguration implements ILifeCycle {
     const base = {
       decoratorService: this.decoratorService,
       fnGenDecoratorExecutorParam: genDecoratorExecutorOptions,
-    }
+      fnDecoratorExecutorSync: false,
+    } as const
 
     const optsCacheable: RegisterDecoratorHandlerParam = {
       ...base,
       decoratorKey: METHOD_KEY_Cacheable,
-      fnDecoratorExecutor: decoratorExecutor,
+      fnDecoratorExecutorAsync: decoratorExecutor,
     }
     registerDecoratorHandler(optsCacheable, aroundFactoryOptions)
 
     const optsCacheEvict: RegisterDecoratorHandlerParam = {
       ...base,
       decoratorKey: METHOD_KEY_CacheEvict,
-      fnDecoratorExecutor: decoratorExecutorEvict,
+      fnDecoratorExecutorAsync: decoratorExecutorEvict,
     }
     registerDecoratorHandler(optsCacheEvict, aroundFactoryOptions)
 
     const optsCachePut: RegisterDecoratorHandlerParam = {
       ...base,
       decoratorKey: METHOD_KEY_CachePut,
-      fnDecoratorExecutor: decoratorExecutorPut,
+      fnDecoratorExecutorAsync: decoratorExecutorPut,
     }
     registerDecoratorHandler(optsCachePut, aroundFactoryOptions)
 

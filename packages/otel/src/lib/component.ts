@@ -43,7 +43,10 @@ import type { NpmPkg } from '@waiting/shared-types'
 import { AbstractOtelComponent } from './abstract'
 import { initSpanStatusOptions } from './config'
 import { KEY_Trace } from './decorator.trace/trace'
-import { decoratorExecutor as decoratorExecutorTrace } from './decorator.trace/trace.helper'
+import {
+  decoratorExecutorAsync as decoratorExecutorTraceAsync,
+  decoratorExecutorSync as decoratorExecutorTraceSync,
+} from './decorator.trace/trace.helper'
 import { METHOD_KEY_TraceInit } from './decorator.trace-init/trace-init'
 import { decoratorExecutor as decoratorExecutorTraceInit } from './decorator.trace-init/trace-init.helper'
 import { TraceDecoratorOptions } from './decorator.types'
@@ -476,7 +479,8 @@ export class OtelComponent extends AbstractOtelComponent {
     const TraceOpts: RegisterDecoratorHandlerParam<TraceDecoratorOptions> = {
       decoratorKey: KEY_Trace,
       decoratorService: this.decoratorService,
-      fnDecoratorExecutor: decoratorExecutorTrace,
+      fnDecoratorExecutorAsync: decoratorExecutorTraceAsync,
+      fnDecoratorExecutorSync: decoratorExecutorTraceSync,
       fnGenDecoratorExecutorParam: genDecoratorExecutorOptions,
     }
     registerDecoratorHandler(TraceOpts, aroundFactoryOptions)
@@ -484,7 +488,8 @@ export class OtelComponent extends AbstractOtelComponent {
     const TraceInitOpts: RegisterDecoratorHandlerParam<TraceDecoratorOptions> = {
       decoratorKey: METHOD_KEY_TraceInit,
       decoratorService: this.decoratorService,
-      fnDecoratorExecutor: decoratorExecutorTraceInit,
+      fnDecoratorExecutorAsync: decoratorExecutorTraceInit,
+      fnDecoratorExecutorSync: false,
       fnGenDecoratorExecutorParam: genDecoratorExecutorOptions,
     }
     registerDecoratorHandler(TraceInitOpts, aroundFactoryOptions)
