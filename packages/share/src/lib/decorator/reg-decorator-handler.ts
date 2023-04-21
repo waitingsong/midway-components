@@ -48,8 +48,7 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
   decoratorService.registerMethodHandler(
     decoratorKey,
     (aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorParam>) => {
-      const foo = aopCallbackInputOptions.target
-      console.log({ foo })
+
       const argsFromClassDecoratorArray = retrieveMetadataPayloadsOnClass<TDecoratorParam>(
         aopCallbackInputOptions.target,
         decoratorKey,
@@ -61,6 +60,41 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
       )
       // const { metadata } = aopCallbackInputOptions
 
+      const { target, propertyName } = aopCallbackInputOptions
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      const instanceName = target.name ?? target.constructor.name ?? 'anonymous'
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      const method = target.prototype[propertyName]
+
+      const isAsyncFunc = isAsyncFunction(method)
+      if (isAsyncFunc) {
+        if (executorAsync === false) {
+          throw new TypeError(`Async method ${instanceName}.${propertyName}() is not supported`)
+        }
+        assert(typeof executorAsync === 'function', 'fnDecoratorExecutorAsync must be function')
+        assert(isAsyncFunction(executorAsync), 'fnDecoratorExecutorAsync must be async function')
+
+        return {
+          around: async (joinPoint: JoinPoint) => {
+            const executorParam = prepareOptions<TDecoratorParam>(
+              decoratorKey,
+              aroundFactoryOptions,
+              joinPoint,
+              mergedDecoratorParam,
+              genDecoratorExecutorParam,
+            )
+
+            assert(executorParam.methodIsAsyncFunction === true, 'methodIsAsyncFunction must be true')
+            const ret = await executorAsync(executorParam)
+            return ret
+          },
+        }
+      } // async
+
+      // sync
+      if (executorSync === false) {
+        throw new TypeError(`Sync method ${instanceName}.${propertyName}() is not supported`)
+      }
       return {
         around: (joinPoint: JoinPoint) => {
           const executorParam = prepareOptions<TDecoratorParam>(
@@ -71,27 +105,13 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
             genDecoratorExecutorParam,
           )
 
-          if (executorParam.methodIsAsyncFunction) {
-            if (executorAsync === false) {
-              throw new TypeError(`Async method ${executorParam.instanceName}.${executorParam.methodName}() is not supported`)
-            }
-            assert(typeof executorAsync === 'function', 'fnDecoratorExecutorAsync must be function')
-            assert(isAsyncFunction(executorAsync), 'fnDecoratorExecutorAsync must be async function')
-
-            const ret = executorAsync(executorParam)
-            return ret
-          }
-
-          if (executorSync === false) {
-            throw new TypeError(`Sync method ${executorParam.instanceName}.${executorParam.methodName}() is not supported`)
-          }
+          assert(executorParam.methodIsAsyncFunction === false, 'methodIsAsyncFunction must be false')
           const ret = executorSync(executorParam)
           return ret
         },
       }
     },
   )
-
 }
 
 
