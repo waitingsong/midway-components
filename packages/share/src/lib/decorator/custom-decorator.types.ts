@@ -1,57 +1,72 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
 import {
-  JoinPoint,
   MethodDecoratorOptions,
   MidwayDecoratorService,
   REQUEST_OBJ_CTX_KEY,
 } from '@midwayjs/core'
+import { MethodType } from '@waiting/shared-types'
 
 import { Application, Context } from '../types.js'
 
 
 /** 装饰器所在的实例 */
 export type InstanceOfDecorator = (new (...args: unknown[]) => unknown) & {
+  /** web context */
   [REQUEST_OBJ_CTX_KEY]?: Context,
 }
 export type DecoratedType = 'class' | 'method'
 export interface DecoratedTypeMeta {
+  /** 装饰器应用类型(不可枚举) */
   decoratedType?: DecoratedType
 }
 
-export interface DecoratorMetaData<T = unknown> {
+export type DecoratorMetaDataPayload<TDecoratorParam extends {} = {}>
+= TDecoratorParam & DecoratedTypeMeta
+
+export interface DecoratorMetaData<T extends {} = {}> {
   propertyName: string
   /** decorator key */
   key: string
-  metadata: T & DecoratedTypeMeta
+  metadata: DecoratorMetaDataPayload<T>
   options: MethodDecoratorOptions | undefined
 }
 export type Method = (...args: unknown[]) => unknown | Promise<unknown>
-export interface DecoratorExecutorOptionsBase<TDecoratorArgs extends {} = {}> {
-  argsFromClassDecorator: (Partial<TDecoratorArgs> & DecoratedTypeMeta) | undefined
-  argsFromMethodDecorator: (Partial<TDecoratorArgs> & DecoratedTypeMeta) | undefined
+
+export interface AroundFactoryParamBase {
+  webApp: Application
+  [key: string]: unknown
+}
+
+export interface DecoratorExecutorParamBase<
+  TDecoratorParam extends {} = {}
+> extends AroundFactoryParamBase {
+
+  argsFromClassDecorator: Partial<DecoratorMetaDataPayload<TDecoratorParam>> | undefined
+  argsFromMethodDecorator: Partial<DecoratorMetaDataPayload<TDecoratorParam>> | undefined
+  /** Merged from argsFromClassDecorator and argsFromMethodDecorator */
+  mergedDecoratorParam: DecoratorMetaDataPayload<TDecoratorParam> | undefined
   decoratorKey: string
-  config: any
   /** 装饰器所在类实例 */
   instance: InstanceOfDecorator
+  /** Caller Class name */
+  instanceName: string
   method: Method
   methodArgs: unknown[]
   methodName: string
   methodResult?: unknown
   methodIsAsyncFunction?: boolean
-  webApplication?: Application
-  [key: string]: unknown
+  webContext?: Context | undefined
 }
 
-export type DecoratorExecutorFn<TDecoratorArgs extends {} = {}> = (
-  options: DecoratorExecutorOptionsBase<TDecoratorArgs>,
-) => Promise<unknown> | unknown
+export type FnDecoratorExecutor = (options: any) => unknown
+export type FnDecoratorExecutorAsync = (options: any) => Promise<unknown>
 
 
-export interface CustomClassDecoratorOptions<TDecoratorArgs extends {}> {
+export interface CustomClassDecoratorParam<TDecoratorParam extends {}> {
   decoratorKey: string
   target: Function
-  args: Partial<TDecoratorArgs> | undefined
+  args: Partial<TDecoratorParam> | undefined
   /**
    * meta.impl will set to false if the method is decorated with the decoratorKey.
    * Always contains the decoratorKey
@@ -60,20 +75,21 @@ export interface CustomClassDecoratorOptions<TDecoratorArgs extends {}> {
    */
   ignoreIfMethodDecortaorKeys?: string[] | undefined
 }
-export type CustomClassDecorator<TDecoratorArgs extends {} = any> = (
-  options: CustomClassDecoratorOptions<TDecoratorArgs>,
+export type CustomClassDecorator<TDecoratorParam extends {} = any> = (
+  options: CustomClassDecoratorParam<TDecoratorParam>,
 ) => void
 
-export interface CustomMethodDecoratorOptions<TDecoratorArgs extends {}> {
+export interface CustomMethodDecoratorParam<TDecoratorParam extends {}> {
   /**
    * @example METHOD_KEY_Cacheable
    */
   decoratorKey: string
   decoratorType?: string
-  args: Partial<TDecoratorArgs> | undefined
-  target: any
+  args: Partial<TDecoratorParam> | undefined
+  target: InstanceOfDecorator | Function
   propertyName: string
-  descriptor: PropertyDescriptor
+  // descriptor: PropertyDescriptor
+  method: MethodType
   decoratedType?: 'method' | 'class'
   /**
    * meta.impl will set to false if the method is decorated with the decoratorKey.
@@ -84,16 +100,16 @@ export interface CustomMethodDecoratorOptions<TDecoratorArgs extends {}> {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type CustomMethodDecorator<TDecoratorArgs extends {} = any> = (
-  options: CustomMethodDecoratorOptions<TDecoratorArgs>,
+export type CustomMethodDecorator<TDecoratorParam extends {} = any> = (
+  options: CustomMethodDecoratorParam<TDecoratorParam>,
 ) => PropertyDescriptor | void
 
-export interface CustomDecoratorFactoryOptions<TDecoratorArgs extends {}> {
+export interface CustomDecoratorFactoryParam<TDecoratorParam extends {}> {
   /**
    * @example METHOD_KEY_Cacheable
    */
   decoratorKey: string
-  decoratorArgs: Partial<TDecoratorArgs> | undefined
+  decoratorArgs: Partial<TDecoratorParam> | undefined
   /**
    * @default false
    */
@@ -111,49 +127,46 @@ export interface CustomDecoratorFactoryOptions<TDecoratorArgs extends {}> {
    *  pass [METHOD_KEY_Cacheable], then the method decorated by @Cacheable with impl:false.
    */
   methodIgnoreIfMethodDecortaorKeys?: string[]
+  before?: FnRegCustomDecorator<TDecoratorParam>
+  after?: FnRegCustomDecorator<TDecoratorParam>
 }
 
+export type FnRegCustomDecorator<TDecoratorParam extends {}> = (
+  target: Object | Function,
+  propertyName: PropertyKey,
+  descriptor: TypedPropertyDescriptor<any> | undefined,
+  options: CustomDecoratorFactoryParam<TDecoratorParam>,
+) => void
 
-export interface RegisterDecoratorHandlerOptions<TDecoratorArgs extends {} = {}> {
+export interface RegisterDecoratorHandlerParam<TDecoratorParam extends {} = any> {
   /**
    * @example 'decorator:cacheable'
    */
   decoratorKey: string
   decoratorService: MidwayDecoratorService
-  decoratorExecutor: DecoratorExecutorFn<TDecoratorArgs>
-  genDecoratorExecutorOptionsFn: GenDecoratorExecutorOptionsFn<TDecoratorArgs>
-  [key: string]: unknown
-}
-
-export type AroundFactory<TDecoratorArgs extends {} = {}> = (
-  options: AroundFactoryOptions<TDecoratorArgs>,
-) => Promise<unknown>
-
-export interface AroundFactoryOptionsBase {
-  config: any
-  webApplication?: Application
-  [key: string]: unknown
-}
-export interface AroundFactoryOptions<TDecoratorArgs extends {} = {}>
-  extends AroundFactoryOptionsBase {
-
   /**
-   * @example METHOD_KEY_Cacaeable
+   * false means not support async function being decorated
    */
-  decoratorKey: string
-  aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorArgs>
-  joinPoint: JoinPoint
+  fnDecoratorExecutorAsync: FnDecoratorExecutorAsync | false
+  /**
+   * - false means not support sync function being decorated
+   * - 'bypass' means bypass the decorator
+   */
+  fnDecoratorExecutorSync: FnDecoratorExecutor | false | 'bypass'
+  fnGenDecoratorExecutorParam: FnGenDecoratorExecutorParam<TDecoratorParam> | void | null
+  [key: string]: unknown
 }
 
-export type GenDecoratorExecutorOptionsFn<TDecoratorArgs extends {} = {}> = (
-  options: AroundFactoryOptions<TDecoratorArgs>,
-) => DecoratorExecutorOptionsBase<TDecoratorArgs>
 
-export interface AopCallbackInputArgsType<TDecoratorArgs extends {} = {}> {
-  /** 装饰器所在的实例 */
-  target: InstanceOfDecorator
+export type FnGenDecoratorExecutorParam<T extends {} = any>
+= (options: DecoratorExecutorParamBase<T>) => DecoratorExecutorParamBase<T>
+
+
+export interface AopCallbackInputArgsType<TDecoratorParam extends {} = {}> {
+  /** 装饰器所在的类原型 */
+  target: Function
   propertyName: string
-  metadata: Partial<TDecoratorArgs> & DecoratedTypeMeta
+  metadata: DecoratorMetaDataPayload<TDecoratorParam>
 }
 
 
