@@ -60,6 +60,7 @@ export interface DecoratorExecutorParamBase<
 }
 
 export type FnDecoratorExecutor = (options: any) => unknown
+export type FnDecoratorExecutorAsync = (options: any) => Promise<unknown>
 
 
 export interface CustomClassDecoratorParam<TDecoratorParam extends {}> {
@@ -143,7 +144,14 @@ export interface RegisterDecoratorHandlerParam<TDecoratorParam extends {} = any>
    */
   decoratorKey: string
   decoratorService: MidwayDecoratorService
-  fnDecoratorExecutor: FnDecoratorExecutor
+  /**
+   * false means not support async function being decorated
+   */
+  fnDecoratorExecutorAsync: FnDecoratorExecutorAsync | false
+  /**
+   * false means not support sync function being decorated
+   */
+  fnDecoratorExecutorSync: FnDecoratorExecutor | false
   fnGenDecoratorExecutorParam: FnGenDecoratorExecutorParam<TDecoratorParam> | void | null
   [key: string]: unknown
 }

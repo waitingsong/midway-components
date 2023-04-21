@@ -19,9 +19,9 @@ import type {
   AopCallbackInputArgsType,
   AroundFactoryParamBase,
   DecoratorExecutorParamBase,
-  FnDecoratorExecutor,
   RegisterDecoratorHandlerParam,
   InstanceOfDecorator,
+  DecoratorMetaDataPayload,
 } from './custom-decorator.types.js'
 
 
@@ -33,33 +33,23 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
   const {
     decoratorKey,
     decoratorService,
-    fnDecoratorExecutor,
-    fnGenDecoratorExecutorParam,
+    fnDecoratorExecutorAsync: executorAsync,
+    fnDecoratorExecutorSync: executorSync,
+    fnGenDecoratorExecutorParam: genDecoratorExecutorParam,
   } = options
 
   assert(decoratorKey, 'decoratorKey is required')
   assert(decoratorService, 'decoratorService is required')
 
-  let executor = fnDecoratorExecutor
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (! fnDecoratorExecutor && typeof options['decoratorExecutor'] === 'function') {
-    // @ts-ignore
-    executor = options['decoratorExecutor']
-  }
-  else {
-    assert(typeof fnDecoratorExecutor === 'function', 'fnDecoratorExecutor is required')
-  }
-
-  let genDecoratorExecutorParam = fnGenDecoratorExecutorParam
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (! fnGenDecoratorExecutorParam && typeof options['genDecoratorExecutorParam'] === 'function') {
-    // @ts-ignore
-    genDecoratorExecutorParam = options['genDecoratorExecutorParam']
-  }
+  // assert(typeof executorAsync === 'function', 'fnDecoratorExecutorAsync must be function')
+  // assert(isAsyncFunction(executorAsync), 'fnDecoratorExecutorAsync must be async function')
+  // assert(typeof executorSync === 'function', 'fnDecoratorExecutorSync must be function')
 
   decoratorService.registerMethodHandler(
     decoratorKey,
     (aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorParam>) => {
+      const foo = aopCallbackInputOptions.target
+      console.log({ foo })
       const argsFromClassDecoratorArray = retrieveMetadataPayloadsOnClass<TDecoratorParam>(
         aopCallbackInputOptions.target,
         decoratorKey,
@@ -73,47 +63,29 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
 
       return {
         around: (joinPoint: JoinPoint) => {
-          const baseOpts: Partial<DecoratorExecutorParamBase<TDecoratorParam>> = {
-            ...aroundFactoryOptions,
+          const executorParam = prepareOptions<TDecoratorParam>(
             decoratorKey,
-          }
-          if (mergedDecoratorParam) {
-            baseOpts.mergedDecoratorParam = mergedDecoratorParam
-          }
-
-          const opts2 = genDecoratorExecutorOptionsCommon<TDecoratorParam>(
+            aroundFactoryOptions,
             joinPoint,
-            baseOpts,
-            // metadata,
-            void 0,
-          )
-          const executorParamBase: DecoratorExecutorParamBase<TDecoratorParam> = {
-            ...opts2,
             mergedDecoratorParam,
-          }
+            genDecoratorExecutorParam,
+          )
 
-          const executorParam = typeof genDecoratorExecutorParam === 'function'
-            ? genDecoratorExecutorParam(executorParamBase)
-            : executorParamBase
+          if (executorParam.methodIsAsyncFunction) {
+            if (executorAsync === false) {
+              throw new TypeError(`Async method ${executorParam.instanceName}.${executorParam.methodName}() is not supported`)
+            }
+            assert(typeof executorAsync === 'function', 'fnDecoratorExecutorAsync must be function')
+            assert(isAsyncFunction(executorAsync), 'fnDecoratorExecutorAsync must be async function')
 
-          if (typeof executorParam.methodIsAsyncFunction === 'undefined') {
-            executorParam.methodIsAsyncFunction = !! joinPoint.proceedIsAsyncFunction
-          }
-
-          if (executorParam.methodIsAsyncFunction === true) {
-            assert(isAsyncFunction(executor), 'executor is not async function, but method is async')
-            const ret = run(
-              executor,
-              executorParam,
-            )
+            const ret = executorAsync(executorParam)
             return ret
           }
 
-          assert(! isAsyncFunction(executor), 'executor is async function, but method is not async')
-          const ret = runSync(
-            executor,
-            executorParam,
-          )
+          if (executorSync === false) {
+            throw new TypeError(`Sync method ${executorParam.instanceName}.${executorParam.methodName}() is not supported`)
+          }
+          const ret = executorSync(executorParam)
           return ret
         },
       }
@@ -123,24 +95,63 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
 }
 
 
-async function run<TDecoratorParam extends {} = {}>(
-  decoratorExecutor: FnDecoratorExecutor,
-  options: DecoratorExecutorParamBase<TDecoratorParam>,
-): Promise<unknown> {
+function prepareOptions<TDecoratorParam extends {} = any>(
+  decoratorKey: string,
+  aroundFactoryOptions: AroundFactoryParamBase,
+  joinPoint: JoinPoint,
+  mergedDecoratorParam: DecoratorMetaDataPayload<TDecoratorParam> | undefined,
+  genDecoratorExecutorParam: RegisterDecoratorHandlerParam['fnegenDecoratorExecutorParam'],
+): DecoratorExecutorParamBase<TDecoratorParam> {
 
-  // not return directly, https://v8.dev/blog/fast-async#improved-developer-experience
-  const dat = await decoratorExecutor(options)
-  return dat
+  const baseOpts: Partial<DecoratorExecutorParamBase<TDecoratorParam>> = {
+    ...aroundFactoryOptions,
+    decoratorKey,
+  }
+  if (mergedDecoratorParam) {
+    baseOpts.mergedDecoratorParam = mergedDecoratorParam
+  }
+
+  const opts2 = genDecoratorExecutorOptionsCommon<TDecoratorParam>(
+    joinPoint,
+    baseOpts,
+    // metadata,
+    void 0,
+  )
+  const executorParamBase: DecoratorExecutorParamBase<TDecoratorParam> = {
+    ...opts2,
+    mergedDecoratorParam,
+  }
+
+  const executorParam: DecoratorExecutorParamBase<TDecoratorParam> = typeof genDecoratorExecutorParam === 'function'
+    ? genDecoratorExecutorParam(executorParamBase)
+    : executorParamBase
+
+  if (typeof executorParam.methodIsAsyncFunction === 'undefined') {
+    executorParam.methodIsAsyncFunction = !! joinPoint.proceedIsAsyncFunction
+  }
+
+  return executorParam
 }
 
-function runSync<TDecoratorParam extends {} = {}>(
-  decoratorExecutor: FnDecoratorExecutor,
-  options: DecoratorExecutorParamBase<TDecoratorParam>,
-): unknown {
 
-  const dat = decoratorExecutor(options)
-  return dat
-}
+// async function run<TDecoratorParam extends {} = {}>(
+//   decoratorExecutor: FnDecoratorExecutor,
+//   options: DecoratorExecutorParamBase<TDecoratorParam>,
+// ): Promise<unknown> {
+
+//   // not return directly, https://v8.dev/blog/fast-async#improved-developer-experience
+//   const dat = await decoratorExecutor(options)
+//   return dat
+// }
+
+// function runSync<TDecoratorParam extends {} = {}>(
+//   decoratorExecutor: FnDecoratorExecutor,
+//   options: DecoratorExecutorParamBase<TDecoratorParam>,
+// ): unknown {
+
+//   const dat = decoratorExecutor(options)
+//   return dat
+// }
 
 
 export function genDecoratorExecutorOptionsCommon<TDecoratorParam extends {} = {}>(
