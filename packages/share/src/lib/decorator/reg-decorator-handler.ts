@@ -41,10 +41,6 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
   assert(decoratorKey, 'decoratorKey is required')
   assert(decoratorService, 'decoratorService is required')
 
-  // assert(typeof executorAsync === 'function', 'fnDecoratorExecutorAsync must be function')
-  // assert(isAsyncFunction(executorAsync), 'fnDecoratorExecutorAsync must be async function')
-  // assert(typeof executorSync === 'function', 'fnDecoratorExecutorSync must be function')
-
   decoratorService.registerMethodHandler(
     decoratorKey,
     (aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorParam>) => {
@@ -91,10 +87,15 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
         }
       } // async
 
+      // sync and bypass
+      if (executorSync === 'bypass') {
+        return {}
+      }
       // sync
-      if (executorSync === false) {
+      else if (executorSync === false) {
         throw new TypeError(`Sync method ${instanceName}.${propertyName}() is not supported`)
       }
+
       return {
         around: (joinPoint: JoinPoint) => {
           const executorParam = prepareOptions<TDecoratorParam>(

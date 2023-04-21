@@ -149,9 +149,10 @@ export interface RegisterDecoratorHandlerParam<TDecoratorParam extends {} = any>
    */
   fnDecoratorExecutorAsync: FnDecoratorExecutorAsync | false
   /**
-   * false means not support sync function being decorated
+   * - false means not support sync function being decorated
+   * - 'bypass' means bypass the decorator
    */
-  fnDecoratorExecutorSync: FnDecoratorExecutor | false
+  fnDecoratorExecutorSync: FnDecoratorExecutor | false | 'bypass'
   fnGenDecoratorExecutorParam: FnGenDecoratorExecutorParam<TDecoratorParam> | void | null
   [key: string]: unknown
 }
