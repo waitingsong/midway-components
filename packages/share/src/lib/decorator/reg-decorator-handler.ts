@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
 import assert from 'node:assert'
-// import { isAsyncFunction } from 'node:util/types'
+import { isAsyncFunction } from 'node:util/types'
 
 import {
   JoinPoint,
@@ -101,6 +101,7 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
           }
 
           if (executorParam.methodIsAsyncFunction === true) {
+            assert(isAsyncFunction(executor), 'executor is not async function, but method is async')
             const ret = run(
               executor,
               executorParam,
@@ -108,6 +109,7 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
             return ret
           }
 
+          assert(! isAsyncFunction(executor), 'executor is async function, but method is not async')
           const ret = runSync(
             executor,
             executorParam,
