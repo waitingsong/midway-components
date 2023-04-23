@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 10.1.0 (2023-04-23)
+
+
+### Features
+
+* **otel:** update genEventKeyWhenSpanNameEmpty() ([fea0364](https://github.com/waitingsong/midway-components/commit/fea036456c550318bf35d7f9ad540eb4f8e6f79b))
+
+
+
+
+
 ## 10.0.2 (2023-04-23)
 
 **Note:** Version bump only for package @mwcp/otel
