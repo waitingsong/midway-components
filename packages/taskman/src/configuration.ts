@@ -44,7 +44,7 @@ export class AutoConfiguration {
 
   @Inject() dbManager: DbSourceManager<DbReplica.taskMaster, DbModel, Context>
 
-  @TraceInit(`INIT ${ConfigKey.componentName}.onReady`)
+  @TraceInit({ spanName: ConfigKey.namespace })
   async onReady(container: IMidwayContainer): Promise<void> {
     // const dbConfig = genKmoreDbConfig(
     //   this.serverConfig,

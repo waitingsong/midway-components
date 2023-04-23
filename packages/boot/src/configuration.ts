@@ -43,7 +43,7 @@ export class ContainerConfiguration implements ILifeCycle {
   @Inject() readonly informationService: MidwayInformationService
 
   // 启动前处理
-  @TraceInit(`INIT ${ConfigKey.componentName}.onReady`)
+  @TraceInit({ namespace: ConfigKey.componentName })
   async onReady(container: IMidwayContainer): Promise<void> {
     void container
 
