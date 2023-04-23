@@ -1,61 +1,14 @@
-import assert from 'node:assert'
+import assert from 'assert'
 import { isPromise } from 'node:util/types'
 
-import {
-  MidwayDecoratorService,
-  JoinPoint,
-  createCustomMethodDecorator,
-} from '@midwayjs/core'
-import {
-  Span,
-  SpanStatusCode,
-} from '@opentelemetry/api'
+import { Span, SpanStatusCode } from '@opentelemetry/api'
 
-import type { AbstractTraceService } from './abstract'
-import { MetaDataType, DecoratorExecutorOptions, prepareAroundFactory } from './trace.helper'
-import {
-  Config,
-  MethodType,
-  TraceDecoratorArg,
-} from './types'
+import type { AbstractTraceService } from '../abstract'
+import type { DecoratorExecutorParam } from '../trace.helper'
 
 
-export const TRACE_KEY = 'decorator:open_telemetry_trace_key'
-
-export function Trace<M extends MethodType | void = void>(
-  options?: TraceDecoratorArg<M>,
-): MethodDecorator {
-
-  return createCustomMethodDecorator(TRACE_KEY, options)
-}
-
-export function registerMethodHandler(
-  decoratorService: MidwayDecoratorService,
-  config: Config,
-): void {
-
-  decoratorService.registerMethodHandler(TRACE_KEY, (options: MetaDataType) => {
-    return config.enable
-      ? {
-        around: (joinPoint: JoinPoint) => {
-          const aroundFactoryOptions: DecoratorExecutorOptions = prepareAroundFactory(joinPoint, options)
-          if (joinPoint.proceedIsAsyncFunction) {
-            const ret = aroundFactory(aroundFactoryOptions)
-            return ret
-          }
-          else {
-            const ret = aroundFactorySync(aroundFactoryOptions)
-            return ret
-          }
-        },
-      }
-      : {}
-  })
-}
-
-
-async function aroundFactory(
-  options: DecoratorExecutorOptions,
+export async function decoratorExecutorAsync(
+  options: DecoratorExecutorParam,
 ): Promise<unknown> {
 
   const {
@@ -70,6 +23,7 @@ async function aroundFactory(
   } = options
 
   if (! traceService) {
+    console.warn('traceService is not initialized. (traceService 尚未初始化。)')
     const ret = await func(...funcArgs)
     return ret
   }
@@ -97,8 +51,8 @@ async function aroundFactory(
   }
 }
 
-function aroundFactorySync(
-  options: DecoratorExecutorOptions,
+export function decoratorExecutorSync(
+  options: DecoratorExecutorParam,
 ): unknown {
 
   const {
@@ -181,4 +135,3 @@ function createActiveSpanCbSync(options: CreateActiveSpanCbOptions): unknown {
     throw new Error(err.message, { cause: err.cause ?? err })
   }
 }
-

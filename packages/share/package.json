@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/share",
   "author": "waiting",
-  "version": "5.1.0",
+  "version": "6.0.0",
   "description": "midway.js share",
   "keywords": [
     "midway.js",
@@ -34,6 +34,7 @@
     "@midwayjs/koa": "^3.11.3",
     "@midwayjs/logger": "^2.17.0",
     "@waiting/shared-core": "^21.1.0",
+    "deepmerge": "^4.3.1",
     "tsconfig-paths": "4"
   },
   "devDependencies": {

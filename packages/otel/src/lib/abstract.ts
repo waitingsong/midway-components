@@ -113,6 +113,7 @@ export abstract class AbstractOtelComponent {
 export abstract class AbstractTraceService {
   abstract isStarted: boolean
 
+  readonly abstract otel: AbstractOtelComponent
   readonly abstract instanceId: symbol
   readonly abstract startTime: string
   protected readonly abstract traceContextArray: Context[]

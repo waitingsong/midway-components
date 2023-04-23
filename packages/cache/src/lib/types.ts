@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CacheManager } from '@midwayjs/cache'
+import type { AbstractTraceService } from '@mwcp/otel'
 import {
   Context,
-  DecoratorExecutorOptionsBase,
+  DecoratorExecutorParamBase,
 } from '@mwcp/share'
 import type { MiddlewareConfig as MWConfig } from '@waiting/shared-types'
 
@@ -49,7 +50,7 @@ export type MethodType = (...input: any[]) => (any | Promise<any>)
  * @param result Result of the method. Only for using `@CacheEvict`
  * @returns if undefined, there is no tailing ":" in cacheName
  */
-export type KeyGenerator<M extends MethodType | undefined = undefined> = (
+export type KeyGenerator<M extends MethodType | void = void> = (
   this: Context,
   /** Arguments of the method */
   args: M extends MethodType ? Parameters<M> : any,
@@ -60,7 +61,7 @@ export type KeyGenerator<M extends MethodType | undefined = undefined> = (
   result: M extends MethodType ? Awaited<ReturnType<M>> : undefined
 ) => string | undefined
 
-export type CacheConditionFn<M extends MethodType | undefined = undefined> = (
+export type CacheConditionFn<M extends MethodType | void = void> = (
   this: Context,
   /** Arguments of the method */
   args: M extends MethodType ? Parameters<M> : any,
@@ -72,7 +73,7 @@ export type CacheConditionFn<M extends MethodType | undefined = undefined> = (
 ) => boolean | Promise<boolean>
 
 
-export type CacheTTLFn<M extends MethodType | undefined = undefined> = (
+export type CacheTTLFn<M extends MethodType | void = void> = (
   this: Context,
   /** Arguments of the method */
   args: M extends MethodType ? Parameters<M> : any,
@@ -98,7 +99,7 @@ export interface CachedResponse<T = unknown> {
   value: T
 }
 
-export interface CacheableArgs<M extends MethodType | undefined = undefined> {
+export interface CacheableArgs<M extends MethodType | void = void> {
   /**
    * Name of the cache set
    * @default `${className}.${methodName}`
@@ -139,9 +140,10 @@ export interface CacheEvictArgs<M extends MethodType | undefined = undefined> {
 export type Method = (...args: unknown[]) => Promise<unknown>
 
 export interface DecoratorExecutorOptions<T extends CacheableArgs | CacheEvictArgs = any>
-  extends DecoratorExecutorOptionsBase<T> {
+  extends DecoratorExecutorParamBase<T> {
 
-  cacheManager?: CacheManager | undefined
-  config: Config | undefined
+  traceService: AbstractTraceService | undefined
+  cacheManager: CacheManager
+  config: Config
 }
 

@@ -5,7 +5,7 @@ import {
   Provide,
 } from '@midwayjs/core'
 
-import { Trace } from '~/lib/trace.decorator'
+import { Trace } from '~/lib/index'
 import { Config, ConfigKey } from '~/lib/types'
 
 

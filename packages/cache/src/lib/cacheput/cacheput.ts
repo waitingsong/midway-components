@@ -7,10 +7,11 @@ import { CacheableArgs, MethodType } from '../types'
 /**
  * 声明式缓存装饰器
  * Declarative CachePut Decorator
+ * @returns MethodDecorator | ClassDecorator
  */
 export function CachePut<M extends MethodType | undefined = undefined>(
   options?: Partial<CacheableArgs<M>>,
-): MethodDecorator & ClassDecorator {
+) {
 
   return customDecoratorFactory<CacheableArgs<M>>({
     decoratorArgs: options,
