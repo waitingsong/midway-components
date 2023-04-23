@@ -1,8 +1,5 @@
 import assert from 'assert'
 
-import { CacheManager } from '@midwayjs/cache'
-import { REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
-
 import { initCachePutArgs } from '../config'
 import { processEx } from '../exception'
 import {
@@ -20,51 +17,51 @@ export async function decoratorExecutor(
   options: DecoratorExecutorOptions<CacheableArgs>,
 ): Promise<unknown> {
 
-  const webContext = options.instance[REQUEST_OBJ_CTX_KEY]
-  assert(webContext, 'webContext is undefined')
-
-  const cacheManager = options.cacheManager ?? await webContext.requestContext.getAsync(CacheManager)
-  assert(cacheManager, 'CacheManager is undefined')
-
   const {
-    argsFromClassDecorator,
-    argsFromMethodDecorator,
+    webContext,
+    cacheManager,
+    mergedDecoratorParam,
   } = options
+
+  assert(webContext, 'webContext is undefined')
 
   const cacheOptions: CacheableArgs = {
     ...initCachePutArgs,
-    ...argsFromClassDecorator,
-    ...argsFromMethodDecorator,
+    ...mergedDecoratorParam,
   }
-  options.argsFromMethodDecorator = cacheOptions
 
-  const opts: GenCacheKeyOptions = {
+  const opts2: GenCacheKeyOptions = {
     ...cacheOptions,
     methodArgs: options.methodArgs,
     methodResult: options.methodResult,
     webContext,
   }
-  const cacheKey = genCacheKey(opts)
+  const cacheKey = genCacheKey(opts2)
 
   try {
-    const { method, methodArgs } = options
+    const opts3 = {
+      ...options,
+      mergedDecoratorParam: cacheOptions,
+    }
+    const { method, methodArgs } = opts3
     const resp = await method(...methodArgs)
 
     const cvalue = computerConditionValue({
-      ...options,
+      ...opts3,
       methodResult: resp,
     })
+
     const enableCache = typeof cvalue === 'boolean' ? cvalue : await cvalue
     assert(typeof enableCache === 'boolean', 'condition must return boolean')
 
-    const ttl = await computerTTLValue(resp as CachedResponse, options)
+    const ttl = await computerTTLValue(resp as CachedResponse, opts3)
 
     if (enableCache && ttl > 0) {
       await saveData(cacheManager, cacheKey, resp, ttl)
     }
 
     if (typeof resp === 'object' && resp) {
-      const resp2 = genDataWithCacheMeta(resp as CachedResponse, opts, ttl)
+      const resp2 = genDataWithCacheMeta(resp as CachedResponse, opts2, ttl)
       return resp2
     }
 

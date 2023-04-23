@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { customDecoratorFactory } from '@mwcp/share'
 
 import {
@@ -10,24 +9,28 @@ import {
 import { CacheableArgs, MethodType } from '../types'
 
 
+export const cacheableClassIgnoreIfMethodDecortaorKeys = [
+  METHOD_KEY_CacheEvict,
+  METHOD_KEY_CachePut,
+  METHOD_KEY_Transactional,
+]
+export const cacheableMethodIgnoreIfMethodDecortaorKeys = [METHOD_KEY_Transactional]
+
 /**
  * 声明式缓存装饰器
  * Declarative Cacheable Decorator
+ * @returns MethodDecorator | ClassDecorator
  */
-export function Cacheable<M extends MethodType | undefined = undefined>(
+export function Cacheable<M extends MethodType | void>(
   options?: Partial<CacheableArgs<M>>,
-): MethodDecorator & ClassDecorator {
+) {
 
   return customDecoratorFactory<CacheableArgs<M>>({
     decoratorArgs: options,
     decoratorKey: METHOD_KEY_Cacheable,
     enableClassDecorator: true,
-    classIgnoreIfMethodDecortaorKeys: [
-      METHOD_KEY_CacheEvict,
-      METHOD_KEY_CachePut,
-      METHOD_KEY_Transactional,
-    ],
-    methodIgnoreIfMethodDecortaorKeys: [METHOD_KEY_Transactional],
+    classIgnoreIfMethodDecortaorKeys: cacheableClassIgnoreIfMethodDecortaorKeys,
+    methodIgnoreIfMethodDecortaorKeys: cacheableMethodIgnoreIfMethodDecortaorKeys,
   })
 }
 

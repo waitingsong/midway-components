@@ -7,10 +7,11 @@ import { CacheEvictArgs, MethodType } from '../types'
 /**
  * 声明式缓存装饰器
  * Declarative CacheEvict Decorator
+ * @returns MethodDecorator | ClassDecorator
  */
 export function CacheEvict<M extends MethodType | undefined = undefined>(
   options?: Partial<CacheEvictArgs<M>>,
-): MethodDecorator & ClassDecorator {
+) {
 
   return customDecoratorFactory<CacheEvictArgs<M>>({
     decoratorArgs: options,

@@ -1,9 +1,5 @@
 import assert from 'assert'
 
-import { CacheManager } from '@midwayjs/cache'
-import { REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
-import { TraceService } from '@mwcp/otel'
-
 import { initCacheableArgs } from '../config'
 import { processEx } from '../exception'
 import {
@@ -22,55 +18,52 @@ export async function decoratorExecutor(
   options: DecoratorExecutorOptions<CacheableArgs>,
 ): Promise<unknown> {
 
-  const webContext = options.instance[REQUEST_OBJ_CTX_KEY]
-  assert(webContext, 'webContext is undefined')
-
-  const cacheManager = options.cacheManager ?? await webContext.requestContext.getAsync(CacheManager)
-  assert(cacheManager, 'CacheManager is undefined')
-
   const {
-    argsFromClassDecorator,
-    argsFromMethodDecorator,
+    webContext,
+    cacheManager,
+    mergedDecoratorParam,
   } = options
+
+  assert(webContext, 'webContext is undefined')
 
   const cacheOptions: CacheableArgs = {
     ...initCacheableArgs,
-    ...argsFromClassDecorator,
-    ...argsFromMethodDecorator,
+    ...mergedDecoratorParam,
   }
-  options.argsFromMethodDecorator = cacheOptions
-
-  const opts: GenCacheKeyOptions = {
+  const opts2: GenCacheKeyOptions = {
     ...cacheOptions,
     methodArgs: options.methodArgs,
     methodResult: options.methodResult,
     webContext,
   }
-  const cacheKey = genCacheKey(opts)
+  const cacheKey = genCacheKey(opts2)
 
   try {
-    const tmp = computerConditionValue(options)
+    const opts4 = {
+      ...options,
+      mergedDecoratorParam: cacheOptions,
+    }
+
+    const tmp = computerConditionValue(opts4)
     const enableCache = typeof tmp === 'boolean' ? tmp : await tmp
     assert(typeof enableCache === 'boolean', 'condition must return boolean')
 
-    // const cacheResp = enableCache
-    //   ? await getData(cacheManager, cacheKey)
-    //   : void 0
     let cacheResp: CachedResponse | undefined = void 0
     if (enableCache) {
-      const traceService = await webContext.requestContext.getAsync(TraceService)
-      cacheResp = await getData(cacheManager, cacheKey, traceService)
+      cacheResp = await getData(cacheManager, cacheKey, opts4.traceService)
     }
 
     if (typeof cacheResp !== 'undefined') {
-      const resp = genDataWithCacheMeta(cacheResp as CachedResponse, opts)
+      const resp = genDataWithCacheMeta(cacheResp as CachedResponse, opts2)
       return resp
     }
 
-    const { method, methodArgs } = options
+    const { method, methodArgs, methodIsAsyncFunction } = opts4
+    assert(methodIsAsyncFunction, 'decorated method must be async function')
+
     const resp = await method(...methodArgs)
 
-    const ttl = await computerTTLValue(resp as CachedResponse, options)
+    const ttl = await computerTTLValue(resp as CachedResponse, opts4)
     if (enableCache && ttl > 0 && typeof resp !== 'undefined') {
       await saveData(cacheManager, cacheKey, resp, ttl)
     }

@@ -1,17 +1,13 @@
 import assert from 'node:assert'
 import { createHash } from 'node:crypto'
 
-import type { CacheManager } from '@midwayjs/cache'
+import { CacheManager } from '@midwayjs/cache'
 import {
   // INJECT_CUSTOM_METHOD,
   REQUEST_OBJ_CTX_KEY,
-  getClassMetadata,
 } from '@midwayjs/core'
-import type { TraceService } from '@mwcp/otel'
-import type {
-  AroundFactoryOptions,
-  Context as WebContext,
-} from '@mwcp/share'
+import { AbstractTraceService, OtelConfigKey } from '@mwcp/otel'
+import { DecoratorExecutorParamBase, Context as WebContext } from '@mwcp/share'
 
 import { initCacheableArgs, initCacheEvictArgs, initConfig } from './config'
 import {
@@ -140,7 +136,7 @@ export async function deleteData(cacheManager: CacheManager, cacheKey: string): 
 export async function getData<T = unknown>(
   cacheManager: CacheManager,
   cacheKey: string,
-  traceService?: TraceService,
+  traceService?: AbstractTraceService | undefined,
 ): Promise<CachedResponse<T>> {
 
   const keys = hashCacheKey(cacheKey)
@@ -160,8 +156,8 @@ export function computerConditionValue(
   options: DecoratorExecutorOptions<CacheableArgs | CacheEvictArgs>,
 ): boolean | Promise<boolean> {
 
-  const { argsFromMethodDecorator: cacheOptions } = options
-  assert(cacheOptions, 'cacheOptions is undefined')
+  const { mergedDecoratorParam: cacheOptions } = options
+  assert(cacheOptions, 'cacheOptions is undefined within computerConditionValue()')
 
   const webContext = options.instance[REQUEST_OBJ_CTX_KEY]
   assert(webContext, 'webContext is undefined')
@@ -192,8 +188,8 @@ export function computerTTLValue(
   options: DecoratorExecutorOptions<CacheableArgs>,
 ): number | Promise<number> {
 
-  const { argsFromMethodDecorator: cacheOptions } = options
-  assert(cacheOptions, 'cacheOptions is undefined')
+  const { mergedDecoratorParam: cacheOptions } = options
+  assert(cacheOptions, 'cacheOptions is undefined within computerTTLValue()')
 
   const webContext = options.instance[REQUEST_OBJ_CTX_KEY]
   assert(webContext, 'webContext is undefined')
@@ -228,110 +224,57 @@ export function computerTTLValue(
   return ttl
 }
 
-export function genDecoratorExecutorOptions<TDecoratorArgs extends CacheableArgs | CacheEvictArgs>(
-  options: AroundFactoryOptions<TDecoratorArgs>,
-): DecoratorExecutorOptions<TDecoratorArgs> {
+export function genDecoratorExecutorOptions(
+  options: DecoratorExecutorParamBase<CacheableArgs | CacheEvictArgs>,
+): DecoratorExecutorOptions<CacheableArgs | CacheEvictArgs> {
 
   const {
+    webApp,
+    webContext,
     decoratorKey,
-    joinPoint,
-    aopCallbackInputOptions,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    config,
-    cacheManager,
-  } = options
-  assert(config, 'config is undefined')
-  assert(cacheManager, 'cacheManager is undefined')
-
-  // eslint-disable-next-line @typescript-eslint/unbound-method
-  assert(joinPoint.proceed, 'joinPoint.proceed is undefined')
-  assert(typeof joinPoint.proceed === 'function', 'joinPoint.proceed is not funtion')
-
-  // 装饰器所在的实例
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const instance = joinPoint.target
-  const funcName = joinPoint.methodName as string
-  assert(funcName, 'funcName is undefined')
-
-  const ret = genDecoratorExecutorOptionsCommon<TDecoratorArgs>({
-    decoratorKey,
-    cacheManager: cacheManager as CacheManager,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    config,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    instance,
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    method: joinPoint.proceed,
-    methodName: funcName,
-    methodArgs: joinPoint.args,
-    argsFromClassDecorator: void 0,
-    argsFromMethodDecorator: aopCallbackInputOptions.metadata,
-  })
-
-  return ret
-}
-
-
-export function genDecoratorExecutorOptionsCommon<T extends CacheableArgs | CacheEvictArgs>(
-  options: DecoratorExecutorOptions<T>,
-): DecoratorExecutorOptions<T> {
-
-  const {
-    decoratorKey,
-    cacheManager,
-    argsFromMethodDecorator,
-    config: configArgs,
     instance,
     method,
     methodName,
-    methodArgs,
+    mergedDecoratorParam,
+    instanceName,
   } = options
+
+  assert(webApp, 'webApp is undefined')
+  assert(webContext, 'webContext is undefined')
+  assert(decoratorKey, 'decoratorKey is undefined')
   assert(instance, 'options.instance is undefined')
   assert(typeof method === 'function', 'options.method is not funtion')
-
-  const webContext = instance[REQUEST_OBJ_CTX_KEY]
-  assert(webContext, 'webContext is undefined')
-
-  // @ts-ignore
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const app = webContext.app ?? instance.app
-  assert(app, 'application undefined, may test case not set app to instance')
-  const config = (configArgs ?? app.getConfig(ConfigKey.config) ?? initConfig) as Config
-
-  const className = instance.constructor.name
-  assert(className, 'instance.constructor.name is undefined')
+  assert(instanceName, 'instanceName is undefined')
   assert(methodName, 'methodName is undefined')
 
+  const config = webApp.getConfig('cache') as Config
+  assert(config, 'cache config is undefined')
 
-  const argsFromClassDecorator = getClassMetadata<T>(decoratorKey, instance)
-  // const arr = getClassMetadata<T>(INJECT_CUSTOM_METHOD, instance)
-  // void arr
-
-  const cacheOptions: CacheableArgs | CacheEvictArgs = {
+  const cacheOptions: CacheableArgs = {
     ...initCacheableArgs,
     ...initCacheEvictArgs,
-    ttl: config.options.ttl,
-    ...argsFromClassDecorator,
-    ...argsFromMethodDecorator,
+    ...mergedDecoratorParam,
   }
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  if (typeof cacheOptions.ttl === 'undefined') {
+    cacheOptions.ttl = config.options.ttl
+  }
+
   if (typeof cacheOptions.cacheName === 'undefined' || ! cacheOptions.cacheName) {
-    const cacheName = `${className}.${methodName}`
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const cacheName = `${instanceName}.${methodName}`
     cacheOptions.cacheName = cacheName
   }
 
-  const ret: DecoratorExecutorOptions = {
-    decoratorKey,
-    cacheManager,
+  const { cacheManager } = options
+  assert(cacheManager, 'CacheManager is undefined')
+  const traceService = webContext[`_${OtelConfigKey.componentName}`] as AbstractTraceService | undefined
+
+  const ret: DecoratorExecutorOptions<CacheableArgs | CacheEvictArgs> = {
+    ...options,
+    cacheManager: cacheManager as CacheManager,
     config,
-    argsFromClassDecorator,
-    argsFromMethodDecorator: cacheOptions,
-    instance,
-    method,
-    methodArgs,
-    methodName,
+    mergedDecoratorParam: cacheOptions,
+    traceService,
   }
-  return ret as DecoratorExecutorOptions<T>
+  return ret
 }
 
