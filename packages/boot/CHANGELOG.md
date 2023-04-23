@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.1.0](https://github.com/waitingsong/midway-components/compare/@mwcp/boot@10.0.3...@mwcp/boot@10.1.0) (2023-04-23)
+
+
+### Features
+
+* **boot:** export decorator TraceInit ([aeda39b](https://github.com/waitingsong/midway-components/commit/aeda39b4ca76bd08352cd9d3ac730224e7c501c6))
+
+
+
+
+
 ## [10.0.3](https://github.com/waitingsong/midway-components/compare/@mwcp/boot@10.0.2...@mwcp/boot@10.0.3) (2023-04-23)
 
 **Note:** Version bump only for package @mwcp/boot
