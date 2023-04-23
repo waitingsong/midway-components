@@ -18,6 +18,7 @@ export {
   AttrNames,
   HeadersKey,
   Trace,
+  TraceInit,
   TraceLogger,
   TraceService,
 } from '@mwcp/otel'
