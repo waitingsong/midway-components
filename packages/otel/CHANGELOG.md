@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@9.0.1...@mwcp/otel@10.0.0) (2023-04-23)
+
+
+### Features
+
+* **otel:** breaking change types and functions ([a3a557a](https://github.com/waitingsong/midway-components/commit/a3a557a8feba7a7a703ab8d739a3f23fb233d70c))
+
+
+
+
+
 ## 9.0.1 (2023-04-14)
 
 **Note:** Version bump only for package @mwcp/otel

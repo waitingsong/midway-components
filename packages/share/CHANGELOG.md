@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.0.0 (2023-04-23)
+
+
+### Features
+
+* **share:** breaking change custom decorator type ([8f7e2d7](https://github.com/waitingsong/midway-components/commit/8f7e2d7556d61f2134cc500a3a8e66e9bd6cb494))
+
+
+
+
+
 # 5.1.0 (2023-04-11)
 
 

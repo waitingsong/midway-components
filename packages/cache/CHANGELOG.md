@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [11.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@10.0.1...@mwcp/cache@11.0.0) (2023-04-23)
+
+
+### Features
+
+* **cache:** decorators support async executor only ([af109d5](https://github.com/waitingsong/midway-components/commit/af109d51b6b4e4afb893e94a0f715474659c3421))
+
+
+
+
+
 ## 10.0.1 (2023-04-14)
 
 **Note:** Version bump only for package @mwcp/cache
