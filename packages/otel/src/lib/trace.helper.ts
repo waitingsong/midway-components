@@ -17,6 +17,11 @@ import {
 } from './types'
 
 
+const configNameList = [
+  'AutoConfiguration',
+  'ContainerConfiguration',
+]
+
 interface GenKeyOptions extends Partial<TraceDecoratorParam> {
   methodArgs: unknown[]
   decoratorContext: DecoratorContext
@@ -88,7 +93,7 @@ function genEventKeyWhenSpanNameEmpty(options: GenKeyOptions): string {
 
   let name = ''
 
-  if (callerClass === 'AutoConfiguration' && namespace) {
+  if (namespace && configNameList.includes(callerClass)) {
     switch (callerMethod) {
       case 'onReady':
       case 'onServerReady': {

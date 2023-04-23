@@ -34,7 +34,7 @@ export interface TraceDecoratorOptions<
   /**
    * Used as the prefix of the span name,
    * if spanName is not provided,
-   *   and the Caller ClassName is `AutoConfiguration`,
+   *   and the Caller ClassName is `AutoConfiguration` | `ContainerConfiguration`,
    *   and the Caller MethodName is event name, such as `onReady` | `onServerReady`,
    */
   namespace: string | undefined
