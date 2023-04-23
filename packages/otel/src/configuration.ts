@@ -72,7 +72,6 @@ export class AutoConfiguration implements ILifeCycle {
 
   }
 
-  // @TraceInit()
   @TraceInit({ namespace: ConfigKey.componentName })
   async onServerReady(container: IMidwayContainer): Promise<void> {
     void container
