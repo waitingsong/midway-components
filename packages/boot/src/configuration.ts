@@ -73,7 +73,7 @@ export class ContainerConfiguration implements ILifeCycle {
   }
 
 
-  @TraceInit(`INIT ${ConfigKey.componentName}.onServerReady`)
+  @TraceInit({ namespace: ConfigKey.componentName })
   async onServerReady(container: IMidwayContainer): Promise<void> {
     void container
     const pkg = this.informationService.getPkg() as NpmPkg | undefined
