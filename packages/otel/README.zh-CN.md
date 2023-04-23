@@ -103,7 +103,7 @@ export class FooController {
 import { TraceInit } from '@mwcp/otel'
 
 export class AutoConfiguration implements ILifeCycle {
-  @TraceInit('INIT Foo.onReady')
+  @TraceInit({ namespace: 'Foo' })
   async onReady(container: IMidwayContainer): Promise<void> {
     // some code
   }

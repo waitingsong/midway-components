@@ -1,9 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import assert from 'assert'
-
 import { customDecoratorFactory } from '@mwcp/share'
 
-import { MethodType, TraceDecoratorArg } from '../types'
+import { MethodType, TraceDecoratorParam, TraceDecoratorOptions } from '../decorator.types'
 
 
 export const METHOD_KEY_TraceInit = 'decorator:method_key_TraceInit'
@@ -15,7 +12,7 @@ export const METHOD_KEY_TraceInit = 'decorator:method_key_TraceInit'
  * @description 可用于 AutoConfiguration 类中
  * @example ```ts
  * export class AutoConfiguration implements ILifeCycle {
- *   \@TraceInit('INIT Foo.onReady')
+ *   \@TraceInit('INIT Foo.onReady') OR \@TraceInit({ namespace: 'Foo' })
  *   async onReady(container: IMidwayContainer): Promise<void> {
  *     // some code
  *   }
@@ -23,16 +20,18 @@ export const METHOD_KEY_TraceInit = 'decorator:method_key_TraceInit'
  * ```
  */
 export function TraceInit<M extends MethodType | void = void>(
-  options: TraceDecoratorArg<M>,
+  options?: TraceDecoratorParam<M>,
 ): MethodDecorator & ClassDecorator {
 
-  const opts = typeof options === 'string'
+  const opts: Partial<TraceDecoratorOptions<M>> = typeof options === 'string'
     ? { spanName: options }
-    : options
+    : options ?? {}
 
-  assert(opts.spanName, 'spanName is required for TraceInit decorator. (TraceInit 装饰器需要 spanName 参数)')
+  if (! opts.spanNameDelimiter) {
+    opts.spanNameDelimiter = '.'
+  }
 
-  return customDecoratorFactory<TraceDecoratorArg<M>>({
+  return customDecoratorFactory < TraceDecoratorOptions<M>>({
     decoratorArgs: opts,
     decoratorKey: METHOD_KEY_TraceInit,
     enableClassDecorator: false,

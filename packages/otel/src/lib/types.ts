@@ -7,7 +7,6 @@ import type {
   Attributes,
   AttributeValue,
   Context as TraceContext,
-  SpanOptions,
   SpanStatusCode,
   TimeInput,
 } from '@opentelemetry/api'
@@ -269,31 +268,3 @@ export interface AddEventOtpions {
   eventName?: string
   startTime?: TimeInput
 }
-
-export type MethodType = (...input: any[]) => (any | Promise<any>)
-
-export type TraceDecoratorArg<M extends MethodType | void = void> =
-  Partial<TraceDecoratorOptions<M>> | string
-
-export interface TraceDecoratorOptions<M extends MethodType | void = void>
-  extends TraceDecoratorOptionsSpanOptions {
-  /** 若空则为 `{target.name}/{methodName}` */
-  spanName: string | KeyGenerator<M> | undefined
-}
-
-export interface TraceDecoratorOptionsSpanOptions extends SpanOptions {
-  /**
-   * @default true
-   */
-  startActiveSpan: boolean
-  traceContext: TraceContext | undefined
-}
-
-export type KeyGenerator<M extends MethodType | void = void> = (
-  /** WebContext */
-  this: Context | undefined,
-  /** Arguments of the method */
-  args: M extends MethodType ? Parameters<M> : any,
-) => string | undefined
-
-

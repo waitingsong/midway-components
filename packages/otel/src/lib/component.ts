@@ -19,8 +19,8 @@ import {
 import { ILogger } from '@midwayjs/logger'
 import {
   Application,
-  AroundFactoryOptionsBase,
-  RegisterDecoratorHandlerOptions,
+  AroundFactoryParamBase,
+  RegisterDecoratorHandlerParam,
   registerDecoratorHandler,
 } from '@mwcp/share'
 import {
@@ -42,9 +42,14 @@ import type { NpmPkg } from '@waiting/shared-types'
 
 import { AbstractOtelComponent } from './abstract'
 import { initSpanStatusOptions } from './config'
-import { decoratorExecutor } from './trace-init/helper.trace-init'
-import { METHOD_KEY_TraceInit } from './trace-init/trace-init'
-import { registerMethodHandler } from './trace.decorator'
+import { KEY_Trace } from './decorator.trace/trace'
+import {
+  decoratorExecutorAsync as decoratorExecutorTraceAsync,
+  decoratorExecutorSync as decoratorExecutorTraceSync,
+} from './decorator.trace/trace.helper'
+import { METHOD_KEY_TraceInit } from './decorator.trace-init/trace-init'
+import { decoratorExecutor as decoratorExecutorTraceInit } from './decorator.trace-init/trace-init.helper'
+import { TraceDecoratorOptions } from './decorator.types'
 import { genDecoratorExecutorOptions } from './trace.helper'
 import {
   AddEventOtpions,
@@ -53,10 +58,10 @@ import {
   ConfigKey,
   InitTraceOptions,
   SpanStatusOptions,
-  TraceDecoratorArg,
 } from './types'
 import { normalizeHeaderKey, setSpan } from './util'
 
+// eslint-disable-next-line import/max-dependencies
 import { initTrace } from '~/helper/index.opentelemetry'
 
 
@@ -466,21 +471,28 @@ export class OtelComponent extends AbstractOtelComponent {
       }
     }
 
-    registerMethodHandler(this.decoratorService, this.config)
-
-
-    const aroundFactoryOptions: AroundFactoryOptionsBase = {
+    const aroundFactoryOptions: AroundFactoryParamBase = {
       config: this.config,
-      webApplication: this.app,
+      webApp: this.app,
     }
-    const optsTraceInit: RegisterDecoratorHandlerOptions<TraceDecoratorArg> = {
+
+    const TraceOpts: RegisterDecoratorHandlerParam<TraceDecoratorOptions> = {
+      decoratorKey: KEY_Trace,
+      decoratorService: this.decoratorService,
+      fnDecoratorExecutorAsync: decoratorExecutorTraceAsync,
+      fnDecoratorExecutorSync: decoratorExecutorTraceSync,
+      fnGenDecoratorExecutorParam: genDecoratorExecutorOptions,
+    }
+    registerDecoratorHandler(TraceOpts, aroundFactoryOptions)
+
+    const TraceInitOpts: RegisterDecoratorHandlerParam<TraceDecoratorOptions> = {
       decoratorKey: METHOD_KEY_TraceInit,
       decoratorService: this.decoratorService,
-      // @ts-expect-error
-      decoratorExecutor,
-      genDecoratorExecutorOptionsFn: genDecoratorExecutorOptions,
+      fnDecoratorExecutorAsync: decoratorExecutorTraceInit,
+      fnDecoratorExecutorSync: false,
+      fnGenDecoratorExecutorParam: genDecoratorExecutorOptions,
     }
-    registerDecoratorHandler(optsTraceInit, aroundFactoryOptions)
+    registerDecoratorHandler(TraceInitOpts, aroundFactoryOptions)
 
   }
 

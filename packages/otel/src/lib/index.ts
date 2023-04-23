@@ -4,13 +4,10 @@ export { OtelComponent } from './component'
 export {
   AbstractOtelComponent, AbstractTraceService,
 } from './abstract'
-export {
-  TRACE_KEY,
-  Trace,
-} from './trace.decorator'
 export * from './trace.logger'
 export * from './trace.service'
-export * from './trace-init/trace-init'
+export * from './decorator.trace/trace'
+export * from './decorator.trace-init/trace-init'
 export {
   addSpanEventWithOutgoingResponseData,
   getIncomingRequestAttributesFromWebContext,
@@ -45,12 +42,16 @@ export {
   SpanExporterList,
   SpanHeaderInit,
   SpanStatusOptions,
-  TraceDecoratorArg,
-  TraceDecoratorOptions,
   TraceError,
   TraceLogType as LogInfo,
 } from './types'
 
+export {
+  TraceDecoratorParam as TraceDecoratorArg,
+  TraceDecoratorOptions,
+} from './decorator.types'
+
+export { genDecoratorExecutorOptions } from './trace.helper'
 
 export { AttrNames } from './attrnames.types'
 
