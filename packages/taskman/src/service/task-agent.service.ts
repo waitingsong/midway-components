@@ -25,7 +25,6 @@ import {
   Span,
   SpanStatusCode,
   TraceContext,
-  setSpan,
 } from '@mwcp/otel'
 import { genISO8601String } from '@waiting/shared-core'
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -105,11 +104,10 @@ export class TaskAgentService {
   start(): void {
     if (this.isRunning) { return }
     if (this.clientConfig.enableTrace) {
-
       const spanName = 'TaskAgent-start'
-      const traceCtx = this.otel.getGlobalCurrentContext()
-      this.span = this.otel.startSpan(spanName, { root: true }, traceCtx)
-      this.traceCtx = setSpan(traceCtx, this.span)
+      const { span, context } = this.otel.startSpan2(spanName, { root: true })
+      this.span = span
+      this.traceCtx = context
     }
 
     const { intv$ } = this
@@ -130,22 +128,22 @@ export class TaskAgentService {
             errStack: err.stack,
             time: genISO8601String(),
           }
-          this.otel.addEvent(span, input)
-          this.otel.endSpan(span, span, {
+          this.otel.addEvent(this.span, input)
+          this.otel.endSpan(this.span, this.span, {
             code: SpanStatusCode.ERROR,
             error: err,
           })
         }
       },
       complete: () => {
-        if (span) {
+        if (this.span) {
           const input: Attributes = {
             [AttrNames.LogLevel]: 'info',
             message: 'TaskAgent complete',
             time: genISO8601String(),
           }
-          this.otel.addEvent(span, input)
-          this.otel.endSpan(span, span)
+          this.otel.addEvent(this.span, input)
+          this.otel.endSpan(this.span, this.span)
         }
       },
     })
