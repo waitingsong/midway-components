@@ -118,15 +118,15 @@ export class TaskAgentService {
 
     this.sub = stream$.subscribe({
       error: (err: Error) => {
-        const input: Attributes = {
-          [AttrNames.LogLevel]: 'error',
-          pid: process.pid,
-          message: 'TaskAgent stopped when error',
-          errMsg: err.message,
-          errStack: err.stack,
-          time: genISO8601String(),
-        }
         if (span) {
+          const input: Attributes = {
+            [AttrNames.LogLevel]: 'error',
+            pid: process.pid,
+            message: 'TaskAgent stopped when error',
+            errMsg: err.message,
+            errStack: err.stack,
+            time: genISO8601String(),
+          }
           this.otel.addEvent(span, input)
           this.otel.endSpan(span, span, {
             code: SpanStatusCode.ERROR,
@@ -135,12 +135,12 @@ export class TaskAgentService {
         }
       },
       complete: () => {
-        const input: Attributes = {
-          [AttrNames.LogLevel]: 'info',
-          message: 'TaskAgent complete',
-          time: genISO8601String(),
-        }
         if (span) {
+          const input: Attributes = {
+            [AttrNames.LogLevel]: 'info',
+            message: 'TaskAgent complete',
+            time: genISO8601String(),
+          }
           this.otel.addEvent(span, input)
           this.otel.endSpan(span, span)
         }
@@ -274,17 +274,7 @@ export class TaskAgentService {
     options?: CallTaskOptions,
   ): Promise<undefined> {
 
-    if (! options?.url) {
-      // const input: SpanLogInput = {
-      //   [TracerTag.logLevel]: 'error',
-      //   taskId,
-      //   message: 'invalid fetch options',
-      //   options,
-      //   time: genISO8601String(),
-      // }
-      // this.logger.error(input)
-      return
-    }
+    if (! options?.url) { return }
 
     const opts = {
       ...this.initFetchOptions,
@@ -324,17 +314,7 @@ export class TaskAgentService {
       opts.dataType = 'text'
     }
 
-    if (! url.startsWith('http')) {
-      // const input: SpanLogInput = {
-      //   [TracerTag.logLevel]: 'error',
-      //   taskId,
-      //   message: 'invalid fetch options',
-      //   opts,
-      //   time: genISO8601String(),
-      // }
-      // this.logger.info(input)
-      return
-    }
+    if (! url.startsWith('http')) { return }
 
     await this.fetch.fetch<void | JsonResp<void>>(opts)
       .then((res) => {
