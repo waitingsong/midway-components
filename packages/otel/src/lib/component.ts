@@ -191,14 +191,22 @@ export class OtelComponent extends AbstractOtelComponent {
    * This method do NOT modify the current Context.
    */
   startSpan(name: string, options?: SpanOptions, traceContext?: Context): Span {
+    const { span } = this.startSpan2(name, options, traceContext)
+    return span
+  }
+
+  /**
+   * Starts a new {@link Span}. Start the span without setting it on context.
+   */
+  startSpan2(name: string, options?: SpanOptions, traceContext?: Context): { span: Span, context: Context } {
     const tracer = trace.getTracer(this.otelLibraryName, this.otelLibraryVersion)
     const opts: SpanOptions = {
       kind: SpanKind.CLIENT,
-      // startTime: Date.now(),
       ...options,
     }
     const span = tracer.startSpan(name, opts, traceContext)
-    return span
+    const ctx = setSpan(traceContext ?? context.active(), span)
+    return { span, context: ctx }
   }
 
   /**
