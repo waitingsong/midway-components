@@ -158,9 +158,9 @@ export class OtelComponent extends AbstractOtelComponent {
       this.appInitProcessContext = ctxWithSpanSet
     }, opts)
 
-    const span = this.getGlobalCurrentSpan(this.appInitProcessContext)
-    void traceCtx
-    void span
+    // const span = this.getGlobalCurrentSpan(this.appInitProcessContext)
+    // void traceCtx
+    // void span
 
     this.prepareCaptureHeaders('request', this.config.captureRequestHeaders)
     this.prepareCaptureHeaders('response', this.config.captureRequestHeaders)
