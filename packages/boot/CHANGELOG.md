@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.2.0](https://github.com/waitingsong/midway-components/compare/@mwcp/boot@10.1.3...@mwcp/boot@10.2.0) (2023-04-25)
+
+
+### Features
+
+* **boot:** export HeadersInit ([41ee4b0](https://github.com/waitingsong/midway-components/commit/41ee4b06c29ebff954c19bf27a40db23eeb58a3f))
+* **boot:** remove default generics of fetch ([74eb16d](https://github.com/waitingsong/midway-components/commit/74eb16db09822efa243a80939bc66d7177532d1b))
+
+
+
+
+
 ## [10.1.3](https://github.com/waitingsong/midway-components/compare/@mwcp/boot@10.1.2...@mwcp/boot@10.1.3) (2023-04-23)
 
 **Note:** Version bump only for package @mwcp/boot
