@@ -2,7 +2,6 @@ import {
   Controller,
   Get,
   Inject,
-  Param,
 } from '@midwayjs/core'
 import { TraceService, Attributes } from '@mwcp/otel'
 import type { Context } from '@mwcp/share'
@@ -28,7 +27,7 @@ export class AgentController {
   async [ClientMethod.start](): Promise<TaskAgentState> {
     const span = this.traceService.startSpan('TaskAgent')
 
-    await this.agentSvc.start(this.ctx, span)
+    this.agentSvc.start()
     const taskAgentState = await this.status()
 
     const event: Attributes = {
@@ -45,17 +44,11 @@ export class AgentController {
   @Get('/' + ClientURL.stop)
   async stopNote(): Promise<TaskAgentState> {
     // const ret = `Access ${ClientURL.base}/${ClientURL.stop}/$id to stop, $id from api ${ClientURL.base}/${ClientURL.status}`
-    await this.agentSvc.stop(this.ctx, void 0)
-    const ret = await this.status()
+    this.agentSvc.stop()
+    const ret = this.agentSvc.status()
     return ret
   }
 
-  @Get('/' + ClientURL.stop + '/:agentId')
-  async [ClientMethod.stop](@Param('agentId') id: string): Promise<TaskAgentState> {
-    await this.agentSvc.stop(this.ctx, id)
-    const ret = await this.status()
-    return ret
-  }
 
   @Get('/' + ClientURL.status)
   async [ClientMethod.status](): Promise<TaskAgentState> {

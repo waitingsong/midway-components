@@ -149,8 +149,7 @@ export class TaskAgentService {
     })
   }
 
-  async stop(agentId?: string): Promise<void> {
-    if (agentId && agentId !== this.id) { return }
+  stop(): void {
     try {
       this.sub?.unsubscribe()
     }

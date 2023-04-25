@@ -5,8 +5,7 @@ import type { Context, IMiddleware, NextFunction } from '@mwcp/share'
 import { genISO8601String } from '@waiting/shared-core'
 
 import { ClientService } from '../lib/client.service'
-import { TaskClientConfig, TaskServerConfig, ConfigKey, ClientURL, ServerURL } from '../lib/types'
-import { TaskAgentService } from '../service/index.service'
+import { TaskClientConfig, TaskServerConfig, ConfigKey } from '../lib/types'
 import { matchFunc } from '../util/common'
 
 
@@ -81,11 +80,11 @@ async function middleware(
     }
   }
 
-  const skipList = [
-    `${ClientURL.base}/${ClientURL.status}`,
-    `${ClientURL.base}/${ClientURL.stop}`,
-    `${ServerURL.base}/${ServerURL.pickTasksWaitToRun}`,
-  ]
+  // const skipList = [
+  //   `${ClientURL.base}/${ClientURL.status}`,
+  //   `${ClientURL.base}/${ClientURL.stop}`,
+  //   `${ServerURL.base}/${ServerURL.pickTasksWaitToRun}`,
+  // ]
 
   if (typeof taskId === 'string' && taskId) {
     clientSvc.runningTasks.add(taskId)
@@ -93,10 +92,10 @@ async function middleware(
   else if (Array.isArray(taskId) && taskId.length) {
     taskId.forEach(id => clientSvc.runningTasks.add(id))
   }
-  else if (! skipList.includes(ctx.path)) {
-    const taskAgent = await ctx.requestContext.getAsync(TaskAgentService)
-    await taskAgent.start()
-  }
+  // else if (! skipList.includes(ctx.path)) {
+  //   const taskAgent = await ctx.requestContext.getAsync(TaskAgentService)
+  //   taskAgent.start()
+  // }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return next()

@@ -144,6 +144,7 @@ export const initTaskClientConfig: TaskClientConfig = {
   headerKeyTaskId: initTaskServerConfig.headerKeyTaskId,
   pickTaskTimer: 1000,
   enableTrace: true,
+  maxRunner: 2,
   supportTaskMap: new Map([ [1, '*'] ]),
 }
 

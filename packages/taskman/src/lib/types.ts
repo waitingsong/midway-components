@@ -71,6 +71,7 @@ export interface TaskClientConfig {
    * @default true
    */
   enableTrace: boolean
+  maxRunner: number
 }
 export type SupportTaskMapType = Map<TaskDTO['taskTypeId'], TaskTypeVerListType>
 export type TaskTypeVerListType = TaskDTO['taskTypeVer'][] | '*'
