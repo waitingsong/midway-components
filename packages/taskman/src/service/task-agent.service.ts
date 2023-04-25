@@ -11,7 +11,7 @@ import {
 import { ILogger } from '@midwayjs/logger'
 import { FetchOptions } from '@mwcp/boot'
 import {
-  FetchService,
+  FetchComponent,
   JsonResp,
   Headers,
   pickUrlStrFromRequestInfo,
@@ -36,7 +36,6 @@ import {
   Subscription,
   map,
   mergeMap,
-  takeWhile,
 } from 'rxjs'
 
 import {
@@ -56,13 +55,10 @@ import {
 } from '../lib/index'
 
 
-const stopped = false
-
-
 @Singleton()
 export class TaskAgentService {
 
-  @Inject() readonly fetch: FetchService
+  @Inject() readonly fetch: FetchComponent
   @Inject() readonly otel: OtelComponent
   @Inject() readonly koid: KoidComponent
   @Inject() readonly logger: ILogger
@@ -70,47 +66,33 @@ export class TaskAgentService {
   @Config(ConfigKey.clientConfig) protected readonly clientConfig: TaskClientConfig
   @Config(ConfigKey.serverConfig) protected readonly serverConfig: TaskServerConfig
 
-
   id: string
-  maxRunner = 1
-  runnerSet = new Set<Subscription>()
-  stopped = false
 
   protected intv$: Observable<number>
+  protected sub: Subscription | undefined
 
   @Init()
   async init(): Promise<void> {
-    if (stopped) {
-      this.stopped = true
-      this.logger.warn('taskman svc stopped on init()')
-      return
-    }
-
     this.id = randomUUID()
 
     const pickTaskTimer = this.clientConfig.pickTaskTimer > 0
       ? this.clientConfig.pickTaskTimer
       : initTaskClientConfig.pickTaskTimer
 
-    this.intv$ = timer(500, pickTaskTimer).pipe(
-      takeWhile(() => {
-        return ! this.stopped
-      }),
-    )
-    if (this.clientConfig.maxRunner > 1) {
-      this.maxRunner = this.clientConfig.maxRunner
-    }
+    this.intv$ = timer(500, pickTaskTimer)
   }
 
   get isRunning(): boolean {
-    const flag = this.runnerSet.size > 0
+    const flag = this.sub
+      ? ! this.sub.closed
+      : false
     return flag
   }
 
   status(): TaskAgentState {
     const taskAgentState: TaskAgentState = {
       agentId: this.id,
-      count: this.runnerSet.size,
+      isRunning: this.isRunning,
     }
     return taskAgentState
   }
@@ -130,76 +112,19 @@ export class TaskAgentService {
         taskAgentState: JSON.stringify(taskAgentState, null, 2),
         pid: process.pid,
         time: genISO8601String(),
-        thisMaxRunner: this.maxRunner,
-        thisClientConfigMaxRunner: this.clientConfig.maxRunner,
-        thisRunnerSetSize: this.runnerSet.size,
       }
       this.otel.addEvent(span, event)
     }
 
-    // console.info({
-    //   thisMaxRunner: this.maxRunner,
-    //   thisClientConfigMaxRunner: this.clientConfig.maxRunner,
-    //   thisRunnerSetSize: this.runnerSet.size,
-    //   pid: process.pid,
-    // })
-    if (this.clientConfig.maxRunner > 0) {
-      this.maxRunner = this.clientConfig.maxRunner
-    }
-    if (this.runnerSet.size >= this.maxRunner) {
-      return true
-    }
-
-    const maxPickTaskCount = this.clientConfig.maxPickTaskCount > 0
-      ? this.clientConfig.maxPickTaskCount
-      : initTaskClientConfig.maxPickTaskCount
-    const minPickTaskCount = this.clientConfig.minPickTaskCount > 0
-      ? this.clientConfig.minPickTaskCount
-      : initTaskClientConfig.minPickTaskCount
-
-    const intv$ = this.intv$.pipe(
-      takeWhile((idx) => {
-        if (this.stopped) {
-          return false
-        }
-        if (idx < maxPickTaskCount) {
-          return true
-        }
-        const input: Attributes = {
-          [AttrNames.LogLevel]: 'info',
-          pid: process.pid,
-          message: `taskAgent stopped at ${idx} of ${maxPickTaskCount}`,
-          time: genISO8601String(),
-        }
-        if (span) { this.otel.addEvent(span, input) }
-
-        return false
-      }),
-    )
+    const { intv$ } = this
     const reqId = this.koid.idGenerator.toString()
     const stream$ = this.pickTasksWaitToRun(intv$, reqId).pipe(
-      takeWhile(({ rows, idx }) => {
-        if (this.stopped) {
-          return false
-        }
-        if (! rows?.length && idx >= minPickTaskCount) {
-          return false
-        }
-        return true
-      }),
       mergeMap(({ rows }) => ofrom(rows)),
       mergeMap(task => this.sendTaskToRun(task, reqId), 1),
     )
 
-    let subsp: Subscription | undefined
-
-    // eslint-disable-next-line prefer-const
-    subsp = stream$.subscribe({
+    this.sub = stream$.subscribe({
       error: (err: Error) => {
-        if (subsp) {
-          this.runnerSet.delete(subsp)
-        }
-
         const input: Attributes = {
           [AttrNames.LogLevel]: 'error',
           pid: process.pid,
@@ -217,8 +142,6 @@ export class TaskAgentService {
         }
       },
       complete: () => {
-        subsp && this.runnerSet.delete(subsp)
-
         const input: Attributes = {
           [AttrNames.LogLevel]: 'info',
           message: 'TaskAgent complete',
@@ -231,26 +154,21 @@ export class TaskAgentService {
       },
     })
 
-    this.runnerSet.add(subsp)
     return true
   }
 
   async stop(ctx?: Context, agentId?: string): Promise<void> {
     void ctx
-    this.stopped = true
     if (agentId && agentId !== this.id) {
       return
     }
     try {
-      this.runnerSet.forEach((subsp) => {
-        subsp.unsubscribe()
-      })
+      this.sub?.unsubscribe()
     }
     /* c8 ignore next 4 */
     catch (ex) {
       this.logger.warn('stop with error', (ex as Error).message)
     }
-    this.runnerSet.clear()
   }
 
   protected pickRandomTaskTypeIdFromSupportTaskMap(
@@ -296,9 +214,6 @@ export class TaskAgentService {
     }
 
     const stream$ = intv$.pipe(
-      takeWhile(() => {
-        return ! this.stopped
-      }),
       mergeMap(() => {
         const opts: FetchOptions = {
           ...this.initFetchOptions,
@@ -381,11 +296,10 @@ export class TaskAgentService {
       return
     }
 
-    // @ts-ignore
-    const opts: FetchOptions = {
+    const opts = {
       ...this.initFetchOptions,
       ...options,
-    }
+    } as FetchOptions
     const headers = new Headers(opts.headers)
     const key: string = this.serverConfig.headerKey ? this.serverConfig.headerKey : 'x-task-agent'
     headers.set(key, '1')
@@ -499,6 +413,7 @@ export class TaskAgentService {
       url: '',
       method: 'GET',
       contentType: 'application/json; charset=utf-8',
+      headers: new Headers(),
     }
     return opts
   }

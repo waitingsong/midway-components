@@ -64,20 +64,6 @@ export interface TaskClientConfig {
    */
   pickTaskTimer: number
   /**
-   * Mininum loop times until no 'init' task
-   * @default 5
-   */
-  minPickTaskCount: number
-  /**
-   * Max loop times until no 'init' task
-   * @default 1000 (loop times, not tasks number)
-   */
-  maxPickTaskCount: number
-  /**
-   * @default 2
-   */
-  maxRunner: number
-  /**
    * Support task type id:ver[] list,
    */
   supportTaskMap: SupportTaskMapType
@@ -347,7 +333,7 @@ export interface TaskAgentState {
    * blank string means no running TaskAgentService during this request
    */
   agentId: string
-  count: number
+  isRunning: boolean
 }
 
 
