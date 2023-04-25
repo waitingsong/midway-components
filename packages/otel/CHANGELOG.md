@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 10.2.0 (2023-04-25)
+
+
+### Features
+
+* **otel:** OtelComponent.start2() ([990c80c](https://github.com/waitingsong/midway-components/commit/990c80c2fb1421ed54d75ae7c7115ad5d1b71b36))
+
+
+
+
+
 # 10.1.0 (2023-04-23)
 
 
