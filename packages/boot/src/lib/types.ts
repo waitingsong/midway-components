@@ -41,6 +41,7 @@ export {
   FetchOptions,
   FormData,
   Headers,
+  HeadersInit,
   Response,
   ResponseData,
   RequestInfo,
