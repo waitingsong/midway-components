@@ -25,7 +25,8 @@
       "noCi": true,
       "nohoist": [
         "cross-env",
-        "egg"
+        "egg",
+        "@mwcp/kmore"
       ],
       "npmClientArgs": [
         "--no-audit"
