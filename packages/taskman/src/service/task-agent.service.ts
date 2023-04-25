@@ -6,9 +6,7 @@ import {
   Config,
   Init,
   Inject,
-  Provide,
-  // Scope,
-  // ScopeEnum,
+  Singleton,
 } from '@midwayjs/core'
 import { ILogger } from '@midwayjs/logger'
 import { FetchOptions } from '@mwcp/boot'
@@ -19,7 +17,14 @@ import {
   pickUrlStrFromRequestInfo,
 } from '@mwcp/fetch'
 import { KoidComponent } from '@mwcp/koid'
-import { Attributes, AttrNames, HeadersKey, Span, SpanStatusCode, TraceService } from '@mwcp/otel'
+import {
+  Attributes,
+  AttrNames,
+  HeadersKey,
+  OtelComponent,
+  Span,
+  SpanStatusCode,
+} from '@mwcp/otel'
 import type { Context } from '@mwcp/share'
 import { genISO8601String } from '@waiting/shared-core'
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -54,12 +59,11 @@ import {
 const stopped = false
 
 
-@Provide()
-// @Scope(ScopeEnum.Singleton)
+@Singleton()
 export class TaskAgentService {
 
   @Inject() readonly fetch: FetchService
-  @Inject() readonly traceService: TraceService
+  @Inject() readonly otel: OtelComponent
   @Inject() readonly koid: KoidComponent
   @Inject() readonly logger: ILogger
 
@@ -120,16 +124,18 @@ export class TaskAgentService {
     void ctx
 
     const taskAgentState = this.status()
-    const event: Attributes = {
-      event: 'TaskAgent-run',
-      taskAgentState: JSON.stringify(taskAgentState, null, 2),
-      pid: process.pid,
-      time: genISO8601String(),
-      thisMaxRunner: this.maxRunner,
-      thisClientConfigMaxRunner: this.clientConfig.maxRunner,
-      thisRunnerSetSize: this.runnerSet.size,
+    if (span) {
+      const event: Attributes = {
+        event: 'TaskAgent-run',
+        taskAgentState: JSON.stringify(taskAgentState, null, 2),
+        pid: process.pid,
+        time: genISO8601String(),
+        thisMaxRunner: this.maxRunner,
+        thisClientConfigMaxRunner: this.clientConfig.maxRunner,
+        thisRunnerSetSize: this.runnerSet.size,
+      }
+      this.otel.addEvent(span, event)
     }
-    this.traceService.addEvent(span, event)
 
     // console.info({
     //   thisMaxRunner: this.maxRunner,
@@ -165,7 +171,7 @@ export class TaskAgentService {
           message: `taskAgent stopped at ${idx} of ${maxPickTaskCount}`,
           time: genISO8601String(),
         }
-        this.traceService.addEvent(span, input)
+        if (span) { this.otel.addEvent(span, input) }
 
         return false
       }),
@@ -202,9 +208,9 @@ export class TaskAgentService {
           errStack: err.stack,
           time: genISO8601String(),
         }
-        this.traceService.addEvent(span, input)
         if (span) {
-          this.traceService.endSpan(span, {
+          this.otel.addEvent(span, input)
+          this.otel.endSpan(span, span, {
             code: SpanStatusCode.ERROR,
             error: err,
           })
@@ -218,9 +224,9 @@ export class TaskAgentService {
           message: 'TaskAgent complete',
           time: genISO8601String(),
         }
-        this.traceService.addEvent(span, input)
         if (span) {
-          this.traceService.endSpan(span)
+          this.otel.addEvent(span, input)
+          this.otel.endSpan(span, span)
         }
       },
     })
