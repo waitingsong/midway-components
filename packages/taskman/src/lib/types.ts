@@ -67,6 +67,10 @@ export interface TaskClientConfig {
    * Support task type id:ver[] list,
    */
   supportTaskMap: SupportTaskMapType
+  /**
+   * @default true
+   */
+  enableTrace: boolean
 }
 export type SupportTaskMapType = Map<TaskDTO['taskTypeId'], TaskTypeVerListType>
 export type TaskTypeVerListType = TaskDTO['taskTypeVer'][] | '*'

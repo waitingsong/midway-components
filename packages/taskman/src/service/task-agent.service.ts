@@ -24,6 +24,8 @@ import {
   OtelComponent,
   Span,
   SpanStatusCode,
+  TraceContext,
+  setSpan,
 } from '@mwcp/otel'
 import { genISO8601String } from '@waiting/shared-core'
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -69,6 +71,8 @@ export class TaskAgentService {
 
   protected intv$: Observable<number>
   protected sub: Subscription | undefined
+  protected span: Span | undefined
+  protected traceCtx: TraceContext | undefined
 
   @Init()
   async init(): Promise<void> {
@@ -79,6 +83,7 @@ export class TaskAgentService {
       : initTaskClientConfig.pickTaskTimer
 
     this.intv$ = timer(500, pickTaskTimer)
+    this.start()
   }
 
   get isRunning(): boolean {
@@ -97,16 +102,14 @@ export class TaskAgentService {
   }
 
   /** 获取待执行任务记录，发送到任务执行服务供其执行 */
-  async run(span?: Span): Promise<boolean> {
-    const taskAgentState = this.status()
-    if (span) {
-      const event: Attributes = {
-        event: 'TaskAgent-run',
-        taskAgentState: JSON.stringify(taskAgentState, null, 2),
-        pid: process.pid,
-        time: genISO8601String(),
-      }
-      this.otel.addEvent(span, event)
+  start(): void {
+    if (this.isRunning) { return }
+    if (this.clientConfig.enableTrace) {
+
+      const spanName = 'TaskAgent-start'
+      const traceCtx = this.otel.getGlobalCurrentContext()
+      this.span = this.otel.startSpan(spanName, { root: true }, traceCtx)
+      this.traceCtx = setSpan(traceCtx, this.span)
     }
 
     const { intv$ } = this
@@ -118,7 +121,7 @@ export class TaskAgentService {
 
     this.sub = stream$.subscribe({
       error: (err: Error) => {
-        if (span) {
+        if (this.span) {
           const input: Attributes = {
             [AttrNames.LogLevel]: 'error',
             pid: process.pid,
@@ -146,8 +149,6 @@ export class TaskAgentService {
         }
       },
     })
-
-    return true
   }
 
   async stop(agentId?: string): Promise<void> {

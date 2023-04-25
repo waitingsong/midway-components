@@ -53,7 +53,7 @@ export class AutoConfiguration {
     )
 
     const agentSvc = await container.getAsync(TaskAgentService)
-    await agentSvc.run()
+    await agentSvc.start()
 
     if (this.mwConfig.enableMiddleware) {
       registerMiddleware(this.app)

@@ -143,6 +143,7 @@ export const initTaskClientConfig: TaskClientConfig = {
   transferHeaders: ['authorization', 'user-agent'],
   headerKeyTaskId: initTaskServerConfig.headerKeyTaskId,
   pickTaskTimer: 1000,
+  enableTrace: true,
   supportTaskMap: new Map([ [1, '*'] ]),
 }
 

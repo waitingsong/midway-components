@@ -28,7 +28,7 @@ export class AgentController {
   async [ClientMethod.start](): Promise<TaskAgentState> {
     const span = this.traceService.startSpan('TaskAgent')
 
-    await this.agentSvc.run(this.ctx, span)
+    await this.agentSvc.start(this.ctx, span)
     const taskAgentState = await this.status()
 
     const event: Attributes = {

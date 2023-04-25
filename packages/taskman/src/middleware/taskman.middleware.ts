@@ -95,7 +95,7 @@ async function middleware(
   }
   else if (! skipList.includes(ctx.path)) {
     const taskAgent = await ctx.requestContext.getAsync(TaskAgentService)
-    await taskAgent.run()
+    await taskAgent.start()
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
