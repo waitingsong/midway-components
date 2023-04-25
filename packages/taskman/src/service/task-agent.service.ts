@@ -25,7 +25,6 @@ import {
   Span,
   SpanStatusCode,
 } from '@mwcp/otel'
-import type { Context } from '@mwcp/share'
 import { genISO8601String } from '@waiting/shared-core'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import {
@@ -98,13 +97,7 @@ export class TaskAgentService {
   }
 
   /** 获取待执行任务记录，发送到任务执行服务供其执行 */
-  async run(
-    ctx?: Context,
-    span?: Span,
-  ): Promise<boolean> {
-
-    void ctx
-
+  async run(span?: Span): Promise<boolean> {
     const taskAgentState = this.status()
     if (span) {
       const event: Attributes = {
@@ -157,11 +150,8 @@ export class TaskAgentService {
     return true
   }
 
-  async stop(ctx?: Context, agentId?: string): Promise<void> {
-    void ctx
-    if (agentId && agentId !== this.id) {
-      return
-    }
+  async stop(agentId?: string): Promise<void> {
+    if (agentId && agentId !== this.id) { return }
     try {
       this.sub?.unsubscribe()
     }

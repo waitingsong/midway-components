@@ -60,7 +60,7 @@ export interface TaskClientConfig {
    */
   headerKeyTaskId: string
   /**
-   * @default 2000(ms)
+   * @default 1000(ms)
    */
   pickTaskTimer: number
   /**
