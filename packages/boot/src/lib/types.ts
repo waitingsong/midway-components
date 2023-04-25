@@ -11,7 +11,6 @@ export {
 } from '@mwcp/share'
 
 
-export { FetchOptions } from '@mwcp/fetch'
 
 export {
   Attributes,
@@ -39,6 +38,7 @@ export {
 } from '@mwcp/cache'
 
 export {
+  FetchOptions,
   FormData,
   Headers,
   Response,
