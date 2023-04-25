@@ -207,7 +207,8 @@ export class OtelComponent extends AbstractOtelComponent {
    * for the duration of the function call.
    */
   startActiveSpan<F extends (
-    ...args: [Span]) => ReturnType<F>>(
+    ...args: [Span]
+  ) => ReturnType<F>>(
     name: string,
     callback: F,
     options?: SpanOptions,
