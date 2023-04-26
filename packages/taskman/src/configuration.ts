@@ -52,9 +52,6 @@ export class AutoConfiguration {
       DbReplica.taskMaster,
     )
 
-    const agentSvc = await container.getAsync(TaskAgentService)
-    await agentSvc.start()
-
     if (this.mwConfig.enableMiddleware) {
       registerMiddleware(this.app)
     }
@@ -63,18 +60,7 @@ export class AutoConfiguration {
   async onStop(container: IMidwayContainer): Promise<void> {
     this.logger.info('[taskman] onStop()')
     const agentSvc = await container.getAsync(TaskAgentService)
-    await agentSvc.stop()
-
-    const time = 10
-    const CI = !! process.env['CI']
-    const env = this.app.getEnv()
-    if (CI || env !== 'prod') {
-      this.logger.info(`[taskman] onStop() wait ${time}s when CI`)
-      await sleep(time * 1000)
-    }
-    else {
-      await sleep(1 * 1000)
-    }
+    agentSvc.stop()
   }
 }
 
