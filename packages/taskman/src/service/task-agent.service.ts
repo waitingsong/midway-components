@@ -26,6 +26,7 @@ import {
   Span,
   SpanStatusCode,
   TraceContext,
+  TraceInit,
 } from '@mwcp/otel'
 import { genISO8601String } from '@waiting/shared-core'
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -76,6 +77,7 @@ export class TaskAgentService {
   protected span: Span | undefined
   protected traceCtx: TraceContext | undefined
 
+  @TraceInit()
   @Init()
   async init(): Promise<void> {
     this.id = randomUUID()
@@ -84,7 +86,7 @@ export class TaskAgentService {
       ? this.clientConfig.pickTaskTimer
       : initTaskClientConfig.pickTaskTimer
 
-    this.intv$ = timer(500, pickTaskTimer)
+    this.intv$ = timer(10, pickTaskTimer)
     this.start()
   }
 
