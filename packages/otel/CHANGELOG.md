@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.3.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@10.2.0...@mwcp/otel@10.3.0) (2023-04-26)
+
+
+### Features
+
+* **otel:** update truncateString() ([482201f](https://github.com/waitingsong/midway-components/commit/482201f5cf07d8ee2db81c92944075a10a4384fa))
+
+
+
+
+
 # 10.2.0 (2023-04-25)
 
 
