@@ -116,10 +116,9 @@ export class TaskAgentService {
     }
 
     const { intv$ } = this
-    const reqId = this.koid.idGenerator.toString()
-    const stream$ = this.pickTasksWaitToRun(intv$, reqId).pipe(
+    const stream$ = this.pickTasksWaitToRun(intv$).pipe(
       mergeMap(({ rows }) => ofrom(rows)),
-      mergeMap(task => this.sendTaskToRun(task, reqId), 2),
+      mergeMap(task => this.sendTaskToRun(task), 2),
     )
 
     this.sub = stream$.subscribe({
@@ -190,7 +189,6 @@ export class TaskAgentService {
 
   private pickTasksWaitToRun(
     intv$: Observable<number>,
-    reqId: string,
   ): Observable<{ rows: TaskDTO[], idx: number }> {
 
     const { supportTaskMap } = this.clientConfig
@@ -215,7 +213,13 @@ export class TaskAgentService {
           data,
         }
         opts.headers = new Headers(opts.headers)
-        if (! opts.headers.has(HeadersKey.reqId)) {
+        let reqId = ''
+        const reqId2 = opts.headers.get(HeadersKey.reqId)
+        if (reqId2) {
+          reqId = reqId2
+        }
+        else {
+          reqId = this.koid.idGenerator.toString()
           opts.headers.set(HeadersKey.reqId, reqId)
         }
 
@@ -238,7 +242,6 @@ export class TaskAgentService {
    */
   private async sendTaskToRun(
     task: TaskDTO | undefined,
-    reqId: string,
   ): Promise<TaskDTO['taskId'] | undefined> {
 
     if (! task) {
@@ -254,18 +257,19 @@ export class TaskAgentService {
         id: taskId,
       },
     }
-    const headers = new Headers(opts.headers)
-    opts.headers = headers
-    if (! opts.headers.has(HeadersKey.reqId)) {
-      opts.headers.set(HeadersKey.reqId, reqId)
-    }
+    // const headers = new Headers(opts.headers)
+    // opts.headers = headers
+    // if (! opts.headers.has(HeadersKey.reqId)) {
+    //   opts.headers.set(HeadersKey.reqId, reqId)
+    // }
 
-    const info = await this.fetch.fetch<TaskPayloadDTO | undefined | JsonResp<TaskPayloadDTO | undefined>>(opts)
+    const [info, headers] = await this.fetch.fetch2<TaskPayloadDTO | JsonResp<TaskPayloadDTO | undefined>>(opts)
     const payload = unwrapResp<TaskPayloadDTO | undefined>(info)
     if (! payload) {
       return ''
     }
 
+    const reqId = headers.get(HeadersKey.reqId) ?? this.koid.idGenerator.toString()
     await this.httpCall(taskId, reqId, payload.json)
     return taskId
   }
