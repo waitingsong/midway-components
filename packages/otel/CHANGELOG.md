@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.5.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@10.4.0...@mwcp/otel@10.5.0) (2023-04-26)
+
+
+### Features
+
+* **otel:** rootSpan of method setSpanWithError, endSpan of OtelComponent accept undefined ([8198e8b](https://github.com/waitingsong/midway-components/commit/8198e8b0b5b52a13d8a50762c8a6e0c9d98be4f7))
+
+
+
+
+
 # [10.4.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@10.3.0...@mwcp/otel@10.4.0) (2023-04-26)
 
 
