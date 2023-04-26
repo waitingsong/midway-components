@@ -80,22 +80,12 @@ async function middleware(
     }
   }
 
-  // const skipList = [
-  //   `${ClientURL.base}/${ClientURL.status}`,
-  //   `${ClientURL.base}/${ClientURL.stop}`,
-  //   `${ServerURL.base}/${ServerURL.pickTasksWaitToRun}`,
-  // ]
-
   if (typeof taskId === 'string' && taskId) {
     clientSvc.runningTasks.add(taskId)
   }
   else if (Array.isArray(taskId) && taskId.length) {
     taskId.forEach(id => clientSvc.runningTasks.add(id))
   }
-  // else if (! skipList.includes(ctx.path)) {
-  //   const taskAgent = await ctx.requestContext.getAsync(TaskAgentService)
-  //   taskAgent.start()
-  // }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return next()
