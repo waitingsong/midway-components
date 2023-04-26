@@ -217,7 +217,7 @@ export class TraceService extends AbstractTraceService {
     if (! this.config.enable) { return }
 
     const target = span ?? this.rootSpan
-    target.setAttributes(input)
+    this.otel.setAttributes(target, input)
   }
 
   setAttributesLater(span: Span | undefined, input: Attributes): void {

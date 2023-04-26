@@ -307,6 +307,16 @@ export class OtelComponent extends AbstractOtelComponent {
     }) // Error-Cause
   }
 
+
+  /**
+   * Sets the attributes to the given span.
+   */
+  setAttributes(span: Span, input: Attributes): void {
+    if (! this.config.enable) { return }
+    span.setAttributes(input)
+  }
+
+
   /**
    * Sets the span with the error passed in params, note span not ended.
    */

@@ -67,6 +67,11 @@ export abstract class AbstractOtelComponent {
   abstract addRootSpanEventWithError(span: Span, error?: Error): void
 
   /**
+   * Sets the attributes to the given span.
+   */
+  abstract setAttributes(span: Span, input: Attributes): void
+
+  /**
    * Sets the span with the error passed in params, note span not ended.
    */
   abstract setSpanWithError(
@@ -104,7 +109,6 @@ export abstract class AbstractOtelComponent {
     /** if omit, use this.appInitProcessSpan */
     span?: Span,
   ): void
-
 
   abstract endAppInitEvent(): void
 }
