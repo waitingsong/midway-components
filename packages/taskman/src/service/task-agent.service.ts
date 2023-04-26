@@ -117,7 +117,7 @@ export class TaskAgentService {
     const reqId = this.koid.idGenerator.toString()
     const stream$ = this.pickTasksWaitToRun(intv$, reqId).pipe(
       mergeMap(({ rows }) => ofrom(rows)),
-      mergeMap(task => this.sendTaskToRun(task, reqId), 1),
+      mergeMap(task => this.sendTaskToRun(task, reqId), 2),
     )
 
     this.sub = stream$.subscribe({
@@ -212,8 +212,7 @@ export class TaskAgentService {
           url: `${this.serverConfig.host}${ServerURL.base}/${ServerURL.pickTasksWaitToRun}`,
           data,
         }
-        const headers = new Headers(opts.headers)
-        opts.headers = headers
+        opts.headers = new Headers(opts.headers)
         if (! opts.headers.has(HeadersKey.reqId)) {
           opts.headers.set(HeadersKey.reqId, reqId)
         }
