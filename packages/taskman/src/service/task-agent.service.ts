@@ -57,7 +57,6 @@ import {
 } from '../lib/index'
 
 
-
 @Autoload()
 @Singleton()
 export class TaskAgentService {
@@ -117,8 +116,17 @@ export class TaskAgentService {
 
     const { intv$ } = this
     const stream$ = this.pickTasksWaitToRun(intv$).pipe(
-      mergeMap(({ rows }) => ofrom(rows)),
-      mergeMap(task => this.sendTaskToRun(task), 2),
+      // mergeMap(({ rows, headers }) => ofrom(rows)),
+      mergeMap(({ rows, headers }) => {
+        const foo$ = ofrom(rows).pipe(
+          map(row => ({
+            task: row,
+            headers,
+          })),
+        )
+        return foo$
+      }),
+      mergeMap(({ task, headers }) => this.sendTaskToRun(task, headers), 2),
     )
 
     this.sub = stream$.subscribe({
@@ -189,12 +197,12 @@ export class TaskAgentService {
 
   private pickTasksWaitToRun(
     intv$: Observable<number>,
-  ): Observable<{ rows: TaskDTO[], idx: number }> {
+  ): Observable<{ rows: TaskDTO[], headers: Headers }> {
 
     const { supportTaskMap } = this.clientConfig
     const taskTypeId = this.pickRandomTaskTypeIdFromSupportTaskMap(supportTaskMap)
     if (! taskTypeId) {
-      return of({ rows: [], idx: 0 })
+      return of({ rows: [], idx: 0, headers: new Headers() })
     }
     const taskTypeVerList = supportTaskMap.get(taskTypeId) ?? []
 
@@ -205,12 +213,18 @@ export class TaskAgentService {
     }
 
     const stream$ = intv$.pipe(
-      mergeMap(() => {
+      mergeMap(async () => {
+        const spanName = `${ConfigKey.namespace} pickTasksWaitToRun`
+        const span = this.otel.startSpan(spanName, {
+          root: true,
+        }, this.traceCtx)
+
         const opts: FetchOptions = {
           ...this.initFetchOptions,
           method: 'POST',
           url: `${this.serverConfig.host}${ServerURL.base}/${ServerURL.pickTasksWaitToRun}`,
           data,
+          span,
         }
         opts.headers = new Headers(opts.headers)
         let reqId = ''
@@ -223,13 +237,11 @@ export class TaskAgentService {
           opts.headers.set(HeadersKey.reqId, reqId)
         }
 
-        const res = this.fetch.fetch<TaskDTO[] | JsonResp<TaskDTO[]>>(opts)
-        return res
-      }, 1),
-      map((res, idx) => {
+        const [res, headers] = await this.fetch.fetch2<TaskDTO[] | JsonResp<TaskDTO[]>>(opts)
+        this.otel.endSpan(void 0, span)
         const rows = unwrapResp<TaskDTO[]>(res)
-        return { rows, idx }
-      }),
+        return { rows, headers }
+      }, 1),
       // tap((rows) => {
       //   console.info(rows)
       // }),
@@ -242,12 +254,21 @@ export class TaskAgentService {
    */
   private async sendTaskToRun(
     task: TaskDTO | undefined,
+    headers: Headers,
   ): Promise<TaskDTO['taskId'] | undefined> {
 
     if (! task) {
       return ''
     }
     const { taskId } = task
+
+    const spanName = `${ConfigKey.namespace} sendTaskToRun`
+    const span = this.otel.startSpan(spanName, {
+      root: true,
+    }, this.traceCtx)
+
+    const reqId = headers.get(HeadersKey.reqId) ?? this.koid.idGenerator.toString()
+    const traceId = headers.get(HeadersKey.traceId) ?? ''
 
     const opts: FetchOptions = {
       ...this.initFetchOptions,
@@ -256,20 +277,26 @@ export class TaskAgentService {
       data: {
         id: taskId,
       },
+      span,
     }
+    const headers2 = new Headers(opts.headers)
+    headers2.set(HeadersKey.reqId, reqId)
+    headers2.set(HeadersKey.traceId, traceId)
+    opts.headers = headers2
+
     // const headers = new Headers(opts.headers)
     // opts.headers = headers
     // if (! opts.headers.has(HeadersKey.reqId)) {
     //   opts.headers.set(HeadersKey.reqId, reqId)
     // }
 
-    const [info, headers] = await this.fetch.fetch2<TaskPayloadDTO | JsonResp<TaskPayloadDTO | undefined>>(opts)
+    const [info] = await this.fetch.fetch2<TaskPayloadDTO | JsonResp<TaskPayloadDTO | undefined>>(opts)
+    this.otel.endSpan(void 0, span)
     const payload = unwrapResp<TaskPayloadDTO | undefined>(info)
     if (! payload) {
       return ''
     }
 
-    const reqId = headers.get(HeadersKey.reqId) ?? this.koid.idGenerator.toString()
     await this.httpCall(taskId, reqId, payload.json)
     return taskId
   }
@@ -282,9 +309,15 @@ export class TaskAgentService {
 
     if (! options?.url) { return }
 
+    const spanName = `${ConfigKey.namespace} sendTaskToRun`
+    const span = this.otel.startSpan(spanName, {
+      root: true,
+    }, this.traceCtx)
+
     const opts = {
       ...this.initFetchOptions,
       ...options,
+      span,
     } as FetchOptions
     const headers = new Headers(opts.headers)
     const key: string = this.serverConfig.headerKey ? this.serverConfig.headerKey : 'x-task-agent'
@@ -324,10 +357,13 @@ export class TaskAgentService {
 
     await this.fetch.fetch<void | JsonResp<void>>(opts)
       .then((res) => {
+        this.otel.endSpan(void 0, span)
         return this.processTaskDist(taskId, reqId, res)
       })
       .catch((err) => {
         if (err instanceof Error) {
+          this.otel.setSpanWithError(void 0, span, err)
+
           const { message } = err as Error
           if (message?.includes('429')
             && message?.includes('Task')
