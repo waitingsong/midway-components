@@ -26,6 +26,7 @@ export const taskServerConfig: TaskServerConfig = {
   dataSource: {
     [DbReplica.taskMaster]: {
       ...initDbConfig,
+      traceInitConnection: true,
     },
   },
 }
