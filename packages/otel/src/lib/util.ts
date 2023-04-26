@@ -401,7 +401,7 @@ export function addSpanEventWithOutgoingResponseData(
 
 export function truncateString(str: string, maxLength = 2048): string {
   if (str && str.length > maxLength) {
-    return str.slice(0, maxLength) + '...'
+    return str.slice(0, maxLength) + '... LENGTH: ' + str.length.toString() + ' bytes'
   }
   return str
 }
