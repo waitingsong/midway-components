@@ -12,7 +12,6 @@ import {
 import { DbConfig, DbSourceManager } from '@mwcp/kmore'
 import { TraceInit } from '@mwcp/otel'
 import type { Application, Context, IMidwayContainer } from '@mwcp/share'
-import { sleep } from '@waiting/shared-core'
 
 import { useComponents } from './imports'
 import {
@@ -46,6 +45,7 @@ export class AutoConfiguration {
 
   @TraceInit({ namespace: ConfigKey.namespace })
   async onReady(container: IMidwayContainer): Promise<void> {
+    void container
     const dbConfig = this.serverConfig.dataSource[DbReplica.taskMaster] as DbConfig<DbModel, Context>
     await this.dbManager.createInstance<DbModel>(
       dbConfig,
