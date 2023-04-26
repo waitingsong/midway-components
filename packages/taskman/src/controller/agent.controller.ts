@@ -25,19 +25,8 @@ export class AgentController {
 
   @Get('/' + ClientURL.start)
   async [ClientMethod.start](): Promise<TaskAgentState> {
-    const span = this.traceService.startSpan('TaskAgent')
-
     this.agentSvc.start()
     const taskAgentState = await this.status()
-
-    const event: Attributes = {
-      event: 'TaskAgent-run',
-      taskAgentState: JSON.stringify(taskAgentState, null, 2),
-      pid: process.pid,
-      time: genISO8601String(),
-    }
-    this.traceService.addEvent(span, event)
-
     return taskAgentState
   }
 
