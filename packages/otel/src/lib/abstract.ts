@@ -75,7 +75,7 @@ export abstract class AbstractOtelComponent {
    * Sets the span with the error passed in params, note span not ended.
    */
   abstract setSpanWithError(
-    rootSpan: Span,
+    rootSpan: Span | undefined,
     span: Span,
     error: Error | undefined,
     eventName?: string,
@@ -89,7 +89,7 @@ export abstract class AbstractOtelComponent {
    * - call span.end(), except span is root span
    */
   abstract endSpan(
-    rootSpan: Span,
+    rootSpan: Span | undefined,
     span: Span,
     spanStatusOptions?: SpanStatusOptions,
     endTime?: TimeInput,

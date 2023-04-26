@@ -321,7 +321,7 @@ export class OtelComponent extends AbstractOtelComponent {
    * Sets the span with the error passed in params, note span not ended.
    */
   setSpanWithError(
-    rootSpan: Span,
+    rootSpan: Span | undefined,
     span: Span,
     error: Error | undefined,
     eventName?: string,
@@ -346,7 +346,7 @@ export class OtelComponent extends AbstractOtelComponent {
 
       // @ts-ignore
       if (error.cause instanceof Error || error[AttrNames.IsTraced]) {
-        if (span !== rootSpan) {
+        if (rootSpan && span !== rootSpan) {
           // error contains cause, then add events only
           attrs[SemanticAttributes.EXCEPTION_MESSAGE] = 'skipping'
           this.addEvent(span, attrs)
@@ -371,7 +371,7 @@ export class OtelComponent extends AbstractOtelComponent {
    * - call span.end(), except span is root span
    */
   endSpan(
-    rootSpan: Span,
+    rootSpan: Span | undefined,
     span: Span,
     spanStatusOptions: SpanStatusOptions = initSpanStatusOptions,
     endTime?: TimeInput,
@@ -397,7 +397,12 @@ export class OtelComponent extends AbstractOtelComponent {
       span.setStatus(status)
     }
 
-    if (span !== rootSpan) {
+    if (rootSpan) {
+      if (span !== rootSpan) {
+        span.end(endTime)
+      }
+    }
+    else {
       span.end(endTime)
     }
   }
