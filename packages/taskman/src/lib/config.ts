@@ -142,9 +142,8 @@ export const initTaskClientConfig: TaskClientConfig = {
   host: 'http://localhost:7001',
   transferHeaders: ['authorization', 'user-agent'],
   headerKeyTaskId: initTaskServerConfig.headerKeyTaskId,
-  pickTaskTimer: 2000,
-  minPickTaskCount: 5,
-  maxPickTaskCount: 1000,
+  pickTaskTimer: 1000,
+  enableTrace: true,
   maxRunner: 2,
   supportTaskMap: new Map([ [1, '*'] ]),
 }

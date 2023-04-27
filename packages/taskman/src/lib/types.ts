@@ -60,27 +60,18 @@ export interface TaskClientConfig {
    */
   headerKeyTaskId: string
   /**
-   * @default 2000(ms)
+   * @default 1000(ms)
    */
   pickTaskTimer: number
-  /**
-   * Mininum loop times until no 'init' task
-   * @default 5
-   */
-  minPickTaskCount: number
-  /**
-   * Max loop times until no 'init' task
-   * @default 1000 (loop times, not tasks number)
-   */
-  maxPickTaskCount: number
-  /**
-   * @default 2
-   */
-  maxRunner: number
   /**
    * Support task type id:ver[] list,
    */
   supportTaskMap: SupportTaskMapType
+  /**
+   * @default true
+   */
+  enableTrace: boolean
+  maxRunner: number
 }
 export type SupportTaskMapType = Map<TaskDTO['taskTypeId'], TaskTypeVerListType>
 export type TaskTypeVerListType = TaskDTO['taskTypeVer'][] | '*'
@@ -347,7 +338,7 @@ export interface TaskAgentState {
    * blank string means no running TaskAgentService during this request
    */
   agentId: string
-  count: number
+  isRunning: boolean
 }
 
 
