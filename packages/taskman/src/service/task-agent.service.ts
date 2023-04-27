@@ -24,6 +24,7 @@ import {
   HeadersKey,
   OtelComponent,
   Span,
+  SpanKind,
   // SpanStatusCode,
   TraceContext,
   TraceInit,
@@ -215,7 +216,10 @@ export class TaskAgentService {
     const stream$ = intv$.pipe(
       mergeMap(async () => {
         const spanName = `${ConfigKey.namespace} pickTasksWaitToRun`
-        const { span, context } = this.otel.startSpan2(spanName, void 0, this.rootTraceCtx)
+        const { span, context } = this.otel.startSpan2(spanName, {
+          root: true,
+          kind: SpanKind.CONSUMER,
+        }, this.rootTraceCtx)
 
         const opts: FetchOptions = {
           ...this.initFetchOptions,
@@ -262,7 +266,7 @@ export class TaskAgentService {
     const { taskId } = task
 
     const spanName = `${ConfigKey.namespace} sendTaskToRun`
-    const { span, context } = this.otel.startSpan2(spanName, void 0, this.rootTraceCtx)
+    const { span, context } = this.otel.startSpan2(spanName, { kind: SpanKind.CONSUMER }, this.rootTraceCtx)
 
     const reqId = headers.get(HeadersKey.reqId) ?? this.koid.idGenerator.toString()
     const traceId = headers.get(HeadersKey.traceId) ?? ''
@@ -310,6 +314,7 @@ export class TaskAgentService {
     const spanName = `${ConfigKey.namespace} sendTaskToRun`
     const { span, context } = this.otel.startSpan2(spanName, {
       root: true,
+      kind: SpanKind.CONSUMER,
     }, this.rootTraceCtx)
 
     const opts = {
