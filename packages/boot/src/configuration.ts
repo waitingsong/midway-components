@@ -43,7 +43,7 @@ export class ContainerConfiguration implements ILifeCycle {
   @Inject() readonly informationService: MidwayInformationService
 
   // 启动前处理
-  @TraceInit(`INIT ${ConfigKey.componentName}.onReady`)
+  @TraceInit({ namespace: ConfigKey.componentName })
   async onReady(container: IMidwayContainer): Promise<void> {
     void container
 
@@ -73,7 +73,7 @@ export class ContainerConfiguration implements ILifeCycle {
   }
 
 
-  @TraceInit(`INIT ${ConfigKey.componentName}.onServerReady`)
+  @TraceInit({ namespace: ConfigKey.componentName })
   async onServerReady(container: IMidwayContainer): Promise<void> {
     void container
     const pkg = this.informationService.getPkg() as NpmPkg | undefined

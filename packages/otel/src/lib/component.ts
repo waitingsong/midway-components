@@ -158,9 +158,9 @@ export class OtelComponent extends AbstractOtelComponent {
       this.appInitProcessContext = ctxWithSpanSet
     }, opts)
 
-    const span = this.getGlobalCurrentSpan(this.appInitProcessContext)
-    void traceCtx
-    void span
+    // const span = this.getGlobalCurrentSpan(this.appInitProcessContext)
+    // void traceCtx
+    // void span
 
     this.prepareCaptureHeaders('request', this.config.captureRequestHeaders)
     this.prepareCaptureHeaders('response', this.config.captureRequestHeaders)
@@ -191,14 +191,22 @@ export class OtelComponent extends AbstractOtelComponent {
    * This method do NOT modify the current Context.
    */
   startSpan(name: string, options?: SpanOptions, traceContext?: Context): Span {
+    const { span } = this.startSpan2(name, options, traceContext)
+    return span
+  }
+
+  /**
+   * Starts a new {@link Span}. Start the span without setting it on context.
+   */
+  startSpan2(name: string, options?: SpanOptions, traceContext?: Context): { span: Span, context: Context } {
     const tracer = trace.getTracer(this.otelLibraryName, this.otelLibraryVersion)
     const opts: SpanOptions = {
       kind: SpanKind.CLIENT,
-      // startTime: Date.now(),
       ...options,
     }
     const span = tracer.startSpan(name, opts, traceContext)
-    return span
+    const ctx = setSpan(traceContext ?? context.active(), span)
+    return { span, context: ctx }
   }
 
   /**
@@ -207,7 +215,8 @@ export class OtelComponent extends AbstractOtelComponent {
    * for the duration of the function call.
    */
   startActiveSpan<F extends (
-    ...args: [Span]) => ReturnType<F>>(
+    ...args: [Span]
+  ) => ReturnType<F>>(
     name: string,
     callback: F,
     options?: SpanOptions,
@@ -298,11 +307,21 @@ export class OtelComponent extends AbstractOtelComponent {
     }) // Error-Cause
   }
 
+
+  /**
+   * Sets the attributes to the given span.
+   */
+  setAttributes(span: Span, input: Attributes): void {
+    if (! this.config.enable) { return }
+    span.setAttributes(input)
+  }
+
+
   /**
    * Sets the span with the error passed in params, note span not ended.
    */
   setSpanWithError(
-    rootSpan: Span,
+    rootSpan: Span | undefined,
     span: Span,
     error: Error | undefined,
     eventName?: string,
@@ -327,7 +346,7 @@ export class OtelComponent extends AbstractOtelComponent {
 
       // @ts-ignore
       if (error.cause instanceof Error || error[AttrNames.IsTraced]) {
-        if (span !== rootSpan) {
+        if (rootSpan && span !== rootSpan) {
           // error contains cause, then add events only
           attrs[SemanticAttributes.EXCEPTION_MESSAGE] = 'skipping'
           this.addEvent(span, attrs)
@@ -352,7 +371,7 @@ export class OtelComponent extends AbstractOtelComponent {
    * - call span.end(), except span is root span
    */
   endSpan(
-    rootSpan: Span,
+    rootSpan: Span | undefined,
     span: Span,
     spanStatusOptions: SpanStatusOptions = initSpanStatusOptions,
     endTime?: TimeInput,
@@ -378,7 +397,12 @@ export class OtelComponent extends AbstractOtelComponent {
       span.setStatus(status)
     }
 
-    if (span !== rootSpan) {
+    if (rootSpan) {
+      if (span !== rootSpan) {
+        span.end(endTime)
+      }
+    }
+    else {
       span.end(endTime)
     }
   }

@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/otel",
   "author": "waiting",
-  "version": "10.0.0",
+  "version": "10.6.0",
   "description": "midway component for open telemetry",
   "keywords": [
     "midway",
@@ -34,7 +34,8 @@
     "@opentelemetry/resource-detector-container": "^0.2.2",
     "@opentelemetry/resource-detector-gcp": "^0.28.0",
     "@opentelemetry/sdk-node": "^0.38.0",
-    "@waiting/shared-core": "^21.1.0"
+    "@waiting/shared-core": "^21.1.0",
+    "undici": "^5.22.0"
   },
   "devDependencies": {
     "cross-env": "7"

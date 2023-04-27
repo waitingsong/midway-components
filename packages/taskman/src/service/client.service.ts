@@ -7,12 +7,12 @@ import {
 import { ILogger } from '@midwayjs/logger'
 import type { FetchOptions } from '@mwcp/boot'
 import { FetchService, JsonResp, Headers, pickUrlStrFromRequestInfo } from '@mwcp/fetch'
-import { TraceService } from '@mwcp/otel'
+import { SpanKind, Trace, TraceService } from '@mwcp/otel'
 import type { Context } from '@mwcp/share'
 import { retrieveHeadersItem } from '@waiting/shared-core'
 
-import { initTaskClientConfig } from './config'
-import { processJsonHeaders } from './helper'
+import { initTaskClientConfig } from '../lib/config'
+import { processJsonHeaders } from '../lib/helper'
 import {
   ConfigKey,
   CreateTaskDTO,
@@ -26,7 +26,9 @@ import {
   TaskProgressDTO,
   TaskProgressDetailDTO,
   TaskResultDTO,
-} from './types'
+} from '../lib/types'
+
+import { TaskAgentService } from './task-agent.service'
 
 
 @Provide()
@@ -40,6 +42,8 @@ export class ClientService {
 
   @Inject() readonly traceService: TraceService
 
+  @Inject() readonly agentService: TaskAgentService
+
   @Config(ConfigKey.clientConfig) protected readonly config: TaskClientConfig
 
   runningTasks = new Set<TaskDTO['taskId']>()
@@ -51,10 +55,13 @@ export class ClientService {
   /**
    * Create a task
    */
-  async [ServerMethod.create](input: CreateTaskOptions): Promise<TaskDTO | undefined> {
+  @Trace({ kind: SpanKind.PRODUCER })
+  async [ServerMethod.create](
+    input: CreateTaskOptions,
+    startAgent = true,
+  ): Promise<TaskDTO | undefined> {
+
     const headers = this.processPostHeaders(input)
-    // const spanHeader = this.traceService.headerOfCurrentSpan()?.[HeadersKey.traceId] as string
-    // headers.set(HeadersKey.traceId, spanHeader)
     const pdata: CreateTaskDTO = {
       taskTypeVer: 1,
       ...input.createTaskDTO,
@@ -85,6 +92,11 @@ export class ClientService {
     // @FIXME
     // this.writeTaskCache(taskRunner)
     this.writeReqHeaders(task.taskId, headers)
+
+    if (startAgent && ! this.agentService.isRunning) {
+      this.agentService.start()
+    }
+
     return task
   }
 

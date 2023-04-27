@@ -72,7 +72,6 @@ export class AutoConfiguration implements ILifeCycle {
 
   }
 
-  // @TraceInit()
   @TraceInit({ namespace: ConfigKey.componentName })
   async onServerReady(container: IMidwayContainer): Promise<void> {
     void container
@@ -94,7 +93,7 @@ export class AutoConfiguration implements ILifeCycle {
   async onStop(container: IMidwayContainer): Promise<void> {
     this.logger.info('[otel] onStop()')
     const otel = await container.getAsync(OtelComponent)
-    await sleep(1000)
+    await sleep(100)
     await otel.shutdown()
   }
 

@@ -11,13 +11,13 @@ export {
 } from '@mwcp/share'
 
 
-export { FetchOptions } from '@mwcp/fetch'
 
 export {
   Attributes,
   AttrNames,
   HeadersKey,
   Trace,
+  TraceInit,
   TraceLogger,
   TraceService,
 } from '@mwcp/otel'
@@ -38,8 +38,10 @@ export {
 } from '@mwcp/cache'
 
 export {
+  FetchOptions,
   FormData,
   Headers,
+  HeadersInit,
   Response,
   ResponseData,
   RequestInfo,

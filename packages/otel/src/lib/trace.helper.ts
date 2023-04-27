@@ -11,10 +11,16 @@ import {
 } from './decorator.types'
 import {
   AttrNames,
+  Config,
   ConfigKey,
   TraceContext,
 } from './types'
 
+
+const configNameList = [
+  'AutoConfiguration',
+  'ContainerConfiguration',
+]
 
 interface GenKeyOptions extends Partial<TraceDecoratorParam> {
   methodArgs: unknown[]
@@ -87,7 +93,7 @@ function genEventKeyWhenSpanNameEmpty(options: GenKeyOptions): string {
 
   let name = ''
 
-  if (callerClass === 'AutoConfiguration' && namespace) {
+  if (namespace && configNameList.includes(callerClass)) {
     switch (callerMethod) {
       case 'onReady':
       case 'onServerReady': {
@@ -103,6 +109,7 @@ type ExecutorParamBase<T extends TraceDecoratorParam = TraceDecoratorParam> = De
 
 export interface DecoratorExecutorParam<T extends TraceDecoratorParam = TraceDecoratorParam>
   extends ExecutorParamBase<T> {
+  config: Config
   callerAttr: Attributes
   spanName: string
   spanOptions: Partial<SpanOptions>
@@ -158,9 +165,11 @@ export function genDecoratorExecutorOptions(
     [AttrNames.CallerMethod]: options.methodName,
   }
 
+  const config = options.webApp.getConfig(ConfigKey.config) as Config
 
   const ret: DecoratorExecutorParam<TraceDecoratorParam> = {
     ...options,
+    config,
     callerAttr,
     spanName,
     spanOptions: mergedDecoratorParam,

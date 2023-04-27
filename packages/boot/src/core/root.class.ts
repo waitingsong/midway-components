@@ -14,7 +14,6 @@ import { JwtComponent } from '@mwcp/jwt'
 import { KoidComponent } from '@mwcp/koid'
 import { AttrNames, TraceLogger, TraceService } from '@mwcp/otel'
 import { MyError } from '@mwcp/share'
-import type { OverwriteAnyToUnknown } from '@waiting/shared-types'
 
 import {
   Application,
@@ -94,50 +93,50 @@ export class RootClass {
    * 请求和返回类型都是 JSON 格式，
    * 返回类型为 `JsonResp` 结构
    */
-  fetch<T extends ResponseData = any>(
+  fetch<T extends ResponseData>(
     options: FetchOptions,
-  ): Promise<JsonResp<OverwriteAnyToUnknown<T>>> {
+  ): Promise<JsonResp<T>> {
 
     const opts: FetchOptions = {
       ...this.initFetchOptions,
       ...options,
       headers: this.genFetchHeaders(options.headers),
     }
-    return this.fetchService.fetch(opts) as Promise<JsonResp<OverwriteAnyToUnknown<T>>>
+    return this.fetchService.fetch(opts) as Promise<JsonResp<T>>
   }
 
   /**
    * 请求和返回类型都是 JSON 格式，
    * 返回类型为 `JsonResp` 结构
    */
-  getJson<T extends ResponseData = any>(
+  getJson<T extends ResponseData>(
     url: string,
     options?: FetchOptions,
-  ): Promise<JsonResp<OverwriteAnyToUnknown<T>>> {
+  ): Promise<JsonResp<T>> {
 
     const opts: FetchOptions = {
       ...this.initFetchOptions,
       ...options,
       headers: this.genFetchHeaders(options?.headers),
     }
-    return this.fetchService.get(url, opts) as Promise<JsonResp<OverwriteAnyToUnknown<T>>>
+    return this.fetchService.get(url, opts) as Promise<JsonResp<T>>
   }
 
   /**
    * 请求和返回类型都是 JSON 格式，
    * 返回类型为 `JsonResp` 结构
    */
-  postJson<T extends ResponseData = any>(
+  postJson<T extends ResponseData>(
     url: string,
     options?: FetchOptions,
-  ): Promise<JsonResp<OverwriteAnyToUnknown<T>>> {
+  ): Promise<JsonResp<T>> {
 
     const opts: FetchOptions = {
       ...this.initFetchOptions,
       ...options,
       headers: this.genFetchHeaders(options?.headers),
     }
-    return this.fetchService.post(url, opts) as Promise<JsonResp<OverwriteAnyToUnknown<T>>>
+    return this.fetchService.post(url, opts) as Promise<JsonResp<T>>
   }
 
 
@@ -147,14 +146,14 @@ export class RootClass {
    */
   fetchCustom<T>(
     options: FetchOptions,
-  ): Promise<OverwriteAnyToUnknown<T>> {
+  ): Promise<T> {
 
     const opts: FetchOptions = {
       ...this.initFetchOptions,
       ...options,
       headers: this.genFetchHeaders(options.headers),
     }
-    return this.fetchService.fetch(opts) as Promise<OverwriteAnyToUnknown<T>>
+    return this.fetchService.fetch(opts) as Promise<T>
   }
 
   /**
@@ -164,14 +163,14 @@ export class RootClass {
   getCustomJson<T>(
     url: string,
     options?: FetchOptions,
-  ): Promise<OverwriteAnyToUnknown<T>> {
+  ): Promise<T> {
 
     const opts: FetchOptions = {
       ...this.initFetchOptions,
       ...options,
       headers: this.genFetchHeaders(options?.headers),
     }
-    return this.fetchService.get(url, opts) as Promise<OverwriteAnyToUnknown<T>>
+    return this.fetchService.get(url, opts) as Promise<T>
   }
 
   /**
@@ -181,14 +180,14 @@ export class RootClass {
   postCustomJson<T>(
     url: string,
     options?: FetchOptions,
-  ): Promise<OverwriteAnyToUnknown<T>> {
+  ): Promise<T> {
 
     const opts: FetchOptions = {
       ...this.initFetchOptions,
       ...options,
       headers: this.genFetchHeaders(options?.headers),
     }
-    return this.fetchService.post(url, opts) as Promise<OverwriteAnyToUnknown<T>>
+    return this.fetchService.post(url, opts) as Promise<T>
   }
 
   /* c8 ignore stop */

@@ -19,8 +19,10 @@ import {
   NetTransportValues,
   SemanticAttributes,
 } from '@opentelemetry/semantic-conventions'
+import type { Headers as UndiciHeaders } from 'undici'
 
 import { AttrNames, Config } from './types'
+
 
 
 const defaultPropety: PropertyDescriptor = {
@@ -331,6 +333,30 @@ export function propagateOutgoingHeader(
 }
 
 /**
+ * Skip if header already exists
+ */
+export function propagateHeader<T extends Headers | UndiciHeaders = Headers>(
+  traceContext: Context,
+  headers: T,
+): void {
+
+  const tmp = {}
+  propagation.inject(traceContext, tmp)
+
+  Object.entries(tmp).forEach(([key, val]) => {
+    const curr = headers.get(key)
+    if (typeof curr !== 'undefined' && curr !== null) { return }
+
+    if (typeof val === 'string' || typeof val === 'number') {
+      headers.set(key, val.toString())
+    }
+    else if (Array.isArray(val)) {
+      headers.set(key, val.join(','))
+    }
+  })
+}
+
+/**
    *
    * @param headersKey if omit then use inner prepared headers key
    */
@@ -401,7 +427,7 @@ export function addSpanEventWithOutgoingResponseData(
 
 export function truncateString(str: string, maxLength = 2048): string {
   if (str && str.length > maxLength) {
-    return str.slice(0, maxLength) + '...'
+    return str.slice(0, maxLength) + '... LENGTH: ' + str.length.toString() + ' bytes'
   }
   return str
 }

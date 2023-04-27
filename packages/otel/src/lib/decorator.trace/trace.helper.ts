@@ -12,6 +12,7 @@ export async function decoratorExecutorAsync(
 ): Promise<unknown> {
 
   const {
+    config,
     method: func,
     methodArgs: funcArgs,
     callerAttr,
@@ -21,6 +22,11 @@ export async function decoratorExecutorAsync(
     spanOptions,
     traceService,
   } = options
+
+  if (! config.enable) {
+    const ret = await func(...funcArgs)
+    return ret
+  }
 
   if (! traceService) {
     console.warn('traceService is not initialized. (traceService 尚未初始化。)')
@@ -56,6 +62,7 @@ export function decoratorExecutorSync(
 ): unknown {
 
   const {
+    config,
     method: func,
     methodArgs: funcArgs,
     callerAttr,
@@ -66,9 +73,17 @@ export function decoratorExecutorSync(
     traceService,
   } = options
 
-  if (! traceService) {
-    return func(...funcArgs)
+  if (! config.enable) {
+    const ret = func(...funcArgs)
+    return ret
   }
+
+  if (! traceService) {
+    console.warn('traceService is not initialized. (traceService 尚未初始化。)')
+    const ret = func(...funcArgs)
+    return ret
+  }
+
 
   if (startActiveSpan) {
     // 记录开始时间
