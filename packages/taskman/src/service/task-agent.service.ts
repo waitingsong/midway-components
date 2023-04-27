@@ -215,7 +215,7 @@ export class TaskAgentService {
     const stream$ = intv$.pipe(
       mergeMap(async () => {
         const spanName = `${ConfigKey.namespace} pickTasksWaitToRun`
-        const span = this.otel.startSpan(spanName, void 0, this.rootTraceCtx)
+        const { span, context } = this.otel.startSpan2(spanName, void 0, this.rootTraceCtx)
 
         const opts: FetchOptions = {
           ...this.initFetchOptions,
@@ -223,6 +223,7 @@ export class TaskAgentService {
           url: `${this.serverConfig.host}${ServerURL.base}/${ServerURL.pickTasksWaitToRun}`,
           data,
           span,
+          traceContext: context,
         }
         opts.headers = new Headers(opts.headers)
         let reqId = ''
@@ -261,7 +262,7 @@ export class TaskAgentService {
     const { taskId } = task
 
     const spanName = `${ConfigKey.namespace} sendTaskToRun`
-    const span = this.otel.startSpan(spanName, void 0, this.rootTraceCtx)
+    const { span, context } = this.otel.startSpan2(spanName, void 0, this.rootTraceCtx)
 
     const reqId = headers.get(HeadersKey.reqId) ?? this.koid.idGenerator.toString()
     const traceId = headers.get(HeadersKey.traceId) ?? ''
@@ -274,6 +275,7 @@ export class TaskAgentService {
         id: taskId,
       },
       span,
+      traceContext: context,
     }
     const headers2 = new Headers(opts.headers)
     headers2.set(HeadersKey.reqId, reqId)
@@ -306,7 +308,7 @@ export class TaskAgentService {
     if (! options?.url) { return }
 
     const spanName = `${ConfigKey.namespace} sendTaskToRun`
-    const span = this.otel.startSpan(spanName, {
+    const { span, context } = this.otel.startSpan2(spanName, {
       root: true,
     }, this.rootTraceCtx)
 
@@ -314,7 +316,9 @@ export class TaskAgentService {
       ...this.initFetchOptions,
       ...options,
       span,
+      traceContext: context,
     } as FetchOptions
+
     const headers = new Headers(opts.headers)
     const key: string = this.serverConfig.headerKey ? this.serverConfig.headerKey : 'x-task-agent'
     headers.set(key, '1')
