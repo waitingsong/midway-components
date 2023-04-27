@@ -11,8 +11,8 @@ import { Trace, TraceService } from '~/lib/index'
 import { TraceLogger } from '~/lib/trace.logger'
 import { Config, ConfigKey, Msg } from '~/lib/types'
 
-import { DefaultComponentService } from './test.service'
-import { apiPrefix, apiRoute } from './api-route'
+import { DefaultComponentService } from './trace.service'
+import { apiPrefix, apiRoute } from '../api-route'
 
 
 @Controller(apiPrefix.TraceDecorator)
