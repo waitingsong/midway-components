@@ -25,7 +25,6 @@ import {
   OtelComponent,
   Span,
   SpanKind,
-  // SpanStatusCode,
   TraceContext,
   TraceInit,
 } from '@mwcp/otel'

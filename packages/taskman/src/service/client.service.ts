@@ -55,7 +55,7 @@ export class ClientService {
   /**
    * Create a task
    */
-  @Trace({ kind: SpanKind.CONSUMER })
+  @Trace({ kind: SpanKind.PRODUCER })
   async [ServerMethod.create](
     input: CreateTaskOptions,
     startAgent = true,
