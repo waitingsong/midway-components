@@ -332,6 +332,9 @@ export function propagateOutgoingHeader(
   })
 }
 
+/**
+ * Skip if header already exists
+ */
 export function propagateHeader<T extends Headers | UndiciHeaders = Headers>(
   traceContext: Context,
   headers: T,
@@ -341,6 +344,9 @@ export function propagateHeader<T extends Headers | UndiciHeaders = Headers>(
   propagation.inject(traceContext, tmp)
 
   Object.entries(tmp).forEach(([key, val]) => {
+    const curr = headers.get(key)
+    if (typeof curr !== 'undefined' && curr !== null) { return }
+
     if (typeof val === 'string' || typeof val === 'number') {
       headers.set(key, val.toString())
     }
