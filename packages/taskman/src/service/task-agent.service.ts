@@ -141,10 +141,10 @@ export class TaskAgentService {
             time: genISO8601String(),
           }
           this.otel.addEvent(this.rootSpan, input)
-          this.otel.endSpan(this.rootSpan, this.rootSpan, {
-            code: SpanStatusCode.ERROR,
-            error: err,
-          })
+          // this.otel.endSpan(this.rootSpan, this.rootSpan, {
+          //   code: SpanStatusCode.ERROR,
+          //   error: err,
+          // })
         }
       },
       complete: () => { void 0 },
@@ -217,9 +217,7 @@ export class TaskAgentService {
     const stream$ = intv$.pipe(
       mergeMap(async () => {
         const spanName = `${ConfigKey.namespace} pickTasksWaitToRun`
-        const span = this.otel.startSpan(spanName, {
-          root: true,
-        }, this.rootTraceCtx)
+        const span = this.otel.startSpan(spanName, void 0, this.rootTraceCtx)
 
         const opts: FetchOptions = {
           ...this.initFetchOptions,
@@ -240,7 +238,7 @@ export class TaskAgentService {
         }
 
         const [res, headers] = await this.fetch.fetch2<TaskDTO[] | JsonResp<TaskDTO[]>>(opts)
-        this.otel.endSpan(void 0, span)
+        this.otel.endSpan(this.rootSpan, span)
         const rows = unwrapResp<TaskDTO[]>(res)
         return { rows, headers }
       }, 1),
@@ -265,9 +263,7 @@ export class TaskAgentService {
     const { taskId } = task
 
     const spanName = `${ConfigKey.namespace} sendTaskToRun`
-    const span = this.otel.startSpan(spanName, {
-      root: true,
-    }, this.rootTraceCtx)
+    const span = this.otel.startSpan(spanName, void 0, this.rootTraceCtx)
 
     const reqId = headers.get(HeadersKey.reqId) ?? this.koid.idGenerator.toString()
     const traceId = headers.get(HeadersKey.traceId) ?? ''
@@ -293,7 +289,7 @@ export class TaskAgentService {
     // }
 
     const [info] = await this.fetch.fetch2<TaskPayloadDTO | JsonResp<TaskPayloadDTO | undefined>>(opts)
-    this.otel.endSpan(void 0, span)
+    this.otel.endSpan(this.rootSpan, span)
     const payload = unwrapResp<TaskPayloadDTO | undefined>(info)
     if (! payload) {
       return ''
