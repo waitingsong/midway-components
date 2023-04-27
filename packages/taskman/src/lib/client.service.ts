@@ -11,6 +11,8 @@ import { TraceService } from '@mwcp/otel'
 import type { Context } from '@mwcp/share'
 import { retrieveHeadersItem } from '@waiting/shared-core'
 
+import { TaskAgentService } from '../service/task-agent.service'
+
 import { initTaskClientConfig } from './config'
 import { processJsonHeaders } from './helper'
 import {
@@ -39,6 +41,8 @@ export class ClientService {
   @Inject() protected readonly fetch: FetchService
 
   @Inject() readonly traceService: TraceService
+
+  @Inject() readonly agentService: TaskAgentService
 
   @Config(ConfigKey.clientConfig) protected readonly config: TaskClientConfig
 
@@ -85,6 +89,11 @@ export class ClientService {
     // @FIXME
     // this.writeTaskCache(taskRunner)
     this.writeReqHeaders(task.taskId, headers)
+
+    // if (! this.agentService.isRunning) {
+    //   this.agentService.start()
+    // }
+
     return task
   }
 

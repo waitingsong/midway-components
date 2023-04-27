@@ -73,8 +73,8 @@ export class TaskAgentService {
 
   protected intv$: Observable<number>
   protected sub: Subscription | undefined
-  protected span: Span | undefined
-  protected traceCtx: TraceContext | undefined
+  protected rootSpan: Span | undefined
+  protected rootTraceCtx: TraceContext | undefined
 
   @TraceInit()
   @Init()
@@ -110,8 +110,8 @@ export class TaskAgentService {
     if (this.clientConfig.enableTrace) {
       const spanName = 'TaskAgent-start'
       const { span, context } = this.otel.startSpan2(spanName, { root: true })
-      this.span = span
-      this.traceCtx = context
+      this.rootSpan = span
+      this.rootTraceCtx = context
     }
 
     const { intv$ } = this
@@ -131,7 +131,7 @@ export class TaskAgentService {
 
     this.sub = stream$.subscribe({
       error: (err: Error) => {
-        if (this.span) {
+        if (this.rootSpan) {
           const input: Attributes = {
             [AttrNames.LogLevel]: 'error',
             pid: process.pid,
@@ -140,24 +140,14 @@ export class TaskAgentService {
             errStack: err.stack,
             time: genISO8601String(),
           }
-          this.otel.addEvent(this.span, input)
-          this.otel.endSpan(this.span, this.span, {
+          this.otel.addEvent(this.rootSpan, input)
+          this.otel.endSpan(this.rootSpan, this.rootSpan, {
             code: SpanStatusCode.ERROR,
             error: err,
           })
         }
       },
-      complete: () => {
-        if (this.span) {
-          const input: Attributes = {
-            [AttrNames.LogLevel]: 'info',
-            message: 'TaskAgent complete',
-            time: genISO8601String(),
-          }
-          this.otel.addEvent(this.span, input)
-          this.otel.endSpan(this.span, this.span)
-        }
-      },
+      complete: () => { void 0 },
     })
   }
 
@@ -169,6 +159,18 @@ export class TaskAgentService {
     catch (ex) {
       this.logger.warn('stop with error', (ex as Error).message)
     }
+    if (this.rootSpan) {
+
+      const input: Attributes = {
+        [AttrNames.LogLevel]: 'info',
+        message: 'TaskAgent complete',
+        time: genISO8601String(),
+      }
+      this.otel.addEvent(this.rootSpan, input)
+      this.otel.endRootSpan(this.rootSpan)
+    }
+    this.rootSpan = void 0
+    this.rootTraceCtx = void 0
   }
 
   protected pickRandomTaskTypeIdFromSupportTaskMap(
@@ -217,7 +219,7 @@ export class TaskAgentService {
         const spanName = `${ConfigKey.namespace} pickTasksWaitToRun`
         const span = this.otel.startSpan(spanName, {
           root: true,
-        }, this.traceCtx)
+        }, this.rootTraceCtx)
 
         const opts: FetchOptions = {
           ...this.initFetchOptions,
@@ -265,7 +267,7 @@ export class TaskAgentService {
     const spanName = `${ConfigKey.namespace} sendTaskToRun`
     const span = this.otel.startSpan(spanName, {
       root: true,
-    }, this.traceCtx)
+    }, this.rootTraceCtx)
 
     const reqId = headers.get(HeadersKey.reqId) ?? this.koid.idGenerator.toString()
     const traceId = headers.get(HeadersKey.traceId) ?? ''
@@ -312,7 +314,7 @@ export class TaskAgentService {
     const spanName = `${ConfigKey.namespace} sendTaskToRun`
     const span = this.otel.startSpan(spanName, {
       root: true,
-    }, this.traceCtx)
+    }, this.rootTraceCtx)
 
     const opts = {
       ...this.initFetchOptions,
@@ -372,8 +374,7 @@ export class TaskAgentService {
           }
           return this.processHttpCallExp(taskId, reqId, opts, err as Error)
         }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        throw new Error(err)
+        // throw new Error(err)
       })
       // .finally(() => {
       //   // newSpan && newSpan.finish()
