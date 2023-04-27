@@ -55,7 +55,10 @@ export class ClientService {
   /**
    * Create a task
    */
-  async [ServerMethod.create](input: CreateTaskOptions): Promise<TaskDTO | undefined> {
+  async [ServerMethod.create](
+    input: CreateTaskOptions,
+    startAgent = true,
+  ): Promise<TaskDTO | undefined> {
     const headers = this.processPostHeaders(input)
     // const spanHeader = this.traceService.headerOfCurrentSpan()?.[HeadersKey.traceId] as string
     // headers.set(HeadersKey.traceId, spanHeader)
@@ -90,9 +93,9 @@ export class ClientService {
     // this.writeTaskCache(taskRunner)
     this.writeReqHeaders(task.taskId, headers)
 
-    // if (! this.agentService.isRunning) {
-    //   this.agentService.start()
-    // }
+    if (startAgent && ! this.agentService.isRunning) {
+      this.agentService.start()
+    }
 
     return task
   }
