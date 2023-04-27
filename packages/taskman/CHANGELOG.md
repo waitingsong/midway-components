@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [40.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@39.0.15...@mwcp/taskman@40.0.0) (2023-04-27)
+
+
+### Features
+
+* **taskman:** breaking change scope of TaskAgentService to Singleton ([ed959ff](https://github.com/waitingsong/midway-components/commit/ed959ffc6b74cc44403089f1d9993cea1a93aabd))
+
+
+
+
+
 ## [39.0.15](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@39.0.14...@mwcp/taskman@39.0.15) (2023-04-27)
 
 **Note:** Version bump only for package @mwcp/taskman
