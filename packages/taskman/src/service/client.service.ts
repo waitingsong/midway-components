@@ -11,10 +11,8 @@ import { TraceService } from '@mwcp/otel'
 import type { Context } from '@mwcp/share'
 import { retrieveHeadersItem } from '@waiting/shared-core'
 
-import { TaskAgentService } from '../service/task-agent.service'
-
-import { initTaskClientConfig } from './config'
-import { processJsonHeaders } from './helper'
+import { initTaskClientConfig } from '../lib/config'
+import { processJsonHeaders } from '../lib/helper'
 import {
   ConfigKey,
   CreateTaskDTO,
@@ -28,7 +26,9 @@ import {
   TaskProgressDTO,
   TaskProgressDetailDTO,
   TaskResultDTO,
-} from './types'
+} from '../lib/types'
+
+import { TaskAgentService } from './task-agent.service'
 
 
 @Provide()

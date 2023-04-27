@@ -4,8 +4,8 @@ import { Attributes, TraceService } from '@mwcp/otel'
 import type { Context, IMiddleware, NextFunction } from '@mwcp/share'
 import { genISO8601String } from '@waiting/shared-core'
 
-import { ClientService } from '../lib/client.service'
 import { TaskClientConfig, TaskServerConfig, ConfigKey } from '../lib/types'
+import { ClientService } from '../service/client.service'
 import { matchFunc } from '../util/common'
 
 
