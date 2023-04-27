@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 10.6.0 (2023-04-27)
+
+
+### Features
+
+* **otel:** generics of propagateHeader() accepts UndiciHeaders ([a0aeb6c](https://github.com/waitingsong/midway-components/commit/a0aeb6c54f10ceda7a9c7fc9b34c1c7023e25acf))
+* **otel:** propagateHeader() ([adda2ff](https://github.com/waitingsong/midway-components/commit/adda2ff0a4536977def5fce6e4020a623d33b95d))
+* **otel:** propagateHeader() ([36085d9](https://github.com/waitingsong/midway-components/commit/36085d9fc8c5ab1fa56a847a674b1d1fea8983d8))
+
+
+
+
+
 # [10.5.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@10.4.0...@mwcp/otel@10.5.0) (2023-04-26)
 
 
