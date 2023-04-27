@@ -15,6 +15,7 @@ export {
   genRequestSpanName,
   normalizeHeaderKey,
   parseResponseStatus,
+  propagateHeader,
   propagateOutgoingHeader,
   setResponseContentLengthAttribute,
   setSpanWithRequestHeaders,
