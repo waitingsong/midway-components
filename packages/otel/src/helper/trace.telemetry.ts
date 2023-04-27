@@ -3,6 +3,7 @@ import { CompositePropagator, W3CTraceContextPropagator } from '@opentelemetry/c
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-grpc'
 import { JaegerPropagator } from '@opentelemetry/propagator-jaeger'
 import { node, resources } from '@opentelemetry/sdk-node'
+import { Sampler } from '@opentelemetry/sdk-trace-base'
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions'
 
 import { InitTraceOptions, PropagatorList, SpanExporterList } from '../lib/types'
