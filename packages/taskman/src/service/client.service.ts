@@ -7,7 +7,7 @@ import {
 import { ILogger } from '@midwayjs/logger'
 import type { FetchOptions } from '@mwcp/boot'
 import { FetchService, JsonResp, Headers, pickUrlStrFromRequestInfo } from '@mwcp/fetch'
-import { TraceService } from '@mwcp/otel'
+import { SpanKind, Trace, TraceService } from '@mwcp/otel'
 import type { Context } from '@mwcp/share'
 import { retrieveHeadersItem } from '@waiting/shared-core'
 
@@ -55,13 +55,13 @@ export class ClientService {
   /**
    * Create a task
    */
+  @Trace({ kind: SpanKind.CONSUMER })
   async [ServerMethod.create](
     input: CreateTaskOptions,
     startAgent = true,
   ): Promise<TaskDTO | undefined> {
+
     const headers = this.processPostHeaders(input)
-    // const spanHeader = this.traceService.headerOfCurrentSpan()?.[HeadersKey.traceId] as string
-    // headers.set(HeadersKey.traceId, spanHeader)
     const pdata: CreateTaskDTO = {
       taskTypeVer: 1,
       ...input.createTaskDTO,

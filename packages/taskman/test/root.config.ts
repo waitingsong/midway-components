@@ -3,7 +3,7 @@ import { IncomingHttpHeaders } from 'node:http'
 import type { Application, IMidwayContainer } from '@mwcp/share'
 import supertest, { SuperTest } from 'supertest'
 
-import { ClientService } from '~/lib/index'
+import { ClientService } from '~/index'
 import {
   TaskLogRepository,
   TaskQueueRepository,
