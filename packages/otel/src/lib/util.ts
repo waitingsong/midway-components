@@ -19,8 +19,10 @@ import {
   NetTransportValues,
   SemanticAttributes,
 } from '@opentelemetry/semantic-conventions'
+import type { Headers as UndiciHeaders } from 'undici'
 
 import { AttrNames, Config } from './types'
+
 
 
 const defaultPropety: PropertyDescriptor = {
@@ -330,7 +332,7 @@ export function propagateOutgoingHeader(
   })
 }
 
-export function propagateHeader<T extends Headers = Headers>(
+export function propagateHeader<T extends Headers | UndiciHeaders = Headers>(
   traceContext: Context,
   headers: T,
 ): void {
