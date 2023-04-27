@@ -24,7 +24,7 @@ import {
   HeadersKey,
   OtelComponent,
   Span,
-  SpanStatusCode,
+  // SpanStatusCode,
   TraceContext,
   TraceInit,
 } from '@mwcp/otel'
@@ -107,16 +107,15 @@ export class TaskAgentService {
   /** 获取待执行任务记录，发送到任务执行服务供其执行 */
   start(): void {
     if (this.isRunning) { return }
-    if (this.clientConfig.enableTrace) {
-      const spanName = 'TaskAgent-start'
-      const { span, context } = this.otel.startSpan2(spanName, { root: true })
-      this.rootSpan = span
-      this.rootTraceCtx = context
-    }
+    // if (this.clientConfig.enableTrace) {
+    //   const spanName = 'TaskAgentService.start()'
+    //   const { span, context } = this.otel.startSpan2(spanName, { root: true })
+    //   this.rootSpan = span
+    //   this.rootTraceCtx = context
+    // }
 
     const { intv$ } = this
     const stream$ = this.pickTasksWaitToRun(intv$).pipe(
-      // mergeMap(({ rows, headers }) => ofrom(rows)),
       mergeMap(({ rows, headers }) => {
         const foo$ = ofrom(rows).pipe(
           map(row => ({
@@ -159,18 +158,17 @@ export class TaskAgentService {
     catch (ex) {
       this.logger.warn('stop with error', (ex as Error).message)
     }
-    if (this.rootSpan) {
-
-      const input: Attributes = {
-        [AttrNames.LogLevel]: 'info',
-        message: 'TaskAgent complete',
-        time: genISO8601String(),
-      }
-      this.otel.addEvent(this.rootSpan, input)
-      this.otel.endRootSpan(this.rootSpan)
-    }
-    this.rootSpan = void 0
-    this.rootTraceCtx = void 0
+    // if (this.rootSpan) {
+    //   const input: Attributes = {
+    //     [AttrNames.LogLevel]: 'info',
+    //     message: 'TaskAgent complete',
+    //     time: genISO8601String(),
+    //   }
+    //   this.otel.addEvent(this.rootSpan, input)
+    //   this.otel.endRootSpan(this.rootSpan)
+    // }
+    // this.rootSpan = void 0
+    // this.rootTraceCtx = void 0
   }
 
   protected pickRandomTaskTypeIdFromSupportTaskMap(
@@ -238,7 +236,7 @@ export class TaskAgentService {
         }
 
         const [res, headers] = await this.fetch.fetch2<TaskDTO[] | JsonResp<TaskDTO[]>>(opts)
-        this.otel.endSpan(this.rootSpan, span)
+        this.otel.endRootSpan(span)
         const rows = unwrapResp<TaskDTO[]>(res)
         return { rows, headers }
       }, 1),
@@ -289,7 +287,7 @@ export class TaskAgentService {
     // }
 
     const [info] = await this.fetch.fetch2<TaskPayloadDTO | JsonResp<TaskPayloadDTO | undefined>>(opts)
-    this.otel.endSpan(this.rootSpan, span)
+    this.otel.endRootSpan(span)
     const payload = unwrapResp<TaskPayloadDTO | undefined>(info)
     if (! payload) {
       return ''
@@ -355,7 +353,7 @@ export class TaskAgentService {
 
     await this.fetch.fetch<void | JsonResp<void>>(opts)
       .then((res) => {
-        this.otel.endSpan(void 0, span)
+        this.otel.endRootSpan(span)
         return this.processTaskDist(taskId, reqId, res)
       })
       .catch((err) => {
