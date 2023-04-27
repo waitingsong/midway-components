@@ -330,6 +330,24 @@ export function propagateOutgoingHeader(
   })
 }
 
+export function propagateHeader<T extends Headers = Headers>(
+  traceContext: Context,
+  headers: T,
+): void {
+
+  const tmp = {}
+  propagation.inject(traceContext, tmp)
+
+  Object.entries(tmp).forEach(([key, val]) => {
+    if (typeof val === 'string' || typeof val === 'number') {
+      headers.set(key, val.toString())
+    }
+    else if (Array.isArray(val)) {
+      headers.set(key, val.join(','))
+    }
+  })
+}
+
 /**
    *
    * @param headersKey if omit then use inner prepared headers key

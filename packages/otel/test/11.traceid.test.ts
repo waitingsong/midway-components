@@ -21,7 +21,7 @@ describe(filename, () => {
   const path4 = '/_otel/decorator_arg2'
 
   it(`Should ${path} work`, async () => {
-    const { app, httpRequest } = testConfig
+    const { httpRequest } = testConfig
 
     const resp = await httpRequest
       .get(path)
