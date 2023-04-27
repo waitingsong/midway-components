@@ -1,7 +1,7 @@
 import { ConfigKey } from '~/lib/types'
 
 export const apiPrefix = {
-  test: `/_${ConfigKey.namespace}_test`,
+  TraceDecorator: `/_${ConfigKey.namespace}_trace_decorator`,
   util: `/_${ConfigKey.namespace}_util`,
 }
 
@@ -15,6 +15,7 @@ export const apiRoute = {
   trace_error: 'trace_error',
   log: 'log',
   warn: 'warn',
+  hello: 'hello',
 
   propagateHeader: 'propagateHeader',
 }

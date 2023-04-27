@@ -4,6 +4,7 @@ import { relative } from 'node:path'
 import { makeHttpRequest } from '@midwayjs/core'
 import { sleep } from '@waiting/shared-core'
 
+import { apiPrefix, apiRoute } from '@/fixtures/base-app/src/api-route'
 import { testConfig } from '@/root.config'
 import { exporterEndpoint } from '~/lib/config'
 import { JaegerTraceInfo, JaegerTraceInfoSpan } from '~/lib/types'
@@ -15,10 +16,10 @@ assert(agent, 'OTEL_EXPORTER_OTLP_ENDPOINT not set')
 
 describe(filename, () => {
 
-  const path = '/_otel/id'
-  const path2 = '/_otel/id2'
-  const path3 = '/_otel/decorator_arg'
-  const path4 = '/_otel/decorator_arg2'
+  const path = `${apiPrefix.TraceDecorator}/${apiRoute.id}`
+  const path2 = `${apiPrefix.TraceDecorator}/${apiRoute.id2}`
+  const path3 = `${apiPrefix.TraceDecorator}/${apiRoute.decorator_arg}`
+  const path4 = `${apiPrefix.TraceDecorator}/${apiRoute.decorator_arg2}`
 
   it(`Should ${path} work`, async () => {
     const { httpRequest } = testConfig
@@ -164,7 +165,7 @@ describe(filename, () => {
       span0.operationName === 'DefaultComponentService/hello'
       || span0.operationName === 'DefaultComponentService/helloSync'
       || span0.operationName === 'DefaultComponentController/traceId2'
-      || span0.operationName === 'HTTP GET /_otel/id2',
+      || span0.operationName === `HTTP GET ${apiPrefix.TraceDecorator}/${apiRoute.id2}`,
       span0.operationName,
     )
 

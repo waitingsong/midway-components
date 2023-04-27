@@ -1,12 +1,10 @@
 import assert from 'node:assert/strict'
 import { relative } from 'node:path'
 
-import { makeHttpRequest } from '@midwayjs/core'
-import { sleep } from '@waiting/shared-core'
-
+import { apiPrefix, apiRoute } from '@/fixtures/base-app/src/api-route'
 import { testConfig } from '@/root.config'
 import { exporterEndpoint } from '~/lib/config'
-import { Config, JaegerTraceInfo, JaegerTraceInfoSpan } from '~/lib/types'
+import { Config } from '~/lib/types'
 
 
 const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
@@ -27,7 +25,7 @@ describe(filename, () => {
     app.addConfigObject({ otelConfig })
   })
 
-  const path = '/_otel/disable_trace'
+  const path = `${apiPrefix.TraceDecorator}/${apiRoute.disable_trace}`
 
   it(`Should ${path} work`, async () => {
     const { httpRequest } = testConfig
