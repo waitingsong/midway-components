@@ -367,7 +367,14 @@ export class TaskAgentService {
     const msg = {
       reqId,
       taskId,
-      options,
+      options: {
+        url: options.url,
+        method: options.method,
+        headers: options.headers,
+        contentType: options.contentType,
+        data: options.data,
+        dataType: options.dataType,
+      },
       errMessage: err.message,
     }
     const opts: FetchOptions = {
