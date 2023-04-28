@@ -19,6 +19,7 @@ import {
 } from '@mwcp/fetch'
 import { KoidComponent } from '@mwcp/koid'
 import {
+  Attributes,
   HeadersKey,
   OtelComponent,
   Span,
@@ -101,7 +102,7 @@ export class TaskAgentService {
     return taskAgentState
   }
 
-  /** 获取待执行任务记录，发送到任务执行服务供其执行 */
+  /** 启动轮询：获取待执行任务记录，发送到任务执行服务供其执行 */
   start(): void {
     if (this.isRunning) { return }
 
@@ -278,7 +279,7 @@ export class TaskAgentService {
 
     if (! options?.url) { return }
 
-    const spanName = `${ConfigKey.namespace} sendTaskToRun`
+    const spanName = `${ConfigKey.namespace} httpCall`
     const { span, context } = this.otel.startSpan2(spanName, {
       root: true,
       kind: SpanKind.CONSUMER,
@@ -314,22 +315,45 @@ export class TaskAgentService {
         this.otel.endRootSpan(span)
         return this.processTaskDist(taskId, reqId, res)
       })
-      .catch((err) => {
-        if (err instanceof Error) {
-          this.otel.setSpanWithError(void 0, span, err)
+      .catch((ex) => {
+        const err = ex instanceof Error
+          ? ex
+          : new Error(JSON.stringify(ex))
 
-          const { message } = err as Error
-          if (message?.includes('429')
+        try {
+          const opts2 = {
+            url: opts.url,
+            method: opts.method,
+            headers: opts.headers,
+            data: opts.data,
+          }
+          const attrs: Attributes = {
+            event: 'fetch.error',
+            url,
+            callTaskOptions: JSON.stringify(opts2),
+            message: err.message,
+          }
+          this.otel.addEvent(span, attrs)
+          this.otel.setSpanWithError(void 0, span, err)
+        }
+        catch (ex2) {
+          void ex2
+        }
+
+        setTimeout(() => {
+          this.start()
+        }, 1000)
+
+        const { message } = err
+        if (message?.includes('429')
             && message?.includes('Task')
             && message?.includes(taskId)) {
-            return this.resetTaskToInitDueTo429(taskId, reqId, message)
-          }
-          return this.processHttpCallExp(taskId, reqId, opts, err as Error)
+          return this.resetTaskToInitDueTo429(taskId, reqId, message)
         }
-        // throw new Error(err)
+        return this.processHttpCallExp(taskId, reqId, opts, err as Error)
       })
       // .finally(() => {
-      //   // newSpan && newSpan.finish()
+      //   void 0
       // })
   }
 
@@ -379,6 +403,7 @@ export class TaskAgentService {
       method: 'GET',
       contentType: 'application/json; charset=utf-8',
       headers: new Headers(),
+      dataType: 'json',
     }
     return opts
   }
