@@ -178,6 +178,10 @@ export interface CreateTaskOptions {
 export interface CallTaskOptions {
   url: FetchOptions['url']
   method: FetchOptions['method']
+  /**
+   * @default json
+   */
+  dataType?: FetchOptions['dataType']
   headers?: FetchOptions['headers']
   data?: JsonObject
 }
