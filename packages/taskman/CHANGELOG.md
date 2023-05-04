@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [40.1.0](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@40.0.0...@mwcp/taskman@40.1.0) (2023-05-04)
+
+
+### Bug Fixes
+
+* **taskman:** genCreateTaskDTO() ([9a984b4](https://github.com/waitingsong/midway-components/commit/9a984b4acdd1141d4b6f53e2996ff6d038110bcd))
+* **taskman:** JSON.stringify ([39ab5ec](https://github.com/waitingsong/midway-components/commit/39ab5ec71144a3c4984c0fe09840a778a265ada6))
+* **taskman:** processHttpCallExp() ([c8870ae](https://github.com/waitingsong/midway-components/commit/c8870aeebee332fc1a1aa1681fb30b229087ae6a))
+* **taskman:** TaskQueueRepository.setSucceeded() ([e3c661b](https://github.com/waitingsong/midway-components/commit/e3c661bc40e4f1fac793a6f17e0966851b1e2110))
+
+
+### Features
+
+* **taskman:** add optional CallTaskOptions.dataType ([c412ee2](https://github.com/waitingsong/midway-components/commit/c412ee22884a97ca830e60a3600e67bad4d9b9b0))
+
+
+
+
+
 # [40.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@39.0.15...@mwcp/taskman@40.0.0) (2023-04-27)
 
 
