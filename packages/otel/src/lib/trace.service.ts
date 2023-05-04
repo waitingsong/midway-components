@@ -223,11 +223,14 @@ export class TraceService extends AbstractTraceService {
   setAttributesLater(span: Span | undefined, input: Attributes): void {
     if (! this.config.enable) { return }
 
-    void Promise.resolve()
-      .then(() => {
+    setTimeout(() => {
+      try {
         this.setAttributes(span, input)
-      })
-      .catch(console.warn)
+      }
+      catch (ex) {
+        console.error(ex)
+      }
+    })
   }
 
   /**
