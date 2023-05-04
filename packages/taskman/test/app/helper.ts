@@ -37,7 +37,10 @@ export function genCreateTaskDTO(
   input?: Partial<CreateTaskDTO>,
 ): CreateTaskDTO {
 
-  const dataUrl = `${testConfig.host}${ClientURL.base}/${ClientURL.hello}`
+  const host = testConfig.host.endsWith('/')
+    ? testConfig.host.slice(0, -1)
+    : testConfig.host
+  const dataUrl = `${host}${ClientURL.base}/${ClientURL.hello}`
 
   const data: CreateTaskDTO = {
     json: {
