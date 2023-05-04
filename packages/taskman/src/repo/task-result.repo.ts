@@ -7,7 +7,7 @@ import {
   Inject,
   Provide,
 } from '@midwayjs/core'
-import { DbManager, Kmore } from '@mwcp/kmore'
+import { DbManager, Kmore, Transactional } from '@mwcp/kmore'
 import type { Application, Context } from '@mwcp/share'
 
 import {
@@ -22,6 +22,7 @@ import {
 
 
 @Provide()
+@Transactional()
 export class TaskResultRepository {
 
   @App() protected readonly app: Application

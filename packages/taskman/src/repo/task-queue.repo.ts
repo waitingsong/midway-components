@@ -7,7 +7,7 @@ import {
   Inject,
   Provide,
 } from '@midwayjs/core'
-import { DbManager, Kmore } from '@mwcp/kmore'
+import { DbManager, Kmore, Transactional } from '@mwcp/kmore'
 import type { Application, Context } from '@mwcp/share'
 
 import {
@@ -33,6 +33,7 @@ import {
 
 
 @Provide()
+@Transactional()
 export class TaskQueueRepository {
 
   @App() protected readonly app: Application
@@ -157,17 +158,11 @@ export class TaskQueueRepository {
   ): Promise<TaskProgressDTO | undefined> {
 
     const { db } = this
-    const trx = await db.transaction()
 
     await db.camelTables.ref_tb_task_progress()
-      .transacting(trx)
       .forUpdate()
       .where({ taskId })
       .del()
-      .catch(async (ex) => {
-        await trx.rollback()
-        throw ex
-      })
 
     const data: TaskProgressDTO = {
       ...initTaskProgressDTO,
@@ -176,19 +171,13 @@ export class TaskQueueRepository {
     }
 
     const ins = await db.camelTables.ref_tb_task_progress()
-      .transacting(trx)
       .forUpdate()
       .insert(data)
       .returning('*')
       .then(async (rows) => {
         return rows.length ? rows[0] : void 0
       })
-      .catch(async (ex) => {
-        await trx.rollback()
-        throw ex
-      })
 
-    await trx.commit()
     return ins
   }
 
@@ -265,7 +254,6 @@ export class TaskQueueRepository {
   ): Promise<TaskDTO | undefined> {
 
     const { db } = this
-    const trx = await db.transaction()
 
     const status = await this.getProgress(taskId)
     if (! status || status.taskState === TaskState.pending) {
@@ -274,19 +262,13 @@ export class TaskQueueRepository {
     }
 
     await db.camelTables.ref_tb_task_progress()
-      .transacting(trx)
       .forUpdate()
       .update('taskProgress', 100)
       .update('mtime', 'now()')
       .where({ taskId })
       .returning('*')
-      .catch(async (ex) => {
-        await trx.rollback()
-        throw ex
-      })
 
     const ret = await this.ref_tb_task()
-      .transacting(trx)
       .forUpdate()
       .update('taskState', TaskState.succeeded)
       .update('mtime', 'now()')
@@ -294,12 +276,7 @@ export class TaskQueueRepository {
       .where('taskState', TaskState.running)
       .returning('*')
       .then(rows => rows[0])
-      .catch(async (ex) => {
-        await trx.rollback()
-        throw ex
-      })
 
-    await trx.commit()
     return ret
   }
 
@@ -373,17 +350,12 @@ export class TaskQueueRepository {
 
 
   async pickInitTasksToPending(options: PickInitTaskOptions): Promise<TaskDTO[]> {
-    const { db } = this
-
     assert(options.taskTypeId > 0, 'taskTypeId must > 0')
-
-    const trx = await db.transaction()
 
     const where = `expect_start BETWEEN now() - interval '${options.earlierThanTimeIntv}'
       AND now() + interval '1s'`
 
     let query = this.ref_tb_task()
-      .transacting(trx)
       .forUpdate()
       .select('taskId')
       .where('taskState', TaskState.init)
@@ -399,20 +371,14 @@ export class TaskQueueRepository {
     }
 
     const tasks = await query
-      .catch(async (ex) => {
-        await trx.rollback()
-        throw ex
-      })
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (! tasks?.length) {
-      await trx.rollback() // !
       return []
     }
 
     const ids = tasks.map(row => row.taskId)
     const ret = await this.ref_tb_task()
-      .transacting(trx)
       .update('taskState', TaskState.pending)
       .update('startedAt', 'now()')
       .update('mtime', 'now()')
@@ -420,13 +386,8 @@ export class TaskQueueRepository {
       .whereRaw(where)
       .whereIn('taskId', ids)
       .returning('*')
-      .catch(async (ex) => {
-        await trx.rollback()
-        throw ex
-      })
       // .toQuery()
 
-    await trx.commit()
     return ret
   }
 
