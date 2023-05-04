@@ -44,6 +44,7 @@ export class ServerController {
 
   @Get('/' + ServerURL.getInfo)
   async [ServerMethod.getInfo](@Query('id') id: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
+    assert(id, 'id is required')
     const ret = await this.queueSvc.getInfo(id)
     return ret
   }
@@ -60,6 +61,7 @@ export class ServerController {
   ): Promise<TaskDTO | undefined> {
 
     const { id, msg } = input
+    assert(id, 'id is required')
     const ret = await this.queueSvc.setRunning(id, msg)
     return ret
   }
@@ -70,6 +72,7 @@ export class ServerController {
   ): Promise<TaskDTO | undefined> {
 
     const { id, msg } = input
+    assert(id, 'id is required')
     const ret = this.queueSvc.setCancelled(id, msg)
     return ret
   }
@@ -80,6 +83,7 @@ export class ServerController {
   ): Promise<TaskDTO | undefined> {
 
     const { id, msg } = input
+    assert(id, 'id is required')
     const ret = await this.queueSvc.setFailed(id, msg)
     return ret
   }
@@ -90,6 +94,7 @@ export class ServerController {
   ): Promise<TaskDTO | undefined> {
 
     const { id, result } = input
+    assert(id, 'id is required')
     const ret = await this.queueSvc.setSucceeded(id, result)
     return ret
   }
@@ -106,6 +111,7 @@ export class ServerController {
       taskId: input.id,
       taskProgress: input.progress,
     }
+    assert(input.id, 'id is required')
     const ret = await this.queueSvc.setProgress(info, input.msg)
     return ret
   }
@@ -115,6 +121,7 @@ export class ServerController {
     @Query('id') id: TaskDTO['taskId'],
   ): Promise<TaskProgressDetailDTO | undefined> {
 
+    assert(id, 'id is required')
     const ret = await this.queueSvc.getProgress(id)
     return ret
   }
@@ -124,6 +131,7 @@ export class ServerController {
     @Query('id') id: TaskDTO['taskId'],
   ): Promise<TaskResultDTO | undefined> {
 
+    assert(id, 'id is required')
     const ret = await this.queueSvc.getResult(id)
     return ret
   }
@@ -151,6 +159,7 @@ export class ServerController {
     @Query('id') id: TaskDTO['taskId'],
   ): Promise<TaskPayloadDTO | undefined> {
 
+    assert(id, 'id is required')
     const ret = await this.queueSvc.getPayload(id)
     return ret
   }
@@ -161,6 +170,7 @@ export class ServerController {
   ): Promise<TaskDTO | undefined> {
 
     const { id, state, msg } = input
+    assert(id, 'id is required')
     const ret = await this.queueSvc.setState(id, state, msg)
     return ret
   }
