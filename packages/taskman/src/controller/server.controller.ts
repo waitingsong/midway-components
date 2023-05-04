@@ -62,6 +62,7 @@ export class ServerController {
 
     const { id, msg } = input
     assert(id, 'id is required')
+    await this.queueSvc.assertsTaskExists(id)
     const ret = await this.queueSvc.setRunning(id, msg)
     return ret
   }
@@ -73,6 +74,7 @@ export class ServerController {
 
     const { id, msg } = input
     assert(id, 'id is required')
+    await this.queueSvc.assertsTaskExists(id)
     const ret = this.queueSvc.setCancelled(id, msg)
     return ret
   }
@@ -84,6 +86,7 @@ export class ServerController {
 
     const { id, msg } = input
     assert(id, 'id is required')
+    await this.queueSvc.assertsTaskExists(id)
     const ret = await this.queueSvc.setFailed(id, msg)
     return ret
   }
@@ -95,6 +98,7 @@ export class ServerController {
 
     const { id, result } = input
     assert(id, 'id is required')
+    await this.queueSvc.assertsTaskExists(id)
     const ret = await this.queueSvc.setSucceeded(id, result)
     return ret
   }
@@ -112,6 +116,7 @@ export class ServerController {
       taskProgress: input.progress,
     }
     assert(input.id, 'id is required')
+    await this.queueSvc.assertsTaskExists(input.id)
     const ret = await this.queueSvc.setProgress(info, input.msg)
     return ret
   }
@@ -122,6 +127,7 @@ export class ServerController {
   ): Promise<TaskProgressDetailDTO | undefined> {
 
     assert(id, 'id is required')
+    await this.queueSvc.assertsTaskExists(id)
     const ret = await this.queueSvc.getProgress(id)
     return ret
   }
@@ -132,6 +138,7 @@ export class ServerController {
   ): Promise<TaskResultDTO | undefined> {
 
     assert(id, 'id is required')
+    await this.queueSvc.assertsTaskExists(id)
     const ret = await this.queueSvc.getResult(id)
     return ret
   }
@@ -160,6 +167,7 @@ export class ServerController {
   ): Promise<TaskPayloadDTO | undefined> {
 
     assert(id, 'id is required')
+    await this.queueSvc.assertsTaskExists(id)
     const ret = await this.queueSvc.getPayload(id)
     return ret
   }
@@ -171,6 +179,7 @@ export class ServerController {
 
     const { id, state, msg } = input
     assert(id, 'id is required')
+    await this.queueSvc.assertsTaskExists(id)
     const ret = await this.queueSvc.setState(id, state, msg)
     return ret
   }

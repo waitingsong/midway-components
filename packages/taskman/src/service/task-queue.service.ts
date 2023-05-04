@@ -1,3 +1,5 @@
+import assert from 'node:assert'
+
 import {
   Inject,
   Provide,
@@ -199,6 +201,12 @@ export class TaskQueueService {
 
   async [ServerMethod.stats](): Promise<TaskStatistics> {
     return this.repo.stats()
+  }
+
+
+  async assertsTaskExists(id: TaskDTO['taskId']): Promise<void> {
+    const ret = await this.repo.assertsTaskExists(id)
+    assert(ret, `task ${id} not exists`)
   }
 
   async createLog(

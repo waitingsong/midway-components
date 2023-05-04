@@ -118,12 +118,19 @@ export class TaskQueueRepository {
         ...prog,
         taskState: task.taskState,
       }
+
+      assert(typeof ret.taskProgress !== 'undefined', 'taskProgress should not be undefined')
+      assert(ret.taskProgress >= 0 && ret.taskProgress <= 100)
       return ret
     }
     const ret: TaskProgressDetailDTO = {
       taskId,
       taskState: task.taskState,
+      // taskProgress: 0,
     }
+
+    // assert(typeof ret.taskProgress !== 'undefined', 'taskProgress should not be undefined')
+    // assert(ret.taskProgress >= 0 && ret.taskProgress <= 100)
     return ret
   }
 
@@ -260,16 +267,18 @@ export class TaskQueueRepository {
     const { db } = this
     const trx = await db.transaction()
 
-    await db.camelTables.ref_tb_task_progress()
+    const prog = await db.camelTables.ref_tb_task_progress()
       .transacting(trx)
       .forUpdate()
       .update('taskProgress', 100)
       .update('mtime', 'now()')
       .where({ taskId })
+      .returning('*')
       .catch(async (ex) => {
         await trx.rollback()
         throw ex
       })
+    void prog
 
     const ret = await this.ref_tb_task()
       .transacting(trx)
@@ -433,6 +442,14 @@ export class TaskQueueRepository {
     })
 
     return ret
+  }
+
+  async assertsTaskExists(id: TaskDTO['taskId']): Promise<TaskDTO | undefined> {
+    const ret = await this.ref_tb_task()
+      .where('taskId', id)
+      .first()
+    return ret
+    // assert(ret, `task not exists: ${id}`)
   }
 
 }
