@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 10.2.8 (2023-05-04)
+
+**Note:** Version bump only for package @mwcp/boot
+
+
+
+
+
 ## [10.2.7](https://github.com/waitingsong/midway-components/compare/@mwcp/boot@10.2.6...@mwcp/boot@10.2.7) (2023-04-27)
 
 **Note:** Version bump only for package @mwcp/boot
