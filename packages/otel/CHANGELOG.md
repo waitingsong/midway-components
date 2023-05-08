@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.7.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@10.6.1...@mwcp/otel@10.7.0) (2023-05-08)
+
+
+### Features
+
+* **otel:** OtelComponent.setAttributesLater() ([95867fa](https://github.com/waitingsong/midway-components/commit/95867faeb36946fb3b47a3b3dfc56bd6c6704a07))
+
+
+
+
+
 ## 10.6.1 (2023-05-04)
 
 **Note:** Version bump only for package @mwcp/otel
