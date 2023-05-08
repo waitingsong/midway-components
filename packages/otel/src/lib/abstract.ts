@@ -71,6 +71,8 @@ export abstract class AbstractOtelComponent {
    */
   abstract setAttributes(span: Span, input: Attributes): void
 
+  abstract setAttributesLater(span: Span | undefined, input: Attributes): void
+
   /**
    * Sets the span with the error passed in params, note span not ended.
    */
