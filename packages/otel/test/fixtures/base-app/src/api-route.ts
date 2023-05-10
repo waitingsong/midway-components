@@ -14,6 +14,7 @@ export const apiRoute = {
   error: 'error',
   trace_error: 'trace_error',
   log: 'log',
+  appLog: 'app_log',
   warn: 'warn',
   hello: 'hello',
 

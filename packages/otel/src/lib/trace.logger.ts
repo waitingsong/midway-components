@@ -1,25 +1,90 @@
 import {
   Inject,
+  Logger,
   Provide,
+  Singleton,
 } from '@midwayjs/core'
 import { ILogger } from '@midwayjs/logger'
 import type { Attributes, Span } from '@opentelemetry/api'
 
+import { AbstractOtelComponent } from './abstract'
+import { OtelComponent } from './component'
 import { TraceService } from './trace.service'
 import { AttrNames, TraceLogType } from './types'
 
 
 /**
- * 集成链路追踪 Logger
+ * 集成链路追踪 AppLogger
+ * - 打印日志同时会在链路上报日志级别和内容
+ * - 生产环境应设置合理采样率避免过多的日志随链路上报
+ */
+@Singleton()
+export class TraceAppLogger implements ILogger {
+
+  @Inject() protected readonly otel: OtelComponent
+
+  @Logger() protected readonly logger: ILogger
+
+  debug(msg: unknown, ...args: unknown[]): void {
+    this.log({
+      level: 'debug',
+      msg,
+      args,
+    })
+  }
+
+  info(msg: unknown, ...args: unknown[]): void {
+    this.log({
+      level: 'info',
+      msg,
+      args,
+    })
+  }
+
+  warn(msg: unknown, ...args: unknown[]): void {
+    this.log({
+      level: 'warn',
+      msg,
+      args,
+    })
+  }
+
+  error(msg: unknown, ...args: unknown[]): void {
+    this.log({
+      level: 'error',
+      msg,
+      args,
+    })
+  }
+
+  /**
+   * 打印日志同时会在链路上报日志级别和内容
+   * @param span
+   *  - undefined: 使用请求rootSpan
+   *  - false: 仅打印日志，不上报
+   */
+  log(
+    input: TraceLogType,
+    span?: Span | false,
+    logger?: ILogger,
+  ): void {
+    traceAppLogger(input, this.otel, span)
+    origLogger(input, logger ?? this.logger)
+  }
+}
+
+
+/**
+ * 集成链路追踪 Context Logger
  * - 打印日志同时会在链路上报日志级别和内容
  * - 生产环境应设置合理采样率避免过多的日志随链路上报
  */
 @Provide()
 export class TraceLogger implements ILogger {
 
-  @Inject() protected readonly traceSvc: TraceService
-
   @Inject() protected readonly logger: ILogger
+  @Inject() protected readonly traceSvc: TraceService
+  @Inject() protected readonly traceAppLogger: TraceAppLogger
 
   debug(msg: unknown, ...args: unknown[]): void {
     this.log({
@@ -60,21 +125,25 @@ export class TraceLogger implements ILogger {
    *  - false: 仅打印日志，不上报
    */
   log(input: TraceLogType, span?: Span | false): void {
-    traceLogger(input, this.traceSvc, span)
-    origLogger(input, this.logger)
+    if (this.traceSvc.isStarted) {
+      const currSpan = span ?? this.traceSvc.rootSpan
+      this.traceAppLogger.log(input, currSpan, this.logger)
+    }
+    else {
+      // log w/o trace
+      this.traceAppLogger.log(input, false, this.logger)
+    }
   }
 }
 
-function traceLogger(
+function traceAppLogger(
   input: TraceLogType,
-  traceSvc: TraceService,
+  otel: AbstractOtelComponent,
   span?: Span | false,
 ): void {
 
-  if (! traceSvc.isStarted) { return }
-
-  const currSpan = typeof span === 'undefined'
-    ? traceSvc.rootSpan
+  const currSpan = typeof span === 'undefined' // except false
+    ? otel.getGlobalCurrentSpan()
     : span
   if (! currSpan) { return }
 
@@ -94,9 +163,42 @@ function traceLogger(
   if (typeof args !== 'undefined') {
     event['log.detail'] = JSON.stringify(args)
   }
-
-  traceSvc.addEvent(currSpan, event)
+  otel.addEvent(currSpan, event)
 }
+
+
+// function traceLogger(
+//   input: TraceLogType,
+//   traceSvc: TraceService,
+//   span?: Span | false,
+// ): void {
+
+//   if (! traceSvc.isStarted) { return }
+
+//   const currSpan = typeof span === 'undefined'
+//     ? traceSvc.rootSpan
+//     : span
+//   if (! currSpan) { return }
+
+//   const { msg, args } = input
+//   const level = input.level ?? 'info'
+
+//   const name = input['event'] && typeof input['event'] === 'string'
+//     ? input['event']
+//     : 'trace.log'
+//   const event: Attributes = {
+//     event: name,
+//     [AttrNames.LogLevel]: level,
+//   }
+//   if (typeof msg !== 'undefined') {
+//     event[AttrNames.Message] = typeof msg === 'string' ? msg : JSON.stringify(msg)
+//   }
+//   if (typeof args !== 'undefined') {
+//     event['log.detail'] = JSON.stringify(args)
+//   }
+
+//   traceSvc.addEvent(currSpan, event)
+// }
 
 function origLogger(
   input: TraceLogType,
