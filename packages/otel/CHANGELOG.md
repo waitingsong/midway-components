@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.8.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@10.7.0...@mwcp/otel@10.8.0) (2023-05-10)
+
+
+### Features
+
+* **otel:** TraceAppLogger ([db857ca](https://github.com/waitingsong/midway-components/commit/db857cac2e6ab3a5d71dfac3fe2fcc814a52beaa))
+
+
+
+
+
 # [10.7.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@10.6.1...@mwcp/otel@10.7.0) (2023-05-08)
 
 
