@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.1.0 (2023-05-11)
+
+
+### Features
+
+* **share:** add property span of DecoratorExecutorParamBase ([02acd85](https://github.com/waitingsong/midway-components/commit/02acd85303a11994929356537efdb4ee9eaaaf5a))
+
+
+
+
+
 # 6.0.0 (2023-04-23)
 
 
