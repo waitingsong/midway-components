@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.9.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@10.8.0...@mwcp/otel@10.9.0) (2023-05-11)
+
+
+### Features
+
+* **otel:** change parameter of TraceAppLogger.debug|info|warn|error ([dfd467c](https://github.com/waitingsong/midway-components/commit/dfd467c98be4dba79f01dee8ab62fe9ba5caa0af))
+
+
+
+
+
 # [10.8.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@10.7.0...@mwcp/otel@10.8.0) (2023-05-10)
 
 
