@@ -25,36 +25,36 @@ export class TraceAppLogger implements ILogger {
 
   @Logger() protected readonly logger: ILogger
 
-  debug(msg: unknown, ...args: unknown[]): void {
+  debug(msg: unknown, span: Span | undefined | false, ...args: unknown[]): void {
     this.log({
       level: 'debug',
       msg,
       args,
-    })
+    }, span)
   }
 
-  info(msg: unknown, ...args: unknown[]): void {
+  info(msg: unknown, span: Span | undefined | false, ...args: unknown[]): void {
     this.log({
       level: 'info',
       msg,
       args,
-    })
+    }, span)
   }
 
-  warn(msg: unknown, ...args: unknown[]): void {
+  warn(msg: unknown, span: Span | undefined | false, ...args: unknown[]): void {
     this.log({
       level: 'warn',
       msg,
       args,
-    })
+    }, span)
   }
 
-  error(msg: unknown, ...args: unknown[]): void {
+  error(msg: unknown, span: Span | undefined | false, ...args: unknown[]): void {
     this.log({
       level: 'error',
       msg,
       args,
-    })
+    }, span)
   }
 
   /**
@@ -68,7 +68,10 @@ export class TraceAppLogger implements ILogger {
     span?: Span | false,
     logger?: ILogger,
   ): void {
-    traceAppLogger(input, this.otel, span)
+
+    if (span !== false) {
+      traceAppLogger(input, this.otel, span)
+    }
     origLogger(input, logger ?? this.logger)
   }
 }
@@ -139,12 +142,10 @@ export class TraceLogger implements ILogger {
 function traceAppLogger(
   input: TraceLogType,
   otel: AbstractOtelComponent,
-  span?: Span | false,
+  span: Span | undefined,
 ): void {
 
-  const currSpan = typeof span === 'undefined' // except false
-    ? otel.getGlobalCurrentSpan()
-    : span
+  const currSpan = span ?? otel.getGlobalCurrentSpan()
   if (! currSpan) { return }
 
   const { msg, args } = input
@@ -166,39 +167,6 @@ function traceAppLogger(
   otel.addEvent(currSpan, event)
 }
 
-
-// function traceLogger(
-//   input: TraceLogType,
-//   traceSvc: TraceService,
-//   span?: Span | false,
-// ): void {
-
-//   if (! traceSvc.isStarted) { return }
-
-//   const currSpan = typeof span === 'undefined'
-//     ? traceSvc.rootSpan
-//     : span
-//   if (! currSpan) { return }
-
-//   const { msg, args } = input
-//   const level = input.level ?? 'info'
-
-//   const name = input['event'] && typeof input['event'] === 'string'
-//     ? input['event']
-//     : 'trace.log'
-//   const event: Attributes = {
-//     event: name,
-//     [AttrNames.LogLevel]: level,
-//   }
-//   if (typeof msg !== 'undefined') {
-//     event[AttrNames.Message] = typeof msg === 'string' ? msg : JSON.stringify(msg)
-//   }
-//   if (typeof args !== 'undefined') {
-//     event['log.detail'] = JSON.stringify(args)
-//   }
-
-//   traceSvc.addEvent(currSpan, event)
-// }
 
 function origLogger(
   input: TraceLogType,
