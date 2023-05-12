@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.2.0](https://github.com/waitingsong/midway-components/compare/@mwcp/share@6.1.0...@mwcp/share@6.2.0) (2023-05-12)
+
+
+### Features
+
+* **otel:** DecoratorExecutorParamBase['span'] accepts false ([a08b3fc](https://github.com/waitingsong/midway-components/commit/a08b3fca46fa5f8695baed40f3dec0d4198f7d92))
+
+
+
+
+
 # 6.1.0 (2023-05-11)
 
 
