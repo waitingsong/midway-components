@@ -27,6 +27,7 @@ import {
   TraceContext,
   TraceInit,
 } from '@mwcp/otel'
+import { sleep } from '@waiting/shared-core'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import {
   of,
@@ -214,10 +215,18 @@ export class TaskAgentService {
           opts.headers.set(HeadersKey.reqId, reqId)
         }
 
-        const [res, headers] = await this.fetch.fetch2<TaskDTO[] | JsonResp<TaskDTO[]>>(opts)
-        this.otel.endRootSpan(span)
-        const rows = unwrapResp<TaskDTO[]>(res)
-        return { rows, headers }
+        try {
+          const [res, headers] = await this.fetch.fetch2<TaskDTO[] | JsonResp<TaskDTO[]>>(opts)
+          this.otel.endRootSpan(span)
+          const rows = unwrapResp<TaskDTO[]>(res)
+          return { rows, headers }
+        }
+        catch (ex) {
+          this.otel.setSpanWithError(void 0, span, ex as Error)
+          this.otel.endRootSpan(span)
+          await sleep(1000)
+          return { rows: [], headers: new Headers() }
+        }
       }, 1),
       // tap((rows) => {
       //   console.info(rows)
