@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [40.1.7](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@40.1.6...@mwcp/taskman@40.1.7) (2023-05-23)
+
+
+### Bug Fixes
+
+* **taskman:** TaskAgentService.pickTasksWaitToRun() ([b7566bc](https://github.com/waitingsong/midway-components/commit/b7566bc0abe9eba3aebf0565620fba310b7485af))
+
+
+
+
+
 ## [40.1.6](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@40.1.5...@mwcp/taskman@40.1.6) (2023-05-12)
 
 **Note:** Version bump only for package @mwcp/taskman
