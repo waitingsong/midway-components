@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 10.3.0 (2023-05-24)
+
+
+### Features
+
+* **boot:** update default timeout value of RootClass.initFetchOptions() ([44708e7](https://github.com/waitingsong/midway-components/commit/44708e7eba52e1e2b05bd50214209dcafc94a0ba))
+
+
+
+
+
 ## [10.2.13](https://github.com/waitingsong/midway-components/compare/@mwcp/boot@10.2.12...@mwcp/boot@10.2.13) (2023-05-12)
 
 **Note:** Version bump only for package @mwcp/boot
