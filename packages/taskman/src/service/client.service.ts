@@ -4,7 +4,6 @@ import {
   Inject,
   Provide,
 } from '@midwayjs/core'
-import { ILogger } from '@midwayjs/logger'
 import type { FetchOptions } from '@mwcp/boot'
 import { FetchService, JsonResp, Headers, pickUrlStrFromRequestInfo } from '@mwcp/fetch'
 import { SpanKind, Trace, TraceLogger, TraceService } from '@mwcp/otel'
