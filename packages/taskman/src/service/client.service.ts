@@ -26,6 +26,7 @@ import {
   TaskProgressDTO,
   TaskProgressDetailDTO,
   TaskResultDTO,
+  TaskServerConfig,
 } from '../lib/types'
 
 import { TaskAgentService } from './task-agent.service'
@@ -45,6 +46,7 @@ export class ClientService {
   @Inject() readonly agentService: TaskAgentService
 
   @Config(ConfigKey.clientConfig) protected readonly config: TaskClientConfig
+  @Config(ConfigKey.serverConfig) protected readonly serverConfig: TaskServerConfig
 
   runningTasks = new Set<TaskDTO['taskId']>()
 
@@ -353,7 +355,8 @@ export class ClientService {
     }
 
     const opts: FetchOptions = {
-      url: this.config.host,
+      // url: this.config.host,
+      url: this.serverConfig.host,
       method: (this.ctx.request.method ?? 'GET') as 'GET' | 'POST',
       contentType: 'application/json; charset=utf-8',
       timeout: 60000,
