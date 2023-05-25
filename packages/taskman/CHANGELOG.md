@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [40.1.9](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@40.1.8...@mwcp/taskman@40.1.9) (2023-05-25)
+
+
+### Bug Fixes
+
+* **taskman:** use serverConfig.host within  ClientService.initFetchOptions() ([2280919](https://github.com/waitingsong/midway-components/commit/228091978a8ac0b87f6f04c1d088a95413846360))
+
+
+
+
+
 ## [40.1.8](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@40.1.7...@mwcp/taskman@40.1.8) (2023-05-24)
 
 **Note:** Version bump only for package @mwcp/taskman
