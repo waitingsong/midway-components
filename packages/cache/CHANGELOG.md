@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 11.0.15 (2023-05-25)
+
+**Note:** Version bump only for package @mwcp/cache
+
+
+
+
+
 ## [11.0.14](https://github.com/waitingsong/midway-components/compare/@mwcp/cache@11.0.13...@mwcp/cache@11.0.14) (2023-05-12)
 
 **Note:** Version bump only for package @mwcp/cache

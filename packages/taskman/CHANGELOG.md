@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [40.2.0](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@40.1.9...@mwcp/taskman@40.2.0) (2023-05-25)
+
+
+### Features
+
+* **taskman:** retry notify ([91217b6](https://github.com/waitingsong/midway-components/commit/91217b65476acca32840047fa98d76f05ac373d7))
+
+
+
+
+
 ## [40.1.9](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@40.1.8...@mwcp/taskman@40.1.9) (2023-05-25)
 
 
