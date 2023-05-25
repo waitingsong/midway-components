@@ -3,7 +3,6 @@ import assert from 'node:assert'
 import { randomUUID } from 'node:crypto'
 
 import {
-  Autoload,
   Config,
   Init,
   Inject,
@@ -56,7 +55,6 @@ import {
 } from '../lib/index'
 
 
-@Autoload()
 @Singleton()
 export class TaskAgentService {
 

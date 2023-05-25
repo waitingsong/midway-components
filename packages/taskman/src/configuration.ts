@@ -55,6 +55,8 @@ export class AutoConfiguration {
     if (this.mwConfig.enableMiddleware) {
       registerMiddleware(this.app)
     }
+
+    await container.getAsync(TaskAgentService)
   }
 
   async onStop(container: IMidwayContainer): Promise<void> {
