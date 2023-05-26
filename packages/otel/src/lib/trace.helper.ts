@@ -141,6 +141,10 @@ export function genDecoratorExecutorOptions(
     mergedDecoratorParam.startActiveSpan = true
   }
 
+  if (typeof mergedDecoratorParam.autoEndSpan !== 'boolean') {
+    mergedDecoratorParam.autoEndSpan = true
+  }
+
   const decoratorContext: DecoratorContext = {
     webApp: options.webApp,
     webContext: options.webContext,

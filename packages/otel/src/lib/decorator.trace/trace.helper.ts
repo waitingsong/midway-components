@@ -21,6 +21,7 @@ export async function decoratorExecutorAsync(
     traceContext,
     spanOptions,
     traceService,
+    mergedDecoratorParam,
   } = options
 
   if (! config.enable) {
@@ -40,7 +41,13 @@ export async function decoratorExecutorAsync(
       spanName,
       async (span: Span) => {
         span.setAttributes(callerAttr)
-        const opts = { func, funcArgs, span, traceService }
+        const opts = {
+          func,
+          funcArgs,
+          span,
+          traceService,
+          autoEndSpan: mergedDecoratorParam?.autoEndSpan ?? true,
+        }
         const ret = await createActiveSpanCb(opts)
         return ret
       },
@@ -51,7 +58,13 @@ export async function decoratorExecutorAsync(
   else {
     const span = traceService.startSpan(spanName, spanOptions, traceContext)
     span.setAttributes(callerAttr)
-    const opts = { func, funcArgs, span, traceService }
+    const opts = {
+      func,
+      funcArgs,
+      span,
+      traceService,
+      autoEndSpan: mergedDecoratorParam?.autoEndSpan ?? true,
+    }
     const ret = await createActiveSpanCb(opts)
     return ret
   }
@@ -71,6 +84,7 @@ export function decoratorExecutorSync(
     traceContext,
     spanOptions,
     traceService,
+    mergedDecoratorParam,
   } = options
 
   if (! config.enable) {
@@ -91,7 +105,13 @@ export function decoratorExecutorSync(
       spanName,
       (span: Span) => {
         span.setAttributes(callerAttr)
-        const opts = { func, funcArgs, span, traceService }
+        const opts = {
+          func,
+          funcArgs,
+          span,
+          traceService,
+          autoEndSpan: mergedDecoratorParam?.autoEndSpan ?? true,
+        }
         return createActiveSpanCbSync(opts)
       },
       spanOptions,
@@ -101,7 +121,13 @@ export function decoratorExecutorSync(
   else {
     const span = traceService.startSpan(spanName, spanOptions, traceContext)
     span.setAttributes(callerAttr)
-    const opts = { func, funcArgs, span, traceService }
+    const opts = {
+      func,
+      funcArgs,
+      span,
+      traceService,
+      autoEndSpan: mergedDecoratorParam?.autoEndSpan ?? true,
+    }
     return createActiveSpanCbSync(opts)
   }
 }
@@ -113,15 +139,16 @@ interface CreateActiveSpanCbOptions {
   funcArgs: unknown[]
   span: Span
   traceService: AbstractTraceService
+  autoEndSpan: boolean
 }
 async function createActiveSpanCb(options: CreateActiveSpanCbOptions): Promise<unknown> {
-  const { func, funcArgs, span, traceService } = options
+  const { func, funcArgs, span, traceService, autoEndSpan } = options
 
   try {
     const resp = func(...funcArgs)
     assert(isPromise(resp), 'func return value is not a promise')
     const ret = await resp
-    traceService.endSpan(span)
+    autoEndSpan && traceService.endSpan(span)
     return ret
   }
   catch (ex) {
@@ -134,12 +161,12 @@ async function createActiveSpanCb(options: CreateActiveSpanCbOptions): Promise<u
 }
 
 function createActiveSpanCbSync(options: CreateActiveSpanCbOptions): unknown {
-  const { func, funcArgs, span, traceService } = options
+  const { func, funcArgs, span, traceService, autoEndSpan } = options
 
   try {
     const resp = func(...funcArgs)
     assert(! isPromise(resp), 'func return value is a promise')
-    traceService.endSpan(span)
+    autoEndSpan && traceService.endSpan(span)
     return resp
   }
   catch (ex) {
