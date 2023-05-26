@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { IncomingHttpHeaders } from 'node:http'
 
-import { App, Config, Inject } from '@midwayjs/core'
+import { App, Config, Inject, MidwayEnvironmentService } from '@midwayjs/core'
 // import { ILogger as Logger } from '@midwayjs/logger'
 import { AliOssManager } from '@mwcp/ali-oss'
 import {
@@ -31,6 +31,8 @@ export class RootClass {
   @Inject() readonly ctx: Context
 
   @Inject() readonly aliOssMan: AliOssManager
+
+  @Inject() readonly environmentService: MidwayEnvironmentService
 
   @Inject() readonly fetchService: FetchService
 
@@ -65,7 +67,7 @@ export class RootClass {
    * @default
    *   - contentType: 'application/json; charset=utf-8'
    *   - dataType: 'json'
-   *   - timeout: 60000
+   *   - timeout: 60000 (in production environment, otherwise Infinity)
    *   - headers:
    *     - svc.name
    *     - svc.ver
@@ -76,12 +78,14 @@ export class RootClass {
       [AttrNames.ServiceName]: pkg.name,
       [AttrNames.ServiceVersion]: pkg.version ?? '',
     }
+    const isDevelopmentEnvironment = this.environmentService.isDevelopmentEnvironment()
+    const timeout = isDevelopmentEnvironment ? Infinity : 60000
     const args: FetchOptions = {
       url: '',
       method: 'GET',
       dataType: 'json',
       contentType: 'application/json; charset=utf-8',
-      timeout: 60000,
+      timeout,
       headers,
     }
     return args

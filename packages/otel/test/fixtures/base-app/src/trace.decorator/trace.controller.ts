@@ -8,7 +8,7 @@ import {
 } from '@midwayjs/core'
 
 import { Trace, TraceService } from '~/lib/index'
-import { TraceLogger } from '~/lib/trace.logger'
+import { TraceLogger, TraceAppLogger } from '~/lib/trace.logger'
 import { Config, ConfigKey, Msg } from '~/lib/types'
 
 import { DefaultComponentService } from './trace.service'
@@ -24,6 +24,7 @@ export class DefaultComponentController {
   @Inject() readonly traceSvc: TraceService
 
   @Inject() readonly logger: TraceLogger
+  @Inject() readonly applogger: TraceAppLogger
 
   @Get(`/${apiRoute.id}`)
   async traceId(): Promise<string> {
@@ -118,6 +119,19 @@ export class DefaultComponentController {
     this.logger.log({
       msg: traceId,
     })
+    return traceId
+  }
+
+  @Get(`/${apiRoute.appLog}`)
+  async appLog(): Promise<string> {
+    const traceId = this.traceSvc.getTraceId()
+    // no event
+    this.applogger.log({
+      msg: traceId,
+    })
+    this.applogger.log({
+      msg: traceId,
+    }, this.traceSvc.rootSpan)
     return traceId
   }
 

@@ -195,6 +195,17 @@ export function genDecoratorExecutorOptionsCommon<TDecoratorParam extends {} = {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   const webContext = baseOptions.webContext ?? instance[REQUEST_OBJ_CTX_KEY] as WebContext | undefined
 
+  // let span: Span | undefined = void 0
+  // if (webContext) {
+  //   // _${ConfigKey.serviceName}
+  //   const traceSvc = webContext['_otelService']
+  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+  //   if (traceSvc?.isStarted() === true) {
+  //     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  //     span = traceSvc.rootSpan as Span | undefined
+  //   }
+  // }
+
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unnecessary-condition
   const callerClass = instance.constructor.name ?? ''
   const callerMethod = joinPoint.methodName
@@ -220,6 +231,7 @@ export function genDecoratorExecutorOptionsCommon<TDecoratorParam extends {} = {
 
   // @ts-expect-error
   const opts: DecoratorExecutorParamBase<TDecoratorParam> = {
+    span: void 0,
     ...baseOptions,
     mergedDecoratorParam,
     decoratorKey,

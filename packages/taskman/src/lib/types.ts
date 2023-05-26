@@ -111,6 +111,7 @@ export enum ServerURL {
   getInfo = 'get_info',
   getProgress = 'get_progress',
   getResult = 'get_result',
+  getLog = 'get_log',
   pickTasksWaitToRun = 'pick_tasks',
   getPayload = 'get_payload',
   setState = 'set_state',
@@ -150,6 +151,8 @@ export enum ServerMethod {
   pickTasksWaitToRun = 'pickTasksWaitToRun ',
   getPayload = 'getPayload',
   setState = 'setState',
+
+  getLog = 'getLog',
 }
 
 /**
@@ -178,6 +181,10 @@ export interface CreateTaskOptions {
 export interface CallTaskOptions {
   url: FetchOptions['url']
   method: FetchOptions['method']
+  /**
+   * @default json
+   */
+  dataType?: FetchOptions['dataType']
   headers?: FetchOptions['headers']
   data?: JsonObject
 }

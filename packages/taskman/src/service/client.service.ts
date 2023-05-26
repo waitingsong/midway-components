@@ -4,10 +4,9 @@ import {
   Inject,
   Provide,
 } from '@midwayjs/core'
-import { ILogger } from '@midwayjs/logger'
 import type { FetchOptions } from '@mwcp/boot'
 import { FetchService, JsonResp, Headers, pickUrlStrFromRequestInfo } from '@mwcp/fetch'
-import { SpanKind, Trace, TraceService } from '@mwcp/otel'
+import { SpanKind, Trace, TraceLogger, TraceService } from '@mwcp/otel'
 import type { Context } from '@mwcp/share'
 import { retrieveHeadersItem } from '@waiting/shared-core'
 
@@ -26,6 +25,7 @@ import {
   TaskProgressDTO,
   TaskProgressDetailDTO,
   TaskResultDTO,
+  TaskServerConfig,
 } from '../lib/types'
 
 import { TaskAgentService } from './task-agent.service'
@@ -36,7 +36,7 @@ export class ClientService {
 
   @Inject() protected readonly ctx: Context
 
-  @Inject() readonly logger: ILogger
+  @Inject() readonly logger: TraceLogger
 
   @Inject() protected readonly fetch: FetchService
 
@@ -45,6 +45,7 @@ export class ClientService {
   @Inject() readonly agentService: TaskAgentService
 
   @Config(ConfigKey.clientConfig) protected readonly config: TaskClientConfig
+  @Config(ConfigKey.serverConfig) protected readonly serverConfig: TaskServerConfig
 
   runningTasks = new Set<TaskDTO['taskId']>()
 
@@ -307,7 +308,11 @@ export class ClientService {
     msg?: TaskLogDTO['taskLogContent'],
   ): void {
 
-    this.setRunning(id, msg).catch(ex => this.logger.error(ex))
+    this.setRunning(id, msg)
+      .catch(() => {
+        return this.setRunning(id, msg)
+      })
+      .catch(ex => this.logger.error(ex))
   }
 
   notifyCancelled(
@@ -315,7 +320,11 @@ export class ClientService {
     msg?: TaskLogDTO['taskLogContent'],
   ): void {
 
-    this.setCancelled(id, msg).catch(ex => this.logger.error(ex))
+    this.setCancelled(id, msg)
+      .catch(() => {
+        return this.setCancelled(id, msg)
+      })
+      .catch(ex => this.logger.error(ex))
   }
 
   notifyFailed(
@@ -323,7 +332,11 @@ export class ClientService {
     msg?: TaskLogDTO['taskLogContent'],
   ): void {
 
-    this.setFailed(id, msg).catch(ex => this.logger.error(ex))
+    this.setFailed(id, msg)
+      .catch(() => {
+        return this.setFailed(id, msg)
+      })
+      .catch(ex => this.logger.error(ex))
   }
 
   notifySucceeded(
@@ -331,7 +344,11 @@ export class ClientService {
     result?: TaskResultDTO['json'],
   ): void {
 
-    this.setSucceeded(id, result).catch(ex => this.logger.error(ex))
+    this.setSucceeded(id, result)
+      .catch(() => {
+        return this.setSucceeded(id, result)
+      })
+      .catch(ex => this.logger.error(ex))
   }
 
   notifyProgress(
@@ -340,7 +357,11 @@ export class ClientService {
     msg?: TaskLogDTO['taskLogContent'],
   ): void {
 
-    this.setProgress(id, progress, msg).catch(ex => this.logger.error(ex))
+    this.setProgress(id, progress, msg)
+      .catch(() => {
+        return this.setProgress(id, progress, msg)
+      })
+      .catch(ex => this.logger.error(ex))
   }
 
   initFetchOptions(id?: TaskDTO['taskId']): FetchOptions {
@@ -353,7 +374,8 @@ export class ClientService {
     }
 
     const opts: FetchOptions = {
-      url: this.config.host,
+      // url: this.config.host,
+      url: this.serverConfig.host,
       method: (this.ctx.request.method ?? 'GET') as 'GET' | 'POST',
       contentType: 'application/json; charset=utf-8',
       timeout: 60000,

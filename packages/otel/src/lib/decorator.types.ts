@@ -44,6 +44,10 @@ export interface TraceDecoratorOptions<
   spanNameDelimiter: string | undefined
   before: MethodType<[MParamType, DecoratorContext]> | undefined
   after: MethodType<[MParamType, DecoratorContext]> | undefined
+  /**
+   * @default true
+   */
+  autoEndSpan: boolean | undefined
 }
 
 export type KeyGenerator<ArgsType = unknown[], DContext extends DecoratorContext = DecoratorContext> = (

@@ -5,6 +5,7 @@ import {
   MidwayDecoratorService,
   REQUEST_OBJ_CTX_KEY,
 } from '@midwayjs/core'
+import type { Span } from '@opentelemetry/api'
 import { MethodType } from '@waiting/shared-types'
 
 import { Application, Context } from '../types.js'
@@ -57,6 +58,10 @@ export interface DecoratorExecutorParamBase<
   methodResult?: unknown
   methodIsAsyncFunction?: boolean
   webContext?: Context | undefined
+  /**
+   * @description no trace if false, use current span if undefined
+   */
+  span?: Span | undefined | false
 }
 
 export type FnDecoratorExecutor = (options: any) => unknown
