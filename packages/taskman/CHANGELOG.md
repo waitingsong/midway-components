@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [41.1.0](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@41.0.0...@mwcp/taskman@41.1.0) (2023-05-26)
+
+
+### Features
+
+* **taskman:** retry httpCall ([bcf7db2](https://github.com/waitingsong/midway-components/commit/bcf7db22d92f0047f1dddde1f40f9558c84c07a9))
+
+
+
+
+
 # [41.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@40.3.1...@mwcp/taskman@41.0.0) (2023-05-26)
 
 **Note:** Version bump only for package @mwcp/taskman
