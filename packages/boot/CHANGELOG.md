@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [11.0.0](https://github.com/waitingsong/midway-components/compare/@mwcp/boot@10.3.3...@mwcp/boot@11.0.0) (2023-05-26)
+
+
+### Features
+
+* **boot:** breaking change change ctx.status to 200 ([8217319](https://github.com/waitingsong/midway-components/commit/82173198d75d25fea16e2a058bbc5aa63e34d7b4))
+
+
+
+
+
 ## [10.3.3](https://github.com/waitingsong/midway-components/compare/@mwcp/boot@10.3.2...@mwcp/boot@10.3.3) (2023-05-26)
 
 **Note:** Version bump only for package @mwcp/boot
