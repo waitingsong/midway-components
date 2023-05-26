@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [41.2.0](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@41.1.0...@mwcp/taskman@41.2.0) (2023-05-26)
+
+
+### Features
+
+* **taskman:** breaking change return type of getLog ([793fbc5](https://github.com/waitingsong/midway-components/commit/793fbc5bb9912faacd6773363431d4897dee6a28))
+
+
+
+
+
 # [41.1.0](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@41.0.0...@mwcp/taskman@41.1.0) (2023-05-26)
 
 
