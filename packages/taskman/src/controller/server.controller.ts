@@ -26,6 +26,7 @@ import {
   SetStateInputData,
   PickInitTaskOptions,
   SetSucceededInputData,
+  TaskLogDTO,
 } from '../lib/index'
 import { TaskQueueService } from '../service/index.service'
 
@@ -140,6 +141,17 @@ export class ServerController {
     assert(id, 'id is required')
     await this.queueSvc.assertsTaskExists(id)
     const ret = await this.queueSvc.getResult(id)
+    return ret
+  }
+
+  @Get('/' + ServerURL.getLog)
+  async [ServerMethod.getLog](
+    @Query('id') id: TaskDTO['taskId'],
+  ): Promise<TaskLogDTO | undefined> {
+
+    assert(id, 'id is required')
+    await this.queueSvc.assertsTaskExists(id)
+    const ret = await this.queueSvc.getLog(id)
     return ret
   }
 

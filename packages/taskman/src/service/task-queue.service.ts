@@ -77,16 +77,25 @@ export class TaskQueueService {
     id: TaskDTO['taskId'],
   ): Promise<TaskProgressDetailDTO | undefined> {
 
-    return this.repo.getProgress(id)
+    const ret = await this.repo.getProgress(id)
+    return ret
   }
 
   async [ServerMethod.getResult](
     id: TaskDTO['taskId'],
   ): Promise<TaskResultDTO | undefined> {
 
-    return this.retRepo.read(id)
+    const ret = await this.retRepo.read(id)
+    return ret
   }
 
+  async [ServerMethod.getLog](
+    id: TaskDTO['taskId'],
+  ): Promise<TaskLogDTO | undefined> {
+
+    const ret = await this.logRepo.read(id)
+    return ret
+  }
 
   async setState(
     id: TaskDTO['taskId'],
@@ -215,11 +224,12 @@ export class TaskQueueService {
   ): Promise<TaskLogDTO | undefined> {
 
     if (id && msg && typeof msg === 'string') {
-      return this.logRepo.create({
+      const ret = await this.logRepo.create({
         taskId: id,
         taskLogContent: msg.trim(),
         ctime: 'now()',
       })
+      return ret
     }
     return
   }
