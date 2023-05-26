@@ -318,8 +318,10 @@ export class TaskAgentService {
     if (! url.startsWith('http')) { return }
 
     await this.fetch.fetch<void | JsonResp<void>>(opts)
+      .catch(() => {
+        return this.fetch.fetch<void | JsonResp<void>>(opts)
+      })
       .then((res) => {
-        this.otel.endRootSpan(span)
         return this.processTaskDist(taskId, reqId, res)
       })
       .catch((ex) => {
@@ -359,9 +361,9 @@ export class TaskAgentService {
         }
         return this.processHttpCallExp(taskId, reqId, opts, err as Error)
       })
-      // .finally(() => {
-      //   void 0
-      // })
+      .finally(() => {
+        this.otel.endRootSpan(span)
+      })
   }
 
   private async processHttpCallExp(

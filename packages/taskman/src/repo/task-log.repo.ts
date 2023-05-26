@@ -59,12 +59,9 @@ export class TaskLogRepository {
   }
 
 
-  async [ServerMethod.read](id: TaskLogDTO['taskLogId']): Promise<TaskLogDTO | undefined> {
+  async [ServerMethod.read](id: TaskLogDTO['taskLogId']): Promise<TaskLogDTO[]> {
     const ret = await this.ref_tb_task_log()
       .where('task_log_id', id)
-      .limit(1)
-      .then(arr => arr[0])
-
     return ret
   }
 

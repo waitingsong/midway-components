@@ -91,7 +91,7 @@ export class TaskQueueService {
 
   async [ServerMethod.getLog](
     id: TaskDTO['taskId'],
-  ): Promise<TaskLogDTO | undefined> {
+  ): Promise<TaskLogDTO[]> {
 
     const ret = await this.logRepo.read(id)
     return ret
