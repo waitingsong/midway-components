@@ -35,7 +35,7 @@
     "@opentelemetry/resource-detector-gcp": "^0.28.2",
     "@opentelemetry/sdk-node": "^0.39.1",
     "@waiting/shared-core": "^21.1.0",
-    "undici": "^5.22.1"
+    "undici": "*"
   },
   "devDependencies": {
     "cross-env": "7"
