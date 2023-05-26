@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [40.3.0](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@40.2.0...@mwcp/taskman@40.3.0) (2023-05-26)
+
+
+### Features
+
+* **taskman:** add getLog api ([0f97466](https://github.com/waitingsong/midway-components/commit/0f97466293bed4fc82b5f474a1328997cc73af11))
+
+
+
+
+
 # [40.2.0](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@40.1.9...@mwcp/taskman@40.2.0) (2023-05-25)
 
 
