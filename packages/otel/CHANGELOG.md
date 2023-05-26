@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.10.0](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@10.9.4...@mwcp/otel@10.10.0) (2023-05-26)
+
+
+### Features
+
+* **otel:** add property TraceDecoratorOptions['autoEndSpan'] ([9e3883f](https://github.com/waitingsong/midway-components/commit/9e3883fcf28dce15a12420810845f6e1ac3b8831))
+
+
+
+
+
 ## [10.9.4](https://github.com/waitingsong/midway-components/compare/@mwcp/otel@10.9.3...@mwcp/otel@10.9.4) (2023-05-26)
 
 **Note:** Version bump only for package @mwcp/otel
