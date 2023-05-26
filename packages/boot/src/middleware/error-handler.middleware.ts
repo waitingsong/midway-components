@@ -36,9 +36,10 @@ async function middleware(
   try {
     await next()
     /* c8 ignore next */
-    if (ctx.status === 404) {
+    if (ctx.status === 404 && typeof ctx.body === 'undefined') {
       const { reqId } = ctx
-      ctx.body = { code: 404, reqId, msg: 'Not Found' }
+      ctx.body = { code: 0, reqId, data: void 0 }
+      ctx.status = 200
     }
   }
   catch (err) {
