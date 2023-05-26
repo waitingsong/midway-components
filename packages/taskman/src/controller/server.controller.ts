@@ -147,7 +147,7 @@ export class ServerController {
   @Get('/' + ServerURL.getLog)
   async [ServerMethod.getLog](
     @Query('id') id: TaskDTO['taskId'],
-  ): Promise<TaskLogDTO | undefined> {
+  ): Promise<TaskLogDTO[]> {
 
     assert(id, 'id is required')
     await this.queueSvc.assertsTaskExists(id)
