@@ -341,6 +341,7 @@ export class TaskAgentService {
             url,
             callTaskOptions: JSON.stringify(opts2),
             message: err.message,
+            cause: typeof err.cause === 'string' ? err.cause : '',
           }
           this.otel.addEvent(span, attrs)
           this.otel.setSpanWithError(void 0, span, err)
@@ -385,6 +386,7 @@ export class TaskAgentService {
         dataType: options.dataType,
       },
       errMessage: err.message,
+      errCause: typeof err.cause === 'string' ? err.cause : '',
     }
     const opts: FetchOptions = {
       ...this.initFetchOptions,
