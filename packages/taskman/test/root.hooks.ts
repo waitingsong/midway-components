@@ -64,12 +64,12 @@ export const mochaHooks = async () => {
         security: {
           csrf: false,
         },
-        taskManClientConfig: {
-          host: url.slice(0, -1),
-        },
+        // taskManClientConfig: {
+        //   host: url.slice(0, -1),
+        // },
       })
-      globalConfig[ConfigKey.clientConfig].host = host
-      globalConfig[ConfigKey.serverConfig].host = host
+      // globalConfig[ConfigKey.clientConfig].host = host
+      // globalConfig[ConfigKey.serverConfig].host = host
       app.addConfigObject(globalConfig)
 
       testConfig.container = app.getApplicationContext()
