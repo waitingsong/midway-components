@@ -28,8 +28,8 @@
     "@midwayjs/cache": "^3.11.3",
     "@mwcp/otel": "^10.10.1",
     "@mwcp/share": "^6.2.1",
-    "@waiting/shared-core": "^21.1.0",
-    "cache-manager": "^5.2.0"
+    "@waiting/shared-core": "^21.2.1",
+    "cache-manager": "^5.2.3"
   },
   "devDependencies": {
     "@types/cache-manager": "^4.0.2",
