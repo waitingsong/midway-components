@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/share",
   "author": "waiting",
-  "version": "6.2.1",
+  "version": "6.2.2",
   "description": "midway.js share",
   "keywords": [
     "midway.js",
@@ -34,12 +34,12 @@
     "@midwayjs/koa": "^3.11.6",
     "@midwayjs/logger": "^2.17.0",
     "@opentelemetry/api": "*",
-    "@waiting/shared-core": "^21.1.0",
+    "@waiting/shared-core": "^21.2.1",
     "deepmerge": "^4.3.1",
     "tsconfig-paths": "4"
   },
   "devDependencies": {
-    "@waiting/shared-types": "^21.1.0",
+    "@waiting/shared-types": "^21.2.0",
     "cross-env": "7"
   },
   "engines": {
