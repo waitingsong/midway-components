@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [41.3.0](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@41.2.3...@mwcp/taskman@41.3.0) (2023-06-27)
+
+
+### Features
+
+* **taskman:** default use pg driver instead of pgnative ([294d940](https://github.com/waitingsong/midway-components/commit/294d940f3b3b3496a6c1b1c1a188045d8330ff6c))
+
+
+
+
+
 ## [41.2.3](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@41.2.2...@mwcp/taskman@41.2.3) (2023-06-16)
 
 **Note:** Version bump only for package @mwcp/taskman
