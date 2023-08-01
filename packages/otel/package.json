@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/otel",
   "author": "waiting",
-  "version": "10.11.0",
+  "version": "10.12.0",
   "description": "midway component for open telemetry",
   "keywords": [
     "midway",
@@ -27,14 +27,14 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@mwcp/share": "^6.2.2",
+    "@mwcp/share": "^6.3.0",
     "@opentelemetry/api": "^1.4.1",
-    "@opentelemetry/resource-detector-alibaba-cloud": "^0.27.7",
+    "@opentelemetry/resource-detector-alibaba-cloud": "^0.28.0",
     "@opentelemetry/resource-detector-aws": "^1.2.5",
-    "@opentelemetry/resource-detector-container": "^0.2.5",
+    "@opentelemetry/resource-detector-container": "^0.3.0",
     "@opentelemetry/resource-detector-gcp": "^0.28.3",
     "@opentelemetry/sdk-node": "^0.41.0",
-    "@waiting/shared-core": "^21.2.1",
+    "@waiting/shared-core": "^21.3.0",
     "undici": "*"
   },
   "devDependencies": {
@@ -45,6 +45,9 @@
   },
   "files": [
     "README.*.md",
+    "Dockerfile",
+    "tsconfig.json",
+    "tsconfig.base.json",
     "bin/*.js",
     "dist"
   ],

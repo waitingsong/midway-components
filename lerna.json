@@ -1,12 +1,5 @@
 {
   "version": "independent",
-  "packages": [
-    "packages/*"
-  ],
-  "ignore": [
-    "demo",
-    "@mwcp/demo"
-  ],
   "command": {
     "publish": {
       "ignoreChanges": [

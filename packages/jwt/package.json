@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/jwt",
   "author": "waiting",
-  "version": "18.0.4",
+  "version": "18.1.0",
   "description": "midway component jwt",
   "keywords": [
     "midway",
@@ -25,11 +25,11 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@waiting/shared-core": "^21.2.1",
+    "@waiting/shared-core": "^21.3.0",
     "jsonwebtoken": "^9.0.0"
   },
   "devDependencies": {
-    "@mwcp/share": "^6.2.2",
+    "@mwcp/share": "^6.3.0",
     "@types/jsonwebtoken": "^9.0.1",
     "cross-env": "7"
   },
@@ -37,6 +37,10 @@
     "node": ">=16.13.0"
   },
   "files": [
+    "README.*.md",
+    "Dockerfile",
+    "tsconfig.json",
+    "tsconfig.base.json",
     "bin/*.js",
     "dist"
   ],
@@ -59,8 +63,8 @@
     "pretest": "npm run build",
     "pretest:local": "npm run build",
     "start": "node bootstrap.js",
-    "test": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json mocha --parallel=false",
-    "test:local": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json ../../node_modules/.bin/mocha --parallel=false",
+    "test": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json mocha ",
+    "test:local": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json ../../node_modules/.bin/mocha ",
     "tsc": "tsc -b"
   }
 }

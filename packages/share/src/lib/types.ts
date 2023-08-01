@@ -1,23 +1,28 @@
-import { MidwayConfig } from '@midwayjs/core'
-import { Context as KoaCtx } from '@midwayjs/koa'
-import { MiddlewareConfig as MWConfig } from '@waiting/shared-types'
+import type {
+  IMidwayApplication,
+  IMidwayContainer,
+  IMiddleware,
+  MidwayConfig,
+  NextFunction,
+} from '@midwayjs/core'
+import type { Context as KoaCtx, Application } from '@midwayjs/koa'
+import type { MiddlewareConfig as MWConfig } from '@waiting/shared-types'
 
+
+export {
+  Application,
+  IMidwayApplication,
+  IMidwayContainer,
+  IMiddleware,
+  NextFunction,
+}
 
 export interface Context extends KoaCtx {
   reqId: string
   _internalError?: Error
 }
 
-
-export {
-  IMidwayApplication,
-  IMidwayContainer,
-  IMiddleware,
-  NextFunction,
-} from '@midwayjs/core'
-
 export type AppConfig = Partial<MidwayConfig>
-export { Application } from '@midwayjs/koa'
 
 
 export interface AppInfomation {

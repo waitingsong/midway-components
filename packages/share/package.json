@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/share",
   "author": "waiting",
-  "version": "6.2.2",
+  "version": "6.3.0",
   "description": "midway.js share",
   "keywords": [
     "midway.js",
@@ -34,12 +34,12 @@
     "@midwayjs/koa": "^3.11.6",
     "@midwayjs/logger": "^2.17.0",
     "@opentelemetry/api": "*",
-    "@waiting/shared-core": "^21.2.1",
+    "@waiting/shared-core": "^21.3.0",
     "deepmerge": "^4.3.1",
     "tsconfig-paths": "4"
   },
   "devDependencies": {
-    "@waiting/shared-types": "^21.2.0",
+    "@waiting/shared-types": "^21.3.0",
     "cross-env": "7"
   },
   "engines": {
@@ -47,8 +47,9 @@
   },
   "files": [
     "README.*.md",
-    "tsconfig.json",
     "Dockerfile",
+    "tsconfig.json",
+    "tsconfig.base.json",
     "bin/*.js",
     "dist"
   ],
@@ -60,7 +61,7 @@
     "clean": "npm run clean:lock & npm run clean:cache & rm -rf dist/*",
     "clean:cache": "rm -rf .eslintcache .tsbuildinfo",
     "clean:lock": "rm package-lock.json -f",
-    "cov": "cross-env TS_NODE_PROJECT=test/tsconfig.json c8 mocha --loader=ts-node/esm --parallel=false",
+    "cov": "cross-env TS_NODE_PROJECT=test/tsconfig.json c8 mocha --parallel=false",
     "lint": "eslint --fix --cache {src,test}/**/*.ts",
     "lint:nofix": "eslint --cache {src,test}/**/*.ts",
     "purge": "npm run clean && rm node_modules -rf && rm package-lock.json -f",
@@ -68,8 +69,8 @@
     "prepack": "rm -f dist/tsconfig.tsbuildinfo",
     "pretest": "npm run build",
     "pretest:local": "npm run build",
-    "test": "cross-env TS_NODE_PROJECT=test/tsconfig.json mocha --loader=ts-node/esm",
-    "test:local": "cross-env TS_NODE_PROJECT=test/tsconfig.json ../../node_modules/.bin/mocha --loader=ts-node/esm --parallel=false",
+    "test": "cross-env TS_NODE_PROJECT=test/tsconfig.json mocha",
+    "test:local": "cross-env TS_NODE_PROJECT=test/tsconfig.json ../../node_modules/.bin/mocha",
     "tsc": "tsc -b"
   }
 }
