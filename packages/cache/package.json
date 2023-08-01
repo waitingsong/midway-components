@@ -40,6 +40,9 @@
   },
   "files": [
     "README.*.md",
+    "Dockerfile",
+    "tsconfig.json",
+    "tsconfig.base.json",
     "bin/*.js",
     "dist"
   ],

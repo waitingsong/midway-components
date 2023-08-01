@@ -39,6 +39,10 @@
     "node": ">=16.13.0"
   },
   "files": [
+    "README.*.md",
+    "Dockerfile",
+    "tsconfig.json",
+    "tsconfig.base.json",
     "bin/*.js",
     "dist"
   ],

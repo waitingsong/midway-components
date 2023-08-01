@@ -93,7 +93,6 @@ jobs:
           npm i --no-audit -g autocannon c8 lerna rollup zx
           # npm run purge
           npm i
-          .githooks/link.sh
         env:
           CI: true
 
