@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/jwt",
   "author": "waiting",
-  "version": "18.1.0",
+  "version": "18.2.0",
   "description": "midway component jwt",
   "keywords": [
     "midway",
@@ -26,12 +26,11 @@
   "license": "MIT",
   "dependencies": {
     "@waiting/shared-core": "^21.3.0",
-    "jsonwebtoken": "^9.0.0"
+    "jsonwebtoken": "^9.0.1"
   },
   "devDependencies": {
-    "@mwcp/share": "^6.3.0",
-    "@types/jsonwebtoken": "^9.0.1",
-    "cross-env": "7"
+    "@mwcp/share": "^6.4.0",
+    "@types/jsonwebtoken": "^9.0.2"
   },
   "engines": {
     "node": ">=16.13.0"
@@ -53,10 +52,11 @@
     "clean:cache": "rm -rf .eslintcache .tsbuildinfo",
     "clean:lock": "rm package-lock.json -f",
     "cov": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json c8 mocha --parallel=false",
+    "db:gen": "kmore gen --project tsconfig.cjs.json --path ./src",
+    "db:gen-cjs": "kmore gen --project tsconfig.cjs.json --path ./src --format cjs",
     "debug": "cross-env MIDWAY_SERVER_ENV=local ../../node_modules/.bin/midway-bin dev -ts --fast --debug",
     "dev": "cross-env MIDWAY_SERVER_ENV=local ../../node_modules/.bin/midway-bin dev --ts --fast --port=7001",
     "dev:debug": "cross-env MIDWAY_SERVER_ENV=local NODE_DEBUG=midway* ../../node_modules/.bin/midway-bin dev --ts",
-    "db:gen-cjs": "kmore gen --project tsconfig.cjs.json --path ./src --format cjs",
     "lint": "eslint --fix --cache {src,test}/**/*.ts",
     "lint:nofix": "eslint --cache {src,test}/**/*.ts",
     "purge": "npm run clean && rm node_modules -rf && rm package-lock.json -f",

@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/boot",
   "author": "waiting",
-  "version": "11.2.0",
+  "version": "11.3.0",
   "description": "midway.js boot",
   "keywords": [
     "midway",
@@ -21,26 +21,25 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/prometheus": "^3.11.6",
-    "@midwayjs/redis": "^3.11.6",
-    "@midwayjs/static-file": "^3.11.6",
-    "@midwayjs/validate": "^3.11.6",
-    "@mwcp/ali-oss": "^14.2.0",
-    "@mwcp/cache": "^11.2.0",
+    "@midwayjs/prometheus": "^3.12.1",
+    "@midwayjs/redis": "^3.12.1",
+    "@midwayjs/static-file": "^3.12.1",
+    "@midwayjs/validate": "^3.12.1",
+    "@mwcp/ali-oss": "^14.3.0",
+    "@mwcp/cache": "^11.3.0",
     "@mwcp/fetch": "^23.3.4",
-    "@mwcp/jwt": "^18.1.0",
+    "@mwcp/jwt": "^18.2.0",
     "@mwcp/kmore": "^56.0.0",
     "@mwcp/koid": "^12.0.1",
-    "@mwcp/otel": "^10.12.0",
-    "@mwcp/share": "^6.3.0",
+    "@mwcp/otel": "^10.13.0",
+    "@mwcp/share": "^6.4.0",
     "@waiting/base64": "^4.2.9",
     "@waiting/shared-core": "^21.3.0",
     "tsconfig-paths": "4",
-    "undici": "^5.22.1"
+    "undici": "^5.23.0"
   },
   "devDependencies": {
-    "@midwayjs/swagger": "^3.11.6",
-    "cross-env": "7",
+    "@midwayjs/swagger": "^3.12.1",
     "kmore-cli": "^56.0.0"
   },
   "engines": {
