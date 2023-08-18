@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.3.1](https://github.com/waitingsong/midway-components/compare/@mwcp/boot@11.3.0...@mwcp/boot@11.3.1) (2023-08-18)
+
+
+### Bug Fixes
+
+* bump deps version ([0623719](https://github.com/waitingsong/midway-components/commit/0623719223c7ea7cd801ef4b86e3b51af96a5f94))
+
+
+
+
+
 # [11.3.0](https://github.com/waitingsong/midway-components/compare/@mwcp/boot@11.2.0...@mwcp/boot@11.3.0) (2023-08-16)
 
 **Note:** Version bump only for package @mwcp/boot
