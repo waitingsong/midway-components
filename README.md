@@ -25,10 +25,15 @@
 
 ## Initialize and install dependencies
 
+## 安装全局依赖
+```sh
+npm i -g c8 lerna rollup tsx
+```
+
 ## Update package
 
 ```sh
-npm run bootstrap
+npm i && npm run build
 ```
 
 ## Test
