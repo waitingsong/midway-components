@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/taskman",
   "author": "waiting",
-  "version": "41.6.0",
+  "version": "41.6.1",
   "description": "midway component task manager",
   "keywords": [
     "midway",
@@ -26,14 +26,14 @@
     "@mwcp/fetch": "^23.3.4",
     "@mwcp/kmore": "^56.0.0",
     "@mwcp/koid": "^12.0.1",
-    "@mwcp/otel": "^10.13.0",
-    "@waiting/shared-core": "^21.3.0",
+    "@mwcp/otel": "^10.13.1",
+    "@waiting/shared-core": "^21.4.2",
     "pg": "^8.11.2",
     "postgres-interval": "^4.0.1"
   },
   "devDependencies": {
-    "@mwcp/boot": "^11.3.0",
-    "@mwcp/share": "^6.4.0",
+    "@mwcp/boot": "^11.3.1",
+    "@mwcp/share": "^6.4.1",
     "kmore-cli": "^56.0.1",
     "pg-native": "^3.0.1"
   },
@@ -43,19 +43,24 @@
   "files": [
     "README.*.md",
     "Dockerfile",
+    "npm-shrinkwrap.json",
     "tsconfig.json",
     "tsconfig.base.json",
     "bin/*.js",
-    "dist"
+    "dist",
+    "!**/*.spec.*",
+    "!**/*.tsbuildinfo"
   ],
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "build": "npm run tsc && tsc-alias && npm run db:gen-cjs",
-    "clean": "npm run clean:lock & npm run clean:cache & rm -rf dist/*",
-    "clean:cache": "rm -rf .eslintcache .vscode/.tsbuildinfo .tsbuildinfo",
+    "clean": "npm run clean:lock && npm run clean:cache && npm run clean:dist && npm run clean:log",
+    "clean:cache": "rm -rf .eslintcache .tsbuildinfo",
+    "clean:dist": "rm -rf dist/* .tsbuildinfo",
     "clean:lock": "rm package-lock.json -f",
+    "clean:log": "rm -rf ./logs ./run",
     "cov": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json c8 mocha --parallel=false",
     "dev": "cross-env TS_NODE_TYPE_CHECK=false TS_NODE_TRANSPILE_ONLY=true NODE_ENV=local ../../node_modules/.bin/midway-bin dev --ts --port=7001",
     "db:gen": "kmore gen --project tsconfig.cjs.json --path ./src",

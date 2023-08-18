@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/share",
   "author": "waiting",
-  "version": "6.4.0",
+  "version": "6.4.1",
   "description": "midway.js share",
   "keywords": [
     "midway.js",
@@ -28,18 +28,15 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/bootstrap": "^3.12.1",
-    "@midwayjs/core": "^3.12.1",
-    "@midwayjs/decorator": "^3.12.1",
-    "@midwayjs/koa": "^3.12.1",
+    "@midwayjs/bootstrap": "^3.12.2",
+    "@midwayjs/core": "^3.12.2",
+    "@midwayjs/decorator": "^3.12.2",
+    "@midwayjs/koa": "^3.12.2",
     "@midwayjs/logger": "^2.17.0",
     "@opentelemetry/api": "*",
-    "@waiting/shared-core": "^21.3.0",
+    "@waiting/shared-core": "^21.4.2",
     "deepmerge": "^4.3.1",
     "tsconfig-paths": "4"
-  },
-  "devDependencies": {
-    "@waiting/shared-types": "^21.3.0"
   },
   "engines": {
     "node": ">=16.13.0"
@@ -47,25 +44,29 @@
   "files": [
     "README.*.md",
     "Dockerfile",
+    "npm-shrinkwrap.json",
     "tsconfig.json",
     "tsconfig.base.json",
     "bin/*.js",
-    "dist"
+    "dist",
+    "!**/*.spec.*",
+    "!**/*.tsbuildinfo"
   ],
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "build": "npm run tsc && tsc-alias && npm run rp",
-    "clean": "npm run clean:lock & npm run clean:cache & rm -rf dist/*",
+    "clean": "npm run clean:lock && npm run clean:cache && npm run clean:dist && npm run clean:log",
     "clean:cache": "rm -rf .eslintcache .tsbuildinfo",
+    "clean:dist": "rm -rf dist/* .tsbuildinfo",
     "clean:lock": "rm package-lock.json -f",
+    "clean:log": "rm -rf ./logs ./run",
     "cov": "cross-env TS_NODE_PROJECT=test/tsconfig.json c8 mocha --parallel=false",
     "lint": "eslint --fix --cache {src,test}/**/*.ts",
     "lint:nofix": "eslint --cache {src,test}/**/*.ts",
-    "purge": "npm run clean && rm node_modules -rf && rm package-lock.json -f",
+    "purge": "npm run clean && rm node_modules -rf",
     "rp": "rollup -c rollup.config.js --context this",
-    "prepack": "rm -f dist/tsconfig.tsbuildinfo",
     "pretest": "npm run build",
     "pretest:local": "npm run build",
     "test": "cross-env TS_NODE_PROJECT=test/tsconfig.json mocha",

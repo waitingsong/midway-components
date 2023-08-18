@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/boot",
   "author": "waiting",
-  "version": "11.3.0",
+  "version": "11.3.1",
   "description": "midway.js boot",
   "keywords": [
     "midway",
@@ -21,25 +21,25 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/prometheus": "^3.12.1",
-    "@midwayjs/redis": "^3.12.1",
-    "@midwayjs/static-file": "^3.12.1",
-    "@midwayjs/validate": "^3.12.1",
-    "@mwcp/ali-oss": "^14.3.0",
-    "@mwcp/cache": "^11.3.0",
+    "@midwayjs/prometheus": "^3.12.2",
+    "@midwayjs/redis": "^3.12.2",
+    "@midwayjs/static-file": "^3.12.2",
+    "@midwayjs/validate": "^3.12.2",
+    "@mwcp/ali-oss": "^14.3.1",
+    "@mwcp/cache": "^11.3.1",
     "@mwcp/fetch": "^23.3.4",
-    "@mwcp/jwt": "^18.2.0",
+    "@mwcp/jwt": "^18.2.1",
     "@mwcp/kmore": "^56.0.0",
     "@mwcp/koid": "^12.0.1",
-    "@mwcp/otel": "^10.13.0",
-    "@mwcp/share": "^6.4.0",
+    "@mwcp/otel": "^10.13.1",
+    "@mwcp/share": "^6.4.1",
     "@waiting/base64": "^4.2.9",
-    "@waiting/shared-core": "^21.3.0",
+    "@waiting/shared-core": "^21.4.2",
     "tsconfig-paths": "4",
     "undici": "^5.23.0"
   },
   "devDependencies": {
-    "@midwayjs/swagger": "^3.12.1",
+    "@midwayjs/swagger": "^3.12.2",
     "kmore-cli": "^56.0.0"
   },
   "engines": {
@@ -48,26 +48,31 @@
   "files": [
     "README.*.md",
     "Dockerfile",
+    "npm-shrinkwrap.json",
     "tsconfig.json",
     "tsconfig.base.json",
     "bin/*.js",
-    "dist"
+    "dist",
+    "!**/*.spec.*",
+    "!**/*.tsbuildinfo"
   ],
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "build": "npm run tsc && tsc-alias",
-    "clean": "npm run clean:lock & npm run clean:cache & rm -rf dist/*",
-    "clean:cache": "rm -rf .eslintcache .vscode/.tsbuildinfo .tsbuildinfo",
+    "clean": "npm run clean:lock && npm run clean:cache && npm run clean:dist && npm run clean:log",
+    "clean:cache": "rm -rf .eslintcache .tsbuildinfo",
+    "clean:dist": "rm -rf dist/* .tsbuildinfo",
     "clean:lock": "rm package-lock.json -f",
+    "clean:log": "rm -rf ./logs ./run",
     "cov": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json c8 mocha --parallel=false",
     "dev": "cross-env TS_NODE_TYPE_CHECK=false TS_NODE_TRANSPILE_ONLY=true NODE_ENV=local ../../node_modules/.bin/midway-bin dev --ts --port=7001",
     "db:gen": "kmore gen --project tsconfig.cjs.json --path ./src",
     "db:gen-cjs": "kmore gen --project tsconfig.cjs.json --path ./src --format cjs",
     "lint": "eslint --fix --cache {src,test}/**/*.ts",
     "lint:nofix": "eslint --cache {src,test}/**/*.ts",
-    "purge": "npm run clean && rm node_modules -rf && rm package-lock.json -f",
+    "purge": "npm run clean && rm node_modules -rf",
     "test": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json mocha --parallel=false",
     "test:local": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json ../../node_modules/.bin/mocha --parallel=false",
     "tsc": "tsc -b"
