@@ -37,6 +37,7 @@
   },
   "files": [
     "README.*.md",
+    "Dockerfile",
     "npm-shrinkwrap.json",
     "tsconfig.json",
     "tsconfig.base.json",
@@ -51,7 +52,7 @@
   "scripts": {
     "build": "npm run tsc && tsc-alias",
     "clean": "npm run clean:lock && npm run clean:cache && npm run clean:dist && npm run clean:log",
-    "clean:cache": "rm -rf .eslintcache .tsbuildinfo .vscode/.jest-cache",
+    "clean:cache": "rm -rf .eslintcache .tsbuildinfo",
     "clean:dist": "rm -rf dist/* .tsbuildinfo",
     "clean:lock": "rm package-lock.json -f",
     "clean:log": "rm -rf ./logs ./run",
@@ -63,7 +64,7 @@
     "dev:debug": "cross-env MIDWAY_SERVER_ENV=local NODE_DEBUG=midway* ../../node_modules/.bin/midway-bin dev --ts",
     "lint": "eslint --fix --cache {src,test}/**/*.ts",
     "lint:nofix": "eslint --cache {src,test}/**/*.ts",
-    "purge": "npm run clean && rm node_modules -rf && rm package-lock.json -f",
+    "purge": "npm run clean && rm node_modules -rf",
     "pretest": "npm run build",
     "pretest:local": "npm run build",
     "start": "node bootstrap.js",

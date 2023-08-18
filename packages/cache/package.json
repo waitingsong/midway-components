@@ -25,10 +25,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/cache": "^3.12.1",
+    "@midwayjs/cache": "^3.12.2",
     "@mwcp/otel": "^10.13.0",
     "@mwcp/share": "^6.4.0",
-    "@waiting/shared-core": "^21.3.0",
+    "@waiting/shared-core": "^21.4.2",
     "cache-manager": "^5.2.3"
   },
   "devDependencies": {
@@ -40,26 +40,31 @@
   "files": [
     "README.*.md",
     "Dockerfile",
+    "npm-shrinkwrap.json",
     "tsconfig.json",
     "tsconfig.base.json",
     "bin/*.js",
-    "dist"
+    "dist",
+    "!**/*.spec.*",
+    "!**/*.tsbuildinfo"
   ],
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "build": "npm run tsc && tsc-alias",
-    "clean": "npm run clean:lock & npm run clean:cache & rm -rf dist/*",
-    "clean:cache": "rm -rf .eslintcache .vscode/.tsbuildinfo .tsbuildinfo",
+    "clean": "npm run clean:lock && npm run clean:cache && npm run clean:dist && npm run clean:log",
+    "clean:cache": "rm -rf .eslintcache .tsbuildinfo",
+    "clean:dist": "rm -rf dist/* .tsbuildinfo",
     "clean:lock": "rm package-lock.json -f",
+    "clean:log": "rm -rf ./logs ./run",
     "cov": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json c8 mocha --parallel=false",
     "debug": "cross-env MIDWAY_SERVER_ENV=local ../../node_modules/.bin/midway-bin dev -ts --fast --debug",
     "dev": "cross-env MIDWAY_SERVER_ENV=local ../../node_modules/.bin/midway-bin dev --ts --fast --port=7001",
     "dev:debug": "cross-env MIDWAY_SERVER_ENV=local NODE_DEBUG=midway* ../../node_modules/.bin/midway-bin dev --ts",
     "lint": "eslint --fix --cache {src,test}/**/*.ts",
     "lint:nofix": "eslint --cache {src,test}/**/*.ts",
-    "purge": "npm run clean && rm node_modules -rf && rm package-lock.json -f",
+    "purge": "npm run clean && rm node_modules -rf",
     "pretest": "npm run build",
     "pretest:local": "npm run build",
     "start": "node bootstrap.js",
