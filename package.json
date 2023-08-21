@@ -15,8 +15,8 @@
     "@types/mocha": "10",
     "@types/node": "20",
     "@waiting/eslint-config": "^8.8.0",
-    "@waiting/shared-core": "^21.4.2",
-    "@waiting/shared-types": "^21.4.0",
+    "@waiting/shared-core": "^21.5.0",
+    "@waiting/shared-types": "^21.5.0",
     "autocannon": "7",
     "coveralls": "3",
     "cross-env": "7",
@@ -30,6 +30,7 @@
     "ts-node": "^10.9.1",
     "tsc-alias": "^1.8.7",
     "tsconfig-paths": "4",
+    "tsx": "3",
     "typescript": "^5.1.6",
     "zx": "7"
   },
