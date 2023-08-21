@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [18.2.2](https://github.com/waitingsong/midway-components/compare/@mwcp/jwt@18.2.1...@mwcp/jwt@18.2.2) (2023-08-21)
+
+**Note:** Version bump only for package @mwcp/jwt
+
+
+
+
+
 ## [18.2.1](https://github.com/waitingsong/midway-components/compare/@mwcp/jwt@18.2.0...@mwcp/jwt@18.2.1) (2023-08-18)
 
 
