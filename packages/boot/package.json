@@ -27,20 +27,20 @@
     "@midwayjs/validate": "^3.12.2",
     "@mwcp/ali-oss": "^14.3.1",
     "@mwcp/cache": "^11.3.1",
-    "@mwcp/fetch": "^23.3.4",
+    "@mwcp/fetch": "^23.3.5",
     "@mwcp/jwt": "^18.2.1",
-    "@mwcp/kmore": "^56.0.0",
-    "@mwcp/koid": "^12.0.1",
+    "@mwcp/kmore": "^56.0.2",
+    "@mwcp/koid": "^12.0.2",
     "@mwcp/otel": "^10.13.1",
     "@mwcp/share": "^6.4.1",
     "@waiting/base64": "^4.2.9",
-    "@waiting/shared-core": "^21.4.2",
+    "@waiting/shared-core": "^21.5.0",
     "tsconfig-paths": "4",
     "undici": "^5.23.0"
   },
   "devDependencies": {
     "@midwayjs/swagger": "^3.12.2",
-    "kmore-cli": "^56.0.0"
+    "kmore-cli": "^56.0.2"
   },
   "engines": {
     "node": ">=18.12.0"
