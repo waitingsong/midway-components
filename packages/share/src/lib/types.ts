@@ -10,6 +10,10 @@ import type { MiddlewareConfig as MWConfig } from '@waiting/shared-types'
 
 
 export {
+  JsonResp, JsonObject, JsonType, PlainJsonValue,
+} from '@waiting/shared-types'
+
+export {
   Application,
   IMidwayApplication,
   IMidwayContainer,
