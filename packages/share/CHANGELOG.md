@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.6.0](https://github.com/waitingsong/midway-components/compare/@mwcp/share@6.5.0...@mwcp/share@6.6.0) (2023-08-29)
+
+
+### Features
+
+* **share:** add registerMiddleware() ([194ad84](https://github.com/waitingsong/midway-components/commit/194ad84cc1ca5f58ec2ab29b76c53495779beece))
+
+
+
+
+
 # [6.5.0](https://github.com/waitingsong/midway-components/compare/@mwcp/share@6.4.2...@mwcp/share@6.5.0) (2023-08-25)
 
 
