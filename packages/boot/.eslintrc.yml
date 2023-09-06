@@ -11,5 +11,5 @@ rules:
       - ./
       - ../share/
 
-ignorePatterns:
-  - fixtures
+# ignorePatterns:
+#   - test

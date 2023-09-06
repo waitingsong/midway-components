@@ -20,12 +20,13 @@
     "noUnusedParameters": true,
     "outDir": "dist",
     "paths": {
-      "~/*": ["./src/*"],
-      "@/*": ["./test/*"]
+      "##/*": ["src/*"],
+      "#@/*": ["test/*"]
     },
     "preserveConstEnums": true,
     "pretty": true,
     "resolveJsonModule": true,
+    "rootDir": "src",
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
@@ -44,7 +45,6 @@
     "app/views",
     "dist",
     "node_modules*",
-    "test",
     "**/*.d.ts",
     "**/*.spec.ts"
   ],

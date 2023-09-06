@@ -1,14 +1,15 @@
 import assert from 'node:assert/strict'
-import { relative } from 'node:path'
+
+import { fileShortPath } from '@waiting/shared-core'
+
+import { testConfig } from './root.config.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), () => {
 
   describe('should work', () => {
     it('always passed', () => {
-      assert(true)
+      assert(testConfig)
     })
   })
 

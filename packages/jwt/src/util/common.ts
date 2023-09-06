@@ -4,7 +4,7 @@ import {
   Config,
   ConfigKey,
   MiddlewareConfig,
-} from '../lib/types'
+} from '##/lib/types.js'
 
 
 /**
