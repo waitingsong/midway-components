@@ -28,11 +28,12 @@ export * from './lib/index'
 export * from './middleware/index.middleware'
 
 
+// @ts-ignore
 declare module '@midwayjs/core/dist/interface' {
   interface MidwayConfig {
-    [ConfigKey.config]: Partial<Config>
-    [ConfigKey.middlewareConfig]: Partial<MiddlewareConfig>
-    [ConfigKey.otlpGrpcExporterConfig]: Partial<InitTraceOptions['otlpGrpcExporterConfig']>
+    [ConfigKey.config]?: Partial<Config>
+    [ConfigKey.middlewareConfig]?: Partial<MiddlewareConfig>
+    [ConfigKey.otlpGrpcExporterConfig]?: Partial<InitTraceOptions['otlpGrpcExporterConfig']>
   }
 }
 // @ts-ignore

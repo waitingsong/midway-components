@@ -21,7 +21,7 @@ export {
 
 declare module '@midwayjs/core/dist/interface' {
   interface MidwayConfig {
-    [ConfigKey.config]: Config
+    [ConfigKey.config]?: Config
   }
 }
 

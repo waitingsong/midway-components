@@ -12,8 +12,8 @@ export { CacheManager } from '@midwayjs/cache'
 
 declare module '@midwayjs/core/dist/interface' {
   interface MidwayConfig {
-    [ConfigKey.config]: Config
-    [ConfigKey.middlewareConfig]: MiddlewareConfig
+    [ConfigKey.config]?: Config
+    [ConfigKey.middlewareConfig]?: MiddlewareConfig
   }
 }
 

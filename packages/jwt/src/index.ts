@@ -24,8 +24,8 @@ export {
 // @ts-ignore
 declare module '@midwayjs/core/dist/interface' {
   interface MidwayConfig {
-    [ConfigKey.config]: Partial<Config>
-    [ConfigKey.middlewareConfig]: Partial<MiddlewareConfig>
+    [ConfigKey.config]?: Partial<Config>
+    [ConfigKey.middlewareConfig]?: Partial<MiddlewareConfig>
   }
 }
 

@@ -22,9 +22,9 @@ export * from './lib/index'
 // @ts-ignore
 declare module '@midwayjs/core/dist/interface' {
   interface MidwayConfig {
-    [ConfigKey.clientConfig]: Partial<TaskClientConfig>
-    [ConfigKey.serverConfig]: Partial<TaskServerConfig>
-    [ConfigKey.middlewareConfig]: Partial<MiddlewareConfig>
+    [ConfigKey.clientConfig]?: Partial<TaskClientConfig>
+    [ConfigKey.serverConfig]?: Partial<TaskServerConfig>
+    [ConfigKey.middlewareConfig]?: Partial<MiddlewareConfig>
   }
 }
 
