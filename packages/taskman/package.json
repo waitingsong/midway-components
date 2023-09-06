@@ -23,7 +23,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@mwcp/fetch": "^23.3.5",
+    "@mwcp/fetch": "^24.0.1",
     "@mwcp/kmore": "^56.0.2",
     "@mwcp/koid": "^12.0.2",
     "@mwcp/otel": "^10.13.5",
