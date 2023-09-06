@@ -1,6 +1,8 @@
 import { isPathMatchRules } from '@waiting/shared-core'
 import { MiddlewareConfig } from '@waiting/shared-types'
 
+import type { Application } from '../lib/types.js'
+
 
 /**
  * Return true if rules of match and ignore empty
@@ -30,6 +32,29 @@ export function requestPathMatched(
   }
   else {
     return true
+  }
+}
+
+export function registerMiddleware(
+  app: Application,
+  middleware: { name: string },
+  postion: 'first' | 'last' = 'last',
+): void {
+
+  const mwNames = app.getMiddleware().getNames()
+  if (mwNames.includes(middleware.name)) {
+    return
+  }
+
+  switch (postion) {
+    case 'first':
+      // @ts-ignore
+      app.getMiddleware().insertFirst(middleware)
+      break
+    case 'last':
+      // @ts-ignore
+      app.getMiddleware().insertLast(middleware)
+      break
   }
 }
 

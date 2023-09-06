@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/share",
   "author": "waiting",
-  "version": "6.4.1",
+  "version": "6.6.0",
   "description": "midway.js share",
   "keywords": [
     "midway.js",
@@ -34,7 +34,7 @@
     "@midwayjs/koa": "^3.12.2",
     "@midwayjs/logger": "^2.17.0",
     "@opentelemetry/api": "*",
-    "@waiting/shared-core": "^21.4.2",
+    "@waiting/shared-core": "^21.5.0",
     "deepmerge": "^4.3.1",
     "tsconfig-paths": "4"
   },
@@ -47,6 +47,7 @@
     "npm-shrinkwrap.json",
     "tsconfig.json",
     "tsconfig.base.json",
+    "asset",
     "bin/*.js",
     "dist",
     "!**/*.spec.*",

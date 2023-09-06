@@ -32,7 +32,7 @@ export interface DecoratorMetaData<T extends {} = {}> {
   metadata: DecoratorMetaDataPayload<T>
   options: MethodDecoratorOptions | undefined
 }
-export type Method = (...args: unknown[]) => unknown | Promise<unknown>
+export type Method<T = unknown> = (...args: unknown[]) => T | Promise<T>
 
 export interface AroundFactoryParamBase {
   webApp: Application
