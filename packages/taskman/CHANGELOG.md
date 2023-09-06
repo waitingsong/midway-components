@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [41.6.5](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@41.6.4...@mwcp/taskman@41.6.5) (2023-09-06)
+
+
+### Bug Fixes
+
+* MidwayConfig extension optional ([1ec4c58](https://github.com/waitingsong/midway-components/commit/1ec4c5885f5d59a750d7658c1cc902fa56624705))
+
+
+
+
+
 ## [41.6.4](https://github.com/waitingsong/midway-components/compare/@mwcp/taskman@41.6.3...@mwcp/taskman@41.6.4) (2023-08-29)
 
 **Note:** Version bump only for package @mwcp/taskman

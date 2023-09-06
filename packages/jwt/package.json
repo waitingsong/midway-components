@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/jwt",
   "author": "waiting",
-  "version": "18.2.4",
+  "version": "18.2.5",
   "description": "midway component jwt",
   "keywords": [
     "midway",
