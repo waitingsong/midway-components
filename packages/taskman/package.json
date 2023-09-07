@@ -34,7 +34,7 @@
   "devDependencies": {
     "@mwcp/boot": "^11.3.5",
     "@mwcp/share": "^6.6.0",
-    "kmore-cli": "^56.0.2",
+    "kmore-cli": "^57.0.0",
     "pg-native": "^3.0.1"
   },
   "engines": {
