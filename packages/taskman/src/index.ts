@@ -26,3 +26,4 @@ declare module '@midwayjs/core/dist/interface' {
   }
 }
 
+
