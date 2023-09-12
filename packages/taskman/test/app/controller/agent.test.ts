@@ -1,16 +1,14 @@
-import assert from 'assert/strict'
-import { relative } from 'path'
+import assert from 'node:assert/strict'
 
-import { testConfig } from 'test/root.config'
+import { fileShortPath } from '@waiting/shared-core'
 
-import { createOneTask } from '../helper'
+import { createOneTask } from '../helper.js'
 
-import { ClientURL, PickInitTaskOptions, ServerURL, TaskDTO } from '~/lib'
+import { ClientURL, PickInitTaskOptions, ServerURL, TaskDTO, TaskState } from '##/lib/index.js'
+import { testConfig } from '#@/root.config.js'
 
 
-const filename = relative(process.cwd(), __filename)
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), () => {
 
   const path = `${ServerURL.base}/${ServerURL.pickTasksWaitToRun}`
   const pathStop = `${ClientURL.base}/${ClientURL.stop}`
@@ -45,7 +43,7 @@ describe(filename, () => {
       assert(row, 'should get task ok')
       assert(row.taskTypeId === 1)
       assert(row.taskTypeVer === 1)
-      assert(row.taskState === 'pending')
+      assert(row.taskState === TaskState.pending)
     })
 
     it('taskTypeVerList exists', async () => {
@@ -74,7 +72,7 @@ describe(filename, () => {
       assert(row, 'should get task ok')
       assert(row.taskTypeId === 1)
       assert(row.taskTypeVer === 1)
-      assert(row.taskState === 'pending')
+      assert(row.taskState === TaskState.pending)
     })
 
     it('taskTypeVerList *', async () => {
@@ -102,7 +100,7 @@ describe(filename, () => {
       assert(row, 'should get task ok')
       assert(row.taskTypeId === 1)
       assert(row.taskTypeVer === 1)
-      assert(row.taskState === 'pending')
+      assert(row.taskState === TaskState.pending)
     })
 
     it('taskTypeVerList exists 2', async () => {
@@ -131,7 +129,7 @@ describe(filename, () => {
       assert(row, 'should get task ok')
       assert(row.taskTypeId === 1)
       assert(row.taskTypeVer === 1)
-      assert(row.taskState === 'pending')
+      assert(row.taskState === TaskState.pending)
     })
 
 

@@ -11,7 +11,7 @@ import { node } from '@opentelemetry/sdk-node'
 import {
   AddEventOtpions,
   SpanStatusOptions,
-} from './types'
+} from './types.js'
 
 
 /** OpenTelemetry Component */

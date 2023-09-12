@@ -8,6 +8,10 @@ Ali Oss ossutil client component for midway.js
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 
 
+## Note
+
+ESM build only, requires `@midwayjs >= 3.12` and set `"type": "module"` in `packages.json`
+
 ## Prepare
 
 [ossutil 下载页面](https://help.aliyun.com/document_detail/120075.html)
@@ -19,7 +23,7 @@ sudo chmod a+x /usr/bin/ossutil
 
 ## Installation
 ```sh
-npm i @mw-components/ali-oss
+npm i @mwcp/ali-oss
 ```
 
 ## Configuration

@@ -1,6 +1,6 @@
 import { genDbDict } from 'kmore-types'
 
-import { DbModel } from './db.model.dst'
+import { DbModel } from './db.model.dst.js'
 
 
 export { DbModel }

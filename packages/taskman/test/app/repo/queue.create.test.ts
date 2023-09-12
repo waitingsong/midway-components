@@ -1,16 +1,15 @@
-import assert from 'assert/strict'
-import { relative } from 'path'
 
-import { testConfig } from 'test/root.config'
+import assert from 'node:assert/strict'
 
-import { createOneTask } from '../helper'
+import { fileShortPath } from '@waiting/shared-core'
 
-import { CreateTaskDTO, InitTaskLogDTO } from '~/lib'
+import { createOneTask } from '../helper.js'
+
+import { CreateTaskDTO } from '##/lib/index.js'
+import { testConfig } from '#@/root.config.js'
 
 
-const filename = relative(process.cwd(), __filename)
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), () => {
 
   describe('should create() work', () => {
     it('normal', async () => {

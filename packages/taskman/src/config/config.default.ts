@@ -1,4 +1,3 @@
-import { MiddlewareConfig } from '../index'
 import {
   DbReplica,
   initTaskClientConfig,
@@ -8,7 +7,8 @@ import {
   initTaskServerConfig,
   initialMiddlewareConfig,
   initMiddlewareOptions,
-} from '../lib/index'
+  MiddlewareConfig,
+} from '##/lib/index.js'
 
 
 export const keys = Math.random().toString()

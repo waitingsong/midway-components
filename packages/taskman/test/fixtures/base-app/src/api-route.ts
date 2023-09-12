@@ -1,8 +1,8 @@
-import { ConfigKey } from '~/lib/types'
+import { ConfigKey } from '../../../../src/lib/types.js'
 
 
 export const apiPrefix = {
-  task: `/${ConfigKey.componentName}_task`
+  task: `/${ConfigKey.componentName}_task`,
 }
 
 export const apiRoute = {

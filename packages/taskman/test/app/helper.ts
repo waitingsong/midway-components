@@ -1,15 +1,15 @@
 import assert from 'assert/strict'
 
-import { testConfig } from '@/root.config'
 import {
   CreateTaskDTO,
   TaskFullDTO,
   TaskDTO,
   initTaskDTO,
   ClientURL,
-} from '~/lib/index'
-import { TaskQueueRepository } from '~/repo/index.repo'
-import { TaskQueueService } from '~/service/index.service'
+} from '##/lib/index.js'
+import { TaskQueueRepository } from '##/repo/index.repo.js'
+import { TaskQueueService } from '##/service/index.service.js'
+import { testConfig } from '#@/root.config.js'
 
 
 export async function createTasks(

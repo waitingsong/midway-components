@@ -3,9 +3,9 @@ import {
   initialMiddlewareConfig,
   initOtlpGrpcExporterConfig,
   initTracerIgnoreArray,
-} from '../lib/config'
-// import { processCustomFailure } from '../lib/tracer'
-import { Config, InitTraceOptions, MiddlewareConfig, SpanExporterList } from '../lib/types'
+} from '##/lib/config.js'
+// import { processCustomFailure } from '##/lib/tracer.js'
+import { Config, InitTraceOptions, MiddlewareConfig, SpanExporterList } from '##/lib/types.js'
 
 
 export const otelConfig: Config = {
@@ -31,5 +31,5 @@ export const otelMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
 export const otlpGrpcExporterConfig: InitTraceOptions['otlpGrpcExporterConfig'] = {
   ...initOtlpGrpcExporterConfig,
 }
-console.info({ __dirname, otlpGrpcExporterConfig })
+console.info({ otlpGrpcExporterConfig })
 

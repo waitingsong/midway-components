@@ -4,8 +4,8 @@ import {
   initialMiddlewareConfig,
   initMiddlewareOptions,
   initPathArray,
-} from '../lib/config'
-import { Config, MiddlewareConfig } from '../lib/types'
+} from '##/lib/config.js'
+import { Config, MiddlewareConfig } from '##/lib/types.js'
 
 
 export const keys = Date.now()

@@ -1,15 +1,15 @@
-import { relative } from 'path'
+import assert from 'node:assert/strict'
 
-import { authShouldSkipped } from '../helper'
+import { fileShortPath } from '@waiting/shared-core'
 
-import { testConfig } from '@/root.config'
-import { jwtMiddlewareConfig as mConfig } from '~/config/config.unittest'
-import { ConfigKey, MiddlewareConfig } from '~/lib/types'
+import { authShouldSkipped } from '../helper.js'
+
+import { jwtMiddlewareConfig as mConfig } from '##/config/config.unittest.js'
+import { ConfigKey, MiddlewareConfig } from '##/lib/types.js'
+import { testConfig } from '#@/root.config.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), () => {
 
   const path = '/test'
 

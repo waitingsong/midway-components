@@ -2,9 +2,13 @@
 Siging, verifying and authentication for midway framework.
 
 
+## Note
+
+ESM build only, requires `@midwayjs >= 3.12` and set `"type": "module"` in `packages.json`
+
 ## Installation
 ```sh
-npm i @mw-components/jwt
+npm i @mwcp/jwt
 ```
 
 

@@ -1,36 +1,38 @@
-import { relative } from 'path'
+import assert from 'node:assert/strict'
+
+import { fileShortPath } from '@waiting/shared-core'
 
 import {
   authShouldFailedWithNotFound2,
   authShouldPassed,
   authShouldPassthroughNotFound,
-} from '../helper'
+} from '../helper.js'
 
-import { authHeader1, payload1 } from '@/mock-data'
-import { testConfig } from '@/root.config'
 import {
   ConfigKey,
   MiddlewareConfig,
   PassthroughCallback,
-} from '~/lib/types'
+} from '##/lib/types.js'
+import { authHeader1, payload1 } from '#@/mock-data.js'
+import { testConfig } from '#@/root.config.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
+describe(fileShortPath(import.meta.url), () => {
 
-describe(filename, () => {
-
-  const cb: PassthroughCallback = async () => true
+  const callbackTrue: PassthroughCallback = async () => true
+  const callbackFalse: PassthroughCallback = async () => false
   const path = '/test'
 
   describe('Should JwtAuthenticateOptions.passthrough work with func', () => {
     it('true: passed', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: MiddlewareConfig = {
-        // @ts-ignore
+        enableMiddleware: true,
         options: {
-          passthrough: cb,
+          passthrough: callbackFalse,
         },
       }
+      assert(mwConfig.options)
       app.addConfigObject({
         [ConfigKey.middlewareConfig]: mwConfig,
       })
@@ -38,18 +40,31 @@ describe(filename, () => {
       const sendHeader = {
         authorization: authHeader1,
       }
+
+      // validate 401 without token and passthrough
+      const resp1 = await httpRequest
+        .get(path)
+      assert(resp1, 'resp1 is empty')
+      assert(resp1.status === 401, `resp1.status: ${resp1.status}`)
+
+      mwConfig.options.passthrough = callbackTrue
+
       const resp = await httpRequest
         .get(path)
         .set(sendHeader)
+        .expect(200)
+
+      assert(resp, 'resp is empty')
       authShouldPassed(resp, payload1)
     })
 
-    it('true: token not found', async () => {
+    it('true: w/o token', async () => {
       const { app, httpRequest } = testConfig
+
       const mwConfig: MiddlewareConfig = {
-        // @ts-ignore
+        enableMiddleware: true,
         options: {
-          passthrough: cb,
+          passthrough: callbackTrue,
         },
       }
       app.addConfigObject({
@@ -61,11 +76,12 @@ describe(filename, () => {
       authShouldPassthroughNotFound(resp, 200)
     })
 
-    it('invalid value: token not found', async () => {
+    it('invalid value: w/o token', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: MiddlewareConfig = {
+        enableMiddleware: true,
         options: {
-          // @ts-ignore
+          // @ts-expect-error
           passthrough: 0,
         },
       }
@@ -78,11 +94,12 @@ describe(filename, () => {
       authShouldFailedWithNotFound2(resp, 401)
     })
 
-    it('invalid value 1: token not found', async () => {
+    it('invalid value 1: w/o token', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: MiddlewareConfig = {
+        enableMiddleware: true,
         options: {
-          // @ts-ignore
+          // @ts-expect-error
           passthrough: 1,
         },
       }

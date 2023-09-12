@@ -1,6 +1,6 @@
 import { customDecoratorFactory } from '@mwcp/share'
 
-import { MethodType, TraceDecoratorParam } from '../decorator.types'
+import { MethodType, TraceDecoratorParam } from '../decorator.types.js'
 
 
 export const KEY_Trace = 'decorator:key_Trace'

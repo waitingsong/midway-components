@@ -10,13 +10,12 @@ import {
   Query,
 } from '@midwayjs/core'
 import type { Context } from '@mwcp/share'
-import {
-  ClientKey,
-} from '~/lib/types'
+
 import {
   AliOssComponent,
   AliOssManager,
-} from '~/lib/index'
+} from '../../../../dist/lib/index.js'
+import { ClientKey } from '../../../../dist/lib/types.js'
 
 
 @Controller('/oss')
@@ -33,7 +32,7 @@ export class OssController {
   }
 
   @Get('/stat')
-  async stat(@Query('target') target: string): Promise<ReturnType<AliOssComponent["stat"]>> {
+  async stat(@Query('target') target: string): Promise<ReturnType<AliOssComponent['stat']>> {
     const res = await this.ossClient.stat(target)
     return res
   }
@@ -41,10 +40,10 @@ export class OssController {
   @Post('/mkdir')
   async mkdir(
     @Query() parm: {
-      target: Parameters<AliOssComponent["mkdir"]>[0]
-      opts: Parameters<AliOssComponent["mkdir"]>[1]
+      target: Parameters<AliOssComponent['mkdir']>[0],
+      opts: Parameters<AliOssComponent['mkdir']>[1],
     },
-  ): Promise<ReturnType<AliOssComponent["mkdir"]>> {
+  ): Promise<ReturnType<AliOssComponent['mkdir']>> {
 
     assert(this.ossClient.ctx === this.ctx)
     const { target, opts } = parm

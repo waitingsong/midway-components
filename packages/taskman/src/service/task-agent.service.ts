@@ -52,7 +52,7 @@ import {
   TaskAgentState,
   initPickInitTasksOptions,
   PickInitTaskOptions,
-} from '../lib/index'
+} from '##/lib/index.js'
 
 
 @Singleton()

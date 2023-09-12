@@ -4,11 +4,11 @@ import {
   Get,
 } from '@midwayjs/core'
 
-import { Cacheable, ConfigKey, Msg } from '../lib/types'
+import { Cacheable, ConfigKey, Msg } from '##/lib/types.js'
 
 
 @Controller(`/_${ConfigKey.namespace}`)
-export class DefaultBaseComponentController {
+export class DefaultBootComponentController {
 
   @Get('/hello')
   async hello(): Promise<string> {

@@ -23,12 +23,12 @@ import {
   TaskLogDTO,
   TaskResultDTO,
   TaskProgressDetailDTO,
-} from '../lib/index'
+} from '##/lib/index.js'
 import {
   TaskLogRepository,
   TaskQueueRepository,
   TaskResultRepository,
-} from '../repo/index.repo'
+} from '##/repo/index.repo.js'
 
 
 @Provide()

@@ -21,8 +21,7 @@ import {
 } from '@opentelemetry/semantic-conventions'
 import type { Headers as UndiciHeaders } from 'undici'
 
-import { AttrNames, Config } from './types'
-
+import { AttrNames, Config } from './types.js'
 
 
 const defaultPropety: PropertyDescriptor = {

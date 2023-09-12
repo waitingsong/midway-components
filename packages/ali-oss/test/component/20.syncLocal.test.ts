@@ -1,15 +1,15 @@
 import assert from 'node:assert/strict'
 import { mkdir } from 'node:fs/promises'
-import { join, relative } from 'node:path'
+import { join } from 'node:path'
 
-import { assertLocalFileExists } from '@/helper'
-import { cloudUrlPrefix, files, src, srcDir, testConfig, testDir } from '@/root.config'
-import { SyncOptions } from '~/index'
+import { fileShortPath } from '@waiting/shared-core'
+
+import { SyncOptions } from '../../src/index.js'
+import { assertLocalFileExists } from '../helper.js'
+import { cloudUrlPrefix, files, srcDir, testConfig, testDir } from '../root.config.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), function() {
 
   const target = `${cloudUrlPrefix}/sync-${Date.now().toString()}`
 

@@ -3,8 +3,8 @@ import {
   initialMiddlewareConfig,
   initOtlpGrpcExporterConfig,
   initTracerIgnoreArray,
-} from '../lib/config'
-import { Config, InitTraceOptions, MiddlewareConfig } from '../lib/types'
+} from '##/lib/config.js'
+import { Config, InitTraceOptions, MiddlewareConfig } from '##/lib/types.js'
 
 
 export const keys = Date.now()

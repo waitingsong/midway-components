@@ -4,15 +4,16 @@ import {
   Config as _Config,
   Controller,
   Get,
+  Init,
   Inject,
 } from '@midwayjs/core'
 
-import { Trace, TraceService } from '~/lib/index'
-import { TraceLogger, TraceAppLogger } from '~/lib/trace.logger'
-import { Config, ConfigKey, Msg } from '~/lib/types'
+import { Trace, TraceService } from '../../../../../dist/lib/index.js'
+import { TraceLogger, TraceAppLogger } from '../../../../../dist/lib/trace.logger.js'
+import { Config, ConfigKey, Msg } from '../../../../../dist/lib/types.js'
+import { apiPrefix, apiRoute } from '../api-route.js'
 
-import { DefaultComponentService } from './trace.service'
-import { apiPrefix, apiRoute } from '../api-route'
+import { DefaultComponentService } from './trace.service.js'
 
 
 @Controller(apiPrefix.TraceDecorator)
@@ -26,11 +27,16 @@ export class DefaultComponentController {
   @Inject() readonly logger: TraceLogger
   @Inject() readonly applogger: TraceAppLogger
 
+  @Init()
+  async init(): Promise<void> {
+    assert(true)
+  }
+
   @Get(`/${apiRoute.id}`)
   async traceId(): Promise<string> {
     const traceId = this.traceSvc.getTraceId()
     await this.svc.hello(Msg.hello)
-    this.traceSvc.setAttributes(void 0, {foo: 'foo'})
+    this.traceSvc.setAttributes(void 0, { foo: 'foo' })
     // ensure child span of svc.hello is sent, to keep span order for unit test validation
     await this.traceSvc.flush()
     return traceId
@@ -40,7 +46,7 @@ export class DefaultComponentController {
   @Get(`/${apiRoute.id2}`)
   async traceId2(): Promise<string> {
     const traceId = this.traceSvc.getTraceId()
-    this.traceSvc.setAttributesLater(void 0, {bar: 'bar'})
+    this.traceSvc.setAttributesLater(void 0, { bar: 'bar' })
     const msg = await this.svc.hello(Msg.hello)
     assert(msg)
 

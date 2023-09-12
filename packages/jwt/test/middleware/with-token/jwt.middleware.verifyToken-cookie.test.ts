@@ -1,16 +1,16 @@
-import { relative } from 'path'
+import assert from 'node:assert/strict'
 
-import { authShouldFailedWithNotFound, authShouldPassed, authShouldSkipped } from '../helper'
+import { fileShortPath } from '@waiting/shared-core'
 
-import { payload1, token1 } from '@/mock-data'
-import { testConfig } from '@/root.config'
-import { initialMiddlewareConfig, initPathArray } from '~/lib/config'
-import { ConfigKey, MiddlewareConfig } from '~/lib/types'
+import { authShouldFailedWithNotFound, authShouldPassed, authShouldSkipped } from '../helper.js'
+
+import { initialMiddlewareConfig, initPathArray } from '##/lib/config.js'
+import { ConfigKey, MiddlewareConfig } from '##/lib/types.js'
+import { payload1, token1 } from '#@/mock-data.js'
+import { testConfig } from '#@/root.config.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), () => {
 
   const path = '/test'
 
@@ -19,8 +19,8 @@ describe(filename, () => {
       const { app, httpRequest } = testConfig
       const cookieKey = 'user'
       const mwConfig: MiddlewareConfig = {
+        enableMiddleware: true,
         ignore: [path],
-        // @ts-ignore
         options: {
           cookie: cookieKey,
         },
@@ -44,8 +44,8 @@ describe(filename, () => {
       const { app, httpRequest } = testConfig
       const cookieKey = 'user'
       const mwConfig: MiddlewareConfig = {
+        enableMiddleware: true,
         ignore: initPathArray,
-        // @ts-ignore
         options: {
           cookie: cookieKey,
         },
@@ -69,8 +69,8 @@ describe(filename, () => {
       const { app, httpRequest } = testConfig
       const cookieKey = 'user'
       const mwConfig: MiddlewareConfig = {
+        enableMiddleware: true,
         ignore: initPathArray,
-        // @ts-ignore
         options: {
           ...initialMiddlewareConfig.options,
         },

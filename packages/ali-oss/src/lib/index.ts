@@ -1,8 +1,8 @@
 
-export * from './config'
-export { AliOssComponent } from './component'
-export { AliOssManager } from './manager'
-export { AliOssSourceManager } from './source-manager'
+export * from './config.js'
+export { AliOssComponent } from './component.js'
+export { AliOssManager } from './manager.js'
+export { AliOssSourceManager } from './source-manager.js'
 
 export {
   Config as AliOssConfig,
@@ -29,5 +29,5 @@ export {
   SyncOptions,
   SyncLocalOptions,
   SyncRemoteOptions,
-} from './types'
+} from './types.js'
 

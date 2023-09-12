@@ -6,7 +6,7 @@ import {
   Config,
   JwtPayload,
   JwtToken,
-} from './types'
+} from './types.js'
 
 
 export function validateTokenString(input: JwtToken): void {

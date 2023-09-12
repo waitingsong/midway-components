@@ -9,7 +9,7 @@ rules:
     - 2
     - packageDir:
       - ./
-      - ../share/
+      - ../../node_modules/@mwcp/share/
 
 # ignorePatterns:
 #   - test

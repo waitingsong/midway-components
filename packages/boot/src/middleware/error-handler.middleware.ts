@@ -6,16 +6,16 @@ import {
   IMiddleware,
   JsonResp,
   NextFunction,
-} from '../lib/index'
+} from '##/lib/index.js'
 
 
 @Middleware()
 export class ErrorHandlerMiddleware implements IMiddleware<Context, NextFunction> {
 
-  static getName(): string {
-    const name = 'errorHandlerMiddleware'
-    return name
-  }
+  // static getName(): string {
+  //   const name = 'errorHandlerMiddleware'
+  //   return name
+  // }
 
   match(ctx?: Context) {
     const flag = !! ctx
@@ -97,6 +97,9 @@ async function middleware(
       body.code = 999 // db error
     }
 
+    // const foo = ctx.app.getConfig() as unknown
+    // void foo
+
     /* c8 ignore start */
     const ErrorCode = ctx.app.getConfig('globalErrorCode') as Record<string | number, string | number> | undefined
     if (typeof ErrorCode === 'object') {
@@ -118,71 +121,6 @@ async function middleware(
     ctx.status = status >= 100 && status < 600 ? status : 200
   }
 
-  wrapRespForJson(ctx)
 }
 
-
-/**
- * 对于 `application/json` 相应类型，包裹成 JsonResp 格式数据
- */
-function wrapRespForJson(ctx: Context): void {
-  const contentType: string | number | string[] | undefined = ctx.response.header['content-type']
-  if (! contentType || typeof contentType === 'number') {
-    return
-  }
-  else if (typeof contentType === 'string' && ! contentType.includes('application/json')) {
-    return
-  }
-  else if (Array.isArray(contentType) && ! contentType.includes('application/json')) {
-    return
-  }
-
-  const { status } = ctx
-  const body = ctx.body as JsonResp | void
-
-  if (body && typeof body === 'object' && typeof body.code === 'number') {
-    if (body.code === status) {
-      return
-    }
-    else if (body.code >= 600) {
-      return
-    }
-    else if (typeof body.data !== 'undefined') {
-      return
-    }
-  }
-
-  ctx.body = wrap(ctx, body)
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function wrap(ctx: Context, payload: JsonResp | void): JsonResp {
-  if (ctx.status === 204) {
-    ctx.status = 200 // force return JsonResp<T> structure
-  }
-
-  const { status, reqId } = ctx
-  const body: JsonResp = {
-    code: status >= 200 && status < 400 ? 0 : status,
-    reqId,
-  }
-
-  if (Array.isArray(payload)) {
-    body.data = payload
-  }
-  else if (payload && typeof payload === 'object' && Object.keys(payload).length > 0) {
-    const { codeKey, ...data } = payload
-    if (typeof data !== 'undefined') {
-      body.data = data
-    }
-    if (typeof codeKey === 'string') {
-      body.codeKey = codeKey
-    }
-  }
-  else if (typeof payload !== 'undefined') {
-    body.data = payload
-  }
-
-  return body
-}
 

@@ -1,7 +1,7 @@
 import assert from 'assert'
 
-import { initCacheableArgs } from '../config'
-import { processEx } from '../exception'
+import { initCacheableArgs } from '../config.js'
+import { processEx } from '../exception.js'
 import {
   computerConditionValue,
   computerTTLValue,
@@ -10,8 +10,8 @@ import {
   genDataWithCacheMeta,
   getData,
   saveData,
-} from '../helper'
-import { CachedResponse, CacheableArgs, DecoratorExecutorOptions } from '../types'
+} from '../helper.js'
+import { CachedResponse, CacheableArgs, DecoratorExecutorOptions } from '../types.js'
 
 
 export async function decoratorExecutor(

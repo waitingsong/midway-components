@@ -1,8 +1,13 @@
 import { Middleware } from '@midwayjs/core'
-import type { Context, IMiddleware, NextFunction } from '@mwcp/share'
+import {
+  Context,
+  IMiddleware,
+  NextFunction,
+  requestPathMatched,
+} from '@mwcp/share'
 
-import { JwtComponent } from '../lib/component'
-import { retrieveToken } from '../lib/resolvers'
+import { JwtComponent } from '##/lib/component.js'
+import { retrieveToken } from '##/lib/resolvers.js'
 import {
   ConfigKey,
   JwtAuthenticateOptions,
@@ -10,11 +15,8 @@ import {
   Msg,
   VerifySecret,
   RedirectURL,
-} from '../lib/types'
-import {
-  getMiddlewareConfig,
-  matchFunc,
-} from '../util/common'
+  MiddlewareConfig,
+} from '##/lib/types.js'
 
 
 @Middleware()
@@ -26,18 +28,21 @@ export class JwtMiddleware implements IMiddleware<Context, NextFunction> {
 
   match(ctx?: Context) {
     if (ctx) {
-
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (! ctx.state) {
         ctx.state = {}
       }
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (! ctx['jwtState']) {
         ctx['jwtState'] = {} as JwtState
       }
 
+      const mwConfig = ctx.app.getConfig(ConfigKey.middlewareConfig) as MiddlewareConfig
+      const flag = requestPathMatched(ctx.path, mwConfig)
+      return flag
     }
 
-    const flag = matchFunc(ctx)
-    return flag
+    return false
   }
 
   resolve() {
@@ -52,7 +57,7 @@ export async function middleware(
 
   const { app } = ctx
 
-  const mwConfig = getMiddlewareConfig(app)
+  const mwConfig = app.getConfig(ConfigKey.middlewareConfig) as MiddlewareConfig
   const { options } = mwConfig
   if (! options) {
     console.error('[JWT] mwConfig.options undefined')
@@ -64,7 +69,6 @@ export async function middleware(
     const token = retrieveToken(ctx, cookie)
 
     if (! token) {
-      console.error(Msg.TokenNotFound)
       throw new Error(Msg.TokenNotFound)
     }
 

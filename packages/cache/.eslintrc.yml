@@ -6,12 +6,11 @@ rules:
   "@typescript-eslint/no-unused-vars": 0
   "@typescript-eslint/prefer-ts-expect-error": 0
   "import/no-extraneous-dependencies":
-    - 0
+    - 2
     - packageDir:
       - ./
       - ../share/
       - ../boot/
-      # - ../../node_modules/@midwayjs/core
 
-ignorePatterns:
-  - fixtures
+# ignorePatterns:
+#   - test

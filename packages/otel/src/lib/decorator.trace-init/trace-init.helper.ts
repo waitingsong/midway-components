@@ -3,8 +3,8 @@ import { isAsyncFunction } from 'node:util/types'
 
 import { Attributes, SpanKind, SpanOptions } from '@opentelemetry/api'
 
-import type { DecoratorContext, TraceDecoratorOptions } from '../decorator.types'
-import type { DecoratorExecutorParam } from '../trace.helper'
+import type { DecoratorContext, TraceDecoratorOptions } from '../decorator.types.js'
+import type { DecoratorExecutorParam } from '../trace.helper.js'
 
 
 export async function decoratorExecutor(

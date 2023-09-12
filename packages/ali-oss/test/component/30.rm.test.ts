@@ -1,12 +1,11 @@
 import assert from 'node:assert/strict'
-import { relative } from 'node:path'
 
-import { cloudUrlPrefix, src, testConfig } from '@/root.config'
+import { fileShortPath } from '@waiting/shared-core'
+
+import { cloudUrlPrefix, src, testConfig } from '../root.config.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), function() {
 
   describe('rm should work', () => {
     it('normal', async () => {

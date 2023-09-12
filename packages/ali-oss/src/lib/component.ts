@@ -9,13 +9,13 @@ import {
   Config as OssConfig,
   DataBase,
   DataCp,
+  DataDownload,
   DataSign,
   DataStat,
   FnKey,
   OssClient,
   ProcessRet,
 } from '@yuntools/ali-oss'
-import { DataDownload } from '@yuntools/ali-oss/dist/lib/method/download'
 
 import {
   InstanceConfig,
@@ -34,7 +34,7 @@ import {
   SyncRemoteOptions,
   QuerySpanInfo,
   DownloadOptions,
-} from './types'
+} from './types.js'
 
 
 /** 阿里云 OSS ossutils 命令行封装组件 */
@@ -44,7 +44,7 @@ export class AliOssComponent {
   traceService: TraceService | undefined
 
   private readonly client: OssClient
-  private readonly querySpanMap: WeakMap<object, QuerySpanInfo> = new WeakMap()
+  private readonly querySpanMap = new WeakMap<object, QuerySpanInfo>()
 
   constructor(protected readonly config: InstanceConfig) {
     const opts: OssConfig = {

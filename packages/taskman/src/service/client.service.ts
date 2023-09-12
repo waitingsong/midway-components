@@ -10,8 +10,10 @@ import { SpanKind, Trace, TraceLogger, TraceService } from '@mwcp/otel'
 import type { Context } from '@mwcp/share'
 import { retrieveHeadersItem } from '@waiting/shared-core'
 
-import { initTaskClientConfig } from '../lib/config'
-import { processJsonHeaders } from '../lib/helper'
+import { TaskAgentService } from './task-agent.service.js'
+
+import { initTaskClientConfig } from '##/lib/config.js'
+import { processJsonHeaders } from '##/lib/helper.js'
 import {
   ConfigKey,
   CreateTaskDTO,
@@ -26,9 +28,7 @@ import {
   TaskProgressDetailDTO,
   TaskResultDTO,
   TaskServerConfig,
-} from '../lib/types'
-
-import { TaskAgentService } from './task-agent.service'
+} from '##/lib/types.js'
 
 
 @Provide()

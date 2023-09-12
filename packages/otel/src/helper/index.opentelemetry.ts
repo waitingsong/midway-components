@@ -1,3 +1,3 @@
 
-export * from './trace.telemetry'
+export * from './trace.telemetry.js'
 

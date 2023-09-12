@@ -3,8 +3,8 @@ import { isPromise } from 'node:util/types'
 
 import { Span, SpanStatusCode } from '@opentelemetry/api'
 
-import type { AbstractTraceService } from '../abstract'
-import type { DecoratorExecutorParam } from '../trace.helper'
+import type { AbstractTraceService } from '../abstract.js'
+import type { DecoratorExecutorParam } from '../trace.helper.js'
 
 
 export async function decoratorExecutorAsync(

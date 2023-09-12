@@ -9,7 +9,7 @@ psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U$POSTGRES_USER -d $POSTGRES_DB -c "SH
 
 echo -e "\n"
 
-SQL_DIR='./packages/taskman/src/database/'
+SQL_DIR='./packages/taskman/database/'
 
 cd "$SQL_DIR"
 . ./init-db.sh
