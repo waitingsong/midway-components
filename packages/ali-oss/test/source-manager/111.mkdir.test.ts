@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict'
 
-import type { JsonResp } from '@mwcp/share'
 import { fileShortPath } from '@waiting/shared-core'
 
 import { AliOssComponent } from '../../src/index.js'
@@ -22,12 +21,9 @@ describe(fileShortPath(import.meta.url), function() {
         .expect(200)
 
       assert(resp)
-      const json = resp.body as JsonResp<Awaited<ReturnType<AliOssComponent['mkdir']>>>
+      const data = resp.body as Awaited<ReturnType<AliOssComponent['mkdir']>>
 
-      CI || console.log(json)
-
-      assert(json.code === 0, `mkdir ${target} failed, ${json.msg}`)
-      const { data } = json
+      CI || console.log(data)
 
       assert(! data.exitCode, `mkdir ${target} failed, ${data.stderr}`)
       assert(data.data)
@@ -44,10 +40,7 @@ describe(fileShortPath(import.meta.url), function() {
         .expect(200)
 
       assert(resp)
-      const json = resp.body as JsonResp<Awaited<ReturnType<AliOssComponent['mkdir']>>>
-
-      assert(json.code === 0, `mkdir ${target} failed, ${json.msg}`)
-      const { data } = json
+      const data = resp.body as Awaited<ReturnType<AliOssComponent['mkdir']>>
 
       assert(! data.exitCode, `mkdir ${target} failed, ${data.stderr}`)
       assert(data.data)
