@@ -8,8 +8,10 @@ import {
   initTaskServerConfig,
   TaskClientConfig,
   TaskServerConfig,
-} from '~/lib/index'
+} from '##/lib/index.js'
 
+
+export const enableJsonRespMiddlewareConfig = false
 
 /**
  * this variable can be delete if running as client

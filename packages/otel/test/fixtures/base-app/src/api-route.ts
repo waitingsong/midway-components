@@ -1,4 +1,5 @@
-import { ConfigKey } from '~/lib/types'
+import { ConfigKey } from '../../../../src/lib/types.js'
+
 
 export const apiPrefix = {
   TraceDecorator: `/_${ConfigKey.namespace}_trace_decorator`,

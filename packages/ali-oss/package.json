@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/ali-oss",
   "author": "waiting",
-  "version": "14.3.5",
+  "version": "15.0.0",
   "description": "阿里云 OSS 命令行工具 ossutil 封装 midway.js 组件，提供 TypeScript 类型定义",
   "keywords": [
     "midway",
@@ -15,9 +15,18 @@
     "ESM",
     "ts"
   ],
+  "type": "module",
   "bin": {},
-  "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "imports": {
+    "#package.json": "./package.json",
+    "##/*": "./dist/*",
+    "#@/*": "./test/*"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
   "bugs": {
     "url": "https://github.com/waitingsong/midway-components/issues"
   },
@@ -28,14 +37,13 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@mwcp/otel": "^10.13.5",
+    "@mwcp/otel": "^15.0.0",
+    "@mwcp/share": "^15.0.0",
     "@yuntools/ali-oss": "^16.1.4"
   },
-  "devDependencies": {
-    "@mwcp/share": "^6.6.0"
-  },
   "engines": {
-    "node": ">=16.13.0"
+    "node": ">=18.12.0",
+    "@midwayjs/core": ">=3.12.0"
   },
   "files": [
     "README.*.md",
@@ -43,7 +51,9 @@
     "npm-shrinkwrap.json",
     "tsconfig.json",
     "tsconfig.base.json",
-    "bin/*.js",
+    "asset",
+    "bin",
+    "database",
     "dist",
     "!**/*.spec.*",
     "!**/*.tsbuildinfo"
@@ -53,19 +63,20 @@
   },
   "scripts": {
     "build": "npm run tsc && tsc-alias",
-    "clean": "npm run clean:lock && npm run clean:cache && npm run clean:dist && npm run clean:log",
+    "clean": "npm run clean:lock && npm run clean:dist && npm run clean:log",
     "clean:cache": "rm -rf .eslintcache .tsbuildinfo",
-    "clean:dist": "rm -rf dist/* .tsbuildinfo",
-    "clean:lock": "rm package-lock.json -f",
+    "clean:dist": "npm run clean:cache && rm -rf dist/*",
+    "clean:lock": "rm -f package-lock.json",
     "clean:log": "rm -rf ./logs ./run",
-    "cov": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json c8 mocha --parallel=false",
-    "dev": "cross-env TS_NODE_TYPE_CHECK=false TS_NODE_TRANSPILE_ONLY=true NODE_ENV=local ../../node_modules/.bin/midway-bin dev --ts --port=7001",
-    "db:gen": "kmore gen --project tsconfig.cjs.json --path ./src",
+    "cov": "c8 --all npm run test -- --parallel=false",
+    "dev": "cross-env MIDWAY_SERVER_ENV=local mwtsc --watch --run @midwayjs/mock/app",
     "lint": "eslint --fix --cache {src,test}/**/*.ts",
     "lint:nofix": "eslint --cache {src,test}/**/*.ts",
-    "purge": "npm run clean && rm node_modules -rf",
+    "predev": "npm run build",
+    "pretest": "npm run build",
+    "rp": "rollup -c rollup.config.js --context this",
+    "start": "cross-env NODE_ENV=production node ./bootstrap.js",
     "test": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json mocha --parallel=false",
-    "test:local": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json ../../node_modules/.bin/mocha --parallel=false",
     "tsc": "tsc -b"
   }
 }

@@ -14,7 +14,7 @@ import type { OTLPGRPCExporterConfigNode as OTLPGRPCExporterConfig } from '@open
 import { node } from '@opentelemetry/sdk-node'
 import type { MiddlewareConfig as MWConfig, KnownKeys } from '@waiting/shared-types'
 
-import { AttrNames } from './attrnames.types'
+import { AttrNames } from './attrnames.types.js'
 
 
 export type NodeTracerConfig = node.TracerConfig
@@ -63,6 +63,7 @@ export interface Config extends BaseConfig {
   /**
    * @default ['authorization', 'host', 'user-agent']
    */
+  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
   captureRequestHeaders: (string | KnownKeys<IncomingHttpHeaders>)[]
   /**
    * @default false

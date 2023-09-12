@@ -3,7 +3,7 @@ import {
   initMiddlewareOptions,
   MiddlewareConfig,
   MiddlewareOptions,
-} from '~/index'
+} from '##/index.js'
 import {
   DbReplica,
   initDbConfig,
@@ -11,7 +11,7 @@ import {
   initTaskServerConfig,
   TaskClientConfig,
   TaskServerConfig,
-} from '~/lib/index'
+} from '##/lib/index.js'
 
 
 export const taskClientConfig: TaskClientConfig = {

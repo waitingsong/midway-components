@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import assert from 'node:assert/strict'
 
 import {
@@ -8,11 +9,11 @@ import {
 } from '@midwayjs/core'
 import { sleep } from '@waiting/shared-core'
 
-import { apiPrefix, apiRoute } from '../api-route'
-import { validateMeta } from '../base.helper'
-import { ClassDecoratorService, ttl } from './23b.class-decorator.service'
+import { Config, ConfigKey } from '../../../../../src/lib/types.js'
+import { apiPrefix, apiRoute } from '../api-route.js'
+import { validateMeta } from '../base.helper.js'
 
-import { Config, ConfigKey } from '~/lib/types'
+import { ClassDecoratorService, ttl } from './23b.class-decorator.service.js'
 
 
 @Controller(apiPrefix.classCacheable)

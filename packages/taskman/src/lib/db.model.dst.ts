@@ -9,7 +9,7 @@ import {
   TbTaskResultDO,
   TbTaskTypeDO,
   ViTaskDO,
-} from './types'
+} from './types.js'
 
 
 export interface DbModel {

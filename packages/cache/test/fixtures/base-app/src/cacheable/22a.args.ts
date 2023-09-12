@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import assert from 'node:assert/strict'
 
 import {
@@ -9,12 +10,12 @@ import {
 import type { Context } from '@mwcp/share'
 import { sleep } from '@waiting/shared-core'
 
-import { apiPrefix, apiRoute } from '../api-route'
-import { validateMeta } from '../base.helper'
+import { Cacheable } from '../../../../../src/index.js'
+import { CachedResponse, Config, ConfigKey } from '../../../../../src/lib/types.js'
+import { apiPrefix, apiRoute } from '../api-route.js'
+import { validateMeta } from '../base.helper.js'
 
-import { CachedResponse, Config, ConfigKey } from '~/lib/types'
-import { Cacheable, } from '~/index'
-import { ArgsDecoratorService } from './22b.args.service'
+import { ArgsDecoratorService } from './22b.args.service.js'
 
 
 const ttl = 1

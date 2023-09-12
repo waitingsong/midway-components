@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import type { Context } from '@mwcp/share'
 
-import { schemePrefix } from './config'
-import { JwtToken, JwtAuthenticateOptions } from './types'
+import { schemePrefix } from './config.js'
+import { JwtToken, JwtAuthenticateOptions } from './types.js'
 
 
 /**
@@ -19,7 +19,7 @@ export function retrieveToken(ctx: Context, cookieKey: JwtAuthenticateOptions['c
     token = token.trimEnd()
   }
   else if (ctx?.header?.cookie) {
-    token = pickTokenFromHeaderCookies(ctx.header.cookie, cookieKey)
+    token = pickTokenFromHeaderCookies(ctx.header.cookie, cookieKey ?? false)
   }
 
   if (token) {

@@ -1,17 +1,16 @@
 import assert from 'node:assert/strict'
-import { relative } from 'node:path'
 
-import { cloudUrlPrefix, testConfig, src } from '@/root.config'
-import { Msg } from '~/lib/types'
+import { fileShortPath } from '@waiting/shared-core'
+
+import { Msg } from '../../src/lib/types.js'
+import { cloudUrlPrefix, src, testConfig, TestRespBody } from '../root.config.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), function() {
 
   describe('mv should work', () => {
     it('file', async () => {
-      const { CI, ossClient } = testConfig
+      const { ossClient } = testConfig
 
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
       const ret = await ossClient.cp(src, target)
@@ -29,7 +28,7 @@ describe(filename, () => {
     })
 
     it('cloud file dst already exists', async () => {
-      const { CI, ossClient } = testConfig
+      const { ossClient } = testConfig
 
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
       const ret = await ossClient.cp(src, target)

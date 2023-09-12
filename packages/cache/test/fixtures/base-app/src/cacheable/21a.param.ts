@@ -10,11 +10,10 @@ import {
 } from '@midwayjs/core'
 import type { Context } from '@mwcp/share'
 
-import { apiPrefix, apiRoute } from '../api-route'
-import { validateMeta } from '../base.helper'
-
-import { CachedResponse, Config, ConfigKey, DataWithCacheMeta } from '~/lib/types'
-import { Cacheable, } from '~/index'
+import { Cacheable } from '../../../../../src/index.js'
+import { CachedResponse, Config, ConfigKey, DataWithCacheMeta } from '../../../../../src/lib/types.js'
+import { apiPrefix, apiRoute } from '../api-route.js'
+import { validateMeta } from '../base.helper.js'
 
 
 const bigint = 1024n
@@ -50,8 +49,14 @@ export class ParamController {
     return ret3
   }
 
-  @Cacheable<ParamController['_simple']>({ key: (args) => `arg-${args[0]}` })
-  protected async _simple<T>(value: T, input: string = 'abc'): Promise<CachedResponse<T>> {
+  @Cacheable<ParamController['_simple']>({
+    key: (args) => {
+      const value = args[0]
+      assert(typeof value === 'string' || typeof value === 'number')
+      return `arg-${value.toString()}`
+    },
+  })
+  protected async _simple<T>(value: T, input = 'abc'): Promise<CachedResponse<T>> {
     void input // default param not support
     return { value }
   }

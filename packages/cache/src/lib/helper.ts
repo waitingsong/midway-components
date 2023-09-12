@@ -9,7 +9,7 @@ import {
 import { AbstractTraceService, OtelConfigKey } from '@mwcp/otel'
 import { DecoratorExecutorParamBase, Context as WebContext } from '@mwcp/share'
 
-import { initCacheableArgs, initCacheEvictArgs, initConfig } from './config'
+import { initCacheableArgs, initCacheEvictArgs, initConfig } from './config.js'
 import {
   CacheableArgs,
   CachedResponse,
@@ -19,7 +19,7 @@ import {
   ConfigKey,
   DataWithCacheMeta,
   DecoratorExecutorOptions,
-} from './types'
+} from './types.js'
 
 
 export interface GenCacheKeyOptions extends Omit<CacheableArgs, 'ttl'> {

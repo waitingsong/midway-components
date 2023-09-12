@@ -1,5 +1,5 @@
-import { initialConfig } from '../lib/config'
-import { Config, ClientKey } from '../lib/types'
+import { initialConfig } from '../lib/config.js'
+import { Config, ClientKey } from '../lib/types.js'
 
 
 export const aliOssConfig: Readonly<Config<ClientKey.unitTest>> = {

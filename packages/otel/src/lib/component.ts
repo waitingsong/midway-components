@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import assert from 'node:assert'
-import { join } from 'node:path'
+
 
 import {
   App,
@@ -40,17 +40,17 @@ import { SemanticAttributes } from '@opentelemetry/semantic-conventions'
 import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
 import type { NpmPkg } from '@waiting/shared-types'
 
-import { AbstractOtelComponent } from './abstract'
-import { initSpanStatusOptions } from './config'
-import { KEY_Trace } from './decorator.trace/trace'
+import { AbstractOtelComponent } from './abstract.js'
+import { initSpanStatusOptions } from './config.js'
 import {
   decoratorExecutorAsync as decoratorExecutorTraceAsync,
   decoratorExecutorSync as decoratorExecutorTraceSync,
-} from './decorator.trace/trace.helper'
-import { METHOD_KEY_TraceInit } from './decorator.trace-init/trace-init'
-import { decoratorExecutor as decoratorExecutorTraceInit } from './decorator.trace-init/trace-init.helper'
-import { TraceDecoratorOptions } from './decorator.types'
-import { genDecoratorExecutorOptions } from './trace.helper'
+} from './decorator.trace/trace.helper.js'
+import { KEY_Trace } from './decorator.trace/trace.js'
+import { decoratorExecutor as decoratorExecutorTraceInit } from './decorator.trace-init/trace-init.helper.js'
+import { METHOD_KEY_TraceInit } from './decorator.trace-init/trace-init.js'
+import { TraceDecoratorOptions } from './decorator.types.js'
+import { genDecoratorExecutorOptions } from './trace.helper.js'
 import {
   AddEventOtpions,
   AttrNames,
@@ -58,11 +58,13 @@ import {
   ConfigKey,
   InitTraceOptions,
   SpanStatusOptions,
-} from './types'
-import { normalizeHeaderKey, setSpan } from './util'
+} from './types.js'
+import { normalizeHeaderKey, setSpan } from './util.js'
 
 // eslint-disable-next-line import/max-dependencies
-import { initTrace } from '~/helper/index.opentelemetry'
+import { initTrace } from '##/helper/index.opentelemetry.js'
+// eslint-disable-next-line import/max-dependencies
+import PKG from '#package.json' assert { type: 'json' }
 
 
 /** OpenTelemetry Component */
@@ -276,10 +278,10 @@ export class OtelComponent extends AbstractOtelComponent {
     const name = options?.eventName ?? ename
     delete input['event']
 
-    if (options?.logMemeoryUsage || this.config.logMemeoryUsage) {
+    if (options?.logMemeoryUsage ?? this.config.logMemeoryUsage) {
       input[AttrNames.ServiceMemoryUsage] = JSON.stringify(humanMemoryUsage(), null, 2)
     }
-    if (options?.logCpuUsage || this.config.logCpuUsage) {
+    if (options?.logCpuUsage ?? this.config.logCpuUsage) {
       input[AttrNames.ServiceCpuUsage] = JSON.stringify(process.cpuUsage(), null, 2)
     }
 
@@ -491,20 +493,21 @@ export class OtelComponent extends AbstractOtelComponent {
     this.config.serviceName = serviceName
     this.config.serviceVersion = ver
 
-
     if (! this.otelLibraryName) {
-      const otelPkgPath = join(__dirname, '../../package.json')
+      // const otelPkgPath = join(__dirname, '../../package.json')
+      // const otelPkgPath = join(__dirname, '../../package.json')
       try {
-        const { name, version } = await import(otelPkgPath) as NpmPkg
-        if (name) {
-          this.otelLibraryName = name
+        // const { name, version } = await import(otelPkgPath) as NpmPkg
+        if (PKG.name) {
+          this.otelLibraryName = PKG.name
         }
-        if (version) {
-          this.otelLibraryVersion = version
+        if (PKG.version) {
+          this.otelLibraryVersion = PKG.version
         }
       }
       catch (ex) {
-        this.logger.warn('Failed to load package.json: %s', otelPkgPath)
+        // this.logger.warn('Failed to load package.json: %s', otelPkgPath)
+        this.logger.warn('Failed to load package.json')
       }
     }
 

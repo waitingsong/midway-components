@@ -1,5 +1,5 @@
 
-export { ClientService } from './client.service'
-export { TaskAgentService } from './task-agent.service'
-export { TaskQueueService } from './task-queue.service'
+export { ClientService } from './client.service.js'
+export { TaskAgentService } from './task-agent.service.js'
+export { TaskQueueService } from './task-queue.service.js'
 

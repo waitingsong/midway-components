@@ -1,17 +1,17 @@
-import assert from 'assert/strict'
+import assert from 'node:assert/strict'
 import { relative } from 'path'
 
-import { token1 } from '@/mock-data'
+import { fileShortPath } from '@waiting/shared-core'
+
 import {
   schemePrefix,
   resolveFromAuthorizationHeader,
   resolveFromCookies,
-} from '~/index'
+} from '##/index.js'
+import { token1 } from '#@/mock-data.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), () => {
 
   describe('Should resolveFromAuthorizationHeader() works', () => {
     it('with valid input', () => {

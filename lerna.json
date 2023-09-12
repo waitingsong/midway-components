@@ -1,9 +1,8 @@
 {
-  "version": "independent",
+  "version": "15.0.0",
   "command": {
     "publish": {
       "ignoreChanges": [
-        "*.md",
         ".githooks",
         ".scripts",
         ".vscode",
@@ -22,7 +21,6 @@
         "versioning_*"
       ],
       "ignoreChanges": [
-        "*.md",
         ".githooks",
         ".scripts",
         ".vscode",

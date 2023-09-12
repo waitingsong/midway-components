@@ -1,13 +1,13 @@
-import assert from 'assert/strict'
-import { relative } from 'path'
 
-import { token1 } from '@/mock-data'
-import { validatePayload } from '~/index'
+import assert from 'node:assert/strict'
+
+import { fileShortPath } from '@waiting/shared-core'
+
+import { validatePayload } from '##/index.js'
+import { token1 } from '#@/mock-data.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), () => {
 
   describe('Should validatePayload() work', () => {
     it('with valid input', () => {

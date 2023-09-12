@@ -2,8 +2,8 @@ import type { NextFunction } from '@mwcp/share'
 import { Attributes } from '@opentelemetry/api'
 import { genISO8601String } from '@waiting/shared-core'
 
-import { TraceService } from '~/lib/trace.service'
-import { AttrNames } from '~/lib/types'
+import { TraceService } from '##/lib/trace.service.js'
+import { AttrNames } from '##/lib/types.js'
 
 
 /**

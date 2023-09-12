@@ -4,15 +4,15 @@ import { Middleware } from '@midwayjs/core'
 import { Context, IMiddleware, NextFunction, shouldEnableMiddleware } from '@mwcp/share'
 import { SpanKind, SpanStatus } from '@opentelemetry/api'
 
-import { handleTopExceptionAndNext } from './helper.middleware'
+import { handleTopExceptionAndNext } from './helper.middleware.js'
 
-import { TraceService } from '~/lib/trace.service'
-import { ConfigKey, Config, MiddlewareConfig, middlewareEnableCacheKey } from '~/lib/types'
+import { TraceService } from '##/lib/trace.service.js'
+import { ConfigKey, Config, MiddlewareConfig, middlewareEnableCacheKey } from '##/lib/types.js'
 import {
   addSpanEventWithOutgoingResponseData,
   parseResponseStatus,
   propagateOutgoingHeader,
-} from '~/lib/util'
+} from '##/lib/util.js'
 
 
 @Middleware()

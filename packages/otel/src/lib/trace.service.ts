@@ -21,9 +21,9 @@ import {
 } from '@opentelemetry/api'
 import { genISO8601String } from '@waiting/shared-core'
 
-import { AbstractTraceService } from './abstract'
-import { OtelComponent } from './component'
-import { initSpanStatusOptions } from './config'
+import { AbstractTraceService } from './abstract.js'
+import { OtelComponent } from './component.js'
+import { initSpanStatusOptions } from './config.js'
 import {
   AttrNames,
   SpanStatusOptions,
@@ -31,14 +31,14 @@ import {
   Config,
   MiddlewareConfig,
   AddEventOtpions,
-} from './types'
+} from './types.js'
 import {
   genRequestSpanName,
   getIncomingRequestAttributesFromWebContext,
   getSpan,
   setSpan,
   setSpanWithRequestHeaders,
-} from './util'
+} from './util.js'
 
 
 @Provide()

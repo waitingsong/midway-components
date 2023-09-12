@@ -39,10 +39,11 @@ export function registerMiddleware(
   app: Application,
   middleware: { name: string },
   postion: 'first' | 'last' = 'last',
+  force = false,
 ): void {
 
   const mwNames = app.getMiddleware().getNames()
-  if (mwNames.includes(middleware.name)) {
+  if (! force && mwNames.includes(middleware.name)) {
     return
   }
 

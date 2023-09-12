@@ -1,3 +1,4 @@
+import * as info from '@midwayjs/info'
 import * as koa from '@midwayjs/koa'
 import * as prometheus from '@midwayjs/prometheus'
 import * as validate from '@midwayjs/validate'
@@ -11,6 +12,13 @@ import * as otel from '@mwcp/otel'
 // import { customLogger } from './util/custom-logger'
 
 
+/* c8 ignore next 4 */
+// const CI = !! (process.env['MIDWAY_SERVER_ENV'] === 'unittest'
+//   || process.env['MIDWAY_SERVER_ENV'] === 'local'
+//   || process.env['NODE_ENV'] === 'unittest'
+//   || process.env['NODE_ENV'] === 'local'
+// )
+
 export const useComponents: IComponentInfo[] = [
   otel,
   koa,
@@ -22,6 +30,7 @@ export const useComponents: IComponentInfo[] = [
   db,
   aliOss,
   cache,
+  info,
 ]
 
 export const useDefaultRoutes: (string | RegExp)[] = [

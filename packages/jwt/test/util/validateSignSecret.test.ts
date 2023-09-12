@@ -1,13 +1,12 @@
-import assert from 'assert/strict'
-import { relative } from 'path'
+import assert from 'node:assert/strict'
 
-import { token1 } from '@/mock-data'
-import { validateSignSecret } from '~/index'
+import { fileShortPath } from '@waiting/shared-core'
+
+import { validateSignSecret } from '##/index.js'
+import { token1 } from '#@/mock-data.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), () => {
 
   describe('Should validateSignSecret() work', () => {
     it('with valid input', () => {

@@ -1,32 +1,29 @@
-import 'tsconfig-paths/register'
-import assert from 'node:assert'
-import { join } from 'node:path'
-
+/* eslint-disable import/max-dependencies */
 import {
-  App,
   Configuration,
   ILifeCycle,
 } from '@midwayjs/core'
-import * as otel from '@mwcp/otel'
-import type { Application, IMidwayContainer } from '@mwcp/share'
 
-import { ConfigKey } from './lib/types'
+import * as DefulatConfig from './config/config.default.js'
+// import * as LocalConfig from './config/config.local.js'
+import * as UnittestConfig from './config/config.unittest.js'
+import { useComponents } from './imports.js'
+import { ConfigKey } from './lib/types.js'
 
 
 @Configuration({
   namespace: ConfigKey.namespace,
-  importConfigs: [join(__dirname, 'config')],
-  imports: [otel],
+  importConfigs: [
+    {
+      default: DefulatConfig,
+      // local: LocalConfig,
+      unittest: UnittestConfig,
+    },
+  ],
+  imports: useComponents,
 })
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class AutoConfiguration implements ILifeCycle {
-
-  @App() readonly app: Application
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async onReady(_container: IMidwayContainer): Promise<void> {
-    assert(this.app, 'this.app must be set')
-  }
-
 }
 
 

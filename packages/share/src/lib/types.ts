@@ -21,6 +21,31 @@ export {
   NextFunction,
 }
 
+export enum ConfigKey {
+  namespace = 'share',
+  config = 'shareConfig',
+  middlewareConfig = 'shareMiddlewareConfig',
+  componentName = 'shareComponent',
+  middlewareName = 'shareMiddleware',
+  enableJsonRespMiddlewareConfig = 'enableJsonRespMiddlewareConfig',
+}
+
+export enum Msg {
+  hello = 'hello world',
+  AuthFailed = 'Authentication Failed',
+}
+export interface Config extends BaseConfig {
+  /**
+   * Enable default http route, eg. /hello
+   * @default false
+   */
+  enableDefaultRoute?: boolean | undefined
+}
+export interface MiddlewareOptions {
+  debug: boolean
+}
+
+
 export interface Context extends KoaCtx {
   reqId: string
   _internalError?: Error

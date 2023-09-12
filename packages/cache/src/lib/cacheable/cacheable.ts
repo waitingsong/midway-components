@@ -5,8 +5,8 @@ import {
   METHOD_KEY_CacheEvict,
   METHOD_KEY_CachePut,
   METHOD_KEY_Transactional,
-} from '../config'
-import { CacheableArgs, MethodType } from '../types'
+} from '../config.js'
+import { CacheableArgs, MethodType } from '../types.js'
 
 
 export const cacheableClassIgnoreIfMethodDecortaorKeys = [

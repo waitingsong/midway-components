@@ -3,11 +3,11 @@ import { Middleware } from '@midwayjs/core'
 import { Context, IMiddleware, NextFunction } from '@mwcp/share'
 import { humanMemoryUsage } from '@waiting/shared-core'
 
-import { handleAppExceptionAndNext } from './helper.middleware'
+import { handleAppExceptionAndNext } from './helper.middleware.js'
 
-import { TraceService } from '~/lib/trace.service'
-import { AttrNames, ConfigKey, middlewareEnableCacheKey } from '~/lib/types'
-import { addSpanEventWithIncomingRequestData } from '~/lib/util'
+import { TraceService } from '##/lib/trace.service.js'
+import { AttrNames, ConfigKey, middlewareEnableCacheKey } from '##/lib/types.js'
+import { addSpanEventWithIncomingRequestData } from '##/lib/util.js'
 
 
 @Middleware()

@@ -54,12 +54,12 @@ export interface Config {
 
 /** Authentication options for middleware */
 export interface MiddlewareOptions {
-  debug: boolean
+  debug?: boolean | undefined
   /**
    * Retrieving the token from the name of cookie, instead of from HTTP header (Authorization),
    * @default false
    */
-  cookie: string | false
+  cookie?: string | false | undefined
   /**
    * - false (Default): throw error
    * - true: always yield next, even if no valid Authorization header was found,
@@ -67,7 +67,7 @@ export interface MiddlewareOptions {
    * - <RedirectURL>: redirect and without yield next
    * @default false
    */
-  passthrough: boolean | RedirectURL | PassthroughCallback
+  passthrough?: boolean | RedirectURL | PassthroughCallback | undefined
 }
 export type MiddlewareConfig = MWConfig<MiddlewareOptions>
 export type JwtAuthenticateOptions = MiddlewareOptions

@@ -1,5 +1,6 @@
 
-export * from './error-handler.middleware'
-export * from './request-id.middleware'
-export * from './response-headers.middleware'
-export * from './response-mime.middleware'
+export * from './error-handler.middleware.js'
+export * from './json-response.middleware.js'
+export * from './request-id.middleware.js'
+export * from './response-headers.middleware.js'
+export * from './response-mime.middleware.js'
