@@ -1,10 +1,10 @@
 import assert from 'assert/strict'
 
-import { TestResponse, TestRespBody } from '@/root.config'
 import {
   JwtMsg,
   JwtState,
-} from '~/index'
+} from '##/index.js'
+import { TestResponse, RespData2 } from '#@/root.config.js'
 
 
 export function authShouldPassed(
@@ -13,7 +13,7 @@ export function authShouldPassed(
 ): void {
 
   const { status } = resp
-  const { jwtState } = resp.body as TestRespBody
+  const { jwtState } = resp.body as RespData2
 
   assert(status === 200)
   assert(jwtState)
@@ -28,12 +28,12 @@ export function authShouldSkipped(
 ): void {
 
   const { status } = resp
-  const { jwtState } = resp.body as TestRespBody
+  const { jwtState } = resp.body as RespData2
 
   assert(status === 200)
   console.info({ jwtState })
-  assert(! jwtState.user)
-  assert(! jwtState.signature)
+  assert(! jwtState.user, 'jwtState.user empty')
+  assert(! jwtState.signature, 'jwtState.signature empty')
 }
 
 export function authShouldFailedWithNotFound2(
@@ -42,10 +42,10 @@ export function authShouldFailedWithNotFound2(
 ): void {
 
   const { status, error } = resp
-  const { jwtState } = resp.body as TestRespBody
+  const { jwtState } = resp.body as RespData2
 
   assert(status === expectStatus)
-  assert(! jwtState)
+  assert(! jwtState, 'jwtState not empty')
   assert(error)
   assert(error.text.includes('401') || error.text.includes(JwtMsg.AuthFailed))
 }
@@ -56,11 +56,11 @@ export function authShouldFailedWithNotFound(
 ): void {
 
   const { status, error } = resp
-  const { jwtState } = resp.body as TestRespBody
+  const { jwtState } = resp.body as RespData2
 
   assert(status === expectStatus)
-  assert(! jwtState)
-  assert(error)
+  assert(! jwtState, 'jwtState not empty')
+  assert(error, 'error empty')
   assert(error.text.includes('401') || error.text.includes(JwtMsg.AuthFailed))
 }
 
@@ -69,10 +69,10 @@ export function authShouldValidatFailed(
 ): void {
 
   const { status, error } = resp
-  const { jwtState } = resp.body as TestRespBody
+  const { jwtState } = resp.body as RespData2
 
   assert(status === 401)
-  assert(! jwtState)
+  assert(! jwtState, 'jwtState not empty')
   assert(error)
   assert(error.text.includes('401') || error.text.includes(JwtMsg.AuthFailed))
 }
@@ -83,14 +83,11 @@ export function authShouldPassthroughNotFound(
 ): void {
 
   const { status } = resp
-  const { jwtState, jwtOriginalErrorText } = resp.body as TestRespBody
+  const { jwtState, jwtOriginalErrorText } = resp.body as RespData2
 
-  assert(status === expectStatus)
-  assert(jwtState)
-  assert(! jwtState.user)
-  assert(! jwtState.secret)
-  assert(! jwtState.signature)
-  assert(jwtOriginalErrorText.includes(JwtMsg.TokenNotFound))
+  assert(status === expectStatus, `status: ${status} != expect: ${expectStatus}`)
+  validateData(resp.body as RespData2)
+  assert(jwtOriginalErrorText.includes(JwtMsg.TokenNotFound), jwtOriginalErrorText)
 }
 
 export function authShouldPassthroughValidFailed(
@@ -99,14 +96,11 @@ export function authShouldPassthroughValidFailed(
 ): void {
 
   const { status } = resp
-  const { jwtState, jwtOriginalErrorText } = resp.body as TestRespBody
+  const { jwtOriginalErrorText } = resp.body as RespData2
 
-  assert(status === expectStatus)
-  assert(jwtState)
-  assert(! jwtState.user)
-  assert(! jwtState.secret)
-  assert(! jwtState.signature)
-  assert(jwtOriginalErrorText.includes(JwtMsg.TokenValidFailed))
+  assert(status === expectStatus, `status: ${status} != expect: ${expectStatus}`)
+  validateData(resp.body as RespData2)
+  assert(jwtOriginalErrorText.includes(JwtMsg.TokenValidFailed), jwtOriginalErrorText)
 }
 
 
@@ -116,7 +110,7 @@ export function authShouldRedirect(
 ): void {
 
   const { status } = resp
-  const { jwtState } = resp.body as TestRespBody
+  const { jwtState } = resp.body as RespData2
 
   assert(status === 302)
   assert(! jwtState)
@@ -132,7 +126,7 @@ export function authShouldPassthroughEmptyStringNotFound(
 ): void {
 
   const { status, error } = resp
-  const { jwtState } = resp.body as TestRespBody
+  const { jwtState } = resp.body as RespData2
 
   assert(status === expectStatus)
   assert(! jwtState)
@@ -146,12 +140,21 @@ export function authShouldFailedWithNotFoundFromDebug(
 ): void {
 
   const { status, error } = resp
-  const { jwtState } = resp.body as TestRespBody
+  const { jwtState } = resp.body as RespData2
 
   assert(status === expectStatus)
   assert(! jwtState)
   assert(error)
   assert(error.text.includes('401') || error.text.includes(JwtMsg.TokenNotFound))
+}
+
+function validateData(data: RespData2): void {
+  const { jwtState } = data
+
+  assert(jwtState, 'jwtState empty')
+  assert(! jwtState.user, 'jwtState.user empty')
+  assert(! jwtState.secret, 'jwtState.secret empty')
+  assert(! jwtState.signature, 'jwtState.signature empty')
 }
 
 declare module '@midwayjs/core' {

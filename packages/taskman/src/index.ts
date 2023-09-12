@@ -1,22 +1,20 @@
 
-// import { PowerPartial } from '@midwayjs/core'
-
 import {
   ConfigKey,
   MiddlewareConfig,
   TaskClientConfig,
   TaskServerConfig,
-} from './lib/index'
+} from './lib/index.js'
 
 
-export { AutoConfiguration as Configuration } from './configuration'
-export * from './app/index.controller'
-export { TaskManMiddleware } from './middleware/taskman.middleware'
-export * from './validation-schema/index.schema'
-export * from './controller/index.controller'
-export * from './service/index.service'
-export * from './repo/index.repo'
-export * from './lib/index'
+export { AutoConfiguration as Configuration } from './configuration.js'
+export * from './app/index.controller.js'
+export { TaskManMiddleware } from './middleware/index.middleware.js'
+export * from './validation-schema/index.schema.js'
+export * from './controller/index.controller.js'
+export * from './service/index.service.js'
+export * from './repo/index.repo.js'
+export * from './lib/index.js'
 
 
 // @ts-ignore

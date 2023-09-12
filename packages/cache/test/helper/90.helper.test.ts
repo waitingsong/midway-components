@@ -1,15 +1,13 @@
 import assert from 'node:assert/strict'
-import { relative } from 'node:path'
 
 import { CacheManager } from '@midwayjs/cache'
+import { fileShortPath } from '@waiting/shared-core'
 
-import { testConfig } from '@/root.config'
-import { hashCacheKey, saveData, getData, deleteData } from '~/lib/helper'
+import { hashCacheKey, saveData, getData, deleteData } from '../../src/lib/helper.js'
+import { testConfig } from '../root.config.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), function() {
   const key = 'CustService.getUserList:{"orderfield":"total","pageindex":1,"pagesize":5}'
   const expectHash = 'CustService.443bb521e2a0b756631224861f7a54f6'
   const key2 = 'CustService.getUserList'

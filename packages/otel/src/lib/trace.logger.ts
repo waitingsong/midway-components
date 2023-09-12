@@ -7,10 +7,10 @@ import {
 import { ILogger } from '@midwayjs/logger'
 import type { Attributes, Span } from '@opentelemetry/api'
 
-import { AbstractOtelComponent } from './abstract'
-import { OtelComponent } from './component'
-import { TraceService } from './trace.service'
-import { AttrNames, TraceLogType } from './types'
+import { AbstractOtelComponent } from './abstract.js'
+import { OtelComponent } from './component.js'
+import { TraceService } from './trace.service.js'
+import { AttrNames, TraceLogType } from './types.js'
 
 
 /**

@@ -1,16 +1,15 @@
 import assert from 'node:assert/strict'
-import { relative } from 'node:path'
 
-import { cloudUrlPrefix, src, testConfig } from '@/root.config'
+import { fileShortPath } from '@waiting/shared-core'
+
+import { cloudUrlPrefix, src, testConfig, TestRespBody } from '../root.config.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), function() {
 
   describe('Should upload() work', () => {
     it('normal string', async () => {
-      const { CI, ossClient } = testConfig
+      const { ossClient } = testConfig
 
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
 

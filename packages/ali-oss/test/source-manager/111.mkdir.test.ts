@@ -1,13 +1,13 @@
 import assert from 'node:assert/strict'
-import { relative } from 'node:path'
 
-import { cloudUrlPrefix, testConfig } from '@/root.config'
-import { AliOssComponent } from '~/index'
+import type { JsonResp } from '@mwcp/share'
+import { fileShortPath } from '@waiting/shared-core'
+
+import { AliOssComponent } from '../../src/index.js'
+import { cloudUrlPrefix, testConfig } from '../root.config.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), function() {
 
   const path = '/oss/mkdir'
 
@@ -22,12 +22,16 @@ describe(filename, () => {
         .expect(200)
 
       assert(resp)
-      const ret = resp.body as Awaited<ReturnType<AliOssComponent['mkdir']>>
+      const json = resp.body as JsonResp<Awaited<ReturnType<AliOssComponent['mkdir']>>>
 
-      CI || console.log(ret)
-      assert(! ret.exitCode, `mkdir ${target} failed, ${ret.stderr}`)
-      assert(ret.data)
-      assert(typeof ret.data.elapsed === 'string')
+      CI || console.log(json)
+
+      assert(json.code === 0, `mkdir ${target} failed, ${json.msg}`)
+      const { data } = json
+
+      assert(! data.exitCode, `mkdir ${target} failed, ${data.stderr}`)
+      assert(data.data)
+      assert(typeof data.data.elapsed === 'string', JSON.stringify(data.data))
     })
 
     it('mchar', async () => {
@@ -40,12 +44,15 @@ describe(filename, () => {
         .expect(200)
 
       assert(resp)
-      const ret = resp.body as Awaited<ReturnType<AliOssComponent['mkdir']>>
+      const json = resp.body as JsonResp<Awaited<ReturnType<AliOssComponent['mkdir']>>>
 
-      CI || console.log(ret)
-      assert(! ret.exitCode, `mkdir ${target} failed, ${ret.stderr}`)
-      assert(ret.data)
-      assert(typeof ret.data.elapsed === 'string')
+      assert(json.code === 0, `mkdir ${target} failed, ${json.msg}`)
+      const { data } = json
+
+      assert(! data.exitCode, `mkdir ${target} failed, ${data.stderr}`)
+      assert(data.data)
+
+      assert(typeof data.data.elapsed === 'string')
     })
 
   })

@@ -10,9 +10,8 @@ import {
   ClientURL,
   ClientMethod,
   TaskAgentState,
-} from '../lib/index'
-import { TaskAgentService } from '../service/index.service'
-
+} from '##/lib/index.js'
+import { TaskAgentService } from '##/service/index.service.js'
 
 
 @Controller(ClientURL.base)

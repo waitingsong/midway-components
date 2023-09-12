@@ -1,7 +1,7 @@
 import { customDecoratorFactory } from '@mwcp/share'
 
-import { METHOD_KEY_CachePut, METHOD_KEY_Transactional } from '../config'
-import { CacheableArgs, MethodType } from '../types'
+import { METHOD_KEY_CachePut, METHOD_KEY_Transactional } from '../config.js'
+import { CacheableArgs, MethodType } from '../types.js'
 
 
 /**

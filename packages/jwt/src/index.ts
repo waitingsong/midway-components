@@ -14,7 +14,6 @@ export {
   getComponentConfig,
   getMiddlewareConfig,
 } from './util/common.js'
-export * from './middleware/jwt.middleware'
 export {
   DecodeOptions,
   JwtHeader,

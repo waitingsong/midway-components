@@ -1,4 +1,4 @@
 
-export * from './trace-inner.middleware'
-export * from './trace-outer.middleware'
+export * from './trace-inner.middleware.js'
+export * from './trace-outer.middleware.js'
 

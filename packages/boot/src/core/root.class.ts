@@ -21,7 +21,7 @@ import {
   FetchOptions,
   JsonResp,
   NpmPkg,
-} from '../lib/index'
+} from '##/lib/index.js'
 
 
 export class RootClass {
@@ -263,10 +263,12 @@ export class RootClass {
   }
 
   getJwtPayload<T = unknown>(): T {
-    if (! this.ctx.jwtState.user) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if (! this.ctx['jwtState'].user) {
       this.throwError('获取 jwt payload 信息为空')
     }
-    return this.ctx.jwtState.user as T
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    return this.ctx['jwtState'].user as T
   }
 
   throwError(message: string, status?: number, error?: Error): never {

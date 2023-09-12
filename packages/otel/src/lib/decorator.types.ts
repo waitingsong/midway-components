@@ -5,7 +5,7 @@ import type {
   Span,
 } from '@opentelemetry/api'
 
-import { AbstractOtelComponent, AbstractTraceService } from './abstract'
+import { AbstractOtelComponent, AbstractTraceService } from './abstract.js'
 
 
 export type MethodType<

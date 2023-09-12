@@ -1,19 +1,18 @@
-import {
-  Config as _Config,
-} from '@midwayjs/core'
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
+import { Config as _Config } from '@midwayjs/core'
 
-import { CachedResponse } from '~/lib/types'
-import { Cacheable, CacheEvict } from '~/index'
+import { Cacheable, CacheEvict } from '../../../../../src/index.js'
+import { CachedResponse } from '../../../../../src/lib/types.js'
 
 
 // should equal to the cacheName of ClassDecoratorEvictService.hello()
-export const cacheNameHello = `ClassDecoratorEvictService.hello`
-export const cacheNameSimple = `CacheEvictService.simple`
+export const cacheNameHello = 'ClassDecoratorEvictService.hello'
+export const cacheNameSimple = 'CacheEvictService.simple'
 
 @Cacheable({
   condition: true,
 })
-export class ClassDecoratorEvictService  {
+export class ClassDecoratorEvictService {
 
   async hello(): Promise<CachedResponse<'OK'>> {
     return { value: 'OK' }
@@ -47,9 +46,7 @@ export class ClassDecoratorEvictService  {
 
   @CacheEvict({
     cacheName: cacheNameSimple,
-    condition: (
-      _args: unknown, result: CachedResponse<number> | undefined
-    ) => result ? result.value % 2 === 0 : false,
+    condition: (_args: unknown, result: CachedResponse<number> | undefined) => result ? result.value % 2 === 0 : false,
   })
   async evictResultEven(input: number): Promise<CachedResponse<number>> {
     return { value: input + 1 }
@@ -65,9 +62,7 @@ export class ClassDecoratorEvictService  {
       }
       return result && result.value % 2 === 0 ? void 0 : invalidStr
     },
-    condition: (
-      _args: unknown, result: CachedResponse<number> | undefined
-    ) => result ? result.value % 2 === 0 : false,
+    condition: (_args: unknown, result: CachedResponse<number> | undefined) => result ? result.value % 2 === 0 : false,
   })
   async evictResultEvenAndGreaterThanZero(input: number): Promise<CachedResponse<number>> {
     return { value: input }

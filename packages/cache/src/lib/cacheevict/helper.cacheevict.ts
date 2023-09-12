@@ -1,9 +1,9 @@
 import assert from 'assert'
 
-import { initCacheEvictArgs } from '../config'
-import { processEx } from '../exception'
-import { computerConditionValue, deleteData, genCacheKey, GenCacheKeyOptions } from '../helper'
-import { CacheEvictArgs, DecoratorExecutorOptions } from '../types'
+import { initCacheEvictArgs } from '../config.js'
+import { processEx } from '../exception.js'
+import { computerConditionValue, deleteData, genCacheKey, GenCacheKeyOptions } from '../helper.js'
+import { CacheEvictArgs, DecoratorExecutorOptions } from '../types.js'
 
 
 export async function decoratorExecutor(

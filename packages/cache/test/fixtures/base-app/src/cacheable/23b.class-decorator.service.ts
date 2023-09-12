@@ -1,16 +1,15 @@
-import {
-  Config as _Config,
-} from '@midwayjs/core'
+import { Config as _Config } from '@midwayjs/core'
 
-import { CachedResponse } from '~/lib/types'
-import { Cacheable, } from '~/index'
+import { Cacheable } from '../../../../../src/index.js'
+import { CachedResponse } from '../../../../../src/lib/types.js'
+
 
 export const ttl = 1
 
 const cacheName = 'foo'
 
 @Cacheable()
-export class ClassDecoratorService  {
+export class ClassDecoratorService {
 
   async simple(): Promise<CachedResponse<'OK'>> {
     return { value: 'OK' }

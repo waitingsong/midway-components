@@ -1,7 +1,7 @@
 import { customDecoratorFactory } from '@mwcp/share'
 
-import { METHOD_KEY_CacheEvict, METHOD_KEY_Transactional } from '../config'
-import { CacheEvictArgs, MethodType } from '../types'
+import { METHOD_KEY_CacheEvict, METHOD_KEY_Transactional } from '../config.js'
+import { CacheEvictArgs, MethodType } from '../types.js'
 
 
 /**

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/await-thenable */
 import assert from 'assert'
 
 import {
@@ -5,8 +6,8 @@ import {
   Provide,
 } from '@midwayjs/core'
 
-import { Trace } from '~/lib/index'
-import { Config, ConfigKey } from '~/lib/types'
+import { Trace } from '../../../../../dist/lib/index.js'
+import { Config, ConfigKey } from '../../../../../dist/lib/types.js'
 
 
 @Provide()
@@ -28,7 +29,7 @@ export class DefaultComponentService {
   }
 
   @Trace<DefaultComponentService['testArgSync']>({
-    spanName: (args) => `foo-${args[0]}`,
+    spanName: args => `foo-${args[0]}`,
   })
   testArgSync(input: number): string {
     return input.toString()
@@ -36,7 +37,7 @@ export class DefaultComponentService {
 
   @Trace<DefaultComponentService['testArg']>({
     startActiveSpan: false,
-    spanName: (args) => `foo-${args[0]}`,
+    spanName: args => `foo-${args[0]}`,
   })
   async testArg(input: number): Promise<string> {
     const ret = await input.toString()

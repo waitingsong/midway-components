@@ -8,13 +8,20 @@ import { Msg as _Msg } from '@yuntools/ali-oss'
 export enum ConfigKey {
   namespace = 'aliOss',
   config = 'aliOssConfig',
+  middlewareConfig = 'aliOssMiddlewareConfig',
   aliOssInstanceKey = 'aliOssInstanceKey',
   componentName = 'aliOssComponent',
   managerName = 'aliOssManager',
   sourceManagerName = 'aliOssSourceManager',
 }
 
-export const Msg = { ..._Msg, hello: 'hello aliOss' } as const
+
+export enum Msg2 {
+  hello = 'hello aliOss',
+}
+
+export const Msg = { ..._Msg, ...Msg2 }
+export type Msg = _Msg | Msg2
 
 export enum ClientKey {
   master = 'ossMaster',

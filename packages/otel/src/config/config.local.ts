@@ -2,8 +2,8 @@ import {
   initialConfig,
   initialMiddlewareConfig,
   initTracerIgnoreArray,
-} from '../lib/config'
-import { Config, MiddlewareConfig, SpanExporterList } from '../lib/types'
+} from '##/lib/config.js'
+import { Config, MiddlewareConfig, SpanExporterList } from '##/lib/types.js'
 
 
 export const otelConfig: Config = {

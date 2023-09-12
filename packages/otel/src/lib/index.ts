@@ -1,13 +1,13 @@
 
-export * from './config'
-export { OtelComponent } from './component'
+export * from './config.js'
+export { OtelComponent } from './component.js'
 export {
   AbstractOtelComponent, AbstractTraceService,
-} from './abstract'
-export * from './trace.logger'
-export * from './trace.service'
-export * from './decorator.trace/trace'
-export * from './decorator.trace-init/trace-init'
+} from './abstract.js'
+export * from './trace.logger.js'
+export * from './trace.service.js'
+export * from './decorator.trace/trace.js'
+export * from './decorator.trace-init/trace-init.js'
 export {
   addSpanEventWithOutgoingResponseData,
   getIncomingRequestAttributesFromWebContext,
@@ -22,7 +22,7 @@ export {
   getSpan,
   setSpan,
   deleteSpan,
-} from './util'
+} from './util.js'
 
 export {
   Config as OtelConfig,
@@ -45,14 +45,14 @@ export {
   SpanStatusOptions,
   TraceError,
   TraceLogType as LogInfo,
-} from './types'
+} from './types.js'
 
 export {
   TraceDecoratorParam as TraceDecoratorArg,
   TraceDecoratorOptions,
-} from './decorator.types'
+} from './decorator.types.js'
 
-export { genDecoratorExecutorOptions } from './trace.helper'
+export { genDecoratorExecutorOptions } from './trace.helper.js'
 
-export { AttrNames } from './attrnames.types'
+export { AttrNames } from './attrnames.types.js'
 

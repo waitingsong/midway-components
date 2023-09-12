@@ -3,7 +3,7 @@ import { HeadersKey } from '@mwcp/otel'
 import type { Context } from '@mwcp/share'
 import { defaultPropDescriptor } from '@waiting/shared-core'
 
-import type { CreateTaskOptions } from './types'
+import type { CreateTaskOptions } from './types.js'
 
 
 export function processJsonHeaders(

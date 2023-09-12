@@ -17,10 +17,7 @@
     "#@/*": "./test/*"
   },
   "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    },
+    ".": "./dist/index.js",
     "./package.json": "./package.json"
   },
   "bugs": {
@@ -36,15 +33,16 @@
     "@midwayjs/bootstrap": "^3.12.2",
     "@midwayjs/core": "^3.12.2",
     "@midwayjs/decorator": "^3.12.2",
+    "@midwayjs/info": "^3.12.2",
     "@midwayjs/koa": "^3.12.2",
     "@midwayjs/logger": "^2.17.0",
     "@opentelemetry/api": "*",
     "@waiting/shared-core": "^21.5.0",
-    "deepmerge": "^4.3.1",
-    "tsconfig-paths": "4"
+    "deepmerge": "^4.3.1"
   },
   "engines": {
-    "node": ">=16.13.0"
+    "node": ">=18.12.0",
+    "@midwayjs/core": ">=3.12.0"
   },
   "files": [
     "README.*.md",
@@ -63,18 +61,21 @@
     "access": "public"
   },
   "scripts": {
-    "build": "npm run tsc && tsc-alias && npm run rp",
+    "build": "npm run tsc && tsc-alias",
     "clean": "npm run clean:lock && npm run clean:dist && npm run clean:log",
     "clean:cache": "rm -rf .eslintcache .tsbuildinfo",
     "clean:dist": "npm run clean:cache && rm -rf dist/*",
     "clean:lock": "rm -f package-lock.json",
     "clean:log": "rm -rf ./logs ./run",
     "cov": "c8 --all npm run test -- --parallel=false",
+    "dev": "cross-env MIDWAY_SERVER_ENV=local mwtsc --watch --run @midwayjs/mock/app",
     "lint": "eslint --fix --cache {src,test}/**/*.ts",
     "lint:nofix": "eslint --cache {src,test}/**/*.ts",
+    "predev": "npm run build",
     "pretest": "npm run build",
     "rp": "rollup -c rollup.config.js --context this",
-    "test": "cross-env NODE_ENV=test TS_NODE_PROJECT=test/tsconfig.json mocha --jobs=4",
+    "start": "cross-env NODE_ENV=production node ./bootstrap.js",
+    "test": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json mocha --parallel=false",
     "tsc": "tsc -b"
   }
 }

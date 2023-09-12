@@ -6,7 +6,7 @@ import {
   Context,
   IMiddleware,
   NextFunction,
-} from '../lib/index'
+} from '##/lib/index.js'
 
 
 @Middleware()

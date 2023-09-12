@@ -5,12 +5,13 @@ import {
   Scope,
   ScopeEnum,
 } from '@midwayjs/core'
-import {
-  decode,
-  sign,
-  verify,
-  VerifyOptions,
-} from 'jsonwebtoken'
+// import {
+//   decode,
+//   sign,
+//   verify,
+//   VerifyOptions,
+// } from 'jsonwebtoken'
+import JWT from 'jsonwebtoken'
 
 import {
   ConfigKey,
@@ -21,20 +22,27 @@ import {
   JwtPayload,
   VerifyOpts,
   JwtResult,
-} from './types'
+} from './types.js'
 import {
   validatePayload,
   validateSignSecret,
   validateTokenString,
   validateVerifySecret,
-} from './util'
+} from './util.js'
 
 import type {
   DecodeOptions,
   JsonObject,
   SignOptions,
   Secret,
-} from '~/interface'
+} from '##/interface.js'
+
+
+const {
+  decode,
+  sign,
+  verify,
+} = JWT
 
 
 @Provide()
@@ -94,7 +102,7 @@ export class JwtComponent {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (! this) { throw new TypeError('Should call with class name, such as jwt.verify()') }
 
-    const opts: VerifyOptions = options
+    const opts: JWT.VerifyOptions = options
       ? { ...this.config.verifyOpts, ...options }
       : { ...this.config.verifyOpts }
     opts.complete = true

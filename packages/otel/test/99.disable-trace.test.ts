@@ -1,17 +1,17 @@
 import assert from 'node:assert/strict'
-import { relative } from 'node:path'
 
-import { apiPrefix, apiRoute } from '@/fixtures/base-app/src/api-route'
-import { testConfig } from '@/root.config'
-import { exporterEndpoint } from '~/lib/config'
-import { Config } from '~/lib/types'
+import { fileShortPath } from '@waiting/shared-core'
+
+import { exporterEndpoint } from '##/lib/config.js'
+import { Config } from '##/lib/types.js'
+import { apiPrefix, apiRoute } from '#@/fixtures/base-app/src/api-route.js'
+import { testConfig } from '#@/root.config.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
 const agent = exporterEndpoint.replace(/:\d+$/u, '')
 assert(agent, 'OTEL_EXPORTER_OTLP_ENDPOINT not set')
 
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), function() {
 
   before(() => {
     const { app } = testConfig

@@ -1,4 +1,4 @@
 
-export * from './types'
-export { ConfigKey as BootConfigKey } from './types'
+export * from './types.js'
+export { ConfigKey as BootConfigKey } from './types.js'
 

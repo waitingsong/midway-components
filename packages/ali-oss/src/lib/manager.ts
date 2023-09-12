@@ -9,9 +9,9 @@ import {
 import { TraceService } from '@mwcp/otel'
 import type { Context } from '@mwcp/share'
 
-import { AliOssComponent } from './component'
-import { AliOssSourceManager } from './source-manager'
-import { InstanceConfig, ConfigKey } from './types'
+import { AliOssComponent } from './component.js'
+import { AliOssSourceManager } from './source-manager.js'
+import { InstanceConfig, ConfigKey } from './types.js'
 
 
 @Provide()
@@ -25,7 +25,7 @@ export class AliOssManager<SourceName extends string = string, Ctx extends Conte
 
   getName(): string { return ConfigKey.managerName }
 
-  instCacheMap: Map<SourceName, AliOssComponent> = new Map()
+  instCacheMap = new Map<SourceName, AliOssComponent>()
 
 
   async createInstance(

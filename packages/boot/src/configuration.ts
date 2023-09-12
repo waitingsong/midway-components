@@ -1,44 +1,55 @@
 /* eslint-disable import/max-dependencies */
-import 'tsconfig-paths/register'
 import assert from 'node:assert/strict'
-import { join } from 'node:path'
 
 import {
   App,
   Configuration,
   ILifeCycle,
   Inject,
+  ILogger,
   Logger,
   MidwayInformationService,
 } from '@midwayjs/core'
-import { IMidwayLogger } from '@midwayjs/logger'
 import { JwtConfigKey, JwtMiddlewareConfig } from '@mwcp/jwt'
 import { TraceInit } from '@mwcp/otel'
-
-import { useComponents, useDefaultRoutes } from './imports'
 import {
   Application,
-  ConfigKey,
   IMidwayContainer,
+  registerMiddleware,
+} from '@mwcp/share'
+
+import * as DefulatConfig from './config/config.default.js'
+import * as LocalConfig from './config/config.local.js'
+import * as UnittestConfig from './config/config.unittest.js'
+import { useComponents, useDefaultRoutes } from './imports.js'
+import {
+  ConfigKey,
   NpmPkg,
-} from './lib/index'
+} from './lib/index.js'
 import {
   ErrorHandlerMiddleware,
+  JsonRespMiddleware,
   RequestIdMiddleware,
   ResponseHeadersMiddleware,
   ResponseMimeMiddleware,
-} from './middleware/index.middleware'
+} from './middleware/index.middleware.js'
 
 
 @Configuration({
-  importConfigs: [join(__dirname, 'config')],
+  importConfigs: [
+    {
+      default: DefulatConfig,
+      local: LocalConfig,
+      unittest: UnittestConfig,
+    },
+  ],
   imports: useComponents,
 })
 export class ContainerConfiguration implements ILifeCycle {
 
   @App() readonly app: Application
 
-  @Logger() readonly logger: IMidwayLogger
+  @Logger() protected readonly logger: ILogger
 
   @Inject() readonly informationService: MidwayInformationService
 
@@ -51,16 +62,16 @@ export class ContainerConfiguration implements ILifeCycle {
     // customLogger(this.logger, this.app)
 
     // 全局x-request-id处理中间件
-    // @ts-ignore
-    this.app.getMiddleware().insertFirst(RequestIdMiddleware)
+    registerMiddleware(this.app, RequestIdMiddleware, 'first')
 
-    // 全局错误处理中间件（确保在最前）
-    // @ts-ignore
-    this.app.getMiddleware().insertFirst(ErrorHandlerMiddleware)
+    // 全局错误处理中间件（尽量靠前）
+    registerMiddleware(this.app, ErrorHandlerMiddleware, 'first')
+    registerMiddleware(this.app, JsonRespMiddleware, 'first', true)
 
     const mws = [
       ResponseMimeMiddleware,
       ResponseHeadersMiddleware,
+      JsonRespMiddleware,
     ]
     // @ts-ignore
     this.app.useMiddleware(mws)
@@ -70,6 +81,8 @@ export class ContainerConfiguration implements ILifeCycle {
       assert(pkg, 'retrieve package.json failed')
       this.app.addConfigObject({ pkg })
     }
+
+    this.logger.info(`[${ConfigKey.componentName}] onReady`)
   }
 
 
@@ -97,9 +110,17 @@ export class ContainerConfiguration implements ILifeCycle {
         }
       })
     }
+    console.info({ jwtMiddlewareConfig })
+
+    // const configAll = this.app.getConfig() as unknown
+    // console.info({ configAll })
+
+    const serviceEnv = this.app.getEnv()
+    console.info({ serviceEnv })
 
     // eslint-disable-next-line no-console
-    console.info('✅ midway ready', info)
+    // console.info('✅ midway ready', info)
+    this.logger.info(`✅ [${ConfigKey.componentName}] onServerReady`, info)
   }
 
   // async onStop(): Promise<void> {

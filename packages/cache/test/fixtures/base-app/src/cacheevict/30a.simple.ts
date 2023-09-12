@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import assert from 'node:assert/strict'
 
 import {
@@ -8,14 +9,13 @@ import {
 } from '@midwayjs/core'
 import type { Context } from '@mwcp/share'
 
-import { apiPrefix, apiRoute } from '../api-route'
-import { validateMeta } from '../base.helper'
+import { Cacheable, CacheEvict } from '../../../../../src/index.js'
+import { CachedResponse, Config, ConfigKey } from '../../../../../src/lib/types.js'
+import { apiPrefix, apiRoute } from '../api-route.js'
+import { validateMeta } from '../base.helper.js'
 
-import { Cacheable, CacheEvict } from '~/index'
-import { CachedResponse, Config, ConfigKey } from '~/lib/types'
 
-
-const cacheKey = `CacheEvictController.simple`
+const cacheKey = 'CacheEvictController.simple'
 
 @Controller(apiPrefix.methodCacheEvict)
 export class CacheEvictController {

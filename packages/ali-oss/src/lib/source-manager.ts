@@ -14,8 +14,8 @@ import {
 } from '@midwayjs/core'
 import { ILogger } from '@midwayjs/logger'
 
-import { AliOssComponent } from './component'
-import { InstanceConfig, ConfigKey, Config } from './types'
+import { AliOssComponent } from './component.js'
+import { InstanceConfig, ConfigKey, Config } from './types.js'
 
 
 @Provide()

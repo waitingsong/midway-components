@@ -7,11 +7,10 @@ import {
   Inject,
 } from '@midwayjs/core'
 
-import { Trace, TraceService } from '~/lib/index'
-import { Config, ConfigKey, HeadersKey } from '~/lib/types'
-import { propagateHeader } from '~/lib/util'
-
-import { apiPrefix, apiRoute } from '../api-route'
+import { Trace, TraceService } from '../../../../../dist/lib/index.js'
+import { Config, ConfigKey, HeadersKey } from '../../../../../dist/lib/types.js'
+import { propagateHeader } from '../../../../../dist/lib/util.js'
+import { apiPrefix, apiRoute } from '../api-route.js'
 
 
 @Controller(apiPrefix.util)

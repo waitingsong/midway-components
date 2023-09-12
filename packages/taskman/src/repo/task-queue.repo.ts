@@ -29,7 +29,7 @@ import {
   ServerMethod,
   TaskProgressDetailDTO,
   ConfigKey,
-} from '../lib/index'
+} from '##/lib/index.js'
 
 
 @Provide()

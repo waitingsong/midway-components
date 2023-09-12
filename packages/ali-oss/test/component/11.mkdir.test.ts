@@ -1,13 +1,12 @@
 import assert from 'node:assert/strict'
-import { relative } from 'node:path'
 
-import { cloudUrlPrefix, testConfig } from '@/root.config'
-import { MkdirOptions } from '~/index'
+import { fileShortPath } from '@waiting/shared-core'
+
+import { MkdirOptions } from '../../src/index.js'
+import { cloudUrlPrefix, testConfig, TestRespBody } from '../root.config.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), function() {
 
   describe('mkdir should work', () => {
     it('normal', async () => {

@@ -6,6 +6,7 @@ import {
 import type { Context } from '@mwcp/share'
 
 import {
+  Config,
   ConfigKey,
   MiddlewareConfig,
 } from '../../../../dist/lib/types.js'
@@ -15,6 +16,7 @@ import { RespData } from '../../../root.config.js'
 @Controller('/')
 export class HomeController {
 
+  @_Config(ConfigKey.config) protected readonly config: Config
   @_Config(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
 
   @Get('/')

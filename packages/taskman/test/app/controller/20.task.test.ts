@@ -1,18 +1,23 @@
-import assert from 'assert/strict'
-import { relative } from 'path'
+import assert from 'node:assert/strict'
 
-import { sleep } from '@waiting/shared-core'
-import { testConfig } from 'test/root.config'
+import { sleep, fileShortPath } from '@waiting/shared-core'
 
-import { createOneTask } from '../helper'
+import { createOneTask } from '../helper.js'
 
-import { apiPrefix, apiRoute } from '@/fixtures/base-app/src/api-route'
-import { ClientURL, CreateTaskDTO, ServerURL, TaskAgentState, TaskDTO, TaskState } from '~/lib'
+import {
+  ClientURL,
+  CreateTaskDTO,
+  ServerURL,
+  TaskAgentState,
+  TaskDTO,
+  TaskState,
+  PickInitTaskOptions,
+} from '##/lib/index.js'
+import { apiPrefix, apiRoute } from '#@/fixtures/base-app/src/api-route.js'
+import { testConfig } from '#@/root.config.js'
 
 
-const filename = relative(process.cwd(), __filename)
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), () => {
 
   const path = `${apiPrefix.task}/${apiRoute.task1}`
   const pathStart = `${ClientURL.base}/${ClientURL.start}`
@@ -41,7 +46,7 @@ describe(filename, () => {
 
       const resp2 = await httpRequest.get(pathStart).expect(200)
       const status = resp2.body as TaskAgentState
-      assert(status.isRunning, 'should running')
+      assert(status.isRunning, `Should running but got: ${JSON.stringify(status)}`)
 
       let loop = 0
       let info: TaskDTO | undefined = void 0

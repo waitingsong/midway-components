@@ -1,13 +1,13 @@
-import assert from 'assert/strict'
-import { relative } from 'path'
 
-import { token1 } from '@/mock-data'
-import { validateVerifySecret } from '~/index'
+import assert from 'node:assert/strict'
+
+import { fileShortPath } from '@waiting/shared-core'
+
+import { validateVerifySecret } from '##/index.js'
+import { token1 } from '#@/mock-data.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), () => {
 
   describe('Should validateVerifySecret() work', () => {
     it('with valid input', () => {

@@ -1,17 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import assert from 'node:assert'
 
-import {
-  Config as _Config,
-} from '@midwayjs/core'
+import { Config as _Config } from '@midwayjs/core'
 
-import { validateMeta } from '../base.helper'
-
-import { CachedResponse, Config, ConfigKey } from '~/lib/types'
-import { Cacheable, } from '~/index'
+import { Cacheable } from '../../../../../src/index.js'
+import { CachedResponse, Config, ConfigKey } from '../../../../../src/lib/types.js'
+import { validateMeta } from '../base.helper.js'
 
 
 @Cacheable()
-export class ArgsDecoratorService  {
+export class ArgsDecoratorService {
 
   @_Config(ConfigKey.config) readonly config: Config
 

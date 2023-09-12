@@ -1,17 +1,17 @@
-import { relative } from 'path'
+import assert from 'node:assert/strict'
+
+import { fileShortPath } from '@waiting/shared-core'
 
 import {
   authShouldFailedWithNotFoundFromDebug,
   authShouldPassthroughNotFound,
-} from '../helper'
+} from '../helper.js'
 
-import { testConfig } from '@/root.config'
-import { ConfigKey, MiddlewareConfig } from '~/lib/types'
+import { ConfigKey, MiddlewareConfig } from '##/lib/types.js'
+import { testConfig } from '#@/root.config.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), () => {
 
   const path = '/test'
 
@@ -19,7 +19,7 @@ describe(filename, () => {
     it('normal', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: MiddlewareConfig = {
-        // @ts-ignore
+        enableMiddleware: true,
         options: {
           debug: true,
         },
@@ -34,7 +34,7 @@ describe(filename, () => {
     it('ignored with passthrough:true', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: MiddlewareConfig = {
-        // @ts-ignore
+        enableMiddleware: true,
         options: {
           debug: true,
           passthrough: true,

@@ -2,13 +2,14 @@ import type { PrometheusConfig } from '@midwayjs/prometheus'
 import type { JwtState } from '@mwcp/jwt'
 
 
-export { ContainerConfiguration as Configuration } from './configuration'
-export * from './app/index.controller'
-export * from './lib/index'
-export * from './middleware/index.middleware'
-export { RootClass } from './core/root.class'
+export { ContainerConfiguration as Configuration } from './configuration.js'
+export * from './app/index.controller.js'
+export * from './lib/index.js'
+export * from './middleware/index.middleware.js'
+export { RootClass } from './core/root.class.js'
 
 
+// @ts-ignore
 declare module '@midwayjs/core/dist/interface' {
   interface MidwayConfig {
     globalErrorCode: Record<string | number, string | number>
@@ -17,6 +18,7 @@ declare module '@midwayjs/core/dist/interface' {
   }
 }
 
+// @ts-ignore
 declare module '@midwayjs/koa/dist/interface' {
   interface Context {
     jwtState: JwtState

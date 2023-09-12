@@ -9,9 +9,6 @@ import {
 import { genCurrentDirname } from '@waiting/shared-core'
 import supertest, { SuperTest } from 'supertest'
 
-import { TestSpanInfo } from '~/lib/types'
-
-
 
 export const testDir = genCurrentDirname(import.meta.url)
 export const baseDir = join(testDir, '..')
@@ -29,7 +26,7 @@ export interface RespData {
   header: IncomingHttpHeaders
   url: string
   cookies: unknown
-  spanInfo: TestSpanInfo
+  // spanInfo: TestSpanInfo
 }
 
 export interface TestConfig {

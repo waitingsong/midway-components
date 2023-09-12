@@ -1,13 +1,11 @@
 import assert from 'node:assert/strict'
-import { relative } from 'node:path'
 
-import { cloudUrlPrefix, testConfig, src } from '@/root.config'
+import { fileShortPath } from '@waiting/shared-core'
+
+import { cloudUrlPrefix, src, testConfig, TestRespBody } from '../root.config.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-
-describe(filename, () => {
-
+describe(fileShortPath(import.meta.url), function() {
   describe('createSymlink should work', () => {
     it('normal', async () => {
       const { CI, ossClient } = testConfig

@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { DbConfig } from '@mwcp/kmore'
 
-import { dbDict, DbModel } from './db.model'
+import { dbDict, DbModel } from './db.model.js'
 import {
   InitTaskDTO,
   InitTaskPayloadDTO,
@@ -15,7 +15,7 @@ import {
   TaskServerConfig,
   TaskState,
   TaskStatistics,
-} from './types'
+} from './types.js'
 
 
 export const initMiddlewareOptions: MiddlewareOptions = {

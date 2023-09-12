@@ -1,4 +1,4 @@
 
-export * from './default.controller'
-export * from './default.service'
+export * from './default.controller.js'
+export * from './default.service.js'
 

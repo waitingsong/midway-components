@@ -4,17 +4,17 @@ import assert from 'node:assert'
 import { DecoratorExecutorParamBase } from '@mwcp/share'
 import { Attributes, SpanOptions } from '@opentelemetry/api'
 
-import type { AbstractOtelComponent, AbstractTraceService } from './abstract'
+import type { AbstractOtelComponent, AbstractTraceService } from './abstract.js'
 import {
   DecoratorContext,
   TraceDecoratorOptions as TraceDecoratorParam,
-} from './decorator.types'
+} from './decorator.types.js'
 import {
   AttrNames,
   Config,
   ConfigKey,
   TraceContext,
-} from './types'
+} from './types.js'
 
 
 const configNameList = [

@@ -1,19 +1,17 @@
-import { relative } from 'path'
+import { fileShortPath } from '@waiting/shared-core'
 
 import {
   authShouldPassed,
   authShouldPassthroughNotFound,
   authShouldPassthroughValidFailed,
-} from '../helper'
+} from '../helper.js'
 
-import { authHeader1, payload1 } from '@/mock-data'
-import { testConfig } from '@/root.config'
-import { ConfigKey, MiddlewareConfig } from '~/lib/types'
+import { ConfigKey, MiddlewareConfig } from '##/lib/types.js'
+import { authHeader1, payload1 } from '#@/mock-data.js'
+import { testConfig } from '#@/root.config.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), () => {
 
   const path = '/test'
 
@@ -21,7 +19,7 @@ describe(filename, () => {
     it('passed', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: MiddlewareConfig = {
-        // @ts-ignore
+        enableMiddleware: true,
         options: {
           passthrough: true,
         },
@@ -40,7 +38,7 @@ describe(filename, () => {
     it('token not found', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: MiddlewareConfig = {
-        // @ts-ignore
+        enableMiddleware: true,
         options: {
           passthrough: true,
         },
@@ -58,7 +56,7 @@ describe(filename, () => {
     it('token valid faied', async () => {
       const { app, httpRequest } = testConfig
       const mwConfig: MiddlewareConfig = {
-        // @ts-ignore
+        enableMiddleware: true,
         options: {
           passthrough: true,
         },

@@ -1,4 +1,4 @@
-extends: '@waiting/eslint-config/recommended'
+extends: '@waiting/eslint-config'
 parserOptions:
   project: 'tsconfig.eslint.json'
 
@@ -12,5 +12,5 @@ rules:
       - ../share/
       - ../boot/
 
-ignorePatterns:
-  - fixtures
+# ignorePatterns:
+#   - test

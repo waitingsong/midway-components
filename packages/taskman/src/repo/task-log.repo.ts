@@ -18,7 +18,7 @@ import {
   ServerMethod,
   TaskLogDTO,
   ConfigKey,
-} from '../lib/index'
+} from '##/lib/index.js'
 
 
 @Provide()

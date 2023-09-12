@@ -4,7 +4,7 @@ import { stat } from 'node:fs/promises'
 import {
   AliOssComponent,
   DataCp,
-} from '~/index'
+} from '../src/index.js'
 
 
 export async function assertFileExists(

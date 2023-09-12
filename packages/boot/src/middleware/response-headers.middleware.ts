@@ -6,7 +6,7 @@ import {
   IMiddleware,
   NextFunction,
   NpmPkg,
-} from '../lib/index'
+} from '##/lib/index.js'
 
 
 /**

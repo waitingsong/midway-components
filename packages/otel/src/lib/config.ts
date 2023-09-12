@@ -14,7 +14,7 @@ import {
   PropagatorList,
   SpanExporterList,
   SpanStatusOptions,
-} from './types'
+} from './types.js'
 
 /**
  * Initial config, contains:
@@ -22,6 +22,7 @@ import {
  * - host
  * - user-agent
  */
+// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 export const initCaptureRequestHeaders: (string | KnownKeys<IncomingHttpHeaders>)[] = [
   HeadersKey.authorization,
   HeadersKey.contentType,

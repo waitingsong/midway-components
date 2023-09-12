@@ -6,5 +6,5 @@ rules:
   "@typescript-eslint/no-unused-vars": 0
   "@typescript-eslint/prefer-ts-expect-error": 0
 
-ignorePatterns:
-  - fixtures
+# ignorePatterns:
+#   - test

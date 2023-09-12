@@ -17,5 +17,5 @@ rules:
       - ../../node_modules/@opentelemetry/otlp-grpc-exporter-base
       # - ../../node_modules/@midwayjs/core
 
-ignorePatterns:
-  - fixtures
+# ignorePatterns:
+#   - test

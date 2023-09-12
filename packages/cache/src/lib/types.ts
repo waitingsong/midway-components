@@ -10,13 +10,17 @@ import type { MiddlewareConfig as MWConfig } from '@waiting/shared-types'
 
 
 export enum ConfigKey {
+  namespace = 'cache',
   config = 'cacheConfig',
   middlewareConfig = 'cacheMiddlewareConfig',
-  namespace = 'cache',
   componentName = 'cacheComponent',
   CacheMetaType = 'CacheMetaType',
 }
 
+export enum Msg {
+  hello = 'hello world',
+  AuthFailed = 'Authentication Failed',
+}
 
 export interface MiddlewareOptions {
   debug: boolean
@@ -42,6 +46,7 @@ export interface Config {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 export type MethodType = (...input: any[]) => (any | Promise<any>)
 
 /**

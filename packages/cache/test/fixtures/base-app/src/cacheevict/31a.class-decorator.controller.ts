@@ -7,11 +7,11 @@ import {
   Inject,
 } from '@midwayjs/core'
 
-import { apiPrefix, apiRoute } from '../api-route'
-import { validateMeta } from '../base.helper'
-import { ClassDecoratorEvictService, cacheNameSimple } from './31b.class-decorator.service'
+import { ConfigKey, Config } from '../../../../../src/lib/types.js'
+import { apiPrefix, apiRoute } from '../api-route.js'
+import { validateMeta } from '../base.helper.js'
 
-import { ConfigKey, Config } from '~/lib/types'
+import { ClassDecoratorEvictService, cacheNameSimple } from './31b.class-decorator.service.js'
 
 
 @Controller(apiPrefix.classCacheable)
@@ -131,14 +131,14 @@ export class ClassDecoratorEvictController {
     await this.svc.evictResultEven(1) // (1+1) evict
 
     const ret4 = await this.svc.simple()
-    assert(!ret4[ConfigKey.CacheMetaType])
+    assert(! ret4[ConfigKey.CacheMetaType])
 
     const ret4a = await this.svc.simple()
     validateMeta(ret4a, cacheKey, this.config.options.ttl)
 
     await this.svc.evictHello()
     const ret5 = await this.svc.hello()
-    assert(!ret5[ConfigKey.CacheMetaType])
+    assert(! ret5[ConfigKey.CacheMetaType])
 
     const ret5a = await this.svc.hello()
     validateMeta(ret5a, 'ClassDecoratorEvictService.hello', this.config.options.ttl)

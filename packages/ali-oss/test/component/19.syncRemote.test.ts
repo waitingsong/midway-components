@@ -1,14 +1,14 @@
 import assert from 'node:assert/strict'
-import { join, relative } from 'node:path'
+import { join } from 'node:path'
 
-import { assertFileExists, assertUploadFiles } from '@/helper'
-import { cloudUrlPrefix, files, src, srcDir, testConfig } from '@/root.config'
-import { SyncOptions } from '~/index'
+import { fileShortPath } from '@waiting/shared-core'
+
+import { SyncOptions } from '../../src/index.js'
+import { assertFileExists, assertUploadFiles } from '../helper.js'
+import { cloudUrlPrefix, files, src, srcDir, testConfig, TestRespBody } from '../root.config.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), function() {
   const target = `${cloudUrlPrefix}/sync-${Date.now().toString()}`
 
   describe('syncRemote should work', () => {

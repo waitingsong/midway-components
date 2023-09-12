@@ -1,8 +1,8 @@
 
-export * from './config'
-export * from './resolvers'
-export * from './util'
-export { JwtComponent } from './component'
+export * from './config.js'
+export * from './resolvers.js'
+export * from './util.js'
+export { JwtComponent } from './component.js'
 
 export {
   Config as JwtConfig,
@@ -18,5 +18,5 @@ export {
   RedirectURL,
   VerifySecret,
   VerifyOpts,
-} from './types'
+} from './types.js'
 

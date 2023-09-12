@@ -2,11 +2,11 @@ import {
   initConfig,
   initialMiddlewareConfig,
   initMiddlewareOptions,
-} from '../lib/config'
+} from '../lib/config.js'
 import {
   Config,
   MiddlewareConfig,
-} from '../lib/types'
+} from '../lib/types.js'
 
 
 export const cacheConfig: Config = {

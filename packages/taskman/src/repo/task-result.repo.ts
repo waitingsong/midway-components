@@ -18,7 +18,7 @@ import {
   TaskResultDTO,
   TaskDTO,
   ConfigKey,
-} from '../lib/index'
+} from '##/lib/index.js'
 
 
 @Provide()

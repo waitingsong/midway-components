@@ -7,15 +7,16 @@ import {
   RecordCamelKeys,
 } from '@waiting/shared-types'
 
-import { IPostgresInterval } from '../interface'
-import { taskManValidSchemas } from '../validation-schema/index.schema'
 
-import { DbReplica } from './config.types'
+import { DbReplica } from './config.types.js'
+
+import { IPostgresInterval } from '##/interface.js'
+import { taskManValidSchemas } from '##/validation-schema/index.schema.js'
 
 
 export enum ConfigKey {
   namespace = 'taskman',
-  config = 'taskClientConfig',
+  // config = 'taskClientConfig',
   middlewareConfig = 'taskMiddlewareConfig',
   componentName = 'taskmanComponent',
   middlewareName = 'taskmanMiddleware',
@@ -24,7 +25,7 @@ export enum ConfigKey {
 }
 
 export enum Msg {
-  hello = 'hello taskman',
+  hello = 'hello world',
 }
 
 

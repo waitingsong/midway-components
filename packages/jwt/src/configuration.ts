@@ -3,12 +3,13 @@ import assert from 'node:assert'
 
 import {
   App,
-  Configuration,
   Config,
+  Configuration,
   MidwayEnvironmentService,
   MidwayInformationService,
   ILifeCycle,
   Inject,
+  MidwayDecoratorService,
 } from '@midwayjs/core'
 import {
   Application,
@@ -16,7 +17,6 @@ import {
   registerMiddleware,
 } from '@mwcp/share'
 
-import { useComponents } from './imports.js'
 import * as DefulatConfig from './config/config.default.js'
 // import * as LocalConfig from './config/config.local.js'
 import * as UnittestConfig from './config/config.unittest.js'
@@ -50,6 +50,8 @@ export class AutoConfiguration implements ILifeCycle {
   @Inject() protected readonly environmentService: MidwayEnvironmentService
   @Inject() protected readonly informationService: MidwayInformationService
 
+  @Inject() protected readonly decoratorService: MidwayDecoratorService
+
   async onReady(container: IMidwayContainer): Promise<void> {
     void container
     assert(
@@ -64,7 +66,7 @@ export class AutoConfiguration implements ILifeCycle {
 
     const { enableMiddleware } = this.mwConfig
     if (enableMiddleware || typeof enableMiddleware === 'number') {
-      registerMiddleware(this.app)
+      registerMiddleware(this.app, JwtMiddleware)
     }
   }
 

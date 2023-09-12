@@ -5,8 +5,8 @@ import {
   Provide,
 } from '@midwayjs/core'
 
-import { Trace } from '../lib/index'
-import { Config, ConfigKey } from '../lib/types'
+import { Trace } from '##/lib/index.js'
+import { Config, ConfigKey } from '##/lib/types.js'
 
 
 @Provide()

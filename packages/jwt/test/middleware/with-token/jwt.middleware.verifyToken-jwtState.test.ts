@@ -1,16 +1,16 @@
-import { relative } from 'path'
+import assert from 'node:assert/strict'
 
-import { authShouldPassed } from '../helper'
+import { fileShortPath } from '@waiting/shared-core'
 
-import { authHeader1, payload1 } from '@/mock-data'
-import { testConfig } from '@/root.config'
-import { jwtMiddlewareConfig as mConfig } from '~/config/config.unittest'
-import { Config, ConfigKey, MiddlewareConfig } from '~/lib/types'
+import { authShouldPassed } from '../helper.js'
+
+import { jwtMiddlewareConfig as mConfig } from '##/config/config.unittest.js'
+import { Config, ConfigKey, MiddlewareConfig } from '##/lib/types.js'
+import { authHeader1, payload1 } from '#@/mock-data.js'
+import { testConfig } from '#@/root.config.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), () => {
 
   const path = '/test'
 

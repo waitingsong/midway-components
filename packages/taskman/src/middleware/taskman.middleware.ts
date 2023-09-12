@@ -1,12 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { Middleware } from '@midwayjs/core'
 import { Attributes, TraceService } from '@mwcp/otel'
-import type { Context, IMiddleware, NextFunction } from '@mwcp/share'
+import {
+  Context,
+  IMiddleware,
+  NextFunction,
+  requestPathMatched,
+} from '@mwcp/share'
 import { genISO8601String } from '@waiting/shared-core'
 
-import { TaskClientConfig, TaskServerConfig, ConfigKey } from '../lib/types'
-import { ClientService } from '../service/client.service'
-import { matchFunc } from '../util/common'
+import { TaskClientConfig, TaskServerConfig, ConfigKey, MiddlewareConfig } from '##/lib/types.js'
+import { ClientService } from '##/service/client.service.js'
 
 
 @Middleware()
@@ -21,10 +25,13 @@ export class TaskManMiddleware implements IMiddleware<Context, NextFunction> {
       if (! ctx.state) {
         ctx.state = {}
       }
+
+      const mwConfig = ctx.app.getConfig(ConfigKey.middlewareConfig) as MiddlewareConfig
+      const flag = requestPathMatched(ctx.path, mwConfig)
+      return flag
     }
 
-    const flag = matchFunc(ctx)
-    return flag
+    return false
   }
 
   resolve() {

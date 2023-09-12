@@ -1,13 +1,15 @@
-import 'tsconfig-paths/register'
+/* eslint-disable import/max-dependencies */
 import assert from 'node:assert'
-import { join } from 'node:path'
 
 import { CacheManager } from '@midwayjs/cache'
 import {
   App,
-  Config as _Config,
+  Config,
   Configuration,
-  Inject, ILifeCycle,
+  MidwayEnvironmentService,
+  MidwayInformationService,
+  ILifeCycle,
+  Inject,
   MidwayDecoratorService,
 } from '@midwayjs/core'
 import { TraceInit } from '@mwcp/otel'
@@ -19,19 +21,28 @@ import {
   registerDecoratorHandler,
 } from '@mwcp/share'
 
-import { useComponents } from './imports'
-import { decoratorExecutor } from './lib/cacheable/helper.cacheable'
-import { decoratorExecutor as decoratorExecutorEvict } from './lib/cacheevict/helper.cacheevict'
-import { decoratorExecutor as decoratorExecutorPut } from './lib/cacheput/helper.cacheput'
-import { genDecoratorExecutorOptions } from './lib/helper'
-import { CacheConfig, METHOD_KEY_Cacheable, METHOD_KEY_CacheEvict, METHOD_KEY_CachePut } from './lib/index'
-
-import { ConfigKey } from '~/lib/types'
+import * as DefulatConfig from './config/config.default.js'
+// import * as LocalConfig from './config/config.local.js'
+// import * as UnittestConfig from './config/config.unittest.js'
+import { useComponents } from './imports.js'
+import { decoratorExecutor } from './lib/cacheable/helper.cacheable.js'
+import { decoratorExecutor as decoratorExecutorEvict } from './lib/cacheevict/helper.cacheevict.js'
+import { decoratorExecutor as decoratorExecutorPut } from './lib/cacheput/helper.cacheput.js'
+import { METHOD_KEY_CacheEvict, METHOD_KEY_CachePut, METHOD_KEY_Cacheable } from './lib/config.js'
+import { genDecoratorExecutorOptions } from './lib/helper.js'
+import { CacheConfig } from './lib/index.js'
+import { ConfigKey } from './lib/types.js'
 
 
 @Configuration({
   namespace: ConfigKey.namespace,
-  importConfigs: [join(__dirname, 'config')],
+  importConfigs: [
+    {
+      default: DefulatConfig,
+      // local: LocalConfig,
+      // unittest: UnittestConfig,
+    },
+  ],
   imports: useComponents,
 })
 export class AutoConfiguration implements ILifeCycle {
@@ -39,9 +50,12 @@ export class AutoConfiguration implements ILifeCycle {
   @App() readonly app: Application
 
   /** component config */
-  @_Config(ConfigKey.config) protected readonly cacheConfig: CacheConfig
+  @Config(ConfigKey.config) protected readonly cacheConfig: CacheConfig
   /** original config */
-  @_Config() protected readonly cache: CacheConfig
+  @Config() protected readonly cache: CacheConfig
+
+  @Inject() protected readonly environmentService: MidwayEnvironmentService
+  @Inject() protected readonly informationService: MidwayInformationService
 
   @Inject() decoratorService: MidwayDecoratorService
   @Inject() cacheManager: CacheManager
@@ -54,6 +68,10 @@ export class AutoConfiguration implements ILifeCycle {
   @TraceInit(`INIT ${ConfigKey.componentName}.onReady`)
   async onReady(container: IMidwayContainer): Promise<void> {
     void container
+    assert(
+      this.app,
+      'this.app undefined. If start for development, please set env first like `export MIDWAY_SERVER_ENV=local`',
+    )
 
     const config = this.app.getConfig('cache') as CacheConfig
     assert.deepEqual(config, this.cacheConfig)

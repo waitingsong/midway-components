@@ -27,8 +27,8 @@ import {
   PickInitTaskOptions,
   SetSucceededInputData,
   TaskLogDTO,
-} from '../lib/index'
-import { TaskQueueService } from '../service/index.service'
+} from '##/lib/index.js'
+import { TaskQueueService } from '##/service/index.service.js'
 
 
 @Controller(ServerURL.base)

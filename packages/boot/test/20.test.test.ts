@@ -1,13 +1,13 @@
 import assert from 'node:assert/strict'
-import { relative } from 'node:path'
 
-import { testConfig, TestRespBody } from '@/root.config'
-import { ErrorCode, JsonResp } from '~/index'
+import { fileShortPath } from '@waiting/shared-core'
+
+import { ErrorCode, JsonResp } from '../src/index.js'
+
+import { testConfig, TestRespBody } from './root.config.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), () => {
 
   it('Should work', async () => {
     const { httpRequest, app } = testConfig

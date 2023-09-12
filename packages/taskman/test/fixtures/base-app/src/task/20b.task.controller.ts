@@ -6,18 +6,21 @@ import {
   Get,
   Inject,
 } from '@midwayjs/core'
+// eslint-disable-next-line import/order
 import { FetchService } from '@mwcp/fetch'
 // import { Trace } from '@mwcp/otel'
 
+import { Context } from '@mwcp/share'
+
+import { TaskAgentService } from '../../../../../dist/index.js'
 import {
   ConfigKey,
   ServerURL,
   SetSucceededInputData,
   TaskServerConfig,
-} from '~/lib/types'
-import { apiPrefix, apiRoute } from '../api-route'
-import { Context } from '@mwcp/share'
-import { TaskAgentService } from '~/index'
+} from '../../../../../dist/lib/types.js'
+import { apiPrefix, apiRoute } from '../api-route.js'
+
 
 
 @Controller(apiPrefix.task)
@@ -36,14 +39,14 @@ export class TaskTestController {
     assert(taskId, 'taskId is required')
     assert(typeof taskId === 'string', 'taskId must be string')
 
-    await this.agentService.stop()
+    this.agentService.stop()
 
     const url = `http://${ctx.host}${ServerURL.base}/${ServerURL.setSucceeded}`
     const pdata: SetSucceededInputData = {
       id: taskId,
       result: {
         data: 'OK',
-      }
+      },
     }
     console.log({ url })
     const data = await this.fetch.fetch({

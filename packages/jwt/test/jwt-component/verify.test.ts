@@ -1,18 +1,18 @@
 import assert from 'assert/strict'
-import { relative } from 'path'
 
+import { fileShortPath } from '@waiting/shared-core'
+
+import { JwtComponent } from '##/index.js'
+import { Config } from '##/lib/types.js'
 import {
   payload1,
   token1,
-} from '@/mock-data'
-import { testConfig } from '@/root.config'
-import { JwtComponent } from '~/index'
-import { Config } from '~/lib/types'
+} from '#@/mock-data.js'
+import { testConfig } from '#@/root.config.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
+describe(fileShortPath(import.meta.url), () => {
 
-describe(filename, () => {
   const secret = '123456abc'
 
   describe('Should Jwt:verify() work', () => {

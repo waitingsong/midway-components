@@ -1,21 +1,20 @@
 import assert from 'assert/strict'
-import { relative } from 'path'
 
+import { fileShortPath } from '@waiting/shared-core'
+
+import { jwtConfig } from '##/config/config.unittest.js'
+import { JwtComponent } from '##/index.js'
 import {
   payload1,
   PayloadSig1,
   PayloadExt1,
   signature1,
   token1,
-} from '@/mock-data'
-import { testConfig } from '@/root.config'
-import { jwtConfig } from '~/config/config.unittest'
-import { JwtComponent } from '~/index'
+} from '#@/mock-data.js'
+import { testConfig } from '#@/root.config.js'
 
 
-const filename = relative(process.cwd(), __filename).replace(/\\/ug, '/')
-
-describe(filename, () => {
+describe(fileShortPath(import.meta.url), () => {
 
   describe('Should Jwt:decode() work', () => {
     it('normal string', async () => {

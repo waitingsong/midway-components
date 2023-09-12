@@ -12,5 +12,5 @@ rules:
       - ../share/
       - ../boot/
 
-ignorePatterns:
-  - fixtures
+# ignorePatterns:
+#   - test

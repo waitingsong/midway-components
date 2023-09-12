@@ -1,4 +1,4 @@
 
-export { AgentController } from './agent.controller'
-export { ServerController } from './server.controller'
+export { AgentController } from './agent.controller.js'
+export { ServerController } from './server.controller.js'
 
