@@ -118,9 +118,7 @@ export class ContainerConfiguration implements ILifeCycle {
     const serviceEnv = this.app.getEnv()
     console.info({ serviceEnv })
 
-    // eslint-disable-next-line no-console
-    // console.info('✅ midway ready', info)
-    this.logger.info(`✅ [${ConfigKey.componentName}] onServerReady`, info)
+    this.logger.info(`[${ConfigKey.componentName}] onServerReady`, info)
   }
 
   // async onStop(): Promise<void> {
