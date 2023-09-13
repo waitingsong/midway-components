@@ -11,20 +11,28 @@ describe(fileShortPath(import.meta.url), function() {
   describe('mv should work', () => {
     it('file', async () => {
       const { ossClient } = testConfig
+      const dd = new Date()
+      console.log('start:', new Date().toTimeString())
 
       const target = `${cloudUrlPrefix}/${Date.now().toString()}-tsconfig.json`
+      console.log('cp:', { src, target })
       const ret = await ossClient.cp(src, target)
+      console.log('cp done:', new Date().toTimeString())
       assert(! ret.exitCode)
 
       const newPath = `${target}-${Date.now().toString()}`
+      console.log('mv:', { target, newPath })
       const mv = await ossClient.mv(target, newPath)
+      console.log('mv done:', new Date().toTimeString())
       assert(! mv.exitCode, ` ${mv.stderr}`)
 
       const existsDst = await ossClient.pathExists(newPath)
-      assert(existsDst === true)
+      console.log('existsDst done:', new Date().toTimeString())
+      assert(existsDst === true, `${newPath} not exists after mv`)
 
       const existsOri = await ossClient.pathExists(target)
-      assert(existsOri === false)
+      console.log('existsOri done:', new Date().toTimeString())
+      assert(existsOri === false, `${target} exists after mv`)
     })
 
     it('cloud file dst already exists', async () => {
