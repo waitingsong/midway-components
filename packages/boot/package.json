@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/boot",
   "author": "waiting",
-  "version": "19.0.3",
+  "version": "19.1.0",
   "description": "midway.js boot",
   "keywords": [
     "midway",
@@ -35,14 +35,14 @@
     "@midwayjs/redis": "^3.12.2",
     "@midwayjs/static-file": "^3.12.2",
     "@midwayjs/validate": "^3.12.2",
-    "@mwcp/ali-oss": "^19.0.3",
-    "@mwcp/cache": "^19.0.3",
+    "@mwcp/ali-oss": "^19.1.0",
+    "@mwcp/cache": "^19.1.0",
     "@mwcp/fetch": "^24.0.0",
-    "@mwcp/jwt": "^19.0.3",
+    "@mwcp/jwt": "^19.1.0",
     "@mwcp/kmore": "^57.0.0",
     "@mwcp/koid": "^13.0.0",
-    "@mwcp/otel": "^19.0.3",
-    "@mwcp/share": "^19.0.3",
+    "@mwcp/otel": "^19.1.0",
+    "@mwcp/share": "^19.1.0",
     "@waiting/base64": "^4.2.9",
     "@waiting/shared-core": "^21.5.0",
     "undici": "^5.23.0"

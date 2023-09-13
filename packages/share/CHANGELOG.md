@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [19.1.0](https://github.com/waitingsong/midway-components/compare/v19.0.3...v19.1.0) (2023-09-13)
+
+
+### Features
+
+* **share:** registerMiddleware() support array items ([3f336f4](https://github.com/waitingsong/midway-components/commit/3f336f4c62287acc1cc583ade2e16ca78b749961))
+
+
+
+
+
 ## [19.0.3](https://github.com/waitingsong/midway-components/compare/v19.0.2...v19.0.3) (2023-09-13)
 
 **Note:** Version bump only for package @mwcp/share
