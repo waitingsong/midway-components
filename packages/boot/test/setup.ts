@@ -1,6 +1,6 @@
 // https://mochajs.org/#global-fixtures
 // https://mochajs.org/#root-hook-plugins
-import assert from 'node:assert/strict'
+import assert from 'node:assert'
 
 import { createApp, close, createHttpRequest } from '@midwayjs/mock'
 import { Application } from '@mwcp/share'
@@ -35,8 +35,8 @@ async function createAppInstance(): Promise<Application> {
 
   assert(app, 'app not exists')
 
-  const names = app.getMiddleware().getNames()
-  console.info({ middlewares: names })
+  const middlewares = app.getMiddleware().getNames()
+  console.info({ middlewares })
 
   return app
   // https://midwayjs.org/docs/testing
