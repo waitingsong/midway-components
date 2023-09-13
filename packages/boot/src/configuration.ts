@@ -71,7 +71,7 @@ export class ContainerConfiguration implements ILifeCycle {
     const mws = [
       ResponseMimeMiddleware,
       ResponseHeadersMiddleware,
-      JsonRespMiddleware,
+      // JsonRespMiddleware,
     ]
     // @ts-ignore
     this.app.useMiddleware(mws)
