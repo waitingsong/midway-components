@@ -23,12 +23,6 @@ const pkg = packageJson as unknown as NpmPkg
 assert(pkg, 'package.json not found')
 assert(pkg.name, 'package.json name not found')
 
-// use for cookie sign key, should change to your own and keep security
-export const keys = '1559532739677_8888'
-
-export const koa = {
-  port: 7001,
-}
 
 export const welcomeMsg = 'Hello Midwayjs!'
 export const globalErrorCode = ErrorCode
