@@ -42,8 +42,8 @@ async function createAppInstance(): Promise<Application> {
 
   assert(app, 'app not exists')
 
-  const names = app.getMiddleware().getNames()
-  console.info({ middlewares: names })
+  const middlewares = app.getMiddleware().getNames()
+  console.info({ middlewares })
 
   return app
   // https://midwayjs.org/docs/testing
