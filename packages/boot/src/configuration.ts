@@ -110,7 +110,7 @@ export class ContainerConfiguration implements ILifeCycle {
         }
       })
     }
-    console.info({ jwtMiddlewareConfig })
+    // console.info({ jwtMiddlewareConfig })
 
     // const configAll = this.app.getConfig() as unknown
     // console.info({ configAll })
