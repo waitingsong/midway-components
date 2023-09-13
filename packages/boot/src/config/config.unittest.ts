@@ -3,9 +3,6 @@ import { initPathArray } from '@mwcp/jwt'
 import { AppConfig } from '##/lib/index.js'
 
 
-// use for cookie sign key, should change to your own and keep security
-export const keys = Math.random().toString()
-
 const jwtIgnoreArr = [
   ...initPathArray,
   '/_info', // https://www.npmjs.com/package/@midwayjs/info

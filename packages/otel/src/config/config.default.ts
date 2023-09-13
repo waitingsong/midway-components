@@ -7,7 +7,6 @@ import {
 import { Config, InitTraceOptions, MiddlewareConfig } from '##/lib/types.js'
 
 
-export const keys = Date.now()
 export const koa = {
   port: 7001,
 }

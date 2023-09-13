@@ -3,9 +3,6 @@ import type { Config, MiddlewareConfig, MiddlewareOptions } from '../lib/types.j
 
 
 export const keys = 123456
-export const koa = {
-  port: 7001,
-}
 
 export const shareConfig: Readonly<Config> = {
   ...initialConfig,

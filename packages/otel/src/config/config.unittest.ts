@@ -8,6 +8,8 @@ import {
 import { Config, InitTraceOptions, MiddlewareConfig, SpanExporterList } from '##/lib/types.js'
 
 
+export const keys = Date.now().toString()
+
 export const otelConfig: Config = {
   ...initialConfig,
   enableDefaultRoute: true,
