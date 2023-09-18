@@ -37,19 +37,19 @@
     "@midwayjs/validate": "^3.12.2",
     "@mwcp/ali-oss": "^19.1.1",
     "@mwcp/cache": "^19.1.1",
-    "@mwcp/fetch": "^24.0.0",
+    "@mwcp/fetch": "^24.0.3",
     "@mwcp/jwt": "^19.1.1",
-    "@mwcp/kmore": "^57.0.0",
-    "@mwcp/koid": "^13.0.0",
+    "@mwcp/kmore": "^58.0.0",
+    "@mwcp/koid": "^13.0.2",
     "@mwcp/otel": "^19.1.1",
     "@mwcp/share": "^19.1.1",
     "@waiting/base64": "^4.2.9",
-    "@waiting/shared-core": "^21.6.1",
+    "@waiting/shared-core": "^20.0.0",
     "undici": "^5.23.0"
   },
   "devDependencies": {
     "@midwayjs/swagger": "^3.12.2",
-    "kmore-cli": "^57.0.0"
+    "kmore-cli": "^58.0.0"
   },
   "engines": {
     "node": ">=18.12.0",
