@@ -37,9 +37,9 @@
     "@midwayjs/validate": "^3.12.2",
     "@mwcp/ali-oss": "^19.2.1",
     "@mwcp/cache": "^19.2.1",
-    "@mwcp/fetch": "^24.0.3",
+    "@mwcp/fetch": "^25.0.0",
     "@mwcp/jwt": "^19.2.1",
-    "@mwcp/kmore": "^58.0.1",
+    "@mwcp/kmore": "^58.0.2",
     "@mwcp/koid": "^13.0.2",
     "@mwcp/otel": "^19.2.1",
     "@mwcp/share": "^19.2.1",
@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@midwayjs/swagger": "^3.12.2",
-    "kmore-cli": "^58.0.1"
+    "kmore-cli": "^58.0.2"
   },
   "engines": {
     "node": ">=18.12.0",
