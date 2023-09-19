@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/jwt",
   "author": "waiting",
-  "version": "19.0.0",
+  "version": "19.2.1",
   "description": "midway component jwt",
   "keywords": [
     "midway",
@@ -34,8 +34,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@mwcp/share": "^19.0.0",
-    "@waiting/shared-core": "^21.5.0",
+    "@mwcp/share": "^19.2.1",
+    "@waiting/shared-core": "^22.0.0",
     "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
@@ -62,7 +62,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "npm run tsc && tsc-alias",
+    "build": "npm run tsc && tsc-alias && npm run rp",
     "clean": "npm run clean:lock && npm run clean:dist && npm run clean:log",
     "clean:cache": "rm -rf .eslintcache .tsbuildinfo",
     "clean:dist": "npm run clean:cache && rm -rf dist/*",
@@ -75,7 +75,7 @@
     "lint:nofix": "eslint --cache {src,test}/**/*.ts",
     "predev": "npm run build",
     "pretest": "npm run build",
-    "rp": "rollup -c rollup.config.js --context this",
+    "rp": "tsx bin-hashbang.js",
     "start": "cross-env NODE_ENV=production node ./bootstrap.js",
     "test": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json mocha --parallel=false -r=test/root.hooks.mjs",
     "tsc": "tsc -b"

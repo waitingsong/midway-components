@@ -19,7 +19,7 @@ import {
 } from '@mwcp/share'
 
 import * as DefulatConfig from './config/config.default.js'
-import * as LocalConfig from './config/config.local.js'
+// import * as LocalConfig from './config/config.local.js'
 import * as UnittestConfig from './config/config.unittest.js'
 import { useComponents, useDefaultRoutes } from './imports.js'
 import {
@@ -39,7 +39,7 @@ import {
   importConfigs: [
     {
       default: DefulatConfig,
-      local: LocalConfig,
+      // local: LocalConfig,
       unittest: UnittestConfig,
     },
   ],
@@ -71,7 +71,7 @@ export class ContainerConfiguration implements ILifeCycle {
     const mws = [
       ResponseMimeMiddleware,
       ResponseHeadersMiddleware,
-      JsonRespMiddleware,
+      // JsonRespMiddleware,
     ]
     // @ts-ignore
     this.app.useMiddleware(mws)
@@ -110,7 +110,7 @@ export class ContainerConfiguration implements ILifeCycle {
         }
       })
     }
-    console.info({ jwtMiddlewareConfig })
+    // console.info({ jwtMiddlewareConfig })
 
     // const configAll = this.app.getConfig() as unknown
     // console.info({ configAll })
@@ -118,9 +118,7 @@ export class ContainerConfiguration implements ILifeCycle {
     const serviceEnv = this.app.getEnv()
     console.info({ serviceEnv })
 
-    // eslint-disable-next-line no-console
-    // console.info('✅ midway ready', info)
-    this.logger.info(`✅ [${ConfigKey.componentName}] onServerReady`, info)
+    this.logger.info(`[${ConfigKey.componentName}] onServerReady`, info)
   }
 
   // async onStop(): Promise<void> {

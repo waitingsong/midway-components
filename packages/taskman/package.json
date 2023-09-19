@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/taskman",
   "author": "waiting",
-  "version": "15.0.0",
+  "version": "41.6.7",
   "description": "midway component task manager",
   "keywords": [
     "midway",
@@ -32,18 +32,18 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@mwcp/fetch": "^24.0.0",
-    "@mwcp/kmore": "^57.0.0",
-    "@mwcp/koid": "^13.0.0",
-    "@mwcp/otel": "^15.0.0",
-    "@mwcp/share": "^15.0.0",
-    "@waiting/shared-core": "^21.5.0",
+    "@mwcp/fetch": "^24.0.3",
+    "@mwcp/kmore": "^58.0.1",
+    "@mwcp/koid": "^13.0.2",
+    "@mwcp/otel": "^19.1.1",
+    "@waiting/shared-core": "^22.0.0",
     "pg": "^8.11.3",
     "postgres-interval": "^4.0.1"
   },
   "devDependencies": {
-    "@mwcp/boot": "^15.0.0",
-    "kmore-cli": "^57.0.0",
+    "@mwcp/boot": "19 - 20",
+    "@mwcp/share": "19 - 20",
+    "kmore-cli": "^58.0.1",
     "pg-native": "^3.0.1"
   },
   "engines": {
@@ -80,7 +80,6 @@
     "lint:nofix": "eslint --cache {src,test}/**/*.ts",
     "predev": "npm run build",
     "pretest": "npm run build",
-    "rp": "rollup -c rollup.config.js --context this",
     "start": "cross-env NODE_ENV=production node ./bootstrap.js",
     "test": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json mocha --parallel=false -r=test/root.hooks.ts",
     "tsc": "tsc -b"

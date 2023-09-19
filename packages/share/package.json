@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/share",
   "author": "waiting",
-  "version": "19.0.0",
+  "version": "19.2.1",
   "description": "midway.js share",
   "keywords": [
     "midway.js",
@@ -36,9 +36,11 @@
     "@midwayjs/info": "^3.12.2",
     "@midwayjs/koa": "^3.12.2",
     "@midwayjs/logger": "^2.17.0",
-    "@opentelemetry/api": "*",
-    "@waiting/shared-core": "^21.5.0",
+    "@waiting/shared-core": "^22.0.0",
     "deepmerge": "^4.3.1"
+  },
+  "devDependencies": {
+    "@opentelemetry/api": "*"
   },
   "engines": {
     "node": ">=18.12.0",
@@ -73,7 +75,6 @@
     "lint:nofix": "eslint --cache {src,test}/**/*.ts",
     "predev": "npm run build",
     "pretest": "npm run build",
-    "rp": "rollup -c rollup.config.js --context this",
     "start": "cross-env NODE_ENV=production node ./bootstrap.js",
     "test": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json mocha --parallel=false",
     "tsc": "tsc -b"

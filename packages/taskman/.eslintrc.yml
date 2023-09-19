@@ -9,8 +9,8 @@ rules:
     - 2
     - packageDir:
       - ./
-      - ../share/
-      - ../boot/
+      - ../../node_modules/@mwcp/boot/
+      - ../../node_modules/@mwcp/share/
 
 # ignorePatterns:
 #   - test

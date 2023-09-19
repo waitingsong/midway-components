@@ -35,9 +35,28 @@ export function requestPathMatched(
   }
 }
 
+interface MiddlewareClz {
+  name: string
+}
+
 export function registerMiddleware(
   app: Application,
-  middleware: { name: string },
+  middleware: MiddlewareClz | MiddlewareClz[],
+  postion: 'first' | 'last' = 'last',
+  force = false,
+): void {
+
+  if (Array.isArray(middleware)) {
+    middleware.forEach(item => _registerMiddleware(app, item, postion, force))
+  }
+  else {
+    _registerMiddleware(app, middleware, postion, force)
+  }
+}
+
+function _registerMiddleware(
+  app: Application,
+  middleware: MiddlewareClz,
   postion: 'first' | 'last' = 'last',
   force = false,
 ): void {
@@ -58,4 +77,3 @@ export function registerMiddleware(
       break
   }
 }
-

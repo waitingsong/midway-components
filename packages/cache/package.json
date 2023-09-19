@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/cache",
   "author": "waiting",
-  "version": "19.0.0",
+  "version": "19.2.1",
   "description": "midway component for declarative cache",
   "keywords": [
     "Cacheable",
@@ -35,9 +35,9 @@
   "license": "MIT",
   "dependencies": {
     "@midwayjs/cache": "^3.12.2",
-    "@mwcp/otel": "^19.0.0",
-    "@mwcp/share": "^19.0.0",
-    "@waiting/shared-core": "^21.5.0",
+    "@mwcp/otel": "^19.2.1",
+    "@mwcp/share": "^19.2.1",
+    "@waiting/shared-core": "^22.0.0",
     "cache-manager": "^5.2.3"
   },
   "devDependencies": {
@@ -77,7 +77,6 @@
     "lint:nofix": "eslint --cache {src,test}/**/*.ts",
     "predev": "npm run build",
     "pretest": "npm run build",
-    "rp": "rollup -c rollup.config.js --context this",
     "start": "cross-env NODE_ENV=production node ./bootstrap.js",
     "test": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json mocha --parallel=false",
     "tsc": "tsc -b"

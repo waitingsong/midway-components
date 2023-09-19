@@ -2,6 +2,8 @@ import { initialConfig } from '../lib/config.js'
 import { Config, ClientKey } from '../lib/types.js'
 
 
+export const keys = Date.now().toString()
+
 export const aliOssConfig: Readonly<Config<ClientKey.unitTest>> = {
   enableDefaultRoute: true,
   dataSource: {
