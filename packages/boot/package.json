@@ -44,7 +44,7 @@
     "@mwcp/otel": "^19.2.1",
     "@mwcp/share": "^19.2.1",
     "@waiting/shared-core": "^22.0.0",
-    "undici": "^5.24.0"
+    "undici": "^6.2.0"
   },
   "devDependencies": {
     "@midwayjs/swagger": "^3.12.2",
