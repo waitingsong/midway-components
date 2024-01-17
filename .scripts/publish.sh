@@ -48,7 +48,7 @@ if [[ "$*" =~ "gitlab" ]]; then
 fi
 
 if [ -z $RELEASE_BRANCH ]; then
-  branch=master
+  branch=main
 else
   branch="$RELEASE_BRANCH"
 fi
@@ -64,16 +64,19 @@ if [ "$?" -ne 0 ]; then
 fi
 
 
-echo -e ">>> lerna initializing..."
-#npm run clean 
-npm run bootstrap
-#source $scriptDir/build.sh
-npm run build
+# echo ">>> lerna initializing..."
+# npm run bootstrap
+# npm run build
 
-echo -e ">>> lerna publishing..."
-sh "$scriptDir/pre-publish-valiate.sh"
+rm -rf $appDir/package-lock.json
+rm -rf $appDir/packages/*/package-lock.json
+
+echo ">>> lerna pre-publish-valiate"
+"$scriptDir/pre-publish-valiate.sh"
 
 echo $*
+echo ">>> lerna publishing..."
+git status
 if [ -z "$NPM_VERSION_REGISTRY" ]; then
   lerna publish $*
 else
