@@ -155,7 +155,7 @@ export interface SpanHeaderInit extends Attributes {
 export interface TraceLogType {
   /**
    * debug | info | warn | error
-   * @defaut info
+   * @default info
    */
   level?: keyof ILogger
   msg: unknown

@@ -57,6 +57,22 @@ export class TraceAppLogger implements ILogger {
     }, span)
   }
 
+  write(msg: unknown, span: Span | undefined | false, ...args: unknown[]): void {
+    this.log({
+      level: 'write',
+      msg,
+      args,
+    }, span)
+  }
+
+  verbose(msg: unknown, span: Span | undefined | false, ...args: unknown[]): void {
+    this.log({
+      level: 'verbose',
+      msg,
+      args,
+    }, span)
+  }
+
   /**
    * 打印日志同时会在链路上报日志级别和内容
    * @param span
@@ -116,6 +132,23 @@ export class TraceLogger implements ILogger {
   error(msg: unknown, ...args: unknown[]): void {
     this.log({
       level: 'error',
+      msg,
+      args,
+    })
+  }
+
+
+  write(msg: unknown, ...args: unknown[]): void {
+    this.log({
+      level: 'write',
+      msg,
+      args,
+    })
+  }
+
+  verbose(msg: unknown, ...args: unknown[]): void {
+    this.log({
+      level: 'verbose',
       msg,
       args,
     })
