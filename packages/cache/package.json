@@ -35,10 +35,11 @@
   "license": "MIT",
   "dependencies": {
     "@midwayjs/cache": "^3.14.0",
+    "@midwayjs/cache-manager": "^3.14.0",
     "@mwcp/otel": "^19.2.1",
     "@mwcp/share": "^19.2.1",
     "@waiting/shared-core": "^23.0.0",
-    "cache-manager": "^5.3.2"
+    "cache-manager": "^5.4.0"
   },
   "devDependencies": {
     "@types/cache-manager": "^4.0.6"

@@ -1,7 +1,7 @@
 /* eslint-disable import/max-dependencies */
 import assert from 'node:assert'
 
-import { CacheManager } from '@midwayjs/cache'
+import { CacheManager } from '@midwayjs/cache-manager'
 import {
   App,
   Config,

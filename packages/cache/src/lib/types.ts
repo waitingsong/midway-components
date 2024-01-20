@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CacheManager } from '@midwayjs/cache'
+import type { MidwayCache } from '@midwayjs/cache-manager'
 import type { AbstractTraceService } from '@mwcp/otel'
 import {
   Context,
@@ -149,6 +150,7 @@ export interface DecoratorExecutorOptions<T extends CacheableArgs | CacheEvictAr
 
   traceService: AbstractTraceService | undefined
   cacheManager: CacheManager
+  cacheInstance: MidwayCache
   config: Config
 }
 
