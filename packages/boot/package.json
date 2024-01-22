@@ -39,7 +39,7 @@
     "@mwcp/cache": "^20.0.0",
     "@mwcp/fetch": "^26.0.0",
     "@mwcp/jwt": "^20.0.0",
-    "@mwcp/kmore": "^58.0.2",
+    "@mwcp/kmore": "^59.0.0",
     "@mwcp/koid": "^14.0.0",
     "@mwcp/otel": "^20.0.0",
     "@mwcp/share": "^20.0.0",
@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@midwayjs/swagger": "^3.14.0",
-    "kmore-cli": "^58.0.2"
+    "kmore-cli": "^59.0.0"
   },
   "engines": {
     "node": ">=18.12.0",
