@@ -31,6 +31,7 @@ export const initPathArray = [
   '/ping',
   '/favicon.ico',
   '/favicon.png',
+  /\/swagger-ui\/.+(html|json|js|css|png|ico)#?/u,
 ]
 
 export const schemePrefix = 'Bearer'
