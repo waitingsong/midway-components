@@ -1,5 +1,6 @@
 import type { PrometheusConfig } from '@midwayjs/prometheus'
 import type { JwtState } from '@mwcp/jwt'
+import { MiddlewareConfig } from '@waiting/shared-types'
 
 
 export { ContainerConfiguration as Configuration } from './configuration.js'
@@ -12,6 +13,7 @@ export { RootClass } from './core/root.class.js'
 // @ts-ignore
 declare module '@midwayjs/core/dist/interface' {
   interface MidwayConfig {
+    jsonRespMiddlewareConfig: Omit<MiddlewareConfig, 'match'> | undefined
     globalErrorCode: Record<string | number, string | number>
     prometheus?: PrometheusConfig
     welcomeMsg: string

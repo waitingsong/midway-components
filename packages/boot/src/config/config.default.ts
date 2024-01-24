@@ -4,7 +4,7 @@ import { join } from 'node:path'
 
 import { initPathArray } from '@mwcp/jwt'
 import { retrieveFirstIp, genCurrentDirname } from '@waiting/shared-core'
-import { NpmPkg } from '@waiting/shared-types'
+import { MiddlewareConfig, NpmPkg } from '@waiting/shared-types'
 
 import { ConfigKey, ErrorCode } from '##/lib/index.js'
 import packageJson from '#package.json' assert { type: 'json' }
@@ -50,4 +50,8 @@ export const jwtMiddlewareConfig = {
   ignore: jwtIgnoreArr,
 }
 
+export const jsonRespMiddlewareConfig: Omit<MiddlewareConfig, 'match' > = {
+  enableMiddleware: false,
+  ignore: ['/swagger-ui/index.json'],
+}
 

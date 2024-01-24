@@ -1,10 +1,13 @@
-import { Middleware } from '@midwayjs/core'
+import { App, Middleware } from '@midwayjs/core'
 import {
+  Application,
   Context,
   IMiddleware,
   JsonResp,
   NextFunction,
+  shouldEnableMiddleware,
 } from '@mwcp/share'
+import { MiddlewareConfig } from '@waiting/shared-types'
 
 
 /**
@@ -12,6 +15,7 @@ import {
  */
 @Middleware()
 export class JsonRespMiddleware implements IMiddleware<Context, NextFunction> {
+  @App() readonly app: Application
 
   // static getName(): string {
   //   const name = 'DemoWrapMiddleware'
@@ -38,7 +42,14 @@ async function middleware(
 
   await next()
 
+  const mwConfig = ctx.app.getConfig('jsonRespMiddlewareConfig') as Omit<MiddlewareConfig, 'match'> | undefined
+  if (! mwConfig || mwConfig.enableMiddleware !== true) { return }
+
   if (isRespJsonMime(ctx) === false) { return }
+
+  const flag = shouldEnableMiddleware(ctx, mwConfig)
+  if (! flag) { return }
+
   if (isRespWrapped(ctx) === true) { return }
 
   wrapRespToJson(ctx)
