@@ -11,8 +11,8 @@ import packageJson from '#package.json' assert { type: 'json' }
 
 
 const configDir = genCurrentDirname(import.meta.url)
-export const APP_BASE_DIR = join(configDir, '../..')
-export const APP_DIST_DIR = join(configDir, '../')
+export const MWCP_BOOT_BASE_DIR = join(configDir, '../..')
+export const MWCP_BOOT_DIST_DIR = join(configDir, '../')
 
 // const pkgPath = join(APP_BASE_DIR, 'package.json')
 // const p2 = pathToFileURL(pkgPath).pathname
