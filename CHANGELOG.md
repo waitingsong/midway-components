@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [20.4.0](https://github.com/waitingsong/midway-components/compare/v20.3.0...v20.4.0) (2024-01-26)
+
+
+### Features
+
+* **boot:** export types from @mwcp/koid ([1a1982f](https://github.com/waitingsong/midway-components/commit/1a1982f989f332c9bddcd568e2892fa031fe5105))
+
+
+
+
+
 # [20.3.0](https://github.com/waitingsong/midway-components/compare/v20.2.0...v20.3.0) (2024-01-25)
 
 
