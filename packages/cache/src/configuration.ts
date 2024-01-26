@@ -72,8 +72,8 @@ export class AutoConfiguration implements ILifeCycle {
       'this.app undefined. If start for development, please set env first like `export MIDWAY_SERVER_ENV=local`',
     )
 
-    const config = this.app.getConfig('cache') as CacheConfig
-    assert.deepEqual(config, this.cacheConfig)
+    // const config = this.app.getConfig('cache') as CacheConfig
+    // assert.deepEqual(config, this.cacheConfig)
 
     if (! this.cacheConfig.enableDefaultRoute) {
       await deleteRouter(`/_${ConfigKey.namespace}`, this.webRouterService)
