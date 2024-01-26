@@ -65,6 +65,13 @@ export {
   Transactional,
 } from '@mwcp/kmore'
 
+export {
+  ConfigDc as KoidConfigDc,
+  ConfigNode as KoidConfigNode,
+  KoidConfig,
+  KoidConfigKey,
+} from '@mwcp/koid'
+
 export enum ConfigKey {
   namespace = 'boot',
   config = 'bootConfig',
