@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [20.8.1](https://github.com/waitingsong/midway-components/compare/v20.8.0...v20.8.1) (2024-01-26)
+
+
+### Bug Fixes
+
+* **cache:** comment assert.deepEqual(config, this.cacheConfig) out ([9ad80d8](https://github.com/waitingsong/midway-components/commit/9ad80d88b03f90226e5b339398181deb6750e021))
+
+
+
+
+
 # [20.8.0](https://github.com/waitingsong/midway-components/compare/v20.7.0...v20.8.0) (2024-01-26)
 
 
