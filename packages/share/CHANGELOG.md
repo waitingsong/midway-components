@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [20.7.0](https://github.com/waitingsong/midway-components/compare/v20.6.0...v20.7.0) (2024-01-26)
+
+
+### Features
+
+* **share:** add deleteRouter() ([16c53af](https://github.com/waitingsong/midway-components/commit/16c53af62a01858b5dc777a6b2b07d77402f9a5d))
+
+
+
+
+
 # [20.6.0](https://github.com/waitingsong/midway-components/compare/v20.5.0...v20.6.0) (2024-01-26)
 
 
