@@ -7,7 +7,7 @@ import {
   REQUEST_OBJ_CTX_KEY,
 } from '@midwayjs/core'
 import { AbstractTraceService, OtelConfigKey } from '@mwcp/otel'
-import { DecoratorExecutorParamBase, Context as WebContext } from '@mwcp/share'
+import { DecoratorExecutorParamBase, PagingDTO, Context as WebContext } from '@mwcp/share'
 
 import { initCacheableArgs, initCacheEvictArgs, initConfig } from './config.js'
 import {
@@ -60,6 +60,18 @@ export function genCacheKey(options: GenCacheKeyOptions): string {
     default:
       return cacheName
   }
+}
+
+export function genCacheKeyFromPagingDTO(options: PagingDTO): string {
+  assert(options, 'options PagingDTO is undefined')
+  assert(options.page >= 1, 'PagingDTO.page must be greater than or equal to 1')
+  assert(options.pageSize >= 1, 'PagingDTO.pageSize must be greater than or equal to 1')
+
+  let key = `${options.page}-${options.pageSize}-`
+  if (options.orderBy && options.orderBy.length > 0) {
+    key += JSON.stringify(options.orderBy)
+  }
+  return key
 }
 
 export interface HashedCacheKey {

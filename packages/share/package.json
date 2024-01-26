@@ -42,6 +42,7 @@
     "deepmerge": "^4.3.1"
   },
   "devDependencies": {
+    "swagger-ui-dist": "^5.11.0",
     "@opentelemetry/api": "*"
   },
   "engines": {
