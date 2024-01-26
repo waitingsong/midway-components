@@ -1,3 +1,4 @@
+import { MidwayWebRouterService } from '@midwayjs/core'
 import { isPathMatchRules } from '@waiting/shared-core'
 import { MiddlewareConfig } from '@waiting/shared-types'
 
@@ -77,3 +78,20 @@ function _registerMiddleware(
       break
   }
 }
+
+export async function deleteRouter(prefix: string, routerService: MidwayWebRouterService): Promise<void> {
+  if (! prefix) {
+    return
+  }
+  const routerTable = await routerService.getRouterTable()
+  routerTable.delete(prefix)
+
+  // @ts-ignore
+  routerService.routesPriority = routerService.routesPriority.filter((item) => {
+    if (prefix === item.prefix) {
+      return false
+    }
+    return true
+  })
+}
+
