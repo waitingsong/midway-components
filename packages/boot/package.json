@@ -34,7 +34,6 @@
     "@midwayjs/prometheus": "^3.14.0",
     "@midwayjs/redis": "^3.14.0",
     "@midwayjs/static-file": "^3.14.0",
-    "@midwayjs/validate": "^3.14.0",
     "@mwcp/ali-oss": "^20.3.0",
     "@mwcp/cache": "^20.3.0",
     "@mwcp/fetch": "^26.0.0",
