@@ -57,7 +57,7 @@ export function registerMiddleware(
 function _registerMiddleware(
   app: Application,
   middleware: MiddlewareClz,
-  postion: 'first' | 'last' = 'last',
+  position: 'first' | 'last' = 'last',
   force = false,
 ): void {
 
@@ -66,7 +66,7 @@ function _registerMiddleware(
     return
   }
 
-  switch (postion) {
+  switch (position) {
     case 'first':
       // @ts-ignore
       app.getMiddleware().insertFirst(middleware)
