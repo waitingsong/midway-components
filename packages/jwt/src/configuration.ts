@@ -10,11 +10,13 @@ import {
   ILifeCycle,
   Inject,
   MidwayDecoratorService,
+  MidwayWebRouterService,
 } from '@midwayjs/core'
 import {
   Application,
   IMidwayContainer,
   registerMiddleware,
+  deleteRouter,
 } from '@mwcp/share'
 
 import * as DefaultConfig from './config/config.default.js'
@@ -49,7 +51,7 @@ export class AutoConfiguration implements ILifeCycle {
 
   @Inject() protected readonly environmentService: MidwayEnvironmentService
   @Inject() protected readonly informationService: MidwayInformationService
-
+  @Inject() protected readonly webRouterService: MidwayWebRouterService
   @Inject() protected readonly decoratorService: MidwayDecoratorService
 
   async onReady(container: IMidwayContainer): Promise<void> {
@@ -59,7 +61,10 @@ export class AutoConfiguration implements ILifeCycle {
       'this.app undefined. If start for development, please set env first like `export MIDWAY_SERVER_ENV=local`',
     )
 
-    if (this.config.enableDefaultRoute && this.mwConfig.ignore) {
+    if (! this.config.enableDefaultRoute) {
+      await deleteRouter(`/_${ConfigKey.namespace}`, this.webRouterService)
+    }
+    else if (this.mwConfig.ignore) {
       this.mwConfig.ignore.push(new RegExp(`/_${ConfigKey.namespace}/.+`, 'u'))
     }
 

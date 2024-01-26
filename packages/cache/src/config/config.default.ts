@@ -10,6 +10,7 @@ import {
 
 
 export const cacheConfig: Config = {
+  enableDefaultRoute: false,
   store: initConfig.store,
   options: {
     ...initConfig.options,

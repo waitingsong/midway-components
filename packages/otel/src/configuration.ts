@@ -4,22 +4,23 @@ import {
   App,
   Config,
   Configuration,
-  MidwayEnvironmentService,
-  MidwayInformationService,
   ILifeCycle,
   Inject,
   Logger,
+  MidwayEnvironmentService,
+  MidwayInformationService,
+  MidwayWebRouterService,
 } from '@midwayjs/core'
 import { ILogger } from '@midwayjs/logger'
 import {
   Application,
   IMidwayContainer,
+  deleteRouter,
   registerMiddleware,
 } from '@mwcp/share'
 import { sleep } from '@waiting/shared-core'
 
-
-import * as DefulatConfig from './config/config.default.js'
+import * as DefaultConfig from './config/config.default.js'
 import * as LocalConfig from './config/config.local.js'
 import * as UnittestConfig from './config/config.unittest.js'
 import { useComponents } from './imports.js'
@@ -40,7 +41,7 @@ import {
   namespace: ConfigKey.namespace,
   importConfigs: [
     {
-      default: DefulatConfig,
+      default: DefaultConfig,
       local: LocalConfig,
       unittest: UnittestConfig,
     },
@@ -56,6 +57,7 @@ export class AutoConfiguration implements ILifeCycle {
 
   @Inject() protected readonly environmentService: MidwayEnvironmentService
   @Inject() protected readonly informationService: MidwayInformationService
+  @Inject() protected readonly webRouterService: MidwayWebRouterService
 
   @Inject() otel: OtelComponent
   @Logger() logger: ILogger
@@ -73,7 +75,10 @@ export class AutoConfiguration implements ILifeCycle {
       'this.app undefined. If start for development, please set env first like `export MIDWAY_SERVER_ENV=local`',
     )
 
-    if (this.config.enableDefaultRoute && this.mwConfig.ignore) {
+    if (! this.config.enableDefaultRoute) {
+      await deleteRouter(`/_${ConfigKey.namespace}`, this.webRouterService)
+    }
+    else if (this.mwConfig.ignore) {
       this.mwConfig.ignore.push(new RegExp(`/_${ConfigKey.namespace}/.+`, 'u'))
     }
 

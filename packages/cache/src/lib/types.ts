@@ -28,6 +28,7 @@ export interface MiddlewareOptions {
 export type MiddlewareConfig = MWConfig<MiddlewareOptions>
 
 export interface Config {
+  enableDefaultRoute: boolean
   /**
    * @default 'memory'
    * @link https://github.com/node-cache-manager/node-cache-manager#store-engines

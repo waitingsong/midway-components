@@ -8,6 +8,7 @@ import {
 
 
 export const initConfig: Config = {
+  enableDefaultRoute: false,
   store: 'memory',
   options: {
     max: 512,
