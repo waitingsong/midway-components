@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [20.8.0](https://github.com/waitingsong/midway-components/compare/v20.7.0...v20.8.0) (2024-01-26)
+
+
+### Features
+
+* deleteRouter if enableDefaultRoute false ([bc4027e](https://github.com/waitingsong/midway-components/commit/bc4027ed6c4233ee906dee9bae97986ff9f5e1c2))
+
+
+
+
+
 # [20.7.0](https://github.com/waitingsong/midway-components/compare/v20.6.0...v20.7.0) (2024-01-26)
 
 **Note:** Version bump only for package @mwcp/jwt
