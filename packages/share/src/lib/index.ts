@@ -1,4 +1,5 @@
 
+export * from './common.dto.js'
 export * from './decorator/reg-decorator.js'
 export * from './decorator/reg-decorator-handler.js'
 export * from './decorator/custom-decorator.helper.js'
