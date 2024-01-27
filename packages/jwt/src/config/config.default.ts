@@ -8,7 +8,6 @@ import {
 import { Config, MiddlewareConfig } from '##/lib/types.js'
 
 
-
 export const jwtConfig: Config = {
   ...initialConfig,
 }
