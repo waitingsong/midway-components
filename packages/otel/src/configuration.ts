@@ -62,9 +62,14 @@ export class AutoConfiguration implements ILifeCycle {
   @Inject() otel: OtelComponent
   @Logger() logger: ILogger
 
-  // async onConfigLoad(): Promise<unknown> {
-  //   return
-  // }
+  async onConfigLoad(): Promise<void> {
+    if (! this.config.enableDefaultRoute) {
+      await deleteRouter(`/_${ConfigKey.namespace}`, this.webRouterService)
+    }
+    else if (this.mwConfig.ignore) {
+      this.mwConfig.ignore.push(new RegExp(`/_${ConfigKey.namespace}/.+`, 'u'))
+    }
+  }
 
   // @TraceInit(`INIT ${ConfigKey.componentName}.onReady`)
   @TraceInit({ namespace: ConfigKey.componentName })
@@ -75,20 +80,12 @@ export class AutoConfiguration implements ILifeCycle {
       'this.app undefined. If start for development, please set env first like `export MIDWAY_SERVER_ENV=local`',
     )
 
-    if (! this.config.enableDefaultRoute) {
-      await deleteRouter(`/_${ConfigKey.namespace}`, this.webRouterService)
-    }
-    else if (this.mwConfig.ignore) {
-      this.mwConfig.ignore.push(new RegExp(`/_${ConfigKey.namespace}/.+`, 'u'))
-    }
-
     // const otel = await this.app.getApplicationContext().getAsync(OtelComponent, [ { name, version } ])
     // assert(otel, 'otel must be set')
 
     if (this.config.enable && this.mwConfig.enableMiddleware) {
       registerMiddleware(this.app, TraceMiddlewareInner, 'last')
     }
-
   }
 
   @TraceInit({ namespace: ConfigKey.componentName })
