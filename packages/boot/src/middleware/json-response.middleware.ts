@@ -12,6 +12,7 @@ import { MiddlewareConfig } from '@waiting/shared-types'
 
 /**
  * 对于 `application/json` 响应类型，将 ctx.body 包裹成 JsonResp 格式数据
+ * @description 可以通过 `enableJsonRespMiddlewareConfig` 配置项来控制是否启用该中间件 `
  */
 @Middleware()
 export class JsonRespMiddleware implements IMiddleware<Context, NextFunction> {
