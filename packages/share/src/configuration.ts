@@ -2,14 +2,18 @@ import {
   App,
   Config,
   Configuration,
-  MidwayEnvironmentService,
-  MidwayInformationService,
   ILifeCycle,
+  ILogger,
   IMidwayContainer,
   Inject,
+  Logger,
+  MidwayEnvironmentService,
+  MidwayInformationService,
+  MidwayWebRouterService,
 } from '@midwayjs/core'
 
-import * as DefulatConfig from './config/config.default.js'
+import * as DefaultConfig from './config/config.default.js'
+import * as LocalConfig from './config/config.local.js'
 import * as UnittestConfig from './config/config.unittest.js'
 import { useComponents } from './imports.js'
 import {
@@ -19,15 +23,16 @@ import {
   MiddlewareConfig,
   MiddlewareOptions,
 } from './lib/types.js'
-import { JsonRespMiddleware } from './middleware/index.middleware.js'
-import { registerMiddleware } from './util/common.js'
+// import { JsonRespMiddleware } from './middleware/index.middleware.js'
+import { deleteRouter } from './util/common.js'
 
 
 @Configuration({
   namespace: ConfigKey.namespace,
   importConfigs: [
     {
-      default: DefulatConfig,
+      default: DefaultConfig,
+      local: LocalConfig,
       unittest: UnittestConfig,
     },
   ],
@@ -43,16 +48,27 @@ export class AutoConfiguration implements ILifeCycle {
 
   @Inject() protected readonly environmentService: MidwayEnvironmentService
   @Inject() protected readonly informationService: MidwayInformationService
+  @Inject() protected readonly webRouterService: MidwayWebRouterService
+  @Logger() protected readonly logger: ILogger
+
+  async onConfigLoad(): Promise<void> {
+    if (! this.config.enableDefaultRoute) {
+      await deleteRouter(`/_${ConfigKey.namespace}`, this.webRouterService)
+    }
+    // else if (this.mwConfig.ignore) {
+    //   this.mwConfig.ignore.push(new RegExp(`/_${ConfigKey.namespace}/.+`, 'u'))
+    // }
+  }
+
   async onReady(container: IMidwayContainer): Promise<void> {
     void container
-    if (this.config.enableDefaultRoute && this.mwConfig.ignore) {
-      this.mwConfig.ignore.push(new RegExp(`/_${ConfigKey.namespace}/.+`, 'u'))
-    }
 
-    const isDevelopmentEnvironment = this.environmentService.isDevelopmentEnvironment()
-    if (isDevelopmentEnvironment && this.enableJsonRespMiddlewareConfig === true) {
-      registerMiddleware(this.app, JsonRespMiddleware)
-    }
+    // const isDevelopmentEnvironment = this.environmentService.isDevelopmentEnvironment()
+    // if (isDevelopmentEnvironment && this.enableJsonRespMiddlewareConfig === true) {
+    //   registerMiddleware(this.app, JsonRespMiddleware)
+    // }
+
+    this.logger.info(`[${ConfigKey.componentName}] onReady`)
   }
 
 }
