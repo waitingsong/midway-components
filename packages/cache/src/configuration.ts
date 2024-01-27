@@ -15,7 +15,7 @@ import {
   MidwayInformationService,
   MidwayWebRouterService,
 } from '@midwayjs/core'
-// import { TraceInit } from '@mwcp/otel'
+import { TraceInit } from '@mwcp/otel'
 import {
   Application,
   AroundFactoryParamBase,
@@ -80,7 +80,7 @@ export class AutoConfiguration implements ILifeCycle {
 
   }
 
-  // @TraceInit(`INIT ${ConfigKey.componentName}.onReady`)
+  @TraceInit(`INIT ${ConfigKey.componentName}.onReady`)
   async onReady(container: IMidwayContainer): Promise<void> {
     void container
     assert(
@@ -121,6 +121,8 @@ export class AutoConfiguration implements ILifeCycle {
       fnDecoratorExecutorAsync: decoratorExecutorPut,
     }
     registerDecoratorHandler(optsCachePut, aroundFactoryOptions)
+
+    this.logger.info(`[${ConfigKey.componentName}] onReady`)
   }
 
 }
