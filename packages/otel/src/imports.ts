@@ -12,11 +12,11 @@ const CI = !! (process.env['MIDWAY_SERVER_ENV'] === 'unittest'
 
 export const useComponents: IComponentInfo[] = []
 if (CI) {
-  if ( ! useComponents.includes(koa)) {
+  if (! useComponents.includes(koa)) {
     useComponents.push(koa)
     useComponents.push(info)
   }
-  if ( ! useComponents.includes(swagger)) {
+  if (! useComponents.includes(swagger)) {
     useComponents.push(swagger)
   }
 }
