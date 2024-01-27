@@ -76,7 +76,6 @@ export class AutoConfiguration implements ILifeCycle {
       'this.app undefined. If start for development, please set env first like `export MIDWAY_SERVER_ENV=local`',
     )
 
-
     const { enableMiddleware } = this.mwConfig
     if (enableMiddleware || typeof enableMiddleware === 'number') {
       registerMiddleware(this.app, JwtMiddleware)

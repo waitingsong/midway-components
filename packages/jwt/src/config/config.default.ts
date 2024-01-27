@@ -8,6 +8,10 @@ import {
 import { Config, MiddlewareConfig } from '##/lib/types.js'
 
 
+export const koa = {
+  port: 7001,
+}
+
 export const jwtConfig: Config = {
   ...initialConfig,
 }
