@@ -7,7 +7,9 @@ import {
   Config,
   Configuration,
   ILifeCycle,
+  ILogger,
   Inject,
+  Logger,
   MidwayDecoratorService,
   MidwayEnvironmentService,
   MidwayInformationService,
@@ -24,6 +26,7 @@ import {
 } from '@mwcp/share'
 
 import * as DefaultConfig from './config/config.default.js'
+import * as LocalConfig from './config/config.local.js'
 import { useComponents } from './imports.js'
 import { decoratorExecutor } from './lib/cacheable/helper.cacheable.js'
 import { decoratorExecutor as decoratorExecutorEvict } from './lib/cacheevict/helper.cacheevict.js'
@@ -39,6 +42,7 @@ import { ConfigKey } from './lib/types.js'
   importConfigs: [
     {
       default: DefaultConfig,
+      local: LocalConfig,
     },
   ],
   imports: useComponents,
@@ -56,12 +60,22 @@ export class AutoConfiguration implements ILifeCycle {
   @Inject() protected readonly informationService: MidwayInformationService
   @Inject() protected readonly webRouterService: MidwayWebRouterService
 
+  @Logger() protected readonly logger: ILogger
+
   @Inject() decoratorService: MidwayDecoratorService
   @Inject() cacheManager: CacheManager
 
   async onConfigLoad(): Promise<void> {
     assert(this.cache, 'cache config is required')
     updateCacheConfig(this.cache, this.cacheConfig)
+
+    if (! this.cacheConfig.enableDefaultRoute) {
+      await deleteRouter(`/_${ConfigKey.namespace}`, this.webRouterService)
+    }
+    // else if (this.mwConfig.ignore) {
+    //   this.mwConfig.ignore.push(new RegExp(`/_${ConfigKey.namespace}/.+`, 'u'))
+    // }
+
   }
 
   @TraceInit(`INIT ${ConfigKey.componentName}.onReady`)
@@ -74,10 +88,6 @@ export class AutoConfiguration implements ILifeCycle {
 
     // const config = this.app.getConfig('cache') as CacheConfig
     // assert.deepEqual(config, this.cacheConfig)
-
-    if (! this.cacheConfig.enableDefaultRoute) {
-      await deleteRouter(`/_${ConfigKey.namespace}`, this.webRouterService)
-    }
 
     const aroundFactoryOptions: AroundFactoryParamBase = {
       webApp: this.app,
@@ -109,8 +119,6 @@ export class AutoConfiguration implements ILifeCycle {
       fnDecoratorExecutorAsync: decoratorExecutorPut,
     }
     registerDecoratorHandler(optsCachePut, aroundFactoryOptions)
-
-
   }
 
 }
