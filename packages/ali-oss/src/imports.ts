@@ -1,5 +1,6 @@
 import * as info from '@midwayjs/info'
 import * as koa from '@midwayjs/koa'
+import * as swagger from '@midwayjs/swagger'
 import * as otel from '@mwcp/otel'
 
 
@@ -11,9 +12,10 @@ const CI = !! (process.env['MIDWAY_SERVER_ENV'] === 'unittest'
 )
 
 export const useComponents: IComponentInfo[] = []
-if (CI && ! useComponents.includes(koa)) {
+if (CI) {
   useComponents.push(koa)
   useComponents.push(info)
+  useComponents.push(swagger)
 }
 
 useComponents.push(otel)

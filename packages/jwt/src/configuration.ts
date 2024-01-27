@@ -5,11 +5,12 @@ import {
   App,
   Config,
   Configuration,
-  MidwayEnvironmentService,
-  MidwayInformationService,
   ILifeCycle,
   Inject,
   MidwayDecoratorService,
+  MidwayWebRouterService,
+  MidwayEnvironmentService,
+  MidwayInformationService,
   MidwayWebRouterService,
 } from '@midwayjs/core'
 import {
@@ -36,7 +37,7 @@ import { JwtMiddleware } from './middleware/index.middleware.js'
   importConfigs: [
     {
       default: DefaultConfig,
-      // local: LocalConfig,
+      local: LocalConfig,
       unittest: UnittestConfig,
     },
   ],
@@ -51,8 +52,19 @@ export class AutoConfiguration implements ILifeCycle {
 
   @Inject() protected readonly environmentService: MidwayEnvironmentService
   @Inject() protected readonly informationService: MidwayInformationService
-  @Inject() protected readonly webRouterService: MidwayWebRouterService
   @Inject() protected readonly decoratorService: MidwayDecoratorService
+  @Inject() protected readonly webRouterService: MidwayWebRouterService
+
+  @Logger() protected readonly logger: ILogger
+
+  async onConfigLoad(): Promise<void> {
+    if (! this.config.enableDefaultRoute) {
+      await deleteRouter(`/_${ConfigKey.namespace}`, this.webRouterService)
+    }
+    else if (this.mwConfig.ignore) {
+      this.mwConfig.ignore.push(new RegExp(`/_${ConfigKey.namespace}/.+`, 'u'))
+    }
+  }
 
   async onReady(container: IMidwayContainer): Promise<void> {
     void container
@@ -60,13 +72,6 @@ export class AutoConfiguration implements ILifeCycle {
       this.app,
       'this.app undefined. If start for development, please set env first like `export MIDWAY_SERVER_ENV=local`',
     )
-
-    if (! this.config.enableDefaultRoute) {
-      await deleteRouter(`/_${ConfigKey.namespace}`, this.webRouterService)
-    }
-    else if (this.mwConfig.ignore) {
-      this.mwConfig.ignore.push(new RegExp(`/_${ConfigKey.namespace}/.+`, 'u'))
-    }
 
 
     const { enableMiddleware } = this.mwConfig
