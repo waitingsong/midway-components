@@ -35,7 +35,6 @@
   "license": "MIT",
   "dependencies": {
     "@midwayjs/info": "^3.14.0",
-    "@mwcp/otel": "^20.8.0",
     "@mwcp/share": "^20.7.0",
     "@waiting/shared-core": "^23.0.0",
     "jsonwebtoken": "^9.0.2"
