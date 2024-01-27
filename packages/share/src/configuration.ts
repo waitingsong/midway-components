@@ -23,8 +23,8 @@ import {
   MiddlewareConfig,
   MiddlewareOptions,
 } from './lib/types.js'
-import { JsonRespMiddleware } from './middleware/index.middleware.js'
-import { deleteRouter, registerMiddleware } from './util/common.js'
+// import { JsonRespMiddleware } from './middleware/index.middleware.js'
+import { deleteRouter } from './util/common.js'
 
 
 @Configuration({
@@ -63,10 +63,10 @@ export class AutoConfiguration implements ILifeCycle {
   async onReady(container: IMidwayContainer): Promise<void> {
     void container
 
-    const isDevelopmentEnvironment = this.environmentService.isDevelopmentEnvironment()
-    if (isDevelopmentEnvironment && this.enableJsonRespMiddlewareConfig === true) {
-      registerMiddleware(this.app, JsonRespMiddleware)
-    }
+    // const isDevelopmentEnvironment = this.environmentService.isDevelopmentEnvironment()
+    // if (isDevelopmentEnvironment && this.enableJsonRespMiddlewareConfig === true) {
+    //   registerMiddleware(this.app, JsonRespMiddleware)
+    // }
 
     this.logger.info(`[${ConfigKey.componentName}] onReady`)
   }
