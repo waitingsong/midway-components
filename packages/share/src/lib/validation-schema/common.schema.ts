@@ -18,5 +18,7 @@ export const commonValidSchemas = {
   pageSizeMax: RuleType.number().min(1).max(1000),
   /** 分页查询字段排序规则 */
   pageOrderBy: pageOrderByArraySchema,
+  stringMax100: RuleType.string().trim().min(1).max(100),
+  stringMax255: RuleType.string().trim().min(1).max(255),
 }
 
