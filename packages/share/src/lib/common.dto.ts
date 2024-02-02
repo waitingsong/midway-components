@@ -4,16 +4,32 @@ import { Rule } from '@midwayjs/validate'
 import { commonValidSchemas } from './validation-schema/common.schema.js'
 
 
-/** 查询排序规则 */
-export class PageOrderByRule {
+/**
+ * 查询排序规则
+ * @example `
+ * class UserDTO {
+ *   id: number
+ *   name: string
+ * }
+ * class UserRule extends PageOrderByRule<keyof UserDTO> {
+ *   @ApiProperty({ example: 'id', description: '' })
+ *   declare column
+ * }
+ * class UserRule extends PageOrderByRule<'id' | 'name'> {
+ *   @ApiProperty({ example: 'id', description: '' })
+ *   declare column
+ * }
+ * `
+ **/
+export class PageOrderByRule<TCol = string, TOrder = 'ASC' | 'DESC' | 'asc' | 'desc'> {
   @ApiProperty({ example: 'ctime', description: '排序字段' })
-  column: string
+  column: TCol
 
   /**
    * @default ASC
    */
   @ApiProperty({ example: 'ASC', description: '排序顺序 默认升序' })
-  order?: 'ASC' | 'DESC' | 'asc' | 'desc'
+  order?: TOrder | undefined
 }
 
 
