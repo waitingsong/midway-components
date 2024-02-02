@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [20.10.0](https://github.com/waitingsong/midway-components/compare/v20.9.0...v20.10.0) (2024-02-02)
+
+
+### Features
+
+* **share:** export functions ([9fabdf0](https://github.com/waitingsong/midway-components/commit/9fabdf0502293d1cad3504818a2d4921d55669c9))
+* **share:** update commonValidSchemas ([7a6171f](https://github.com/waitingsong/midway-components/commit/7a6171f336f93774dee9efae7661caff56e51c14))
+* **share:** update type PageOrderByRule ([aac4e3e](https://github.com/waitingsong/midway-components/commit/aac4e3e0e2cb3f922478741c8961e73847b42dee))
+
+
+
+
+
 # [20.9.0](https://github.com/waitingsong/midway-components/compare/v20.8.1...v20.9.0) (2024-01-27)
 
 **Note:** Version bump only for package midway-components
