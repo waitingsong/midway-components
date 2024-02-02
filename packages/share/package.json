@@ -36,7 +36,7 @@
     "@midwayjs/info": "^3.14.0",
     "@midwayjs/koa": "^3.14.0",
     "@midwayjs/logger": "^3.2.0",
-    "@midwayjs/swagger": "3.14.0",
+    "@midwayjs/swagger": "3.14.9",
     "@midwayjs/upload": "^3.14.0",
     "@midwayjs/validate": "^3.14.0",
     "@waiting/shared-core": "^23.0.0",
