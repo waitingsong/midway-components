@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [20.10.1](https://github.com/waitingsong/midway-components/compare/v20.10.0...v20.10.1) (2024-02-03)
+
+**Note:** Version bump only for package @mwcp/share
+
+
+
+
+
 # [20.10.0](https://github.com/waitingsong/midway-components/compare/v20.9.0...v20.10.0) (2024-02-02)
 
 
