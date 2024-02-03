@@ -44,7 +44,7 @@ export class PagingDTO {
   @Rule(commonValidSchemas.id.required())
   page: number
 
-  @ApiProperty({ example: 100, description: '每页最多记录数' })
+  @ApiProperty({ example: 10, description: '每页最多记录数' })
   @Rule(commonValidSchemas.pageSizeMax.required())
   pageSize: number
 
