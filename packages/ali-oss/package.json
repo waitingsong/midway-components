@@ -2,7 +2,7 @@
   "name": "@mwcp/ali-oss",
   "author": "waiting",
   "version": "20.11.0",
-  "description": "������ OSS �����й��� ossutil ��װ midway.js ������ṩ TypeScript ���Ͷ���",
+  "description": "阿里云 OSS 命令行工具 ossutil 封装 midway.js 组件，提供 TypeScript 类型定义",
   "keywords": [
     "midway",
     "IoC",
