@@ -3,7 +3,7 @@ import assert from 'node:assert'
 
 import {
   App,
-  Config,
+  Config as _Config,
   Configuration,
   ILifeCycle,
   ILogger,

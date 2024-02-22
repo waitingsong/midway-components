@@ -2,7 +2,7 @@
   "name": "@mwcp/ali-oss",
   "author": "waiting",
   "version": "20.10.1",
-  "description": "é˜¿é‡Œäº‘ OSS å‘½ä»¤è¡Œå·¥å…· ossutil å°è£… midway.js ç»„ä»¶ï¼Œæä¾› TypeScript ç±»å‹å®šä¹‰",
+  "description": "°¢ÀïÔÆ OSS ÃüÁîĞĞ¹¤¾ß ossutil ·â×° midway.js ×é¼ş£¬Ìá¹© TypeScript ÀàĞÍ¶¨Òå",
   "keywords": [
     "midway",
     "IoC",
