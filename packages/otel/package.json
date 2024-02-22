@@ -42,7 +42,7 @@
     "@opentelemetry/resource-detector-container": "^0.3.5",
     "@opentelemetry/resource-detector-gcp": "^0.29.5",
     "@opentelemetry/sdk-node": "^0.47.0",
-    "@waiting/shared-core": "^23.0.0",
+    "@waiting/shared-core": "^23.0.1",
     "undici": "*"
   },
   "engines": {
