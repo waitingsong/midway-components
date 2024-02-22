@@ -8,6 +8,10 @@ const pageOrderBySchema = RuleType.object().keys({
 const pageOrderByArraySchema = RuleType.array().items(pageOrderBySchema)
 
 export const commonValidSchemas = {
+  /** 自然数 */
+  naturalNumber: RuleType.number().min(1).max(Number.MAX_SAFE_INTEGER),
+  /** 大于等于0的正整数 */
+  nonNegativeInteger: RuleType.number().min(0).max(Number.MAX_SAFE_INTEGER),
   id: RuleType.number().min(1).max(Number.MAX_SAFE_INTEGER),
   name50: RuleType.string().trim().min(1).max(50),
   bigintString: RuleType.string().trim().min(1).max(30),
@@ -20,5 +24,6 @@ export const commonValidSchemas = {
   pageOrderBy: pageOrderByArraySchema,
   stringMax100: RuleType.string().trim().min(1).max(100),
   stringMax255: RuleType.string().trim().min(1).max(255),
+  string: RuleType.string().trim().min(1),
 }
 
