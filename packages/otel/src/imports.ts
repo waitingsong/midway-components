@@ -1,7 +1,6 @@
 import * as info from '@midwayjs/info'
 import * as koa from '@midwayjs/koa'
 import * as swagger from '@midwayjs/swagger'
-import * as otel from '@mwcp/otel'
 
 
 /* c8 ignore next 4 */
