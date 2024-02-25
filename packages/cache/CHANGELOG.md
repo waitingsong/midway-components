@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [21.0.0](https://github.com/waitingsong/midway-components/compare/v20.12.0...v21.0.0) (2024-02-25)
+
+
+### Features
+
+* **cache:** breaking change use @midwayjs/cache-manager instead of @midwayjs/cache ([7fb786c](https://github.com/waitingsong/midway-components/commit/7fb786cb7e65663d68d042b54cfeb2f2bdb6e024))
+
+
+
+
+
 # [20.12.0](https://github.com/waitingsong/midway-components/compare/v20.11.1...v20.12.0) (2024-02-25)
 
 **Note:** Version bump only for package @mwcp/cache
