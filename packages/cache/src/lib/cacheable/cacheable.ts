@@ -9,12 +9,12 @@ import {
 import { CacheableArgs, MethodType } from '../types.js'
 
 
-export const cacheableClassIgnoreIfMethodDecortaorKeys = [
+export const cacheableClassIgnoreIfMethodDecoratorKeys = [
   METHOD_KEY_CacheEvict,
   METHOD_KEY_CachePut,
   METHOD_KEY_Transactional,
 ]
-export const cacheableMethodIgnoreIfMethodDecortaorKeys = [METHOD_KEY_Transactional]
+export const cacheableMethodIgnoreIfMethodDecoratorKeys = [METHOD_KEY_Transactional]
 
 /**
  * 声明式缓存装饰器
@@ -29,8 +29,8 @@ export function Cacheable<M extends MethodType | void>(
     decoratorArgs: options,
     decoratorKey: METHOD_KEY_Cacheable,
     enableClassDecorator: true,
-    classIgnoreIfMethodDecortaorKeys: cacheableClassIgnoreIfMethodDecortaorKeys,
-    methodIgnoreIfMethodDecortaorKeys: cacheableMethodIgnoreIfMethodDecortaorKeys,
+    classIgnoreIfMethodDecoratorKeys: cacheableClassIgnoreIfMethodDecoratorKeys,
+    methodIgnoreIfMethodDecoratorKeys: cacheableMethodIgnoreIfMethodDecoratorKeys,
   })
 }
 

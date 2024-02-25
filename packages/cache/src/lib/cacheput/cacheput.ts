@@ -17,7 +17,7 @@ export function CachePut<M extends MethodType | undefined = undefined>(
     decoratorArgs: options,
     decoratorKey: METHOD_KEY_CachePut,
     enableClassDecorator: false,
-    methodIgnoreIfMethodDecortaorKeys: [METHOD_KEY_Transactional],
+    methodIgnoreIfMethodDecoratorKeys: [METHOD_KEY_Transactional],
   })
 
 }
