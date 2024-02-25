@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [20.12.0](https://github.com/waitingsong/midway-components/compare/v20.11.1...v20.12.0) (2024-02-25)
+
+
+### Features
+
+* **share:** remove min(1) from commonValidSchemas.string ([e5dc556](https://github.com/waitingsong/midway-components/commit/e5dc5562e73dfff81dca95d1c93543076ef33965))
+
+
+
+
+
 ## [20.11.1](https://github.com/waitingsong/midway-components/compare/v20.11.0...v20.11.1) (2024-02-22)
 
 **Note:** Version bump only for package midway-components
