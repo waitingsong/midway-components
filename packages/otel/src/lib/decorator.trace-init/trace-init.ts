@@ -35,8 +35,8 @@ export function TraceInit<M extends MethodType | void = void>(
     decoratorArgs: opts,
     decoratorKey: METHOD_KEY_TraceInit,
     enableClassDecorator: false,
-    classIgnoreIfMethodDecortaorKeys: [],
-    methodIgnoreIfMethodDecortaorKeys: [],
+    classIgnoreIfMethodDecoratorKeys: [],
+    methodIgnoreIfMethodDecoratorKeys: [],
   })
 }
 

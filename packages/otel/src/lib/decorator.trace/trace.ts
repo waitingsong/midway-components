@@ -22,8 +22,8 @@ export function Trace<M extends MethodType | void = void>(
     decoratorArgs: opts,
     decoratorKey: KEY_Trace,
     enableClassDecorator: false,
-    classIgnoreIfMethodDecortaorKeys: [],
-    methodIgnoreIfMethodDecortaorKeys: [],
+    classIgnoreIfMethodDecoratorKeys: [],
+    methodIgnoreIfMethodDecoratorKeys: [],
   })
 }
 
