@@ -24,6 +24,6 @@ export const commonValidSchemas = {
   pageOrderBy: pageOrderByArraySchema,
   stringMax100: RuleType.string().trim().min(1).max(100),
   stringMax255: RuleType.string().trim().min(1).max(255),
-  string: RuleType.string().trim().min(1),
+  string: RuleType.string().trim(),
 }
 
