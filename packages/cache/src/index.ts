@@ -12,7 +12,10 @@ export * from './lib/index.js'
 
 export {
   CachingFactory,
+  CacheManagerOptions,
   MidwayUnionCache,
+  MidwayCache,
+  MidwayMultiCache,
 } from '@midwayjs/cache-manager'
 
 // @ts-ignore
