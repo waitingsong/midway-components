@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 
-import { CacheManager } from '@midwayjs/cache'
+import { CachingFactory } from '@midwayjs/cache-manager'
 import { fileShortPath } from '@waiting/shared-core'
 
 import { hashCacheKey, saveData, getData, deleteData } from '../../src/lib/helper.js'
@@ -31,42 +31,44 @@ describe(fileShortPath(import.meta.url), function() {
     })
 
     it('save and read for long key', async () => {
-      const cacheManager = await testConfig.container.getAsync(CacheManager)
-      assert(cacheManager)
+      const cachingFactory = await testConfig.container.getAsync(CachingFactory)
+      assert(cachingFactory)
+      const caching = cachingFactory.get('default')
 
-      const ret = await saveData(cacheManager, key, { a: 1 }, 30)
+      const ret = await saveData(caching, key, { a: 1 }, 30)
       console.log({ ret })
       assert(ret)
       assert(ret.CacheMetaType)
       assert(ret.CacheMetaType.cacheKeyHash === expectHash)
 
-      const ret2 = await getData(cacheManager, key)
+      const ret2 = await getData(caching, key)
       assert(ret2)
       assert(ret2.CacheMetaType)
       assert(ret2.CacheMetaType.cacheKeyHash === expectHash)
 
-      await deleteData(cacheManager, key)
-      const ret3 = await getData(cacheManager, key)
+      await deleteData(caching, key)
+      const ret3 = await getData(caching, key)
       assert(typeof ret3 === 'undefined')
     })
 
     it('save and read for short key', async () => {
-      const cacheManager = await testConfig.container.getAsync(CacheManager)
-      assert(cacheManager)
+      const cachingFactory = await testConfig.container.getAsync(CachingFactory)
+      assert(cachingFactory)
+      const caching = cachingFactory.get('default')
 
-      const ret = await saveData(cacheManager, key2, { a: 1 }, 30)
+      const ret = await saveData(caching, key2, { a: 1 }, 30)
       console.log({ ret })
       assert(ret)
       assert(ret.CacheMetaType)
       assert(! ret.CacheMetaType.cacheKeyHash)
 
-      const ret2 = await getData(cacheManager, key2)
+      const ret2 = await getData(caching, key2)
       assert(ret2)
       assert(ret2.CacheMetaType)
       assert(! ret2.CacheMetaType.cacheKeyHash)
 
-      await deleteData(cacheManager, key2)
-      const ret3 = await getData(cacheManager, key2)
+      await deleteData(caching, key2)
+      const ret3 = await getData(caching, key2)
       assert(typeof ret3 === 'undefined')
     })
 

@@ -1,7 +1,7 @@
 /* eslint-disable import/max-dependencies */
 import assert from 'node:assert'
 
-import { CacheManager } from '@midwayjs/cache'
+import { CachingFactory } from '@midwayjs/cache-manager'
 import {
   App,
   Config,
@@ -34,7 +34,7 @@ import { decoratorExecutor as decoratorExecutorEvict } from './lib/cacheevict/he
 import { decoratorExecutor as decoratorExecutorPut } from './lib/cacheput/helper.cacheput.js'
 import { METHOD_KEY_CacheEvict, METHOD_KEY_CachePut, METHOD_KEY_Cacheable } from './lib/config.js'
 import { genDecoratorExecutorOptions } from './lib/helper.js'
-import { CacheConfig } from './lib/index.js'
+import { CacheManagerConfig } from './lib/index.js'
 import { ConfigKey } from './lib/types.js'
 
 
@@ -54,9 +54,9 @@ export class AutoConfiguration implements ILifeCycle {
   @App() readonly app: Application
 
   /** component config */
-  @Config(ConfigKey.config) protected readonly cacheConfig: CacheConfig
-  /** original config */
-  @Config() protected readonly cache: CacheConfig
+  @Config(ConfigKey.config) protected readonly cacheConfig: CacheManagerConfig
+  // /** original config */
+  // @Config() protected readonly cacheManager: CacheManager
 
   @Inject() protected readonly environmentService: MidwayEnvironmentService
   @Inject() protected readonly informationService: MidwayInformationService
@@ -65,11 +65,11 @@ export class AutoConfiguration implements ILifeCycle {
   @Logger() protected readonly logger: ILogger
 
   @Inject() decoratorService: MidwayDecoratorService
-  @Inject() cacheManager: CacheManager
+  @Inject() cachingFactory: CachingFactory
 
   async onConfigLoad(): Promise<void> {
-    assert(this.cache, 'cache config is required')
-    updateCacheConfig(this.cache, this.cacheConfig)
+    assert(this.cacheConfig, 'cache config is required')
+    // updateCacheConfig(this.cacheManager, this.cacheConfig)
 
     if (! this.cacheConfig.enableDefaultRoute) {
       await deleteRouter(`/_${ConfigKey.namespace}`, this.webRouterService)
@@ -93,7 +93,7 @@ export class AutoConfiguration implements ILifeCycle {
 
     const aroundFactoryOptions: AroundFactoryParamBase = {
       webApp: this.app,
-      cacheManager: this.cacheManager,
+      cachingFactory: this.cachingFactory,
     }
     const base = {
       decoratorService: this.decoratorService,
@@ -127,17 +127,3 @@ export class AutoConfiguration implements ILifeCycle {
 
 }
 
-function updateCacheConfig(
-  config: CacheConfig,
-  newConfig: CacheConfig,
-): CacheConfig {
-
-  assert(config, 'config is required')
-  assert(newConfig, 'newConfig is required')
-
-  if (newConfig.store) {
-    config.store = newConfig.store
-  }
-  Object.assign(config.options, newConfig.options)
-  return config
-}

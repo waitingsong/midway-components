@@ -3,9 +3,9 @@ export const apiPrefix = {
   args: '/args',
   classCacheable: '/class_cacheable',
   keyGenerator: '/key_generator',
-  methodCacheable: '/method_chacheable',
-  methodCacheEvict: '/method_chacheevict',
-  methodCachePut: '/method_chacheput',
+  methodCacheable: '/method_cacheable',
+  methodCacheEvict: '/method_cacheevict',
+  methodCachePut: '/method_cacheput',
 }
 
 export const apiRoute = {

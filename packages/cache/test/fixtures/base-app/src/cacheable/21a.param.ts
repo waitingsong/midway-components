@@ -1,10 +1,13 @@
 import assert from 'node:assert/strict'
 
+import { CachingFactory, MidwayCache, SingleCacheOptions } from '@midwayjs/cache-manager'
 import {
   Config as _Config,
   Controller,
   Get,
+  Init,
   Inject,
+  InjectClient,
   Param,
   Query,
 } from '@midwayjs/core'
@@ -21,13 +24,28 @@ const bigint = 1024n
 @Controller(apiPrefix.keyGenerator)
 export class ParamController {
 
-  @_Config(ConfigKey.config) readonly config: Config
+  @_Config(ConfigKey.config) readonly cacheManagerConfig: Config
   @Inject() readonly ctx: Context
+
+  @InjectClient(CachingFactory, 'default') cache: MidwayCache
+
+  private midwayConfig: { ttl: number } // MidwayConfig
+
+  @Init()
+  async init() {
+    const defaultConfig = this.cacheManagerConfig.clients['default'] as SingleCacheOptions
+    assert(defaultConfig)
+    // @ts-expect-error
+    const configOpt = defaultConfig.options as { ttl: number} // MidwayConfig
+    assert(configOpt)
+    this.midwayConfig = configOpt
+  }
 
   readonly controllerName = 'ParamController'
 
   @Get(`/${apiRoute.param}/:uid`)
   async param(@Param('uid') uid: number | string): Promise<CachedResponse<number | string>> {
+
     const cacheKey = `${this.controllerName}._simple:arg-${uid.toString()}`
 
     const ret = await this._simple(uid)
@@ -39,12 +57,12 @@ export class ParamController {
     assert(! ret2[ConfigKey.CacheMetaType])
 
     const ret3 = await this._simple(uid)
-    validateMeta(ret3, cacheKey, this.config.options.ttl)
+    validateMeta(ret3, cacheKey, this.midwayConfig.ttl)
 
     const cacheKey2 = `${this.controllerName}._big:${bigint.toString()}`
     await this._big(uid)
     const ret4 = await this._big(uid)
-    validateMeta(ret4, cacheKey2, this.config.options.ttl)
+    validateMeta(ret4, cacheKey2, this.midwayConfig.ttl)
 
     return ret3
   }
@@ -76,7 +94,7 @@ export class ParamController {
     assert(! ret[ConfigKey.CacheMetaType])
 
     const ret2 = await this._simple2(input)
-    validateMeta(ret2, cacheKey, this.config.options.ttl)
+    validateMeta(ret2, cacheKey, this.midwayConfig.ttl)
 
     return 'OK'
   }

@@ -1,7 +1,7 @@
 import assert from 'node:assert'
 import { createHash } from 'node:crypto'
 
-import { CacheManager } from '@midwayjs/cache'
+import { CachingFactory, MidwayUnionCache } from '@midwayjs/cache-manager'
 import {
   // INJECT_CUSTOM_METHOD,
   REQUEST_OBJ_CTX_KEY,
@@ -9,7 +9,7 @@ import {
 import { AbstractTraceService, OtelConfigKey } from '@mwcp/otel'
 import { DecoratorExecutorParamBase, PagingDTO, Context as WebContext } from '@mwcp/share'
 
-import { initCacheableArgs, initCacheEvictArgs, initConfig } from './config.js'
+import { initCacheableArgs, initCacheEvictArgs, initCacheManagerOptions } from './config.js'
 import {
   CacheableArgs,
   CachedResponse,
@@ -100,7 +100,7 @@ export function hashCacheKey(key: string, activeLength = 48): HashedCacheKey {
 export function genDataWithCacheMeta<T>(
   result: CachedResponse<T>,
   options: GenCacheKeyOptions,
-  defaultTTL = initConfig.options.ttl,
+  defaultTTL = initCacheManagerOptions.options.ttl,
 ): DataWithCacheMeta<T> {
 
   const data = result.value
@@ -122,9 +122,10 @@ export function genDataWithCacheMeta<T>(
 
 
 export async function saveData<T>(
-  cacheManager: CacheManager,
+  caching: MidwayUnionCache,
   cacheKey: string,
   result: T,
+  /** In Second */
   ttl: number,
 ): Promise<CachedResponse<T>> {
 
@@ -137,23 +138,24 @@ export async function saveData<T>(
     },
     value: result,
   }
-  return cacheManager.set(keys.cacheKeyHash ?? keys.cacheKey, data, { ttl })
+  await caching.set(keys.cacheKeyHash ?? keys.cacheKey, data, ttl * 1000)
+  return data
 }
 
-export async function deleteData(cacheManager: CacheManager, cacheKey: string): Promise<void> {
+export async function deleteData(caching: MidwayUnionCache, cacheKey: string): Promise<void> {
   const keys = hashCacheKey(cacheKey)
-  await cacheManager.del(keys.cacheKeyHash ?? keys.cacheKey)
+  await caching.del(keys.cacheKeyHash ?? keys.cacheKey)
 }
 
 export async function getData<T = unknown>(
-  cacheManager: CacheManager,
+  caching: MidwayUnionCache,
   cacheKey: string,
   traceService?: AbstractTraceService | undefined,
 ): Promise<CachedResponse<T>> {
 
   const keys = hashCacheKey(cacheKey)
 
-  const ret = await cacheManager.get(keys.cacheKeyHash ?? keys.cacheKey) as CachedResponse<T> | undefined
+  const ret = await caching.get(keys.cacheKeyHash ?? keys.cacheKey) as CachedResponse<T> | undefined
   if (traceService?.isStarted && ret?.CacheMetaType) {
     traceService.addEvent(void 0, {
       event: 'cache.hit',
@@ -206,11 +208,11 @@ export function computerTTLValue(
   const webContext = options.instance[REQUEST_OBJ_CTX_KEY]
   assert(webContext, 'webContext is undefined')
 
-  let ttl = 10
+  let ttl = 10 // second
 
   switch (typeof cacheOptions['ttl']) {
     case 'undefined':
-      ttl = +initConfig.options.ttl
+      ttl = +initCacheManagerOptions.options.ttl
       break
 
     case 'number':
@@ -255,35 +257,36 @@ export function genDecoratorExecutorOptions(
   assert(webContext, 'webContext is undefined')
   assert(decoratorKey, 'decoratorKey is undefined')
   assert(instance, 'options.instance is undefined')
-  assert(typeof method === 'function', 'options.method is not funtion')
+  assert(typeof method === 'function', 'options.method is not function')
   assert(instanceName, 'instanceName is undefined')
   assert(methodName, 'methodName is undefined')
 
-  const config = webApp.getConfig('cache') as Config
-  assert(config, 'cache config is undefined')
+  const configManagerConfig = webApp.getConfig(ConfigKey.config) as Config
+  assert(configManagerConfig, 'cacheManager config is undefined')
 
   const cacheOptions: CacheableArgs = {
     ...initCacheableArgs,
     ...initCacheEvictArgs,
     ...mergedDecoratorParam,
   }
-  if (typeof cacheOptions.ttl === 'undefined') {
-    cacheOptions.ttl = config.options.ttl
-  }
+  // @FIXME
+  // if (typeof cacheOptions.ttl === 'undefined') {
+  //   cacheOptions.ttl = configManagerConfig.options.ttl
+  // }
 
   if (typeof cacheOptions.cacheName === 'undefined' || ! cacheOptions.cacheName) {
     const cacheName = `${instanceName}.${methodName}`
     cacheOptions.cacheName = cacheName
   }
 
-  const { cacheManager } = options
-  assert(cacheManager, 'CacheManager is undefined')
+  const { cachingFactory } = options
+  assert(cachingFactory, 'midway cachingFactory is undefined')
   const traceService = webContext[`_${OtelConfigKey.componentName}`] as AbstractTraceService | undefined
 
   const ret: DecoratorExecutorOptions<CacheableArgs | CacheEvictArgs> = {
     ...options,
-    cacheManager: cacheManager as CacheManager,
-    config,
+    cachingFactory: cachingFactory as CachingFactory,
+    config: configManagerConfig,
     mergedDecoratorParam: cacheOptions,
     traceService,
   }

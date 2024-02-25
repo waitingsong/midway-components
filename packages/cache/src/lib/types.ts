@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CacheManager } from '@midwayjs/cache'
+import { CachingFactory, CacheManagerOptions } from '@midwayjs/cache-manager'
 import type { AbstractTraceService } from '@mwcp/otel'
 import {
   Context,
@@ -11,7 +11,7 @@ import type { MiddlewareConfig as MWConfig } from '@waiting/shared-types'
 
 export enum ConfigKey {
   namespace = 'cache',
-  config = 'cacheConfig',
+  config = 'cacheManager',
   middlewareConfig = 'cacheMiddlewareConfig',
   componentName = 'cacheComponent',
   CacheMetaType = 'CacheMetaType',
@@ -29,22 +29,7 @@ export type MiddlewareConfig = MWConfig<MiddlewareOptions>
 
 export interface Config {
   enableDefaultRoute: boolean
-  /**
-   * @default 'memory'
-   * @link https://github.com/node-cache-manager/node-cache-manager#store-engines
-   */
-  store: unknown
-  options: {
-    /**
-     * @default 512
-     */
-    max: number,
-    /**
-     * time to live in seconds
-     * @default 10(sec)
-     */
-    ttl: number,
-  }
+  clients: Record<string, CacheManagerOptions>
 }
 
 // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
@@ -122,6 +107,16 @@ export interface CacheableArgs<M extends MethodType | void = void> {
    * @default undefined - always cache
    */
   condition: CacheConditionFn<M> | boolean | undefined
+  /**
+   * @default 'default'
+   */
+  instanceId?: string | undefined
+  /**
+   * use multi caching
+   * @default false
+   * @link https://midwayjs.org/docs/extensions/caching#7%E4%BD%BF%E7%94%A8%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98
+   */
+  useMultiCaching?: boolean | undefined
 }
 
 export interface CacheEvictArgs<M extends MethodType | undefined = undefined> {
@@ -140,6 +135,10 @@ export interface CacheEvictArgs<M extends MethodType | undefined = undefined> {
    * @default undefined - always evict
    */
   condition: CacheConditionFn<M> | boolean | undefined
+  /**
+   * @default 'default'
+   */
+  instanceId?: string | undefined
 }
 
 
@@ -149,7 +148,11 @@ export interface DecoratorExecutorOptions<T extends CacheableArgs | CacheEvictAr
   extends DecoratorExecutorParamBase<T> {
 
   traceService: AbstractTraceService | undefined
-  cacheManager: CacheManager
+  cachingFactory: CachingFactory
   config: Config
+  /**
+   * @default 'default'
+   */
+  cachingInstanceId?: string | undefined
 }
 

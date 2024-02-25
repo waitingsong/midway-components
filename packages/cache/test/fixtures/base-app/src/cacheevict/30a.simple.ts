@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import assert from 'node:assert/strict'
 
+import { SingleCacheOptions } from '@midwayjs/cache-manager'
 import {
   Config as _Config,
   Controller,
   Get,
+  Init,
   Inject,
 } from '@midwayjs/core'
 import type { Context } from '@mwcp/share'
@@ -20,11 +22,23 @@ const cacheKey = 'CacheEvictController.simple'
 @Controller(apiPrefix.methodCacheEvict)
 export class CacheEvictController {
 
-  @_Config(ConfigKey.config) readonly config: Config
+  @_Config(ConfigKey.config) readonly cacheManagerConfig: Config
 
   @Inject() readonly ctx: Context
 
   readonly controllerName = 'CacheEvictController'
+
+  private midwayConfig: { ttl: number } // MidwayConfig
+
+  @Init()
+  async init() {
+    const defaultConfig = this.cacheManagerConfig.clients['default'] as SingleCacheOptions
+    assert(defaultConfig)
+    // @ts-expect-error
+    const configOpt = defaultConfig.options as { ttl: number} // MidwayConfig
+    assert(configOpt)
+    this.midwayConfig = configOpt
+  }
 
   @Get(`/${apiRoute.simple}`)
   async simple(): Promise<CachedResponse<'OK'>> {
@@ -34,10 +48,10 @@ export class CacheEvictController {
     assert(! ret[ConfigKey.CacheMetaType])
 
     const ret2 = await this._simple()
-    validateMeta(ret2, cacheKey, this.config.options.ttl)
+    validateMeta(ret2, cacheKey, this.midwayConfig.ttl)
 
     const ret2a = await this._simple()
-    validateMeta(ret2a, cacheKey, this.config.options.ttl)
+    validateMeta(ret2a, cacheKey, this.midwayConfig.ttl)
 
     await this._del()
     const ret3 = await this._simple()
@@ -45,7 +59,7 @@ export class CacheEvictController {
     assert(! ret3[ConfigKey.CacheMetaType])
 
     const ret3a = await this._simple()
-    validateMeta(ret3a, cacheKey, this.config.options.ttl)
+    validateMeta(ret3a, cacheKey, this.midwayConfig.ttl)
 
     await this._del2()
     const ret4 = await this._simple()
@@ -53,7 +67,7 @@ export class CacheEvictController {
     assert(! ret4[ConfigKey.CacheMetaType])
 
     const ret4a = await this._simple()
-    validateMeta(ret4a, cacheKey, this.config.options.ttl)
+    validateMeta(ret4a, cacheKey, this.midwayConfig.ttl)
 
     return ret3
   }

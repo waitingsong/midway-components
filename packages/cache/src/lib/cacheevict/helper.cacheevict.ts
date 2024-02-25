@@ -12,7 +12,8 @@ export async function decoratorExecutor(
 
   const {
     webContext,
-    cacheManager,
+    cachingFactory,
+    cachingInstanceId,
     mergedDecoratorParam,
   } = options
 
@@ -40,8 +41,10 @@ export async function decoratorExecutor(
     const enableEvict = typeof tmp === 'boolean' ? tmp : await tmp
     assert(typeof enableEvict === 'boolean', 'condition must return boolean')
 
+    const caching = cachingFactory.get(cachingInstanceId)
+
     if (enableEvict && cacheOptions.beforeInvocation) {
-      await deleteData(cacheManager, cacheKey)
+      await deleteData(caching, cacheKey)
     }
 
     const { method, methodArgs, methodIsAsyncFunction } = opts3
@@ -50,7 +53,7 @@ export async function decoratorExecutor(
 
     if (! cacheOptions.beforeInvocation) {
       if (enableEvict) {
-        await deleteData(cacheManager, cacheKey)
+        await deleteData(caching, cacheKey)
       }
       else {
         const ps: DecoratorExecutorOptions<CacheEvictArgs> = {
@@ -67,7 +70,7 @@ export async function decoratorExecutor(
             methodResult: resp,
           }
           const cacheKey2 = genCacheKey(opts4)
-          await deleteData(cacheManager, cacheKey2)
+          await deleteData(caching, cacheKey2)
         }
       }
     }

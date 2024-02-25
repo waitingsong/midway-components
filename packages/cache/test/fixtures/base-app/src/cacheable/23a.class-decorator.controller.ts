@@ -1,11 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import assert from 'node:assert/strict'
 
+import { CachingFactory, MidwayCache, SingleCacheOptions } from '@midwayjs/cache-manager'
 import {
   Config as _Config,
   Controller,
   Get,
+  Init,
   Inject,
+  InjectClient,
 } from '@midwayjs/core'
 import { sleep } from '@waiting/shared-core'
 
@@ -19,11 +22,25 @@ import { ClassDecoratorService, ttl } from './23b.class-decorator.service.js'
 @Controller(apiPrefix.classCacheable)
 export class ClassDecoratorController {
 
-  @_Config(ConfigKey.config) readonly config: Config
+  @_Config(ConfigKey.config) readonly cacheManagerConfig: Config
+
+  @InjectClient(CachingFactory, 'default') cache: MidwayCache
 
   @Inject() svc: ClassDecoratorService
 
   readonly controllerName = 'ClassDecoratorService'
+
+  private midwayConfig: { ttl: number } // MidwayConfig
+
+  @Init()
+  async init() {
+    const defaultConfig = this.cacheManagerConfig.clients['default'] as SingleCacheOptions
+    assert(defaultConfig)
+    // @ts-expect-error
+    const configOpt = defaultConfig.options as { ttl: number} // MidwayConfig
+    assert(configOpt)
+    this.midwayConfig = configOpt
+  }
 
   @Get(`/${apiRoute.simple}`)
   async simple(): Promise<'OK'> {
@@ -34,12 +51,12 @@ export class ClassDecoratorController {
     assert(! ret[ConfigKey.CacheMetaType])
 
     const ret2 = await this.svc.simple()
-    validateMeta(ret2, cacheKey, this.config.options.ttl)
+    validateMeta(ret2, cacheKey, this.midwayConfig.ttl)
 
     await sleep(ttl * 1001)
 
     const ret2a = await this.svc.simple()
-    validateMeta(ret2a, cacheKey, this.config.options.ttl)
+    validateMeta(ret2a, cacheKey, this.midwayConfig.ttl)
 
     return 'OK'
   }

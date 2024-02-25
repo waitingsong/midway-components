@@ -1,7 +1,7 @@
 
 export * from './config.js'
 export {
-  Config as CacheConfig,
+  Config as CacheManagerConfig,
   ConfigKey as CacheConfigKey,
 
   KeyGenerator,

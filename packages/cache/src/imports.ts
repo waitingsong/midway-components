@@ -1,4 +1,4 @@
-import * as cache from '@midwayjs/cache'
+import * as cache from '@midwayjs/cache-manager'
 import * as info from '@midwayjs/info'
 import * as koa from '@midwayjs/koa'
 import * as swagger from '@midwayjs/swagger'

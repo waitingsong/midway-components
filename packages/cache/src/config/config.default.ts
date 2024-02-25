@@ -1,5 +1,5 @@
 import {
-  initConfig,
+  initCacheManagerOptions,
   initialMiddlewareConfig,
   initMiddlewareOptions,
 } from '../lib/config.js'
@@ -13,11 +13,12 @@ export const koa = {
   port: 7001,
 }
 
-export const cacheConfig: Config = {
+export const cacheManager: Config = {
   enableDefaultRoute: false,
-  store: initConfig.store,
-  options: {
-    ...initConfig.options,
+  clients: {
+    default: {
+      ...initCacheManagerOptions,
+    },
   },
 }
 

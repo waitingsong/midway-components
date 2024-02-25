@@ -1,20 +1,21 @@
+import { CacheManagerOptions } from '@midwayjs/cache-manager'
+
 import {
   CacheableArgs,
   CacheEvictArgs,
-  Config,
   MiddlewareConfig,
   MiddlewareOptions,
 } from './types.js'
 
 
-export const initConfig: Config = {
-  enableDefaultRoute: false,
+export const initCacheManagerOptions = {
   store: 'memory',
   options: {
     max: 512,
+    /** ttl second (not micro second) */
     ttl: 10,
   },
-}
+} satisfies CacheManagerOptions
 
 export const initMiddlewareOptions: MiddlewareOptions = {
   debug: false,
@@ -43,14 +44,16 @@ export const METHOD_KEY_Transactional = 'decorator:kmore_trxnal_decorator_key'
 export const initCacheableArgs: CacheableArgs = {
   cacheName: void 0,
   key: void 0,
-  ttl: initConfig.options.ttl,
+  ttl: initCacheManagerOptions.options.ttl,
   condition: void 0,
+  instanceId: 'default',
 }
 export const initCacheEvictArgs: CacheEvictArgs = {
   cacheName: void 0,
   key: void 0,
   condition: void 0,
   beforeInvocation: false,
+  instanceId: 'default',
 }
 export const initCachePutArgs: CacheableArgs = {
   ...initCacheableArgs,

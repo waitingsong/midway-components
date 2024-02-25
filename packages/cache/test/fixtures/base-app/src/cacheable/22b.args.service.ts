@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import assert from 'node:assert'
 
-import { Config as _Config } from '@midwayjs/core'
+import { CachingFactory, MidwayCache, SingleCacheOptions } from '@midwayjs/cache-manager'
+import {
+  Config as _Config,
+  Init,
+  InjectClient,
+} from '@midwayjs/core'
 
 import { Cacheable } from '../../../../../src/index.js'
 import { CachedResponse, Config, ConfigKey } from '../../../../../src/lib/types.js'
@@ -11,7 +16,21 @@ import { validateMeta } from '../base.helper.js'
 @Cacheable()
 export class ArgsDecoratorService {
 
-  @_Config(ConfigKey.config) readonly config: Config
+  @_Config(ConfigKey.config) readonly cacheManagerConfig: Config
+
+  @InjectClient(CachingFactory, 'default') cache: MidwayCache
+
+  private midwayConfig: { ttl: number } // MidwayConfig
+
+  @Init()
+  async init() {
+    const defaultConfig = this.cacheManagerConfig.clients['default'] as SingleCacheOptions
+    assert(defaultConfig)
+    // @ts-expect-error
+    const configOpt = defaultConfig.options as { ttl: number} // MidwayConfig
+    assert(configOpt)
+    this.midwayConfig = configOpt
+  }
 
   async assertUndefined(): Promise<void> {
     const cacheKey = 'ArgsDecoratorService.conditionUndefined'
@@ -21,10 +40,10 @@ export class ArgsDecoratorService {
     assert(! ret[ConfigKey.CacheMetaType], JSON.stringify(ret[ConfigKey.CacheMetaType]))
 
     const ret2 = await this.conditionUndefined()
-    validateMeta(ret2, cacheKey, this.config.options.ttl)
+    validateMeta(ret2, cacheKey, this.midwayConfig.ttl)
 
     const ret2a = await this.conditionUndefined()
-    validateMeta(ret2a, cacheKey, this.config.options.ttl)
+    validateMeta(ret2a, cacheKey, this.midwayConfig.ttl)
   }
 
   async assertTrue(): Promise<void> {
@@ -35,10 +54,10 @@ export class ArgsDecoratorService {
     assert(! ret[ConfigKey.CacheMetaType], JSON.stringify(ret[ConfigKey.CacheMetaType]))
 
     const ret2 = await this.conditionTrue()
-    validateMeta(ret2, cacheKey, this.config.options.ttl)
+    validateMeta(ret2, cacheKey, this.midwayConfig.ttl)
 
     const ret2a = await this.conditionTrue()
-    validateMeta(ret2a, cacheKey, this.config.options.ttl)
+    validateMeta(ret2a, cacheKey, this.midwayConfig.ttl)
   }
 
   async assertFnTrue(): Promise<void> {
@@ -49,10 +68,10 @@ export class ArgsDecoratorService {
     assert(! ret[ConfigKey.CacheMetaType], JSON.stringify(ret[ConfigKey.CacheMetaType]))
 
     const ret2 = await this.conditionFnTrue()
-    validateMeta(ret2, cacheKey, this.config.options.ttl)
+    validateMeta(ret2, cacheKey, this.midwayConfig.ttl)
 
     const ret2a = await this.conditionFnTrue()
-    validateMeta(ret2a, cacheKey, this.config.options.ttl)
+    validateMeta(ret2a, cacheKey, this.midwayConfig.ttl)
   }
 
   async assertPromiseTrue(): Promise<void> {
@@ -63,10 +82,10 @@ export class ArgsDecoratorService {
     assert(! ret[ConfigKey.CacheMetaType], JSON.stringify(ret[ConfigKey.CacheMetaType]))
 
     const ret2 = await this.conditionPromiseTrue()
-    validateMeta(ret2, cacheKey, this.config.options.ttl)
+    validateMeta(ret2, cacheKey, this.midwayConfig.ttl)
 
     const ret2a = await this.conditionPromiseTrue()
-    validateMeta(ret2a, cacheKey, this.config.options.ttl)
+    validateMeta(ret2a, cacheKey, this.midwayConfig.ttl)
   }
 
 

@@ -19,7 +19,8 @@ export async function decoratorExecutor(
 
   const {
     webContext,
-    cacheManager,
+    cachingFactory,
+    cachingInstanceId,
     mergedDecoratorParam,
   } = options
 
@@ -55,9 +56,10 @@ export async function decoratorExecutor(
     assert(typeof enableCache === 'boolean', 'condition must return boolean')
 
     const ttl = await computerTTLValue(resp as CachedResponse, opts3)
+    const caching = cachingFactory.get(cachingInstanceId)
 
     if (enableCache && ttl > 0) {
-      await saveData(cacheManager, cacheKey, resp, ttl)
+      await saveData(caching, cacheKey, resp, ttl)
     }
 
     if (typeof resp === 'object' && resp) {
@@ -74,4 +76,3 @@ export async function decoratorExecutor(
     })
   }
 }
-
