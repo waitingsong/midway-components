@@ -78,7 +78,7 @@ export interface CustomClassDecoratorParam<TDecoratorParam extends {}> {
    * @description class has decorator @Cacheable, method has decorator @CacheEvict,
    *  then the method will be decorated by @Cacheable but with impl:false.
    */
-  ignoreIfMethodDecortaorKeys?: string[] | undefined
+  ignoreIfMethodDecoratorKeys?: string[] | undefined
 }
 export type CustomClassDecorator<TDecoratorParam extends {} = any> = (
   options: CustomClassDecoratorParam<TDecoratorParam>,
@@ -101,7 +101,7 @@ export interface CustomMethodDecoratorParam<TDecoratorParam extends {}> {
    * @description method has decorators @Transactional and @Cacheable
    *  pass [METHOD_KEY_Cacheable], then the method decorated by @Cacheable with impl:false.
    */
-  ignoreIfMethodDecortaorKeys?: string[] | undefined
+  ignoreIfMethodDecoratorKeys?: string[] | undefined
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -125,13 +125,13 @@ export interface CustomDecoratorFactoryParam<TDecoratorParam extends {}> {
    * @description class has decorator @Cacheable, method has decorator @CacheEvict,
    *  then the method will be decorated by @Cacheable but with impl:false.
    */
-  classIgnoreIfMethodDecortaorKeys?: string[]
+  classIgnoreIfMethodDecoratorKeys?: string[]
   /**
    * meta.impl will set to false if the method is decorated with the decoratorKey.
    * @description method has decorators @Transactional and @Cacheable
    *  pass [METHOD_KEY_Cacheable], then the method decorated by @Cacheable with impl:false.
    */
-  methodIgnoreIfMethodDecortaorKeys?: string[]
+  methodIgnoreIfMethodDecoratorKeys?: string[]
   before?: FnRegCustomDecorator<TDecoratorParam>
   after?: FnRegCustomDecorator<TDecoratorParam>
 }

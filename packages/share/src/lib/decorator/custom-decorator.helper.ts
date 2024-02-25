@@ -150,13 +150,13 @@ export function setImplToFalseIfDecoratedWithBothClassAndMethod(
   /** 装饰器所在的实例 */
   target: InstanceOfDecorator,
   decoratorKey: string,
-  inclusiveDecortaorKeys: string[] | undefined,
+  inclusiveDecoratorKeys: string[] | undefined,
 ) {
 
   assert(target, 'target is undefined')
   assert(decoratorKey, 'decoratorKey is undefined')
 
-  const inclusiveKeysSet = new Set(inclusiveDecortaorKeys)
+  const inclusiveKeysSet = new Set(inclusiveDecoratorKeys)
   inclusiveKeysSet.add(decoratorKey)
 
   const arr = getClassMetadata<DecoratorMetaData[]>(INJECT_CUSTOM_METHOD, target)

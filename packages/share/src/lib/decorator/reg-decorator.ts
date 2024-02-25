@@ -69,7 +69,7 @@ export function regCustomDecorator<TDecoratorParam extends {}>(
       decoratorKey,
       target,
       args: decoratorArgs,
-      ignoreIfMethodDecortaorKeys: options.classIgnoreIfMethodDecortaorKeys,
+      ignoreIfMethodDecoratorKeys: options.classIgnoreIfMethodDecoratorKeys,
     }
     regClassDecorator(opts)
   }
@@ -101,7 +101,7 @@ export function regCustomDecorator<TDecoratorParam extends {}>(
       propertyName: propertyName.toString(),
       args: decoratorArgs,
       method: descriptor.value,
-      ignoreIfMethodDecortaorKeys: options.methodIgnoreIfMethodDecortaorKeys,
+      ignoreIfMethodDecoratorKeys: options.methodIgnoreIfMethodDecoratorKeys,
     }
 
     regMethodDecorator(opts)
@@ -125,7 +125,7 @@ function regMethodDecorator<TDecoratorParam extends {} = any>(
     target,
     propertyName,
     method,
-    ignoreIfMethodDecortaorKeys,
+    ignoreIfMethodDecoratorKeys,
   } = options
 
   assert(method, 'method is undefined')
@@ -145,10 +145,10 @@ function regMethodDecorator<TDecoratorParam extends {} = any>(
       impl: true,
     },
   }
-  if (ignoreIfMethodDecortaorKeys?.length) {
+  if (ignoreIfMethodDecoratorKeys?.length) {
     const arr = getClassMetadata<DecoratorMetaData[] | undefined>(INJECT_CUSTOM_METHOD, target)
     if (arr?.length) {
-      for (const key of ignoreIfMethodDecortaorKeys) {
+      for (const key of ignoreIfMethodDecoratorKeys) {
         if (methodHasDecorated(key, propertyName, arr, true)) {
           // @ts-expect-error
           data.options.impl = false
@@ -175,7 +175,7 @@ function regClassDecorator<TDecoratorParam extends {}>(
     args,
     decoratorKey,
     target,
-    ignoreIfMethodDecortaorKeys,
+    ignoreIfMethodDecoratorKeys,
   } = options
 
   assert(target)
@@ -196,7 +196,7 @@ function regClassDecorator<TDecoratorParam extends {}>(
   decoratorAllClassMethodsOnPrototype(options)
   // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  setImplToFalseIfDecoratedWithBothClassAndMethod(target, decoratorKey, ignoreIfMethodDecortaorKeys)
+  setImplToFalseIfDecoratedWithBothClassAndMethod(target, decoratorKey, ignoreIfMethodDecoratorKeys)
   // const foo4 = getClassMetadata(INJECT_CUSTOM_METHOD, target)
   // void foo4
 
