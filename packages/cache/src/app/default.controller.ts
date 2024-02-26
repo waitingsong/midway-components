@@ -12,7 +12,7 @@ import { DefaultApi } from './default.types.js'
 
 
 @Controller(DefaultApi.base)
-export class DefaultComponentController {
+export class DefaultCacheController {
 
   @_Config(ConfigKey.config) private readonly config: Config
 

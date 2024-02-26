@@ -11,7 +11,7 @@ import { Config, ConfigKey, Msg } from '##/lib/types.js'
 
 
 @Controller(DefaultApi.base)
-export class DefaultComponentController {
+export class DefaultShareController {
 
   @_Config(ConfigKey.config) private readonly config: Config
 
