@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [22.1.0](https://github.com/waitingsong/midway-components/compare/v22.0.1...v22.1.0) (2024-03-05)
+
+
+### Features
+
+* **core:** update commonValidSchemas ([eaa5a93](https://github.com/waitingsong/midway-components/commit/eaa5a931c9dd6a816dd72e4d9260780427fe2506))
+* **share:** export function and options ([03d6e7c](https://github.com/waitingsong/midway-components/commit/03d6e7c2368036f43b15749c7f50c5e8634121e8))
+
+
+
+
+
 ## [22.0.1](https://github.com/waitingsong/midway-components/compare/v22.0.0...v22.0.1) (2024-02-26)
 
 **Note:** Version bump only for package midway-components
