@@ -58,12 +58,13 @@ export async function decoratorExecutor(
     const ttl = await computerTTLValue(resp as CachedResponse, opts3)
     const caching = cachingFactory.get(cachingInstanceId)
 
+    let cacheResp: CachedResponse | undefined = void 0
     if (enableCache && ttl > 0) {
-      await saveData(caching, cacheKey, resp, ttl)
+      cacheResp = await saveData(caching, cacheKey, resp, ttl)
     }
 
-    if (typeof resp === 'object' && resp) {
-      const resp2 = genDataWithCacheMeta(resp as CachedResponse, opts2, ttl)
+    if (typeof cacheResp !== 'undefined') {
+      const resp2 = genDataWithCacheMeta(cacheResp, opts2, ttl)
       return resp2
     }
 

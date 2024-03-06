@@ -75,7 +75,9 @@ export class CachePutController {
     assert(ret4a.value === 'OK')
     validateMeta(ret4a, cacheKey, this.midwayConfig.ttl)
 
-    await this._put()
+    const putResp = await this._put()
+    assert(putResp, 'putResp empty')
+    assert(putResp.value === 'PUT')
     const ret5 = await this._simple()
     assert(ret5.value === 'PUT')
     validateMeta(ret5, cacheKey, this.midwayConfig.ttl)
