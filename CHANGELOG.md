@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [22.1.1](https://github.com/waitingsong/midway-components/compare/v22.1.0...v22.1.1) (2024-03-06)
+
+
+### Bug Fixes
+
+* **cache:** return of @PUT invalid ([91f0080](https://github.com/waitingsong/midway-components/commit/91f0080cfea72378c323b22602b45b3a4110a6eb))
+
+
+
+
+
 # [22.1.0](https://github.com/waitingsong/midway-components/compare/v22.0.1...v22.1.0) (2024-03-05)
 
 
