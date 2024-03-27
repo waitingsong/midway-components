@@ -11,7 +11,7 @@ import { testConfig } from '#@/root.config.js'
 const agent = exporterEndpoint.replace(/:\d+$/u, '')
 assert(agent, 'OTEL_EXPORTER_OTLP_ENDPOINT not set')
 
-describe(fileShortPath(import.meta.url), function() {
+describe(fileShortPath(import.meta.url), function () {
 
   before(() => {
     const { app } = testConfig
@@ -34,7 +34,7 @@ describe(fileShortPath(import.meta.url), function() {
       .get(path)
       .expect(200)
 
-    const traceId = resp.text as string
+    const traceId = resp.text
     assert(! traceId, 'traceId should be empty')
   })
 

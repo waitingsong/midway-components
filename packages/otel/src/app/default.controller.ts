@@ -8,10 +8,11 @@ import {
 } from '@midwayjs/core'
 import { ILogger } from '@midwayjs/logger'
 
-import { DefaultOtelComponentService } from './default.service.js'
 
 import { Trace, TraceService } from '##/lib/index.js'
 import { Config, ConfigKey, Msg } from '##/lib/types.js'
+
+import { DefaultOtelComponentService } from './default.service.js'
 
 
 @Controller(`/_${ConfigKey.namespace}`)

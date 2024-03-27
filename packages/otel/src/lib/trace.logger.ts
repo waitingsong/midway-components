@@ -90,6 +90,7 @@ export class TraceAppLogger implements ILogger {
     }
     origLogger(input, logger ?? this.logger)
   }
+
 }
 
 
@@ -170,6 +171,7 @@ export class TraceLogger implements ILogger {
       this.traceAppLogger.log(input, false, this.logger)
     }
   }
+
 }
 
 function traceAppLogger(

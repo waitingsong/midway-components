@@ -7,9 +7,7 @@ import type { AbstractTraceService } from '../abstract.js'
 import type { DecoratorExecutorParam } from '../trace.helper.js'
 
 
-export async function decoratorExecutorAsync(
-  options: DecoratorExecutorParam,
-): Promise<unknown> {
+export async function decoratorExecutorAsync(options: DecoratorExecutorParam): Promise<unknown> {
 
   const {
     config,
@@ -70,9 +68,7 @@ export async function decoratorExecutorAsync(
   }
 }
 
-export function decoratorExecutorSync(
-  options: DecoratorExecutorParam,
-): unknown {
+export function decoratorExecutorSync(options: DecoratorExecutorParam): unknown {
 
   const {
     config,

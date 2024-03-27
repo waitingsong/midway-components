@@ -1,4 +1,3 @@
-import { Config as _Config } from '@midwayjs/core'
 import {
   Attributes,
   Context,
@@ -16,6 +15,7 @@ import {
 
 /** OpenTelemetry Component */
 export abstract class AbstractOtelComponent {
+
   /** Active during Midway Lifecyle between onReady and onServerReady */
   abstract appInitProcessContext: Context | undefined
   /** Active during Midway Lifecyle between onReady and onServerReady */
@@ -113,10 +113,12 @@ export abstract class AbstractOtelComponent {
   ): void
 
   abstract endAppInitEvent(): void
+
 }
 
 
 export abstract class AbstractTraceService {
+
   abstract isStarted: boolean
 
   readonly abstract otel: AbstractOtelComponent
@@ -213,5 +215,6 @@ export abstract class AbstractTraceService {
   ): void
 
   abstract flush(): Promise<void>
+
 }
 

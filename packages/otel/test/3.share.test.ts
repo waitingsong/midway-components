@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { getNpmPkgViewFromRegistry, fileShortPath } from '@waiting/shared-core'
 
 
-describe(fileShortPath(import.meta.url), function() {
+describe(fileShortPath(import.meta.url), function () {
 
   describe('should work', () => {
     it('getNpmPkgViewFromRegistry()', async () => {

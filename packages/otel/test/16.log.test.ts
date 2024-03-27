@@ -6,7 +6,7 @@ import { apiPrefix, apiRoute } from '#@/fixtures/base-app/src/api-route.js'
 import { testConfig } from '#@/root.config.js'
 
 
-describe(fileShortPath(import.meta.url), function() {
+describe(fileShortPath(import.meta.url), function () {
 
   const pathLog = `${apiPrefix.TraceDecorator}/${apiRoute.log}` // exception will be caught
   const pathAppLog = `${apiPrefix.TraceDecorator}/${apiRoute.appLog}`
@@ -18,7 +18,7 @@ describe(fileShortPath(import.meta.url), function() {
       .get(pathLog)
       .expect(200)
 
-    const ret = resp.text as string
+    const ret = resp.text
     assert(ret)
     // assert(ret.startsWith('debug for'))
   })
@@ -30,7 +30,7 @@ describe(fileShortPath(import.meta.url), function() {
       .get(pathAppLog)
       .expect(200)
 
-    const ret = resp.text as string
+    const ret = resp.text
     assert(ret)
     // assert(! ret, ret)
     // assert(ret.includes('debug for DefaultComponentService.error()'), ret)

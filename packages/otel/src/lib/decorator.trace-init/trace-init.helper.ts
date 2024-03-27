@@ -7,9 +7,7 @@ import type { DecoratorContext, TraceDecoratorOptions } from '../decorator.types
 import type { DecoratorExecutorParam } from '../trace.helper.js'
 
 
-export async function decoratorExecutor(
-  options: DecoratorExecutorParam<TraceDecoratorOptions>,
-): Promise<unknown> {
+export async function decoratorExecutor(options: DecoratorExecutorParam<TraceDecoratorOptions>): Promise<unknown> {
 
   const { webApp, methodIsAsyncFunction } = options
   assert(webApp, 'webApplication is required')

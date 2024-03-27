@@ -6,7 +6,7 @@ import { apiPrefix, apiRoute } from '#@/fixtures/base-app/src/api-route.js'
 import { testConfig } from '#@/root.config.js'
 
 
-describe(fileShortPath(import.meta.url), function() {
+describe(fileShortPath(import.meta.url), function () {
 
   describe('should propagateHeader() work', () => {
     const path = `${apiPrefix.util}/${apiRoute.propagateHeader}`

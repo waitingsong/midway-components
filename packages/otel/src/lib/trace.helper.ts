@@ -96,6 +96,8 @@ function genEventKeyWhenSpanNameEmpty(options: GenKeyOptions): string {
   if (namespace && configNameList.includes(callerClass)) {
     switch (callerMethod) {
       case 'onReady':
+
+      // eslint-disable-next-line no-fallthrough
       case 'onServerReady': {
         name = `INIT ${namespace}.${options.callerMethod.toString()}`
       }
@@ -119,9 +121,7 @@ export interface DecoratorExecutorParam<T extends TraceDecoratorParam = TraceDec
   traceService: AbstractTraceService | undefined
 }
 
-export function genDecoratorExecutorOptions(
-  options: ExecutorParamBase,
-): DecoratorExecutorParam {
+export function genDecoratorExecutorOptions(options: ExecutorParamBase): DecoratorExecutorParam {
 
   assert(options.webApp, 'options.webApp is undefined')
   assert(options.instanceName, 'options.instanceName is undefined')

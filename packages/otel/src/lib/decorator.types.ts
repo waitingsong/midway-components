@@ -14,12 +14,12 @@ export type MethodType<
   ReturnType = unknown,
 > = (...input: ArgsType) => ReturnType
 
-export type TraceDecoratorParam<M extends MethodType | void = void> =
+export type TraceDecoratorParam<M extends MethodType | undefined = undefined> =
   Partial<TraceDecoratorOptions<M>> | string
 
 export interface TraceDecoratorOptions<
   /** Decorated method */
-  M extends MethodType | void = void,
+  M extends MethodType | undefined = undefined,
   /** Arguments of decorated method */
   MParamType = M extends MethodType<infer P> ? P : [],
 > extends SpanOptions {

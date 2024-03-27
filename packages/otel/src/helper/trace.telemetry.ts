@@ -5,9 +5,10 @@ import { JaegerPropagator } from '@opentelemetry/propagator-jaeger'
 import { node, resources } from '@opentelemetry/sdk-node'
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions'
 
+import { InitTraceOptions, PropagatorList, SpanExporterList } from '##/lib/types.js'
+
 import { detectorResources } from './resource.detector.js'
 
-import { InitTraceOptions, PropagatorList, SpanExporterList } from '##/lib/types.js'
 
 
 interface InitTraceReturnType {
@@ -55,9 +56,7 @@ export function initTrace(options: InitTraceOptions): InitTraceReturnType {
   return ret
 }
 
-function genPropagators(
-  list: PropagatorList[],
-): TextMapPropagator[] {
+function genPropagators(list: PropagatorList[]): TextMapPropagator[] {
 
   const propagators: TextMapPropagator[] = []
 

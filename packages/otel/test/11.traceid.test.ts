@@ -13,7 +13,7 @@ const agent = exporterEndpoint.replace(/:\d+$/u, '')
 assert(agent, 'OTEL_EXPORTER_OTLP_ENDPOINT not set')
 
 
-describe(fileShortPath(import.meta.url), function() {
+describe(fileShortPath(import.meta.url), function () {
 
   const path = `${apiPrefix.TraceDecorator}/${apiRoute.id}`
   const path2 = `${apiPrefix.TraceDecorator}/${apiRoute.id2}`
@@ -27,7 +27,7 @@ describe(fileShortPath(import.meta.url), function() {
       .get(path)
       .expect(200)
 
-    const traceId = resp.text as string
+    const traceId = resp.text
     assert(traceId.length === 32)
     console.log({ traceId })
 
@@ -47,7 +47,7 @@ describe(fileShortPath(import.meta.url), function() {
       })
     }
 
-    const { data } = resp2.data as {data: [JaegerTraceInfo]}
+    const { data } = resp2.data as { data: [JaegerTraceInfo] }
     assert(Array.isArray(data))
     assert(data.length === 1)
     const [info] = data
@@ -102,7 +102,7 @@ describe(fileShortPath(import.meta.url), function() {
       .get(path2)
       .expect(200)
 
-    const traceId = resp.text as string
+    const traceId = resp.text
     assert(traceId.length === 32)
     console.log({ traceId })
 
@@ -123,7 +123,7 @@ describe(fileShortPath(import.meta.url), function() {
       })
     }
 
-    const { data } = resp2.data as {data: [JaegerTraceInfo]}
+    const { data } = resp2.data as { data: [JaegerTraceInfo] }
     assert(Array.isArray(data))
     assert(data.length === 1)
     const [info] = data
@@ -192,7 +192,7 @@ describe(fileShortPath(import.meta.url), function() {
       dataType: 'json',
     })
 
-    const { data } = resp2.data as {data: [JaegerTraceInfo]}
+    const { data } = resp2.data as { data: [JaegerTraceInfo] }
     assert(Array.isArray(data))
     assert(data.length === 1)
     const [info] = data
@@ -233,7 +233,7 @@ describe(fileShortPath(import.meta.url), function() {
       dataType: 'json',
     })
 
-    const { data } = resp2.data as {data: [JaegerTraceInfo]}
+    const { data } = resp2.data as { data: [JaegerTraceInfo] }
     assert(Array.isArray(data))
     assert(data.length === 1)
     const [info] = data

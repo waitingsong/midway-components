@@ -87,5 +87,5 @@ export enum AttrNames {
   ProcCpuinfo = 'proc.cpuinfo',
   ProcDiskstats = 'proc.diskstats',
   ProcMeminfo = 'proc.meminfo',
-  ProcStat = 'proc.stat'
+  ProcStat = 'proc.stat',
 }

@@ -41,7 +41,7 @@ export type HttpCallbackOptional = HttpCallback | undefined
 
 // from node 10+
 export type RequestSignature = [http.RequestOptions, HttpCallbackOptional] &
-HttpCallback
+  HttpCallback
 
 export type HttpRequestArgs = (HttpCallbackOptional | RequestSignature)[]
 

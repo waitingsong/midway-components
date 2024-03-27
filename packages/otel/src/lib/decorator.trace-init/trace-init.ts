@@ -19,9 +19,7 @@ export const METHOD_KEY_TraceInit = 'decorator:method_key_TraceInit'
  * }
  * ```
  */
-export function TraceInit<M extends MethodType | void = void>(
-  options?: TraceDecoratorParam<M>,
-): MethodDecorator & ClassDecorator {
+export function TraceInit<M extends MethodType | undefined = undefined>(options?: TraceDecoratorParam<M>): MethodDecorator & ClassDecorator {
 
   const opts: Partial<TraceDecoratorOptions<M>> = typeof options === 'string'
     ? { spanName: options }

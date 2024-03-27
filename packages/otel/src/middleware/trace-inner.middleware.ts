@@ -3,15 +3,17 @@ import { Middleware } from '@midwayjs/core'
 import { Context, IMiddleware, NextFunction } from '@mwcp/share'
 import { humanMemoryUsage } from '@waiting/shared-core'
 
-import { handleAppExceptionAndNext } from './helper.middleware.js'
 
 import { TraceService } from '##/lib/trace.service.js'
 import { AttrNames, ConfigKey, middlewareEnableCacheKey } from '##/lib/types.js'
 import { addSpanEventWithIncomingRequestData } from '##/lib/util.js'
 
+import { handleAppExceptionAndNext } from './helper.middleware.js'
+
 
 @Middleware()
 export class TraceMiddlewareInner implements IMiddleware<Context, NextFunction> {
+
   static getName(): string {
     const name = ConfigKey.middlewareNameInner
     return name
@@ -24,6 +26,7 @@ export class TraceMiddlewareInner implements IMiddleware<Context, NextFunction> 
   resolve() {
     return middleware
   }
+
 }
 
 /**

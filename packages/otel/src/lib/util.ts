@@ -122,9 +122,7 @@ export function setResponseContentLengthAttribute(
   }
 }
 
-function getContentLength(
-  headers: OutgoingHttpHeaders | IncomingHttpHeaders,
-): number | null {
+function getContentLength(headers: OutgoingHttpHeaders | IncomingHttpHeaders): number | null {
   const contentLengthHeader = headers['content-length']
   if (contentLengthHeader === undefined) { return null }
 
@@ -134,9 +132,7 @@ function getContentLength(
   return contentLength
 }
 
-function isCompressed(
-  headers: OutgoingHttpHeaders | IncomingHttpHeaders,
-): boolean {
+function isCompressed(headers: OutgoingHttpHeaders | IncomingHttpHeaders): boolean {
   const encoding = headers['content-encoding']
 
   return !! encoding && encoding !== 'identity'
@@ -292,7 +288,7 @@ export function addSpanEventWithIncomingRequestData(
     }
   }
 
-  const data = ctx.request.body as unknown
+  const data = ctx.request.body
   if (data && Object.keys(data).length) {
     const value = truncateString(JSON.stringify(data, null, 2))
     Object.defineProperty(attrs, AttrNames.Http_Request_Body, {

@@ -10,9 +10,7 @@ export const KEY_Trace = 'decorator:key_Trace'
  *
  * ```
  */
-export function Trace<M extends MethodType | void = void>(
-  options?: TraceDecoratorParam<M>,
-): MethodDecorator {
+export function Trace<M extends MethodType | undefined = undefined>(options?: TraceDecoratorParam<M>): MethodDecorator {
 
   const opts = typeof options === 'string'
     ? { spanName: options }

@@ -4,7 +4,6 @@ import { Middleware } from '@midwayjs/core'
 import { Context, IMiddleware, NextFunction, shouldEnableMiddleware } from '@mwcp/share'
 import { SpanKind, SpanStatus } from '@opentelemetry/api'
 
-import { handleTopExceptionAndNext } from './helper.middleware.js'
 
 import { TraceService } from '##/lib/trace.service.js'
 import { ConfigKey, Config, MiddlewareConfig, middlewareEnableCacheKey } from '##/lib/types.js'
@@ -14,9 +13,12 @@ import {
   propagateOutgoingHeader,
 } from '##/lib/util.js'
 
+import { handleTopExceptionAndNext } from './helper.middleware.js'
+
 
 @Middleware()
 export class TraceMiddleware implements IMiddleware<Context, NextFunction> {
+
   static getName(): string {
     const name = ConfigKey.middlewareName
     return name
@@ -60,7 +62,7 @@ export async function middleware(
   // const traceSvc = await ctx.requestContext.getAsync(TraceService)
   const traceSvc = (ctx[`_${ConfigKey.serviceName}`] ?? await ctx.requestContext.getAsync(TraceService)) as TraceService
 
-  ctx.res.once('finish', () => finishCallback(traceSvc))
+  ctx.res.once('finish', () => { finishCallback(traceSvc) })
   await handleTopExceptionAndNext(traceSvc, next)
   propagateOutgoingHeader(traceSvc.rootContext, ctx.res)
   addSpanEventWithOutgoingResponseData(traceSvc.rootSpan, ctx)

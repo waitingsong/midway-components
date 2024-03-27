@@ -40,6 +40,8 @@ import { SemanticAttributes } from '@opentelemetry/semantic-conventions'
 import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
 import type { NpmPkg } from '@waiting/shared-types'
 
+import { initTrace } from '##/helper/index.opentelemetry.js'
+
 import { AbstractOtelComponent } from './abstract.js'
 import { initSpanStatusOptions } from './config.js'
 import {
@@ -62,7 +64,6 @@ import {
 import { normalizeHeaderKey, setSpan } from './util.js'
 
 // eslint-disable-next-line import/max-dependencies
-import { initTrace } from '##/helper/index.opentelemetry.js'
 // eslint-disable-next-line import/max-dependencies
 import PKG from '#package.json' assert { type: 'json' }
 
@@ -152,9 +153,7 @@ export class OtelComponent extends AbstractOtelComponent {
     const traceCtx = this.getGlobalCurrentContext()
 
     // this.appInitProcessSpan = this.startSpan(spanName, opts)
-    this.startActiveSpan(spanName, (
-      span,
-    ) => {
+    this.startActiveSpan(spanName, (span) => {
       this.appInitProcessSpan = span
       const ctxWithSpanSet = setSpan(traceCtx, span)
       this.appInitProcessContext = ctxWithSpanSet
@@ -271,12 +270,13 @@ export class OtelComponent extends AbstractOtelComponent {
   ): void {
 
     if (! this.config.enable) { return }
-    if (options?.traceEvent === false || this.config.traceEvent === false) { return }
+    if (options?.traceEvent === false || ! this.config.traceEvent) { return }
 
     const ename = typeof input['event'] === 'string' || typeof input['event'] === 'number'
-      ? String(input['event']) : ''
+      ? String(input['event'])
+      : ''
     const name = options?.eventName ?? ename
-    delete input['event']
+    delete input.event
 
     if (options?.logMemeoryUsage ?? this.config.logMemeoryUsage) {
       input[AttrNames.ServiceMemoryUsage] = JSON.stringify(humanMemoryUsage(), null, 2)
