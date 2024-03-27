@@ -14,9 +14,7 @@ import {
 import { CachedResponse, CacheableArgs, DecoratorExecutorOptions } from '../types.js'
 
 
-export async function decoratorExecutor(
-  options: DecoratorExecutorOptions<CacheableArgs>,
-): Promise<unknown> {
+export async function decoratorExecutor(options: DecoratorExecutorOptions<CacheableArgs>): Promise<unknown> {
 
   const {
     webContext,
@@ -57,7 +55,7 @@ export async function decoratorExecutor(
     }
 
     if (typeof cacheResp !== 'undefined') {
-      const resp = genDataWithCacheMeta(cacheResp as CachedResponse, opts2)
+      const resp = genDataWithCacheMeta(cacheResp, opts2)
       return resp
     }
 

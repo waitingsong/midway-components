@@ -13,9 +13,7 @@ import {
 import { CacheableArgs, CachedResponse, DecoratorExecutorOptions } from '../types.js'
 
 
-export async function decoratorExecutor(
-  options: DecoratorExecutorOptions<CacheableArgs>,
-): Promise<unknown> {
+export async function decoratorExecutor(options: DecoratorExecutorOptions<CacheableArgs>): Promise<unknown> {
 
   const {
     webContext,

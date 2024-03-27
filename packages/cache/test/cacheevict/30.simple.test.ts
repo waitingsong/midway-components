@@ -6,7 +6,7 @@ import { apiPrefix, apiRoute } from '../fixtures/base-app/src/api-route.js'
 import { testConfig } from '../root.config.js'
 
 
-describe(fileShortPath(import.meta.url), function() {
+describe(fileShortPath(import.meta.url), function () {
   describe('Should @Cacheable decorator work', () => {
     const prefix = apiPrefix.methodCacheEvict
 

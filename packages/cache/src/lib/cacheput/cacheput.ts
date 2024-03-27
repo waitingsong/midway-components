@@ -9,9 +9,7 @@ import { CacheableArgs, MethodType } from '../types.js'
  * Declarative CachePut Decorator
  * @returns MethodDecorator | ClassDecorator
  */
-export function CachePut<M extends MethodType | undefined = undefined>(
-  options?: Partial<CacheableArgs<M>>,
-) {
+export function CachePut<M extends MethodType | undefined = undefined>(options?: Partial<CacheableArgs<M>>) {
 
   return customDecoratorFactory<CacheableArgs<M>>({
     decoratorArgs: options,

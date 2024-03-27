@@ -43,7 +43,7 @@ export function genCacheKey(options: GenCacheKeyOptions): string {
       return `${cacheName}:${key.toString()}`
 
     case 'undefined':
-      return `${cacheName}` // without tailing `:`
+      return cacheName // without tailing `:`
 
     case 'function': {
       // @ts-expect-error
@@ -155,20 +155,20 @@ export async function getData<T = unknown>(
 
   const keys = hashCacheKey(cacheKey)
 
-  const ret = await caching.get(keys.cacheKeyHash ?? keys.cacheKey) as CachedResponse<T> | undefined
+  const ret = await caching.get(keys.cacheKeyHash ?? keys.cacheKey)
+  // @ts-expect-error
   if (traceService?.isStarted && ret?.CacheMetaType) {
     traceService.addEvent(void 0, {
       event: 'cache.hit',
       library: '@mwcp/cache',
+      // @ts-expect-error
       CacheMetaType: JSON.stringify(ret.CacheMetaType),
     })
   }
-  return ret as CachedResponse<T>
+  return ret as Promise<CachedResponse<T>>
 }
 
-export function computerConditionValue(
-  options: DecoratorExecutorOptions<CacheableArgs | CacheEvictArgs>,
-): boolean | Promise<boolean> {
+export function computerConditionValue(options: DecoratorExecutorOptions<CacheableArgs | CacheEvictArgs>): boolean | Promise<boolean> {
 
   const { mergedDecoratorParam: cacheOptions } = options
   assert(cacheOptions, 'cacheOptions is undefined within computerConditionValue()')
@@ -176,15 +176,15 @@ export function computerConditionValue(
   const webContext = options.instance[REQUEST_OBJ_CTX_KEY]
   assert(webContext, 'webContext is undefined')
 
-  switch (typeof cacheOptions['condition']) {
+  switch (typeof cacheOptions.condition) {
     case 'undefined':
       return true
 
     case 'boolean':
-      return cacheOptions['condition']
+      return cacheOptions.condition
 
     case 'function': {
-      const fn = cacheOptions['condition'] as (...args: unknown[]) => boolean | Promise<boolean>
+      const fn = cacheOptions.condition as (...args: unknown[]) => boolean | Promise<boolean>
       return fn.call(
         webContext,
         options.methodArgs,
@@ -193,7 +193,7 @@ export function computerConditionValue(
     }
 
     default:
-      throw new Error(`Invalid condition type: ${typeof cacheOptions['condition']}`)
+      throw new Error(`Invalid condition type: ${typeof cacheOptions.condition}`)
   }
 }
 
@@ -210,18 +210,18 @@ export function computerTTLValue(
 
   let ttl = 10 // second
 
-  switch (typeof cacheOptions['ttl']) {
+  switch (typeof cacheOptions.ttl) {
     case 'undefined':
       ttl = +initCacheManagerOptions.options.ttl
       break
 
     case 'number':
-      ttl = Number.isNaN(cacheOptions['ttl']) ? ttl : +cacheOptions['ttl']
+      ttl = Number.isNaN(cacheOptions.ttl) ? ttl : +cacheOptions.ttl
       break
 
     case 'function': {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const fn = cacheOptions['ttl'] as CacheTTLFn<any>
+      const fn = cacheOptions.ttl as CacheTTLFn<any>
       return fn.call(
         webContext,
         options.methodArgs,
@@ -230,7 +230,7 @@ export function computerTTLValue(
     }
 
     default:
-      throw new Error(`Invalid ttl type: ${typeof cacheOptions['ttl']}`)
+      throw new Error(`Invalid ttl type: ${typeof cacheOptions.ttl}`)
   }
 
   assert(typeof ttl === 'number', 'ttl is not a number')
@@ -238,9 +238,7 @@ export function computerTTLValue(
   return ttl
 }
 
-export function genDecoratorExecutorOptions(
-  options: DecoratorExecutorParamBase<CacheableArgs | CacheEvictArgs>,
-): DecoratorExecutorOptions<CacheableArgs | CacheEvictArgs> {
+export function genDecoratorExecutorOptions(options: DecoratorExecutorParamBase<CacheableArgs | CacheEvictArgs>): DecoratorExecutorOptions<CacheableArgs | CacheEvictArgs> {
 
   const {
     webApp,

@@ -6,9 +6,7 @@ import { computerConditionValue, deleteData, genCacheKey, GenCacheKeyOptions } f
 import { CacheEvictArgs, DecoratorExecutorOptions } from '../types.js'
 
 
-export async function decoratorExecutor(
-  options: DecoratorExecutorOptions<CacheEvictArgs>,
-): Promise<unknown> {
+export async function decoratorExecutor(options: DecoratorExecutorOptions<CacheEvictArgs>): Promise<unknown> {
 
   const {
     webContext,

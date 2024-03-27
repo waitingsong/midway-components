@@ -41,7 +41,7 @@ export type MethodType = (...input: any[]) => (any | Promise<any>)
  * @param result Result of the method. Only for using `@CacheEvict`
  * @returns if undefined, there is no tailing ":" in cacheName
  */
-export type KeyGenerator<M extends MethodType | void = void> = (
+export type KeyGenerator<M extends MethodType | undefined = undefined> = (
   this: Context,
   /** Arguments of the method */
   args: M extends MethodType ? Parameters<M> : any,
@@ -52,7 +52,7 @@ export type KeyGenerator<M extends MethodType | void = void> = (
   result: M extends MethodType ? Awaited<ReturnType<M>> : undefined
 ) => string | undefined
 
-export type CacheConditionFn<M extends MethodType | void = void> = (
+export type CacheConditionFn<M extends MethodType | undefined = undefined> = (
   this: Context,
   /** Arguments of the method */
   args: M extends MethodType ? Parameters<M> : any,
@@ -64,7 +64,7 @@ export type CacheConditionFn<M extends MethodType | void = void> = (
 ) => boolean | Promise<boolean>
 
 
-export type CacheTTLFn<M extends MethodType | void = void> = (
+export type CacheTTLFn<M extends MethodType | undefined = undefined> = (
   this: Context,
   /** Arguments of the method */
   args: M extends MethodType ? Parameters<M> : any,
@@ -90,7 +90,7 @@ export interface CachedResponse<T = unknown> {
   value: T
 }
 
-export interface CacheableArgs<M extends MethodType | void = void> {
+export interface CacheableArgs<M extends MethodType | undefined = undefined> {
   /**
    * Name of the cache set
    * @default `${className}.${methodName}`

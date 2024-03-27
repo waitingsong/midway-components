@@ -7,7 +7,7 @@ import { hashCacheKey, saveData, getData, deleteData } from '../../src/lib/helpe
 import { testConfig } from '../root.config.js'
 
 
-describe(fileShortPath(import.meta.url), function() {
+describe(fileShortPath(import.meta.url), function () {
   const key = 'CustService.getUserList:{"orderfield":"total","pageindex":1,"pagesize":5}'
   const expectHash = 'CustService.443bb521e2a0b756631224861f7a54f6'
   const key2 = 'CustService.getUserList'

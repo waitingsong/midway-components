@@ -21,9 +21,7 @@ export const cacheableMethodIgnoreIfMethodDecoratorKeys = [METHOD_KEY_Transactio
  * Declarative Cacheable Decorator
  * @returns MethodDecorator | ClassDecorator
  */
-export function Cacheable<M extends MethodType | void>(
-  options?: Partial<CacheableArgs<M>>,
-) {
+export function Cacheable<M extends MethodType | undefined>(options?: Partial<CacheableArgs<M>>) {
 
   return customDecoratorFactory<CacheableArgs<M>>({
     decoratorArgs: options,

@@ -9,9 +9,7 @@ import { CacheEvictArgs, MethodType } from '../types.js'
  * Declarative CacheEvict Decorator
  * @returns MethodDecorator | ClassDecorator
  */
-export function CacheEvict<M extends MethodType | undefined = undefined>(
-  options?: Partial<CacheEvictArgs<M>>,
-) {
+export function CacheEvict<M extends MethodType | undefined = undefined>(options?: Partial<CacheEvictArgs<M>>) {
 
   return customDecoratorFactory<CacheEvictArgs<M>>({
     decoratorArgs: options,

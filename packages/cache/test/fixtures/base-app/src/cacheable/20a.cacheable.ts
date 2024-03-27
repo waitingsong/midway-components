@@ -35,7 +35,7 @@ export class DecoratorController {
     const defaultConfig = this.cacheManagerConfig.clients['default'] as SingleCacheOptions
     assert(defaultConfig)
     // @ts-expect-error
-    const configOpt = defaultConfig.options as { ttl: number} // MidwayConfig
+    const configOpt = defaultConfig.options as { ttl: number } // MidwayConfig
     assert(configOpt)
     this.midwayConfig = configOpt
   }
