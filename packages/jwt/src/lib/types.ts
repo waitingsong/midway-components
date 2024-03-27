@@ -29,7 +29,7 @@ export enum Msg {
   VerifyNotFunc = 'jwt.verify is not a function',
   TokenNotFound = 'Token not found. Header format is "Authorization: Bearer <token>"',
   TokenValidFailed = 'Token validation failed',
-  VSceretInvalid = 'VerifySecret not provided',
+  VerifySecretInvalid = 'VerifySecret not provided',
 }
 
 

@@ -1,3 +1,5 @@
+import assert from 'node:assert'
+
 import {
   Config as _Config,
   Init,
@@ -146,7 +148,7 @@ export class JwtComponent {
   ): JwtResult {
 
     /* istanbul ignore next */
-    if (! secretSet.size) { throw new Error(Msg.VSceretInvalid) }
+    if (! secretSet.size) { throw new Error(Msg.VerifySecretInvalid) }
 
     const ret: JwtResult[] = []
     const msgs: string[] = []
@@ -161,7 +163,7 @@ export class JwtComponent {
         const start = ss.slice(0, 2)
         let end = ss
         /* istanbul ignore else */
-        if (! process.env['CI']) {
+        if (! process.env.CI) {
           end = ss.length > 10 ? ss.slice(-2) : '**'
         }
         msgs.push(`Error during verify: with secret "${start}****${end}"`)
@@ -169,7 +171,9 @@ export class JwtComponent {
     })
 
     if (ret.length) {
-      return ret[0]!
+      const resp = ret[0]
+      assert(resp, 'Should have response')
+      return resp
     }
     throw new Error(Msg.TokenValidFailed + ':\n' + msgs.join('\n'))
   }

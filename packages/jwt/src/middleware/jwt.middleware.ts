@@ -77,14 +77,14 @@ export async function middleware(
     const container = app.getApplicationContext()
     const svc = await container.getAsync(JwtComponent)
 
-    const secretSet: Set<VerifySecret> = svc.genVerifySecretSet(ctx.jwtState.secret ?? ctx.state['secret'])
+    const secretSet: Set<VerifySecret> = svc.genVerifySecretSet(ctx.jwtState.secret ?? ctx.state.secret)
     const decoded = svc.validateToken(token, secretSet)
 
     ctx.jwtState.header = decoded.header
     ctx.jwtState.signature = decoded.signature
     ctx.jwtState.user = decoded.payload
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    ctx.state['user'] = decoded.payload
+    ctx.state.user = decoded.payload
     if (typeof ctx.status === 'undefined') {
       ctx.status = 200
     }
@@ -95,7 +95,7 @@ export async function middleware(
       // lets downstream middlewares handle JWT exceptions
       ctx.jwtState.jwtOriginalError = ex as Error
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      ctx.state['jwtOriginalError'] = ex as Error
+      ctx.state.jwtOriginalError = ex as Error
       if (typeof ctx.status === 'undefined') {
         ctx.status = 200
       }
