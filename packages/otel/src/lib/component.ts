@@ -276,8 +276,7 @@ export class OtelComponent extends AbstractOtelComponent {
       ? String(input['event'])
       : ''
     const name = options?.eventName ?? eventName
-    // @ts-expect-error
-    delete input.event
+    delete input['event']
 
     if (options?.logMemoryUsage ?? this.config.logMemoryUsage) {
       input[AttrNames.ServiceMemoryUsage] = JSON.stringify(humanMemoryUsage(), null, 2)
