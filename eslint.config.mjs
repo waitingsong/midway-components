@@ -8,7 +8,7 @@ import { genCurrentDirname, genModuleAbsolutePathIfExists } from '@waiting/share
 const projectDir = genCurrentDirname(import.meta.url)
 
 const srcRules = {
-  'import/no-extraneous-dependencies': [2, {
+  'import/no-extraneous-dependencies': [0, {
     devDependencies: false,
     optionalDependencies: false,
     bundledDependencies: false,
