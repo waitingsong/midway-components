@@ -56,13 +56,12 @@ jobs:
           export cwd=`pwd`
           git config --global --add safe.directory $cwd
 
-      - name: Inatall Dependencies
+      - name: Install Dependencies
         timeout-minutes: 15
         shell: bash
         run: |
           export cwd=`pwd`
           npm i --no-audit -g autocannon c8 lerna rollup tsx zx
-          # npm run purge
           npm i
         env:
           CI: true
@@ -112,6 +111,8 @@ jobs:
           REDIS_PORT: 6379
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 

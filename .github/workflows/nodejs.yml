@@ -61,7 +61,7 @@ jobs:
           locale-gen
           locale -a
           netstat -tunpl
-          chmod a+w -R .
+          # chmod a+w -R .
           dig jaeger
           export cwd=`pwd`
           git config --global --add safe.directory $cwd
@@ -82,13 +82,12 @@ jobs:
           POSTGRES_PASSWORD: postgres
           PGPASSWORD: postgres
 
-      - name: Inatall Dependencies
+      - name: Install Dependencies
         timeout-minutes: 15
         run: |
-          chown -R 1001:121 "/github/home/.npm"
+          # chown -R 1001:121 "/github/home/.npm"
           # DO NOT execute: npm config set unsafe-perm=true
           export cwd=`pwd`
-          # .github/workflows/fix.sh
           npm i --no-audit -g autocannon c8 lerna rollup tsx zx
           npm i
         env:
@@ -167,7 +166,9 @@ jobs:
           OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 
     services:
