@@ -38,9 +38,7 @@ export function assertUploadFiles(
   assert(data.uploadFiles === expectFiles, stderr)
 }
 
-export async function assertLocalFileExists(
-  file: string,
-): Promise<void> {
+export async function assertLocalFileExists(file: string): Promise<void> {
 
   const exists = (await stat(file)).isFile()
   assert(exists === true, `${file} should exists`)

@@ -6,7 +6,7 @@ import { AliOssComponent } from '../../src/index.js'
 import { cloudUrlPrefix, testConfig } from '../root.config.js'
 
 
-describe(fileShortPath(import.meta.url), function() {
+describe(fileShortPath(import.meta.url), function () {
 
   const path = '/oss/mkdir'
 

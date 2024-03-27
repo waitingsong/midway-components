@@ -8,7 +8,7 @@ import { fileShortPath } from '@waiting/shared-core'
 import { cloudUrlPrefix, src, testConfig } from '../root.config.js'
 
 
-describe(fileShortPath(import.meta.url), function() {
+describe(fileShortPath(import.meta.url), function () {
 
   describe('Should download() work', () => {
     it('normal string', async () => {

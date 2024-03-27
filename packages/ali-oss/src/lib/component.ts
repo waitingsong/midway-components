@@ -349,7 +349,7 @@ export class AliOssComponent {
 
   protected async runner<
     T extends BaseOptions,
-    R extends ProcessRet<DataBase> | boolean = ProcessRet<DataBase>
+    R extends ProcessRet<DataBase> | boolean = ProcessRet<DataBase>,
   >(options: RunnerOptions<T>): Promise<R> {
 
     const { fnKey } = options
@@ -506,6 +506,7 @@ export class AliOssComponent {
 
     return
   }
+
 }
 
 

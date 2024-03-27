@@ -6,7 +6,7 @@ import { Msg } from '../../src/lib/types.js'
 import { cloudUrlPrefix, src, testConfig, TestRespBody } from '../root.config.js'
 
 
-describe(fileShortPath(import.meta.url), function() {
+describe(fileShortPath(import.meta.url), function () {
 
   describe('mv should work', () => {
     it('file', async () => {

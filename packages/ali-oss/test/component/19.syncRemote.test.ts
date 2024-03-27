@@ -8,7 +8,7 @@ import { assertFileExists, assertUploadFiles } from '../helper.js'
 import { cloudUrlPrefix, files, src, srcDir, testConfig, TestRespBody } from '../root.config.js'
 
 
-describe(fileShortPath(import.meta.url), function() {
+describe(fileShortPath(import.meta.url), function () {
   const target = `${cloudUrlPrefix}/sync-${Date.now().toString()}`
 
   describe('syncRemote should work', () => {

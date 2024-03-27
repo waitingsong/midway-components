@@ -5,7 +5,7 @@ import { fileShortPath } from '@waiting/shared-core'
 import { cloudUrlPrefix, src, testConfig, TestRespBody } from '../root.config.js'
 
 
-describe(fileShortPath(import.meta.url), function() {
+describe(fileShortPath(import.meta.url), function () {
 
   describe('Should upload() work', () => {
     it('normal string', async () => {

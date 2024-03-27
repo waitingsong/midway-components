@@ -9,7 +9,7 @@ import { assertLocalFileExists } from '../helper.js'
 import { cloudUrlPrefix, files, srcDir, testConfig, testDir } from '../root.config.js'
 
 
-describe(fileShortPath(import.meta.url), function() {
+describe(fileShortPath(import.meta.url), function () {
 
   const target = `${cloudUrlPrefix}/sync-${Date.now().toString()}`
 

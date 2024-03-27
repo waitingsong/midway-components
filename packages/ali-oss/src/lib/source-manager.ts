@@ -40,7 +40,7 @@ export class AliOssSourceManager<SourceName extends string = string>
     config: InstanceConfig,
     clientName: SourceName,
     options?: CreateInstanceOptions,
-  ) => Promise<AliOssComponent | void>
+  ) => Promise<AliOssComponent | undefined>
 
   @Init()
   async init(): Promise<void> {

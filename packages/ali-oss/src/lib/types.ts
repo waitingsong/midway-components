@@ -25,7 +25,7 @@ export type Msg = _Msg | Msg2
 
 export enum ClientKey {
   master = 'ossMaster',
-  unitTest = 'ossUnitTest'
+  unitTest = 'ossUnitTest',
 }
 
 

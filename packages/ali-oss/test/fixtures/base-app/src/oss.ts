@@ -38,12 +38,10 @@ export class OssController {
   }
 
   @Post('/mkdir')
-  async mkdir(
-    @Query() parm: {
-      target: Parameters<AliOssComponent['mkdir']>[0],
-      opts: Parameters<AliOssComponent['mkdir']>[1],
-    },
-  ): Promise<ReturnType<AliOssComponent['mkdir']>> {
+  async mkdir(@Query() parm: {
+    target: Parameters<AliOssComponent['mkdir']>[0],
+    opts: Parameters<AliOssComponent['mkdir']>[1],
+  }): Promise<ReturnType<AliOssComponent['mkdir']>> {
 
     assert(this.ossClient.ctx === this.ctx)
     const { target, opts } = parm

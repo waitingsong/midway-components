@@ -5,7 +5,7 @@ import { fileShortPath } from '@waiting/shared-core'
 import { cloudUrlPrefix, src, testConfig } from '../root.config.js'
 
 
-describe(fileShortPath(import.meta.url), function() {
+describe(fileShortPath(import.meta.url), function () {
 
   describe('rm should work', () => {
     it('normal', async () => {

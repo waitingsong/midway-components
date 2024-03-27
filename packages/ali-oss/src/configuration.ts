@@ -61,6 +61,7 @@ export class AutoConfiguration implements ILifeCycle {
   async onReady(): Promise<void> {
     this.logger.info(`[${ConfigKey.componentName}] onReady`)
   }
+
 }
 
 

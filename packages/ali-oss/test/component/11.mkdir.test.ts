@@ -6,7 +6,7 @@ import { MkdirOptions } from '../../src/index.js'
 import { cloudUrlPrefix, testConfig, TestRespBody } from '../root.config.js'
 
 
-describe(fileShortPath(import.meta.url), function() {
+describe(fileShortPath(import.meta.url), function () {
 
   describe('mkdir should work', () => {
     it('normal', async () => {

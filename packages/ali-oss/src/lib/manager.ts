@@ -32,7 +32,7 @@ export class AliOssManager<SourceName extends string = string, Ctx extends Conte
     config: InstanceConfig,
     clientName: SourceName,
     options?: CreateInstanceOptions,
-  ): Promise<AliOssComponent | void> {
+  ): Promise<AliOssComponent | undefined> {
 
     const opts: CreateInstanceOptions = {
       validateConnection: true,

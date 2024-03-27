@@ -6,7 +6,7 @@ import { SignOptions } from '../../src/index.js'
 import { cloudUrlPrefix, src, testConfig } from '../root.config.js'
 
 
-describe(fileShortPath(import.meta.url), function() {
+describe(fileShortPath(import.meta.url), function () {
 
   describe('sign should work', () => {
     it('normal', async () => {
