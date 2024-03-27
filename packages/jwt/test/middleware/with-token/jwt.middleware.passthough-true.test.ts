@@ -1,14 +1,15 @@
 import { fileShortPath } from '@waiting/shared-core'
 
+
+import { ConfigKey, MiddlewareConfig } from '##/lib/types.js'
+import { authHeader1, payload1 } from '#@/mock-data.js'
+import { testConfig } from '#@/root.config.js'
+
 import {
   authShouldPassed,
   authShouldPassthroughNotFound,
   authShouldPassthroughValidFailed,
 } from '../helper.js'
-
-import { ConfigKey, MiddlewareConfig } from '##/lib/types.js'
-import { authHeader1, payload1 } from '#@/mock-data.js'
-import { testConfig } from '#@/root.config.js'
 
 
 describe(fileShortPath(import.meta.url), () => {

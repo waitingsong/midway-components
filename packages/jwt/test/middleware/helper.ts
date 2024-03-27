@@ -23,9 +23,7 @@ export function authShouldPassed(
   assert.deepStrictEqual(jwtState.user, expectPayload)
 }
 
-export function authShouldSkipped(
-  resp: TestResponse,
-): void {
+export function authShouldSkipped(resp: TestResponse): void {
 
   const { status } = resp
   const { jwtState } = resp.body as RespData2
@@ -64,9 +62,7 @@ export function authShouldFailedWithNotFound(
   assert(error.text.includes('401') || error.text.includes(JwtMsg.AuthFailed))
 }
 
-export function authShouldValidatFailed(
-  resp: TestResponse,
-): void {
+export function authShouldValidatFailed(resp: TestResponse): void {
 
   const { status, error } = resp
   const { jwtState } = resp.body as RespData2

@@ -21,6 +21,7 @@ import {
 
 @Middleware()
 export class JwtMiddleware implements IMiddleware<Context, NextFunction> {
+
   static getName(): string {
     const name = ConfigKey.middlewareName
     return name
@@ -33,8 +34,8 @@ export class JwtMiddleware implements IMiddleware<Context, NextFunction> {
         ctx.state = {}
       }
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (! ctx['jwtState']) {
-        ctx['jwtState'] = {} as JwtState
+      if (! ctx.jwtState) {
+        ctx.jwtState = {} as JwtState
       }
 
       const mwConfig = ctx.app.getConfig(ConfigKey.middlewareConfig) as MiddlewareConfig
@@ -48,6 +49,7 @@ export class JwtMiddleware implements IMiddleware<Context, NextFunction> {
   resolve() {
     return middleware
   }
+
 }
 
 export async function middleware(
@@ -75,14 +77,12 @@ export async function middleware(
     const container = app.getApplicationContext()
     const svc = await container.getAsync(JwtComponent)
 
-    const secretSet: Set<VerifySecret> = svc.genVerifySecretSet(
-      ctx['jwtState'].secret ?? ctx.state['secret'],
-    )
+    const secretSet: Set<VerifySecret> = svc.genVerifySecretSet(ctx.jwtState.secret ?? ctx.state['secret'])
     const decoded = svc.validateToken(token, secretSet)
 
-    ctx['jwtState'].header = decoded.header
-    ctx['jwtState'].signature = decoded.signature
-    ctx['jwtState'].user = decoded.payload
+    ctx.jwtState.header = decoded.header
+    ctx.jwtState.signature = decoded.signature
+    ctx.jwtState.user = decoded.payload
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     ctx.state['user'] = decoded.payload
     if (typeof ctx.status === 'undefined') {
@@ -93,7 +93,7 @@ export async function middleware(
     const pass = await parseByPassthrough(ctx, passthrough)
     if (pass === true) {
       // lets downstream middlewares handle JWT exceptions
-      ctx['jwtState'].jwtOriginalError = ex as Error
+      ctx.jwtState.jwtOriginalError = ex as Error
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       ctx.state['jwtOriginalError'] = ex as Error
       if (typeof ctx.status === 'undefined') {
@@ -108,7 +108,7 @@ export async function middleware(
       const msg = debug === true ? (ex as Error).message : Msg.AuthFailed
       ctx.status = 401
       if (typeof ctx.throw === 'function') {
-        ctx.throw(401, msg, { originalError: ex as unknown })
+        ctx.throw(401, msg, { originalError: ex })
         return
       }
       else {

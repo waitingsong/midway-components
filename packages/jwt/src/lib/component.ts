@@ -13,6 +13,13 @@ import {
 // } from 'jsonwebtoken'
 import JWT from 'jsonwebtoken'
 
+import type {
+  DecodeOptions,
+  JsonObject,
+  SignOptions,
+  Secret,
+} from '##/interface.js'
+
 import {
   ConfigKey,
   Msg,
@@ -30,12 +37,6 @@ import {
   validateVerifySecret,
 } from './util.js'
 
-import type {
-  DecodeOptions,
-  JsonObject,
-  SignOptions,
-  Secret,
-} from '##/interface.js'
 
 
 const {
@@ -126,9 +127,7 @@ export class JwtComponent {
    *
    * @param options value of complete always be TRUE
    */
-  decode<T = JsonObject>(
-    token: JwtToken,
-  ): JwtResult<T> {
+  decode<T = JsonObject>(token: JwtToken): JwtResult<T> {
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (! this) { throw new TypeError('Should call with class name, such as jwt.decode()') }
@@ -169,9 +168,8 @@ export class JwtComponent {
       }
     })
 
-    /* istanbul ignore else */
     if (ret.length) {
-      return ret[0] as JwtResult
+      return ret[0]!
     }
     throw new Error(Msg.TokenValidFailed + ':\n' + msgs.join('\n'))
   }
@@ -180,9 +178,7 @@ export class JwtComponent {
    * Generate secrets for verify,
    * Note: use ctxSecret only if available
    */
-  genVerifySecretSet(
-    ctxSecret?: unknown,
-  ): Set<VerifySecret> {
+  genVerifySecretSet(ctxSecret?: unknown): Set<VerifySecret> {
 
     if (ctxSecret) {
       const cs = processSecret(ctxSecret)

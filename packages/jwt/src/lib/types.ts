@@ -14,7 +14,7 @@ export enum ConfigKey {
   config = 'jwtConfig',
   middlewareConfig = 'jwtMiddlewareConfig',
   componentName = 'jwtComponent',
-  middlewareName = 'jwtMiddleware'
+  middlewareName = 'jwtMiddleware',
 }
 
 export enum Msg {

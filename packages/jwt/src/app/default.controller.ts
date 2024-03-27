@@ -5,9 +5,10 @@ import {
 } from '@midwayjs/core'
 import { ApiResponse } from '@midwayjs/swagger'
 
+import { Config, ConfigKey, Msg } from '##/lib/types.js'
+
 import { DefaultApi } from './default.types.js'
 
-import { Config, ConfigKey, Msg } from '##/lib/types.js'
 
 
 @Controller(DefaultApi.base)

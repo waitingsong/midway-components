@@ -2,11 +2,6 @@ import assert from 'node:assert/strict'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-import {
-  authShouldFailedWithNotFound2,
-  authShouldPassed,
-  authShouldPassthroughNotFound,
-} from '../helper.js'
 
 import {
   ConfigKey,
@@ -15,6 +10,12 @@ import {
 } from '##/lib/types.js'
 import { authHeader1, payload1 } from '#@/mock-data.js'
 import { testConfig } from '#@/root.config.js'
+
+import {
+  authShouldFailedWithNotFound2,
+  authShouldPassed,
+  authShouldPassthroughNotFound,
+} from '../helper.js'
 
 
 describe(fileShortPath(import.meta.url), () => {

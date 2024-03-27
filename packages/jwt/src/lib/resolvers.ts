@@ -84,7 +84,7 @@ export function resolveFromCookies(
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   const token = cookies && typeof cookies.get === 'function'
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    ? cookies.get(cookieKey) as JwtToken | undefined
+    ? cookies.get(cookieKey)
     : ''
   return token
 }

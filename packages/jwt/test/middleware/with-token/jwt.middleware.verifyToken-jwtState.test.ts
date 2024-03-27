@@ -2,12 +2,13 @@ import assert from 'node:assert/strict'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-import { authShouldPassed } from '../helper.js'
 
 import { jwtMiddlewareConfig as mConfig } from '##/config/config.unittest.js'
 import { Config, ConfigKey, MiddlewareConfig } from '##/lib/types.js'
 import { authHeader1, payload1 } from '#@/mock-data.js'
 import { testConfig } from '#@/root.config.js'
+
+import { authShouldPassed } from '../helper.js'
 
 
 describe(fileShortPath(import.meta.url), () => {

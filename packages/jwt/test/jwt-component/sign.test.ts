@@ -41,7 +41,7 @@ describe(fileShortPath(import.meta.url), () => {
       const svc = await container.getAsync(JwtComponent)
 
       const token = svc.sign(payload2)
-      assert(token.indexOf(tokenHeader2) === 0)
+      assert(token.startsWith(tokenHeader2))
     })
   })
 })

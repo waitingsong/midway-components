@@ -2,13 +2,14 @@ import assert from 'node:assert/strict'
 
 import { fileShortPath } from '@waiting/shared-core'
 
+
+import { ConfigKey, MiddlewareConfig } from '##/lib/types.js'
+import { testConfig } from '#@/root.config.js'
+
 import {
   authShouldPassthroughEmptyStringNotFound,
   authShouldRedirect,
 } from '../helper.js'
-
-import { ConfigKey, MiddlewareConfig } from '##/lib/types.js'
-import { testConfig } from '#@/root.config.js'
 
 
 describe(fileShortPath(import.meta.url), () => {
