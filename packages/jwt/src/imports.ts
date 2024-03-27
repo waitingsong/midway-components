@@ -4,10 +4,10 @@ import * as swagger from '@midwayjs/swagger'
 // import * as otel from '@mwcp/otel'
 
 /* c8 ignore next 4 */
-const CI = !! (process.env.MIDWAY_SERVER_ENV === 'unittest'
-  || process.env.MIDWAY_SERVER_ENV === 'local'
-  || process.env.NODE_ENV === 'unittest'
-  || process.env.NODE_ENV === 'local'
+const CI = !! (process.env['MIDWAY_SERVER_ENV'] === 'unittest'
+  || process.env['MIDWAY_SERVER_ENV'] === 'local'
+  || process.env['NODE_ENV'] === 'unittest'
+  || process.env['NODE_ENV'] === 'local'
 )
 
 export const useComponents: IComponentInfo[] = []
