@@ -17,9 +17,11 @@ const srcRules = {
       await genModuleAbsolutePathIfExists(projectDir, 'node_modules/@mwcp/share'),
     ],
   }],
+  '@typescript-eslint/no-dynamic-delete': 0,
 }
 const testRules = {
-  '@typescript-eslint/no-explicit-any': 0
+  '@typescript-eslint/no-explicit-any': 0,
+  '@typescript-eslint/dot-notation': 0,
 }
 
 const languageOptions = {
