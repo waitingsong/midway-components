@@ -78,6 +78,7 @@ export type MiddlewareConfig<T> = MWConfig<T>
 
 /** 分页查询结果包装器 */
 export class PagingResult<T> {
+
   /**
    * Total count of rows in table
    *
@@ -96,4 +97,5 @@ export class PagingResult<T> {
    */
   pageSize: number
   rows: T[]
+
 }

@@ -25,15 +25,13 @@ import type {
 } from './custom-decorator.types.js'
 
 
-export function customDecoratorFactory<TDecoratorParam extends {}>(
-  options: CustomDecoratorFactoryParam<TDecoratorParam>,
-): MethodDecorator & ClassDecorator {
+export function customDecoratorFactory<TDecoratorParam extends {}>(options: CustomDecoratorFactoryParam<TDecoratorParam>): MethodDecorator & ClassDecorator {
 
   const DecoratorFactory = (
     target: Object | Function,
     propertyName: PropertyKey,
     descriptor?: TypedPropertyDescriptor<any> | undefined,
-  ) => regCustomDecorator(target, propertyName, descriptor, options)
+  ) => { regCustomDecorator(target, propertyName, descriptor, options) }
 
   // @ts-expect-error
   return DecoratorFactory
@@ -114,9 +112,7 @@ export function regCustomDecorator<TDecoratorParam extends {}>(
 }
 
 
-function regMethodDecorator<TDecoratorParam extends {} = any>(
-  options: CustomMethodDecoratorParam<TDecoratorParam>,
-): void {
+function regMethodDecorator<TDecoratorParam extends {} = any>(options: CustomMethodDecoratorParam<TDecoratorParam>): void {
 
   const {
     decoratorKey,
@@ -167,9 +163,7 @@ function regMethodDecorator<TDecoratorParam extends {} = any>(
 }
 
 
-function regClassDecorator<TDecoratorParam extends {}>(
-  options: CustomClassDecoratorParam<TDecoratorParam>,
-): void {
+function regClassDecorator<TDecoratorParam extends {}>(options: CustomClassDecoratorParam<TDecoratorParam>): void {
 
   const {
     args,
@@ -204,9 +198,7 @@ function regClassDecorator<TDecoratorParam extends {}>(
   Provide()(target)
 }
 
-function decoratorAllClassMethodsOnPrototype<TDecoratorParam extends {}>(
-  options: CustomClassDecoratorParam<TDecoratorParam>,
-): unknown {
+function decoratorAllClassMethodsOnPrototype<TDecoratorParam extends {}>(options: CustomClassDecoratorParam<TDecoratorParam>): unknown {
 
   const { target, decoratorKey, args } = options
 

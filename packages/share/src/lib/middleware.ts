@@ -28,7 +28,7 @@ export function shouldEnableMiddleware(
 
   if (Array.isArray(ignore) && ignore.length) {
     const matched = isPathMatchRules(ctx.path, ignore)
-    if (matched === true) {
+    if (matched) {
       return false
     }
     // if not mathched, continue to check match rules

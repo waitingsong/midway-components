@@ -22,6 +22,7 @@ import { commonValidSchemas } from './validation-schema/common.schema.js'
  * `
  **/
 export class PageOrderByRule<TCol = string, TOrder = 'ASC' | 'DESC' | 'asc' | 'desc'> {
+
   @ApiProperty({ example: 'ctime', description: '排序字段' })
   column: TCol
 
@@ -30,6 +31,7 @@ export class PageOrderByRule<TCol = string, TOrder = 'ASC' | 'DESC' | 'asc' | 'd
    */
   @ApiProperty({ example: 'ASC', description: '排序顺序 默认升序' })
   order?: TOrder | undefined
+
 }
 
 
@@ -37,6 +39,7 @@ export class PageOrderByRule<TCol = string, TOrder = 'ASC' | 'DESC' | 'asc' | 'd
  * 分页查询通用
  */
 export class PagingDTO {
+
   /**
    * Current page number, start from 1
    */
@@ -55,5 +58,6 @@ export class PagingDTO {
   })
   @Rule(commonValidSchemas.pageOrderBy)
   orderBy?: PageOrderByRule[]
+
 }
 

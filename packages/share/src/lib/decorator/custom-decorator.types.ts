@@ -40,7 +40,7 @@ export interface AroundFactoryParamBase {
 }
 
 export interface DecoratorExecutorParamBase<
-  TDecoratorParam extends {} = {}
+  TDecoratorParam extends {} = {},
 > extends AroundFactoryParamBase {
 
   argsFromClassDecorator: Partial<DecoratorMetaDataPayload<TDecoratorParam>> | undefined
@@ -107,7 +107,7 @@ export interface CustomMethodDecoratorParam<TDecoratorParam extends {}> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type CustomMethodDecorator<TDecoratorParam extends {} = any> = (
   options: CustomMethodDecoratorParam<TDecoratorParam>,
-) => PropertyDescriptor | void
+) => PropertyDescriptor | undefined
 
 export interface CustomDecoratorFactoryParam<TDecoratorParam extends {}> {
   /**
@@ -158,7 +158,7 @@ export interface RegisterDecoratorHandlerParam<TDecoratorParam extends {} = any>
    * - 'bypass' means bypass the decorator
    */
   fnDecoratorExecutorSync: FnDecoratorExecutor | false | 'bypass'
-  fnGenDecoratorExecutorParam: FnGenDecoratorExecutorParam<TDecoratorParam> | void | null
+  fnGenDecoratorExecutorParam: FnGenDecoratorExecutorParam<TDecoratorParam> | undefined | null
   [key: string]: unknown
 }
 

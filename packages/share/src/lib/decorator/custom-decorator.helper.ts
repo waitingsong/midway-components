@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/ban-types */
 import assert from 'node:assert'
 
@@ -88,7 +91,7 @@ export function instanceMethodHasMethodDecorator(
   const metaDataArr = getClassMetadata(
     INJECT_CUSTOM_METHOD,
     target,
-  ) as DecoratorMetaData[] | undefined
+  )
 
   if (! metaDataArr?.length) {
     return false
@@ -125,7 +128,7 @@ export function instanceHasClassDecorator(
   const metaDataArr = getClassMetadata(
     INJECT_CUSTOM_METHOD,
     target,
-  ) as DecoratorMetaData[] | undefined
+  )
 
   if (! metaDataArr?.length) {
     return false
@@ -203,22 +206,32 @@ export function retrieveMetadataPayloadsOnClass<TDecoratorParam extends {} = {}>
   const arr = getClassMetadata(
     INJECT_CUSTOM_METHOD,
     target,
-  ) as DecoratorMetaData<TDecoratorParam>[] | undefined
+  )
 
   if (! arr?.length) {
     return []
   }
 
   const ret: DecoratorMetaDataPayload<TDecoratorParam>[] = []
-  arr.forEach((row) => {
+  arr.forEach((row: unknown) => {
+    assert(typeof row === 'object', 'row is not object')
+    assert(row !== null, 'row is null')
+    // @ts-expect-error
     if (row.key !== decoratorKey) { return }
+    // @ts-expect-error
     if (row.propertyName !== methodName) { return }
+    // @ts-expect-error
     if (typeof row.metadata === 'undefined') { return }
+    // @ts-expect-error
     if (row.metadata.decoratedType !== 'class') { return }
     // metadata.decoratedType is not enumerable
+    // @ts-expect-error
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     if (! Object.keys(row.metadata).length) { return }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     ret.push({
+      // @ts-expect-error
       ...row.metadata,
     })
 
@@ -239,22 +252,33 @@ export function retrieveMetadataPayloadsOnMethod<TDecoratorParam extends {} = {}
   const arr = getClassMetadata(
     INJECT_CUSTOM_METHOD,
     target,
-  ) as DecoratorMetaData<TDecoratorParam>[] | undefined
+  )
 
   if (! arr?.length) {
     return []
   }
 
   const ret: DecoratorMetaDataPayload<TDecoratorParam>[] = []
-  arr.forEach((row) => {
+  arr.forEach((row: unknown) => {
+    assert(typeof row === 'object', 'row is not object')
+    assert(row !== null, 'row is null')
+
+    // @ts-expect-error
     if (row.key !== decoratorKey) { return }
+    // @ts-expect-error
     if (row.propertyName !== methodName) { return }
+    // @ts-expect-error
     if (typeof row.metadata === 'undefined') { return }
+    // @ts-expect-error
     if (row.metadata.decoratedType === 'class') { return }
     // metadata.decoratedType is not enumerable
+    // @ts-expect-error
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     if (! Object.keys(row.metadata).length) { return }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     ret.push({
+      // @ts-expect-error
       ...row.metadata,
     })
 

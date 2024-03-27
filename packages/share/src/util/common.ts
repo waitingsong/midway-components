@@ -48,7 +48,7 @@ export function registerMiddleware(
 ): void {
 
   if (Array.isArray(middleware)) {
-    middleware.forEach(item => _registerMiddleware(app, item, postion, force))
+    middleware.forEach((item) => { _registerMiddleware(app, item, postion, force) })
   }
   else {
     _registerMiddleware(app, middleware, postion, force)
@@ -72,6 +72,7 @@ function _registerMiddleware(
       // @ts-ignore
       app.getMiddleware().insertFirst(middleware)
       break
+
     case 'last':
       // @ts-ignore
       app.getMiddleware().insertLast(middleware)
