@@ -54,7 +54,7 @@ import { METHOD_KEY_TraceInit } from './decorator.trace-init/trace-init.js'
 import { TraceDecoratorOptions } from './decorator.types.js'
 import { genDecoratorExecutorOptions } from './trace.helper.js'
 import {
-  AddEventOtpions,
+  AddEventOptions,
   AttrNames,
   Config,
   ConfigKey,
@@ -89,9 +89,9 @@ export class OtelComponent extends AbstractOtelComponent {
 
   @Logger() protected readonly logger: ILogger
 
-  /** Active during Midway Lifecyle between onReady and onServerReady */
+  /** Active during Midway Lifecycle between onReady and onServerReady */
   appInitProcessContext: Context | undefined
-  /** Active during Midway Lifecyle between onReady and onServerReady */
+  /** Active during Midway Lifecycle between onReady and onServerReady */
   appInitProcessSpan: Span | undefined
 
   otelLibraryName: string
@@ -266,19 +266,20 @@ export class OtelComponent extends AbstractOtelComponent {
   addEvent(
     span: Span,
     input: Attributes,
-    options?: AddEventOtpions,
+    options?: AddEventOptions,
   ): void {
 
     if (! this.config.enable) { return }
     if (options?.traceEvent === false || ! this.config.traceEvent) { return }
 
-    const ename = typeof input['event'] === 'string' || typeof input['event'] === 'number'
+    const eventName = typeof input['event'] === 'string' || typeof input['event'] === 'number'
       ? String(input['event'])
       : ''
-    const name = options?.eventName ?? ename
+    const name = options?.eventName ?? eventName
+    // @ts-expect-error
     delete input.event
 
-    if (options?.logMemeoryUsage ?? this.config.logMemeoryUsage) {
+    if (options?.logMemoryUsage ?? this.config.logMemoryUsage) {
       input[AttrNames.ServiceMemoryUsage] = JSON.stringify(humanMemoryUsage(), null, 2)
     }
     if (options?.logCpuUsage ?? this.config.logCpuUsage) {
@@ -435,7 +436,7 @@ export class OtelComponent extends AbstractOtelComponent {
 
   addAppInitEvent(
     input: Attributes,
-    options?: AddEventOtpions,
+    options?: AddEventOptions,
     /** if omit, use this.appInitProcessSpan */
     span?: Span,
   ): void {
@@ -443,13 +444,13 @@ export class OtelComponent extends AbstractOtelComponent {
     const spanToUse = span ?? this.appInitProcessSpan
 
     if (spanToUse) {
-      const addEventOtpions = {
+      const addEventOptions = {
         traceEvent: true,
         logCpuUsage: true,
-        logMemeoryUsage: true,
+        logMemoryUsage: true,
         ...options,
       }
-      this.addEvent(spanToUse, input, addEventOtpions)
+      this.addEvent(spanToUse, input, addEventOptions)
     }
   }
 

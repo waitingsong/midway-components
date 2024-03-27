@@ -8,7 +8,7 @@ import {
 import { node } from '@opentelemetry/sdk-node'
 
 import {
-  AddEventOtpions,
+  AddEventOptions,
   SpanStatusOptions,
 } from './types.js'
 
@@ -16,9 +16,9 @@ import {
 /** OpenTelemetry Component */
 export abstract class AbstractOtelComponent {
 
-  /** Active during Midway Lifecyle between onReady and onServerReady */
+  /** Active during Midway Lifecycle between onReady and onServerReady */
   abstract appInitProcessContext: Context | undefined
-  /** Active during Midway Lifecyle between onReady and onServerReady */
+  /** Active during Midway Lifecycle between onReady and onServerReady */
   abstract appInitProcessSpan: Span | undefined
 
   abstract otelLibraryName: string
@@ -61,7 +61,7 @@ export abstract class AbstractOtelComponent {
   abstract addEvent(
     span: Span,
     input: Attributes,
-    options?: AddEventOtpions,
+    options?: AddEventOptions,
   ): void
 
   abstract addRootSpanEventWithError(span: Span, error?: Error): void
@@ -107,7 +107,7 @@ export abstract class AbstractOtelComponent {
 
   abstract addAppInitEvent(
     input: Attributes,
-    options?: AddEventOtpions,
+    options?: AddEventOptions,
     /** if omit, use this.appInitProcessSpan */
     span?: Span,
   ): void
@@ -196,7 +196,7 @@ export abstract class AbstractTraceService {
   abstract addEvent(
     span: Span | undefined,
     input: Attributes,
-    options?: AddEventOtpions,
+    options?: AddEventOptions,
   ): void
 
   /**

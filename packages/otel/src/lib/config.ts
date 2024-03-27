@@ -40,7 +40,7 @@ export const initialConfig: Readonly<Omit<Config, 'tracerConfig'>> = {
   enable: enableTrace,
   traceEvent: true,
   logCpuUsage: false,
-  logMemeoryUsage: false,
+  logMemoryUsage: false,
   captureIncomingQuery: true,
   captureRequestHeaders: [...initCaptureRequestHeaders],
   captureResponseBody: true,

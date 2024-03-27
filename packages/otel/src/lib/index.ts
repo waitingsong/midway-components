@@ -31,7 +31,7 @@ export {
   MiddlewareOptions as OtelMiddlewareOptions,
   Msg as TracerMsg,
 
-  AddEventOtpions,
+  AddEventOptions,
   AttributesMap,
   HeadersKey,
   InitTraceOptions,

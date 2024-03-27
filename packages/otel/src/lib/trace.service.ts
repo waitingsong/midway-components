@@ -30,7 +30,7 @@ import {
   ConfigKey,
   Config,
   MiddlewareConfig,
-  AddEventOtpions,
+  AddEventOptions,
 } from './types.js'
 import {
   genRequestSpanName,
@@ -202,7 +202,7 @@ export class TraceService extends AbstractTraceService {
   addEvent(
     span: Span | undefined,
     input: Attributes,
-    options?: AddEventOtpions,
+    options?: AddEventOptions,
   ): void {
 
     if (! this.config.enable) { return }

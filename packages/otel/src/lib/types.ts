@@ -78,7 +78,7 @@ export interface Config extends BaseConfig {
    * Log cpu usage when add span event
    * @default false
    */
-  logMemeoryUsage: boolean
+  logMemoryUsage: boolean
   /**
    * @default [PropagatorList.w3cTraceContext]
    */
@@ -253,7 +253,7 @@ export interface TraceError extends Error {
   [AttrNames.IsTraced]?: boolean
 }
 
-export interface AddEventOtpions {
+export interface AddEventOptions {
   /**
    * false not add span event
    */
@@ -265,7 +265,7 @@ export interface AddEventOtpions {
   /**
    * @default true
    */
-  logMemeoryUsage?: Config['logMemeoryUsage']
+  logMemoryUsage?: Config['logMemoryUsage']
   eventName?: string
   startTime?: TimeInput
 }
