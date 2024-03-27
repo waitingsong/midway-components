@@ -13,7 +13,7 @@ import supertest, { SuperTest } from 'supertest'
 export const testDir = genCurrentDirname(import.meta.url)
 export const baseDir = join(testDir, '..')
 
-export const CI = !! ((process.env['CI']
+const CI = !! ((process.env['CI']
   ?? process.env['MIDWAY_SERVER_ENV'] === 'unittest')
   || process.env['MIDWAY_SERVER_ENV'] === 'local'
   || process.env['NODE_ENV'] === 'unittest'

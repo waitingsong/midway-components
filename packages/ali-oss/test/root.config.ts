@@ -15,8 +15,8 @@ import { AliOssComponent, AliOssManager } from '../src/lib/index.js'
 export const testDir = genCurrentDirname(import.meta.url)
 export const baseDir = join(testDir, '..')
 
-const CI = !! (process.env['CI']
-  || process.env['MIDWAY_SERVER_ENV'] === 'unittest'
+const CI = !! ((process.env['CI']
+  ?? process.env['MIDWAY_SERVER_ENV'] === 'unittest')
   || process.env['MIDWAY_SERVER_ENV'] === 'local'
   || process.env['NODE_ENV'] === 'unittest'
   || process.env['NODE_ENV'] === 'local'
