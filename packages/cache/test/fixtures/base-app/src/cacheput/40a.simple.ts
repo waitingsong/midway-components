@@ -31,11 +31,13 @@ export class CachePutController {
 
   private midwayConfig: { ttl: number } // MidwayConfig
 
+  private tetData = 1
+
   @Init()
   async init() {
     const defaultConfig = this.cacheManagerConfig.clients['default'] as SingleCacheOptions
     assert(defaultConfig)
-    // @ts-expect-error
+    // @ts-ignore
     const configOpt = defaultConfig.options as { ttl: number } // MidwayConfig
     assert(configOpt)
     this.midwayConfig = configOpt
@@ -86,6 +88,17 @@ export class CachePutController {
     assert(ret5.value === 'PUT')
     validateMeta(ret5a, cacheKey, this.midwayConfig.ttl)
 
+    const putResp2 = await this._put2()
+    assert(typeof putResp2.value === 'number')
+    assert(putResp2.value = this.tetData)
+    assert(putResp2.value = 2)
+
+    const putResp2a = await this._put2()
+    assert(typeof putResp2a.value === 'number')
+    assert(putResp2.value = this.tetData)
+    assert(putResp2.value = 3)
+
+
     return ret5a
   }
 
@@ -97,6 +110,13 @@ export class CachePutController {
   @CachePut({ cacheName: cacheKey })
   protected async _put(): Promise<CachedResponse<'PUT'>> {
     return { value: 'PUT' }
+  }
+
+
+  @CachePut()
+  protected async _put2(): Promise<CachedResponse<number>> {
+    this.tetData += 1
+    return { value: this.tetData }
   }
 
 }
