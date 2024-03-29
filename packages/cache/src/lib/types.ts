@@ -96,6 +96,9 @@ export interface CacheableArgs<M extends MethodType | undefined = undefined> {
    * @default `${className}.${methodName}`
    */
   cacheName: string | undefined
+  /**
+   * value will be appended to cacheName
+   */
   key: string | number | bigint | KeyGenerator<M> | undefined
   /**
    * time to live in seconds
