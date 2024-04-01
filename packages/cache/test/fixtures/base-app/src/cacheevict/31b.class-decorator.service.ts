@@ -53,11 +53,11 @@ export class ClassDecoratorEvictService {
   }
 
 
-  @CacheEvict({
+  @CacheEvict<ClassDecoratorEvictService['evictResultEvenAndGreaterThanZero']>({
     cacheName: cacheNameSimple,
-    key: (args: [number], result: CachedResponse<number> | undefined) => {
+    key: ([input], result) => {
       const invalidStr = 'cache item will not exist due to this invalid string'
-      if (args[0] === 0) {
+      if (input === 0) {
         return invalidStr
       }
       return result && result.value % 2 === 0 ? void 0 : invalidStr
