@@ -114,12 +114,6 @@ export interface CacheableArgs<M extends MethodType | undefined = undefined> {
    * @default 'default'
    */
   instanceId?: string | undefined
-  /**
-   * use multi caching
-   * @default false
-   * @link https://midwayjs.org/docs/extensions/caching#7%E4%BD%BF%E7%94%A8%E5%A4%9A%E7%BA%A7%E7%BC%93%E5%AD%98
-   */
-  useMultiCaching?: boolean | undefined
 }
 
 export interface CacheEvictArgs<M extends MethodType | undefined = undefined> {
