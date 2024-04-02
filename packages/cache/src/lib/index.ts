@@ -21,4 +21,5 @@ export * from './cacheevict/cacheevict.js'
 export * from './cacheput/cacheput.js'
 
 export { genDecoratorExecutorOptions } from './helper.js'
+export * from './util.js'
 

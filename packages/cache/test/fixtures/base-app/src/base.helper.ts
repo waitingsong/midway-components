@@ -3,9 +3,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import assert from 'node:assert/strict'
 
+import { retrieveCacheMetaFrom } from '../../../../src/index.js'
 import {
   CachedResponse,
-  ConfigKey,
   DataWithCacheMeta,
 } from '../../../../src/lib/types.js'
 
@@ -20,8 +20,8 @@ export function validateMeta(
   assert(resp, 'resp is undefined')
   assert(cacheKey, 'cacheKey is undefined')
 
-  // @ts-ignore
-  const meta = resp[ConfigKey.CacheMetaType] as any
+  const meta = retrieveCacheMetaFrom(resp)
+
   assert(meta, 'CacheMetaType is undefined')
   assert(meta.cacheKey === cacheKey)
   assert(meta.ttl === ttl, JSON.stringify({ metaTTL: meta.ttl, ttl }))

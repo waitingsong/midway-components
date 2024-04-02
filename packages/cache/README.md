@@ -63,7 +63,12 @@ export const cacheManagerConfig: CacheManagerConfig = {
 Normal [Cache-Docs-EN]
 
 
-## Generation Rule of Cache entry
+## How to determine an `object` result is from cache?
+```ts
+assert(retrieveCacheMetaFrom(data))
+```
+
+## Generation rule of Cache entry
 
 - none of cacheName and key: `{className}.{methodName}`
 - cacheName string
