@@ -9,7 +9,7 @@ import {
   REQUEST_OBJ_CTX_KEY,
 } from '@midwayjs/core'
 
-import type { Context as WebContext } from '../types.js'
+// import type { Context as WebContext } from '../types.js'
 
 import {
   mergeDecoratorMetaDataPayload,
@@ -192,8 +192,7 @@ export function genDecoratorExecutorOptionsCommon<TDecoratorParam extends {} = {
 
   // 装饰器所在的类实例
   const instance = joinPoint.target as InstanceOfDecorator
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-  const webContext = baseOptions.webContext ?? instance[REQUEST_OBJ_CTX_KEY] as WebContext | undefined
+  const webContext = baseOptions.webContext ?? instance[REQUEST_OBJ_CTX_KEY]
 
   // let span: Span | undefined = void 0
   // if (webContext) {
