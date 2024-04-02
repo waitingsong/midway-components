@@ -50,7 +50,7 @@ export async function decoratorExecutor(options: DecoratorExecutorOptions<Cachea
     const caching = cachingFactory.get(cachingInstanceId)
 
     let cacheResp: CachedResponse | undefined = void 0
-    if (enableCache) {
+    if (enableCache && cacheKey) {
       cacheResp = await getData(caching, cacheKey, opts4.traceService)
     }
 
@@ -65,7 +65,7 @@ export async function decoratorExecutor(options: DecoratorExecutorOptions<Cachea
     const resp = await method(...methodArgs)
 
     const ttl = await computerTTLValue(resp as CachedResponse, opts4)
-    if (enableCache && ttl > 0 && typeof resp !== 'undefined') {
+    if (enableCache && cacheKey && ttl > 0 && typeof resp !== 'undefined') {
       await saveData(caching, cacheKey, resp, ttl)
     }
 

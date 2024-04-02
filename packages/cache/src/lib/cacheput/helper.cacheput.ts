@@ -45,19 +45,19 @@ export async function decoratorExecutor(options: DecoratorExecutorOptions<Cachea
     const { method, methodArgs } = opts3
     const resp = await method(...methodArgs)
 
-    const cvalue = computerConditionValue({
+    const tmp = computerConditionValue({
       ...opts3,
       methodResult: resp,
     })
 
-    const enableCache = typeof cvalue === 'boolean' ? cvalue : await cvalue
+    const enableCache = typeof tmp === 'boolean' ? tmp : await tmp
     assert(typeof enableCache === 'boolean', 'condition must return boolean')
 
     const ttl = await computerTTLValue(resp as CachedResponse, opts3)
     const caching = cachingFactory.get(cachingInstanceId)
 
     let cacheResp: CachedResponse | undefined = void 0
-    if (enableCache && ttl > 0) {
+    if (enableCache && cacheKey && ttl > 0) {
       cacheResp = await saveData(caching, cacheKey, resp, ttl)
     }
 

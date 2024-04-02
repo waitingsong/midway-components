@@ -50,15 +50,16 @@ export type KeyGenerator<M extends MethodType | undefined = undefined> = (
    * - value always be undefined if `beforeInvocation`is true
    */
   result: M extends MethodType ? Awaited<ReturnType<M>> : undefined
-) => string | undefined
+) => string | undefined | false // undefined/false means skip cache
 
 export type CacheConditionFn<M extends MethodType | undefined = undefined> = (
   this: Context,
   /** Arguments of the method */
   args: M extends MethodType ? Parameters<M> : any,
   /**
-   * Result of the method. Only for using `@CacheEvict`
-   * - value always be undefined if `beforeInvocation`is true
+   * Result of the method.
+   * - Value valid Only when `@CacheEvict` and `beforeInvocation` is false
+   * - always undefined when `@Cacheable` and `@CachePut`
    */
   result: M extends MethodType ? Awaited<ReturnType<M>> | undefined : undefined
 ) => boolean | Promise<boolean>
@@ -106,7 +107,7 @@ export interface CacheableArgs<M extends MethodType | undefined = undefined> {
    */
   ttl: number | undefined | CacheTTLFn<M>
   /**
-   * Returns false to skip cache
+   * false/undefined to skip cache
    * @default undefined - always cache
    */
   condition: CacheConditionFn<M> | boolean | undefined

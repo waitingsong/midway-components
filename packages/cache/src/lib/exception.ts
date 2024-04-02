@@ -1,6 +1,6 @@
 
 interface ProcessExOptions {
-  cacheKey: string
+  cacheKey: string | false
   error: unknown
 }
 

@@ -41,7 +41,7 @@ export async function decoratorExecutor(options: DecoratorExecutorOptions<CacheE
 
     const caching = cachingFactory.get(cachingInstanceId)
 
-    if (enableEvict && cacheOptions.beforeInvocation) {
+    if (enableEvict && cacheKey && cacheOptions.beforeInvocation) {
       await deleteData(caching, cacheKey)
     }
 
@@ -50,7 +50,7 @@ export async function decoratorExecutor(options: DecoratorExecutorOptions<CacheE
     const resp = await method(...methodArgs)
 
     if (! cacheOptions.beforeInvocation) {
-      if (enableEvict) {
+      if (enableEvict && cacheKey) {
         await deleteData(caching, cacheKey)
       }
       else {
@@ -62,13 +62,15 @@ export async function decoratorExecutor(options: DecoratorExecutorOptions<CacheE
         const enableEvict2 = typeof tmp2 === 'boolean' ? tmp2 : await tmp2
         assert(typeof enableEvict2 === 'boolean', 'condition must return boolean')
         if (enableEvict2) {
-        // re-generate cache key, because CacheConditionFn use result of method
+          // re-generate cache key, because CacheConditionFn use result of method
           const opts4: GenCacheKeyOptions = {
             ...opts2,
             methodResult: resp,
           }
           const cacheKey2 = genCacheKey(opts4)
-          await deleteData(caching, cacheKey2)
+          if (cacheKey2) {
+            await deleteData(caching, cacheKey2)
+          }
         }
       }
     }

@@ -28,7 +28,7 @@ export interface GenCacheKeyOptions extends Omit<CacheableArgs, 'ttl'> {
   methodResult?: unknown
 }
 
-export function genCacheKey(options: GenCacheKeyOptions): string {
+export function genCacheKey(options: GenCacheKeyOptions): string | false {
   const { key, cacheName, webContext, methodArgs, methodResult } = options
   assert(cacheName, 'cacheName is undefined')
 
@@ -48,13 +48,17 @@ export function genCacheKey(options: GenCacheKeyOptions): string {
     case 'function': {
       // @ts-expect-error
       const keyStr = key.call(webContext, methodArgs, methodResult)
-      assert(
-        typeof keyStr === 'string' || typeof keyStr === 'undefined',
-        'keyGenerator function must return a string or undefined',
-      )
-      return typeof keyStr === 'string'
-        ? `${cacheName}:${keyStr}`
-        : cacheName
+      switch (typeof keyStr) {
+        case 'undefined':
+          return cacheName
+
+        case 'string':
+          return `${cacheName}:${keyStr}`
+
+        default:
+          // false
+          return false
+      }
     }
 
     default:

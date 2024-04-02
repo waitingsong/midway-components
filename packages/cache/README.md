@@ -62,18 +62,44 @@ export const cacheManagerConfig: CacheManagerConfig = {
 
 Normal [Cache-Docs-EN]
 
+
+## Generation Rule of Cache entry
+
+- none of cacheName and key: `{className}.{methodName}`
+- cacheName string
+  - key `string | number | bigint`: `{className}.{methodName}:{key.toString()}`
+  - key `undefined`: `{className}.{methodName}`
+  - key `false`: no cache operation
+  - key `KeyGenerator`
+    - `string`: `{className}.{methodName}:{key.toString()}` 
+    - `undefined`: `{className}.{methodName}` 
+    - `false`: no cache operation
+
+
+## Generation of Cache entry
+
+- none of cacheName and key: `{className}.{methodName}`
+- cacheName string
+  - key `string | number | bigint`: `{className}.{methodName}:{key.toString()}`
+  - key `undefined`: `{className}.{methodName}`
+  - key `false`: no cache operation
+  - key `KeyGenerator`
+    - `undefined`: `{className}.{methodName}` 
+    - `string`: `{className}.{methodName}:{key.toString()}` 
+    - `false`: no cache operation
+
 ## Cacheable Decorator
 
 supports class and method
 
 `CacheableArgs` Parameters
 
-| name      | type                                                    | default value            |
-| --------- | ------------------------------------------------------- | ------------------------ |
-| cacheName | string \| undefined                                     | {className}.{methodName} |
-| key       | string \| number \| bigint \| KeyGenerator \| undefined | undefined                |
-| ttl       | number \| undefined                                     | 10(sec)                  |
-| condition | CacheConditionFn \| boolean \| undefined                | undefined (always cache) |
+| name      | type                                                             | default value            |
+| --------- | ---------------------------------------------------------------- | ------------------------ |
+| cacheName | string \| undefined                                              | {className}.{methodName} |
+| key       | string \| number \| bigint \| KeyGenerator \| undefined \| false | undefined                |
+| ttl       | number \| undefined                                              | 10(sec)                  |
+| condition | CacheConditionFn \| boolean \| undefined                         | undefined (always cache) |
 
 ```ts
 import { Cacheable } from '@mwcp/cache'
