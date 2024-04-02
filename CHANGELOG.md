@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [23.1.0](https://github.com/waitingsong/midway-components/compare/v23.0.0...v23.1.0) (2024-04-02)
+
+
+### Features
+
+* **cache:** return type of genCacheKey() accept false ([13ed5f4](https://github.com/waitingsong/midway-components/commit/13ed5f4dd7ef7c2a783cb00038c0bc71fff73399))
+
+
+
+
+
 # [23.0.0](https://github.com/waitingsong/midway-components/compare/v22.1.2...v23.0.0) (2024-03-27)
 
 **Note:** Version bump only for package midway-components
