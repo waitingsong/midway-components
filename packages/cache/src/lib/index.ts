@@ -11,7 +11,7 @@ export {
 
   CacheMetaType,
   CachedResponse,
-  CacheConditionFn,
+  WriteCacheConditionFn as CacheConditionFn,
 
   DecoratorExecutorOptions,
 } from './types.js'

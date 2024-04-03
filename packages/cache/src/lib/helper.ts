@@ -22,7 +22,9 @@ import {
 } from './types.js'
 
 
-export interface GenCacheKeyOptions extends Omit<CacheableArgs, 'ttl'> {
+export interface GenCacheKeyOptions {
+  key: CacheableArgs['key']
+  cacheName: CacheableArgs['cacheName']
   webContext: WebContext
   methodArgs: unknown[]
   methodResult?: unknown
@@ -172,10 +174,38 @@ export async function getData<T = unknown>(
   return ret as Promise<CachedResponse<T>>
 }
 
-export function computerConditionValue(options: DecoratorExecutorOptions<CacheableArgs | CacheEvictArgs>): boolean | Promise<boolean> {
+export function computerWriteConditionValue(options: DecoratorExecutorOptions<CacheableArgs | CacheEvictArgs>): boolean | Promise<boolean> {
 
   const { mergedDecoratorParam: cacheOptions } = options
   assert(cacheOptions, 'cacheOptions is undefined within computerConditionValue()')
+
+  const webContext = options.instance[REQUEST_OBJ_CTX_KEY]
+  assert(webContext, 'webContext is undefined')
+
+  switch (typeof cacheOptions.writeCondition) {
+    case 'undefined':
+      return true
+
+    case 'boolean':
+      return cacheOptions.writeCondition
+
+    case 'function': {
+      const fn = cacheOptions.writeCondition as (...args: unknown[]) => boolean | Promise<boolean>
+      return fn.call(
+        webContext,
+        options.methodArgs,
+        options.methodResult,
+      )
+    }
+
+    default:
+      throw new Error(`Invalid condition type: ${typeof cacheOptions.writeCondition}`)
+  }
+}
+export function computerReadConditionValue(options: DecoratorExecutorOptions<CacheableArgs>): boolean | Promise<boolean> {
+
+  const { mergedDecoratorParam: cacheOptions } = options
+  assert(cacheOptions, 'cacheOptions is undefined within computerReadConditionValue()')
 
   const webContext = options.instance[REQUEST_OBJ_CTX_KEY]
   assert(webContext, 'webContext is undefined')

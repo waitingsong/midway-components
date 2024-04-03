@@ -46,12 +46,13 @@ export const initCacheableArgs: CacheableArgs = {
   key: void 0,
   ttl: initCacheManagerOptions.options.ttl,
   condition: void 0,
+  writeCondition: void 0,
   instanceId: 'default',
 }
 export const initCacheEvictArgs: CacheEvictArgs = {
   cacheName: void 0,
   key: void 0,
-  condition: void 0,
+  writeCondition: void 0,
   beforeInvocation: false,
   instanceId: 'default',
 }

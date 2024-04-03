@@ -64,8 +64,21 @@ export class ParamController {
     const ret4 = await this._big(uid)
     validateMeta(ret4, cacheKey2, this.midwayConfig.ttl)
 
+    const keyCacheString = `${this.controllerName}._cacheString:${Math.random().toString()}`
+    const ret5 = await this._cacheString(keyCacheString)
+    assert(! ret5[ConfigKey.CacheMetaType])
+    const ret5a = await this._cacheString(keyCacheString)
+    assert(ret5a[ConfigKey.CacheMetaType])
+
+    const keyCacheNumber = Math.random() * 10000
+    const ret5b = await this._cacheString(keyCacheNumber)
+    assert(! ret5b[ConfigKey.CacheMetaType])
+    const ret5c = await this._cacheString(keyCacheNumber)
+    assert(! ret5c[ConfigKey.CacheMetaType])
+
     return ret3
   }
+
 
   @Cacheable<ParamController['_simple']>({
     key: (args) => {
@@ -102,6 +115,18 @@ export class ParamController {
   @Cacheable({ key: (args: [GetUserDTO]) => JSON.stringify(args[0]) })
   protected async _simple2(input: GetUserDTO): Promise<DataWithCacheMeta<GetUserDTO>> {
     return input
+  }
+
+  @Cacheable<ParamController['_cacheString']>({
+    key: ([input]) => {
+      if (typeof input === 'string') {
+        return input
+      }
+      return false // no read cache and no write cache
+    },
+  })
+  protected async _cacheString<T extends string | number>(value: T): Promise<CachedResponse<T>> {
+    return { value }
   }
 
 }

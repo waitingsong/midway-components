@@ -52,18 +52,30 @@ export type KeyGenerator<M extends MethodType | undefined = undefined> = (
   result: M extends MethodType ? Awaited<ReturnType<M>> : undefined
 ) => string | undefined | false // undefined/false means skip cache
 
-export type CacheConditionFn<M extends MethodType | undefined = undefined> = (
+export type WriteCacheConditionFn<M extends MethodType | undefined = undefined> = (
+  this: Context,
+  /** Arguments of the method */
+  args: M extends MethodType ? Parameters<M> : any,
+  result: M extends MethodType ? Awaited<ReturnType<M>> : any
+) => boolean | Promise<boolean>
+
+export type ReadCacheConditionFn<M extends MethodType | undefined = undefined> = (
+  this: Context,
+  /** Arguments of the method */
+  args: M extends MethodType ? Parameters<M> : any,
+) => boolean | Promise<boolean>
+
+export type EvictCacheConditionFn<M extends MethodType | undefined = undefined> = (
   this: Context,
   /** Arguments of the method */
   args: M extends MethodType ? Parameters<M> : any,
   /**
-   * Result of the method.
-   * - Value valid Only when `@CacheEvict` and `beforeInvocation` is false
-   * - always undefined when `@Cacheable` and `@CachePut`
+   * Result of the method or undefined
+   * - result of `Awaited<ReturnType<M>>` when `beforeInvocation` is false
+   * - undefined when `beforeInvocation` is true
    */
-  result: M extends MethodType ? Awaited<ReturnType<M>> | undefined : undefined
+  result: M extends MethodType ? (Awaited<ReturnType<M>> | undefined) : any
 ) => boolean | Promise<boolean>
-
 
 export type CacheTTLFn<M extends MethodType | undefined = undefined> = (
   this: Context,
@@ -107,10 +119,19 @@ export interface CacheableArgs<M extends MethodType | undefined = undefined> {
    */
   ttl: number | undefined | CacheTTLFn<M>
   /**
-   * false/undefined to skip cache
-   * @default undefined - always cache
+   * Condition for read cache
+   * - true/undefined to read cache
+   * - false to skip read cache
+   * @default undefined - read cache
    */
-  condition: CacheConditionFn<M> | boolean | undefined
+  condition: ReadCacheConditionFn<M> | boolean | undefined
+  /**
+   * Condition for write cache
+   * - true/undefined to write cache
+   * - false to skip write cache
+   * @default undefined - write cache
+   */
+  writeCondition: WriteCacheConditionFn<M> | boolean | undefined
   /**
    * @default 'default'
    */
@@ -129,10 +150,11 @@ export interface CacheEvictArgs<M extends MethodType | undefined = undefined> {
    */
   beforeInvocation: boolean
   /**
-   * Returns false to skip evict
-   * @default undefined - always evict
+   * - true/undefined to evict cache
+   * - false to skip evict cache
+   * @default undefined - evict cache
    */
-  condition: CacheConditionFn<M> | boolean | undefined
+  writeCondition: EvictCacheConditionFn<M> | boolean | undefined
   /**
    * @default 'default'
    */

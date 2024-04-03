@@ -3,8 +3,9 @@ import assert from 'assert'
 import { initCacheableArgs } from '../config.js'
 import { processEx } from '../exception.js'
 import {
-  computerConditionValue,
+  computerReadConditionValue,
   computerTTLValue,
+  computerWriteConditionValue,
   genCacheKey,
   GenCacheKeyOptions,
   genDataWithCacheMeta,
@@ -43,7 +44,7 @@ export async function decoratorExecutor(options: DecoratorExecutorOptions<Cachea
       mergedDecoratorParam: cacheOptions,
     }
 
-    const tmp = computerConditionValue(opts4)
+    const tmp = computerReadConditionValue(opts4)
     const enableCache = typeof tmp === 'boolean' ? tmp : await tmp
     assert(typeof enableCache === 'boolean', 'condition must return boolean')
 
@@ -63,9 +64,12 @@ export async function decoratorExecutor(options: DecoratorExecutorOptions<Cachea
     assert(methodIsAsyncFunction, 'decorated method must be async function')
 
     const resp = await method(...methodArgs)
-
     const ttl = await computerTTLValue(resp as CachedResponse, opts4)
-    if (enableCache && cacheKey && ttl > 0 && typeof resp !== 'undefined') {
+
+    const tmp2 = computerWriteConditionValue(opts4)
+    const enableCache2 = typeof tmp2 === 'boolean' ? tmp2 : await tmp2
+    assert(typeof enableCache2 === 'boolean', 'write condition must return boolean')
+    if (enableCache2 && cacheKey && ttl > 0 && typeof resp !== 'undefined') {
       await saveData(caching, cacheKey, resp, ttl)
     }
 

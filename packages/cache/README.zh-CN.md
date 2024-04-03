@@ -63,7 +63,7 @@ export const cacheManagerConfig: CacheManagerConfig = {
 Normal [Cache-Docs]
 
 
-## 判断对象返回值是否来自于缓存
+## 判断返回对象值是否来自于缓存
 ```ts
 assert(retrieveCacheMetaFrom(data))
 ```

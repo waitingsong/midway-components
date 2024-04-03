@@ -2,7 +2,7 @@ import assert from 'assert'
 
 import { initCacheEvictArgs } from '../config.js'
 import { processEx } from '../exception.js'
-import { computerConditionValue, deleteData, genCacheKey, GenCacheKeyOptions } from '../helper.js'
+import { computerWriteConditionValue, deleteData, genCacheKey, GenCacheKeyOptions } from '../helper.js'
 import { CacheEvictArgs, DecoratorExecutorOptions } from '../types.js'
 
 
@@ -35,7 +35,7 @@ export async function decoratorExecutor(options: DecoratorExecutorOptions<CacheE
       mergedDecoratorParam: cacheOptions,
     }
 
-    const tmp = computerConditionValue(opts3)
+    const tmp = computerWriteConditionValue(opts3)
     const enableEvict = typeof tmp === 'boolean' ? tmp : await tmp
     assert(typeof enableEvict === 'boolean', 'condition must return boolean')
 
@@ -58,7 +58,7 @@ export async function decoratorExecutor(options: DecoratorExecutorOptions<CacheE
           ...opts3,
           methodResult: resp,
         }
-        const tmp2 = computerConditionValue(ps)
+        const tmp2 = computerWriteConditionValue(ps)
         const enableEvict2 = typeof tmp2 === 'boolean' ? tmp2 : await tmp2
         assert(typeof enableEvict2 === 'boolean', 'condition must return boolean')
         if (enableEvict2) {
