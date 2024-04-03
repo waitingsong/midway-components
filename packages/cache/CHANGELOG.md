@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [23.2.0](https://github.com/waitingsong/midway-components/compare/v23.1.0...v23.2.0) (2024-04-03)
+
+
+### Features
+
+* **cache:** retrieveCacheMetaFrom() ([8d2a74d](https://github.com/waitingsong/midway-components/commit/8d2a74ddec0b5daf25ed5ca15694e98a2cfc7853))
+
+
+
+
+
 # [23.1.0](https://github.com/waitingsong/midway-components/compare/v23.0.0...v23.1.0) (2024-04-02)
 
 
