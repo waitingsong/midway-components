@@ -5,7 +5,7 @@ export enum AttrNames {
   HTTP_ERROR_CAUSE = 'http.error_cause',
   HTTP_STATUS_TEXT = 'http.status_text',
 
-  Exception_Cause = 'exception.cuase',
+  Exception_Cause = 'exception.cause',
   ServiceName = 'service.name',
   ServiceVersion = 'service.version',
 
@@ -54,8 +54,16 @@ export enum AttrNames {
   QueryFinish = 'query.finish',
   QueryRowCount = 'row.count',
   QueryCost = 'query.cost',
+  /**
+   * @deprecated use QueryCostThrottleInSec instead
+   */
   QueryCostThottleInSec = 'query.cost.thottle.in.sec',
+  QueryCostThrottleInSec = 'query.cost.throttle.in.sec',
+  /**
+   * @deprecated use QueryCostThrottleInMS instead
+   */
   QueryCostThottleInMS = 'query.cost.thottle.in.ms',
+  QueryCostThrottleInMS = 'query.cost.throttle.in.ms',
   TransactionStart = 'transaction.start',
   TransactionCommit = 'transaction.commit',
   TransactionRollback = 'transaction.rollback',
@@ -63,7 +71,7 @@ export enum AttrNames {
   TransactionalRegister = 'Transactional.register',
   TransactionalStart = 'Transactional.start',
   TransactionalEnd = 'Transactional.end',
-  /** top, child, savepoint */
+  /** top, child, save-point */
   TransactionalEntryType = 'Transactional.entry',
 
   TrxPropagated = 'trx.propagated',
