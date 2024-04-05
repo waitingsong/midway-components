@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [24.1.0](https://github.com/waitingsong/midway-components/compare/v24.0.0...v24.1.0) (2024-04-05)
+
+
+### Features
+
+* **otel:** update AttrNames ([d0362e2](https://github.com/waitingsong/midway-components/commit/d0362e2205f83e678156fdc508b31c137ed6836c))
+
+
+
+
+
 # [24.0.0](https://github.com/waitingsong/midway-components/compare/v23.2.0...v24.0.0) (2024-04-03)
 
 
