@@ -1,12 +1,12 @@
 import assert from 'node:assert'
 
 import {
-  Config as _Config,
   Controller,
   Get,
   Init,
   Inject,
 } from '@midwayjs/core'
+import { MConfig } from '@mwcp/share'
 
 import { Trace, TraceService } from '../../../../../dist/lib/index.js'
 import { TraceLogger, TraceAppLogger } from '../../../../../dist/lib/trace.logger.js'
@@ -19,7 +19,7 @@ import { DefaultComponentService } from './trace.service.js'
 @Controller(apiPrefix.TraceDecorator)
 export class DefaultComponentController {
 
-  @_Config(ConfigKey.config) readonly config: Config
+  @MConfig(ConfigKey.config) readonly config: Config
 
   @Inject() readonly svc: DefaultComponentService
   @Inject() readonly traceSvc: TraceService

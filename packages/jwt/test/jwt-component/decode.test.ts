@@ -38,7 +38,7 @@ describe(fileShortPath(import.meta.url), () => {
       const ret1 = svc.decode<PayloadSig1>(token) // index signature
       const ret2 = svc.decode<PayloadExt1>(token) // extends from
       const ret3 = svc.decode<typeof payload1>(token) // pick type
-      const ret4 = svc.decode(token) // default jsont type
+      const ret4 = svc.decode(token) // default json type
 
       assert.deepStrictEqual(ret1.payload, payload1)
       assert.deepStrictEqual(ret2.payload, payload1)

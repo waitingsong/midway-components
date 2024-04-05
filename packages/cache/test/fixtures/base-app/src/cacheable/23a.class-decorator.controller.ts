@@ -3,13 +3,13 @@ import assert from 'node:assert/strict'
 
 import { CachingFactory, MidwayCache, SingleCacheOptions } from '@midwayjs/cache-manager'
 import {
-  Config as _Config,
   Controller,
   Get,
   Init,
   Inject,
   InjectClient,
 } from '@midwayjs/core'
+import { MConfig } from '@mwcp/share'
 import { sleep } from '@waiting/shared-core'
 
 import { Config, ConfigKey } from '../../../../../src/lib/types.js'
@@ -22,7 +22,7 @@ import { ClassDecoratorService, ttl } from './23b.class-decorator.service.js'
 @Controller(apiPrefix.classCacheable)
 export class ClassDecoratorController {
 
-  @_Config(ConfigKey.config) readonly cacheManagerConfig: Config
+  @MConfig(ConfigKey.config) readonly cacheManagerConfig: Config
 
   @InjectClient(CachingFactory, 'default') cache: MidwayCache
 

@@ -1,11 +1,11 @@
 import assert from 'node:assert'
 
 import {
-  Config as _Config,
   Controller,
   Get,
   Inject,
 } from '@midwayjs/core'
+import { MConfig } from '@mwcp/share'
 
 import { Trace, TraceService } from '../../../../../dist/lib/index.js'
 import { Config, ConfigKey, HeadersKey } from '../../../../../dist/lib/types.js'
@@ -16,7 +16,7 @@ import { apiPrefix, apiRoute } from '../api-route.js'
 @Controller(apiPrefix.util)
 export class UtilController {
 
-  @_Config(ConfigKey.config) readonly config: Config
+  @MConfig(ConfigKey.config) readonly config: Config
 
   @Inject() readonly traceSvc: TraceService
 

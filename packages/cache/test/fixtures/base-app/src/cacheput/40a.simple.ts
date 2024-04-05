@@ -3,13 +3,12 @@ import assert from 'node:assert/strict'
 
 import { SingleCacheOptions } from '@midwayjs/cache-manager'
 import {
-  Config as _Config,
   Controller,
   Get,
   Init,
   Inject,
 } from '@midwayjs/core'
-import type { Context } from '@mwcp/share'
+import { Context, MConfig } from '@mwcp/share'
 import { sleep } from '@waiting/shared-core'
 
 import { Cacheable, CachePut } from '../../../../../src/index.js'
@@ -23,7 +22,7 @@ const cacheKey = 'CachePutController.simple'
 @Controller(apiPrefix.methodCachePut)
 export class CachePutController {
 
-  @_Config(ConfigKey.config) readonly cacheManagerConfig: Config
+  @MConfig(ConfigKey.config) readonly cacheManagerConfig: Config
 
   @Inject() readonly ctx: Context
 

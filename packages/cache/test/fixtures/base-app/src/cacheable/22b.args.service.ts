@@ -3,10 +3,10 @@ import assert from 'node:assert'
 
 import { CachingFactory, MidwayCache, SingleCacheOptions } from '@midwayjs/cache-manager'
 import {
-  Config as _Config,
   Init,
   InjectClient,
 } from '@midwayjs/core'
+import { MConfig } from '@mwcp/share'
 
 import { Cacheable } from '../../../../../src/index.js'
 import { CachedResponse, Config, ConfigKey } from '../../../../../src/lib/types.js'
@@ -16,7 +16,7 @@ import { validateMeta } from '../base.helper.js'
 @Cacheable()
 export class ArgsDecoratorService {
 
-  @_Config(ConfigKey.config) readonly cacheManagerConfig: Config
+  @MConfig(ConfigKey.config) readonly cacheManagerConfig: Config
 
   @InjectClient(CachingFactory, 'default') cache: MidwayCache
 

@@ -5,7 +5,6 @@ import assert from 'node:assert'
 import {
   App,
   Autoload,
-  Config as _Config,
   MidwayDecoratorService,
   Init,
   Inject,
@@ -20,6 +19,7 @@ import { ILogger } from '@midwayjs/logger'
 import {
   Application,
   AroundFactoryParamBase,
+  MConfig,
   RegisterDecoratorHandlerParam,
   registerDecoratorHandler,
 } from '@mwcp/share'
@@ -76,12 +76,12 @@ export class OtelComponent extends AbstractOtelComponent {
 
   @App() app: Application
 
-  @_Config(ConfigKey.config) protected readonly config: Config
+  @MConfig(ConfigKey.config) protected readonly config: Config
 
-  // @_Config(ConfigKey.jaegerExporterConfig)
+  // @MConfig(ConfigKey.jaegerExporterConfig)
   // protected readonly jaegerExporterConfig: InitTraceOptions['jaegerExporterConfig']
 
-  @_Config(ConfigKey.otlpGrpcExporterConfig)
+  @MConfig(ConfigKey.otlpGrpcExporterConfig)
   protected readonly otlpGrpcExporterConfig: InitTraceOptions['otlpGrpcExporterConfig']
 
   @Inject() protected readonly decoratorService: MidwayDecoratorService

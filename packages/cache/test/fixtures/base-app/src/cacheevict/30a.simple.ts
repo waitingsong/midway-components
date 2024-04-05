@@ -3,13 +3,12 @@ import assert from 'node:assert/strict'
 
 import { SingleCacheOptions } from '@midwayjs/cache-manager'
 import {
-  Config as _Config,
   Controller,
   Get,
   Init,
   Inject,
 } from '@midwayjs/core'
-import type { Context } from '@mwcp/share'
+import { Context, MConfig } from '@mwcp/share'
 
 import { Cacheable, CacheEvict } from '../../../../../src/index.js'
 import { CachedResponse, Config, ConfigKey } from '../../../../../src/lib/types.js'
@@ -22,7 +21,7 @@ const cacheKey = 'CacheEvictController.simple'
 @Controller(apiPrefix.methodCacheEvict)
 export class CacheEvictController {
 
-  @_Config(ConfigKey.config) readonly cacheManagerConfig: Config
+  @MConfig(ConfigKey.config) readonly cacheManagerConfig: Config
 
   @Inject() readonly ctx: Context
 

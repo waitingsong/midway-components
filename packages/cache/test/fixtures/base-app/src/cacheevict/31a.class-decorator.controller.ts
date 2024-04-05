@@ -2,12 +2,12 @@ import assert from 'node:assert/strict'
 
 import { SingleCacheOptions } from '@midwayjs/cache-manager'
 import {
-  Config as _Config,
   Controller,
   Get,
   Init,
   Inject,
 } from '@midwayjs/core'
+import { MConfig } from '@mwcp/share'
 
 import { ConfigKey, Config } from '../../../../../src/lib/types.js'
 import { apiPrefix, apiRoute } from '../api-route.js'
@@ -19,7 +19,7 @@ import { ClassDecoratorEvictService, cacheNameSimple } from './31b.class-decorat
 @Controller(apiPrefix.classCacheable)
 export class ClassDecoratorEvictController {
 
-  @_Config(ConfigKey.config) readonly cacheManagerConfig: Config
+  @MConfig(ConfigKey.config) readonly cacheManagerConfig: Config
 
   @Inject() readonly svc: ClassDecoratorEvictService
 

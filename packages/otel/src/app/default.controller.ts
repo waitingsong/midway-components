@@ -1,5 +1,4 @@
 import {
-  Config as _Config,
   Controller,
   Get,
   Inject,
@@ -7,6 +6,7 @@ import {
   Post,
 } from '@midwayjs/core'
 import { ILogger } from '@midwayjs/logger'
+import { MConfig } from '@mwcp/share'
 
 
 import { Trace, TraceService } from '##/lib/index.js'
@@ -18,7 +18,7 @@ import { DefaultOtelComponentService } from './default.service.js'
 @Controller(`/_${ConfigKey.namespace}`)
 export class DefaultOtelComponentController {
 
-  @_Config(ConfigKey.config) readonly config: Config
+  @MConfig(ConfigKey.config) readonly config: Config
 
   @Inject() readonly svc: DefaultOtelComponentService
   @Inject() readonly traceSvc: TraceService
@@ -29,14 +29,14 @@ export class DefaultOtelComponentController {
   @Get('/hello')
   @Post('/hello')
   async hello(): Promise<string> {
-    this.valiateRoute()
+    this.validateRoute()
     const traceId = this.traceSvc.getTraceId()
     const msg = await this.svc.hello(Msg.hello)
     const ret = `${msg}: ${traceId}`
     return ret
   }
 
-  valiateRoute(): void {
+  validateRoute(): void {
     if (! this.config.enableDefaultRoute) {
       throw new Error('route is not enabled')
     }

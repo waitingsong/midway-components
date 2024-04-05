@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import { Config as _Config } from '@midwayjs/core'
-
 import { Cacheable, CacheEvict } from '../../../../../src/index.js'
 import { CachedResponse } from '../../../../../src/lib/types.js'
 

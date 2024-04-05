@@ -1,12 +1,12 @@
 import assert from 'node:assert'
 
 import {
-  Config as _Config,
   Init,
   Provide,
   Scope,
   ScopeEnum,
 } from '@midwayjs/core'
+import { MConfig } from '@mwcp/share'
 // import {
 //   decode,
 //   sign,
@@ -52,7 +52,7 @@ const {
 @Scope(ScopeEnum.Singleton)
 export class JwtComponent {
 
-  @_Config(ConfigKey.config) protected readonly config: Config
+  @MConfig(ConfigKey.config) protected readonly config: Config
 
   private verifySecretSet: Set<VerifySecret>
 

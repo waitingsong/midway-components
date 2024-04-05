@@ -4,7 +4,6 @@ import assert from 'node:assert'
 import { CachingFactory } from '@midwayjs/cache-manager'
 import {
   App,
-  Config,
   Configuration,
   ILifeCycle,
   ILogger,
@@ -20,6 +19,7 @@ import {
   Application,
   AroundFactoryParamBase,
   IMidwayContainer,
+  MConfig,
   RegisterDecoratorHandlerParam,
   deleteRouter,
   registerDecoratorHandler,
@@ -54,9 +54,9 @@ export class AutoConfiguration implements ILifeCycle {
   @App() readonly app: Application
 
   /** component config */
-  @Config(ConfigKey.config) protected readonly cacheConfig: CacheManagerConfig
+  @MConfig(ConfigKey.config) protected readonly cacheConfig: CacheManagerConfig
   // /** original config */
-  // @Config() protected readonly cacheManager: CacheManager
+  // @MConfig() protected readonly cacheManager: CacheManager
 
   @Inject() protected readonly environmentService: MidwayEnvironmentService
   @Inject() protected readonly informationService: MidwayInformationService

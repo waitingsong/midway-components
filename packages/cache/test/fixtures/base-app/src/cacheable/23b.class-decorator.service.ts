@@ -1,5 +1,3 @@
-import { Config as _Config } from '@midwayjs/core'
-
 import { Cacheable } from '../../../../../src/index.js'
 import { CachedResponse } from '../../../../../src/lib/types.js'
 

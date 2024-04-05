@@ -1,12 +1,11 @@
 import assert from 'node:assert'
 
 import {
-  Config as _Config,
   Init,
   Inject,
   Provide,
 } from '@midwayjs/core'
-import type { Context as WebContext } from '@mwcp/share'
+import { Context as WebContext, MConfig } from '@mwcp/share'
 import {
   Attributes,
   Context,
@@ -44,8 +43,8 @@ import {
 @Provide()
 export class TraceService extends AbstractTraceService {
 
-  @_Config(ConfigKey.config) readonly config: Config
-  @_Config(ConfigKey.middlewareConfig) readonly mwConfig: MiddlewareConfig
+  @MConfig(ConfigKey.config) readonly config: Config
+  @MConfig(ConfigKey.middlewareConfig) readonly mwConfig: MiddlewareConfig
 
   @Inject() readonly ctx: WebContext
   @Inject() readonly otel: OtelComponent

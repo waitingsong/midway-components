@@ -2,12 +2,11 @@
 import assert from 'node:assert/strict'
 
 import {
-  Config as _Config,
   Controller,
   Get,
   Inject,
 } from '@midwayjs/core'
-import type { Context } from '@mwcp/share'
+import { Context, MConfig } from '@mwcp/share'
 import { sleep } from '@waiting/shared-core'
 
 import { Cacheable } from '../../../../../src/index.js'
@@ -24,7 +23,7 @@ const cacheName = 'foo'
 @Controller(apiPrefix.args)
 export class ArgsController {
 
-  @_Config(ConfigKey.config) readonly config: Config
+  @MConfig(ConfigKey.config) readonly config: Config
 
   @Inject() readonly ctx: Context
   @Inject() readonly svc: ArgsDecoratorService

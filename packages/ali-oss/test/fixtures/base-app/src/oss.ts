@@ -1,7 +1,6 @@
 import assert from 'node:assert'
 
 import {
-  Config as _Config,
   Controller,
   Get,
   Init,
@@ -9,7 +8,7 @@ import {
   Post,
   Query,
 } from '@midwayjs/core'
-import type { Context } from '@mwcp/share'
+import { Context } from '@mwcp/share'
 
 import {
   AliOssComponent,

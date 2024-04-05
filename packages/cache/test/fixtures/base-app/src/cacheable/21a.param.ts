@@ -2,7 +2,6 @@ import assert from 'node:assert/strict'
 
 import { CachingFactory, MidwayCache, SingleCacheOptions } from '@midwayjs/cache-manager'
 import {
-  Config as _Config,
   Controller,
   Get,
   Init,
@@ -11,7 +10,7 @@ import {
   Param,
   Query,
 } from '@midwayjs/core'
-import type { Context } from '@mwcp/share'
+import { Context, MConfig } from '@mwcp/share'
 
 import { Cacheable } from '../../../../../src/index.js'
 import { CachedResponse, Config, ConfigKey, DataWithCacheMeta } from '../../../../../src/lib/types.js'
@@ -24,7 +23,7 @@ const bigint = 1024n
 @Controller(apiPrefix.keyGenerator)
 export class ParamController {
 
-  @_Config(ConfigKey.config) readonly cacheManagerConfig: Config
+  @MConfig(ConfigKey.config) readonly cacheManagerConfig: Config
   @Inject() readonly ctx: Context
 
   @InjectClient(CachingFactory, 'default') cache: MidwayCache

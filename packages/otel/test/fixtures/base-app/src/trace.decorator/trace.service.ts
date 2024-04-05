@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/await-thenable */
 import assert from 'assert'
 
-import {
-  Config as _Config,
-  Provide,
-} from '@midwayjs/core'
+import { Provide } from '@midwayjs/core'
+import { MConfig } from '@mwcp/share'
 
 import { Trace } from '../../../../../dist/lib/index.js'
 import { Config, ConfigKey } from '../../../../../dist/lib/types.js'
@@ -13,7 +11,7 @@ import { Config, ConfigKey } from '../../../../../dist/lib/types.js'
 @Provide()
 export class DefaultComponentService {
 
-  @_Config(ConfigKey.config) readonly config: Config
+  @MConfig(ConfigKey.config) readonly config: Config
 
   @Trace({ startActiveSpan: false })
   async hello(input: string): Promise<string> {

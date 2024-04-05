@@ -1,9 +1,7 @@
 import assert from 'assert'
 
-import {
-  Config as _Config,
-  Provide,
-} from '@midwayjs/core'
+import { Provide } from '@midwayjs/core'
+import { MConfig } from '@mwcp/share'
 
 import { Trace } from '##/lib/index.js'
 import { Config, ConfigKey } from '##/lib/types.js'
@@ -12,7 +10,7 @@ import { Config, ConfigKey } from '##/lib/types.js'
 @Provide()
 export class DefaultOtelComponentService {
 
-  @_Config(ConfigKey.config) readonly config: Config
+  @MConfig(ConfigKey.config) readonly config: Config
 
   @Trace({ startActiveSpan: false })
   async hello(input: string): Promise<string> {

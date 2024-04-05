@@ -3,7 +3,6 @@ import assert from 'node:assert'
 
 import {
   App,
-  Config as _Config,
   Configuration,
   ILifeCycle,
   ILogger,
@@ -18,6 +17,7 @@ import {
 import {
   Application,
   IMidwayContainer,
+  MConfig,
   registerMiddleware,
   deleteRouter,
 } from '@mwcp/share'
@@ -49,8 +49,8 @@ export class AutoConfiguration implements ILifeCycle {
 
   @App() readonly app: Application
 
-  @_Config(ConfigKey.config) protected readonly config: Conf
-  @_Config(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
+  @MConfig(ConfigKey.config) protected readonly config: Conf
+  @MConfig(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
 
   @Inject() protected readonly environmentService: MidwayEnvironmentService
   @Inject() protected readonly informationService: MidwayInformationService
