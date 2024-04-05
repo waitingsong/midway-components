@@ -49,9 +49,6 @@ export class AutoConfiguration implements ILifeCycle {
 
   @App() readonly app: Application
 
-  @MConfig(ConfigKey.config) protected readonly config: Conf
-  @MConfig(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
-
   @Inject() protected readonly environmentService: MidwayEnvironmentService
   @Inject() protected readonly informationService: MidwayInformationService
   @Inject() protected readonly decoratorService: MidwayDecoratorService
