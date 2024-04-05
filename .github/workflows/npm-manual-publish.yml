@@ -162,6 +162,17 @@ jobs:
           REDIS_PORT: 6379
           # otel
           OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
+          # aliyun
+          ALI_ALB_IPS: ${{ secrets.ALI_ALB_IPS }}
+          ALI_ALB_GROUPID: ${{ secrets.ALI_ALB_GROUPID }}
+          ALI_ECS_AID: ${{ secrets.ALI_ECS_AID }}
+          ALI_ECS_ASECRET: ${{ secrets.ALI_ECS_ASECRET }}
+          ALI_ECS_IDS: ${{ secrets.ALI_ECS_IDS }}
+          ALI_ECS_IPS: ${{ secrets.ALI_ECS_IPS }}
+          ALI_OSS_AID: ${{ secrets.ALI_OSS_AID }}
+          ALI_OSS_ASECRET: ${{ secrets.ALI_OSS_ASECRET }}
+          ALI_OSS_ENDPOINT: ${{ secrets.ALI_OSS_ENDPOINT }}
+          ALI_OSS_BUCKET: ${{ secrets.ALI_OSS_BUCKET }}
 
       - name: NPM Publish
         run: |
@@ -198,7 +209,11 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
         # needed because the postgres container does not provide a healthcheck
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
       jaeger:
         image: jaegertracing/all-in-one
