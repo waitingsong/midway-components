@@ -70,7 +70,6 @@ jobs:
           locale-gen
           locale -a
           netstat -tunpl
-          # chmod a+w -R .
           dig jaeger
 
       - name: Verify
@@ -97,7 +96,6 @@ jobs:
       - name: Install Dependencies
         timeout-minutes: 15
         run: |
-          # chmod a+w -R .
           export cwd=`pwd`
           npm i --no-audit -g autocannon c8 lerna rollup tsx zx
           npm i --no-audit
@@ -182,7 +180,6 @@ jobs:
           . .scripts/ci/ci-env.sh
           # fix: fatal: detected dubious ownership in repository
           git config --global --add safe.directory $cwd
-          # git restore .
           git reset --hard
           git config user.name $GITHUB_ACTOR
           git config user.email gh-actions-${GITHUB_ACTOR}@github.com

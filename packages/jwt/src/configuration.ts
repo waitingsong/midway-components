@@ -27,7 +27,7 @@ import * as LocalConfig from './config/config.local.js'
 import * as UnittestConfig from './config/config.unittest.js'
 import { useComponents } from './imports.js'
 import {
-  Config as Conf,
+  Config,
   ConfigKey,
   MiddlewareConfig,
 } from './lib/types.js'
@@ -58,6 +58,9 @@ export class AutoConfiguration implements ILifeCycle {
   @Inject() protected readonly webRouterService: MidwayWebRouterService
 
   @Logger() protected readonly logger: ILogger
+
+  @MConfig(ConfigKey.config) protected readonly config: Config
+  @MConfig(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
 
   async onConfigLoad(): Promise<void> {
     if (! this.config.enableDefaultRoute) {
