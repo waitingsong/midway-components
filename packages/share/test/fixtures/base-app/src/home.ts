@@ -16,7 +16,7 @@ import { RespData } from '../../../root.config.js'
 export class HomeController {
 
   @MConfig(ConfigKey.config) protected readonly config: Config
-  @MConfig(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
+  @MConfig(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig<unknown>
 
   @Get('/')
   async home(ctx: Context): Promise<RespData> {
