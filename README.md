@@ -30,7 +30,7 @@ ESM build only, requires `@midwayjs >= 3.12` and set `"type": "module"` in `pack
 
 ## 安装全局依赖
 ```sh
-npm i -g c8 lerna rollup tsx
+npm i -g c8 lerna madge rollup tsx zx
 ```
 
 ## Update package
