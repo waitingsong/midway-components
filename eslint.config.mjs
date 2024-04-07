@@ -21,7 +21,6 @@ const srcRules = {
 }
 const testRules = {
   '@typescript-eslint/no-explicit-any': 0,
-  '@typescript-eslint/dot-notation': 0,
 }
 
 const languageOptions = {

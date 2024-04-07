@@ -21,6 +21,8 @@ export {
   Secret,
 } from 'jsonwebtoken'
 
+export * from './interface.js'
+
 // @ts-expect-error for midway
 declare module '@midwayjs/core/dist/interface' {
   interface MidwayConfig {
