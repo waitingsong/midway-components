@@ -43,12 +43,12 @@ export async function decoratorExecutor(options: DecoratorExecutorParam<TraceDec
   const events: Attributes = {
     event: `${spanName}.begin`,
   }
-  const addEventOtpions = {
+  const addEventOptions = {
     traceEvent: true,
     logCpuUsage: true,
-    logMemeoryUsage: true,
+    logMemoryUsage: true,
   }
-  otelComponent.addEvent(span, events, addEventOtpions)
+  otelComponent.addEvent(span, events, addEventOptions)
 
   const decoratorContext: DecoratorContext = {
     webApp,
@@ -98,7 +98,7 @@ export async function decoratorExecutor(options: DecoratorExecutorParam<TraceDec
   const events2: Attributes = {
     event: `${spanName}.end`,
   }
-  otelComponent.addEvent(span, events2, addEventOtpions)
+  otelComponent.addEvent(span, events2, addEventOptions)
   otelComponent.endSpan(otelComponent.appInitProcessSpan, span)
 
   return resp
