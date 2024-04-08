@@ -36,3 +36,12 @@ export class Test2 {
   }
 
 }
+
+@Cacheable({ })
+export class TestClass {
+
+  _simple() {
+    return 'simple'
+  }
+
+}
