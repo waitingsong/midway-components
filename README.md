@@ -18,12 +18,11 @@ ESM build only, requires `@midwayjs >= 3.12` and set `"type": "module"` in `pack
 
 | Package     | Version                      |
 | ----------- | ---------------------------- |
-| [`boot`]    | [![boot-svg]][boot-ch]       |
+| [`share`]   | [![share-svg]][share-ch]     |
 | [`ali-oss`] | [![ali-oss-svg]][ali-oss-ch] |
 | [`cache`]   | [![cache-svg]][cache-ch]     |
 | [`jwt`]     | [![jwt-svg]][jwt-ch]         |
 | [`otel`]    | [![otel-svg]][otel-ch]       |
-| [`taskman`] | [![taskman-svg]][taskman-ch] |
 
 
 ## Initialize and install dependencies
@@ -87,11 +86,7 @@ npm run purge
 [otel-svg]: https://img.shields.io/npm/v/@mwcp/otel.svg?maxAge=7200
 [otel-ch]: https://github.com/waitingsong/midway-components/tree/main/packages/otel/CHANGELOG.md
 
-[`taskman`]: https://github.com/waitingsong/midway-components/tree/main/packages/taskman
-[taskman-svg]: https://img.shields.io/npm/v/@mwcp/taskman.svg?maxAge=7200
-[taskman-ch]: https://github.com/waitingsong/midway-components/tree/main/packages/taskman/CHANGELOG.md
-
-[`boot`]: https://github.com/waitingsong/midway-components/tree/main/packages/boot
-[boot-svg]: https://img.shields.io/npm/v/@mwcp/boot.svg?maxAge=7200
-[boot-ch]: https://github.com/waitingsong/midway-components/tree/main/packages/boot/CHANGELOG.md
+[`share`]: https://github.com/waitingsong/midway-components/tree/main/packages/share
+[share-svg]: https://img.shields.io/npm/v/@mwcp/share.svg?maxAge=7200
+[share-ch]: https://github.com/waitingsong/midway-components/tree/main/packages/share/CHANGELOG.md
 
