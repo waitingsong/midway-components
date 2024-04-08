@@ -31,7 +31,7 @@ export function shouldEnableMiddleware(
     if (matched) {
       return false
     }
-    // if not mathched, continue to check match rules
+    // if not matched, continue to check match rules
   }
 
   if (Array.isArray(match) && match.length) {
