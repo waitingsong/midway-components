@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [25.0.0](https://github.com/waitingsong/midway-components/compare/v24.2.4...v25.0.0) (2024-04-08)
+
+
+### Bug Fixes
+
+* **share:** wrong parameter of prepareOptions() ([1c13ee5](https://github.com/waitingsong/midway-components/commit/1c13ee5c81a559ab68a96662818eaf322a4dbe9f))
+
+
+
+
+
 ## [24.2.4](https://github.com/waitingsong/midway-components/compare/v24.2.3...v24.2.4) (2024-04-08)
 
 
