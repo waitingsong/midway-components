@@ -43,15 +43,15 @@ interface MiddlewareClz {
 export function registerMiddleware(
   app: Application,
   middleware: MiddlewareClz | MiddlewareClz[],
-  postion: 'first' | 'last' = 'last',
+  position: 'first' | 'last' = 'last',
   force = false,
 ): void {
 
   if (Array.isArray(middleware)) {
-    middleware.forEach((item) => { _registerMiddleware(app, item, postion, force) })
+    middleware.forEach((item) => { _registerMiddleware(app, item, position, force) })
   }
   else {
-    _registerMiddleware(app, middleware, postion, force)
+    _registerMiddleware(app, middleware, position, force)
   }
 }
 
