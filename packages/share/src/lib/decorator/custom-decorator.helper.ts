@@ -154,7 +154,7 @@ export function setImplToFalseIfDecoratedWithBothClassAndMethod(
   target: InstanceOfDecorator,
   decoratorKey: string,
   inclusiveDecoratorKeys: string[] | undefined,
-) {
+): void {
 
   assert(target, 'target is undefined')
   assert(decoratorKey, 'decoratorKey is undefined')
@@ -162,7 +162,8 @@ export function setImplToFalseIfDecoratedWithBothClassAndMethod(
   const inclusiveKeysSet = new Set(inclusiveDecoratorKeys)
   inclusiveKeysSet.add(decoratorKey)
 
-  const arr = getClassMetadata<DecoratorMetaData[]>(INJECT_CUSTOM_METHOD, target)
+  const arr = getClassMetadata<DecoratorMetaData[] | undefined>(INJECT_CUSTOM_METHOD, target)
+  if (! arr?.length) { return }
   arr.forEach((row) => {
     // if (row.key !== decoratorKey) { return }
     if (typeof row.options === 'undefined') {

@@ -45,3 +45,15 @@ export class TestClass {
   }
 
 }
+
+export const ttl = 20
+
+@Cacheable()
+export class TestClass2 {
+
+  @Cacheable({ ttl })
+  _simple() {
+    return 'simple'
+  }
+
+}
