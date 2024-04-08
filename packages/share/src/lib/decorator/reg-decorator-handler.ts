@@ -121,7 +121,7 @@ function prepareOptions<TDecoratorParam extends {} = any>(
   aroundFactoryOptions: AroundFactoryParamBase,
   joinPoint: JoinPoint,
   mergedDecoratorParam: DecoratorMetaDataPayload<TDecoratorParam> | undefined,
-  genDecoratorExecutorParam: RegisterDecoratorHandlerParam['fnegenDecoratorExecutorParam'],
+  genDecoratorExecutorParam: RegisterDecoratorHandlerParam['fnGenDecoratorExecutorParam'],
 ): DecoratorExecutorParamBase<TDecoratorParam> {
 
   const baseOpts: Partial<DecoratorExecutorParamBase<TDecoratorParam>> = {
