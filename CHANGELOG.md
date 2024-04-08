@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [25.0.2](https://github.com/waitingsong/midway-components/compare/v25.0.1...v25.0.2) (2024-04-08)
+
+
+### Bug Fixes
+
+* **share:** setImplToFalseIfDecoratedWithBothClassAndMethod() ([b7a3e31](https://github.com/waitingsong/midway-components/commit/b7a3e3126617c1779f9ee9a8880e4c5c7d18b6c0))
+
+
+
+
+
 ## [25.0.1](https://github.com/waitingsong/midway-components/compare/v25.0.0...v25.0.1) (2024-04-08)
 
 **Note:** Version bump only for package midway-components
