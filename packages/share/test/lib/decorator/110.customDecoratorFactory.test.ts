@@ -4,6 +4,8 @@ import { fileShortPath } from '@waiting/shared-core'
 
 import { customDecoratorFactory } from '##/index.js'
 
+import { CacheableArgs } from './111.custom-decorator.helper.js'
+
 
 describe(fileShortPath(import.meta.url), () => {
   describe(`Should customDecoratorFactory() work`, () => {
@@ -28,7 +30,3 @@ describe(fileShortPath(import.meta.url), () => {
 })
 
 
-export interface CacheableArgs {
-  cacheName: string | undefined
-  ttl: number | undefined
-}
