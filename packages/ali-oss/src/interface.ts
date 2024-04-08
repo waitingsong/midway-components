@@ -6,4 +6,3 @@ export {
   NpmPkg,
 } from '@waiting/shared-types'
 
-
