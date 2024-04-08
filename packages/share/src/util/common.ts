@@ -28,7 +28,7 @@ export function requestPathMatched(
     return ! matched
   }
   else if (Array.isArray(match) && match.length) {
-    const matched = isPathMatchRules(path, ignore)
+    const matched = isPathMatchRules(path, match)
     return matched
   }
   else {
