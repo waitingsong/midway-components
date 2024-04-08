@@ -54,11 +54,11 @@ export function methodHasDecorated(
 /**
  * @returns Set<value of decoratorKeys>
  */
-export function isMethodDecoratoredWith(
+export function isMethodDecoratedWith(
   // eslint-disable-next-line @typescript-eslint/ban-types
   target: {}, // class
   propertyName: string, // method name
-  decoratorKeys: string[], // ['docorator:method_key_cacheable']
+  decoratorKeys: string[], // ['decorator:method_key_cacheable']
 ): Set<string> {
 
   const ret = new Set<string>()
