@@ -22,7 +22,7 @@ export class Test {
     cacheName: 'test',
     ttl: 10,
   })
-  _simple() {
+  async _simple(): Promise<string> {
     return 'simple'
   }
 
