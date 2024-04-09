@@ -150,12 +150,15 @@ export interface RegisterDecoratorHandlerParam<TDecoratorParam extends {} = any>
   decoratorKey: string
   decoratorService: MidwayDecoratorService
   /**
-   * false means not support async function being decorated
+   * - false means not support sync function being decorated
+   * - 'bypass' means bypass the decorator
+   * - if both fnDecoratorExecutorAsync and fnDecoratorExecutorSync are 'bypass', throw error
    */
-  fnDecoratorExecutorAsync: FnDecoratorExecutorAsync | false
+  fnDecoratorExecutorAsync: FnDecoratorExecutorAsync | false | 'bypass'
   /**
    * - false means not support sync function being decorated
    * - 'bypass' means bypass the decorator
+   * - if both fnDecoratorExecutorAsync and fnDecoratorExecutorSync are 'bypass', throw error
    */
   fnDecoratorExecutorSync: FnDecoratorExecutor | false | 'bypass'
   fnGenDecoratorExecutorParam: FnGenDecoratorExecutorParam<TDecoratorParam> | undefined | null

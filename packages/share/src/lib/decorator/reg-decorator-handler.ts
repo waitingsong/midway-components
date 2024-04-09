@@ -62,12 +62,20 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const method = target.prototype[propertyName]
 
+      // assert(! (executorAsync === 'bypass' && executorSync === 'bypass'), 'both executorAsync and executorSync can not be bypass together')
+
       const isAsyncFunc = isAsyncFunction(method)
       if (isAsyncFunc) {
+        if (executorAsync === 'bypass') {
+          return {}
+        }
         if (executorAsync === false) {
           throw new TypeError(`Async method ${instanceName}.${propertyName}() is not supported while executorAsync config is false`)
         }
-        assert(typeof executorAsync === 'function', 'fnDecoratorExecutorAsync must be function')
+        assert(
+          typeof executorAsync === 'function',
+          `fnDecoratorExecutorAsync must be function, due to method ${instanceName}.${propertyName}() is async function`,
+        )
         assert(isAsyncFunction(executorAsync), 'fnDecoratorExecutorAsync must be async function')
 
         return {
@@ -87,14 +95,19 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
         }
       }
       else { // sync
-        // sync and bypass
         if (executorSync === 'bypass') {
           return {}
         }
         // sync
         else if (executorSync === false) {
-          throw new TypeError(`Sync method ${instanceName}.${propertyName}() is not supported`)
+          throw new TypeError(`Sync method ${instanceName}.${propertyName}() is not supported, while executorSync config is false`)
         }
+
+        assert(
+          typeof executorSync === 'function',
+          `fnDecoratorExecutorSync must be function, due to method ${instanceName}.${propertyName}() is sync function`,
+        )
+        assert(! isAsyncFunction(executorSync), 'fnDecoratorExecutorSync must not be async function')
 
         return {
           around: (joinPoint: JoinPoint) => {

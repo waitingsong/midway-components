@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import assert from 'node:assert/strict'
 
-// import { CachingFactory } from '@midwayjs/cache-manager'
 import { MidwayDecoratorService } from '@midwayjs/core'
 import { fileShortPath } from '@waiting/shared-core'
 
@@ -11,6 +10,7 @@ import {
   RegisterDecoratorHandlerParam,
   registerDecoratorHandler,
 } from '##/index.js'
+import { apiPrefix, apiRoute } from '#@/api-route.js'
 import { testConfig } from '#@/root.config.js'
 
 import { METHOD_KEY_Cacheable, ttl, Test, Test2, TestClass, TestClass2, CacheableArgs } from './111.custom-decorator.helper.js'
@@ -24,7 +24,6 @@ describe(fileShortPath(import.meta.url), () => {
 
       const aroundFactoryOptions: AroundFactoryParamBase = {
         webApp: app,
-        // cachingFactory: new CachingFactory(),
       }
       const decoratorService = new MidwayDecoratorService(container)
 
@@ -49,7 +48,46 @@ describe(fileShortPath(import.meta.url), () => {
     })
   })
 
+  it(apiRoute.simple, async () => {
+    const { httpRequest } = testConfig
+    const url = `${apiPrefix.methodCacheable}/${apiRoute.simple}`
+
+    const resp = await httpRequest
+      .get(url)
+      .expect(200)
+
+    assert(resp)
+    const data = resp.body as number
+    assert(data === 2)
+  })
+
+  it(apiRoute.simpleSyncWithAsyncBypass, async () => {
+    const { httpRequest } = testConfig
+    const url = `${apiPrefix.methodCacheable}/${apiRoute.simpleSyncWithAsyncBypass}`
+
+    const resp = await httpRequest
+      .get(url)
+      .expect(200)
+
+    assert(resp)
+    const data = resp.body as number
+    assert(data === 2)
+  })
+
+  it(apiRoute.simpleSyncOnly, async () => {
+    const { httpRequest } = testConfig
+    const url = `${apiPrefix.methodCacheable}/${apiRoute.simpleSyncOnly}`
+
+    const resp = await httpRequest
+      .get(url)
+      .expect(200)
+
+    assert(resp)
+    const data = resp.body as number
+    assert(data === 2)
+  })
 })
+
 
 
 async function decoratorExecutor(): Promise<unknown> {
@@ -58,6 +96,5 @@ async function decoratorExecutor(): Promise<unknown> {
 
 function genDecoratorExecutorOptions(options: DecoratorExecutorParamBase<CacheableArgs>): DecoratorExecutorParamBase<CacheableArgs> {
   return options
-
 }
 
