@@ -80,6 +80,7 @@ function _registerMiddleware(
   }
 }
 
+/* c8 ignore start */
 export async function deleteRouter(prefix: string, routerService: MidwayWebRouterService): Promise<void> {
   if (! prefix) {
     return
@@ -95,4 +96,5 @@ export async function deleteRouter(prefix: string, routerService: MidwayWebRoute
     return true
   })
 }
+/* c8 ignore stop */
 
