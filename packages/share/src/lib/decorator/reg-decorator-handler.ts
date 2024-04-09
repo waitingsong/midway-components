@@ -8,6 +8,7 @@ import type {
 import { executeDecoratorHandler } from './reg-decorator-handler.helper.js'
 
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
 export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
   options: RegisterDecoratorHandlerParam<TDecoratorParam>,
   aroundFactoryOptions: AroundFactoryParamBase,
