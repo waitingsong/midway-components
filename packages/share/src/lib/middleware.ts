@@ -13,7 +13,7 @@ export function shouldEnableMiddleware(
   mwConfig?: MiddlewareConfig,
 ): boolean {
 
-  if (! ctx) {
+  if (! ctx?.path) {
     return false
   }
   if (! mwConfig) {
