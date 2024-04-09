@@ -65,7 +65,7 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
       const isAsyncFunc = isAsyncFunction(method)
       if (isAsyncFunc) {
         if (executorAsync === false) {
-          throw new TypeError(`Async method ${instanceName}.${propertyName}() is not supported`)
+          throw new TypeError(`Async method ${instanceName}.${propertyName}() is not supported while executorAsync config is false`)
         }
         assert(typeof executorAsync === 'function', 'fnDecoratorExecutorAsync must be function')
         assert(isAsyncFunction(executorAsync), 'fnDecoratorExecutorAsync must be async function')
@@ -85,31 +85,32 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
             return ret
           },
         }
-      } // async
-
-      // sync and bypass
-      if (executorSync === 'bypass') {
-        return {}
       }
-      // sync
-      else if (executorSync === false) {
-        throw new TypeError(`Sync method ${instanceName}.${propertyName}() is not supported`)
-      }
+      else { // sync
+        // sync and bypass
+        if (executorSync === 'bypass') {
+          return {}
+        }
+        // sync
+        else if (executorSync === false) {
+          throw new TypeError(`Sync method ${instanceName}.${propertyName}() is not supported`)
+        }
 
-      return {
-        around: (joinPoint: JoinPoint) => {
-          const executorParam = prepareOptions<TDecoratorParam>(
-            decoratorKey,
-            aroundFactoryOptions,
-            joinPoint,
-            mergedDecoratorParam,
-            genDecoratorExecutorParam,
-          )
+        return {
+          around: (joinPoint: JoinPoint) => {
+            const executorParam = prepareOptions<TDecoratorParam>(
+              decoratorKey,
+              aroundFactoryOptions,
+              joinPoint,
+              mergedDecoratorParam,
+              genDecoratorExecutorParam,
+            )
 
-          assert(executorParam.methodIsAsyncFunction === false, 'methodIsAsyncFunction must be false')
-          const ret = executorSync(executorParam)
-          return ret
-        },
+            assert(executorParam.methodIsAsyncFunction === false, 'methodIsAsyncFunction must be false')
+            const ret = executorSync(executorParam)
+            return ret
+          },
+        }
       }
     },
   )
