@@ -1,3 +1,4 @@
+/* c8 ignore start */
 /*
  * Copyright The OpenTelemetry Authors
  *
@@ -118,3 +119,5 @@ export interface HttpInstrumentationConfig extends InstrumentationConfig {
 //   syscall?: string
 //   stack?: string
 // }
+
+/* c8 ignore stop */

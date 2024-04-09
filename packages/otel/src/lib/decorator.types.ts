@@ -1,3 +1,4 @@
+/* c8 ignore start */
 import type { Application, Context } from '@mwcp/share'
 import type {
   Context as TraceContext,
@@ -66,3 +67,4 @@ export interface DecoratorContext {
 }
 
 
+/* c8 ignore stop */
