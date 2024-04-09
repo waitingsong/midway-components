@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [25.1.0](https://github.com/waitingsong/midway-components/compare/v25.0.2...v25.1.0) (2024-04-09)
+
+
+### Features
+
+* **share:** RegisterDecoratorHandlerParam['fnDecoratorExecutorAsync'] accepts 'bypass' value ([b6dc402](https://github.com/waitingsong/midway-components/commit/b6dc402b93b8f5f52b3cd6427db2829dfaf733c8))
+
+
+
+
+
 ## [25.0.2](https://github.com/waitingsong/midway-components/compare/v25.0.1...v25.0.2) (2024-04-08)
 
 **Note:** Version bump only for package @mwcp/cache
