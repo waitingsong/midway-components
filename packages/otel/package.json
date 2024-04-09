@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/otel",
   "author": "waiting",
-  "version": "25.2.0",
+  "version": "25.2.1",
   "description": "midway component for open telemetry",
   "keywords": [
     "midway",
@@ -36,7 +36,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@mwcp/share": "^25.2.0",
+    "@mwcp/share": "^25.2.1",
     "@opentelemetry/resource-detector-alibaba-cloud": "^0.28.7",
     "@opentelemetry/resource-detector-aws": "^1.4.0",
     "@opentelemetry/resource-detector-container": "^0.3.7",
