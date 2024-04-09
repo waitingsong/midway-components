@@ -13,7 +13,7 @@ import {
 import { apiPrefix, apiRoute } from '#@/api-route.js'
 import { testConfig } from '#@/root.config.js'
 
-import { METHOD_KEY_Cacheable, ttl, Test, Test2, TestClass, TestClass2, CacheableArgs } from './111.custom-decorator.helper.js'
+import { METHOD_KEY_Cacheable, Test, Test2, TestClass, TestClass2, CacheableArgs } from './111.custom-decorator.helper.js'
 
 
 describe(fileShortPath(import.meta.url), () => {

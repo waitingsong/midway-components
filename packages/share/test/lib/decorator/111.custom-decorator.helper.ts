@@ -16,12 +16,14 @@ export interface CacheableArgs {
   ttl: number | undefined
 }
 
+export const cacheableArgs: CacheableArgs = {
+  cacheName: 'test',
+  ttl: 10,
+}
+
 export class Test {
 
-  @Cacheable({
-    cacheName: 'test',
-    ttl: 10,
-  })
+  @Cacheable(cacheableArgs)
   async _simple(): Promise<string> {
     return 'simple'
   }
