@@ -5,6 +5,7 @@ import assert from 'node:assert'
 import { isAsyncFunction } from 'node:util/types'
 
 import {
+  IMethodAspect,
   JoinPoint,
   REQUEST_OBJ_CTX_KEY,
 } from '@midwayjs/core'
@@ -30,103 +31,115 @@ export function registerDecoratorHandler<TDecoratorParam extends {} = any>(
   aroundFactoryOptions: AroundFactoryParamBase,
 ): void {
 
-  const {
-    decoratorKey,
-    decoratorService,
-    fnDecoratorExecutorAsync: executorAsync,
-    fnDecoratorExecutorSync: executorSync,
-    fnGenDecoratorExecutorParam: genDecoratorExecutorParam,
-  } = options
-
+  const { decoratorKey, decoratorService } = options
   assert(decoratorKey, 'decoratorKey is required')
   assert(decoratorService, 'decoratorService is required')
 
   decoratorService.registerMethodHandler(
     decoratorKey,
-    (aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorParam>) => {
-
-      const argsFromClassDecoratorArray = retrieveMetadataPayloadsOnClass<TDecoratorParam>(
-        aopCallbackInputOptions.target,
-        decoratorKey,
-        aopCallbackInputOptions.propertyName,
-      )
-      const mergedDecoratorParam = mergeDecoratorMetaDataPayload<TDecoratorParam>(
-        argsFromClassDecoratorArray,
-        aopCallbackInputOptions.metadata,
-      )
-      // const { metadata } = aopCallbackInputOptions
-
-      const { target, propertyName } = aopCallbackInputOptions
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      const instanceName = target.name ?? target.constructor.name ?? 'anonymous'
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      const method = target.prototype[propertyName]
-
-      // assert(! (executorAsync === 'bypass' && executorSync === 'bypass'), 'both executorAsync and executorSync can not be bypass together')
-
-      const isAsyncFunc = isAsyncFunction(method)
-      if (isAsyncFunc) {
-        if (executorAsync === 'bypass') {
-          return {}
-        }
-        if (executorAsync === false) {
-          throw new TypeError(`Async method ${instanceName}.${propertyName}() is not supported while executorAsync config is false`)
-        }
-        assert(
-          typeof executorAsync === 'function',
-          `fnDecoratorExecutorAsync must be function, due to method ${instanceName}.${propertyName}() is async function`,
-        )
-        assert(isAsyncFunction(executorAsync), 'fnDecoratorExecutorAsync must be async function')
-
-        return {
-          around: async (joinPoint: JoinPoint) => {
-            const executorParam = prepareOptions<TDecoratorParam>(
-              decoratorKey,
-              aroundFactoryOptions,
-              joinPoint,
-              mergedDecoratorParam,
-              genDecoratorExecutorParam,
-            )
-
-            assert(executorParam.methodIsAsyncFunction === true, 'methodIsAsyncFunction must be true')
-            const ret = await executorAsync(executorParam)
-            return ret
-          },
-        }
-      }
-      else { // sync
-        if (executorSync === 'bypass') {
-          return {}
-        }
-        // sync
-        else if (executorSync === false) {
-          throw new TypeError(`Sync method ${instanceName}.${propertyName}() is not supported, while executorSync config is false`)
-        }
-
-        assert(
-          typeof executorSync === 'function',
-          `fnDecoratorExecutorSync must be function, due to method ${instanceName}.${propertyName}() is sync function`,
-        )
-        assert(! isAsyncFunction(executorSync), 'fnDecoratorExecutorSync must not be async function')
-
-        return {
-          around: (joinPoint: JoinPoint) => {
-            const executorParam = prepareOptions<TDecoratorParam>(
-              decoratorKey,
-              aroundFactoryOptions,
-              joinPoint,
-              mergedDecoratorParam,
-              genDecoratorExecutorParam,
-            )
-
-            assert(executorParam.methodIsAsyncFunction === false, 'methodIsAsyncFunction must be false')
-            const ret = executorSync(executorParam)
-            return ret
-          },
-        }
-      }
-    },
+    (aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorParam>) => executeDecoratorHandler(
+      aopCallbackInputOptions,
+      options,
+      aroundFactoryOptions,
+    ),
   )
+}
+
+function executeDecoratorHandler<TDecoratorParam extends {} = any>(
+  aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorParam>,
+  registerDecoratorHandlerOptions: RegisterDecoratorHandlerParam<TDecoratorParam>,
+  aroundFactoryOptions: AroundFactoryParamBase,
+): IMethodAspect {
+
+  const {
+    decoratorKey,
+    fnDecoratorExecutorAsync: executorAsync,
+    fnDecoratorExecutorSync: executorSync,
+    fnGenDecoratorExecutorParam: genDecoratorExecutorParam,
+  } = registerDecoratorHandlerOptions
+
+  assert(decoratorKey, 'decoratorKey is required')
+
+  const argsFromClassDecoratorArray = retrieveMetadataPayloadsOnClass<TDecoratorParam>(
+    aopCallbackInputOptions.target,
+    decoratorKey,
+    aopCallbackInputOptions.propertyName,
+  )
+  const mergedDecoratorParam = mergeDecoratorMetaDataPayload<TDecoratorParam>(
+    argsFromClassDecoratorArray,
+    aopCallbackInputOptions.metadata,
+  )
+  // const { metadata } = aopCallbackInputOptions
+
+  const { target, propertyName } = aopCallbackInputOptions
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const instanceName = target.name ?? target.constructor.name ?? 'anonymous'
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  const method = target.prototype[propertyName]
+
+  // assert(! (executorAsync === 'bypass' && executorSync === 'bypass'), 'both executorAsync and executorSync can not be bypass together')
+
+  const isAsyncFunc = isAsyncFunction(method)
+  if (isAsyncFunc) {
+    if (executorAsync === 'bypass') {
+      return {}
+    }
+    if (executorAsync === false) {
+      throw new TypeError(`Async method ${instanceName}.${propertyName}() is not supported while executorAsync config is false`)
+    }
+    assert(
+      typeof executorAsync === 'function',
+          `fnDecoratorExecutorAsync must be function, due to method ${instanceName}.${propertyName}() is async function`,
+    )
+    assert(isAsyncFunction(executorAsync), 'fnDecoratorExecutorAsync must be async function')
+
+    return {
+      around: async (joinPoint: JoinPoint) => {
+        const executorParam = prepareOptions<TDecoratorParam>(
+          decoratorKey,
+          aroundFactoryOptions,
+          joinPoint,
+          mergedDecoratorParam,
+          genDecoratorExecutorParam,
+        )
+
+        assert(executorParam.methodIsAsyncFunction === true, 'methodIsAsyncFunction must be true')
+        const ret = await executorAsync(executorParam)
+        return ret
+      },
+    }
+  }
+  else { // sync
+    if (executorSync === 'bypass') {
+      return {}
+    }
+    // sync
+    else if (executorSync === false) {
+      throw new TypeError(`Sync method ${instanceName}.${propertyName}() is not supported, while executorSync config is false`)
+    }
+
+    assert(
+      typeof executorSync === 'function',
+          `fnDecoratorExecutorSync must be function, due to method ${instanceName}.${propertyName}() is sync function`,
+    )
+    assert(! isAsyncFunction(executorSync), 'fnDecoratorExecutorSync must not be async function')
+
+    return {
+      around: (joinPoint: JoinPoint) => {
+        const executorParam = prepareOptions<TDecoratorParam>(
+          decoratorKey,
+          aroundFactoryOptions,
+          joinPoint,
+          mergedDecoratorParam,
+          genDecoratorExecutorParam,
+        )
+
+        assert(executorParam.methodIsAsyncFunction === false, 'methodIsAsyncFunction must be false')
+        const ret = executorSync(executorParam)
+        return ret
+      },
+    }
+  }
 }
 
 
@@ -168,25 +181,6 @@ function prepareOptions<TDecoratorParam extends {} = any>(
   return executorParam
 }
 
-
-// async function run<TDecoratorParam extends {} = {}>(
-//   decoratorExecutor: FnDecoratorExecutor,
-//   options: DecoratorExecutorParamBase<TDecoratorParam>,
-// ): Promise<unknown> {
-
-//   // not return directly, https://v8.dev/blog/fast-async#improved-developer-experience
-//   const dat = await decoratorExecutor(options)
-//   return dat
-// }
-
-// function runSync<TDecoratorParam extends {} = {}>(
-//   decoratorExecutor: FnDecoratorExecutor,
-//   options: DecoratorExecutorParamBase<TDecoratorParam>,
-// ): unknown {
-
-//   const dat = decoratorExecutor(options)
-//   return dat
-// }
 
 
 export function genDecoratorExecutorOptionsCommon<TDecoratorParam extends {} = {}>(
