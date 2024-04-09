@@ -2,6 +2,7 @@ import { customDecoratorFactory } from '##/index.js'
 
 
 export const METHOD_KEY_Cacheable = 'decorator:method_key_cacheable_test'
+export const ttl = 20
 
 export function Cacheable(options?: Partial<CacheableArgs>) {
   return customDecoratorFactory<CacheableArgs>({
@@ -48,9 +49,8 @@ export class TestClass {
 
 }
 
-export const ttl = 20
 
-@Cacheable()
+@Cacheable(cacheableArgs)
 export class TestClass2 {
 
   @Cacheable({ ttl })

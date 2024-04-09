@@ -130,7 +130,7 @@ function regMethodDecorator<TDecoratorParam extends {} = any>(options: CustomMet
     typeof args === 'object' || typeof args === 'undefined',
     'args is not an object or undefined',
   )
-  const metadata = args ?? {}
+  const metadata = args ? { ...args } : {}
   Object.defineProperty(metadata, 'decoratedType', { value: decoratedType ?? 'method' })
 
   const data: DecoratorMetaData = {
