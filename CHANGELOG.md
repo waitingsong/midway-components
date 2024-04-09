@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [25.2.0](https://github.com/waitingsong/midway-components/compare/v25.1.0...v25.2.0) (2024-04-09)
+
+
+### Features
+
+* **share:** update shouldEnableMiddleware() ([a1d2fc6](https://github.com/waitingsong/midway-components/commit/a1d2fc61c3d504722387f1b598d7cf0edfb94fd3))
+
+
+
+
+
 # [25.1.0](https://github.com/waitingsong/midway-components/compare/v25.0.2...v25.1.0) (2024-04-09)
 
 
