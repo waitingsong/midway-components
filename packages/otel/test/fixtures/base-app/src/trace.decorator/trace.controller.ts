@@ -125,6 +125,25 @@ export class DefaultComponentController {
     this.logger.log({
       msg: traceId,
     })
+
+    this.logger.debug({
+      msg: traceId,
+    })
+    this.logger.info({
+      msg: traceId,
+    })
+    this.logger.warn({
+      msg: traceId,
+    })
+    this.logger.error({
+      msg: traceId,
+    })
+    this.logger.write({
+      msg: traceId,
+    })
+    this.logger.verbose({
+      msg: traceId,
+    })
     return traceId
   }
 
