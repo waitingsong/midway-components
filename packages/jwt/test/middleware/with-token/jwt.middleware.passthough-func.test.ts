@@ -8,6 +8,7 @@ import {
   MiddlewareConfig,
   PassthroughCallback,
 } from '##/lib/types.js'
+import { apiBase, apiMethod } from '#@/api-test.js'
 import { authHeader1, payload1 } from '#@/mock-data.js'
 import { testConfig } from '#@/root.config.js'
 
@@ -22,7 +23,7 @@ describe(fileShortPath(import.meta.url), () => {
 
   const callbackTrue: PassthroughCallback = async () => true
   const callbackFalse: PassthroughCallback = async () => false
-  const path = '/test'
+  const path = `/${apiMethod.test}`
 
   describe('Should JwtAuthenticateOptions.passthrough work with func', () => {
     it('true: passed', async () => {

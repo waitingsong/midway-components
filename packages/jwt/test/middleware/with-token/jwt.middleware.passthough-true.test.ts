@@ -1,7 +1,7 @@
 import { fileShortPath } from '@waiting/shared-core'
 
-
 import { ConfigKey, MiddlewareConfig } from '##/lib/types.js'
+import { apiBase, apiMethod } from '#@/api-test.js'
 import { authHeader1, payload1 } from '#@/mock-data.js'
 import { testConfig } from '#@/root.config.js'
 
@@ -14,7 +14,7 @@ import {
 
 describe(fileShortPath(import.meta.url), () => {
 
-  const path = '/test'
+  const path = `/${apiMethod.test}`
 
   describe('Should JwtAuthenticateOptions.passthrough work with value: true', () => {
     it('passed', async () => {

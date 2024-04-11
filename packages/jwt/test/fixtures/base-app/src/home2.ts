@@ -9,10 +9,11 @@ import {
   ConfigKey,
   MiddlewareConfig,
 } from '../../../../dist/lib/types.js'
+import { apiBase, apiMethod } from '../../../api-test.js'
 import { RespData } from '../../../root.config.js'
 
 
-@Controller('/')
+@Controller(apiBase.root)
 export class HomeController {
 
   @MConfig(ConfigKey.config) protected readonly config: Config
@@ -43,7 +44,7 @@ export class HomeController {
     return res
   }
 
-  @Get('/test')
+  @Get(`/${apiMethod.test}`)
   async test(ctx: Context): Promise<RespData> {
     const { jwtState, cookies, header, url } = ctx
     const config = this.config

@@ -2,8 +2,8 @@ import assert from 'node:assert/strict'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-
 import { ConfigKey, MiddlewareConfig } from '##/lib/types.js'
+import { apiBase, apiMethod } from '#@/api-test.js'
 import { testConfig } from '#@/root.config.js'
 
 import {
@@ -14,7 +14,7 @@ import {
 
 describe(fileShortPath(import.meta.url), () => {
 
-  const path = '/test'
+  const path = `/${apiMethod.test}`
 
   describe('Should MiddlewareConfig.debug work true', () => {
     it('normal', async () => {

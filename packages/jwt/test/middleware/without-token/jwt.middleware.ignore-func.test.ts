@@ -2,9 +2,9 @@ import assert from 'node:assert/strict'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-
 import { jwtMiddlewareConfig as mConfig } from '##/config/config.unittest.js'
 import { ConfigKey, MiddlewareConfig } from '##/lib/types.js'
+import { apiBase, apiMethod } from '#@/api-test.js'
 import { testConfig } from '#@/root.config.js'
 
 import { authShouldFailedWithNotFound, authShouldSkipped } from '../helper.js'
@@ -12,7 +12,7 @@ import { authShouldFailedWithNotFound, authShouldSkipped } from '../helper.js'
 
 describe(fileShortPath(import.meta.url), () => {
 
-  const path = '/test'
+  const path = `/${apiMethod.test}`
 
   describe('Should MiddlewareConfig.ignore work with func', () => {
     it('auth skipped eq', async () => {
