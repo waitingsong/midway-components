@@ -11,12 +11,12 @@ import { MConfig } from '@mwcp/share'
 import { Trace, TraceService } from '../../../../../dist/lib/index.js'
 import { TraceLogger, TraceAppLogger } from '../../../../../dist/lib/trace.logger.js'
 import { Config, ConfigKey, Msg } from '../../../../../dist/lib/types.js'
-import { apiPrefix, apiRoute } from '../api-route.js'
+import { apiBase, apiMethod } from '../../../../api-test.js'
 
 import { DefaultComponentService } from './trace.service.js'
 
 
-@Controller(apiPrefix.TraceDecorator)
+@Controller(apiBase.TraceDecorator)
 export class DefaultComponentController {
 
   @MConfig(ConfigKey.config) readonly config: Config
@@ -32,7 +32,7 @@ export class DefaultComponentController {
     assert(true)
   }
 
-  @Get(`/${apiRoute.id}`)
+  @Get(`/${apiMethod.id}`)
   async traceId(): Promise<string> {
     const traceId = this.traceSvc.getTraceId()
     await this.svc.hello(Msg.hello)
@@ -43,7 +43,7 @@ export class DefaultComponentController {
   }
 
   @Trace()
-  @Get(`/${apiRoute.id2}`)
+  @Get(`/${apiMethod.id2}`)
   async traceId2(): Promise<string> {
     const traceId = this.traceSvc.getTraceId()
     this.traceSvc.setAttributesLater(void 0, { bar: 'bar' })
@@ -59,7 +59,7 @@ export class DefaultComponentController {
   }
 
   @Trace()
-  @Get(`/${apiRoute.decorator_arg}`)
+  @Get(`/${apiMethod.decorator_arg}`)
   async arg(): Promise<string> {
     const traceId = this.traceSvc.getTraceId()
     const rnd = Math.random()
@@ -74,7 +74,7 @@ export class DefaultComponentController {
   }
 
   @Trace()
-  @Get(`/${apiRoute.decorator_arg2}`)
+  @Get(`/${apiMethod.decorator_arg2}`)
   async arg2(): Promise<string> {
     const traceId = this.traceSvc.getTraceId()
     const rnd = Math.round(Math.random() * 100)
@@ -89,14 +89,14 @@ export class DefaultComponentController {
 
 
   @Trace()
-  @Get(`/${apiRoute.disable_trace}`)
+  @Get(`/${apiMethod.disable_trace}`)
   async noTrace(): Promise<string> {
     const traceId = this.traceSvc.getTraceId()
     return traceId // should be empty
   }
 
   @Trace()
-  @Get(`/${apiRoute.error}`)
+  @Get(`/${apiMethod.error}`)
   async error(): Promise<string> {
     try {
       await this.svc.error(true)
@@ -112,14 +112,14 @@ export class DefaultComponentController {
   }
 
   @Trace()
-  @Get(`/${apiRoute.trace_error}`)
+  @Get(`/${apiMethod.trace_error}`)
   async traceError(): Promise<string> {
     await this.svc.traceError(true)
     return 'should not reach here'
   }
 
 
-  @Get(`/${apiRoute.log}`)
+  @Get(`/${apiMethod.log}`)
   async log(): Promise<string> {
     const traceId = this.traceSvc.getTraceId()
     this.logger.log({
@@ -147,7 +147,7 @@ export class DefaultComponentController {
     return traceId
   }
 
-  @Get(`/${apiRoute.appLog}`)
+  @Get(`/${apiMethod.appLog}`)
   async appLog(): Promise<string> {
     const traceId = this.traceSvc.getTraceId()
     // no event
@@ -160,7 +160,7 @@ export class DefaultComponentController {
     return traceId
   }
 
-  @Get(`/${apiRoute.warn}`)
+  @Get(`/${apiMethod.warn}`)
   async warn(): Promise<string> {
     const traceId = this.traceSvc.getTraceId()
     this.logger.warn({

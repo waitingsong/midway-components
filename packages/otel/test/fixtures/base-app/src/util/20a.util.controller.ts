@@ -10,10 +10,10 @@ import { MConfig } from '@mwcp/share'
 import { Trace, TraceService } from '../../../../../dist/lib/index.js'
 import { Config, ConfigKey, HeadersKey } from '../../../../../dist/lib/types.js'
 import { propagateHeader } from '../../../../../dist/lib/util.js'
-import { apiPrefix, apiRoute } from '../api-route.js'
+import { apiBase, apiMethod } from '../../../../api-test.js'
 
 
-@Controller(apiPrefix.util)
+@Controller(apiBase.util)
 export class UtilController {
 
   @MConfig(ConfigKey.config) readonly config: Config
@@ -21,7 +21,7 @@ export class UtilController {
   @Inject() readonly traceSvc: TraceService
 
   @Trace()
-  @Get(`/${apiRoute.propagateHeader}`)
+  @Get(`/${apiMethod.propagateHeader}`)
   async propagateHeader(): Promise<'OK'> {
     const headers = new Headers()
     assert(headers)
