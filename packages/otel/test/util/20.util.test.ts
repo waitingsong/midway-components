@@ -3,14 +3,14 @@ import assert from 'node:assert/strict'
 import { fileShortPath } from '@waiting/shared-core'
 
 import { truncateString } from '##/lib/util.js'
-import { apiPrefix, apiRoute } from '#@/fixtures/base-app/src/api-route.js'
+import { apiBase, apiMethod } from '#@/api-test.js'
 import { testConfig } from '#@/root.config.js'
 
 
 describe(fileShortPath(import.meta.url), function () {
 
   describe('should propagateHeader() work', () => {
-    const path = `${apiPrefix.util}/${apiRoute.propagateHeader}`
+    const path = `${apiBase.util}/${apiMethod.propagateHeader}`
 
     it('common', async () => {
       const { httpRequest } = testConfig

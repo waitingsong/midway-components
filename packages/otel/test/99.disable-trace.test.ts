@@ -4,7 +4,7 @@ import { fileShortPath } from '@waiting/shared-core'
 
 import { exporterEndpoint } from '##/lib/config.js'
 import { Config } from '##/lib/types.js'
-import { apiPrefix, apiRoute } from '#@/fixtures/base-app/src/api-route.js'
+import { apiBase, apiMethod } from '#@/api-test.js'
 import { testConfig } from '#@/root.config.js'
 
 
@@ -25,7 +25,7 @@ describe(fileShortPath(import.meta.url), function () {
     app.addConfigObject({ otelConfig })
   })
 
-  const path = `${apiPrefix.TraceDecorator}/${apiRoute.disable_trace}`
+  const path = `${apiBase.TraceDecorator}/${apiMethod.disable_trace}`
 
   it(`Should ${path} work`, async () => {
     const { httpRequest } = testConfig

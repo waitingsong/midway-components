@@ -33,11 +33,11 @@ export class UtilController {
     const traceCtx = this.traceSvc.getActiveContext()
     propagateHeader(traceCtx, headers)
     assert(headers)
-    const traceparent = headers.get(HeadersKey.otelTraceId)
-    assert(traceparent)
+    const traceParent = headers.get(HeadersKey.otelTraceId)
+    assert(traceParent)
 
     const traceId = this.traceSvc.getTraceId()
-    const spanId = traceparent.split('-')[1]
+    const spanId = traceParent.split('-')[1]
     assert(spanId === traceId)
 
 

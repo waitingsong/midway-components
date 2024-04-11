@@ -25,7 +25,7 @@ export class DefaultComponentController {
   @Inject() readonly traceSvc: TraceService
 
   @Inject() readonly logger: TraceLogger
-  @Inject() readonly applogger: TraceAppLogger
+  @Inject() readonly appLogger: TraceAppLogger
 
   @Init()
   async init(): Promise<void> {
@@ -151,10 +151,10 @@ export class DefaultComponentController {
   async appLog(): Promise<string> {
     const traceId = this.traceSvc.getTraceId()
     // no event
-    this.applogger.log({
+    this.appLogger.log({
       msg: traceId,
     })
-    this.applogger.log({
+    this.appLogger.log({
       msg: traceId,
     }, this.traceSvc.rootSpan)
     return traceId

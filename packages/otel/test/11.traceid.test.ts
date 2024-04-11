@@ -5,7 +5,7 @@ import { sleep, fileShortPath } from '@waiting/shared-core'
 
 import { exporterEndpoint } from '##/lib/config.js'
 import { JaegerTraceInfo, JaegerTraceInfoSpan } from '##/lib/types.js'
-import { apiPrefix, apiRoute } from '#@/fixtures/base-app/src/api-route.js'
+import { apiBase, apiMethod } from '#@/api-test.js'
 import { testConfig } from '#@/root.config.js'
 
 
@@ -15,10 +15,10 @@ assert(agent, 'OTEL_EXPORTER_OTLP_ENDPOINT not set')
 
 describe(fileShortPath(import.meta.url), function () {
 
-  const path = `${apiPrefix.TraceDecorator}/${apiRoute.id}`
-  const path2 = `${apiPrefix.TraceDecorator}/${apiRoute.id2}`
-  const path3 = `${apiPrefix.TraceDecorator}/${apiRoute.decorator_arg}`
-  const path4 = `${apiPrefix.TraceDecorator}/${apiRoute.decorator_arg2}`
+  const path = `${apiBase.TraceDecorator}/${apiMethod.id}`
+  const path2 = `${apiBase.TraceDecorator}/${apiMethod.id2}`
+  const path3 = `${apiBase.TraceDecorator}/${apiMethod.decorator_arg}`
+  const path4 = `${apiBase.TraceDecorator}/${apiMethod.decorator_arg2}`
 
   it(`Should ${path} work`, async () => {
     const { httpRequest } = testConfig
@@ -164,7 +164,7 @@ describe(fileShortPath(import.meta.url), function () {
       span0.operationName === 'DefaultComponentService/hello'
       || span0.operationName === 'DefaultComponentService/helloSync'
       || span0.operationName === 'DefaultComponentController/traceId2'
-      || span0.operationName === `HTTP GET ${apiPrefix.TraceDecorator}/${apiRoute.id2}`,
+      || span0.operationName === `HTTP GET ${apiBase.TraceDecorator}/${apiMethod.id2}`,
       span0.operationName,
     )
 
@@ -253,7 +253,7 @@ describe(fileShortPath(import.meta.url), function () {
 })
 
 
-function spanHasRelationshop(
+function spanHasRelationship(
   traceId: string,
   span: JaegerTraceInfoSpan,
   parentSpan: JaegerTraceInfoSpan,
@@ -268,7 +268,7 @@ function spanHasRelationshop(
   const [ref1] = parentSpan.references
   if (! ref1) { // parentSpan should not root span
     // return false
-    return spanHasRelationshop(traceId, parentSpan, span)
+    return spanHasRelationship(traceId, parentSpan, span)
   }
 
   assert(ref0.refType === 'CHILD_OF')

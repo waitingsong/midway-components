@@ -2,15 +2,15 @@ import assert from 'node:assert/strict'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-import { apiPrefix, apiRoute } from '#@/fixtures/base-app/src/api-route.js'
+import { apiBase, apiMethod } from '#@/api-test.js'
 import { testConfig } from '#@/root.config.js'
 
 
 describe(fileShortPath(import.meta.url), function () {
 
 
-  const path = `${apiPrefix.TraceDecorator}/${apiRoute.error}` // exception will be caught
-  const pathTrace = `${apiPrefix.TraceDecorator}/${apiRoute.trace_error}`
+  const path = `${apiBase.TraceDecorator}/${apiMethod.error}` // exception will be caught
+  const pathTrace = `${apiBase.TraceDecorator}/${apiMethod.trace_error}`
 
   it(`Should ${path} work`, async () => {
     const { httpRequest } = testConfig
@@ -23,7 +23,7 @@ describe(fileShortPath(import.meta.url), function () {
     assert(ret.startsWith('debug for'))
   })
 
-  // error from default.servcie will be traced
+  // error from default.service will be traced
   it(`Should ${pathTrace} work`, async () => {
     const { httpRequest } = testConfig
 
