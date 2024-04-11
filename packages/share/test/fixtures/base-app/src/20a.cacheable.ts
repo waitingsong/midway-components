@@ -6,18 +6,18 @@ import {
   Get,
 } from '@midwayjs/core'
 
-import { apiPrefix, apiRoute } from '../../../api-route.js'
+import { apiBase, apiMethod } from '../../../api-test.js'
 
 import { Cacheable, CacheableSyncOnly, CacheableSyncWithAsyncBypass } from './helper.js'
 
 
-@Controller(apiPrefix.methodCacheable)
+@Controller(apiBase.methodCacheable)
 export class CacheController {
 
   readonly controllerName = 'CacheController'
   idx = 1
 
-  @Get(`/${apiRoute.simple}`)
+  @Get(`/${apiMethod.simple}`)
   async simple(): Promise<number> {
     const ret = await this._simple(this.idx)
     assert(ret === this.idx + 1)
@@ -31,7 +31,7 @@ export class CacheController {
     return ret
   }
 
-  @Get(`/${apiRoute.simpleSyncWithAsyncBypass}`)
+  @Get(`/${apiMethod.simpleSyncWithAsyncBypass}`)
   async simpleSyncWithAsyncPass(): Promise<number> {
     const ret = this._simpleSync(this.idx)
     assert(ret === this.idx + 1)
@@ -45,7 +45,7 @@ export class CacheController {
     return ret
   }
 
-  @Get(`/${apiRoute.simpleSyncOnly}`)
+  @Get(`/${apiMethod.simpleSyncOnly}`)
   async simpleSyncOnly(): Promise<number> {
     const ret = this._simpleSync6(this.idx)
     assert(ret === this.idx + 1)

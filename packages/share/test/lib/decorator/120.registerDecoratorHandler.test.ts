@@ -10,7 +10,7 @@ import {
   RegisterDecoratorHandlerParam,
   registerDecoratorHandler,
 } from '##/index.js'
-import { apiPrefix, apiRoute } from '#@/api-route.js'
+import { apiBase, apiMethod } from '#@/api-test.js'
 import { testConfig } from '#@/root.config.js'
 
 import { METHOD_KEY_Cacheable, Test, Test2, TestClass, TestClass2, CacheableArgs } from './111.custom-decorator.helper.js'
@@ -48,9 +48,9 @@ describe(fileShortPath(import.meta.url), () => {
     })
   })
 
-  it(apiRoute.simple, async () => {
+  it(apiMethod.simple, async () => {
     const { httpRequest } = testConfig
-    const url = `${apiPrefix.methodCacheable}/${apiRoute.simple}`
+    const url = `${apiBase.methodCacheable}/${apiMethod.simple}`
 
     const resp = await httpRequest
       .get(url)
@@ -61,9 +61,9 @@ describe(fileShortPath(import.meta.url), () => {
     assert(data === 2)
   })
 
-  it(apiRoute.simpleSyncWithAsyncBypass, async () => {
+  it(apiMethod.simpleSyncWithAsyncBypass, async () => {
     const { httpRequest } = testConfig
-    const url = `${apiPrefix.methodCacheable}/${apiRoute.simpleSyncWithAsyncBypass}`
+    const url = `${apiBase.methodCacheable}/${apiMethod.simpleSyncWithAsyncBypass}`
 
     const resp = await httpRequest
       .get(url)
@@ -74,9 +74,9 @@ describe(fileShortPath(import.meta.url), () => {
     assert(data === 2)
   })
 
-  it(apiRoute.simpleSyncOnly, async () => {
+  it(apiMethod.simpleSyncOnly, async () => {
     const { httpRequest } = testConfig
-    const url = `${apiPrefix.methodCacheable}/${apiRoute.simpleSyncOnly}`
+    const url = `${apiBase.methodCacheable}/${apiMethod.simpleSyncOnly}`
 
     const resp = await httpRequest
       .get(url)
