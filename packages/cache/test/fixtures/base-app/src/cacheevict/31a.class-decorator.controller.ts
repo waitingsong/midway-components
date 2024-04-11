@@ -10,13 +10,13 @@ import {
 import { MConfig } from '@mwcp/share'
 
 import { ConfigKey, Config } from '../../../../../src/lib/types.js'
-import { apiPrefix, apiRoute } from '../api-route.js'
+import { apiBase, apiMethod } from '../../../../api-test.js'
 import { validateMeta } from '../base.helper.js'
 
 import { ClassDecoratorEvictService, cacheNameSimple } from './31b.class-decorator.service.js'
 
 
-@Controller(apiPrefix.classCacheable)
+@Controller(apiBase.classCacheable)
 export class ClassDecoratorEvictController {
 
   @MConfig(ConfigKey.config) readonly cacheManagerConfig: Config
@@ -37,7 +37,7 @@ export class ClassDecoratorEvictController {
     this.midwayConfig = configOpt
   }
 
-  @Get(`/${apiRoute.hello}`)
+  @Get(`/${apiMethod.hello}`)
   async hello(): Promise<'OK'> {
     const cacheKey = 'ClassDecoratorEvictService.hello'
 
@@ -50,7 +50,7 @@ export class ClassDecoratorEvictController {
     return 'OK'
   }
 
-  @Get(`/${apiRoute.evictOverride}`)
+  @Get(`/${apiMethod.evictOverride}`)
   async simple(): Promise<'OK'> {
     const cacheKey = cacheNameSimple
 
@@ -81,7 +81,7 @@ export class ClassDecoratorEvictController {
     return 'OK'
   }
 
-  @Get(`/${apiRoute.evictCondition}`)
+  @Get(`/${apiMethod.evictCondition}`)
   async evictCondition(): Promise<'OK'> {
     const cacheKey = cacheNameSimple
 
@@ -118,7 +118,7 @@ export class ClassDecoratorEvictController {
     return 'OK'
   }
 
-  @Get(`/${apiRoute.evictResult}`)
+  @Get(`/${apiMethod.evictResult}`)
   async evictResult(): Promise<'OK'> {
     const cacheKey = cacheNameSimple
 
@@ -161,7 +161,7 @@ export class ClassDecoratorEvictController {
   }
 
 
-  @Get(`/${apiRoute.evictResultEvenAndGreaterThanZero}`)
+  @Get(`/${apiMethod.evictResultEvenAndGreaterThanZero}`)
   async evictResultEvenAndGreaterThanZero(): Promise<'OK'> {
     const cacheKey = cacheNameSimple
 
@@ -203,7 +203,7 @@ export class ClassDecoratorEvictController {
     return 'OK'
   }
 
-  @Get(`/${apiRoute.evictGenerics}`)
+  @Get(`/${apiMethod.evictGenerics}`)
   async evictGenerics(): Promise<'OK'> {
     const cacheKey = cacheNameSimple
 

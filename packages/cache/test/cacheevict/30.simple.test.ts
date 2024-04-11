@@ -2,17 +2,17 @@ import assert from 'node:assert/strict'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-import { apiPrefix, apiRoute } from '../fixtures/base-app/src/api-route.js'
-import { testConfig } from '../root.config.js'
+import { apiBase, apiMethod } from '#@/api-test.js'
+import { testConfig } from '#@/root.config.js'
 
 
 describe(fileShortPath(import.meta.url), function () {
   describe('Should @Cacheable decorator work', () => {
-    const prefix = apiPrefix.methodCacheEvict
+    const prefix = apiBase.methodCacheEvict
 
-    it(apiRoute.simple, async () => {
+    it(apiMethod.simple, async () => {
       const { httpRequest } = testConfig
-      const url = `${prefix}/${apiRoute.simple}`
+      const url = `${prefix}/${apiMethod.simple}`
 
       const resp = await httpRequest
         .get(url)

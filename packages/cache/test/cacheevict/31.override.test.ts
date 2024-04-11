@@ -2,17 +2,17 @@ import assert from 'node:assert/strict'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-import { apiPrefix, apiRoute } from '../fixtures/base-app/src/api-route.js'
-import { testConfig } from '../root.config.js'
+import { apiBase, apiMethod } from '#@/api-test.js'
+import { testConfig } from '#@/root.config.js'
 
 
 describe(fileShortPath(import.meta.url), function () {
   describe('Should @Cacheable decorator work', () => {
-    const prefix = apiPrefix.classCacheable
+    const prefix = apiBase.classCacheable
 
-    it(apiRoute.evictOverride, async () => {
+    it(apiMethod.evictOverride, async () => {
       const { httpRequest } = testConfig
-      const url = `${prefix}/${apiRoute.evictOverride}`
+      const url = `${prefix}/${apiMethod.evictOverride}`
 
       const resp = await httpRequest
         .get(url)
@@ -21,9 +21,9 @@ describe(fileShortPath(import.meta.url), function () {
       assert(resp)
     })
 
-    it(apiRoute.evictCondition, async () => {
+    it(apiMethod.evictCondition, async () => {
       const { httpRequest } = testConfig
-      const url = `${prefix}/${apiRoute.evictCondition}`
+      const url = `${prefix}/${apiMethod.evictCondition}`
 
       const resp = await httpRequest
         .get(url)
@@ -32,9 +32,9 @@ describe(fileShortPath(import.meta.url), function () {
       assert(resp)
     })
 
-    it(apiRoute.evictResult, async () => {
+    it(apiMethod.evictResult, async () => {
       const { httpRequest } = testConfig
-      const url = `${prefix}/${apiRoute.evictResult}`
+      const url = `${prefix}/${apiMethod.evictResult}`
 
       const resp = await httpRequest
         .get(url)
@@ -43,9 +43,9 @@ describe(fileShortPath(import.meta.url), function () {
       assert(resp)
     })
 
-    it(apiRoute.evictResultEvenAndGreaterThanZero, async () => {
+    it(apiMethod.evictResultEvenAndGreaterThanZero, async () => {
       const { httpRequest } = testConfig
-      const url = `${prefix}/${apiRoute.evictResultEvenAndGreaterThanZero}`
+      const url = `${prefix}/${apiMethod.evictResultEvenAndGreaterThanZero}`
 
       const resp = await httpRequest
         .get(url)
@@ -54,9 +54,9 @@ describe(fileShortPath(import.meta.url), function () {
       assert(resp)
     })
 
-    it(apiRoute.evictGenerics, async () => {
+    it(apiMethod.evictGenerics, async () => {
       const { httpRequest } = testConfig
-      const url = `${prefix}/${apiRoute.evictGenerics}`
+      const url = `${prefix}/${apiMethod.evictGenerics}`
 
       const resp = await httpRequest
         .get(url)

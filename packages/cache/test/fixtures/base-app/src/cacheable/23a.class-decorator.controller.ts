@@ -13,13 +13,13 @@ import { MConfig } from '@mwcp/share'
 import { sleep } from '@waiting/shared-core'
 
 import { Config, ConfigKey } from '../../../../../src/lib/types.js'
-import { apiPrefix, apiRoute } from '../api-route.js'
+import { apiBase, apiMethod } from '../../../../api-test.js'
 import { validateMeta } from '../base.helper.js'
 
 import { ClassDecoratorService, ttl } from './23b.class-decorator.service.js'
 
 
-@Controller(apiPrefix.classCacheable)
+@Controller(apiBase.classCacheable)
 export class ClassDecoratorController {
 
   @MConfig(ConfigKey.config) readonly cacheManagerConfig: Config
@@ -42,7 +42,7 @@ export class ClassDecoratorController {
     this.midwayConfig = configOpt
   }
 
-  @Get(`/${apiRoute.simple}`)
+  @Get(`/${apiMethod.simple}`)
   async simple(): Promise<'OK'> {
     const cacheKey = `${this.controllerName}.simple`
 
@@ -61,7 +61,7 @@ export class ClassDecoratorController {
     return 'OK'
   }
 
-  @Get(`/${apiRoute.argsOverride}`)
+  @Get(`/${apiMethod.argsOverride}`)
   async argsOverride(): Promise<'OK'> {
     const cacheKey = `${this.controllerName}.ttl`
 
@@ -80,7 +80,7 @@ export class ClassDecoratorController {
     return 'OK'
   }
 
-  @Get(`/${apiRoute.ttlFn}`)
+  @Get(`/${apiMethod.ttlFn}`)
   async ttlFn(): Promise<'OK'> {
 
     let cacheKey = `${this.controllerName}.ttlFn`

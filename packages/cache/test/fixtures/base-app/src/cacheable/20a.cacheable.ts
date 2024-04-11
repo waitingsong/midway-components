@@ -14,11 +14,11 @@ import { sleep } from '@waiting/shared-core'
 
 import { Cacheable } from '../../../../../src/index.js'
 import { CachedResponse, Config, ConfigKey } from '../../../../../src/lib/types.js'
-import { apiPrefix, apiRoute } from '../api-route.js'
+import { apiBase, apiMethod } from '../../../../api-test.js'
 import { validateMeta } from '../base.helper.js'
 
 
-@Controller(apiPrefix.methodCacheable)
+@Controller(apiBase.methodCacheable)
 export class DecoratorController {
 
   @MConfig(ConfigKey.config) readonly cacheManagerConfig: Config
@@ -39,7 +39,7 @@ export class DecoratorController {
     this.midwayConfig = configOpt
   }
 
-  @Get(`/${apiRoute.simple}`)
+  @Get(`/${apiMethod.simple}`)
   async simple(): Promise<CachedResponse<'OK'>> {
     const cacheKey = `${this.controllerName}._simple`
 

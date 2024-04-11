@@ -12,13 +12,13 @@ import { Context, MConfig } from '@mwcp/share'
 
 import { Cacheable, CacheEvict } from '../../../../../src/index.js'
 import { CachedResponse, Config, ConfigKey } from '../../../../../src/lib/types.js'
-import { apiPrefix, apiRoute } from '../api-route.js'
+import { apiBase, apiMethod } from '../../../../api-test.js'
 import { validateMeta } from '../base.helper.js'
 
 
 const cacheKey = 'CacheEvictController.simple'
 
-@Controller(apiPrefix.methodCacheEvict)
+@Controller(apiBase.methodCacheEvict)
 export class CacheEvictController {
 
   @MConfig(ConfigKey.config) readonly cacheManagerConfig: Config
@@ -39,7 +39,7 @@ export class CacheEvictController {
     this.midwayConfig = configOpt
   }
 
-  @Get(`/${apiRoute.simple}`)
+  @Get(`/${apiMethod.simple}`)
   async simple(): Promise<CachedResponse<'OK'>> {
 
     const ret = await this._simple()

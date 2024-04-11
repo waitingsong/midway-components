@@ -11,7 +11,7 @@ import { sleep } from '@waiting/shared-core'
 
 import { Cacheable } from '../../../../../src/index.js'
 import { CachedResponse, Config, ConfigKey } from '../../../../../src/lib/types.js'
-import { apiPrefix, apiRoute } from '../api-route.js'
+import { apiBase, apiMethod } from '../../../../api-test.js'
 import { validateMeta } from '../base.helper.js'
 
 import { ArgsDecoratorService } from './22b.args.service.js'
@@ -20,7 +20,7 @@ import { ArgsDecoratorService } from './22b.args.service.js'
 const ttl = 1
 const cacheName = 'foo'
 
-@Controller(apiPrefix.args)
+@Controller(apiBase.args)
 export class ArgsController {
 
   @MConfig(ConfigKey.config) readonly config: Config
@@ -30,7 +30,7 @@ export class ArgsController {
 
   readonly controllerName = 'ArgsController'
 
-  @Get(`/${apiRoute.ttl}`)
+  @Get(`/${apiMethod.ttl}`)
   async simple(): Promise<CachedResponse<'OK'>> {
     const cacheKey = `${this.controllerName}._simple`
 
@@ -61,7 +61,7 @@ export class ArgsController {
   }
 
 
-  @Get(`/${apiRoute.cacheName}`)
+  @Get(`/${apiMethod.cacheName}`)
   async cacheName(): Promise<CachedResponse<'OK'>> {
     const cacheKey = cacheName
 
@@ -84,7 +84,7 @@ export class ArgsController {
   }
 
 
-  @Get(`/${apiRoute.condition}`)
+  @Get(`/${apiMethod.condition}`)
   async condition(): Promise<'OK'> {
     await this.svc.assertUndefined()
 

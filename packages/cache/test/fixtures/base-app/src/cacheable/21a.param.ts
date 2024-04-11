@@ -14,13 +14,13 @@ import { Context, MConfig } from '@mwcp/share'
 
 import { Cacheable } from '../../../../../src/index.js'
 import { CachedResponse, Config, ConfigKey, DataWithCacheMeta } from '../../../../../src/lib/types.js'
-import { apiPrefix, apiRoute } from '../api-route.js'
+import { apiBase, apiMethod } from '../../../../api-test.js'
 import { validateMeta } from '../base.helper.js'
 
 
 const bigint = 1024n
 
-@Controller(apiPrefix.keyGenerator)
+@Controller(apiBase.keyGenerator)
 export class ParamController {
 
   @MConfig(ConfigKey.config) readonly cacheManagerConfig: Config
@@ -42,7 +42,7 @@ export class ParamController {
 
   readonly controllerName = 'ParamController'
 
-  @Get(`/${apiRoute.param}/:uid`)
+  @Get(`/${apiMethod.param}/:uid`)
   async param(@Param('uid') uid: number | string): Promise<CachedResponse<number | string>> {
 
     const cacheKey = `${this.controllerName}._simple:arg-${uid.toString()}`
@@ -98,7 +98,7 @@ export class ParamController {
   }
 
 
-  @Get(`/${apiRoute.query}`)
+  @Get(`/${apiMethod.query}`)
   async query(@Query() input: GetUserDTO): Promise<string> {
     const cacheKey = `${this.controllerName}._simple2:${JSON.stringify(input)}`
 

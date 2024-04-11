@@ -3,17 +3,17 @@ import assert from 'node:assert/strict'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-import { apiPrefix, apiRoute } from '../fixtures/base-app/src/api-route.js'
-import { testConfig } from '../root.config.js'
+import { apiBase, apiMethod } from '#@/api-test.js'
+import { testConfig } from '#@/root.config.js'
 
 
 describe(fileShortPath(import.meta.url), function () {
   describe('Should @Cacheable decorator work', () => {
-    const prefix = apiPrefix.keyGenerator
+    const prefix = apiBase.keyGenerator
 
-    it(`${apiRoute.param}/:uid number`, async () => {
+    it(`${apiMethod.param}/:uid number`, async () => {
       const { httpRequest } = testConfig
-      const url = `${prefix}/${apiRoute.param}/123`
+      const url = `${prefix}/${apiMethod.param}/123`
 
       const resp = await httpRequest
         .get(url)
@@ -22,9 +22,9 @@ describe(fileShortPath(import.meta.url), function () {
       assert(resp)
     })
 
-    it(`${apiRoute.param}/:uid string`, async () => {
+    it(`${apiMethod.param}/:uid string`, async () => {
       const { httpRequest } = testConfig
-      const url = `${prefix}/${apiRoute.param}/foo`
+      const url = `${prefix}/${apiMethod.param}/foo`
 
       const resp = await httpRequest
         .get(url)
@@ -33,9 +33,9 @@ describe(fileShortPath(import.meta.url), function () {
       assert(resp)
     })
 
-    it(apiRoute.query, async () => {
+    it(apiMethod.query, async () => {
       const { httpRequest } = testConfig
-      const url = `${prefix}/${apiRoute.query}/?uid=1&sex=male`
+      const url = `${prefix}/${apiMethod.query}/?uid=1&sex=male`
 
       const resp = await httpRequest
         .get(url)

@@ -13,13 +13,13 @@ import { sleep } from '@waiting/shared-core'
 
 import { Cacheable, CachePut } from '../../../../../src/index.js'
 import { CachedResponse, Config, ConfigKey } from '../../../../../src/lib/types.js'
-import { apiPrefix, apiRoute } from '../api-route.js'
+import { apiBase, apiMethod } from '../../../../api-test.js'
 import { validateMeta } from '../base.helper.js'
 
 
 const cacheKey = 'CachePutController.simple'
 
-@Controller(apiPrefix.methodCachePut)
+@Controller(apiBase.methodCachePut)
 export class CachePutController {
 
   @MConfig(ConfigKey.config) readonly cacheManagerConfig: Config
@@ -42,7 +42,7 @@ export class CachePutController {
     this.midwayConfig = configOpt
   }
 
-  @Get(`/${apiRoute.simple}`)
+  @Get(`/${apiMethod.simple}`)
   async simple(): Promise<CachedResponse<string>> {
 
     const ret = await this._simple()
