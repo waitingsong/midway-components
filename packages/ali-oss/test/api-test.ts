@@ -8,7 +8,7 @@ export const apiBase = {
   oss: '/oss',
 }
 
-export const apiPath = {
+export const apiMethod = {
   root: '/',
   hello: 'hello',
   component: 'component',
