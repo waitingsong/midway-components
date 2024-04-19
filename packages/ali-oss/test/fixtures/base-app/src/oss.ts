@@ -15,7 +15,7 @@ import {
   AliOssManager,
 } from '../../../../dist/lib/index.js'
 import { ClientKey } from '../../../../dist/lib/types.js'
-import { apiBase, apiPath } from '../../../api-test.js'
+import { apiBase, apiMethod } from '../../../api-test.js'
 
 
 @Controller(apiBase.oss)
@@ -31,14 +31,14 @@ export class OssController {
     this.ossClient = this.aliOssManager.getDataSource(ClientKey.unitTest)
   }
 
-  @Get(`/${apiPath.stat}`)
-  @Get(apiPath.root)
+  @Get(`/${apiMethod.stat}`)
+  @Get(apiMethod.root)
   async stat(@Query('target') target: string): Promise<ReturnType<AliOssComponent['stat']>> {
     const res = await this.ossClient.stat(target)
     return res
   }
 
-  @Post(`/${apiPath.mkdir}`)
+  @Post(`/${apiMethod.mkdir}`)
   async mkdir(@Query() parm: {
     target: Parameters<AliOssComponent['mkdir']>[0],
     opts: Parameters<AliOssComponent['mkdir']>[1],
