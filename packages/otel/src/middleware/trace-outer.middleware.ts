@@ -36,8 +36,8 @@ export class TraceMiddleware implements IMiddleware<Context, NextFunction> {
 
     const flag = shouldEnableMiddleware(ctx, mwConfig)
     Object.defineProperty(ctx, middlewareEnableCacheKey, {
-      enumerable: false,
-      writable: false,
+      enumerable: true,
+      writable: true,
       value: flag,
     })
     return flag

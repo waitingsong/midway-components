@@ -60,6 +60,7 @@ export class AutoConfiguration implements ILifeCycle {
   @Inject() protected readonly webRouterService: MidwayWebRouterService
 
   @Inject() otel: OtelComponent
+
   @Logger() logger: ILogger
 
   async onConfigLoad(): Promise<void> {
@@ -94,7 +95,6 @@ export class AutoConfiguration implements ILifeCycle {
     if (this.config.enable && this.mwConfig.enableMiddleware) {
       registerMiddleware(this.app, TraceMiddleware, 'first')
     }
-
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     void setTimeout(async () => {

@@ -27,7 +27,7 @@ export async function decoratorExecutorAsync(options: DecoratorExecutorParam): P
     return ret
   }
 
-  if (! traceService) {
+  if (! traceService?.isStarted) {
     console.warn('traceService is not initialized. (traceService 尚未初始化。)')
     const ret = await func(...funcArgs)
     return ret
@@ -72,7 +72,7 @@ export function decoratorExecutorSync(options: DecoratorExecutorParam): unknown 
 
   const {
     config,
-    method: func,
+    method,
     methodArgs: funcArgs,
     callerAttr,
     spanName,
@@ -84,13 +84,13 @@ export function decoratorExecutorSync(options: DecoratorExecutorParam): unknown 
   } = options
 
   if (! config.enable) {
-    const ret = func(...funcArgs)
+    const ret = method(...funcArgs)
     return ret
   }
 
-  if (! traceService) {
+  if (! traceService?.isStarted) {
     console.warn('traceService is not initialized. (traceService 尚未初始化。)')
-    const ret = func(...funcArgs)
+    const ret = method(...funcArgs)
     return ret
   }
 
@@ -102,7 +102,7 @@ export function decoratorExecutorSync(options: DecoratorExecutorParam): unknown 
       (span: Span) => {
         span.setAttributes(callerAttr)
         const opts = {
-          func,
+          func: method,
           funcArgs,
           span,
           traceService,
@@ -118,7 +118,7 @@ export function decoratorExecutorSync(options: DecoratorExecutorParam): unknown 
     const span = traceService.startSpan(spanName, spanOptions, traceContext)
     span.setAttributes(callerAttr)
     const opts = {
-      func,
+      func: method,
       funcArgs,
       span,
       traceService,

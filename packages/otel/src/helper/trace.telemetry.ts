@@ -35,7 +35,7 @@ export function initTrace(options: InitTraceOptions): InitTraceReturnType {
 
   const processors: node.SpanProcessor[] = []
   otelConfig.exporters.forEach((exporter) => {
-    const processor = genExporterInstrum(options, exporter, options.isDevelopmentEnvironment)
+    const processor = genExporterInstrumentation(options, exporter, options.isDevelopmentEnvironment)
     processors.push(processor)
     provider.addSpanProcessor(processor)
   })
@@ -82,13 +82,14 @@ function genPropagators(list: PropagatorList[]): TextMapPropagator[] {
 }
 
 
-function genExporterInstrum(
+function genExporterInstrumentation(
   options: InitTraceOptions,
   exporterName: SpanExporterList,
   isDevelopmentEnvironment: boolean,
 ): node.SpanProcessor {
 
   switch (exporterName) {
+    /* c8 ignore start :local test */
     case SpanExporterList.console: {
       const exporter: node.SpanExporter = new node.ConsoleSpanExporter()
       const processor = isDevelopmentEnvironment
@@ -96,6 +97,7 @@ function genExporterInstrum(
         : new node.BatchSpanProcessor(exporter)
       return processor
     }
+    /* c8 ignore stop */
 
     // case SpanExporterList.jaeger: {
     //   const exporter: SpanExporter = new JaegerExporter(options.jaegerExporterConfig)
@@ -112,6 +114,7 @@ function genExporterInstrum(
       return processor
     }
 
+    /* c8 ignore next 3 */
     default:
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       throw new TypeError(`Exporter ${exporterName} not implemented`)

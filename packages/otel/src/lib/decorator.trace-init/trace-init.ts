@@ -1,6 +1,9 @@
 import { customDecoratorFactory } from '@mwcp/share'
+import type { MethodTypeUnknown } from '@waiting/shared-types'
 
-import { MethodType, TraceDecoratorParam, TraceDecoratorOptions } from '../decorator.types.js'
+import { TraceOptions, TraceDecoratorOptions } from '../decorator.types.js'
+
+import { DecoratorHandlerTraceInit } from './trace-init.decorator-handler.js'
 
 
 export const METHOD_KEY_TraceInit = 'decorator:method_key_TraceInit'
@@ -19,7 +22,7 @@ export const METHOD_KEY_TraceInit = 'decorator:method_key_TraceInit'
  * }
  * ```
  */
-export function TraceInit<M extends MethodType | undefined = undefined>(options?: TraceDecoratorParam<M>): MethodDecorator & ClassDecorator {
+export function TraceInit<M extends MethodTypeUnknown | undefined = undefined>(options?: TraceOptions<M>): MethodDecorator & ClassDecorator {
 
   const opts: Partial<TraceDecoratorOptions<M>> = typeof options === 'string'
     ? { spanName: options }
@@ -29,12 +32,13 @@ export function TraceInit<M extends MethodType | undefined = undefined>(options?
     opts.spanNameDelimiter = '.'
   }
 
-  return customDecoratorFactory < TraceDecoratorOptions<M>>({
+  return customDecoratorFactory({
     decoratorArgs: opts,
     decoratorKey: METHOD_KEY_TraceInit,
     enableClassDecorator: false,
     classIgnoreIfMethodDecoratorKeys: [],
     methodIgnoreIfMethodDecoratorKeys: [],
+    decoratorHandlerClass: DecoratorHandlerTraceInit,
   })
 }
 

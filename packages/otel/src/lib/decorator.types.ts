@@ -5,24 +5,18 @@ import type {
   SpanOptions,
   Span,
 } from '@opentelemetry/api'
+import type { MethodTypeUnknown } from '@waiting/shared-types'
 
 import { AbstractOtelComponent, AbstractTraceService } from './abstract.js'
 
 
-export type MethodType<
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ArgsType extends unknown[] = any[],
-  ReturnType = unknown,
-> = (...input: ArgsType) => ReturnType
-
-export type TraceDecoratorParam<M extends MethodType | undefined = undefined> =
-  Partial<TraceDecoratorOptions<M>> | string
+export type TraceOptions<M extends MethodTypeUnknown | undefined = undefined> = Partial<TraceDecoratorOptions<M>> | string
 
 export interface TraceDecoratorOptions<
   /** Decorated method */
-  M extends MethodType | undefined = undefined,
+  M extends MethodTypeUnknown | undefined = undefined,
   /** Arguments of decorated method */
-  MParamType = M extends MethodType<infer P> ? P : [],
+  MParamType = M extends MethodTypeUnknown<infer P> ? P : [],
 > extends SpanOptions {
 
   /** @default `{target.name}/{methodName}` */
@@ -43,8 +37,8 @@ export interface TraceDecoratorOptions<
    * @default `/`
    */
   spanNameDelimiter: string | undefined
-  before: MethodType<[MParamType, DecoratorContext]> | undefined
-  after: MethodType<[MParamType, DecoratorContext]> | undefined
+  before: MethodTypeUnknown<[MParamType, DecoratorContext]> | undefined
+  after: MethodTypeUnknown<[MParamType, DecoratorContext]> | undefined
   /**
    * @default true
    */

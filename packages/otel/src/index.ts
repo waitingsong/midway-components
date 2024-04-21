@@ -27,7 +27,6 @@ export { SemanticAttributes } from '@opentelemetry/semantic-conventions'
 
 
 // @ts-ignore
-// @ts-ignore
 declare module '@midwayjs/core/dist/interface' {
   interface MidwayConfig {
     [ConfigKey.config]?: Partial<Config>

@@ -1,17 +1,21 @@
 import assert from 'node:assert/strict'
 
 import { fileShortPath } from '@waiting/shared-core'
-
-import { MethodType } from '##/lib/decorator.types.js'
+import type { MethodTypeUnknown } from '@waiting/shared-types'
 
 
 describe(fileShortPath(import.meta.url), function () {
 
-  it(`Should MethodType work`, async () => {
-    const ret: MethodType = () => {
+  it(`Should MethodTypeUnknown work`, async () => {
+    const ret: MethodTypeUnknown = () => {
       return 'OK'
     }
     assert(ret)
+
+    const ret2: MethodTypeUnknown = async () => {
+      return 'OK'
+    }
+    assert(ret2)
   })
 
 })

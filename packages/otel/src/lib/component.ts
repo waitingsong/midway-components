@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import assert from 'node:assert'
 
-
 import {
   App,
   Autoload,
@@ -11,18 +10,10 @@ import {
   Logger,
   MidwayEnvironmentService,
   MidwayInformationService,
-  Provide,
-  Scope,
-  ScopeEnum,
+  Singleton,
 } from '@midwayjs/core'
 import { ILogger } from '@midwayjs/logger'
-import {
-  Application,
-  AroundFactoryParamBase,
-  MConfig,
-  RegisterDecoratorHandlerParam,
-  registerDecoratorHandler,
-} from '@mwcp/share'
+import { Application, MConfig } from '@mwcp/share'
 import {
   Attributes,
   Context,
@@ -45,15 +36,6 @@ import { initTrace } from '##/helper/index.opentelemetry.js'
 import { AbstractOtelComponent } from './abstract.js'
 import { initSpanStatusOptions } from './config.js'
 import {
-  decoratorExecutorAsync as decoratorExecutorTraceAsync,
-  decoratorExecutorSync as decoratorExecutorTraceSync,
-} from './decorator.trace/trace.helper.js'
-import { KEY_Trace } from './decorator.trace/trace.js'
-import { decoratorExecutor as decoratorExecutorTraceInit } from './decorator.trace-init/trace-init.helper.js'
-import { METHOD_KEY_TraceInit } from './decorator.trace-init/trace-init.js'
-import { TraceDecoratorOptions } from './decorator.types.js'
-import { genDecoratorExecutorOptions } from './trace.helper.js'
-import {
   AddEventOptions,
   AttrNames,
   Config,
@@ -70,8 +52,7 @@ import PKG from '#package.json' assert { type: 'json' }
 
 /** OpenTelemetry Component */
 @Autoload()
-@Provide()
-@Scope(ScopeEnum.Singleton)
+@Singleton()
 export class OtelComponent extends AbstractOtelComponent {
 
   @App() app: Application
@@ -510,30 +491,6 @@ export class OtelComponent extends AbstractOtelComponent {
         this.logger.warn('Failed to load package.json')
       }
     }
-
-    const aroundFactoryOptions: AroundFactoryParamBase = {
-      config: this.config,
-      webApp: this.app,
-    }
-
-    const TraceOpts: RegisterDecoratorHandlerParam<TraceDecoratorOptions> = {
-      decoratorKey: KEY_Trace,
-      decoratorService: this.decoratorService,
-      fnDecoratorExecutorAsync: decoratorExecutorTraceAsync,
-      fnDecoratorExecutorSync: decoratorExecutorTraceSync,
-      fnGenDecoratorExecutorParam: genDecoratorExecutorOptions,
-    }
-    registerDecoratorHandler(TraceOpts, aroundFactoryOptions)
-
-    const TraceInitOpts: RegisterDecoratorHandlerParam<TraceDecoratorOptions> = {
-      decoratorKey: METHOD_KEY_TraceInit,
-      decoratorService: this.decoratorService,
-      fnDecoratorExecutorAsync: decoratorExecutorTraceInit,
-      fnDecoratorExecutorSync: false,
-      fnGenDecoratorExecutorParam: genDecoratorExecutorOptions,
-    }
-    registerDecoratorHandler(TraceInitOpts, aroundFactoryOptions)
-
   }
 
 }

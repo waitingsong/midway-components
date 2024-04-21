@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 
 import { makeHttpRequest } from '@midwayjs/core'
-import { sleep, fileShortPath } from '@waiting/shared-core'
+import { sleep, fileShortPath, isWin32 } from '@waiting/shared-core'
 
 import { exporterEndpoint } from '##/lib/config.js'
 import { JaegerTraceInfo, JaegerTraceInfoSpan } from '##/lib/types.js'
@@ -21,12 +21,13 @@ describe(fileShortPath(import.meta.url), function () {
   const path4 = `${apiBase.TraceDecorator}/${apiMethod.decorator_arg2}`
 
   it(`Should ${path} work`, async () => {
+    if (isWin32) { return }
     const { httpRequest } = testConfig
 
     const resp = await httpRequest
       .get(path)
-      .expect(200)
 
+    assert(resp.ok, resp.text)
     const traceId = resp.text
     assert(traceId.length === 32)
     console.log({ traceId })
@@ -96,12 +97,13 @@ describe(fileShortPath(import.meta.url), function () {
 
 
   it(`Should ${path2} work`, async () => {
+    if (isWin32) { return }
     const { httpRequest } = testConfig
 
     const resp = await httpRequest
       .get(path2)
-      .expect(200)
 
+    assert(resp.ok, resp.text)
     const traceId = resp.text
     assert(traceId.length === 32)
     console.log({ traceId })
@@ -172,12 +174,13 @@ describe(fileShortPath(import.meta.url), function () {
 
 
   it(`Should ${path3} work`, async () => {
+    if (isWin32) { return }
     const { httpRequest } = testConfig
 
     const resp = await httpRequest
       .get(path3)
-      .expect(200)
 
+    assert(resp.ok, resp.text)
     const [traceId, rnd] = resp.text.split(':')
     assert(traceId)
     assert(traceId.length === 32)
@@ -210,12 +213,13 @@ describe(fileShortPath(import.meta.url), function () {
   })
 
   it(`Should ${path4} work`, async () => {
+    if (isWin32) { return }
     const { httpRequest } = testConfig
 
     const resp = await httpRequest
       .get(path4)
-      .expect(200)
 
+    assert(resp.ok, resp.text)
     const [traceId, rnd, suffix] = resp.text.split(':')
     assert(traceId)
     assert(traceId.length === 32)

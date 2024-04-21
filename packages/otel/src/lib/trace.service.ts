@@ -60,7 +60,6 @@ export class TraceService extends AbstractTraceService {
 
   @Init()
   init(): void {
-    if (! this.config.enable) { return }
     this.start()
   }
 
@@ -264,6 +263,7 @@ export class TraceService extends AbstractTraceService {
     await this.otel.flush()
   }
 
+  // #region private methods
   /* --------------------- */
 
   protected genRootSpanName(): string {
@@ -287,6 +287,14 @@ export class TraceService extends AbstractTraceService {
 
   protected start(): void {
     if (this.isStarted) { return }
+
+    Object.defineProperty(this.ctx, `_${ConfigKey.serviceName}`, {
+      enumerable: true,
+      writable: true,
+      value: this,
+    })
+    if (! this.config.enable) { return }
+
     this.initRootSpan()
     this.isStarted = true
 
@@ -295,12 +303,6 @@ export class TraceService extends AbstractTraceService {
       time: this.startTime,
     }
     this.addEvent(this.rootSpan, events)
-
-    Object.defineProperty(this.ctx, `_${ConfigKey.serviceName}`, {
-      enumerable: true,
-      writable: true,
-      value: this,
-    })
 
     void Promise.resolve()
       .then(() => {

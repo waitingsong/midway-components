@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
+import { assert } from 'console'
+
 import { Middleware } from '@midwayjs/core'
 import { Context, IMiddleware, NextFunction } from '@mwcp/share'
 import { humanMemoryUsage } from '@waiting/shared-core'
@@ -39,7 +41,9 @@ async function middleware(
   next: NextFunction,
 ): Promise<void> {
 
-  const traceSvc = (ctx[`_${ConfigKey.serviceName}`] ?? await ctx.requestContext.getAsync(TraceService)) as TraceService
+  const traceSvc = ctx[`_${ConfigKey.serviceName}`] as TraceService
+  // const traceSvc = await ctx.requestContext.getAsync(TraceService)
+  assert(traceSvc, 'traceSvc is required')
   addSpanEventWithIncomingRequestData(traceSvc.rootSpan, ctx)
 
   traceSvc.addEvent(traceSvc.rootSpan, {

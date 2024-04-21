@@ -24,7 +24,7 @@ import type { Headers as UndiciHeaders } from 'undici'
 import { AttrNames, Config } from './types.js'
 
 
-const defaultPropety: PropertyDescriptor = {
+const defaultProperty: PropertyDescriptor = {
   configurable: true,
   enumerable: true,
   writable: false,
@@ -275,14 +275,14 @@ export function addSpanEventWithIncomingRequestData(
   if (query) {
     if (typeof query === 'string') {
       Object.defineProperty(attrs, AttrNames.Http_Request_Query, {
-        ...defaultPropety,
+        ...defaultProperty,
         value: query,
       })
     }
     else if (typeof query === 'object' && Object.keys(query).length) {
       const value = truncateString(JSON.stringify(query, null, 2))
       Object.defineProperty(attrs, AttrNames.Http_Request_Query, {
-        ...defaultPropety,
+        ...defaultProperty,
         value,
       })
     }
@@ -292,18 +292,18 @@ export function addSpanEventWithIncomingRequestData(
   if (data && Object.keys(data).length) {
     const value = truncateString(JSON.stringify(data, null, 2))
     Object.defineProperty(attrs, AttrNames.Http_Request_Body, {
-      ...defaultPropety,
+      ...defaultProperty,
       value,
     })
   }
 
   const { headers } = ctx.request
   Object.defineProperty(attrs, 'http.request.header.content_length', {
-    ...defaultPropety,
+    ...defaultProperty,
     value: headers['content-length'],
   })
   Object.defineProperty(attrs, 'http.request.header.content_type', {
-    ...defaultPropety,
+    ...defaultProperty,
     value: headers['content-type'],
   })
 
@@ -388,30 +388,30 @@ export function addSpanEventWithOutgoingResponseData(
   if (typeof body === 'object') {
     const value = truncateString(JSON.stringify(body, null, 2))
     Object.defineProperty(attrs, AttrNames.Http_Response_Body, {
-      ...defaultPropety,
+      ...defaultProperty,
       value,
     })
   }
   else {
     const value = truncateString(JSON.stringify(body, null, 2))
     Object.defineProperty(attrs, AttrNames.Http_Response_Body, {
-      ...defaultPropety,
+      ...defaultProperty,
       value,
     })
   }
 
   Object.defineProperty(attrs, AttrNames.Http_Response_Code, {
-    ...defaultPropety,
+    ...defaultProperty,
     value: ctx.status,
   })
 
   const { headers } = ctx.response
   Object.defineProperty(attrs, 'http.response.header.content_length', {
-    ...defaultPropety,
+    ...defaultProperty,
     value: headers['content-length'],
   })
   Object.defineProperty(attrs, 'http.response.header.content_type', {
-    ...defaultPropety,
+    ...defaultProperty,
     value: headers['content-type'],
   })
 

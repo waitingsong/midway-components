@@ -8,7 +8,6 @@ import { testConfig } from '#@/root.config.js'
 
 describe(fileShortPath(import.meta.url), function () {
 
-
   const path = `${apiBase.TraceDecorator}/${apiMethod.error}` // exception will be caught
   const pathTrace = `${apiBase.TraceDecorator}/${apiMethod.trace_error}`
 
@@ -17,10 +16,11 @@ describe(fileShortPath(import.meta.url), function () {
 
     const resp = await httpRequest
       .get(path)
-      .expect(200)
 
+    assert(resp.ok, resp.text)
     const ret = resp.text
     assert(ret.startsWith('debug for'))
+    assert(ret.includes('error'))
   })
 
   // error from default.service will be traced
@@ -29,8 +29,9 @@ describe(fileShortPath(import.meta.url), function () {
 
     const resp = await httpRequest
       .get(pathTrace)
-      .expect(500)
 
+    assert(! resp.ok, resp.text)
+    assert(resp.status === 500, resp.text)
     const ret = resp.text
     // assert(! ret, ret)
     assert(ret.includes('debug for DefaultComponentService.error()'), ret)

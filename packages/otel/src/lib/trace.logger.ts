@@ -26,51 +26,27 @@ export class TraceAppLogger implements ILogger {
   @Logger() protected readonly logger: ILogger
 
   debug(msg: unknown, span: Span | undefined | false, ...args: unknown[]): void {
-    this.log({
-      level: 'debug',
-      msg,
-      args,
-    }, span)
+    this.log({ level: 'debug', msg, args }, span)
   }
 
   info(msg: unknown, span: Span | undefined | false, ...args: unknown[]): void {
-    this.log({
-      level: 'info',
-      msg,
-      args,
-    }, span)
+    this.log({ level: 'info', msg, args }, span)
   }
 
   warn(msg: unknown, span: Span | undefined | false, ...args: unknown[]): void {
-    this.log({
-      level: 'warn',
-      msg,
-      args,
-    }, span)
+    this.log({ level: 'warn', msg, args }, span)
   }
 
   error(msg: unknown, span: Span | undefined | false, ...args: unknown[]): void {
-    this.log({
-      level: 'error',
-      msg,
-      args,
-    }, span)
+    this.log({ level: 'error', msg, args }, span)
   }
 
   write(msg: unknown, span: Span | undefined | false, ...args: unknown[]): void {
-    this.log({
-      level: 'write',
-      msg,
-      args,
-    }, span)
+    this.log({ level: 'write', msg, args }, span)
   }
 
   verbose(msg: unknown, span: Span | undefined | false, ...args: unknown[]): void {
-    this.log({
-      level: 'verbose',
-      msg,
-      args,
-    }, span)
+    this.log({ level: 'verbose', msg, args }, span)
   }
 
   /**

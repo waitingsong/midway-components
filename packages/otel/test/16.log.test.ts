@@ -16,8 +16,8 @@ describe(fileShortPath(import.meta.url), function () {
 
     const resp = await httpRequest
       .get(pathLog)
-      .expect(200)
 
+    assert(resp.ok, resp.text)
     const ret = resp.text
     assert(ret)
     // assert(ret.startsWith('debug for'))
@@ -28,8 +28,8 @@ describe(fileShortPath(import.meta.url), function () {
 
     const resp = await httpRequest
       .get(pathAppLog)
-      .expect(200)
 
+    assert(resp.ok, resp.text)
     const ret = resp.text
     assert(ret)
     // assert(! ret, ret)

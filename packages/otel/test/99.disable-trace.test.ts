@@ -32,10 +32,10 @@ describe(fileShortPath(import.meta.url), function () {
 
     const resp = await httpRequest
       .get(path)
-      .expect(200)
 
+    assert(resp.ok, resp.text)
     const traceId = resp.text
-    assert(! traceId, 'traceId should be empty')
+    assert(! traceId, 'traceId should empty')
   })
 
 })

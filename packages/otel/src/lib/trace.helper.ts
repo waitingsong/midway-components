@@ -7,7 +7,7 @@ import { Attributes, SpanOptions } from '@opentelemetry/api'
 import type { AbstractOtelComponent, AbstractTraceService } from './abstract.js'
 import {
   DecoratorContext,
-  TraceDecoratorOptions as TraceDecoratorParam,
+  TraceDecoratorOptions,
 } from './decorator.types.js'
 import {
   AttrNames,
@@ -22,7 +22,7 @@ const configNameList = [
   'ContainerConfiguration',
 ]
 
-interface GenKeyOptions extends Partial<TraceDecoratorParam> {
+interface GenKeyOptions extends Partial<TraceDecoratorOptions> {
   methodArgs: unknown[]
   decoratorContext: DecoratorContext
   callerClass: string
@@ -107,9 +107,9 @@ function genEventKeyWhenSpanNameEmpty(options: GenKeyOptions): string {
   return name
 }
 
-type ExecutorParamBase<T extends TraceDecoratorParam = TraceDecoratorParam> = DecoratorExecutorParamBase<T>
+export type ExecutorParamBase<T extends TraceDecoratorOptions = TraceDecoratorOptions> = DecoratorExecutorParamBase<T>
 
-export interface DecoratorExecutorParam<T extends TraceDecoratorParam = TraceDecoratorParam>
+export interface DecoratorExecutorParam<T extends TraceDecoratorOptions = TraceDecoratorOptions>
   extends ExecutorParamBase<T> {
   config: Config
   callerAttr: Attributes
@@ -121,20 +121,31 @@ export interface DecoratorExecutorParam<T extends TraceDecoratorParam = TraceDec
   traceService: AbstractTraceService | undefined
 }
 
-export function genDecoratorExecutorOptions(options: ExecutorParamBase): DecoratorExecutorParam {
+export interface GenDecoratorExecutorOptions {
+  config: Config
+  otelComponent: AbstractOtelComponent
+}
 
-  assert(options.webApp, 'options.webApp is undefined')
-  assert(options.instanceName, 'options.instanceName is undefined')
-  assert(options.methodName, 'options.methodName is undefined')
+export function genDecoratorExecutorOptions(
+  optionsBase: DecoratorExecutorParamBase<TraceDecoratorOptions>,
+  optionsExt: GenDecoratorExecutorOptions,
+): DecoratorExecutorParam<TraceDecoratorOptions> {
 
-  const traceService = options.webContext?.[`_${ConfigKey.serviceName}`] as AbstractTraceService | undefined
+  assert(optionsBase.webApp, 'options.webApp is undefined')
+  assert(optionsBase.instanceName, 'options.instanceName is undefined')
+  assert(optionsBase.methodName, 'options.methodName is undefined')
 
-  const otelKey = `_${ConfigKey.componentName}`
-  // @ts-ignore
-  const otel: AbstractOtelComponent | undefined = traceService?.otel ?? options.webApp[otelKey] ?? void 0
-  assert(otel, 'OtelComponent is not initialized. (OTEL 尚未初始化。)')
+  let traceService
+  if (optionsBase.webContext) {
+    traceService = optionsBase.webContext[`_${ConfigKey.serviceName}`] as AbstractTraceService | undefined
+    assert(traceService, 'TraceService is not initialized. (TraceService 尚未初始化)')
+  }
 
-  const { mergedDecoratorParam } = options
+  // const { otel } = traceService
+  const { otelComponent } = optionsExt
+  assert(otelComponent, 'OtelComponent is not initialized. (OTEL Component 尚未初始化)')
+
+  const { mergedDecoratorParam } = optionsBase
   assert(mergedDecoratorParam, 'mergedDecoratorParam is undefined')
 
   if (typeof mergedDecoratorParam.startActiveSpan !== 'boolean') {
@@ -146,39 +157,38 @@ export function genDecoratorExecutorOptions(options: ExecutorParamBase): Decorat
   }
 
   const decoratorContext: DecoratorContext = {
-    webApp: options.webApp,
-    webContext: options.webContext,
-    otelComponent: otel,
-    traceService: traceService ?? void 0,
+    webApp: optionsBase.webApp,
+    webContext: optionsBase.webContext,
+    otelComponent,
+    traceService,
     traceContext: mergedDecoratorParam.traceContext,
     traceSpan: void 0,
   }
 
   const keyOpts: GenKeyOptions = {
     ...mergedDecoratorParam,
-    callerClass: options.instanceName,
-    callerMethod: options.methodName,
+    callerClass: optionsBase.instanceName,
+    callerMethod: optionsBase.methodName,
     decoratorContext,
-    methodArgs: options.methodArgs,
+    methodArgs: optionsBase.methodArgs,
   }
   const spanName = genKey(keyOpts)
   assert(spanName, 'spanName is undefined')
 
   const callerAttr: Attributes = {
-    [AttrNames.CallerClass]: options.instanceName,
-    [AttrNames.CallerMethod]: options.methodName,
+    [AttrNames.CallerClass]: optionsBase.instanceName,
+    [AttrNames.CallerMethod]: optionsBase.methodName,
   }
 
-  const config = options.webApp.getConfig(ConfigKey.config) as Config
 
-  const ret: DecoratorExecutorParam<TraceDecoratorParam> = {
-    ...options,
-    config,
+  const ret: DecoratorExecutorParam<TraceDecoratorOptions> = {
+    ...optionsBase,
+    ...optionsExt,
     callerAttr,
     spanName,
     spanOptions: mergedDecoratorParam,
     startActiveSpan: mergedDecoratorParam.startActiveSpan,
-    otelComponent: otel,
+    otelComponent,
     traceContext: mergedDecoratorParam.traceContext,
     traceService,
   }

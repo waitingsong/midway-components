@@ -150,6 +150,15 @@ export class DefaultComponentController {
   @Get(`/${apiMethod.appLog}`)
   async appLog(): Promise<string> {
     const traceId = this.traceSvc.getTraceId()
+
+    this.appLogger.debug(void 0, false)
+    this.appLogger.debug(traceId, false)
+    this.appLogger.info(traceId, false)
+    this.appLogger.warn(traceId, false)
+    this.appLogger.error(traceId, false)
+    this.appLogger.write(traceId, false)
+    this.appLogger.verbose(traceId, false)
+
     // no event
     this.appLogger.log({
       msg: traceId,

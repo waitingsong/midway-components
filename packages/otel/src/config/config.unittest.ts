@@ -5,7 +5,7 @@ import {
   initTracerIgnoreArray,
 } from '##/lib/config.js'
 // import { processCustomFailure } from '##/lib/tracer.js'
-import { Config, InitTraceOptions, MiddlewareConfig, SpanExporterList } from '##/lib/types.js'
+import { Config, InitTraceOptions, MiddlewareConfig, PropagatorList, SpanExporterList } from '##/lib/types.js'
 
 
 export const keys = Date.now().toString()
@@ -14,8 +14,12 @@ export const otelConfig: Config = {
   ...initialConfig,
   enableDefaultRoute: true,
   exporters: [
-    // SpanExporterList.console,
+    SpanExporterList.console,
     SpanExporterList.otlpGrpc,
+  ],
+  propagators: [
+    PropagatorList.w3cTraceContext,
+    PropagatorList.jaeger,
   ],
 }
 

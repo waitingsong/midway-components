@@ -1,6 +1,8 @@
 
 export * from './config.js'
 export { OtelComponent } from './component.js'
+export { DecoratorHandlerTrace } from './decorator.trace/trace.decorator-handler.js'
+export { DecoratorHandlerTraceInit } from './decorator.trace-init/trace-init.decorator-handler.js'
 export {
   AbstractOtelComponent, AbstractTraceService,
 } from './abstract.js'
@@ -48,7 +50,7 @@ export {
 } from './types.js'
 
 export {
-  TraceDecoratorParam as TraceDecoratorArg,
+  TraceOptions as TraceDecoratorArg,
   TraceDecoratorOptions,
 } from './decorator.types.js'
 

@@ -1,6 +1,7 @@
 import * as info from '@midwayjs/info'
 import * as koa from '@midwayjs/koa'
 import * as swagger from '@midwayjs/swagger'
+import * as share from '@mwcp/share'
 
 
 /* c8 ignore next 4 */
@@ -20,6 +21,9 @@ if (CI) {
     useComponents.push(swagger)
   }
 }
+
+useComponents.push(share)
+
 
 export interface IComponentInfo {
   Configuration: unknown
