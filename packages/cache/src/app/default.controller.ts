@@ -10,7 +10,6 @@ import { Config, ConfigKey, Msg } from '../lib/types.js'
 import { DefaultApi } from './default.types.js'
 
 
-
 @Controller(DefaultApi.base)
 export class DefaultCacheController {
 

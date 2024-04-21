@@ -12,7 +12,7 @@ import {
 import { MConfig } from '@mwcp/share'
 import { sleep } from '@waiting/shared-core'
 
-import { Config, ConfigKey } from '../../../../../src/lib/types.js'
+import { Config, ConfigKey } from '../../../../../dist/lib/types.js'
 import { apiBase, apiMethod } from '../../../../api-test.js'
 import { validateMeta } from '../base.helper.js'
 

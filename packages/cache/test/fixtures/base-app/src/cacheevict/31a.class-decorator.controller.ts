@@ -9,7 +9,7 @@ import {
 } from '@midwayjs/core'
 import { MConfig } from '@mwcp/share'
 
-import { ConfigKey, Config } from '../../../../../src/lib/types.js'
+import { ConfigKey, Config } from '../../../../../dist/lib/types.js'
 import { apiBase, apiMethod } from '../../../../api-test.js'
 import { validateMeta } from '../base.helper.js'
 

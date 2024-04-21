@@ -1,4 +1,5 @@
 import { customDecoratorFactory } from '@mwcp/share'
+import type { MethodType } from '@waiting/shared-types'
 
 import {
   METHOD_KEY_Cacheable,
@@ -6,7 +7,9 @@ import {
   METHOD_KEY_CachePut,
   METHOD_KEY_Transactional,
 } from '../config.js'
-import { CacheableArgs, MethodType } from '../types.js'
+import { CacheableArgs } from '../types.js'
+
+import { DecoratorHandlerCacheable } from './cacheable.decorator-handler.js'
 
 
 export const cacheableClassIgnoreIfMethodDecoratorKeys = [
@@ -19,16 +22,19 @@ export const cacheableMethodIgnoreIfMethodDecoratorKeys = [METHOD_KEY_Transactio
 /**
  * 声明式缓存装饰器
  * Declarative Cacheable Decorator
+ * @description
+ * - Support class
+ * - Not support sync method
  * @returns MethodDecorator | ClassDecorator
  */
-export function Cacheable<M extends MethodType | undefined>(options?: Partial<CacheableArgs<M>>) {
+export function Cacheable<M extends MethodType | undefined = undefined>(options?: Partial<CacheableArgs<M>>) {
 
-  return customDecoratorFactory<CacheableArgs<M>>({
+  return customDecoratorFactory({
     decoratorArgs: options,
     decoratorKey: METHOD_KEY_Cacheable,
-    enableClassDecorator: true,
     classIgnoreIfMethodDecoratorKeys: cacheableClassIgnoreIfMethodDecoratorKeys,
     methodIgnoreIfMethodDecoratorKeys: cacheableMethodIgnoreIfMethodDecoratorKeys,
+    decoratorHandlerClass: DecoratorHandlerCacheable,
   })
 }
 

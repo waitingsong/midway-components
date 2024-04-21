@@ -18,8 +18,9 @@ describe(fileShortPath(import.meta.url), function () {
 
       const resp = await httpRequest
         .get(url)
-        .expect(200)
+        // .expect(200)
 
+      assert(resp.ok, resp.text)
       assert(resp)
       const data = resp.body as CacheRet<string>
     })

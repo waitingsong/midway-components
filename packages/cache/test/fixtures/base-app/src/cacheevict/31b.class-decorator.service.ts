@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import { Cacheable, CacheEvict } from '../../../../../src/index.js'
-import { CachedResponse } from '../../../../../src/lib/types.js'
+import { Cacheable, CacheEvict } from '../../../../../dist/index.js'
+import { CachedResponse } from '../../../../../dist/lib/types.js'
 
 
 // should equal to the cacheName of ClassDecoratorEvictService.hello()

@@ -12,8 +12,8 @@ import {
 } from '@midwayjs/core'
 import { Context, MConfig } from '@mwcp/share'
 
-import { Cacheable } from '../../../../../src/index.js'
-import { CachedResponse, Config, ConfigKey, DataWithCacheMeta } from '../../../../../src/lib/types.js'
+import { Cacheable } from '../../../../../dist/index.js'
+import { CachedResponse, Config, ConfigKey, DataWithCacheMeta } from '../../../../../dist/lib/types.js'
 import { apiBase, apiMethod } from '../../../../api-test.js'
 import { validateMeta } from '../base.helper.js'
 

@@ -10,8 +10,8 @@ import {
 } from '@midwayjs/core'
 import { Context, MConfig } from '@mwcp/share'
 
-import { Cacheable, CacheEvict } from '../../../../../src/index.js'
-import { CachedResponse, Config, ConfigKey } from '../../../../../src/lib/types.js'
+import { Cacheable, CacheEvict } from '../../../../../dist/index.js'
+import { CachedResponse, Config, ConfigKey } from '../../../../../dist/lib/types.js'
 import { apiBase, apiMethod } from '../../../../api-test.js'
 import { validateMeta } from '../base.helper.js'
 

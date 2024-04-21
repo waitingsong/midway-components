@@ -1,5 +1,5 @@
-import { Cacheable } from '../../../../../src/index.js'
-import { CachedResponse } from '../../../../../src/lib/types.js'
+import { Cacheable } from '../../../../../dist/index.js'
+import { CachedResponse } from '../../../../../dist/lib/types.js'
 
 
 export const ttl = 1

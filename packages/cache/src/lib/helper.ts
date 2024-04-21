@@ -2,10 +2,7 @@ import assert from 'node:assert'
 import { createHash } from 'node:crypto'
 
 import { CachingFactory, MidwayUnionCache } from '@midwayjs/cache-manager'
-import {
-  // INJECT_CUSTOM_METHOD,
-  REQUEST_OBJ_CTX_KEY,
-} from '@midwayjs/core'
+import { REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
 import { AbstractTraceService, OtelConfigKey } from '@mwcp/otel'
 import { DecoratorExecutorParamBase, PagingDTO, Context as WebContext } from '@mwcp/share'
 
@@ -272,35 +269,53 @@ export function computerTTLValue(
   return ttl
 }
 
-export function genDecoratorExecutorOptions(options: DecoratorExecutorParamBase<CacheableArgs | CacheEvictArgs>): DecoratorExecutorOptions<CacheableArgs | CacheEvictArgs> {
+
+export interface GenDecoratorExecutorOptionsExt {
+  config: Config
+  cachingFactory: CachingFactory
+  op: 'cacheable' | 'cacheput' | 'cacheevict'
+}
+
+export function genDecoratorExecutorOptions<T extends object>(
+  optionsBase: DecoratorExecutorParamBase<T>,
+  optionsExt: GenDecoratorExecutorOptionsExt,
+): DecoratorExecutorOptions {
 
   const {
     webApp,
-    webContext,
     decoratorKey,
     instance,
     method,
     methodName,
     mergedDecoratorParam,
     instanceName,
-  } = options
+  } = optionsBase
 
   assert(webApp, 'webApp is undefined')
-  assert(webContext, 'webContext is undefined')
   assert(decoratorKey, 'decoratorKey is undefined')
   assert(instance, 'options.instance is undefined')
   assert(typeof method === 'function', 'options.method is not function')
   assert(instanceName, 'instanceName is undefined')
   assert(methodName, 'methodName is undefined')
 
-  const configManagerConfig = webApp.getConfig(ConfigKey.config) as Config
-  assert(configManagerConfig, 'cacheManager config is undefined')
+  const cacheOptions = {
+  } as CacheableArgs | CacheEvictArgs
+  switch (optionsExt.op) {
+    case 'cacheable':
+      Object.assign(cacheOptions, initCacheableArgs, mergedDecoratorParam)
+      break
 
-  const cacheOptions: CacheableArgs = {
-    ...initCacheableArgs,
-    ...initCacheEvictArgs,
-    ...mergedDecoratorParam,
+    case 'cacheput':
+      Object.assign(cacheOptions, initCacheableArgs, mergedDecoratorParam)
+      break
+
+    case 'cacheevict':
+      Object.assign(cacheOptions, initCacheEvictArgs, mergedDecoratorParam)
+      break
   }
+  assert(Object.keys(cacheOptions).length > 0, 'cacheOptions is empty')
+
+
   // @FIXME
   // if (typeof cacheOptions.ttl === 'undefined') {
   //   cacheOptions.ttl = configManagerConfig.options.ttl
@@ -311,16 +326,17 @@ export function genDecoratorExecutorOptions(options: DecoratorExecutorParamBase<
     cacheOptions.cacheName = cacheName
   }
 
-  const { cachingFactory } = options
-  assert(cachingFactory, 'midway cachingFactory is undefined')
-  const traceService = webContext[`_${OtelConfigKey.componentName}`] as AbstractTraceService | undefined
+  let traceService
+  if (optionsBase.webContext) {
+    traceService = optionsBase.webContext[`_${OtelConfigKey.serviceName}`] as AbstractTraceService | undefined
+    assert(traceService, 'TraceService is not initialized. (TraceService 尚未初始化)')
+  }
 
-  const ret: DecoratorExecutorOptions<CacheableArgs | CacheEvictArgs> = {
-    ...options,
-    cachingFactory: cachingFactory as CachingFactory,
-    config: configManagerConfig,
-    mergedDecoratorParam: cacheOptions,
+  const ret: DecoratorExecutorOptions = {
+    ...optionsBase,
+    ...optionsExt,
     traceService,
+    mergedDecoratorParam: cacheOptions,
   }
   return ret
 }

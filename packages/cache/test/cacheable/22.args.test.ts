@@ -17,9 +17,9 @@ describe(fileShortPath(import.meta.url), function () {
 
       const resp = await httpRequest
         .get(url)
-        .expect(200)
 
       assert(resp)
+      assert(resp.ok, resp.text)
     })
 
     it(apiMethod.cacheName, async () => {
@@ -28,9 +28,9 @@ describe(fileShortPath(import.meta.url), function () {
 
       const resp = await httpRequest
         .get(url)
-        .expect(200)
 
       assert(resp)
+      assert(resp.ok, resp.text)
     })
 
     it(apiMethod.condition, async () => {
@@ -39,9 +39,9 @@ describe(fileShortPath(import.meta.url), function () {
 
       const resp = await httpRequest
         .get(url)
-        .expect(200)
 
       assert(resp)
+      assert(resp.ok, resp.text)
     })
 
   })

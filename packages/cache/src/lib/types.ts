@@ -2,11 +2,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CachingFactory, CacheManagerOptions } from '@midwayjs/cache-manager'
 import type { AbstractTraceService } from '@mwcp/otel'
-import {
-  Context,
-  DecoratorExecutorParamBase,
-} from '@mwcp/share'
-import type { MiddlewareConfig as MWConfig } from '@waiting/shared-types'
+import { Context, DecoratorExecutorParamBase } from '@mwcp/share'
+import type { MethodType, MiddlewareConfig as MWConfig } from '@waiting/shared-types'
 
 
 export enum ConfigKey {
@@ -31,9 +28,6 @@ export interface Config {
   enableDefaultRoute: boolean
   clients: Record<string, CacheManagerOptions>
 }
-
-// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-export type MethodType = (...input: any[]) => (any | Promise<any>)
 
 /**
  * @param ctx Koa context
@@ -161,8 +155,6 @@ export interface CacheEvictArgs<M extends MethodType | undefined = undefined> {
   instanceId?: string | undefined
 }
 
-
-export type Method = (...args: unknown[]) => Promise<unknown>
 
 export interface DecoratorExecutorOptions<T extends CacheableArgs | CacheEvictArgs = any>
   extends DecoratorExecutorParamBase<T> {
