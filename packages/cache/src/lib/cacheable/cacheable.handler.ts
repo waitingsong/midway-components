@@ -5,15 +5,14 @@ import { MConfig, DecoratorExecutorParamBase, DecoratorHandlerBase } from '@mwcp
 import { GenDecoratorExecutorOptionsExt, genDecoratorExecutorOptions } from '../helper.js'
 import { Config, CacheableArgs, ConfigKey, DecoratorExecutorOptions } from '../types.js'
 
-import { decoratorExecutor } from './helper.cacheput.js'
-
+import { decoratorExecutor } from './cacheable.helper.js'
 
 /**
  * Cacheable decorator handler
- * @description not support sync method
+ * @description Not support sync method
  */
 @Singleton()
-export class DecoratorHandlerCachePut extends DecoratorHandlerBase {
+export class DecoratorHandlerCacheable extends DecoratorHandlerBase {
   /** component config */
   @MConfig(ConfigKey.config) protected readonly cacheConfig: Config
 
@@ -23,7 +22,7 @@ export class DecoratorHandlerCachePut extends DecoratorHandlerBase {
     const optsExt: GenDecoratorExecutorOptionsExt = {
       config: this.cacheConfig,
       cachingFactory: this.cachingFactory,
-      op: 'cacheput',
+      op: 'cacheable',
     }
     const ret = genDecoratorExecutorOptions(options, optsExt)
     return ret

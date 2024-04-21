@@ -9,7 +9,7 @@ import {
 } from '../config.js'
 import { CacheableArgs } from '../types.js'
 
-import { DecoratorHandlerCacheable } from './cacheable.decorator-handler.js'
+import { DecoratorHandlerCacheable } from './cacheable.handler.js'
 
 
 export const cacheableClassIgnoreIfMethodDecoratorKeys = [

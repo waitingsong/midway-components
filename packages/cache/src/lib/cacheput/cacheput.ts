@@ -4,7 +4,7 @@ import type { MethodType } from '@waiting/shared-types'
 import { METHOD_KEY_CachePut, METHOD_KEY_Transactional } from '../config.js'
 import { CacheableArgs } from '../types.js'
 
-import { DecoratorHandlerCachePut } from './cacheput.decorator-handler.js'
+import { DecoratorHandlerCachePut } from './cacheput.handler.js'
 
 
 /**

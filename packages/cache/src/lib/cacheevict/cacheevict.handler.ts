@@ -5,7 +5,7 @@ import { MConfig, DecoratorExecutorParamBase, DecoratorHandlerBase } from '@mwcp
 import { GenDecoratorExecutorOptionsExt, genDecoratorExecutorOptions } from '../helper.js'
 import { Config, CacheEvictArgs, ConfigKey, DecoratorExecutorOptions } from '../types.js'
 
-import { decoratorExecutor } from './helper.cacheevict.js'
+import { decoratorExecutor } from './cacheevict.helper.js'
 
 
 /**
