@@ -6,6 +6,7 @@ export const apiBase = {
   prefix: `/_${ConfigKey.namespace}`,
   demo: '/demo',
   methodCacheable: '/method_cacheable',
+  methodCacheable2: '/method_cacheable2',
 }
 
 export const apiMethod = {
@@ -14,5 +15,15 @@ export const apiMethod = {
   component: 'component',
   simple: 'simple',
   simpleSyncOnly: 'simple_sync_only',
-  simpleSyncWithAsyncBypass: 'simple_sync_with_async_bypass',
+  simpleAsyncOnly: 'simple_async_only',
+  simpleNumber: 'simple_number',
+  simpleRequest: 'simple_request',
+  simpleRequestExtends: 'simple_request_extends',
+  simpleMix: 'simple_mix',
+  simpleClassOnly: 'simple_class_only',
+  simpleClassOnly2: 'simple_class_only2',
+  classIgnoreIfMethodDecoratorKeys: 'class_ignore_if_method_decorator_keys',
+  classIgnoreIfMethodDecoratorKeys2: 'class_ignore_if_method_decorator_keys2',
+  methodIgnoreIfMethodDecoratorKeys: 'method_ignore_if_method_decorator_keys',
+  methodIgnoreIfMethodDecoratorKeys2: 'method_ignore_if_method_decorator_keys2',
 }

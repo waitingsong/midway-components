@@ -13,7 +13,7 @@ import deepmerge from 'deepmerge'
 import {
   DecoratorMetaData,
   DecoratorMetaDataPayload,
-  InstanceOfDecorator,
+  InstanceWithDecorator,
 } from './custom-decorator.types.js'
 
 
@@ -79,7 +79,7 @@ export function isMethodDecoratedWith(
 
 export function instanceMethodHasMethodDecorator(
   /** 装饰器所在的实例 */
-  target: InstanceOfDecorator,
+  target: InstanceWithDecorator,
   decoratorKey: string,
   methodName: string,
 ): boolean {
@@ -101,9 +101,7 @@ export function instanceMethodHasMethodDecorator(
     if (row.key !== decoratorKey) { continue }
 
     if (row.propertyName === methodName) {
-      if (typeof row.metadata === 'undefined') {
-        return true
-      }
+      assert(row.metadata, 'row.metadata is undefined')
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (row.metadata && typeof row.metadata === 'object') {
         if (typeof row.metadata.decoratedType === 'undefined' || row.metadata.decoratedType === 'method') {
@@ -118,7 +116,7 @@ export function instanceMethodHasMethodDecorator(
 
 export function instanceHasClassDecorator(
   /** 装饰器所在的实例 */
-  target: InstanceOfDecorator,
+  target: InstanceWithDecorator,
   decoratorKey: string,
 ): boolean {
 
@@ -136,8 +134,6 @@ export function instanceHasClassDecorator(
 
   for (const row of metaDataArr) {
     if (row.key !== decoratorKey) { continue }
-    if (typeof row.metadata === 'undefined') { continue }
-
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (row.metadata && typeof row.metadata === 'object') {
       if (row.metadata.decoratedType === 'class') {
@@ -151,7 +147,7 @@ export function instanceHasClassDecorator(
 
 export function setImplToFalseIfDecoratedWithBothClassAndMethod(
   /** 装饰器所在的实例 */
-  target: InstanceOfDecorator,
+  target: InstanceWithDecorator,
   decoratorKey: string,
   inclusiveDecoratorKeys: string[] | undefined,
 ): void {
@@ -166,6 +162,7 @@ export function setImplToFalseIfDecoratedWithBothClassAndMethod(
   if (! arr?.length) { return }
   arr.forEach((row) => {
     // if (row.key !== decoratorKey) { return }
+    /* c8 ignore next 5 */
     if (typeof row.options === 'undefined') {
       row.options = {
         impl: true,
@@ -180,13 +177,12 @@ export function setImplToFalseIfDecoratedWithBothClassAndMethod(
       row.options.impl = false
     }
 
-    inclusiveKeysSet.forEach((key) => {
+    for (const key of inclusiveKeysSet) {
+      if (row.options.impl === false) { return }
       if (instanceMethodHasMethodDecorator(target, key, row.propertyName)) {
-        row.options = {
-          impl: false,
-        }
+        row.options.impl = false
       }
-    })
+    }
   })
 
   // const arr2 = getClassMetadata<DecoratorMetaData[]>(INJECT_CUSTOM_METHOD, target)
@@ -195,7 +191,7 @@ export function setImplToFalseIfDecoratedWithBothClassAndMethod(
 
 
 export function retrieveMetadataPayloadsOnClass<TDecoratorParam extends {} = {}>(
-  target: InstanceOfDecorator | Function,
+  target: InstanceWithDecorator | Function,
   decoratorKey: string,
   methodName: string,
 ): DecoratorMetaDataPayload<TDecoratorParam>[] {
@@ -204,44 +200,33 @@ export function retrieveMetadataPayloadsOnClass<TDecoratorParam extends {} = {}>
   assert(decoratorKey, 'decoratorKey is undefined')
   assert(methodName, 'methodName is undefined')
 
-  const arr = getClassMetadata(
-    INJECT_CUSTOM_METHOD,
-    target,
-  )
-
+  const arr = getClassMetadata<(DecoratorMetaData | null)[] | undefined>(INJECT_CUSTOM_METHOD, target)
   if (! arr?.length) {
     return []
   }
 
   const ret: DecoratorMetaDataPayload<TDecoratorParam>[] = []
-  arr.forEach((row: unknown) => {
+  arr.forEach((row) => {
     assert(typeof row === 'object', 'row is not object')
     assert(row !== null, 'row is null')
-    // @ts-expect-error
     if (row.key !== decoratorKey) { return }
-    // @ts-expect-error
     if (row.propertyName !== methodName) { return }
-    // @ts-expect-error
+    /* c8 ignore next */
     if (typeof row.metadata === 'undefined') { return }
-    // @ts-expect-error
-    if (row.metadata.decoratedType !== 'class') { return }
-    // metadata.decoratedType is not enumerable
-    // @ts-expect-error
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    if (! Object.keys(row.metadata).length) { return }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    ret.push({
-      // @ts-expect-error
-      ...row.metadata,
-    })
+    const metadata = row.metadata as DecoratorMetaDataPayload<TDecoratorParam>
 
+    if (metadata.decoratedType !== 'class') { return } // metadata.decoratedType is not enumerable
+    if (! Object.keys(metadata).length) { return }
+
+    ret.push(metadata)
   })
+  assert(ret.length <= 1, 'decorator param length is not 1: ' + JSON.stringify(ret))
   return ret
 }
 
 export function retrieveMetadataPayloadsOnMethod<TDecoratorParam extends {} = {}>(
-  target: InstanceOfDecorator | Function,
+  target: InstanceWithDecorator | Function,
   decoratorKey: string,
   methodName: string,
 ): DecoratorMetaDataPayload<TDecoratorParam>[] {
@@ -250,39 +235,27 @@ export function retrieveMetadataPayloadsOnMethod<TDecoratorParam extends {} = {}
   assert(decoratorKey, 'decoratorKey is undefined')
   assert(methodName, 'methodName is undefined')
 
-  const arr = getClassMetadata(
-    INJECT_CUSTOM_METHOD,
-    target,
-  )
-
+  const arr = getClassMetadata<(DecoratorMetaData | null)[] | undefined>(INJECT_CUSTOM_METHOD, target)
   if (! arr?.length) {
     return []
   }
 
   const ret: DecoratorMetaDataPayload<TDecoratorParam>[] = []
-  arr.forEach((row: unknown) => {
+  arr.forEach((row) => {
     assert(typeof row === 'object', 'row is not object')
     assert(row !== null, 'row is null')
 
-    // @ts-expect-error
     if (row.key !== decoratorKey) { return }
-    // @ts-expect-error
     if (row.propertyName !== methodName) { return }
-    // @ts-expect-error
+    /* c8 ignore next */
     if (typeof row.metadata === 'undefined') { return }
-    // @ts-expect-error
-    if (row.metadata.decoratedType === 'class') { return }
-    // metadata.decoratedType is not enumerable
-    // @ts-expect-error
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    if (! Object.keys(row.metadata).length) { return }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    ret.push({
-      // @ts-expect-error
-      ...row.metadata,
-    })
+    const metadata = row.metadata as DecoratorMetaDataPayload<TDecoratorParam>
 
+    if (metadata.decoratedType === 'class') { return } // metadata.decoratedType is not enumerable
+    if (! Object.keys(metadata).length) { return }
+
+    ret.push(metadata)
   })
   return ret
 }
@@ -293,17 +266,17 @@ export function retrieveMetadataPayloadsOnMethod<TDecoratorParam extends {} = {}
  * - argsFromClassDecorator: 从类装饰器中获取的参数
  * - argsFromMethodDecorator: 从方法装饰器中获取的参数
  */
-export function mergeDecoratorMetaDataPayload<TDecoratorParam extends {} = {}>(
-  argsFromClassDecoratorArray: DecoratorMetaDataPayload<TDecoratorParam>[] | undefined,
-  argsFromMethodDecorator: DecoratorMetaDataPayload<TDecoratorParam> | undefined,
-): DecoratorMetaDataPayload<TDecoratorParam> | undefined {
+export function mergeDecoratorMetaDataPayload(
+  argsFromClassDecoratorArray: DecoratorMetaDataPayload[] | undefined,
+  argsFromMethodDecorator: DecoratorMetaDataPayload | undefined,
+): DecoratorMetaDataPayload | undefined {
 
   const argsFromClassDecorator = argsFromClassDecoratorArray?.[0]
   if (argsFromMethodDecorator && argsFromMethodDecorator.decoratedType === 'method') {
     const ret = deepmerge.all([
       argsFromClassDecorator ?? {},
       argsFromMethodDecorator,
-    ]) as DecoratorMetaDataPayload<TDecoratorParam>
+    ]) as DecoratorMetaDataPayload
     return ret
   }
   return argsFromClassDecorator

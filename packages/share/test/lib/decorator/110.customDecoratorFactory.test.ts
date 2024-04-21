@@ -17,7 +17,7 @@ describe(fileShortPath(import.meta.url), () => {
       }
       const METHOD_KEY_Cacheable = 'cacheable_test'
 
-      const decoratorFactory = customDecoratorFactory<CacheableArgs>({
+      const decoratorFactory = customDecoratorFactory({
         decoratorArgs: options,
         decoratorKey: METHOD_KEY_Cacheable,
         enableClassDecorator: true,

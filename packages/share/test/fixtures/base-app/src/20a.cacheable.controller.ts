@@ -31,7 +31,7 @@ export class CacheController {
     return ret
   }
 
-  @Get(`/${apiMethod.simpleSyncWithAsyncBypass}`)
+  @Get(`/${apiMethod.simpleAsyncOnly}`)
   async simpleSyncWithAsyncPass(): Promise<number> {
     const ret = this._simpleSync(this.idx)
     assert(ret === this.idx + 1)

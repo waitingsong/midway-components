@@ -15,3 +15,4 @@ export const initialMiddlewareConfig: Readonly<Omit<MiddlewareConfig<MiddlewareO
   enableMiddleware: false,
 }
 
+

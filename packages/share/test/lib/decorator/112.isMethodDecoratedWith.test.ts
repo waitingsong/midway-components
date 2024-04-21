@@ -2,7 +2,8 @@ import assert from 'node:assert/strict'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-import { DecoratorMetaData, isMethodDecoratedWith } from '##/index.js'
+import { isMethodDecoratedWith } from '##/index.js'
+import { DecoratorMetaData } from '##/lib/decorator/custom-decorator.types.js'
 
 import { METHOD_KEY_Cacheable, Test } from './111.custom-decorator.helper.js'
 

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
 import assert from 'node:assert'
 
@@ -11,42 +10,61 @@ import {
   saveModule,
   Provide,
 } from '@midwayjs/core'
+import { MethodTypeUnknown } from '@waiting/shared-types'
 
 import {
   methodHasDecorated,
   setImplToFalseIfDecoratedWithBothClassAndMethod,
 } from './custom-decorator.helper.js'
 import type {
-  CustomClassDecoratorParam,
-  CustomDecoratorFactoryParam,
-  CustomMethodDecoratorParam,
+  RegClassDecoratorOptions,
+  CustomDecoratorFactoryOptions,
+  RegMethodDecoratorOptions,
   DecoratorMetaData,
-  InstanceOfDecorator,
+  DecoratorHandlerBase,
+  ClassWithDecorator,
 } from './custom-decorator.types.js'
 
 
-export function customDecoratorFactory<TDecoratorParam extends {}>(options: CustomDecoratorFactoryParam<TDecoratorParam>): MethodDecorator & ClassDecorator {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const customDecoratorRegMap = new Map<string, typeof DecoratorHandlerBase>()
+export const INJECT_CUSTOM_DecoratorHandlerClass = 'mwcp-share:inject_custom_decorator_handler_class'
+
+/**
+ * @description support only one parameter options
+ */
+export function customDecoratorFactory(
+  options: CustomDecoratorFactoryOptions,
+): MethodDecorator & ClassDecorator {
+
+  assert(typeof options === 'object', 'options is not an object')
+  assert(typeof options.decoratorArgs === 'undefined' || typeof options.decoratorArgs === 'object', 'options.decoratorArgs is not an object')
+
+  if (options.decoratorHandlerClass) {
+    customDecoratorRegMap.set(options.decoratorKey, options.decoratorHandlerClass)
+  }
 
   const DecoratorFactory = (
-    target: Object | Function,
-    propertyName: PropertyKey,
-    descriptor?: TypedPropertyDescriptor<any> | undefined,
+    target: ClassWithDecorator,
+    propertyName: string,
+    descriptor?: TypedPropertyDescriptor<unknown> | undefined,
   ) => { regCustomDecorator(target, propertyName, descriptor, options) }
 
   // @ts-expect-error
   return DecoratorFactory
 }
 
-export function regCustomDecorator<TDecoratorParam extends {}>(
-  target: Object | Function,
-  propertyName: PropertyKey,
-  descriptor: TypedPropertyDescriptor<any> | undefined,
-  options: CustomDecoratorFactoryParam<TDecoratorParam>,
+function regCustomDecorator<TDecoratorParam extends object>(
+  target: ClassWithDecorator,
+  propertyName: string,
+  descriptor: TypedPropertyDescriptor<unknown> | undefined,
+  options: CustomDecoratorFactoryOptions<TDecoratorParam>,
 ): void {
 
   assert(target, 'target is undefined')
+  assert(typeof options === 'object', 'options is not an object')
 
-  const beforeAfterOpts: CustomDecoratorFactoryParam<TDecoratorParam> = {
+  const beforeAfterOpts: CustomDecoratorFactoryOptions<TDecoratorParam> = {
     ...options,
   }
   delete beforeAfterOpts.before
@@ -57,7 +75,12 @@ export function regCustomDecorator<TDecoratorParam extends {}>(
   }
 
   if (typeof target === 'function') { // Class Decorator, target is class constructor
-    if (! options.enableClassDecorator) { return }
+    assert(typeof propertyName === 'undefined', 'propertyName is not undefined while Class Decorator')
+    assert(
+      typeof options.enableClassDecorator === 'undefined' || options.enableClassDecorator,
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      `${options.decoratorKey} is not allowed on class ${target.name}.${propertyName}, due to options.enableClassDecorator is false`,
+    )
 
     const { decoratorArgs, decoratorKey } = options
     assert(decoratorKey, 'decoratorKey is undefined')
@@ -80,11 +103,12 @@ export function regCustomDecorator<TDecoratorParam extends {}>(
     assert(descriptor, 'descriptor is undefined')
 
     // descriptor.value is the method being decorated
-    if (typeof descriptor.value !== 'function') {
-      throw new Error(`Only method can be decorated with decorator "${decoratorKey}",
+    assert(
+      typeof descriptor.value === 'function',
+      `Only method can be decorated with decorator "${decoratorKey}",
         target: ${target.constructor.name},
-        ${propertyName.toString()} is not a method`)
-    }
+        ${propertyName.toString()} is not a method`,
+    )
 
     // // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     // if (descriptor.value.constructor.name !== 'AsyncFunction') {
@@ -92,28 +116,29 @@ export function regCustomDecorator<TDecoratorParam extends {}>(
     //   target: ${target.constructor.name}, propertyName: ${propertyName}`)
     // }
 
-    const obj = target as InstanceOfDecorator
     const opts = {
       decoratorKey,
-      target: obj,
+      target,
       propertyName: propertyName.toString(),
       args: decoratorArgs,
-      method: descriptor.value,
+      method: descriptor.value as MethodTypeUnknown,
       ignoreIfMethodDecoratorKeys: options.methodIgnoreIfMethodDecoratorKeys,
     }
 
     regMethodDecorator(opts)
   }
+  /* c8 ignore next 3 */
+  else {
+    throw new Error('invalid target type')
+  }
 
   if (typeof options.after === 'function') {
     options.after(target, propertyName, descriptor, beforeAfterOpts)
   }
-
 }
 
 
-function regMethodDecorator<TDecoratorParam extends {} = any>(options: CustomMethodDecoratorParam<TDecoratorParam>): void {
-
+function regMethodDecorator<TDecoratorParam extends object = object>(options: RegMethodDecoratorOptions<TDecoratorParam>): void {
   const {
     decoratorKey,
     decoratedType,
@@ -163,8 +188,7 @@ function regMethodDecorator<TDecoratorParam extends {} = any>(options: CustomMet
 }
 
 
-function regClassDecorator<TDecoratorParam extends {}>(options: CustomClassDecoratorParam<TDecoratorParam>): void {
-
+function regClassDecorator<TDecoratorParam extends object>(options: RegClassDecoratorOptions<TDecoratorParam>): void {
   const {
     args,
     decoratorKey,
@@ -198,22 +222,17 @@ function regClassDecorator<TDecoratorParam extends {}>(options: CustomClassDecor
   Provide()(target)
 }
 
-function decoratorAllClassMethodsOnPrototype<TDecoratorParam extends {}>(options: CustomClassDecoratorParam<TDecoratorParam>): unknown {
-
+function decoratorAllClassMethodsOnPrototype<TDecoratorParam extends object>(options: RegClassDecoratorOptions<TDecoratorParam>): unknown {
   const { target, decoratorKey, args } = options
 
-  if (! target.prototype) {
-    return target
-  }
+  assert(typeof target.prototype === 'object', 'target.prototype is not an object')
 
   const prot = target.prototype as unknown
   for (const propertyName of Object.getOwnPropertyNames(prot)) {
     if (propertyName === 'constructor') { continue }
 
     const descriptor = Object.getOwnPropertyDescriptor(prot, propertyName)
-    if (! descriptor) { continue }
-
-    if (typeof descriptor.value === 'function') {
+    if (typeof descriptor?.value === 'function') {
       // if (! isAsyncFunction(descriptor.value)) { continue }
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       // if (descriptor.value.constructor.name !== 'AsyncFunction') { continue }
@@ -231,5 +250,4 @@ function decoratorAllClassMethodsOnPrototype<TDecoratorParam extends {}>(options
 
   return target
 }
-
 

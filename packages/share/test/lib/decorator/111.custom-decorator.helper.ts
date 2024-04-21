@@ -5,7 +5,7 @@ export const METHOD_KEY_Cacheable = 'decorator:method_key_cacheable_test'
 export const ttl = 20
 
 export function Cacheable(options?: Partial<CacheableArgs>) {
-  return customDecoratorFactory<CacheableArgs>({
+  return customDecoratorFactory({
     decoratorArgs: options,
     decoratorKey: METHOD_KEY_Cacheable,
     enableClassDecorator: true,

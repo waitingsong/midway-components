@@ -4,7 +4,8 @@ import assert from 'node:assert/strict'
 import { INJECT_CUSTOM_METHOD, getClassMetadata } from '@midwayjs/core'
 import { fileShortPath } from '@waiting/shared-core'
 
-import { DecoratorMetaData, setImplToFalseIfDecoratedWithBothClassAndMethod } from '##/index.js'
+import { setImplToFalseIfDecoratedWithBothClassAndMethod } from '##/index.js'
+import { DecoratorMetaData } from '##/lib/decorator/custom-decorator.types.js'
 
 import { METHOD_KEY_Cacheable, ttl, Test, Test2, TestClass, TestClass2 } from './111.custom-decorator.helper.js'
 

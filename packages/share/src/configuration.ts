@@ -7,8 +7,7 @@ import {
   IMidwayContainer,
   Inject,
   Logger,
-  MidwayEnvironmentService,
-  MidwayInformationService,
+  MidwayDecoratorService,
   MidwayWebRouterService,
 } from '@midwayjs/core'
 
@@ -16,6 +15,7 @@ import * as DefaultConfig from './config/config.default.js'
 import * as LocalConfig from './config/config.local.js'
 import * as UnittestConfig from './config/config.unittest.js'
 import { useComponents } from './imports.js'
+import { autoRegisterDecoratorHandlers } from './lib/decorator/reg-decorator-handler.js'
 import {
   Application,
   Config as Conf,
@@ -46,12 +46,14 @@ export class AutoConfiguration implements ILifeCycle {
   @Config(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig<MiddlewareOptions>
   @Config(ConfigKey.enableJsonRespMiddlewareConfig) protected readonly enableJsonRespMiddlewareConfig: boolean
 
-  @Inject() protected readonly environmentService: MidwayEnvironmentService
-  @Inject() protected readonly informationService: MidwayInformationService
+  @Inject() protected readonly decoratorService: MidwayDecoratorService
+  // @Inject() protected readonly environmentService: MidwayEnvironmentService
+  // @Inject() protected readonly informationService: MidwayInformationService
   @Inject() protected readonly webRouterService: MidwayWebRouterService
   @Logger() protected readonly logger: ILogger
 
   async onConfigLoad(): Promise<void> {
+    /* c8 ignore next 3 */
     if (! this.config.enableDefaultRoute) {
       await deleteRouter(`/_${ConfigKey.namespace}`, this.webRouterService)
     }
@@ -62,6 +64,7 @@ export class AutoConfiguration implements ILifeCycle {
 
   async onReady(container: IMidwayContainer): Promise<void> {
     void container
+    await autoRegisterDecoratorHandlers(this.app, this.decoratorService, true)
 
     // const isDevelopmentEnvironment = this.environmentService.isDevelopmentEnvironment()
     // if (isDevelopmentEnvironment && this.enableJsonRespMiddlewareConfig === true) {
@@ -69,6 +72,10 @@ export class AutoConfiguration implements ILifeCycle {
     // }
 
     this.logger.info(`[${ConfigKey.componentName}] onReady`)
+  }
+
+  async onServerReady(): Promise<void> {
+    await autoRegisterDecoratorHandlers(this.app, this.decoratorService, false)
   }
 
 }
