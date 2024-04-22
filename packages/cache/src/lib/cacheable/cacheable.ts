@@ -5,7 +5,6 @@ import {
   METHOD_KEY_Cacheable,
   METHOD_KEY_CacheEvict,
   METHOD_KEY_CachePut,
-  METHOD_KEY_Transactional,
 } from '../config.js'
 import { CacheableArgs } from '../types.js'
 
@@ -15,9 +14,8 @@ import { DecoratorHandlerCacheable } from './cacheable.handler.js'
 export const cacheableClassIgnoreIfMethodDecoratorKeys = [
   METHOD_KEY_CacheEvict,
   METHOD_KEY_CachePut,
-  METHOD_KEY_Transactional,
 ]
-export const cacheableMethodIgnoreIfMethodDecoratorKeys = [METHOD_KEY_Transactional]
+export const cacheableMethodIgnoreIfMethodDecoratorKeys = []
 
 /**
  * 声明式缓存装饰器

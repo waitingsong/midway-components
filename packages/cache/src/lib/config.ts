@@ -25,7 +25,6 @@ export const initialMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'ignore' |
 }
 
 
-
 export const CLASS_KEY_Cacheable = 'decorator:class_key_cacheable'
 export const METHOD_KEY_Cacheable = 'decorator:method_key_cacheable'
 export const METHOD_KEY_CacheEvict = 'decorator:method_key_cacheevict'
@@ -36,9 +35,6 @@ export const methodDecoratorKeyMap = new Map([
   [METHOD_KEY_CacheEvict, 'CacheEvict'],
   [METHOD_KEY_CachePut, 'CachePut'],
 ])
-
-// from @mwcp/kmore
-export const METHOD_KEY_Transactional = 'decorator:kmore_trxnal_decorator_key'
 
 
 export const initCacheableArgs: CacheableArgs = {
