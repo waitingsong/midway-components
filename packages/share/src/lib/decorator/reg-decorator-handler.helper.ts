@@ -28,8 +28,8 @@ export function genExecutorOptionsCommon<TDecoratorParam extends object = object
   // 装饰器所在的类实例 // instance.constructor === baseOptions.instance
   const instance = joinPoint.target as InstanceWithDecorator
   const webContext = baseOptions.webContext ?? instance[REQUEST_OBJ_CTX_KEY]
-  // const webApp = webContext.getApp()
   assert(baseOptions.webApp, 'webApp is empty')
+  assert(baseOptions.methodName, 'methodName is undefined')
 
   // let span: Span | undefined = void 0
   // if (webContext) {
@@ -72,16 +72,14 @@ export function genExecutorOptionsCommon<TDecoratorParam extends object = object
   const opts: DecoratorExecutorParamBase<TDecoratorParam> = {
     span: void 0,
     ...baseOptions,
-    // decoratorKey,
     instance: target,
-    // instanceName: callerClass,
     method,
     // index:0 may webcontext
     methodArgs: args,
-    // methodName: callerMethod,
-    // methodIsAsyncFunction: !! joinPoint.proceedIsAsyncFunction,
     webContext,
   }
+
+  assert(opts.instance, 'options.instance is undefined')
 
   return opts
 }
