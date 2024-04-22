@@ -109,17 +109,16 @@ function genEventKeyWhenSpanNameEmpty(options: GenKeyOptions): string {
 
 export type ExecutorParamBase<T extends TraceDecoratorOptions = TraceDecoratorOptions> = DecoratorExecutorParamBase<T>
 
-export interface DecoratorExecutorParam<T extends TraceDecoratorOptions = TraceDecoratorOptions>
-  extends ExecutorParamBase<T> {
-  config: Config
-  callerAttr: Attributes
-  spanName: string
-  spanOptions: Partial<SpanOptions>
-  startActiveSpan: boolean
-  otelComponent: AbstractOtelComponent
-  traceContext: TraceContext | undefined
-  traceService: AbstractTraceService | undefined
-}
+export type DecoratorExecutorParam<T extends TraceDecoratorOptions = TraceDecoratorOptions> = ExecutorParamBase<T>
+  & GenDecoratorExecutorOptions
+  & {
+    callerAttr: Attributes,
+    spanName: string,
+    spanOptions: Partial<SpanOptions>,
+    startActiveSpan: boolean,
+    traceContext: TraceContext | undefined,
+    traceService: AbstractTraceService | undefined,
+  }
 
 export interface GenDecoratorExecutorOptions {
   config: Config
