@@ -156,15 +156,19 @@ export interface CacheEvictArgs<M extends MethodType | undefined = undefined> {
 }
 
 
-export interface DecoratorExecutorOptions<T extends CacheableArgs | CacheEvictArgs = any>
-  extends DecoratorExecutorParamBase<T> {
+export type DecoratorExecutorOptions<T extends CacheableArgs | CacheEvictArgs = any> = DecoratorExecutorParamBase<T>
+  & GenDecoratorExecutorOptionsExt
+  & {
+    traceService: AbstractTraceService | undefined,
+    /**
+     * @default 'default'
+     */
+    cachingInstanceId?: string | undefined,
+  }
 
-  traceService: AbstractTraceService | undefined
-  cachingFactory: CachingFactory
+export interface GenDecoratorExecutorOptionsExt {
   config: Config
-  /**
-   * @default 'default'
-   */
-  cachingInstanceId?: string | undefined
+  cachingFactory: CachingFactory
+  op: 'cacheable' | 'cacheput' | 'cacheevict'
 }
 

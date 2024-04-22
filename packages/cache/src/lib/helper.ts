@@ -1,7 +1,7 @@
 import assert from 'node:assert'
 import { createHash } from 'node:crypto'
 
-import { CachingFactory, MidwayUnionCache } from '@midwayjs/cache-manager'
+import { MidwayUnionCache } from '@midwayjs/cache-manager'
 import { REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
 import { AbstractTraceService, OtelConfigKey } from '@mwcp/otel'
 import { DecoratorExecutorParamBase, PagingDTO, Context as WebContext } from '@mwcp/share'
@@ -12,10 +12,10 @@ import {
   CachedResponse,
   CacheEvictArgs,
   CacheTTLFn,
-  Config,
   ConfigKey,
   DataWithCacheMeta,
   DecoratorExecutorOptions,
+  GenDecoratorExecutorOptionsExt,
 } from './types.js'
 
 
@@ -269,12 +269,6 @@ export function computerTTLValue(
   return ttl
 }
 
-
-export interface GenDecoratorExecutorOptionsExt {
-  config: Config
-  cachingFactory: CachingFactory
-  op: 'cacheable' | 'cacheput' | 'cacheevict'
-}
 
 export function genDecoratorExecutorOptions<T extends object>(
   optionsBase: DecoratorExecutorParamBase<T>,

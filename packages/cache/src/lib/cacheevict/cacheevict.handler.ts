@@ -2,8 +2,8 @@ import { CachingFactory } from '@midwayjs/cache-manager'
 import { Inject, Singleton } from '@midwayjs/core'
 import { MConfig, DecoratorExecutorParamBase, DecoratorHandlerBase } from '@mwcp/share'
 
-import { GenDecoratorExecutorOptionsExt, genDecoratorExecutorOptions } from '../helper.js'
-import { Config, CacheEvictArgs, ConfigKey, DecoratorExecutorOptions } from '../types.js'
+import { genDecoratorExecutorOptions } from '../helper.js'
+import { Config, CacheEvictArgs, ConfigKey, DecoratorExecutorOptions, GenDecoratorExecutorOptionsExt } from '../types.js'
 
 import { decoratorExecutor } from './cacheevict.helper.js'
 
