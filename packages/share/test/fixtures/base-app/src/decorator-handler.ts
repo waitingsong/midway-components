@@ -233,3 +233,40 @@ export class DecoratorHandlerMix extends DecoratorHandlerBase {
   }
 
 }
+
+
+@Singleton()
+export class DecoratorHandlerMulti1 extends DecoratorHandlerBase {
+  @Init()
+  async init() {
+    void 0
+  }
+
+  id = 1
+
+  override async executorAsync(options: DecoratorExecutorParamBase<CacheableArgs>) {
+    return decoratorExecutorAsync(options)
+  }
+
+  override executorSync(options: DecoratorExecutorParamBase<CacheableArgs>) {
+    return decoratorExecutorSync(options)
+  }
+}
+
+@Singleton()
+export class DecoratorHandlerMulti2 extends DecoratorHandlerBase {
+  @Init()
+  async init() {
+    void 0
+  }
+
+  id = 2
+
+  override async executorAsync(options: DecoratorExecutorParamBase<CacheableArgs>) {
+    return decoratorExecutorAsync(options)
+  }
+
+  override executorSync(options: DecoratorExecutorParamBase<CacheableArgs>) {
+    return decoratorExecutorSync(options)
+  }
+}

@@ -8,6 +8,8 @@ import {
   DecoratorHandler,
   DecoratorHandlerAsyncOnly2,
   DecoratorHandlerMix,
+  DecoratorHandlerMulti1,
+  DecoratorHandlerMulti2,
   DecoratorHandlerNumber,
   DecoratorHandlerRequest,
   DecoratorHandlerSyncOnly2,
@@ -22,6 +24,8 @@ export const METHOD_KEY_Cacheable_number = 'decorator:method_key_cacheable_numbe
 export const METHOD_KEY_Cacheable_request = 'decorator:method_key_cacheable_request_test'
 export const METHOD_KEY_Cacheable_request_wrong_inject_scope = 'decorator:method_key_cacheable_request_wrong_inject_scope_test'
 export const METHOD_KEY_ClassIgnoreIfMethodDecoratorKeys = 'decorator:classIgnoreIfMethodDecoratorKeys'
+export const METHOD_KEY_Multi1 = 'decorator:method_key_multi_1'
+export const METHOD_KEY_Multi2 = 'decorator:method_key_multi_2'
 
 export const METHOD_KEY_Cacheable_mix = 'decorator:method_key_cacheable_mix'
 
@@ -141,3 +145,22 @@ function assertBeforeAfter(target: object | MethodTypeUnknown, propertyName: unk
     throw new Error(`4 invalid propertyName` + import.meta.url)
   }
 }
+
+
+export function Multi1(ttl?: CacheableArgs['ttl']) {
+  return customDecoratorFactory({
+    decoratorArgs: { ttl },
+    decoratorKey: METHOD_KEY_Multi1,
+    decoratorHandlerClass: DecoratorHandlerMulti1,
+  })
+}
+
+
+export function Multi2(ttl?: CacheableArgs['ttl']) {
+  return customDecoratorFactory({
+    decoratorArgs: { ttl },
+    decoratorKey: METHOD_KEY_Multi2,
+    decoratorHandlerClass: DecoratorHandlerMulti2,
+  })
+}
+
