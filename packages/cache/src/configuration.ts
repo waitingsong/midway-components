@@ -69,10 +69,9 @@ export class AutoConfiguration implements ILifeCycle {
     // else if (this.mwConfig.ignore) {
     //   this.mwConfig.ignore.push(new RegExp(`/_${ConfigKey.namespace}/.+`, 'u'))
     // }
-
   }
 
-  @TraceInit(`INIT ${ConfigKey.componentName}.onReady`)
+  @TraceInit({ namespace: ConfigKey.componentName })
   async onReady(container: IMidwayContainer): Promise<void> {
     void container
     assert(
