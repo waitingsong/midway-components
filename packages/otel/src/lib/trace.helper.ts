@@ -95,11 +95,29 @@ function genEventKeyWhenSpanNameEmpty(options: GenKeyOptions): string {
 
   if (namespace && configNameList.includes(callerClass)) {
     switch (callerMethod) {
-      case 'onReady':
+      case 'onConfigLoad': {
+        name = `TraceInit ${namespace}.${options.callerMethod.toString()}`
+        break
+      }
 
-      // eslint-disable-next-line no-fallthrough
+      case 'onReady': {
+        name = `TraceInit ${namespace}.${options.callerMethod.toString()}`
+        break
+      }
+
       case 'onServerReady': {
-        name = `INIT ${namespace}.${options.callerMethod.toString()}`
+        name = `TraceInit ${namespace}.${options.callerMethod.toString()}`
+        break
+      }
+
+      case 'onStop': {
+        name = `TraceInit ${namespace}.${options.callerMethod.toString()}`
+        break
+      }
+
+      case 'onHealthCheck': {
+        name = `TraceInit ${namespace}.${options.callerMethod.toString()}`
+        break
       }
     }
   }
