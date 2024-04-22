@@ -33,10 +33,7 @@ export const INJECT_CUSTOM_DecoratorHandlerClass = 'mwcp-share:inject_custom_dec
 /**
  * @description support only one parameter options
  */
-export function customDecoratorFactory(
-  options: CustomDecoratorFactoryOptions,
-): MethodDecorator & ClassDecorator {
-
+export function customDecoratorFactory(options: CustomDecoratorFactoryOptions): MethodDecorator & ClassDecorator {
   assert(typeof options === 'object', 'options is not an object')
   assert(typeof options.decoratorArgs === 'undefined' || typeof options.decoratorArgs === 'object', 'options.decoratorArgs is not an object')
 

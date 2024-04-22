@@ -282,21 +282,10 @@ export function genDecoratorExecutorOptions<T extends object>(
 ): DecoratorExecutorOptions {
 
   const {
-    decoratorKey,
-    instance,
     instanceName,
     mergedDecoratorParam,
-    method,
     methodName,
-    webApp,
   } = optionsBase
-
-  assert(decoratorKey, 'decoratorKey is undefined')
-  assert(instance, 'options.instance is undefined')
-  assert(instanceName, 'instanceName is undefined')
-  assert(typeof method === 'function', 'options.method is not function')
-  assert(methodName, 'methodName is undefined')
-  assert(webApp, 'webApp is undefined')
 
   const cacheOptions = {
   } as CacheableArgs | CacheEvictArgs

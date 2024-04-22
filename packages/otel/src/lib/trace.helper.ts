@@ -131,10 +131,6 @@ export function genDecoratorExecutorOptions(
   optionsExt: GenDecoratorExecutorOptions,
 ): DecoratorExecutorParam<TraceDecoratorOptions> {
 
-  assert(optionsBase.webApp, 'options.webApp is undefined')
-  assert(optionsBase.instanceName, 'options.instanceName is undefined')
-  assert(optionsBase.methodName, 'options.methodName is undefined')
-
   let traceService
   if (optionsBase.webContext) {
     traceService = optionsBase.webContext[`_${ConfigKey.serviceName}`] as AbstractTraceService | undefined
