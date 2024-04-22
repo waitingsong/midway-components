@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [26.2.0](https://github.com/waitingsong/midway-components/compare/v26.1.0...v26.2.0) (2024-04-22)
+
+
+### Features
+
+* **cache:** remove METHOD_KEY_Transactional usage from cacheableMethodIgnoreIfMethodDecoratorKeys ([6723e01](https://github.com/waitingsong/midway-components/commit/6723e0145385b926b9a365c07157b1b15f4cd546))
+
+
+
+
+
 # [26.1.0](https://github.com/waitingsong/midway-components/compare/v26.0.2...v26.1.0) (2024-04-22)
 
 
