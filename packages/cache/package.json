@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/cache",
   "author": "waiting",
-  "version": "26.3.0",
+  "version": "26.3.1",
   "description": "midway component for declarative cache",
   "keywords": [
     "Cacheable",
@@ -37,8 +37,8 @@
     "@midwayjs/cache-manager": "^3.15.8",
     "@midwayjs/info": "^3.15.8",
     "@midwayjs/logger": "^3.4.0",
-    "@mwcp/otel": "^26.3.0",
-    "@mwcp/share": "^26.3.0",
+    "@mwcp/otel": "^26.3.1",
+    "@mwcp/share": "^26.3.1",
     "@waiting/shared-core": "^23.5.1"
   },
   "engines": {
