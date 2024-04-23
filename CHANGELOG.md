@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [26.3.0](https://github.com/waitingsong/midway-components/compare/v26.2.1...v26.3.0) (2024-04-23)
+
+
+### Features
+
+* **share:** add and export registerDecoratorHandlers() ([367e4be](https://github.com/waitingsong/midway-components/commit/367e4bef57c20b52e088bec5c0da5e8ff7c7fe9a))
+
+
+
+
+
 ## [26.2.1](https://github.com/waitingsong/midway-components/compare/v26.2.0...v26.2.1) (2024-04-22)
 
 **Note:** Version bump only for package midway-components
