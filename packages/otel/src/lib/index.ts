@@ -10,6 +10,7 @@ export * from './trace.logger.js'
 export * from './trace.service.js'
 export * from './decorator.trace/trace.js'
 export * from './decorator.trace-init/trace-init.js'
+export * from './reg-decorator.js'
 export {
   addSpanEventWithOutgoingResponseData,
   getIncomingRequestAttributesFromWebContext,

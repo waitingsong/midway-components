@@ -26,6 +26,7 @@ import * as UnittestConfig from './config/config.unittest.js'
 import { useComponents } from './imports.js'
 import { OtelComponent } from './lib/component.js'
 import { TraceInit } from './lib/index.js'
+import { AutoRegister } from './lib/reg-decorator.js'
 import {
   Config as Conf,
   ConfigKey,
@@ -59,6 +60,7 @@ export class AutoConfiguration implements ILifeCycle {
   @Inject() protected readonly informationService: MidwayInformationService
   @Inject() protected readonly webRouterService: MidwayWebRouterService
 
+  @Inject() Reg: AutoRegister
   @Inject() otel: OtelComponent
 
   @Logger() logger: ILogger

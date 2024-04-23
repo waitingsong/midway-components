@@ -3,7 +3,6 @@ import assert from 'node:assert'
 
 import {
   App,
-  Autoload,
   MidwayDecoratorService,
   Init,
   Inject,
@@ -13,7 +12,11 @@ import {
   Singleton,
 } from '@midwayjs/core'
 import { ILogger } from '@midwayjs/logger'
-import { Application, MConfig } from '@mwcp/share'
+import {
+  // registerDecoratorHandlers,
+  Application,
+  MConfig,
+} from '@mwcp/share'
 import {
   Attributes,
   Context,
@@ -51,7 +54,6 @@ import PKG from '#package.json' assert { type: 'json' }
 
 
 /** OpenTelemetry Component */
-@Autoload()
 @Singleton()
 export class OtelComponent extends AbstractOtelComponent {
 
@@ -151,6 +153,9 @@ export class OtelComponent extends AbstractOtelComponent {
       event: `${ConfigKey.componentName}.init.end`,
     })
 
+    // setTimeout(() => {
+    //   void registerDecoratorHandlers(this.app, this.decoratorService, [METHOD_KEY_TraceInit])
+    // }, 1)
   }
 
   getGlobalCurrentContext(): Context {

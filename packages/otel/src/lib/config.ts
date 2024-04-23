@@ -93,3 +93,7 @@ export const initOtlpGrpcExporterConfig: OTLPGRPCExporterConfigNode = {
   compression: CompressionAlgorithm.GZIP,
 }
 
+
+export const KEY_Trace = 'decorator:key_Trace'
+export const METHOD_KEY_TraceInit = 'decorator:method_key_TraceInit'
+

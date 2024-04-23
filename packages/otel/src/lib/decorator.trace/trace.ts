@@ -1,12 +1,11 @@
 import { customDecoratorFactory } from '@mwcp/share'
 import type { MethodTypeUnknown } from '@waiting/shared-types'
 
+import { KEY_Trace } from '../config.js'
 import { TraceOptions } from '../decorator.types.js'
 
 import { DecoratorHandlerTrace } from './trace.decorator-handler.js'
 
-
-export const KEY_Trace = 'decorator:key_Trace'
 
 /**
  * Declarative Trace Decorator
