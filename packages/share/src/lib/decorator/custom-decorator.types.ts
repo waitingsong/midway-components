@@ -58,7 +58,7 @@ export class DecoratorHandlerBase extends AbstractDecoratorHandler {
    * Otherwise, it will throw an error, if async method decorated by the Decorator (eg. @Cacheable()).
    */
   async executorAsync(options: any): Promise<unknown> {
-    console.info(options)
+    console.error(Msg.DecoratorHandlerExecutorSyncForbidden, options)
     throw new TypeError(Msg.DecoratorHandlerExecutorAsyncForbidden)
   }
 
@@ -67,7 +67,7 @@ export class DecoratorHandlerBase extends AbstractDecoratorHandler {
    * Otherwise, it will throw an error, if sync method decorated by the Decorator (eg. @Cacheable()).
    */
   executorSync(options: any): unknown {
-    console.info(options)
+    console.error(Msg.DecoratorHandlerExecutorSyncForbidden, options)
     throw new TypeError(Msg.DecoratorHandlerExecutorSyncForbidden)
   }
 
