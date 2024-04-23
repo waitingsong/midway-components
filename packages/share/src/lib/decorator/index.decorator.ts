@@ -9,4 +9,5 @@ export {
   DecoratorExecutorParamBase,
   FnRegCustomDecorator,
 } from './custom-decorator.types.js'
+export { registerDecoratorHandlers } from './reg-decorator-handler.js'
 

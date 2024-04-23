@@ -244,16 +244,14 @@ export function retrieveMetadataPayloadsOnMethod<TDecoratorParam extends {} = {}
   arr.forEach((row) => {
     assert(typeof row === 'object', 'row is not object')
     assert(row !== null, 'row is null')
-
-    if (row.key !== decoratorKey) { return }
-    if (row.propertyName !== methodName) { return }
-    /* c8 ignore next */
-    if (typeof row.metadata === 'undefined') { return }
+    assert(row.key === decoratorKey, `row.key ${row.key} !== decoratorKey ${decoratorKey}`)
+    assert(row.propertyName === methodName, `row.propertyName ${row.propertyName} !== methodName ${methodName}`)
+    assert(typeof row.metadata !== 'undefined', 'row.metadata is undefined')
 
     const metadata = row.metadata as DecoratorMetaDataPayload<TDecoratorParam>
 
     if (metadata.decoratedType === 'class') { return } // metadata.decoratedType is not enumerable
-    if (! Object.keys(metadata).length) { return }
+    assert(Object.keys(metadata).length, 'Object.keys(metadata).length is zero')
 
     ret.push(metadata)
   })

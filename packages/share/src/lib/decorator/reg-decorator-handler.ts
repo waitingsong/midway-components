@@ -26,22 +26,9 @@ export async function autoRegisterDecoratorHandlers(
   ignoreRetrieveDecoratorHandlerError: boolean,
 ): Promise<void> {
 
-  assert(app, 'app is required')
-  const container = app.getApplicationContext()
-
-  for (const [key, DecoratorHandler] of customDecoratorRegMap) {
+  for (const [key] of customDecoratorRegMap) {
     try {
-      const decoratorHandlerInst = await container.getAsync<DecoratorHandlerBase>(DecoratorHandler)
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (! Object.prototype.hasOwnProperty.call(decoratorHandlerInst, 'app') || ! decoratorHandlerInst.app) {
-        Object.defineProperty(decoratorHandlerInst, 'app', {
-          configurable: false,
-          enumerable: true,
-          value: app,
-        })
-      }
-      registerDecoratorHandler(app, key, decoratorService, decoratorHandlerInst)
-      customDecoratorRegMap.delete(key)
+      await registerDecoratorHandlers(app, decoratorService, [key], true)
     }
     /* c8 ignore start */
     catch (ex) {
@@ -55,6 +42,44 @@ export async function autoRegisterDecoratorHandlers(
     /* c8 ignore stop */
   }
 }
+
+export async function registerDecoratorHandlers(
+  app: Application,
+  decoratorService: MidwayDecoratorService,
+  decoratorKeys: string[],
+  ignoreDecoratorKeyNotExistsError = false,
+): Promise<void> {
+
+  assert(app, 'app is required')
+  assert(decoratorKeys, 'decoratorKeys is required')
+
+  const container = app.getApplicationContext()
+
+  for (const key of decoratorKeys) {
+    const DecoratorHandler = customDecoratorRegMap.get(key)
+
+    if (ignoreDecoratorKeyNotExistsError && ! DecoratorHandler) { continue }
+    assert(
+      DecoratorHandler,
+        `customDecoratorRegMap does not have key: ${key}.
+        maybe the decorator handler is registered by autoRegisterDecoratorHandlers() early.
+        you can ignore this error by setting ignoreDecoratorKeyNotExistsError = true.
+        `,
+    )
+
+    const decoratorHandlerInst = await container.getAsync<DecoratorHandlerBase>(DecoratorHandler)
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (! Object.prototype.hasOwnProperty.call(decoratorHandlerInst, 'app') || ! decoratorHandlerInst.app) {
+      Object.defineProperty(decoratorHandlerInst, 'app', {
+        enumerable: true,
+        value: app,
+      })
+    }
+    registerDecoratorHandler(app, key, decoratorService, decoratorHandlerInst)
+    customDecoratorRegMap.delete(key)
+  }
+}
+
 
 function registerDecoratorHandler(
   app: Application,
