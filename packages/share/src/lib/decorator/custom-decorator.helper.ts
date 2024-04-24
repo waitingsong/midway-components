@@ -191,14 +191,15 @@ export function setImplToFalseIfDecoratedWithBothClassAndMethod(
 
 
 export function retrieveMetadataPayloadsOnClass<TDecoratorParam extends {} = {}>(
-  target: InstanceWithDecorator | Function,
+  target: Function,
   decoratorKey: string,
   methodName: string,
 ): DecoratorMetaDataPayload<TDecoratorParam>[] {
 
-  assert(target, 'target is undefined')
   assert(decoratorKey, 'decoratorKey is undefined')
-  assert(methodName, 'methodName is undefined')
+  assert(methodName, `methodName is undefined, decoratorKey: ${decoratorKey}`)
+  assert(typeof target === 'function', `target is not a function, decoratorKey: ${decoratorKey}, methodName: ${methodName}`)
+  assert(target, 'target is undefined')
 
   const arr = getClassMetadata<(DecoratorMetaData | null)[] | undefined>(INJECT_CUSTOM_METHOD, target)
   if (! arr?.length) {

@@ -210,7 +210,7 @@ export type FnRegCustomDecorator<TDecoratorParam extends object> = (
 
 
 export interface AopCallbackInputArgsType<TDecoratorParam extends object = object> {
-  /** 装饰器所在的类原型 */
+  /** 装饰器所在的类定义 */
   target: Function
   propertyName: string
   metadata: DecoratorMetaDataPayload<TDecoratorParam>
