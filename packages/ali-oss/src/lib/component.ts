@@ -37,7 +37,7 @@ import {
 } from './types.js'
 
 
-/** 阿里云 OSS ossutils 命令行封装组件 */
+/** 阿里云 OSS oss-utils 命令行封装组件 */
 export class AliOssComponent {
 
   ctx: Context | undefined
@@ -219,7 +219,7 @@ export class AliOssComponent {
 
   /**
    * 删除云对象，不支持删除 bucket 本身
-   * 如果在 recusive 为 false 时删除目录，则目录参数值必须以 '/' 结尾，否则不会删除成功
+   * 如果在 recursive 为 false 时删除目录，则目录参数值必须以 '/' 结尾，否则不会删除成功
    * @link https://help.aliyun.com/document_detail/120053.html
    */
   async rm(
@@ -416,7 +416,7 @@ export class AliOssComponent {
         this.querySpanMap.set(id, spanInfo)
 
         const attrs: Attributes = {
-          [AttrNames.QueryCostThottleInMS]: opts['sampleThrottleMs'],
+          [AttrNames.QueryCostThrottleInMS]: opts['sampleThrottleMs'],
           qid: id.time.toString(),
           acl: opts['acl'],
           payer: opts['payer'],
