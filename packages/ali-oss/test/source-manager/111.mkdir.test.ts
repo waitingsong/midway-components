@@ -2,13 +2,15 @@ import assert from 'node:assert/strict'
 
 import { fileShortPath } from '@waiting/shared-core'
 
+import { apiBase, apiMethod } from '#@/api-test.js'
+
 import { AliOssComponent } from '../../src/index.js'
 import { cloudUrlPrefix, testConfig } from '../root.config.js'
 
 
 describe(fileShortPath(import.meta.url), function () {
 
-  const path = '/oss/mkdir'
+  const path = `${apiBase.oss}/${apiMethod.mkdir}`
 
   describe('should work', () => {
     it('normal', async () => {
@@ -18,9 +20,8 @@ describe(fileShortPath(import.meta.url), function () {
       const resp = await httpRequest
         .post(path)
         .query({ target })
-        .expect(200)
 
-      assert(resp)
+      assert(resp.ok, resp.text)
       const data = resp.body as Awaited<ReturnType<AliOssComponent['mkdir']>>
 
       CI || console.log(data)
@@ -37,9 +38,8 @@ describe(fileShortPath(import.meta.url), function () {
       const resp = await httpRequest
         .post(path)
         .query({ target })
-        .expect(200)
 
-      assert(resp)
+      assert(resp.ok, resp.text)
       const data = resp.body as Awaited<ReturnType<AliOssComponent['mkdir']>>
 
       assert(! data.exitCode, `mkdir ${target} failed, ${data.stderr}`)
