@@ -13,9 +13,7 @@ describe(fileShortPath(import.meta.url), () => {
     const { httpRequest } = testConfig
     const url = `${apiBase.methodCacheable2}/${apiMethod.simple}`
 
-    const resp = await httpRequest
-      .get(url)
-
+    const resp = await httpRequest.get(url)
     assert(resp)
     assert(resp.ok, resp.text)
     const data = resp.body as number
@@ -26,9 +24,7 @@ describe(fileShortPath(import.meta.url), () => {
     const { httpRequest } = testConfig
     const url = `${apiBase.methodCacheable2}/${apiMethod.simpleAsyncOnly}`
 
-    const resp = await httpRequest
-      .get(url)
-
+    const resp = await httpRequest.get(url)
     assert(resp)
     assert(resp.ok, resp.text)
     const data = resp.body as number
@@ -39,9 +35,7 @@ describe(fileShortPath(import.meta.url), () => {
     const { httpRequest } = testConfig
     const url = `${apiBase.methodCacheable2}/${apiMethod.simpleSyncOnly}`
 
-    const resp = await httpRequest
-      .get(url)
-
+    const resp = await httpRequest.get(url)
     assert(resp)
     assert(resp.ok, resp.text)
     const data = resp.body as number
@@ -52,9 +46,7 @@ describe(fileShortPath(import.meta.url), () => {
     const { httpRequest } = testConfig
     const url = `${apiBase.methodCacheable2}/${apiMethod.simpleNumber}`
 
-    const resp = await httpRequest
-      .get(url)
-
+    const resp = await httpRequest.get(url)
     assert(resp)
     assert(resp.ok, resp.text)
     const data = resp.body as number
@@ -65,9 +57,7 @@ describe(fileShortPath(import.meta.url), () => {
     const { httpRequest } = testConfig
     const url = `${apiBase.methodCacheable2}/${apiMethod.simpleRequest}`
 
-    const resp = await httpRequest
-      .get(url)
-
+    const resp = await httpRequest.get(url)
     assert(resp)
     assert(resp.ok, resp.text)
     const data = resp.body as number
@@ -78,9 +68,7 @@ describe(fileShortPath(import.meta.url), () => {
     const { httpRequest } = testConfig
     const url = `${apiBase.methodCacheable2}/${apiMethod.simpleRequest}`
 
-    const resp = await httpRequest
-      .get(url)
-
+    const resp = await httpRequest.get(url)
     assert(resp)
     assert(resp.ok, resp.text)
     const data = resp.body as number
@@ -91,9 +79,7 @@ describe(fileShortPath(import.meta.url), () => {
     const { httpRequest } = testConfig
     const url = `${apiBase.methodCacheable2}/${apiMethod.simpleMix}`
 
-    const resp = await httpRequest
-      .get(url)
-
+    const resp = await httpRequest.get(url)
     assert(resp)
     assert(resp.ok, resp.text)
     const data = resp.body as number
@@ -104,9 +90,7 @@ describe(fileShortPath(import.meta.url), () => {
     const { httpRequest } = testConfig
     const url = `${apiBase.methodCacheable2}/${apiMethod.simpleClassOnly}`
 
-    const resp = await httpRequest
-      .get(url)
-
+    const resp = await httpRequest.get(url)
     assert(resp)
     assert(resp.ok, resp.text)
     const data = resp.body as number
@@ -117,9 +101,7 @@ describe(fileShortPath(import.meta.url), () => {
     const { httpRequest } = testConfig
     const url = `${apiBase.methodCacheable2}/${apiMethod.classIgnoreIfMethodDecoratorKeys}`
 
-    const resp = await httpRequest
-      .get(url)
-
+    const resp = await httpRequest.get(url)
     assert(resp)
     assert(resp.ok, resp.text)
     const data = resp.body as number
@@ -130,9 +112,7 @@ describe(fileShortPath(import.meta.url), () => {
     const { httpRequest } = testConfig
     const url = `${apiBase.methodCacheable2}/${apiMethod.classIgnoreIfMethodDecoratorKeys2}`
 
-    const resp = await httpRequest
-      .get(url)
-
+    const resp = await httpRequest.get(url)
     assert(resp)
     assert(resp.ok, resp.text)
     const data = resp.body as number
@@ -143,9 +123,7 @@ describe(fileShortPath(import.meta.url), () => {
     const { httpRequest } = testConfig
     const url = `${apiBase.methodCacheable2}/${apiMethod.methodIgnoreIfMethodDecoratorKeys}`
 
-    const resp = await httpRequest
-      .get(url)
-
+    const resp = await httpRequest.get(url)
     assert(resp)
     assert(resp.ok, resp.text)
     const data = resp.body as number
@@ -156,9 +134,7 @@ describe(fileShortPath(import.meta.url), () => {
     const { httpRequest } = testConfig
     const url = `${apiBase.methodCacheable2}/${apiMethod.methodIgnoreIfMethodDecoratorKeys2}`
 
-    const resp = await httpRequest
-      .get(url)
-
+    const resp = await httpRequest.get(url)
     assert(resp)
     assert(resp.ok, resp.text)
     const data = resp.body as number
@@ -169,9 +145,7 @@ describe(fileShortPath(import.meta.url), () => {
     const { httpRequest } = testConfig
     const url = `${apiBase.methodCacheable2}/${apiMethod.multi}`
 
-    const resp = await httpRequest
-      .get(url)
-
+    const resp = await httpRequest.get(url)
     assert(resp)
     assert(resp.ok, resp.text)
     const data = resp.body as number
