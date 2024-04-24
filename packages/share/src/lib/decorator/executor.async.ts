@@ -12,7 +12,7 @@ import type {
 import { genExecutorOptionsCommon } from './reg-decorator-handler.helper.js'
 
 
-export function executeDecoratorHandlerAsync(
+export function genExecuteDecoratorHandlerAsync(
   options: ExecuteDecoratorHandlerRunnerOptions,
   decoratorHandlerInstance: DecoratorHandlerBase,
 ): IMethodAspect {

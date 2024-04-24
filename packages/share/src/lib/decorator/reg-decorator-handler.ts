@@ -16,7 +16,7 @@ import type {
   ExecuteDecoratorHandlerRunnerOptions,
   InstanceWithDecorator,
 } from './custom-decorator.types.js'
-import { executeDecoratorHandlerAsync } from './executor.async.js'
+import { genExecuteDecoratorHandlerAsync } from './executor.async.js'
 import { executeDecoratorHandlerSync } from './executor.sync.js'
 
 
@@ -154,7 +154,7 @@ function registerMethodHandlerCallback<TDecoratorParam extends object = object>(
   }
 
   if (isAsyncFunc) {
-    return executeDecoratorHandlerAsync(options, decoratorHandlerInstance)
+    return genExecuteDecoratorHandlerAsync(options, decoratorHandlerInstance)
   }
   else {
     return executeDecoratorHandlerSync(options, decoratorHandlerInstance)
