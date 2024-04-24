@@ -27,4 +27,5 @@ export const apiMethod = {
   methodIgnoreIfMethodDecoratorKeys: 'method_ignore_if_method_decorator_keys',
   methodIgnoreIfMethodDecoratorKeys2: 'method_ignore_if_method_decorator_keys2',
   multi: 'multi',
+  passthrough: 'pass_through',
 }

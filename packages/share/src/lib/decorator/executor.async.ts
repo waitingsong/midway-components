@@ -4,10 +4,11 @@ import { isAsyncFunction } from 'node:util/types'
 import { IMethodAspect, JoinPoint } from '@midwayjs/core'
 
 
-import type {
-  DecoratorExecutorParamBase,
-  DecoratorHandlerBase,
-  ExecuteDecoratorHandlerRunnerOptions,
+import {
+  bypassDecoratorHandlerExecutor,
+  type DecoratorExecutorParamBase,
+  type DecoratorHandlerBase,
+  type ExecuteDecoratorHandlerRunnerOptions,
 } from './custom-decorator.types.js'
 import { genExecutorOptionsCommon } from './reg-decorator-handler.helper.js'
 
@@ -17,12 +18,12 @@ export function genExecuteDecoratorHandlerAsync(
   decoratorHandlerInstance: DecoratorHandlerBase,
 ): IMethodAspect {
 
-  const { instanceName, methodName } = options
+  const { decoratorHandlerClassName, instanceName, methodName } = options
   assert(typeof decoratorHandlerInstance.executorAsync === 'function', 'executorAsync must be function')
   assert(
     // eslint-disable-next-line @typescript-eslint/unbound-method
     isAsyncFunction(decoratorHandlerInstance.executorAsync),
-    `${decoratorHandlerInstance.executorAsync.name}() must be async function, due to method ${instanceName}.${methodName}() is async function`,
+    `${decoratorHandlerClassName}.${decoratorHandlerInstance.executorAsync.name}() must be async function, due to method ${instanceName}.${methodName}() is async function`,
   )
 
   return {
@@ -35,7 +36,12 @@ export function genExecuteDecoratorHandlerAsync(
         decoratorHandlerInstance,
       )
       assert(executorParam.methodIsAsyncFunction === true, 'methodIsAsyncFunction must be true')
-      const ret = await decoratorHandlerInstance.executorAsync(executorParam)
+
+      let ret = await decoratorHandlerInstance.executorAsync(executorParam)
+      if (ret === bypassDecoratorHandlerExecutor) {
+        assert(typeof joinPoint.proceed === 'function', 'joinPoint.proceed is not function')
+        ret = await joinPoint.proceed(...executorParam.methodArgs)
+      }
       return ret
     },
   }

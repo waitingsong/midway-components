@@ -136,11 +136,14 @@ function registerMethodHandlerCallback<TDecoratorParam extends object = object>(
   const method = target.prototype[propertyName] as MethodTypeUnknown
   assert(typeof method === 'function', 'method is not a function')
 
+  const decoratorHandlerClassName = decoratorHandlerInstance.constructor.name
+
   const isAsyncFunc = isAsyncFunction(method)
   const options: ExecuteDecoratorHandlerRunnerOptions = {
     argsFromClassDecorator: argsFromClassDecoratorArray[0],
     argsFromMethodDecorator,
     decoratorKey,
+    decoratorHandlerClassName,
     instance: target,
     instanceName,
     methodName: propertyName,

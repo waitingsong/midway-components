@@ -5,6 +5,7 @@ import { Init, Provide, Singleton } from '@midwayjs/core'
 import {
   DecoratorExecutorParamBase,
   DecoratorHandlerBase,
+  bypassDecoratorHandlerExecutor,
 } from '../../../../src/index.js'
 
 import { CacheService, data } from './30.cacheable-async-only.service.js'
@@ -268,5 +269,16 @@ export class DecoratorHandlerMulti2 extends DecoratorHandlerBase {
 
   override executorSync(options: DecoratorExecutorParamBase<CacheableArgs>) {
     return decoratorExecutorSync(options)
+  }
+}
+
+@Singleton()
+export class DecoratorHandlerPassthrough extends DecoratorHandlerBase {
+  override async executorAsync() {
+    return bypassDecoratorHandlerExecutor
+  }
+
+  override executorSync() {
+    return bypassDecoratorHandlerExecutor
   }
 }

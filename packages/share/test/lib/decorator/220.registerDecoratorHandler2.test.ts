@@ -151,5 +151,16 @@ describe(fileShortPath(import.meta.url), () => {
     const data = resp.body as number
     assert(data === 4, resp.text)
   })
+
+  it(apiMethod.methodIgnoreIfMethodDecoratorKeys2, async () => {
+    const { httpRequest } = testConfig
+    const url = `${apiBase.methodCacheable2}/${apiMethod.passthrough}`
+
+    const resp = await httpRequest.get(url)
+    assert(resp)
+    assert(resp.ok, resp.text)
+    const data = resp.body as number
+    assert(data === 2, resp.text)
+  })
 })
 

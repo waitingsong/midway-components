@@ -3,10 +3,11 @@ import { isAsyncFunction, isPromise } from 'node:util/types'
 
 import { IMethodAspect, JoinPoint } from '@midwayjs/core'
 
-import type {
-  DecoratorExecutorParamBase,
-  DecoratorHandlerBase,
-  ExecuteDecoratorHandlerRunnerOptions,
+import {
+  bypassDecoratorHandlerExecutor,
+  type DecoratorExecutorParamBase,
+  type DecoratorHandlerBase,
+  type ExecuteDecoratorHandlerRunnerOptions,
 } from './custom-decorator.types.js'
 import { genExecutorOptionsCommon } from './reg-decorator-handler.helper.js'
 
@@ -16,12 +17,12 @@ export function genExecuteDecoratorHandlerSync(
   decoratorHandlerInstance: DecoratorHandlerBase,
 ): IMethodAspect {
 
-  const { instanceName, methodName } = options
+  const { decoratorHandlerClassName, instanceName, methodName } = options
   assert(typeof decoratorHandlerInstance.executorSync === 'function', 'executorSync must be function')
   assert(
     // eslint-disable-next-line @typescript-eslint/unbound-method
     ! isAsyncFunction(decoratorHandlerInstance.executorSync),
-    `${decoratorHandlerInstance.executorSync.name}() must be sync function, due to method ${instanceName}.${methodName}() is sync function`,
+    `${decoratorHandlerClassName}.${decoratorHandlerInstance.executorSync.name}() must be sync function, due to method ${instanceName}.${methodName}() is sync function`,
   )
 
   return {
@@ -34,8 +35,14 @@ export function genExecuteDecoratorHandlerSync(
         decoratorHandlerInstance,
       )
       assert(executorParam.methodIsAsyncFunction === false, 'methodIsAsyncFunction must be false')
-      const ret = decoratorHandlerInstance.executorSync(executorParam)
+
+      let ret = decoratorHandlerInstance.executorSync(executorParam)
       assert(! isPromise(ret), `result must not be Promise, due to method ${instanceName}.${methodName}() is sync function`)
+
+      if (ret === bypassDecoratorHandlerExecutor) {
+        assert(typeof joinPoint.proceed === 'function', 'joinPoint.proceed is not function')
+        ret = joinPoint.proceed(...executorParam.methodArgs)
+      }
       return ret
     },
   }

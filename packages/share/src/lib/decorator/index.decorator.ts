@@ -8,6 +8,7 @@ export {
   DecoratorMetaDataPayload,
   DecoratorExecutorParamBase,
   FnRegCustomDecorator,
+  bypassDecoratorHandlerExecutor,
 } from './custom-decorator.types.js'
 export { registerDecoratorHandlers } from './reg-decorator-handler.js'
 

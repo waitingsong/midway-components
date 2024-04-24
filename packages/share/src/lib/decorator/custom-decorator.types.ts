@@ -10,6 +10,8 @@ import { MethodTypeUnknown } from '@waiting/shared-types'
 import { Application, Context, Msg } from '../types.js'
 
 
+export const bypassDecoratorHandlerExecutor = Symbol.for('bypassDecoratorHandlerExecutor')
+
 /**
  * @description
  * - Must exports with package
@@ -54,8 +56,9 @@ export class DecoratorHandlerBase extends AbstractDecoratorHandler {
   }
 
   /**
-   * You should override this method to implement the decorator logic.
-   * Otherwise, it will throw an error, if async method decorated by the Decorator (eg. @Cacheable()).
+   * - You can return symbol `bypassDecoratorHandlerExecutor` to bypass the method, without any change.
+   * - You should override this method to implement the decorator logic.
+   * Otherwise, it will throw an error, if async method decorated by the Decorator (eg. \@Cacheable()).
    */
   async executorAsync(options: any): Promise<unknown> {
     console.error(Msg.DecoratorHandlerExecutorSyncForbidden, options)
@@ -63,8 +66,9 @@ export class DecoratorHandlerBase extends AbstractDecoratorHandler {
   }
 
   /**
-   * You should override this method to implement the decorator logic.
-   * Otherwise, it will throw an error, if sync method decorated by the Decorator (eg. @Cacheable()).
+   * - You can return symbol `bypassDecoratorHandlerExecutor` to bypass the method, without any change.
+   * - You should override this method to implement the decorator logic.
+   * Otherwise, it will throw an error, if sync method decorated by the Decorator (eg. \@Cacheable()).
    */
   executorSync(options: any): unknown {
     console.error(Msg.DecoratorHandlerExecutorSyncForbidden, options)
@@ -114,6 +118,7 @@ export interface DecoratorExecutorParamBase<TDecoratorParam extends object = obj
   /** Merged from argsFromClassDecorator and argsFromMethodDecorator */
   mergedDecoratorParam: DecoratorMetaDataPayload<TDecoratorParam> | undefined
   decoratorKey: string
+  decoratorHandlerClassName: string
   /** 装饰器所在类实例(包括注入对象) */
   instance: InstanceWithDecorator
   /** Caller Class name */
@@ -228,6 +233,7 @@ export interface ExecuteDecoratorHandlerRunnerOptions {
   /** Merged from argsFromClassDecorator and argsFromMethodDecorator */
   mergedDecoratorParam: DecoratorMetaDataPayload | undefined
   decoratorKey: string
+  decoratorHandlerClassName: string
   /** 装饰器所在类实例 */
   instance: InstanceWithDecorator
   /** Caller Class name */
