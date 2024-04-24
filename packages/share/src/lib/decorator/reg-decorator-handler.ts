@@ -94,7 +94,7 @@ function registerDecoratorHandler(
 
   decoratorService.registerMethodHandler(
     decoratorKey,
-    (aopCallbackInputOptions: AopCallbackInputArgsType) => executeDecoratorHandler(
+    (aopCallbackInputOptions: AopCallbackInputArgsType) => registerMethodHandlerCallback(
       app,
       decoratorKey,
       aopCallbackInputOptions,
@@ -104,7 +104,7 @@ function registerDecoratorHandler(
 }
 
 
-function executeDecoratorHandler<TDecoratorParam extends object = object>(
+function registerMethodHandlerCallback<TDecoratorParam extends object = object>(
   app: Application,
   decoratorKey: string,
   aopCallbackInputOptions: AopCallbackInputArgsType<TDecoratorParam>,
