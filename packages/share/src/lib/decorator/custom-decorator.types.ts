@@ -97,7 +97,13 @@ export interface CustomDecoratorFactoryOptions<TDecoratorParam extends object = 
    *  pass [METHOD_KEY_Cacheable], then the method decorated by @Cacheable with impl:false.
    */
   methodIgnoreIfMethodDecoratorKeys?: string[]
+  /**
+   * Running at register stage
+   */
   before?: FnRegCustomDecorator<TDecoratorParam>
+  /**
+   * Running at register stage
+   */
   after?: FnRegCustomDecorator<TDecoratorParam>
   decoratorHandlerClass?: typeof DecoratorHandlerBase
 }
