@@ -11,7 +11,7 @@ import type {
 import { genExecutorOptionsCommon } from './reg-decorator-handler.helper.js'
 
 
-export function executeDecoratorHandlerSync(
+export function genExecuteDecoratorHandlerSync(
   options: ExecuteDecoratorHandlerRunnerOptions,
   decoratorHandlerInstance: DecoratorHandlerBase,
 ): IMethodAspect {
