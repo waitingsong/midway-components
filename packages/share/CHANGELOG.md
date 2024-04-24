@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [26.5.0](https://github.com/waitingsong/midway-components/compare/v26.4.0...v26.5.0) (2024-04-24)
+
+
+### Features
+
+* **share:** change value of bypassDecoratorHandlerExecutor unique ([84381e2](https://github.com/waitingsong/midway-components/commit/84381e293cadd96960c52aaada9ada4c4ea168fd))
+
+
+
+
+
 # [26.4.0](https://github.com/waitingsong/midway-components/compare/v26.3.2...v26.4.0) (2024-04-24)
 
 
