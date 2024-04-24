@@ -190,7 +190,7 @@ export function setImplToFalseIfDecoratedWithBothClassAndMethod(
 }
 
 
-export function retrieveMetadataPayloadsOnClass<TDecoratorParam extends {} = {}>(
+export function retrieveMetadataPayloadsOnClass<TDecoratorParam extends object = object>(
   target: Function,
   decoratorKey: string,
   methodName: string,
