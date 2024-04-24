@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [26.3.2](https://github.com/waitingsong/midway-components/compare/v26.3.1...v26.3.2) (2024-04-24)
+
+
+### Bug Fixes
+
+* **share:** retrieveMetadataPayloadsOnMethod() ([ce8b204](https://github.com/waitingsong/midway-components/commit/ce8b20457bd078650ca2cfb98101a462d51e113d))
+
+
+
+
+
 ## [26.3.1](https://github.com/waitingsong/midway-components/compare/v26.3.0...v26.3.1) (2024-04-23)
 
 **Note:** Version bump only for package @mwcp/share
