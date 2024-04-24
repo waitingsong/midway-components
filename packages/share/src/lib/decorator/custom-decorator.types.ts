@@ -10,7 +10,7 @@ import { MethodTypeUnknown } from '@waiting/shared-types'
 import { Application, Context, Msg } from '../types.js'
 
 
-export const bypassDecoratorHandlerExecutor = Symbol.for('bypassDecoratorHandlerExecutor')
+export const bypassDecoratorHandlerExecutor = Symbol('bypassDecoratorHandlerExecutor')
 
 /**
  * @description
