@@ -46,7 +46,6 @@ export function genExecutorOptionsCommon<TDecoratorParam extends object = object
   // assert(instance.constructor.name, 'instance.constructor.name is empty')
   // const callerClass = instance.constructor.name
   // const callerMethod = joinPoint.methodName
-  const { args, target } = joinPoint
 
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const method = joinPoint.proceed
@@ -73,10 +72,10 @@ export function genExecutorOptionsCommon<TDecoratorParam extends object = object
   const opts: DecoratorExecutorParamBase<TDecoratorParam> = {
     span: void 0,
     ...baseOptions,
-    instance: target,
+    instance,
     method,
     // index:0 may webcontext
-    methodArgs: args,
+    methodArgs: joinPoint.args,
     webContext,
   }
 
