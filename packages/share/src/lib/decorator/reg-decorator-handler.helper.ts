@@ -25,7 +25,8 @@ export function genExecutorOptionsCommon<TDecoratorParam extends object = object
   assert(baseOptions.decoratorKey, 'baseOptions.decoratorKey is undefined')
   assert(baseOptions.instanceName, 'baseOptions.instanceName is empty')
 
-  // 装饰器所在的类实例 // instance.constructor === baseOptions.instance
+  // 装饰器所在的类实例
+  // instance.constructor === baseOptions.instance, Object.getPrototypeOf(instance) === baseOptions.instance.prototype
   const instance = joinPoint.target as InstanceWithDecorator
   const webContext = baseOptions.webContext ?? instance[REQUEST_OBJ_CTX_KEY]
   assert(baseOptions.webApp, 'webApp is empty')
