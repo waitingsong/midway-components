@@ -6,7 +6,6 @@ import {
   CreateDataSourceInstanceOptions as CreateInstanceOptions,
   Init,
   Inject,
-  Logger as _Logger,
   Singleton,
 } from '@midwayjs/core'
 import { MConfig } from '@mwcp/share'
