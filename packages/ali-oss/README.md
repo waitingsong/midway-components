@@ -16,9 +16,15 @@ ESM build only, requires `@midwayjs >= 3.12` and set `"type": "module"` in `pack
 
 [ossutil 下载页面](https://help.aliyun.com/document_detail/120075.html)
 
+Linux:
 ```sh
 sudo wget https://gosspublic.alicdn.com/ossutil/1.7.11/ossutil64 -O /usr/bin/ossutil
 sudo chmod a+x /usr/bin/ossutil
+```
+
+Windows:
+```sh
+https://gosspublic.alicdn.com/ossutil/1.7.19/ossutil-v1.7.19-windows-amd64.zip
 ```
 
 ## Installation
