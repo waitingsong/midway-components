@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [26.5.1](https://github.com/waitingsong/midway-components/compare/v26.5.0...v26.5.1) (2024-04-25)
+
+
+### Bug Fixes
+
+* **otel:** import assert {type} to import with {type} ([c788e6b](https://github.com/waitingsong/midway-components/commit/c788e6b0fd22a752979b9a6fb44f188a94278bf2))
+
+
+
+
+
 # [26.5.0](https://github.com/waitingsong/midway-components/compare/v26.4.0...v26.5.0) (2024-04-24)
 
 **Note:** Version bump only for package @mwcp/otel
