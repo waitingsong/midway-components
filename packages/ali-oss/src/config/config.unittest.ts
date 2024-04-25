@@ -18,6 +18,7 @@ export const aliOssConfig: Readonly<Config<ClientKey.unitTest>> = {
   default: {
     ...initialConfig,
     sampleThrottleMs: 100,
+    enableTrace: true,
   },
 }
 
