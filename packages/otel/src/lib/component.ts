@@ -50,7 +50,7 @@ import { normalizeHeaderKey, setSpan } from './util.js'
 
 // eslint-disable-next-line import/max-dependencies
 // eslint-disable-next-line import/max-dependencies
-import PKG from '#package.json' assert { type: 'json' }
+import PKG from '#package.json' with { type: 'json' }
 
 
 /** OpenTelemetry Component */
