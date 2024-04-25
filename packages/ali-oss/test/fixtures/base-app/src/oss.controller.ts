@@ -29,6 +29,7 @@ export class OssController {
   @Init()
   async init(): Promise<void> {
     this.ossClient = this.aliOssManager.getDataSource(ClientKey.unitTest)
+    void this.aliOssManager.getDataSource(ClientKey.unitTest) // cov cache
     assert(await this.aliOssManager.isConnected(ClientKey.unitTest))
   }
 

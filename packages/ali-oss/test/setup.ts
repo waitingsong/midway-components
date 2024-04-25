@@ -70,6 +70,7 @@ async function updateConfig2(mockApp: Application, config: TestConfig): Promise<
 
   const client = aliOssManager.getDataSource(ClientKey.unitTest)
   testConfig.ossClient = client
+  void aliOssManager.getDataSource(ClientKey.unitTest) // cov cache
 
   const target = `${cloudUrlPrefix}/`
 
