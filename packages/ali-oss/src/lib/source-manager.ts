@@ -9,7 +9,6 @@ import {
   Logger as _Logger,
   Singleton,
 } from '@midwayjs/core'
-import { ILogger } from '@midwayjs/logger'
 import { MConfig } from '@mwcp/share'
 
 import { AliOssComponent } from './component.js'
@@ -21,8 +20,6 @@ export class AliOssSourceManager<SourceName extends string = string>
   extends DataSourceManager<AliOssComponent | undefined> {
 
   @MConfig(ConfigKey.config) private readonly sourceConfig: Config<SourceName>
-
-  @_Logger() private readonly logger: ILogger
 
   @Inject() baseDir: string
 
