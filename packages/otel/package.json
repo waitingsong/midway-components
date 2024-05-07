@@ -41,7 +41,7 @@
     "@opentelemetry/resource-detector-aws": "^1.4.1",
     "@opentelemetry/resource-detector-container": "^0.3.8",
     "@opentelemetry/resource-detector-gcp": "^0.29.8",
-    "@opentelemetry/sdk-node": "^0.50.0",
+    "@opentelemetry/sdk-node": "^0.51.1",
     "@waiting/shared-core": "^23.5.1",
     "undici": "*"
   },
