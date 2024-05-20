@@ -7,6 +7,7 @@ export const apiBase = {
   demo: '/demo',
   methodCacheable: '/method_cacheable',
   methodCacheable2: '/method_cacheable2',
+  router: '/router',
 }
 
 export const apiMethod = {
@@ -28,4 +29,5 @@ export const apiMethod = {
   methodIgnoreIfMethodDecoratorKeys2: 'method_ignore_if_method_decorator_keys2',
   multi: 'multi',
   passthrough: 'pass_through',
+  helloId: 'hello/:id',
 }
