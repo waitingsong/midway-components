@@ -124,6 +124,7 @@ export abstract class AbstractTraceService {
   readonly abstract otel: AbstractOtelComponent
   readonly abstract instanceId: symbol
   readonly abstract startTime: string
+  readonly abstract rootContext: Context
   protected readonly abstract traceContextArray: Context[]
 
   abstract getActiveContext(): Context

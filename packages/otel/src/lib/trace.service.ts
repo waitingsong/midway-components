@@ -24,12 +24,13 @@ import { AbstractTraceService } from './abstract.js'
 import { OtelComponent } from './component.js'
 import { initSpanStatusOptions } from './config.js'
 import {
+  AddEventOptions,
   AttrNames,
-  SpanStatusOptions,
   ConfigKey,
   Config,
   MiddlewareConfig,
-  AddEventOptions,
+  SpanStatusOptions,
+  middlewareEnableCacheKey,
 } from './types.js'
 import {
   genRequestSpanName,
@@ -60,6 +61,7 @@ export class TraceService extends AbstractTraceService {
 
   @Init()
   init(): void {
+    if (! this.ctx[middlewareEnableCacheKey]) { return }
     this.start()
   }
 

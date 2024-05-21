@@ -14,6 +14,7 @@ import {
   Config,
   ConfigKey,
   TraceContext,
+  middlewareEnableCacheKey,
 } from './types.js'
 
 
@@ -151,7 +152,10 @@ export function genDecoratorExecutorOptions(
   let traceService
   if (optionsBase.webContext) {
     traceService = optionsBase.webContext[`_${ConfigKey.serviceName}`] as AbstractTraceService | undefined
-    assert(traceService, 'TraceService is not initialized. (TraceService 尚未初始化)')
+    // 根据中间件启用状态判断是否校验 TraceService 是否初始化
+    if (optionsBase.webContext[middlewareEnableCacheKey] === true) {
+      assert(traceService, 'TraceService is not initialized. (TraceService 尚未初始化) 路由可能设置为忽略追踪')
+    }
   }
 
   // const { otel } = traceService
@@ -168,6 +172,11 @@ export function genDecoratorExecutorOptions(
   if (typeof mergedDecoratorParam.autoEndSpan !== 'boolean') {
     mergedDecoratorParam.autoEndSpan = true
   }
+
+  // DO NOT set traceContext
+  // if (! mergedDecoratorParam.traceContext) {
+  //   mergedDecoratorParam.traceContext = traceService?.getActiveContext()
+  // }
 
   const decoratorContext: DecoratorContext = {
     webApp: optionsBase.webApp,
