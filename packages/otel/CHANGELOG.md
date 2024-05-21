@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [26.5.3](https://github.com/waitingsong/midway-components/compare/v26.5.2...v26.5.3) (2024-05-21)
+
+
+### Bug Fixes
+
+* **otel:** tracing event if ctx.path matched  otelMiddlewareConfig.ignore lists ([4c1d55c](https://github.com/waitingsong/midway-components/commit/4c1d55c7aa92e8cc448935a34c8ea609fed8ef5a))
+
+
+
+
+
 ## [26.5.2](https://github.com/waitingsong/midway-components/compare/v26.5.1...v26.5.2) (2024-05-09)
 
 **Note:** Version bump only for package @mwcp/otel
