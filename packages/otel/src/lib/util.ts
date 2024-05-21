@@ -1,3 +1,4 @@
+import assert from 'node:assert'
 import type {
   IncomingHttpHeaders,
   IncomingMessage,
@@ -5,7 +6,7 @@ import type {
   OutgoingMessage,
 } from 'node:http'
 
-import type { Context as WebContext } from '@mwcp/share'
+import { Context as WebContext, getRouterInfo } from '@mwcp/share'
 import {
   Attributes,
   Span,
@@ -161,10 +162,12 @@ function getAttributesFromHttpKind(kind?: string): Attributes {
 /**
  * Returns incoming request attributes scoped to the request data
  */
-export function getIncomingRequestAttributesFromWebContext(
+export async function getIncomingRequestAttributesFromWebContext(
   ctx: WebContext,
   config: Config,
-): Attributes {
+): Promise<Attributes> {
+
+  const routerInfo = await getRouterInfo(ctx)
 
   const attrs: Attributes = {
     [SemanticAttributes.HTTP_URL]: ctx.href,
@@ -174,6 +177,7 @@ export function getIncomingRequestAttributesFromWebContext(
     [SemanticAttributes.HTTP_SCHEME]: ctx.protocol,
     [SemanticAttributes.HTTP_TARGET]: ctx.path || '/',
     [SemanticAttributes.HTTP_SERVER_NAME]: config.serviceName ?? 'unknown',
+    [SemanticAttributes.HTTP_ROUTE]: routerInfo?.fullUrl ?? 'unknown',
     [AttrNames.ServiceName]: config.serviceName ?? 'unknown',
     [AttrNames.ServiceVersion]: config.serviceVersion ?? 'unknown',
     // [AttrNames.ServicePid]: process.pid,
@@ -427,16 +431,24 @@ export function truncateString(str: string, maxLength = 2048): string {
   return str
 }
 
+export interface GenRequestSpanNameOptions {
+  /** ctx.request?.protocol */
+  protocol: string
+  /** ctx.method */
+  method: string
+  route: string
+}
+
 /**
  * Generate span name from request
+ * @description no leading slash
+ * @example 'HTTP GET - api/v1/user'
  */
-export function genRequestSpanName(webContext: WebContext, maxLength = 128): string {
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const protocol = webContext?.request?.protocol
-    ? webContext.request.protocol.toLocaleUpperCase()
-    : ''
-  const method = webContext.method || ''
-  const spanName = `${protocol} ${method} ${webContext.path}`
+export function genRequestSpanName(options: GenRequestSpanNameOptions, maxLength = 128): string {
+  const { protocol, method, route } = options
+  assert(protocol, 'protocol is required')
+  assert(method, 'method is required')
+  const spanName = `${protocol.toLocaleUpperCase()} ${method.toUpperCase()} ${route}`
   return spanName.slice(0, maxLength)
 }
 
