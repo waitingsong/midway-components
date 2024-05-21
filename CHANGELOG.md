@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [27.0.0](https://github.com/waitingsong/midway-components/compare/v26.5.3...v27.0.0) (2024-05-21)
+
+
+### Features
+
+* **otel:** breaking change functions ([a6d5459](https://github.com/waitingsong/midway-components/commit/a6d54596ee5e620bc690eb5f7436875e134d3787))
+* **otel:** process span name correctly ([6773857](https://github.com/waitingsong/midway-components/commit/6773857c6e8541ff830010013a055b26873f6643))
+* **share:** getRouterInfo() ([3a1108f](https://github.com/waitingsong/midway-components/commit/3a1108f667e6c39d723c15a202f0cb36021e07e6))
+
+
+
+
+
 ## [26.5.3](https://github.com/waitingsong/midway-components/compare/v26.5.2...v26.5.3) (2024-05-21)
 
 

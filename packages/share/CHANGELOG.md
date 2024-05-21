@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [27.0.0](https://github.com/waitingsong/midway-components/compare/v26.5.3...v27.0.0) (2024-05-21)
+
+
+### Features
+
+* **share:** getRouterInfo() ([3a1108f](https://github.com/waitingsong/midway-components/commit/3a1108f667e6c39d723c15a202f0cb36021e07e6))
+
+
+
+
+
 ## [26.5.2](https://github.com/waitingsong/midway-components/compare/v26.5.1...v26.5.2) (2024-05-09)
 
 **Note:** Version bump only for package @mwcp/share
