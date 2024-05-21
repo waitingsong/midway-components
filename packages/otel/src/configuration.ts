@@ -69,9 +69,9 @@ export class AutoConfiguration implements ILifeCycle {
     if (! this.config.enableDefaultRoute) {
       await deleteRouter(`/_${ConfigKey.namespace}`, this.webRouterService)
     }
-    else if (this.mwConfig.ignore) {
-      this.mwConfig.ignore.push(new RegExp(`/_${ConfigKey.namespace}/.+`, 'u'))
-    }
+    // else if (this.mwConfig.ignore) {
+    //   this.mwConfig.ignore.push(new RegExp(`/_${ConfigKey.namespace}/.+`, 'u'))
+    // }
   }
 
   @TraceInit({ namespace: ConfigKey.componentName })
