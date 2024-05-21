@@ -28,7 +28,7 @@ export async function decoratorExecutorAsync(options: DecoratorExecutorParam): P
   }
 
   if (! traceService?.isStarted) {
-    console.warn('traceService is not initialized. (traceService 尚未初始化。)')
+    // console.warn('decoratorExecutorAsync() traceService is not initialized. (traceService 尚未初始化) 路由可能设置为忽略追踪')
     const ret = await func(...funcArgs)
     return ret
   }
@@ -89,7 +89,7 @@ export function decoratorExecutorSync(options: DecoratorExecutorParam): unknown 
   }
 
   if (! traceService?.isStarted) {
-    console.warn('traceService is not initialized. (traceService 尚未初始化。)')
+    // console.warn('decoratorExecutorSync() traceService is not initialized. (traceService 尚未初始化) 路由可能设置为忽略追踪')
     const ret = method(...funcArgs)
     return ret
   }
