@@ -19,7 +19,6 @@ export const otelConfig: Config = {
   ],
   propagators: [
     PropagatorList.w3cTraceContext,
-    PropagatorList.jaeger,
   ],
 }
 
