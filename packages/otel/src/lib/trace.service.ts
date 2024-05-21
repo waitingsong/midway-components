@@ -5,7 +5,7 @@ import {
   Inject,
   Provide,
 } from '@midwayjs/core'
-import { Context as WebContext, MConfig } from '@mwcp/share'
+import { Context as WebContext, MConfig, getRouterInfo, RouterInfoLite } from '@mwcp/share'
 import {
   Attributes,
   Context,
@@ -53,6 +53,7 @@ export class TraceService extends AbstractTraceService {
   rootContext: Context
   rootSpan: Span
   isStarted = false
+  routerInfo: RouterInfoLite | undefined
 
   readonly instanceId = Symbol(Date.now())
   readonly startTime = genISO8601String()
@@ -60,8 +61,11 @@ export class TraceService extends AbstractTraceService {
   protected readonly traceContextArray: Context[] = []
 
   @Init()
-  init(): void {
+  async init(): Promise<void> {
     if (! this.ctx[middlewareEnableCacheKey]) { return }
+
+    const routerInfo = await getRouterInfo(this.ctx)
+    this.routerInfo = routerInfo
     this.start()
   }
 
@@ -72,6 +76,8 @@ export class TraceService extends AbstractTraceService {
     }
 
     for (let i = len - 1; i >= 0; i -= 1) {
+      if (! this.traceContextArray.length) { break }
+
       const traceContext = this.traceContextArray.at(-1)
       if (! traceContext) {
         this.traceContextArray.pop()
@@ -235,6 +241,7 @@ export class TraceService extends AbstractTraceService {
     endTime?: TimeInput,
   ): void {
 
+    if (! this.isStarted) { return }
     if (! this.config.enable) { return }
 
     const time = genISO8601String()
@@ -266,12 +273,18 @@ export class TraceService extends AbstractTraceService {
   }
 
   // #region private methods
-  /* --------------------- */
 
   protected genRootSpanName(): string {
+    const opts = {
+      /** ctx.request?.protocol */
+      protocol: this.ctx.request.protocol || '',
+      /** ctx.method */
+      method: this.ctx.method,
+      route: this.routerInfo?.fullUrl ?? '',
+    }
     const spanName = this.config.rootSpanName && typeof this.config.rootSpanName === 'function'
       ? this.config.rootSpanName(this.ctx)
-      : genRequestSpanName(this.ctx)
+      : genRequestSpanName(opts)
     return spanName
   }
 
@@ -306,20 +319,23 @@ export class TraceService extends AbstractTraceService {
     }
     this.addEvent(this.rootSpan, events)
 
-    void Promise.resolve()
-      .then(() => {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        this.ctx.get && setSpanWithRequestHeaders(
-          this.rootSpan,
-          this.otel.captureHeadersMap.get('request'),
-          key => this.ctx.get(key),
-        )
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    this.ctx.get && setSpanWithRequestHeaders(
+      this.rootSpan,
+      this.otel.captureHeadersMap.get('request'),
+      key => this.ctx.get(key),
+    )
 
-        const attrs = getIncomingRequestAttributesFromWebContext(this.ctx, this.config)
+    Promise.resolve()
+      .then(async () => {
+        const attrs = await getIncomingRequestAttributesFromWebContext(this.ctx, this.config)
         attrs[AttrNames.RequestStartTime] = this.startTime
         this.setAttributes(this.rootSpan, attrs)
       })
-      .catch(console.error)
+      .catch((err: Error) => {
+        this.setRootSpanWithError(err)
+        console.error(err)
+      })
   }
 
 

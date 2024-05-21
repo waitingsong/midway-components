@@ -8,6 +8,7 @@ export const apiBase = {
 
   TraceDecorator: `/_${ConfigKey.namespace}_trace_decorator`,
   util: `/_${ConfigKey.namespace}_util`,
+  route: '/route',
 }
 
 export const apiMethod = {
