@@ -17,8 +17,24 @@ import {
   createContextKey,
 } from '@opentelemetry/api'
 import {
-  NetTransportValues,
-  SemanticAttributes,
+  NETTRANSPORTVALUES_IP_TCP,
+  NETTRANSPORTVALUES_IP_UDP,
+  SEMATTRS_NET_TRANSPORT,
+  SEMATTRS_HTTP_FLAVOR,
+  SEMATTRS_HTTP_CLIENT_IP,
+  SEMATTRS_HTTP_USER_AGENT,
+  SEMATTRS_HTTP_REQUEST_CONTENT_LENGTH,
+  SEMATTRS_HTTP_REQUEST_CONTENT_LENGTH_UNCOMPRESSED,
+  SEMATTRS_HTTP_RESPONSE_CONTENT_LENGTH,
+  SEMATTRS_HTTP_RESPONSE_CONTENT_LENGTH_UNCOMPRESSED,
+  SEMATTRS_HTTP_URL,
+  SEMATTRS_HTTP_HOST,
+  SEMATTRS_NET_HOST_NAME,
+  SEMATTRS_HTTP_METHOD,
+  SEMATTRS_HTTP_SCHEME,
+  SEMATTRS_HTTP_TARGET,
+  SEMATTRS_HTTP_SERVER_NAME,
+  SEMATTRS_HTTP_ROUTE,
 } from '@opentelemetry/semantic-conventions'
 import type { Headers as UndiciHeaders } from 'undici'
 
@@ -93,10 +109,11 @@ function setRequestContentLengthAttribute(
   if (length === null) { return }
 
   if (isCompressed(request.headers)) {
-    attributes[SemanticAttributes.HTTP_REQUEST_CONTENT_LENGTH] = length
+    attributes[SEMATTRS_HTTP_REQUEST_CONTENT_LENGTH] = length
+
   }
   else {
-    attributes[SemanticAttributes.HTTP_REQUEST_CONTENT_LENGTH_UNCOMPRESSED] = length
+    attributes[SEMATTRS_HTTP_REQUEST_CONTENT_LENGTH_UNCOMPRESSED] = length
   }
 }
 
@@ -114,11 +131,11 @@ export function setResponseContentLengthAttribute(
   if (length === null) { return }
 
   if (isCompressed(response.headers)) {
-    attributes[SemanticAttributes.HTTP_RESPONSE_CONTENT_LENGTH] = length
+    attributes[SEMATTRS_HTTP_RESPONSE_CONTENT_LENGTH] = length
   }
   else {
     attributes[
-      SemanticAttributes.HTTP_RESPONSE_CONTENT_LENGTH_UNCOMPRESSED
+      SEMATTRS_HTTP_RESPONSE_CONTENT_LENGTH_UNCOMPRESSED
     ] = length
   }
 }
@@ -147,12 +164,12 @@ function isCompressed(headers: OutgoingHttpHeaders | IncomingHttpHeaders): boole
 function getAttributesFromHttpKind(kind?: string): Attributes {
   const attributes: Attributes = {}
   if (kind) {
-    attributes[SemanticAttributes.HTTP_FLAVOR] = kind
+    attributes[SEMATTRS_HTTP_FLAVOR] = kind
     if (kind.toUpperCase() === 'QUIC') {
-      attributes[SemanticAttributes.NET_TRANSPORT] = NetTransportValues.IP_UDP
+      attributes[SEMATTRS_NET_TRANSPORT] = NETTRANSPORTVALUES_IP_UDP
     }
     else {
-      attributes[SemanticAttributes.NET_TRANSPORT] = NetTransportValues.IP_TCP
+      attributes[SEMATTRS_NET_TRANSPORT] = NETTRANSPORTVALUES_IP_TCP
     }
   }
   return attributes
@@ -170,14 +187,14 @@ export async function getIncomingRequestAttributesFromWebContext(
   const routerInfo = await getRouterInfo(ctx)
 
   const attrs: Attributes = {
-    [SemanticAttributes.HTTP_URL]: ctx.href,
-    [SemanticAttributes.HTTP_HOST]: ctx.host,
-    [SemanticAttributes.NET_HOST_NAME]: ctx.hostname,
-    [SemanticAttributes.HTTP_METHOD]: ctx.method || 'GET',
-    [SemanticAttributes.HTTP_SCHEME]: ctx.protocol,
-    [SemanticAttributes.HTTP_TARGET]: ctx.path || '/',
-    [SemanticAttributes.HTTP_SERVER_NAME]: config.serviceName ?? 'unknown',
-    [SemanticAttributes.HTTP_ROUTE]: routerInfo?.fullUrl ?? 'unknown',
+    [SEMATTRS_HTTP_HOST]: ctx.host,
+    [SEMATTRS_HTTP_METHOD]: ctx.method || 'GET',
+    [SEMATTRS_HTTP_ROUTE]: routerInfo?.fullUrl ?? 'unknown',
+    [SEMATTRS_HTTP_SCHEME]: ctx.protocol,
+    [SEMATTRS_HTTP_SERVER_NAME]: config.serviceName ?? 'unknown',
+    [SEMATTRS_HTTP_TARGET]: ctx.path || '/',
+    [SEMATTRS_HTTP_URL]: ctx.href,
+    [SEMATTRS_NET_HOST_NAME]: ctx.hostname,
     [AttrNames.ServiceName]: config.serviceName ?? 'unknown',
     [AttrNames.ServiceVersion]: config.serviceVersion ?? 'unknown',
     // [AttrNames.ServicePid]: process.pid,
@@ -196,11 +213,11 @@ export async function getIncomingRequestAttributesFromWebContext(
     const ips = req.headers['x-forwarded-for']
 
     if (typeof ips === 'string') {
-      attrs[SemanticAttributes.HTTP_CLIENT_IP] = ips.split(',')[0]
+      attrs[SEMATTRS_HTTP_CLIENT_IP] = ips.split(',')[0]
     }
 
     if (typeof userAgent !== 'undefined') {
-      attrs[SemanticAttributes.HTTP_USER_AGENT] = userAgent
+      attrs[SEMATTRS_HTTP_USER_AGENT] = userAgent
     }
 
     // Object.defineProperty(attrs, 'http.request.header.content_type', {
