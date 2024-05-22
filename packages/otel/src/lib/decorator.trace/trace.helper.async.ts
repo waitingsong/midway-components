@@ -8,7 +8,6 @@ import type { DecoratorExecutorParam } from '../trace.helper.js'
 
 
 export async function decoratorExecutorAsync(options: DecoratorExecutorParam): Promise<unknown> {
-
   const {
     config,
     method: func,
@@ -68,67 +67,6 @@ export async function decoratorExecutorAsync(options: DecoratorExecutorParam): P
   }
 }
 
-export function decoratorExecutorSync(options: DecoratorExecutorParam): unknown {
-
-  const {
-    config,
-    method,
-    methodArgs: funcArgs,
-    callerAttr,
-    spanName,
-    startActiveSpan,
-    traceContext,
-    spanOptions,
-    traceService,
-    mergedDecoratorParam,
-  } = options
-
-  if (! config.enable) {
-    const ret = method(...funcArgs)
-    return ret
-  }
-
-  if (! traceService?.isStarted) {
-    // console.warn('decoratorExecutorSync() traceService is not initialized. (traceService 尚未初始化) 路由可能设置为忽略追踪')
-    const ret = method(...funcArgs)
-    return ret
-  }
-
-
-  if (startActiveSpan) {
-    // 记录开始时间
-    return traceService.startActiveSpan(
-      spanName,
-      (span: Span) => {
-        span.setAttributes(callerAttr)
-        const opts = {
-          func: method,
-          funcArgs,
-          span,
-          traceService,
-          autoEndSpan: mergedDecoratorParam?.autoEndSpan ?? true,
-        }
-        return createActiveSpanCbSync(opts)
-      },
-      spanOptions,
-      traceContext,
-    )
-  }
-  else {
-    const span = traceService.startSpan(spanName, spanOptions, traceContext)
-    span.setAttributes(callerAttr)
-    const opts = {
-      func: method,
-      funcArgs,
-      span,
-      traceService,
-      autoEndSpan: mergedDecoratorParam?.autoEndSpan ?? true,
-    }
-    return createActiveSpanCbSync(opts)
-  }
-}
-
-
 
 interface CreateActiveSpanCbOptions {
   func: (...args: unknown[]) => unknown
@@ -146,24 +84,6 @@ async function createActiveSpanCb(options: CreateActiveSpanCbOptions): Promise<u
     const ret = await resp
     autoEndSpan && traceService.endSpan(span)
     return ret
-  }
-  catch (ex) {
-    const err = ex instanceof Error
-      ? ex
-      : new Error(typeof ex === 'string' ? ex : JSON.stringify(ex))
-    traceService.endSpan(span, { code: SpanStatusCode.ERROR, error: err })
-    throw new Error(err.message, { cause: err.cause ?? err })
-  }
-}
-
-function createActiveSpanCbSync(options: CreateActiveSpanCbOptions): unknown {
-  const { func, funcArgs, span, traceService, autoEndSpan } = options
-
-  try {
-    const resp = func(...funcArgs)
-    assert(! isPromise(resp), 'func return value is a promise')
-    autoEndSpan && traceService.endSpan(span)
-    return resp
   }
   catch (ex) {
     const err = ex instanceof Error

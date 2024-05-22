@@ -6,7 +6,8 @@ import { TraceDecoratorOptions } from '../decorator.types.js'
 import { DecoratorExecutorParam, GenDecoratorExecutorOptions, genDecoratorExecutorOptions } from '../trace.helper.js'
 import { Config, ConfigKey } from '../types.js'
 
-import { decoratorExecutorAsync, decoratorExecutorSync } from './trace.helper.js'
+import { decoratorExecutorAsync } from './trace.helper.async.js'
+import { decoratorExecutorSync } from './trace.helper.sync.js'
 
 
 @Singleton()
