@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/ali-oss",
   "author": "waiting",
-  "version": "27.0.0",
+  "version": "27.0.1",
   "description": "阿里云 OSS 命令行工具 ossutil 封装 midway.js 组件，提供 TypeScript 类型定义",
   "keywords": [
     "midway",
@@ -38,7 +38,7 @@
   "license": "MIT",
   "dependencies": {
     "@midwayjs/info": "^3.16.1",
-    "@mwcp/otel": "^27.0.0",
+    "@mwcp/otel": "^27.0.1",
     "@mwcp/share": "^27.0.0",
     "@yuntools/ali-oss": "^16.1.5"
   },
