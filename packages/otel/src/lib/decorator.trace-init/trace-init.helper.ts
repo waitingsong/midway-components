@@ -64,13 +64,13 @@ export async function decoratorExecutor(options: DecoratorExecutorParam<TraceDec
 
     if (before && typeof before === 'function') {
       if (isAsyncFunction(before)) {
-      // @ts-expect-error
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        // @ts-expect-error
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         await before(methodArgs, decoratorContext)
       }
       else {
-      // @ts-expect-error
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        // @ts-expect-error
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         before(methodArgs, decoratorContext)
       }
     }
