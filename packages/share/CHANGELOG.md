@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [28.0.0](https://github.com/waitingsong/midway-components/compare/v27.0.1...v28.0.0) (2024-05-23)
+
+
+### Features
+
+* **share:** breaking change properties name of CustomDecoratorFactoryOptions ([1d0f70e](https://github.com/waitingsong/midway-components/commit/1d0f70ef9457c4516fbc0ad8d31616e29ef1c106))
+
+
+
+
+
 # [27.0.0](https://github.com/waitingsong/midway-components/compare/v26.5.3...v27.0.0) (2024-05-21)
 
 

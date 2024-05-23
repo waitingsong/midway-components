@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [28.0.0](https://github.com/waitingsong/midway-components/compare/v27.0.1...v28.0.0) (2024-05-23)
+
+
+### Features
+
+* **otel:** breaking change parameters order and return type of decorator before()/after() ([f8eb988](https://github.com/waitingsong/midway-components/commit/f8eb98831a6e4deb25e7c1867e7bec3cc9e8dfe2))
+* **share:** breaking change properties name of CustomDecoratorFactoryOptions ([1d0f70e](https://github.com/waitingsong/midway-components/commit/1d0f70ef9457c4516fbc0ad8d31616e29ef1c106))
+
+
+
+
+
 ## [27.0.1](https://github.com/waitingsong/midway-components/compare/v27.0.0...v27.0.1) (2024-05-22)
 
 **Note:** Version bump only for package midway-components
