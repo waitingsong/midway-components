@@ -34,6 +34,7 @@ export {
   MiddlewareOptions as OtelMiddlewareOptions,
   Msg as TracerMsg,
 
+  Attributes,
   AddEventOptions,
   AttributesMap,
   HeadersKey,
@@ -51,6 +52,8 @@ export {
 } from './types.js'
 
 export {
+  DecoratorTraceData,
+  DecoratorTraceDataResp,
   TraceOptions as TraceDecoratorArg,
   TraceDecoratorOptions,
 } from './decorator.types.js'

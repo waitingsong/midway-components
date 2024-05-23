@@ -260,7 +260,7 @@ export class OtelComponent extends AbstractOtelComponent {
 
     const eventName = typeof input['event'] === 'string' || typeof input['event'] === 'number'
       ? String(input['event'])
-      : ''
+      : 'default'
     const name = options?.eventName ?? eventName
     delete input['event']
 

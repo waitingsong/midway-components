@@ -14,7 +14,7 @@ export const otelConfig: Config = {
   ...initialConfig,
   enableDefaultRoute: true,
   exporters: [
-    SpanExporterList.console,
+    // SpanExporterList.console,
     SpanExporterList.otlpGrpc,
   ],
   propagators: [

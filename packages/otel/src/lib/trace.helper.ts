@@ -2,9 +2,9 @@
 import assert from 'node:assert'
 
 import { DecoratorExecutorParamBase } from '@mwcp/share'
-import { Attributes, SpanOptions } from '@opentelemetry/api'
+import { SpanOptions } from '@opentelemetry/api'
 
-import type { AbstractOtelComponent, AbstractTraceService } from './abstract.js'
+import type { AbstractTraceService, AbstractOtelComponent } from './abstract.js'
 import {
   DecoratorContext,
   TraceDecoratorOptions,
@@ -131,7 +131,7 @@ export type ExecutorParamBase<T extends TraceDecoratorOptions = TraceDecoratorOp
 export type DecoratorExecutorParam<T extends TraceDecoratorOptions = TraceDecoratorOptions> = ExecutorParamBase<T>
   & GenDecoratorExecutorOptions
   & {
-    callerAttr: Attributes,
+    callerAttr: { [AttrNames.CallerClass]: string, [AttrNames.CallerMethod]: string },
     spanName: string,
     spanOptions: Partial<SpanOptions>,
     startActiveSpan: boolean,
@@ -151,7 +151,7 @@ export function genDecoratorExecutorOptions(
 
   let traceService
   if (optionsBase.webContext) {
-    traceService = optionsBase.webContext[`_${ConfigKey.serviceName}`] as AbstractTraceService | undefined
+    traceService = optionsBase.webContext[`_${ConfigKey.serviceName}`]
     // 根据中间件启用状态判断是否校验 TraceService 是否初始化
     if (optionsBase.webContext[middlewareEnableCacheKey] === true) {
       assert(traceService, 'TraceService is not initialized. (TraceService 尚未初始化) 路由可能设置为忽略追踪')
@@ -197,7 +197,7 @@ export function genDecoratorExecutorOptions(
   const spanName = genKey(keyOpts)
   assert(spanName, 'spanName is undefined')
 
-  const callerAttr: Attributes = {
+  const callerAttr = {
     [AttrNames.CallerClass]: optionsBase.instanceName,
     [AttrNames.CallerMethod]: optionsBase.methodName,
   }

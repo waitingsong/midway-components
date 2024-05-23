@@ -3,7 +3,7 @@ import { isPromise } from 'node:util/types'
 
 import { Span, SpanStatusCode } from '@opentelemetry/api'
 
-import type { AbstractTraceService } from '../abstract.js'
+import { processDecoratorBeforeAfterSync } from '../decorator.helper.js'
 import type { DecoratorExecutorParam } from '../trace.helper.js'
 
 
@@ -11,25 +11,18 @@ export function decoratorExecutorSync(options: DecoratorExecutorParam): unknown 
   const {
     config,
     method,
-    methodArgs: funcArgs,
+    methodArgs,
     callerAttr,
     spanName,
     startActiveSpan,
     traceContext,
     spanOptions,
     traceService,
-    mergedDecoratorParam,
   } = options
 
-  if (! config.enable) {
-    const ret = method(...funcArgs)
-    return ret
-  }
-
-  if (! traceService?.isStarted) {
-    // console.warn('decoratorExecutorSync() traceService is not initialized. (traceService 尚未初始化) 路由可能设置为忽略追踪')
-    const ret = method(...funcArgs)
-    return ret
+  /* c8 ignore next 3 */
+  if (! config.enable || ! traceService?.isStarted) {
+    return method(...methodArgs)
   }
 
   if (startActiveSpan) {
@@ -38,14 +31,7 @@ export function decoratorExecutorSync(options: DecoratorExecutorParam): unknown 
       spanName,
       (span: Span) => {
         span.setAttributes(callerAttr)
-        const opts = {
-          func: method,
-          funcArgs,
-          span,
-          traceService,
-          autoEndSpan: mergedDecoratorParam?.autoEndSpan ?? true,
-        }
-        return createActiveSpanCbSync(opts)
+        return RunAndEndSpanCb(options, span)
       },
       spanOptions,
       traceContext,
@@ -54,40 +40,32 @@ export function decoratorExecutorSync(options: DecoratorExecutorParam): unknown 
   else {
     const span = traceService.startSpan(spanName, spanOptions, traceContext)
     span.setAttributes(callerAttr)
-    const opts = {
-      func: method,
-      funcArgs,
-      span,
-      traceService,
-      autoEndSpan: mergedDecoratorParam?.autoEndSpan ?? true,
-    }
-    return createActiveSpanCbSync(opts)
+    return RunAndEndSpanCb(options, span)
   }
 }
 
 
-interface CreateActiveSpanCbOptions {
-  func: (...args: unknown[]) => unknown
-  funcArgs: unknown[]
-  span: Span
-  traceService: AbstractTraceService
-  autoEndSpan: boolean
-}
-
-function createActiveSpanCbSync(options: CreateActiveSpanCbOptions): unknown {
-  const { func, funcArgs, span, traceService, autoEndSpan } = options
+function RunAndEndSpanCb(options: DecoratorExecutorParam, span: Span): unknown {
+  const { mergedDecoratorParam, method, methodArgs, traceService } = options
+  const autoEndSpan = !! mergedDecoratorParam?.autoEndSpan
 
   try {
-    const resp = func(...funcArgs)
+    processDecoratorBeforeAfterSync('before', options, span, void 0)
+
+    const resp = method(...methodArgs)
     assert(! isPromise(resp), 'func return value is a promise')
-    autoEndSpan && traceService.endSpan(span)
+    processDecoratorBeforeAfterSync('after', options, span, resp)
+
+    autoEndSpan && traceService && traceService.endSpan(span)
     return resp
   }
   catch (ex) {
     const err = ex instanceof Error
       ? ex
       : new Error(typeof ex === 'string' ? ex : JSON.stringify(ex))
-    traceService.endSpan(span, { code: SpanStatusCode.ERROR, error: err })
+    traceService && traceService.endSpan(span, { code: SpanStatusCode.ERROR, error: err })
     throw new Error(err.message, { cause: err.cause ?? err })
   }
 }
+
+

@@ -38,6 +38,11 @@ export interface TestConfig {
   container: IMidwayContainer
   host: string
   httpRequest: SuperTest<supertest.Test>
+  /**
+   * Validate span info from remote Jaeger
+   */
+  validateSpanInfo: boolean
+  testSuffix: string
 }
 
 const testAppDir = join(testDir, 'fixtures', 'base-app')
@@ -48,6 +53,8 @@ export const testConfig = {
   CI,
   host: '',
   httpRequest: {},
+  validateSpanInfo: true,
+  testSuffix: 'FFF',
 } as TestConfig
 
 

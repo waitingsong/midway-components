@@ -1,16 +1,13 @@
 import assert from 'node:assert/strict'
 
-import { makeHttpRequest } from '@midwayjs/core'
-import { sleep, fileShortPath, isWin32 } from '@waiting/shared-core'
+import { SEMATTRS_HTTP_TARGET, SEMATTRS_HTTP_ROUTE } from '@opentelemetry/semantic-conventions'
+import { fileShortPath } from '@waiting/shared-core'
 
 import { exporterEndpoint } from '##/lib/config.js'
-import { JaegerTraceInfo, JaegerTraceInfoSpan } from '##/lib/types.js'
 import { apiBase, apiMethod } from '#@/api-test.js'
+import { retrieveTraceInfoFromRemote, sortSpans } from '#@/helper.test.js'
+import { AssertsOptions, assertsSpan, assertRootSpan } from '#@/lib/110.helper.js'
 import { testConfig } from '#@/root.config.js'
-
-
-const agent = exporterEndpoint.replace(/:\d+$/u, '')
-assert(agent, 'OTEL_EXPORTER_OTLP_ENDPOINT not set')
 
 
 describe(fileShortPath(import.meta.url), function () {
@@ -21,205 +18,203 @@ describe(fileShortPath(import.meta.url), function () {
   const path4 = `${apiBase.TraceDecorator}/${apiMethod.decorator_arg2}`
 
   it(`Should ${path} work`, async () => {
-    if (isWin32) { return }
-    const { httpRequest } = testConfig
+    const { httpRequest, validateSpanInfo } = testConfig
+    if (! validateSpanInfo) {
+      console.warn('validateSpanInfo is false, skip test')
+      return
+    }
 
-    const resp = await httpRequest
-      .get(path)
-
+    const resp = await httpRequest.get(path)
     assert(resp.ok, resp.text)
+
     const traceId = resp.text
     assert(traceId.length === 32)
     console.log({ traceId })
 
-    await sleep(2000)
-
-    const tracePath = `${agent}:16686/api/traces/${traceId}?prettyPrint=true`
-    let resp2 = await makeHttpRequest(tracePath, {
-      method: 'GET',
-      dataType: 'json',
-    })
-    if (resp2.status !== 200 || ! resp2.data) {
-      console.log('retry...')
-      await sleep(3000)
-      resp2 = await makeHttpRequest(tracePath, {
-        method: 'GET',
-        dataType: 'json',
-      })
-    }
-
-    const { data } = resp2.data as { data: [JaegerTraceInfo] }
-    assert(Array.isArray(data))
-    assert(data.length === 1)
-    const [info] = data
+    const [info] = await retrieveTraceInfoFromRemote(traceId, 2)
     assert(info)
-    assert(info.traceID)
-    assert(info.traceID === traceId, info.traceID)
+    // info.spans.forEach((span, idx) => {
+    //   console.info(idx, { span })
+    // })
 
-    console.log({ spans: info.spans })
-    const [span0, span1] = info.spans
-    assert(span0, 'span0 not found')
-    assert(span1, 'span1 not found')
+    const [rootSpan, span1] = sortSpans(info.spans)
+    assert(rootSpan)
+    assert(span1)
 
-    assert(span0.spanID)
-    assert(span1.spanID)
+    assertRootSpan({
+      path,
+      span: rootSpan,
+      traceId,
+      tags: {
+        [SEMATTRS_HTTP_TARGET]: path,
+        [SEMATTRS_HTTP_ROUTE]: path,
+      },
+    })
 
-    assert(span0.traceID === traceId)
-    assert(span1.traceID === traceId)
-
-    const op = 'DefaultComponentService/hello'
-
-    if (span0.operationName === op) {
-      assert(span1.operationName === `HTTP GET ${path}`)
-      assert(! span1.references.length)
-
-      const [ref] = span0.references
-      assert(ref)
-      assert(ref.refType === 'CHILD_OF')
-      assert(ref.traceID === traceId)
-      assert(ref.spanID === span1.spanID)
+    const opt1: AssertsOptions = {
+      traceId,
+      operationName: 'DefaultComponentService/hello',
+      tags: {
+        'caller.class': 'DefaultComponentService',
+        'caller.method': 'hello',
+        'span.kind': 'client',
+      },
     }
-    else if (span0.operationName === `HTTP GET ${path}`) {
-      assert(span1.operationName === op)
-      assert(span1.references.length === 1)
-
-      const [ref] = span1.references
-      assert(ref)
-      assert(ref.refType === 'CHILD_OF')
-      assert(ref.traceID === traceId)
-      assert(ref.spanID === span0.spanID)
-    }
-    else {
-      assert(false, `span0.operationName: ${span0.operationName}`)
-    }
-
+    assertsSpan(span1, opt1)
   })
 
 
   it(`Should ${path2} work`, async () => {
-    if (isWin32) { return }
-    const { httpRequest } = testConfig
+    const { httpRequest, validateSpanInfo } = testConfig
+    if (! validateSpanInfo) {
+      console.warn('validateSpanInfo is false, skip test')
+      return
+    }
 
-    const resp = await httpRequest
-      .get(path2)
-
+    const resp = await httpRequest.get(path2)
     assert(resp.ok, resp.text)
+
     const traceId = resp.text
     assert(traceId.length === 32)
     console.log({ traceId })
 
-    assert(agent)
-    await sleep(2000)
+    const [info] = await retrieveTraceInfoFromRemote(traceId, 4)
+    assert(info)
+    // info.spans.forEach((span, idx) => {
+    //   console.info(idx, { span })
+    // })
 
-    const tracePath = `${agent}:16686/api/traces/${traceId}?prettyPrint=true`
-    console.log({ path2: tracePath })
-    let resp2 = await makeHttpRequest(tracePath, {
-      method: 'GET',
-      dataType: 'json',
-    })
-    if (resp2.status !== 200) {
-      await sleep(3000)
-      resp2 = await makeHttpRequest(tracePath, {
-        method: 'GET',
-        dataType: 'json',
-      })
-    }
-
-    const { data } = resp2.data as { data: [JaegerTraceInfo] }
-    assert(Array.isArray(data))
-    assert(data.length === 1)
-    const [info] = data
-    assert(info.traceID === traceId)
-
-    assert(
-      info.spans.length === 4,
-      typeof info.spans.length === 'number' ? info.spans.length.toString() : 'n/a',
-    )
-    const [span0, span1, span2] = info.spans
-    assert(span0)
+    const [rootSpan, span1, span2, span3] = sortSpans(info.spans)
+    assert(rootSpan)
     assert(span1)
     assert(span2)
+    assert(span3)
 
-    console.log({
-      spanId0: span0.spanID,
-      spanId1: span1.spanID,
-      spanId2: span2.spanID,
+    assertRootSpan({
+      path: path2,
+      span: rootSpan,
+      traceId,
+      tags: {
+        [SEMATTRS_HTTP_TARGET]: path2,
+        [SEMATTRS_HTTP_ROUTE]: path2,
+      },
     })
 
-    assert(span0.spanID)
-    assert(span1.spanID)
-    assert(span2.spanID)
+    const opt1: AssertsOptions = {
+      traceId,
+      operationName: 'DefaultComponentController/traceId2',
+      tags: {
+        'caller.class': 'DefaultComponentController',
+        'caller.method': 'traceId2',
+        'span.kind': 'client',
+      },
+    }
+    assertsSpan(span1, opt1)
 
-    assert(span0.traceID === traceId)
-    assert(span1.traceID === traceId)
-    assert(span2.traceID === traceId)
+    const opt2: AssertsOptions = {
+      traceId,
+      operationName: 'DefaultComponentService/hello',
+      tags: {
+        'caller.class': 'DefaultComponentService',
+        'caller.method': 'hello',
+        'span.kind': 'client',
+      },
+    }
+    assertsSpan(span2, opt2)
 
-    console.log({ span0 })
-    // console.log({ span0Name: span0.operationName })
-    // console.log({ span1Name: span1.operationName })
-    // console.log({ span2Name: span2.operationName })
-    // { span0Name: 'DefaultComponentService/hello' }
-    // { span1Name: 'DefaultComponentController/traceId2' }
-    // { span2Name: 'HTTP GET /_otel/id2' }
-
-    assert(
-      span0.operationName === 'DefaultComponentService/hello'
-      || span0.operationName === 'DefaultComponentService/helloSync'
-      || span0.operationName === 'DefaultComponentController/traceId2'
-      || span0.operationName === `HTTP GET ${apiBase.TraceDecorator}/${apiMethod.id2}`,
-      span0.operationName,
-    )
-
+    const opt3: AssertsOptions = {
+      traceId,
+      operationName: 'DefaultComponentService/helloSync',
+      tags: {
+        'caller.class': 'DefaultComponentService',
+        'caller.method': 'helloSync',
+        'span.kind': 'client',
+      },
+    }
+    assertsSpan(span3, opt3)
   })
 
 
   it(`Should ${path3} work`, async () => {
-    if (isWin32) { return }
-    const { httpRequest } = testConfig
+    const { httpRequest, validateSpanInfo } = testConfig
+    if (! validateSpanInfo) {
+      console.warn('validateSpanInfo is false, skip test')
+      return
+    }
 
-    const resp = await httpRequest
-      .get(path3)
-
+    const resp = await httpRequest.get(path3)
     assert(resp.ok, resp.text)
+
     const [traceId, rnd] = resp.text.split(':')
     assert(traceId)
     assert(traceId.length === 32)
     assert(rnd)
     console.log({ traceId, rnd })
 
-    await sleep(2000)
-
-    const tracePath = `${agent}:16686/api/traces/${traceId}?prettyPrint=true`
-    const resp2 = await makeHttpRequest(tracePath, {
-      method: 'GET',
-      dataType: 'json',
-    })
-
-    const { data } = resp2.data as { data: [JaegerTraceInfo] }
-    assert(Array.isArray(data))
-    assert(data.length === 1)
-    const [info] = data
+    const [info] = await retrieveTraceInfoFromRemote(traceId, 4)
     assert(info)
-    assert(info.traceID)
-    assert(info.traceID === traceId, info.traceID)
 
-    const { spans } = info
-    const found = spans.some((span) => {
-      if (span.operationName === `foo-${rnd}`) {
-        return true
-      }
+    const [rootSpan, span1, span2, span3] = sortSpans(info.spans)
+    assert(rootSpan)
+    assert(span1)
+    assert(span2)
+    assert(span3)
+
+    assertRootSpan({
+      path,
+      span: rootSpan,
+      traceId,
+      operationName: `HTTP GET ${path3}`,
+      tags: {
+        [SEMATTRS_HTTP_TARGET]: path3,
+        [SEMATTRS_HTTP_ROUTE]: path3,
+      },
     })
-    assert(found, `foo-${rnd} not found`)
+
+    const opt1: AssertsOptions = {
+      traceId,
+      operationName: 'DefaultComponentController/arg',
+      tags: {
+        'caller.class': 'DefaultComponentController',
+        'caller.method': 'arg',
+        'span.kind': 'client',
+      },
+    }
+    assertsSpan(span1, opt1)
+
+    const opt2: AssertsOptions = {
+      traceId,
+      operationName: `foo-${rnd}`,
+      tags: {
+        'caller.class': 'DefaultComponentService',
+        'caller.method': 'testArg',
+        'span.kind': 'client',
+      },
+    }
+    assertsSpan(span2, opt2)
+
+    const opt3: AssertsOptions = {
+      traceId,
+      operationName: 'DefaultComponentService/helloSync',
+      tags: {
+        'caller.class': 'DefaultComponentService',
+        'caller.method': 'helloSync',
+        'span.kind': 'client',
+      },
+    }
+    assertsSpan(span3, opt3)
   })
 
   it(`Should ${path4} work`, async () => {
-    if (isWin32) { return }
-    const { httpRequest } = testConfig
+    const { httpRequest, validateSpanInfo } = testConfig
+    if (! validateSpanInfo) {
+      console.warn('validateSpanInfo is false, skip test')
+      return
+    }
 
-    const resp = await httpRequest
-      .get(path4)
-
+    const resp = await httpRequest.get(path4)
     assert(resp.ok, resp.text)
+
     const [traceId, rnd, suffix] = resp.text.split(':')
     assert(traceId)
     assert(traceId.length === 32)
@@ -229,84 +224,47 @@ describe(fileShortPath(import.meta.url), function () {
     const int = parseInt(rnd, 10)
     const opName = `foo-${int + 1}-${suffix}`
 
-    await sleep(2000)
-
-    const tracePath = `${agent}:16686/api/traces/${traceId}?prettyPrint=true`
-    const resp2 = await makeHttpRequest(tracePath, {
-      method: 'GET',
-      dataType: 'json',
-    })
-
-    const { data } = resp2.data as { data: [JaegerTraceInfo] }
-    assert(Array.isArray(data))
-    assert(data.length === 1)
-    const [info] = data
+    const [info] = await retrieveTraceInfoFromRemote(traceId, 3)
     assert(info)
-    assert(info.traceID)
-    assert(info.traceID === traceId, info.traceID)
 
-    const { spans } = info
-    const found = spans.some((span) => {
-      if (span.operationName === opName) {
-        return true
-      }
+    const [rootSpan, span1, span2] = sortSpans(info.spans)
+    assert(rootSpan)
+    assert(span1)
+    assert(span2)
+
+    assertRootSpan({
+      path: path4,
+      span: rootSpan,
+      traceId,
+      operationName: `HTTP GET ${path4}`,
+      tags: {
+        [SEMATTRS_HTTP_TARGET]: path4,
+        [SEMATTRS_HTTP_ROUTE]: path4,
+      },
     })
-    assert(found, `${opName} not found`)
+
+    const opt1: AssertsOptions = {
+      traceId,
+      operationName: 'DefaultComponentController/arg2',
+      tags: {
+        'caller.class': 'DefaultComponentController',
+        'caller.method': 'arg2',
+        'span.kind': 'client',
+      },
+    }
+    assertsSpan(span1, opt1)
+
+    const opt2: AssertsOptions = {
+      traceId,
+      operationName: opName,
+      tags: {
+        'caller.class': 'DefaultComponentService',
+        'caller.method': 'testArg2',
+        'span.kind': 'client',
+      },
+    }
+    assertsSpan(span2, opt2)
   })
 
 })
-
-
-function spanHasRelationship(
-  traceId: string,
-  span: JaegerTraceInfoSpan,
-  parentSpan: JaegerTraceInfoSpan,
-): boolean {
-
-  assert(span)
-  assert(parentSpan)
-
-  const [ref0] = span.references
-  assert(ref0)
-
-  const [ref1] = parentSpan.references
-  if (! ref1) { // parentSpan should not root span
-    // return false
-    return spanHasRelationship(traceId, parentSpan, span)
-  }
-
-  assert(ref0.refType === 'CHILD_OF')
-  assert(ref0.traceID === traceId)
-
-  if (ref0.spanID === parentSpan.spanID) {
-    return true
-  }
-
-  return false
-}
-
-
-function assertsSpanParent(
-  traceId: string,
-  span: JaegerTraceInfoSpan,
-  parentSpan: JaegerTraceInfoSpan,
-): void {
-
-  assert(span)
-  assert(parentSpan)
-
-  const [ref0] = span.references
-  assert(ref0)
-
-  const [ref1] = parentSpan.references
-  assert(! ref1) // must root
-
-  assert(ref0.refType === 'CHILD_OF')
-  assert(ref0.traceID === traceId)
-
-  assert(ref0.spanID === parentSpan.spanID, JSON.stringify({
-    spanRefSpanId: ref0.spanID,
-    parentSpanId: parentSpan.spanID,
-  }))
-}
 

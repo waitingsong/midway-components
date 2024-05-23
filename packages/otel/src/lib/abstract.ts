@@ -125,6 +125,7 @@ export abstract class AbstractTraceService {
   readonly abstract instanceId: symbol
   readonly abstract startTime: string
   readonly abstract rootContext: Context
+  readonly abstract rootSpan: Span
   protected readonly abstract traceContextArray: Context[]
 
   abstract getActiveContext(): Context
@@ -149,8 +150,7 @@ export abstract class AbstractTraceService {
    * @CAUTION: the span returned by this method is NOT ended automatically,
    *   you must to call `this.endSpan()` manually instead of span.edn() directly.
    */
-  abstract startActiveSpan<F extends (
-    ...args: [Span, Context]) => ReturnType<F>>(
+  abstract startActiveSpan<F extends (...args: [Span, Context]) => ReturnType<F>>(
     name: string,
     callback: F,
     options?: SpanOptions,

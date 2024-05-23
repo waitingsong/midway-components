@@ -1,19 +1,19 @@
 import assert from 'assert'
-import { isAsyncFunction } from 'node:util/types'
 
 import { Attributes, SpanKind, SpanOptions } from '@opentelemetry/api'
 
-import type { DecoratorContext, TraceDecoratorOptions } from '../decorator.types.js'
+import { processDecoratorBeforeAfterAsync } from '../decorator.helper.js'
+import type { TraceDecoratorOptions } from '../decorator.types.js'
 import type { DecoratorExecutorParam } from '../trace.helper.js'
 
 
 export async function decoratorExecutor(options: DecoratorExecutorParam<TraceDecoratorOptions>): Promise<unknown> {
-
   const { webApp, methodIsAsyncFunction } = options
   assert(webApp, 'webApplication is required')
   assert(methodIsAsyncFunction === true, 'decorated method must be AsyncFunction')
 
   const {
+    config,
     callerAttr,
     spanName,
     spanOptions,
@@ -21,15 +21,19 @@ export async function decoratorExecutor(options: DecoratorExecutorParam<TraceDec
     methodArgs,
     mergedDecoratorParam,
     otelComponent,
-    // startActiveSpan,
   } = options
 
   assert(otelComponent, 'otelComponent is required')
 
+  /* c8 ignore next 3 */
+  if (! config.enable) {
+    return method(...methodArgs)
+  }
+
   const traceCtx = otelComponent.appInitProcessContext
+  /* c8 ignore next 4 */
   if (! otelComponent.appInitProcessSpan || ! traceCtx) {
-    const resp = await method(...methodArgs)
-    return resp
+    return method(...methodArgs)
   }
 
   const spanOpts: SpanOptions = {
@@ -50,49 +54,15 @@ export async function decoratorExecutor(options: DecoratorExecutorParam<TraceDec
   }
   otelComponent.addEvent(span, events, addEventOptions)
 
-  const decoratorContext: DecoratorContext = {
-    webApp,
-    webContext: options.webContext,
-    otelComponent: options.otelComponent,
-    traceService: options.traceService,
-    traceContext: options.traceContext,
-    traceSpan: span,
-  }
-
   if (mergedDecoratorParam) {
-    const { before } = mergedDecoratorParam
-
-    if (before && typeof before === 'function') {
-      if (isAsyncFunction(before)) {
-        // @ts-expect-error
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        await before(methodArgs, decoratorContext)
-      }
-      else {
-        // @ts-expect-error
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        before(methodArgs, decoratorContext)
-      }
-    }
+    await processDecoratorBeforeAfterAsync('before', options, span, void 0)
   }
 
   // execute method
   const resp = await method(...methodArgs)
 
   if (mergedDecoratorParam) {
-    const { after } = mergedDecoratorParam
-    if (after && typeof after === 'function') {
-      if (isAsyncFunction(after)) {
-      // @ts-expect-error
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        await after(methodArgs, decoratorContext)
-      }
-      else {
-      // @ts-expect-error
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        after(methodArgs, decoratorContext)
-      }
-    }
+    await processDecoratorBeforeAfterAsync('after', options, span, resp)
   }
 
   const events2: Attributes = {

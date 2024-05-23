@@ -30,7 +30,8 @@ export class DecoratorHandlerTrace extends DecoratorHandlerBase {
   }
 
   override executorSync(options: DecoratorExecutorParam) {
-    return decoratorExecutorSync(options)
+    const ret = decoratorExecutorSync(options)
+    return ret
   }
 }
 

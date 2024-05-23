@@ -13,10 +13,9 @@ describe(fileShortPath(import.meta.url), function () {
   it(`Should ${path}/1 work`, async () => {
     const { httpRequest } = testConfig
 
-    const resp = await httpRequest
-      .get(`${path}/1`)
-
+    const resp = await httpRequest.get(`${path}/1`)
     assert(resp.ok, resp.text)
+
     const ret = resp.text
     assert(ret)
     // assert(ret.startsWith('debug for'))
@@ -26,10 +25,9 @@ describe(fileShortPath(import.meta.url), function () {
   it(`Should ${path}/2 work`, async () => {
     const { httpRequest } = testConfig
 
-    const resp = await httpRequest
-      .get(`${path}/2`)
-
+    const resp = await httpRequest.get(`${path}/2`)
     assert(resp.ok, resp.text)
+
     const ret = resp.text
     assert(ret)
     // assert(ret.startsWith('debug for'))

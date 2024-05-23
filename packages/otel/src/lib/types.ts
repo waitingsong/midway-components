@@ -19,7 +19,7 @@ import { AttrNames } from './attrnames.types.js'
 
 export type NodeTracerConfig = node.TracerConfig
 export {
-  AttrNames, TraceContext,
+  Attributes, AttrNames, TraceContext,
 }
 
 

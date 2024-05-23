@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-invalid-void-type */
 /* c8 ignore start */
 import type { Application, Context } from '@mwcp/share'
 import type {
+  Attributes,
   Context as TraceContext,
   SpanOptions,
   Span,
@@ -16,7 +18,9 @@ export interface TraceDecoratorOptions<
   /** Decorated method */
   M extends MethodTypeUnknown | undefined = undefined,
   /** Arguments of decorated method */
-  MParamType = M extends MethodTypeUnknown<infer P> ? P : [],
+  MParamType = M extends MethodTypeUnknown<infer P> ? P : unknown[],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  MResultType = M extends MethodTypeUnknown<any[], infer R> ? R : unknown,
 > extends SpanOptions {
 
   /** @default `{target.name}/{methodName}` */
@@ -37,13 +41,22 @@ export interface TraceDecoratorOptions<
    * @default `/`
    */
   spanNameDelimiter: string | undefined
-  before: MethodTypeUnknown<[MParamType, DecoratorContext]> | undefined
-  after: MethodTypeUnknown<[MParamType, DecoratorContext]> | undefined
+  before: MethodTypeUnknown<[DecoratorContext, MParamType], DecoratorTraceDataResp | DecoratorTraceDataRespAsync> | undefined
+  after: MethodTypeUnknown<[DecoratorContext, MParamType, Awaited<MResultType>], DecoratorTraceDataResp | DecoratorTraceDataRespAsync> | undefined
   /**
    * @default true
    */
   autoEndSpan: boolean | undefined
 }
+
+export interface DecoratorTraceData {
+  attrs?: Attributes
+  events?: Attributes
+  rootAttrs?: Attributes
+  rootEvents?: Attributes
+}
+export type DecoratorTraceDataResp = DecoratorTraceData | void
+export type DecoratorTraceDataRespAsync = Promise<DecoratorTraceData | void>
 
 export type KeyGenerator<ArgsType = unknown[], DContext extends DecoratorContext = DecoratorContext> = (
   /** Arguments of the method */
