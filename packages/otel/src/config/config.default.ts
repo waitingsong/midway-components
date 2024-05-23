@@ -13,7 +13,7 @@ export const koa = {
 
 export const otelConfig: Config = {
   ...initialConfig,
-  enableDefaultRoute: false,
+  enableDefaultRoute: true,
 }
 
 export const otelMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
