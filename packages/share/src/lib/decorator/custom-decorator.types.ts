@@ -104,11 +104,11 @@ export interface CustomDecoratorFactoryOptions<TDecoratorParam extends object = 
   /**
    * Running at register stage
    */
-  before?: FnRegCustomDecorator<TDecoratorParam>
+  beforeRegister?: FnRegCustomDecorator<TDecoratorParam>
   /**
    * Running at register stage
    */
-  after?: FnRegCustomDecorator<TDecoratorParam>
+  afterRegister?: FnRegCustomDecorator<TDecoratorParam>
   decoratorHandlerClass?: typeof DecoratorHandlerBase
 }
 

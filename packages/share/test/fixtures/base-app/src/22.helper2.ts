@@ -36,10 +36,10 @@ export function Cacheable2(options?: Partial<CacheableArgs>) {
     decoratorArgs: options,
     decoratorKey: METHOD_KEY_Cacheable2,
     decoratorHandlerClass: DecoratorHandler,
-    before: (target, propertyName, descriptor, opts) => {
+    beforeRegister: (target, propertyName, descriptor, opts) => {
       assertBeforeAfter(target, propertyName, descriptor, opts)
     },
-    after: (target, propertyName, descriptor, opts) => {
+    afterRegister: (target, propertyName, descriptor, opts) => {
       assertBeforeAfter(target, propertyName, descriptor, opts)
     },
   })
@@ -75,10 +75,10 @@ export function CacheableRequest(ttl?: CacheableArgs['ttl']) {
     decoratorArgs: { ttl },
     decoratorKey: METHOD_KEY_Cacheable_request,
     decoratorHandlerClass: DecoratorHandlerRequest,
-    before: (target, propertyName, descriptor, opts) => {
+    beforeRegister: (target, propertyName, descriptor, opts) => {
       assertBeforeAfter(target, propertyName, descriptor, opts)
     },
-    after: (target, propertyName, descriptor, opts) => {
+    afterRegister: (target, propertyName, descriptor, opts) => {
       assertBeforeAfter(target, propertyName, descriptor, opts)
     },
   })
@@ -91,10 +91,10 @@ export function CacheableMix(options?: Partial<CacheableArgs>) {
     decoratorArgs: options,
     decoratorKey: METHOD_KEY_Cacheable_mix,
     decoratorHandlerClass: DecoratorHandlerMix,
-    before: (target, propertyName, descriptor, opts) => {
+    beforeRegister: (target, propertyName, descriptor, opts) => {
       assertBeforeAfter(target, propertyName, descriptor, opts)
     },
-    after: (target, propertyName, descriptor, opts) => {
+    afterRegister: (target, propertyName, descriptor, opts) => {
       assertBeforeAfter(target, propertyName, descriptor, opts)
     },
   })
@@ -106,10 +106,10 @@ export function CacheableClassIgnoreIfMethodDecoratorKeys() {
     decoratorKey: METHOD_KEY_ClassIgnoreIfMethodDecoratorKeys,
     classIgnoreIfMethodDecoratorKeys: [METHOD_KEY_Cacheable2],
     decoratorHandlerClass: DecoratorHandler,
-    before: (target, propertyName, descriptor, opts) => {
+    beforeRegister: (target, propertyName, descriptor, opts) => {
       assertBeforeAfter(target, propertyName, descriptor, opts)
     },
-    after: (target, propertyName, descriptor, opts) => {
+    afterRegister: (target, propertyName, descriptor, opts) => {
       assertBeforeAfter(target, propertyName, descriptor, opts)
     },
   })
@@ -122,10 +122,10 @@ export function CacheableMethodIgnoreIfMethodDecoratorKeys() {
     classIgnoreIfMethodDecoratorKeys: [METHOD_KEY_Cacheable2],
     methodIgnoreIfMethodDecoratorKeys: [METHOD_KEY_Cacheable2],
     decoratorHandlerClass: DecoratorHandler,
-    before: (target, propertyName, descriptor, opts) => {
+    beforeRegister: (target, propertyName, descriptor, opts) => {
       assertBeforeAfter(target, propertyName, descriptor, opts)
     },
-    after: (target, propertyName, descriptor, opts) => {
+    afterRegister: (target, propertyName, descriptor, opts) => {
       assertBeforeAfter(target, propertyName, descriptor, opts)
     },
   })

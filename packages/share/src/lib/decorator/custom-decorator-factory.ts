@@ -64,11 +64,11 @@ function regCustomDecorator<TDecoratorParam extends object>(
   const beforeAfterOpts: CustomDecoratorFactoryOptions<TDecoratorParam> = {
     ...options,
   }
-  delete beforeAfterOpts.before
-  delete beforeAfterOpts.after
+  delete beforeAfterOpts.beforeRegister
+  delete beforeAfterOpts.afterRegister
 
-  if (typeof options.before === 'function') {
-    options.before(target, propertyName, descriptor, beforeAfterOpts)
+  if (typeof options.beforeRegister === 'function') {
+    options.beforeRegister(target, propertyName, descriptor, beforeAfterOpts)
   }
 
   if (typeof target === 'function') { // Class Decorator, target is class constructor
@@ -129,8 +129,8 @@ function regCustomDecorator<TDecoratorParam extends object>(
     throw new Error('invalid target type')
   }
 
-  if (typeof options.after === 'function') {
-    options.after(target, propertyName, descriptor, beforeAfterOpts)
+  if (typeof options.afterRegister === 'function') {
+    options.afterRegister(target, propertyName, descriptor, beforeAfterOpts)
   }
 }
 
