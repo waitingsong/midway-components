@@ -27,25 +27,37 @@ export function genExecuteDecoratorHandlerAsync(
   )
 
   return {
-    around: async (joinPoint: JoinPoint) => {
-      assert(joinPoint.proceedIsAsyncFunction, `${instanceName}.${methodName}() must be async function`)
-
-      const executorParam = await prepareOptionsAsync(
-        options,
-        joinPoint,
-        decoratorHandlerInstance,
-      )
-      assert(executorParam.methodIsAsyncFunction === true, 'methodIsAsyncFunction must be true')
-
-      let ret = await decoratorHandlerInstance.executorAsync(executorParam)
-      if (ret === bypassDecoratorHandlerExecutor) {
-        assert(typeof joinPoint.proceed === 'function', 'joinPoint.proceed is not function')
-        ret = await joinPoint.proceed(...executorParam.methodArgs)
-      }
-      return ret
-    },
+    around: (joinPoint: JoinPoint) => decoratorAroundAsync(options, decoratorHandlerInstance, joinPoint),
   }
+}
 
+async function decoratorAroundAsync(
+  options: ExecuteDecoratorHandlerRunnerOptions,
+  decoratorHandlerInstance: DecoratorHandlerBase,
+  joinPoint: JoinPoint,
+): Promise<unknown> {
+
+  const { instanceName, methodName } = options
+  // const start = hrtime.bigint()
+  assert(joinPoint.proceedIsAsyncFunction, `${instanceName}.${methodName}() must be async function`)
+
+  const executorParam = await prepareOptionsAsync(
+    options,
+    joinPoint,
+    decoratorHandlerInstance,
+  )
+  assert(executorParam.methodIsAsyncFunction === true, 'methodIsAsyncFunction must be true')
+
+  let ret = await decoratorHandlerInstance.executorAsync(executorParam)
+  if (ret === bypassDecoratorHandlerExecutor) {
+    // assert(typeof joinPoint.proceed === 'function', 'joinPoint.proceed is not function')
+    // @ts-expect-error joinPoint is function
+    ret = await joinPoint.proceed(...executorParam.methodArgs)
+  }
+  // const end = hrtime.bigint()
+  // const elapsed = end - start
+  // console.info(`${instanceName}.${methodName}() cost ${elapsed}ns`)
+  return ret
 }
 
 /**

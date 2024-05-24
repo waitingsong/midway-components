@@ -26,28 +26,36 @@ export function genExecuteDecoratorHandlerSync(
   )
 
   return {
-    around: (joinPoint: JoinPoint) => {
-      assert(! joinPoint.proceedIsAsyncFunction, `${instanceName}.${methodName}() must be sync function`)
-
-      const executorParam = prepareOptions(
-        options,
-        joinPoint,
-        decoratorHandlerInstance,
-      )
-      assert(executorParam.methodIsAsyncFunction === false, 'methodIsAsyncFunction must be false')
-
-      let ret = decoratorHandlerInstance.executorSync(executorParam)
-      assert(! isPromise(ret), `result must not be Promise, due to method ${instanceName}.${methodName}() is sync function`)
-
-      if (ret === bypassDecoratorHandlerExecutor) {
-        assert(typeof joinPoint.proceed === 'function', 'joinPoint.proceed is not function')
-        ret = joinPoint.proceed(...executorParam.methodArgs)
-      }
-      return ret
-    },
+    around: (joinPoint: JoinPoint) => decoratorAroundSync(options, decoratorHandlerInstance, joinPoint),
   }
 }
 
+function decoratorAroundSync(
+  options: ExecuteDecoratorHandlerRunnerOptions,
+  decoratorHandlerInstance: DecoratorHandlerBase,
+  joinPoint: JoinPoint,
+): unknown {
+
+  const { instanceName, methodName } = options
+  assert(! joinPoint.proceedIsAsyncFunction, `${instanceName}.${methodName}() must be sync function`)
+
+  const executorParam = prepareOptions(
+    options,
+    joinPoint,
+    decoratorHandlerInstance,
+  )
+  assert(executorParam.methodIsAsyncFunction === false, 'methodIsAsyncFunction must be false')
+
+  let ret = decoratorHandlerInstance.executorSync(executorParam)
+  assert(! isPromise(ret), `result must not be Promise, due to method ${instanceName}.${methodName}() is sync function`)
+
+  if (ret === bypassDecoratorHandlerExecutor) {
+    // assert(typeof joinPoint.proceed === 'function', 'joinPoint.proceed is not function')
+    // @ts-expect-error joinPoint is function
+    ret = joinPoint.proceed(...executorParam.methodArgs)
+  }
+  return ret
+}
 
 /**
  *
