@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [28.2.0](https://github.com/waitingsong/midway-components/compare/v28.1.1...v28.2.0) (2024-05-24)
+
+
+### Features
+
+* **share:** add 3rd param of getRouterInfo() limit, default 1000 ([cebbc89](https://github.com/waitingsong/midway-components/commit/cebbc89860c346647435c9ab8903d2649876982c))
+
+
+
+
+
 ## [28.1.1](https://github.com/waitingsong/midway-components/compare/v28.1.0...v28.1.1) (2024-05-24)
 
 **Note:** Version bump only for package @mwcp/share
