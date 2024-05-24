@@ -42,11 +42,11 @@ export interface RouterInfoLite {
   fullUrlFlattenString: string
 }
 
-export async function getRouterInfo(ctx: Context, writeCache = true): Promise<RouterInfoLite | undefined> {
+export async function getRouterInfo(ctx: Context, writeCache = true, limit = cacheLimit): Promise<RouterInfoLite | undefined> {
   const key = `${ctx.path}:${ctx.method}`
   const routerInfo = routerInfoMap.get(key) ?? await _getRouterInfo(ctx)
   if (routerInfo && writeCache) {
-    saveCache(key, routerInfo)
+    saveCache(key, routerInfo, limit)
   }
   return routerInfo
 }
@@ -62,8 +62,8 @@ async function _getRouterInfo(ctx: Context): Promise<RouterInfoLite | undefined>
 }
 
 
-function saveCache(key: string, data: RouterInfoLite): void {
-  if (routerInfoMap.size >= cacheLimit) {
+function saveCache(key: string, data: RouterInfoLite, limit = cacheLimit): void {
+  if (routerInfoMap.size >= limit) {
     routerInfoMap.clear()
   }
   routerInfoMap.set(key, data)

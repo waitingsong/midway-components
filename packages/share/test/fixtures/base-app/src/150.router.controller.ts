@@ -17,8 +17,9 @@ export class ControllerRouter {
   @Get(`/${apiMethod.helloId}`)
   async hello(ctx: Context, @Param('id') id: number): Promise<RouterInfoLite> {
     assert(id)
-    const info = await getRouterInfo(ctx)
+    const info = await getRouterInfo(ctx, true, 1)
     assert(info)
+    await getRouterInfo(ctx, true, 1)
     return info
   }
 
