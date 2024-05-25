@@ -9,15 +9,14 @@ import { Application } from '../types.js'
 
 import { customDecoratorRegMap } from './custom-decorator-factory.js'
 import { mergeDecoratorMetaDataPayload, retrieveMetadataPayloadsOnClass } from './custom-decorator.helper.js'
-import type {
-  AopCallbackInputArgsType,
+import {
   DecoratorHandlerBase,
+  AopCallbackInputArgsType,
   DecoratorMetaDataPayload,
-  ExecuteDecoratorHandlerRunnerOptions,
+  DecoratorExecutorParamBase,
   InstanceWithDecorator,
 } from './custom-decorator.types.js'
-import { genExecuteDecoratorHandlerAsync } from './executor.async.js'
-import { genExecuteDecoratorHandlerSync } from './executor.sync.js'
+import { genExecuteDecoratorHandlerAsync, genExecuteDecoratorHandlerSync } from './executor.js'
 
 
 export async function autoRegisterDecoratorHandlers(
@@ -68,6 +67,7 @@ export async function registerDecoratorHandlers(
     )
 
     const decoratorHandlerInst = await container.getAsync<DecoratorHandlerBase>(DecoratorHandler)
+    assert(decoratorHandlerInst, `retrieve DecoratorHandler instance failed, key: ${key}`)
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (! Object.prototype.hasOwnProperty.call(decoratorHandlerInst, 'app') || ! decoratorHandlerInst.app) {
       Object.defineProperty(decoratorHandlerInst, 'app', {
@@ -139,7 +139,7 @@ function registerMethodHandlerCallback<TDecoratorParam extends object = object>(
   const decoratorHandlerClassName = decoratorHandlerInstance.constructor.name
 
   const isAsyncFunc = isAsyncFunction(method)
-  const options: ExecuteDecoratorHandlerRunnerOptions = {
+  const options: DecoratorExecutorParamBase = {
     argsFromClassDecorator: argsFromClassDecoratorArray[0],
     argsFromMethodDecorator,
     decoratorKey,

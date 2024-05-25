@@ -6,14 +6,11 @@ import { customDecoratorFactory } from '../../../../src/index.js'
 
 import {
   DecoratorHandler,
-  DecoratorHandlerAsyncOnly2,
   DecoratorHandlerMix,
   DecoratorHandlerMulti1,
   DecoratorHandlerMulti2,
   DecoratorHandlerNumber,
-  DecoratorHandlerPassthrough,
   DecoratorHandlerRequest,
-  DecoratorHandlerSyncOnly2,
 } from './decorator-handler.js'
 import { CacheableArgs } from './helper.js'
 
@@ -27,7 +24,6 @@ export const METHOD_KEY_Cacheable_request_wrong_inject_scope = 'decorator:method
 export const METHOD_KEY_ClassIgnoreIfMethodDecoratorKeys = 'decorator:classIgnoreIfMethodDecoratorKeys'
 export const METHOD_KEY_Multi1 = 'decorator:method_key_multi_1'
 export const METHOD_KEY_Multi2 = 'decorator:method_key_multi_2'
-export const METHOD_KEY_PassThrough = 'decorator:method_key_cacheable_pass_through'
 
 export const METHOD_KEY_Cacheable_mix = 'decorator:method_key_cacheable_mix'
 
@@ -42,22 +38,6 @@ export function Cacheable2(options?: Partial<CacheableArgs>) {
     afterRegister: (target, propertyName, descriptor, opts) => {
       assertBeforeAfter(target, propertyName, descriptor, opts)
     },
-  })
-}
-
-export function CacheableAsyncOnly2(options?: Partial<CacheableArgs>) {
-  return customDecoratorFactory({
-    decoratorArgs: options,
-    decoratorKey: METHOD_KEY_Cacheable_Async2,
-    decoratorHandlerClass: DecoratorHandlerAsyncOnly2,
-  })
-}
-
-export function CacheableSyncOnly2(options?: Partial<CacheableArgs>) {
-  return customDecoratorFactory({
-    decoratorArgs: options,
-    decoratorKey: METHOD_KEY_Cacheable_Sync2,
-    decoratorHandlerClass: DecoratorHandlerSyncOnly2,
   })
 }
 
@@ -167,10 +147,3 @@ export function Multi2(ttl?: CacheableArgs['ttl']) {
 }
 
 
-export function PassThrough(options?: Partial<CacheableArgs>) {
-  return customDecoratorFactory({
-    decoratorArgs: options,
-    decoratorKey: METHOD_KEY_PassThrough,
-    decoratorHandlerClass: DecoratorHandlerPassthrough,
-  })
-}

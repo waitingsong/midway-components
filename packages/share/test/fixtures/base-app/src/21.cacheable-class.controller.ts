@@ -20,12 +20,12 @@ export class CacheController2 {
   @Get(`/${apiMethod.simple}`)
   async simple(): Promise<number> {
     const ret = await this._simpleAsync(this.idx)
-    assert(ret === this.idx + 1)
+    assert(ret === this.idx + 1, ret.toString())
 
     this.idx += 1
 
     const ret2 = this._simpleSync(this.idx)
-    assert(ret2 === this.idx + 1)
+    assert(ret2 === this.idx + 1, ret.toString())
 
     this.idx = 1
     return ret
@@ -35,12 +35,12 @@ export class CacheController2 {
   @Get(`/${apiMethod.simpleNumber}`)
   async simpleNumber(): Promise<number> {
     const ret = await this._simpleAsyncNumber(this.idx)
-    assert(ret === this.idx + 10) // 11
+    assert(ret === this.idx + 10, ret.toString()) // 11
 
     this.idx += 1
 
     const ret2 = this._simpleSyncNumber(this.idx)
-    assert(ret2 === this.idx + 20) // 22
+    assert(ret2 === this.idx + 20, ret.toString()) // 22
 
     this.idx = 1
     return ret2

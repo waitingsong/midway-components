@@ -20,28 +20,6 @@ describe(fileShortPath(import.meta.url), () => {
     assert(data === 2)
   })
 
-  it(apiMethod.simpleAsyncOnly, async () => {
-    const { httpRequest } = testConfig
-    const url = `${apiBase.methodCacheable2}/${apiMethod.simpleAsyncOnly}`
-
-    const resp = await httpRequest.get(url)
-    assert(resp)
-    assert(resp.ok, resp.text)
-    const data = resp.body as number
-    assert(data === 2)
-  })
-
-  it(apiMethod.simpleSyncOnly, async () => {
-    const { httpRequest } = testConfig
-    const url = `${apiBase.methodCacheable2}/${apiMethod.simpleSyncOnly}`
-
-    const resp = await httpRequest.get(url)
-    assert(resp)
-    assert(resp.ok, resp.text)
-    const data = resp.body as number
-    assert(data === 2)
-  })
-
   it(apiMethod.simpleNumber, async () => {
     const { httpRequest } = testConfig
     const url = `${apiBase.methodCacheable2}/${apiMethod.simpleNumber}`
@@ -152,15 +130,5 @@ describe(fileShortPath(import.meta.url), () => {
     assert(data === 4, resp.text)
   })
 
-  it(apiMethod.methodIgnoreIfMethodDecoratorKeys2, async () => {
-    const { httpRequest } = testConfig
-    const url = `${apiBase.methodCacheable2}/${apiMethod.passthrough}`
-
-    const resp = await httpRequest.get(url)
-    assert(resp)
-    assert(resp.ok, resp.text)
-    const data = resp.body as number
-    assert(data === 2, resp.text)
-  })
 })
 

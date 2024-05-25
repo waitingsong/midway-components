@@ -4,7 +4,7 @@ import { fileShortPath } from '@waiting/shared-core'
 
 import { instanceHasClassDecorator } from '##/index.js'
 
-import { METHOD_KEY_Cacheable, Test, Test2, TestClass } from './111.custom-decorator.helper.js'
+import { METHOD_KEY_Cacheable, Test, Test2, TestClass } from './110.helper.js'
 
 
 describe(fileShortPath(import.meta.url), () => {

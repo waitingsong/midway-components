@@ -17,12 +17,12 @@ import {
   setImplToFalseIfDecoratedWithBothClassAndMethod,
 } from './custom-decorator.helper.js'
 import type {
-  RegClassDecoratorOptions,
-  CustomDecoratorFactoryOptions,
-  RegMethodDecoratorOptions,
-  DecoratorMetaData,
   DecoratorHandlerBase,
   ClassWithDecorator,
+  CustomDecoratorFactoryOptions,
+  DecoratorMetaData,
+  RegClassDecoratorOptions,
+  RegMethodDecoratorOptions,
 } from './custom-decorator.types.js'
 
 
@@ -37,6 +37,7 @@ export function customDecoratorFactory(options: CustomDecoratorFactoryOptions): 
   assert(typeof options === 'object', 'options is not an object')
   assert(typeof options.decoratorArgs === 'undefined' || typeof options.decoratorArgs === 'object', 'options.decoratorArgs is not an object')
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (options.decoratorHandlerClass) {
     customDecoratorRegMap.set(options.decoratorKey, options.decoratorHandlerClass)
   }

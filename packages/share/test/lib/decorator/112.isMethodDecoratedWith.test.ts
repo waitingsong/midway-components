@@ -5,7 +5,7 @@ import { fileShortPath } from '@waiting/shared-core'
 import { isMethodDecoratedWith } from '##/index.js'
 import { DecoratorMetaData } from '##/lib/decorator/custom-decorator.types.js'
 
-import { METHOD_KEY_Cacheable, Test } from './111.custom-decorator.helper.js'
+import { METHOD_KEY_Cacheable, Test } from './110.helper.js'
 
 
 describe(fileShortPath(import.meta.url), () => {

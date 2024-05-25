@@ -4,15 +4,13 @@ import {
   MethodDecoratorOptions,
   REQUEST_OBJ_CTX_KEY,
 } from '@midwayjs/core'
-import type { Span } from '@opentelemetry/api'
 import { MethodTypeUnknown } from '@waiting/shared-types'
 
-import { Application, Context, Msg } from '../types.js'
+import { Application, Context } from '../types.js'
 
-
-export const bypassDecoratorHandlerExecutor = Symbol('bypassDecoratorHandlerExecutor')
 
 /**
+ * @docs https://midwayjs.org/docs/aspect
  * @description
  * - Must exports with package
  * - Must decorated by `@Singleton` or `@Provide` , it actually is a `Singleton` class
@@ -20,62 +18,28 @@ export const bypassDecoratorHandlerExecutor = Symbol('bypassDecoratorHandlerExec
  * - Can inject `Singleton` scope Class
  * - Can NOT inject `Request` scope Class
  */
-export abstract class AbstractDecoratorHandler {
-  abstract readonly app: Application
-  abstract genExecutorParamAsync(options: DecoratorExecutorParamBase): Promise<DecoratorExecutorParamBase>
-  abstract genExecutorParam(options: DecoratorExecutorParamBase): DecoratorExecutorParamBase
-  abstract executorAsync(options: any): Promise<unknown>
-  abstract executorSync(options: any): unknown
-}
-
-/**
- * @description
- * - Must export
- * - Must decorated by `@Singleton` or `@Provide` , it actually is a `Singleton` class
- * - Can inject config by `@Config`
- * - Can inject `Singleton` scope Class
- * - Can NOT inject `Request` scope Class
- */
-export class DecoratorHandlerBase extends AbstractDecoratorHandler {
+export class DecoratorHandlerBase {
   readonly app: Application
-
   /**
-   * - For Async method (executorAsync) ONLY
-   * - Run before `genExecutorParam()`
-   * @description the return value will be passed to `executorAsync` only
+   * @Note It runs at most once in the lifecycle of each request
+   * If return type is Promise, then decorated method must be async function
    */
-  async genExecutorParamAsync(options: DecoratorExecutorParamBase): Promise<DecoratorExecutorParamBase> {
-    return options
-  }
-
+  genExecutorParam?(options: DecoratorExecutorParamBase): DecoratorExecutorParamBase | Promise<DecoratorExecutorParamBase>
   /**
-   * @description the return value will be passed to `executorSync` and `executorAsync`
+   * @Caution It's necessary to run original method in `around` method manually,
+   * the return value of original method is set to `options.methodResult`
    */
-  genExecutorParam(options: DecoratorExecutorParamBase) {
-    return options
-  }
-
+  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+  before?(options: DecoratorExecutorParamBase): void
+  around?(options: DecoratorExecutorParamBase): unknown
   /**
-   * - You can return symbol `bypassDecoratorHandlerExecutor` to bypass the method, without any change.
-   * - You should override this method to implement the decorator logic.
-   * Otherwise, it will throw an error, if async method decorated by the Decorator (eg. \@Cacheable()).
+   * Can return Error, it will be set to `options.error`
    */
-  async executorAsync(options: any): Promise<unknown> {
-    console.error(Msg.DecoratorHandlerExecutorSyncForbidden, options)
-    throw new TypeError(Msg.DecoratorHandlerExecutorAsyncForbidden)
-  }
-
-  /**
-   * - You can return symbol `bypassDecoratorHandlerExecutor` to bypass the method, without any change.
-   * - You should override this method to implement the decorator logic.
-   * Otherwise, it will throw an error, if sync method decorated by the Decorator (eg. \@Cacheable()).
-   */
-  executorSync(options: any): unknown {
-    console.error(Msg.DecoratorHandlerExecutorSyncForbidden, options)
-    throw new TypeError(Msg.DecoratorHandlerExecutorSyncForbidden)
-  }
-
+  afterReturn?(options: DecoratorExecutorParamBase): unknown
+  afterThrow?(options: DecoratorExecutorParamBase): void
+  after?(options: DecoratorExecutorParamBase): void
 }
+
 
 export interface CustomDecoratorFactoryOptions<TDecoratorParam extends object = object> {
   /**
@@ -109,7 +73,7 @@ export interface CustomDecoratorFactoryOptions<TDecoratorParam extends object = 
    * Running at register stage
    */
   afterRegister?: FnRegCustomDecorator<TDecoratorParam>
-  decoratorHandlerClass?: typeof DecoratorHandlerBase
+  decoratorHandlerClass: typeof DecoratorHandlerBase
 }
 
 export interface DecoratorExecutorParamBase<TDecoratorParam extends object = object> {
@@ -123,17 +87,17 @@ export interface DecoratorExecutorParamBase<TDecoratorParam extends object = obj
   instance: InstanceWithDecorator
   /** Caller Class name */
   instanceName: string
-  method: MethodTypeUnknown
+  /**
+   * undefined when afterReturn, afterThrow, after
+   */
+  method: MethodTypeUnknown | undefined
   methodArgs: unknown[]
   methodName: string
   methodResult?: unknown
+  error?: Error | undefined
   methodIsAsyncFunction?: boolean
   webApp: Application
   webContext: Context | undefined
-  /**
-   * @description no trace if false, use current span if undefined
-   */
-  span?: Span | undefined | false
 }
 
 
@@ -227,23 +191,3 @@ export interface AopCallbackInputArgsType<TDecoratorParam extends object = objec
   metadata: DecoratorMetaDataPayload<TDecoratorParam>
 }
 
-export interface ExecuteDecoratorHandlerRunnerOptions {
-  argsFromClassDecorator: DecoratorMetaDataPayload | undefined
-  argsFromMethodDecorator: DecoratorMetaDataPayload | undefined
-  /** Merged from argsFromClassDecorator and argsFromMethodDecorator */
-  mergedDecoratorParam: DecoratorMetaDataPayload | undefined
-  decoratorKey: string
-  decoratorHandlerClassName: string
-  /** 装饰器所在类实例 */
-  instance: InstanceWithDecorator
-  /** Caller Class name */
-  instanceName: string
-  methodName: string
-  methodIsAsyncFunction: boolean
-  webApp: Application
-
-  method: MethodTypeUnknown
-  methodArgs: unknown[]
-  methodResult?: unknown
-  webContext: Context | undefined
-}

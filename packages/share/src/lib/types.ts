@@ -33,8 +33,8 @@ export enum ConfigKey {
 export enum Msg {
   hello = 'hello world',
   AuthFailed = 'Authentication Failed',
-  DecoratorHandlerExecutorAsyncForbidden = '[@mwcp/share] Async method is not supported default. Please override method "executorAsync()" in your class which extends "DecoratorHandlerBase"',
-  DecoratorHandlerExecutorSyncForbidden = '[@mwcp/share] Sync method is not supported default. Please override method "executorSync()" in your class which extends "DecoratorHandlerBase"',
+  // DecoratorHandlerExecutorAsyncForbidden = '[@mwcp/share] Async method is not supported default. Please override method "executorAsync()" in your class which extends "DecoratorHandlerBase"',
+  // DecoratorHandlerExecutorSyncForbidden = '[@mwcp/share] Sync method is not supported default. Please override method "executorSync()" in your class which extends "DecoratorHandlerBase"',
 }
 export interface Config extends BaseConfig {
   /**

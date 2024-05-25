@@ -4,7 +4,7 @@ import { fileShortPath } from '@waiting/shared-core'
 
 import { customDecoratorFactory } from '##/index.js'
 
-import { CacheableArgs } from './111.custom-decorator.helper.js'
+import { DecoratorHandler } from './110.helper.js'
 
 
 describe(fileShortPath(import.meta.url), () => {
@@ -21,6 +21,7 @@ describe(fileShortPath(import.meta.url), () => {
         decoratorArgs: options,
         decoratorKey: METHOD_KEY_Cacheable,
         enableClassDecorator: true,
+        decoratorHandlerClass: DecoratorHandler,
       })
       assert(decoratorFactory)
       assert(decoratorFactory.name === 'DecoratorFactory')

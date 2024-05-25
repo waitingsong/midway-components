@@ -13,7 +13,7 @@ import {
   TestClass,
   TestClass2,
   ttl,
-} from './111.custom-decorator.helper.js'
+} from './110.helper.js'
 
 
 describe(fileShortPath(import.meta.url), () => {

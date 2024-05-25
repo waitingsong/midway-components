@@ -37,15 +37,12 @@
     "@midwayjs/logger": "^3.4.0",
     "@midwayjs/swagger": "^3.16.1",
     "@midwayjs/validate": "^3.16.1",
-    "@waiting/shared-core": "^23.10.1",
+    "@waiting/shared-core": "^23.11.0",
     "deepmerge": "^4.3.1"
   },
   "devDependencies": {
     "@opentelemetry/api": "*",
-    "swagger-ui-dist": "^5.17.6"
-  },
-  "peerDependencies": {
-    "@opentelemetry/api": "*"
+    "swagger-ui-dist": "^5.17.12"
   },
   "engines": {
     "node": ">=18.12.0",

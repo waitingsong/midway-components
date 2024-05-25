@@ -1,4 +1,6 @@
-import { DecoratorExecutorParamBase, customDecoratorFactory } from '../../../../src/index.js'
+import assert from 'node:assert'
+
+import { DecoratorExecutorParamBase } from '../../../../src/index.js'
 
 
 export const METHOD_KEY_Cacheable = 'decorator:method_key_cacheable_test'
@@ -8,28 +10,6 @@ export const ttl10 = 10
 export const ttl20 = 20
 export const ttl40 = 40
 
-export function Cacheable(options?: Partial<CacheableArgs>) {
-  return customDecoratorFactory({
-    decoratorArgs: options,
-    decoratorKey: METHOD_KEY_Cacheable,
-    enableClassDecorator: true,
-  })
-}
-export function CacheableSyncOnly(options?: Partial<CacheableArgs>) {
-  return customDecoratorFactory({
-    decoratorArgs: options,
-    decoratorKey: METHOD_KEY_Cacheable_Sync,
-    enableClassDecorator: true,
-  })
-}
-
-export function CacheableSyncWithAsyncBypass(options?: Partial<CacheableArgs>) {
-  return customDecoratorFactory({
-    decoratorArgs: options,
-    decoratorKey: METHOD_KEY_Cacheable_Sync_with_async_bypass,
-    enableClassDecorator: true,
-  })
-}
 
 export interface CacheableArgs {
   cacheName: string | undefined
@@ -37,6 +17,7 @@ export interface CacheableArgs {
 }
 
 export async function decoratorExecutorAsync(options: DecoratorExecutorParamBase<CacheableArgs>): Promise<unknown> {
+  assert(options.method, 'options.method is required')
   const resp = await options.method(...options.methodArgs)
   if (typeof resp === 'number') {
     return new Promise((done) => {
@@ -46,6 +27,7 @@ export async function decoratorExecutorAsync(options: DecoratorExecutorParamBase
   return resp
 }
 export function decoratorExecutorSync(options: DecoratorExecutorParamBase<CacheableArgs>): unknown {
+  assert(options.method, 'options.method is required')
   const resp = options.method(...options.methodArgs)
   if (typeof resp === 'number') {
     return resp + 1

@@ -2,13 +2,11 @@
 export * from './custom-decorator-factory.js'
 export * from './custom-decorator.helper.js'
 export {
-  AbstractDecoratorHandler,
-  CustomDecoratorFactoryOptions,
   DecoratorHandlerBase,
+  CustomDecoratorFactoryOptions,
   DecoratorMetaDataPayload,
   DecoratorExecutorParamBase,
   FnRegCustomDecorator,
-  bypassDecoratorHandlerExecutor,
 } from './custom-decorator.types.js'
 export { registerDecoratorHandlers } from './reg-decorator-handler.js'
 

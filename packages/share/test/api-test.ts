@@ -7,6 +7,7 @@ export const apiBase = {
   demo: '/demo',
   methodCacheable: '/method_cacheable',
   methodCacheable2: '/method_cacheable2',
+  method: '/method',
   router: '/router',
 }
 
@@ -15,8 +16,6 @@ export const apiMethod = {
   hello: 'hello',
   component: 'component',
   simple: 'simple',
-  simpleSyncOnly: 'simple_sync_only',
-  simpleAsyncOnly: 'simple_async_only',
   simpleNumber: 'simple_number',
   simpleRequest: 'simple_request',
   simpleRequestExtends: 'simple_request_extends',
@@ -28,6 +27,8 @@ export const apiMethod = {
   methodIgnoreIfMethodDecoratorKeys: 'method_ignore_if_method_decorator_keys',
   methodIgnoreIfMethodDecoratorKeys2: 'method_ignore_if_method_decorator_keys2',
   multi: 'multi',
-  passthrough: 'pass_through',
   helloId: 'hello/:id',
+  handler: 'handler',
+  after_throw: 'after_throw',
+  after_throw_re_throw: 'after_throw_re_throw',
 }
