@@ -16,12 +16,12 @@ export class ClassDecoratorEvictService {
     return { value: 'OK' }
   }
 
-  @CacheEvict({ cacheName: cacheNameHello })
+  @CacheEvict({ cacheName: cacheNameHello, traceLogCacheHit: true })
   async evictHello(): Promise<CachedResponse<'OK'>> {
     return { value: 'OK' }
   }
 
-  @Cacheable({ cacheName: cacheNameSimple })
+  @Cacheable({ cacheName: cacheNameSimple, traceLogCacheHit: true })
   async simple(): Promise<CachedResponse<'OK'>> {
     return { value: 'OK' }
   }

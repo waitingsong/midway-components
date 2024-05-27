@@ -18,7 +18,7 @@ import { validateMeta } from '../base.helper.js'
 
 const cacheKey = 'CacheEvictController.simple'
 
-@Controller(apiBase.methodCacheEvict)
+@Controller(apiBase.method_cacheevict)
 export class CacheEvictController {
 
   @MConfig(ConfigKey.config) readonly cacheManagerConfig: Config

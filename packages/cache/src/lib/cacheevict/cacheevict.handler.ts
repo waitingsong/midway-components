@@ -1,25 +1,20 @@
-import { CachingFactory } from '@midwayjs/cache-manager'
-import { Inject, Singleton } from '@midwayjs/core'
-import { MConfig, DecoratorExecutorParamBase, DecoratorHandlerBase } from '@mwcp/share'
+import { Singleton } from '@midwayjs/core'
+import type { DecoratorExecutorParamBase } from '@mwcp/share'
 
+import { DecoratorHandlerCacheBase } from '../decorator.handler.types.js'
 import { genDecoratorExecutorOptions } from '../helper.js'
-import { Config, CacheEvictArgs, ConfigKey, DecoratorExecutorOptions, GenDecoratorExecutorOptionsExt } from '../types.js'
+import { CacheEvictArgs, DecoratorExecutorOptions, GenDecoratorExecutorOptionsExt } from '../types.js'
 
-import { decoratorExecutor } from './cacheevict.helper.js'
+import { around, before } from './cacheevict.helper.js'
 
 
 /**
- * Cacheable decorator handler
+ * CacheEvict decorator handler
  * @description Not support sync method
  */
 @Singleton()
-export class DecoratorHandlerCacheEvict extends DecoratorHandlerBase {
-  /** component config */
-  @MConfig(ConfigKey.config) protected readonly cacheConfig: Config
-
-  @Inject() cachingFactory: CachingFactory
-
-  override async genExecutorParamAsync(options: DecoratorExecutorParamBase): Promise<DecoratorExecutorOptions> {
+export class DecoratorHandlerCacheEvict extends DecoratorHandlerCacheBase {
+  override genExecutorParam(options: DecoratorExecutorParamBase): DecoratorExecutorOptions {
     const optsExt: GenDecoratorExecutorOptionsExt = {
       config: this.cacheConfig,
       cachingFactory: this.cachingFactory,
@@ -29,9 +24,17 @@ export class DecoratorHandlerCacheEvict extends DecoratorHandlerBase {
     return ret
   }
 
-  override async executorAsync(options: DecoratorExecutorOptions<CacheEvictArgs>) {
-    return decoratorExecutor(options)
+  override async before(options: DecoratorExecutorOptions<CacheEvictArgs>) {
+    try {
+      await before(options)
+    }
+    catch (error) {
+      this.afterThrow(options, error)
+    }
   }
 
+  override around(options: DecoratorExecutorOptions<CacheEvictArgs>) {
+    return around(options)
+  }
 }
 

@@ -154,13 +154,14 @@ export async function getData<T = unknown>(
   caching: MidwayUnionCache,
   cacheKey: string,
   traceService?: AbstractTraceService | undefined,
+  traceLogCacheHit?: boolean | undefined,
 ): Promise<CachedResponse<T>> {
 
   const keys = hashCacheKey(cacheKey)
 
   const ret = await caching.get(keys.cacheKeyHash ?? keys.cacheKey)
   // @ts-expect-error
-  if (traceService?.isStarted && ret?.CacheMetaType) {
+  if (traceService?.isStarted && ret?.CacheMetaType && traceLogCacheHit) {
     traceService.addEvent(void 0, {
       event: 'cache.hit',
       library: '@mwcp/cache',

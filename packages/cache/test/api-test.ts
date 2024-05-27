@@ -7,11 +7,11 @@ export const apiBase = {
   demo: '/demo',
 
   args: '/args',
-  classCacheable: '/class_cacheable',
-  keyGenerator: '/key_generator',
-  methodCacheable: '/method_cacheable',
-  methodCacheEvict: '/method_cacheevict',
-  methodCachePut: '/method_cacheput',
+  class_cacheable: '/class_cacheable',
+  key_generator: '/key_generator',
+  method_cacheable: '/method_cacheable',
+  method_cacheevict: '/method_cacheevict',
+  method_cacheput: '/method_cacheput',
 }
 
 export const apiMethod = {
@@ -19,14 +19,14 @@ export const apiMethod = {
   hello: 'hello',
   component: 'component',
 
-  argsOverride: 'method_override_class',
-  cacheName: 'cache_name',
+  method_override_class: 'method_override_class',
+  cache_name: 'cache_name',
   condition: 'condition',
-  evictOverride: 'evict_override',
-  evictCondition: 'evict_condition',
-  evictResult: 'evict_result',
-  evictResultEvenAndGreaterThanZero: 'evict_result_even_and_greater_than_zero',
-  evictGenerics: 'evict_generics',
+  evict_override: 'evict_override',
+  evict_condition: 'evict_condition',
+  evict_result: 'evict_result',
+  evict_result_even_and_greater_than_zero: 'evict_result_even_and_greater_than_zero',
+  evict_generics: 'evict_generics',
   param: 'param',
   query: 'query',
   simple: 'simple',

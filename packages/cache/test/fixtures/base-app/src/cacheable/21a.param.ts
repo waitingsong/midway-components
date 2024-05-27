@@ -20,7 +20,7 @@ import { validateMeta } from '../base.helper.js'
 
 const bigint = 1024n
 
-@Controller(apiBase.keyGenerator)
+@Controller(apiBase.key_generator)
 export class ParamController {
 
   @MConfig(ConfigKey.config) readonly cacheManagerConfig: Config

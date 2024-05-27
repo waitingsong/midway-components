@@ -8,7 +8,7 @@ import { testConfig } from '#@/root.config.js'
 
 describe(fileShortPath(import.meta.url), function () {
   describe('Should @Cacheable decorator work', () => {
-    const prefix = apiBase.methodCacheEvict
+    const prefix = apiBase.method_cacheevict
 
     it(apiMethod.simple, async () => {
       const { httpRequest } = testConfig

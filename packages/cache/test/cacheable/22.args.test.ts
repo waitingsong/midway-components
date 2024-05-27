@@ -22,9 +22,9 @@ describe(fileShortPath(import.meta.url), function () {
       assert(resp.ok, resp.text)
     })
 
-    it(apiMethod.cacheName, async () => {
+    it(apiMethod.cache_name, async () => {
       const { httpRequest } = testConfig
-      const url = `${prefix}/${apiMethod.cacheName}`
+      const url = `${prefix}/${apiMethod.cache_name}`
 
       const resp = await httpRequest
         .get(url)

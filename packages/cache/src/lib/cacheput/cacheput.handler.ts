@@ -1,25 +1,20 @@
-import { CachingFactory } from '@midwayjs/cache-manager'
-import { Inject, Singleton } from '@midwayjs/core'
-import { MConfig, DecoratorExecutorParamBase, DecoratorHandlerBase } from '@mwcp/share'
+import { Singleton } from '@midwayjs/core'
+import { DecoratorExecutorParamBase } from '@mwcp/share'
 
+import { DecoratorHandlerCacheBase } from '../decorator.handler.types.js'
 import { genDecoratorExecutorOptions } from '../helper.js'
-import { Config, CacheableArgs, ConfigKey, DecoratorExecutorOptions, GenDecoratorExecutorOptionsExt } from '../types.js'
+import { CacheableArgs, DecoratorExecutorOptions, GenDecoratorExecutorOptionsExt } from '../types.js'
 
-import { decoratorExecutor } from './cacheput.helper.js'
+import { before, decoratorExecutor } from './cacheput.helper.js'
 
 
 /**
- * Cacheable decorator handler
+ * CachePut decorator handler
  * @description not support sync method
  */
 @Singleton()
-export class DecoratorHandlerCachePut extends DecoratorHandlerBase {
-  /** component config */
-  @MConfig(ConfigKey.config) protected readonly cacheConfig: Config
-
-  @Inject() cachingFactory: CachingFactory
-
-  override async genExecutorParamAsync(options: DecoratorExecutorParamBase): Promise<DecoratorExecutorOptions> {
+export class DecoratorHandlerCachePut extends DecoratorHandlerCacheBase {
+  override genExecutorParam(options: DecoratorExecutorParamBase): DecoratorExecutorOptions {
     const optsExt: GenDecoratorExecutorOptionsExt = {
       config: this.cacheConfig,
       cachingFactory: this.cachingFactory,
@@ -29,7 +24,16 @@ export class DecoratorHandlerCachePut extends DecoratorHandlerBase {
     return ret
   }
 
-  override async executorAsync(options: DecoratorExecutorOptions<CacheableArgs>) {
+  override async before(options: DecoratorExecutorOptions<CacheableArgs>) {
+    try {
+      await before(options)
+    }
+    catch (error) {
+      this.afterThrow(options, error)
+    }
+  }
+
+  override around(options: DecoratorExecutorOptions<CacheableArgs>) {
     return decoratorExecutor(options)
   }
 

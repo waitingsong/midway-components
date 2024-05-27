@@ -16,7 +16,7 @@ import { validateMeta } from '../base.helper.js'
 import { ClassDecoratorEvictService, cacheNameSimple } from './31b.class-decorator.service.js'
 
 
-@Controller(apiBase.classCacheable)
+@Controller(apiBase.class_cacheable)
 export class ClassDecoratorEvictController {
 
   @MConfig(ConfigKey.config) readonly cacheManagerConfig: Config
@@ -50,7 +50,7 @@ export class ClassDecoratorEvictController {
     return 'OK'
   }
 
-  @Get(`/${apiMethod.evictOverride}`)
+  @Get(`/${apiMethod.evict_override}`)
   async simple(): Promise<'OK'> {
     const cacheKey = cacheNameSimple
 
@@ -81,7 +81,7 @@ export class ClassDecoratorEvictController {
     return 'OK'
   }
 
-  @Get(`/${apiMethod.evictCondition}`)
+  @Get(`/${apiMethod.evict_condition}`)
   async evictCondition(): Promise<'OK'> {
     const cacheKey = cacheNameSimple
 
@@ -118,7 +118,7 @@ export class ClassDecoratorEvictController {
     return 'OK'
   }
 
-  @Get(`/${apiMethod.evictResult}`)
+  @Get(`/${apiMethod.evict_result}`)
   async evictResult(): Promise<'OK'> {
     const cacheKey = cacheNameSimple
 
@@ -161,7 +161,7 @@ export class ClassDecoratorEvictController {
   }
 
 
-  @Get(`/${apiMethod.evictResultEvenAndGreaterThanZero}`)
+  @Get(`/${apiMethod.evict_result_even_and_greater_than_zero}`)
   async evictResultEvenAndGreaterThanZero(): Promise<'OK'> {
     const cacheKey = cacheNameSimple
 
@@ -203,7 +203,7 @@ export class ClassDecoratorEvictController {
     return 'OK'
   }
 
-  @Get(`/${apiMethod.evictGenerics}`)
+  @Get(`/${apiMethod.evict_generics}`)
   async evictGenerics(): Promise<'OK'> {
     const cacheKey = cacheNameSimple
 

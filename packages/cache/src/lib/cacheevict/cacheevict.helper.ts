@@ -1,88 +1,83 @@
 import assert from 'assert'
 
 import { initCacheEvictArgs } from '../config.js'
-import { processEx } from '../exception.js'
 import { computerWriteConditionValue, deleteData, genCacheKey, GenCacheKeyOptions } from '../helper.js'
 import { CacheEvictArgs, DecoratorExecutorOptions } from '../types.js'
 
 
-export async function decoratorExecutor(options: DecoratorExecutorOptions<CacheEvictArgs>): Promise<unknown> {
-
+export async function before(options: DecoratorExecutorOptions<CacheEvictArgs>): Promise<void> {
   const {
     webContext,
-    cachingFactory,
-    cachingInstanceId,
     mergedDecoratorParam,
   } = options
-
   assert(webContext, 'webContext is undefined')
 
-  const cacheOptions: CacheEvictArgs = {
+  const mergedDecoratorParam2: CacheEvictArgs = {
     ...initCacheEvictArgs,
     ...mergedDecoratorParam,
   }
   const opts2: GenCacheKeyOptions = {
-    ...cacheOptions,
+    ...mergedDecoratorParam2,
     methodArgs: options.methodArgs,
-    methodResult: options.methodResult,
+    methodResult: void 0,
     webContext,
   }
   const cacheKey = genCacheKey(opts2)
-
-  try {
-    const opts3 = {
-      ...options,
-      mergedDecoratorParam: cacheOptions,
-    }
-
-    const tmp = computerWriteConditionValue(opts3)
-    const enableEvict = typeof tmp === 'boolean' ? tmp : await tmp
-    assert(typeof enableEvict === 'boolean', 'condition must return boolean')
-
-    const caching = cachingFactory.get(cachingInstanceId)
-
-    if (enableEvict && cacheKey && cacheOptions.beforeInvocation) {
-      await deleteData(caching, cacheKey)
-    }
-
-    const { method, methodArgs, methodIsAsyncFunction } = opts3
-    assert(methodIsAsyncFunction, 'decorated method must be async function')
-    const resp = await method(...methodArgs)
-
-    if (! cacheOptions.beforeInvocation) {
-      if (enableEvict && cacheKey) {
-        await deleteData(caching, cacheKey)
-      }
-      else {
-        const ps: DecoratorExecutorOptions<CacheEvictArgs> = {
-          ...opts3,
-          methodResult: resp,
-        }
-        const tmp2 = computerWriteConditionValue(ps)
-        const enableEvict2 = typeof tmp2 === 'boolean' ? tmp2 : await tmp2
-        assert(typeof enableEvict2 === 'boolean', 'condition must return boolean')
-        if (enableEvict2) {
-          // re-generate cache key, because CacheConditionFn use result of method
-          const opts4: GenCacheKeyOptions = {
-            ...opts2,
-            methodResult: resp,
-          }
-          const cacheKey2 = genCacheKey(opts4)
-          if (cacheKey2) {
-            await deleteData(caching, cacheKey2)
-          }
-        }
-      }
-    }
-
-    return resp
-  }
-  catch (error) {
-    return processEx({
-      error,
-      cacheKey,
-    })
-  }
+  options.mergedDecoratorParam = mergedDecoratorParam2
+  options.cacheKey = cacheKey
 }
 
+export async function around(options: DecoratorExecutorOptions<CacheEvictArgs>): Promise<unknown> {
+  const {
+    webContext,
+    cachingFactory,
+    cachingInstanceId,
+    cacheKey,
+    mergedDecoratorParam,
+  } = options
+  assert(webContext, 'webContext is undefined')
+  assert(mergedDecoratorParam, 'mergedDecoratorParam is undefined')
+
+  const tmp = computerWriteConditionValue(options)
+  const enableEvict = typeof tmp === 'boolean' ? tmp : await tmp
+  assert(typeof enableEvict === 'boolean', 'condition must return boolean')
+
+  const caching = cachingFactory.get(cachingInstanceId)
+
+  if (enableEvict && cacheKey && mergedDecoratorParam.beforeInvocation) {
+    await deleteData(caching, cacheKey)
+  }
+
+  const { method, methodArgs, methodIsAsyncFunction } = options
+  assert(methodIsAsyncFunction, 'decorated method must be async function')
+  assert(method, 'original method invalid')
+  const resp = await method(...methodArgs) // execute method
+  options.methodResult = resp
+
+  if (mergedDecoratorParam.beforeInvocation) {
+    return resp
+  }
+
+  if (enableEvict && cacheKey) {
+    await deleteData(caching, cacheKey)
+  }
+  else {
+    const tmp2 = computerWriteConditionValue(options)
+    const enableEvict2 = typeof tmp2 === 'boolean' ? tmp2 : await tmp2
+    assert(typeof enableEvict2 === 'boolean', 'condition must return boolean')
+    if (enableEvict2) {
+      // re-generate cache key, because CacheConditionFn use result of method
+      const opts2: GenCacheKeyOptions = {
+        ...options.mergedDecoratorParam as CacheEvictArgs,
+        methodArgs: options.methodArgs,
+        methodResult: options.methodResult,
+        webContext,
+      }
+      const cacheKey2 = genCacheKey(opts2)
+      cacheKey2 && await deleteData(caching, cacheKey2)
+    }
+  }
+
+  return resp
+}
 

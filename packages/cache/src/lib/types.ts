@@ -12,6 +12,9 @@ export enum ConfigKey {
   middlewareConfig = 'cacheMiddlewareConfig',
   componentName = 'cacheComponent',
   CacheMetaType = 'CacheMetaType',
+  Cacheable = 'Cacheable',
+  CacheEvict = 'CacheEvict',
+  CachePut = 'CachePut',
 }
 
 export enum Msg {
@@ -130,6 +133,10 @@ export interface CacheableArgs<M extends MethodType | undefined = undefined> {
    * @default 'default'
    */
   instanceId?: string | undefined
+  /**
+   * @default false
+   */
+  traceLogCacheHit?: boolean | undefined
 }
 
 export interface CacheEvictArgs<M extends MethodType | undefined = undefined> {
@@ -153,6 +160,10 @@ export interface CacheEvictArgs<M extends MethodType | undefined = undefined> {
    * @default 'default'
    */
   instanceId?: string | undefined
+  /**
+   * @default false
+   */
+  traceLogCacheHit?: boolean | undefined
 }
 
 
@@ -164,6 +175,7 @@ export type DecoratorExecutorOptions<T extends CacheableArgs | CacheEvictArgs = 
      * @default 'default'
      */
     cachingInstanceId?: string | undefined,
+    cacheKey?: string | false | undefined,
   }
 
 export interface GenDecoratorExecutorOptionsExt {

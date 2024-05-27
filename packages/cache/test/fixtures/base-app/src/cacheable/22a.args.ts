@@ -61,7 +61,7 @@ export class ArgsController {
   }
 
 
-  @Get(`/${apiMethod.cacheName}`)
+  @Get(`/${apiMethod.cache_name}`)
   async cacheName(): Promise<CachedResponse<'OK'>> {
     const cacheKey = cacheName
 

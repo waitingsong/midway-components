@@ -8,7 +8,7 @@ import { testConfig } from '#@/root.config.js'
 
 describe(fileShortPath(import.meta.url), function () {
   describe('Should @Cacheable decorator work', () => {
-    const prefix = apiBase.classCacheable
+    const prefix = apiBase.class_cacheable
 
     it(apiMethod.simple, async () => {
       const { httpRequest } = testConfig
@@ -21,9 +21,9 @@ describe(fileShortPath(import.meta.url), function () {
       assert(resp)
     })
 
-    it(apiMethod.argsOverride, async () => {
+    it(apiMethod.method_override_class, async () => {
       const { httpRequest } = testConfig
-      const url = `${prefix}/${apiMethod.argsOverride}`
+      const url = `${prefix}/${apiMethod.method_override_class}`
 
       const resp = await httpRequest
         .get(url)

@@ -9,7 +9,7 @@ import { testConfig } from '#@/root.config.js'
 
 describe(fileShortPath(import.meta.url), function () {
   describe('Should @Cacheable decorator work', () => {
-    const prefix = apiBase.keyGenerator
+    const prefix = apiBase.key_generator
 
     it(`${apiMethod.param}/:uid number`, async () => {
       const { httpRequest } = testConfig

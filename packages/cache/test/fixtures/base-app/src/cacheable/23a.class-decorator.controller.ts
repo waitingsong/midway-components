@@ -19,7 +19,7 @@ import { validateMeta } from '../base.helper.js'
 import { ClassDecoratorService, ttl } from './23b.class-decorator.service.js'
 
 
-@Controller(apiBase.classCacheable)
+@Controller(apiBase.class_cacheable)
 export class ClassDecoratorController {
 
   @MConfig(ConfigKey.config) readonly cacheManagerConfig: Config
@@ -61,7 +61,7 @@ export class ClassDecoratorController {
     return 'OK'
   }
 
-  @Get(`/${apiMethod.argsOverride}`)
+  @Get(`/${apiMethod.method_override_class}`)
   async argsOverride(): Promise<'OK'> {
     const cacheKey = `${this.controllerName}.ttl`
 

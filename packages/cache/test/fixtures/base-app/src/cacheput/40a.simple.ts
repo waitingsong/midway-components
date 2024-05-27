@@ -19,7 +19,7 @@ import { validateMeta } from '../base.helper.js'
 
 const cacheKey = 'CachePutController.simple'
 
-@Controller(apiBase.methodCachePut)
+@Controller(apiBase.method_cacheput)
 export class CachePutController {
 
   @MConfig(ConfigKey.config) readonly cacheManagerConfig: Config

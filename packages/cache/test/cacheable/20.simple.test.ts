@@ -10,7 +10,7 @@ import { CacheRet } from '../decorator.helper.js'
 
 describe(fileShortPath(import.meta.url), function () {
   describe('Should @Cacheable decorator work', () => {
-    const prefix = apiBase.methodCacheable
+    const prefix = apiBase.method_cacheable
     const url = `${prefix}/${apiMethod.simple}`
 
     it(url, async () => {

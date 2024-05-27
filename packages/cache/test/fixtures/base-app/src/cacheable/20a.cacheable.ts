@@ -18,7 +18,7 @@ import { apiBase, apiMethod } from '../../../../api-test.js'
 import { validateMeta } from '../base.helper.js'
 
 
-@Controller(apiBase.methodCacheable)
+@Controller(apiBase.method_cacheable)
 export class DecoratorController {
 
   @MConfig(ConfigKey.config) readonly cacheManagerConfig: Config

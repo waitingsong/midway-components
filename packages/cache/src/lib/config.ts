@@ -44,6 +44,7 @@ export const initCacheableArgs: CacheableArgs = {
   condition: void 0,
   writeCondition: void 0,
   instanceId: 'default',
+  traceLogCacheHit: false,
 }
 export const initCacheEvictArgs: CacheEvictArgs = {
   cacheName: void 0,
@@ -51,6 +52,7 @@ export const initCacheEvictArgs: CacheEvictArgs = {
   writeCondition: void 0,
   beforeInvocation: false,
   instanceId: 'default',
+  traceLogCacheHit: false,
 }
 export const initCachePutArgs: CacheableArgs = {
   ...initCacheableArgs,
