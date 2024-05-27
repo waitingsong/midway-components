@@ -7,43 +7,30 @@ import type { TraceDecoratorOptions } from '../decorator.types.js'
 import type { DecoratorExecutorParam } from '../trace.helper.js'
 
 
-export async function decoratorExecutor(options: DecoratorExecutorParam<TraceDecoratorOptions>): Promise<unknown> {
+export async function before(options: DecoratorExecutorParam<TraceDecoratorOptions>): Promise<void> {
   const { webApp, methodIsAsyncFunction } = options
   assert(webApp, 'webApplication is required')
   assert(methodIsAsyncFunction === true, 'decorated method must be AsyncFunction')
 
   const {
-    config,
     callerAttr,
     spanName,
     spanOptions,
-    method,
-    methodArgs,
     mergedDecoratorParam,
     otelComponent,
   } = options
 
   assert(otelComponent, 'otelComponent is required')
 
-  /* c8 ignore next 3 */
-  if (! config.enable) {
-    return method(...methodArgs)
-  }
-
   const traceCtx = otelComponent.appInitProcessContext
-  /* c8 ignore next 4 */
-  if (! otelComponent.appInitProcessSpan || ! traceCtx) {
-    return method(...methodArgs)
-  }
-
   const spanOpts: SpanOptions = {
     ...spanOptions,
     kind: SpanKind.INTERNAL,
   }
   const span = otelComponent.startSpan(spanName, spanOpts, traceCtx)
+  options.span = span
 
   span.setAttributes(callerAttr)
-
   const events: Attributes = {
     event: `${spanName}.begin`,
   }
@@ -55,23 +42,44 @@ export async function decoratorExecutor(options: DecoratorExecutorParam<TraceDec
   otelComponent.addEvent(span, events, addEventOptions)
 
   if (mergedDecoratorParam) {
-    await processDecoratorBeforeAfterAsync('before', options, span, void 0)
+    await processDecoratorBeforeAfterAsync('before', options)
+  }
+}
+
+export async function afterReturn(options: DecoratorExecutorParam<TraceDecoratorOptions>): Promise<unknown> {
+  const { span } = options
+  if (! span) {
+    return options.methodResult
   }
 
-  // execute method
-  const resp = await method(...methodArgs)
+  const { webApp, methodIsAsyncFunction } = options
+  assert(webApp, 'webApplication is required')
+  assert(methodIsAsyncFunction === true, 'decorated method must be AsyncFunction')
+
+  const {
+    spanName,
+    mergedDecoratorParam,
+    otelComponent,
+  } = options
+
+  assert(otelComponent, 'otelComponent is required')
 
   if (mergedDecoratorParam) {
-    await processDecoratorBeforeAfterAsync('after', options, span, resp)
+    await processDecoratorBeforeAfterAsync('after', options)
   }
 
   const events2: Attributes = {
     event: `${spanName}.end`,
   }
+  const addEventOptions = {
+    traceEvent: true,
+    logCpuUsage: true,
+    logMemoryUsage: true,
+  }
   otelComponent.addEvent(span, events2, addEventOptions)
   otelComponent.endSpan(otelComponent.appInitProcessSpan, span)
 
-  return resp
+  return options.methodResult
 }
 
 

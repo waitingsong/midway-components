@@ -2,7 +2,7 @@
 import assert from 'node:assert'
 
 import { DecoratorExecutorParamBase } from '@mwcp/share'
-import { SpanOptions } from '@opentelemetry/api'
+import { Span, SpanOptions } from '@opentelemetry/api'
 
 import type { AbstractTraceService, AbstractOtelComponent } from './abstract.js'
 import {
@@ -137,6 +137,7 @@ export type DecoratorExecutorParam<T extends TraceDecoratorOptions = TraceDecora
     startActiveSpan: boolean,
     traceContext: TraceContext | undefined,
     traceService: AbstractTraceService | undefined,
+    span: Span | undefined,
   }
 
 export interface GenDecoratorExecutorOptions {
@@ -213,6 +214,7 @@ export function genDecoratorExecutorOptions(
     otelComponent,
     traceContext: mergedDecoratorParam.traceContext,
     traceService,
+    span: void 0,
   }
 
   return ret

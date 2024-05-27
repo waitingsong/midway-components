@@ -274,7 +274,7 @@ export class OtelComponent extends AbstractOtelComponent {
     span.addEvent(name, input, options?.startTime)
   }
 
-  addRootSpanEventWithError(span: Span, error?: Error): void {
+  addSpanEventWithError(span: Span, error?: Error): void {
     if (! this.config.enable) { return }
     if (! error) { return }
 
@@ -291,8 +291,8 @@ export class OtelComponent extends AbstractOtelComponent {
     }
     stack && (attrs[SemanticAttributes.EXCEPTION_STACKTRACE] = stack)
     this.addEvent(span, attrs, {
-      eventName: `${name}-Cause`,
-    }) // Error-Cause
+      eventName: `${name} Cause`,
+    }) // Error Cause
   }
 
 
@@ -343,9 +343,9 @@ export class OtelComponent extends AbstractOtelComponent {
       attrs[AttrNames.HTTP_ERROR_MESSAGE] = error.message
       span.setAttributes(attrs)
 
-      this.addRootSpanEventWithError(span, error)
+      // this.addSpanEventWithError(span, error)
 
-      // @ts-ignore
+      // @ts-ignore - IsTraced
       if (error.cause instanceof Error || error[AttrNames.IsTraced]) {
         if (rootSpan && span !== rootSpan) {
           // error contains cause, then add events only
@@ -357,9 +357,7 @@ export class OtelComponent extends AbstractOtelComponent {
         span.recordException(error)
       }
 
-      Object.defineProperty(error, AttrNames.IsTraced, {
-        value: true,
-      })
+      Object.defineProperty(error, AttrNames.IsTraced, { value: true })
     }
 
     span.setStatus({ code: SpanStatusCode.ERROR, message: error?.message ?? 'unknown error' })

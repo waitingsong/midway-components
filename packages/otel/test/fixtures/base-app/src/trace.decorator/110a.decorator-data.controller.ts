@@ -19,7 +19,7 @@ import { testConfig } from '../../../../root.config.js'
 import { DefaultComponentService } from './trace.service.js'
 
 
-@Controller(apiBase.decoratorData)
+@Controller(apiBase.decorator_data)
 export class DecoratorDataComponentController {
 
   @MConfig(ConfigKey.config) readonly config: Config
@@ -56,7 +56,7 @@ export class DecoratorDataComponentController {
   }
 
   @Trace()
-  @Get(`/${apiMethod.mixOnAsync}/:id`)
+  @Get(`/${apiMethod.mix_on_async}/:id`)
   async mixOnAsync(@Param('id') id: string): Promise<`${string}:${string}`> {
     const traceId = this.traceSvc.getTraceId()
     await this._mixOnAsync(id)
@@ -64,7 +64,7 @@ export class DecoratorDataComponentController {
   }
 
   @Trace()
-  @Get(`/${apiMethod.mixOnSync}/:id`)
+  @Get(`/${apiMethod.mix_on_sync}/:id`)
   async mixOnSync(@Param('id') id: string): Promise<`${string}:${string}`> {
     const traceId = this.traceSvc.getTraceId()
     this._MixOnSync(id)
@@ -74,7 +74,7 @@ export class DecoratorDataComponentController {
   // #region private methods
 
   @Trace<DecoratorDataComponentController['traceDecoratorDataAsync']>({
-    before: (decoratorContext, args) => {
+    before: (args, decoratorContext) => {
       assert(decoratorContext.webApp)
       const attrs: Attributes = {
         args0: args[0],
@@ -86,7 +86,7 @@ export class DecoratorDataComponentController {
 
       return { attrs, events, rootAttrs, rootEvents } as DecoratorTraceDataResp
     },
-    after: (decoratorContext, args, res) => {
+    after: (args, res, decoratorContext) => {
       void decoratorContext
       const events = { args0: args[0], res }
       return { events }
@@ -98,8 +98,7 @@ export class DecoratorDataComponentController {
 
 
   @Trace<DecoratorDataComponentController['traceDecoratorDataSync']>({
-    before: (decoratorContext, args) => {
-      void decoratorContext
+    before: (args) => {
       const attrs: Attributes = {
         args0: args[0],
         traceDecoratorDataAsync: 'foo',
@@ -110,8 +109,7 @@ export class DecoratorDataComponentController {
 
       return { attrs, events, rootAttrs, rootEvents } as DecoratorTraceDataResp
     },
-    after: (decoratorContext, args, res) => {
-      void decoratorContext
+    after: (args, res) => {
       const events = { args0: args[0], res }
       return { events }
     },
@@ -122,8 +120,7 @@ export class DecoratorDataComponentController {
 
   // mix async and sync decorator's callback on async method
   @Trace<DecoratorDataComponentController['_mixOnAsync']>({
-    before: async (decoratorContext, args) => {
-      void decoratorContext
+    before: async (args) => {
       const attrs: Attributes = {
         args0: args[0],
         traceDecoratorDataAsync: 'foo',
@@ -134,8 +131,7 @@ export class DecoratorDataComponentController {
 
       return { attrs, events, rootAttrs, rootEvents }
     },
-    after: (decoratorContext, args, res) => {
-      void decoratorContext
+    after: (args, res) => {
       const events = { args0: args[0], res }
       return { events }
     },
@@ -145,8 +141,9 @@ export class DecoratorDataComponentController {
   }
 
   // mix async and sync decorator's callback on sync method
+  // should throw error according to the decorator's callback before() return Promise
   @Trace<DecoratorDataComponentController['_mixOnAsync']>({
-    before: async (_, args) => {
+    before: async (args) => {
       const attrs: Attributes = {
         args0: args[0],
         traceDecoratorDataAsync: 'foo',

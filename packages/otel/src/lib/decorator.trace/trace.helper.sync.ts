@@ -1,17 +1,16 @@
-import assert from 'assert'
-import { isPromise } from 'node:util/types'
+import assert from 'node:assert'
+import { isAsyncFunction } from 'util/types'
 
-import { Span, SpanStatusCode } from '@opentelemetry/api'
+import { ConfigKey } from '@mwcp/share'
+import { Span } from '@opentelemetry/api'
 
 import { processDecoratorBeforeAfterSync } from '../decorator.helper.js'
 import type { DecoratorExecutorParam } from '../trace.helper.js'
+import { AttrNames } from '../types.js'
 
 
-export function decoratorExecutorSync(options: DecoratorExecutorParam): unknown {
+export function beforeSync(options: DecoratorExecutorParam): void {
   const {
-    config,
-    method,
-    methodArgs,
     callerAttr,
     spanName,
     startActiveSpan,
@@ -20,52 +19,49 @@ export function decoratorExecutorSync(options: DecoratorExecutorParam): unknown 
     traceService,
   } = options
 
-  /* c8 ignore next 3 */
-  if (! config.enable || ! traceService?.isStarted) {
-    return method(...methodArgs)
-  }
+  const type = 'before'
+
+  const func = options.mergedDecoratorParam?.[type]
+  assert(
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    ! func || ! isAsyncFunction(func),
+    `[@mwcp/${ConfigKey.namespace}] Trace() ${type}() is a AsyncFunction, but decorated method is sync function, class: ${callerAttr[AttrNames.CallerClass]}, method: ${callerAttr[AttrNames.CallerMethod]}`,
+  )
+
+  if (! traceService) { return }
 
   if (startActiveSpan) {
     // 记录开始时间
-    return traceService.startActiveSpan(
+    traceService.startActiveSpan(
       spanName,
       (span: Span) => {
-        span.setAttributes(callerAttr)
-        return RunAndEndSpanCb(options, span)
+        options.span = span
+        options.span.setAttributes(callerAttr)
+        processDecoratorBeforeAfterSync(type, options)
       },
       spanOptions,
       traceContext,
     )
   }
   else {
-    const span = traceService.startSpan(spanName, spanOptions, traceContext)
-    span.setAttributes(callerAttr)
-    return RunAndEndSpanCb(options, span)
+    options.span = traceService.startSpan(spanName, spanOptions, traceContext)
+    options.span.setAttributes(callerAttr)
+    processDecoratorBeforeAfterSync(type, options)
   }
 }
 
 
-function RunAndEndSpanCb(options: DecoratorExecutorParam, span: Span): unknown {
-  const { mergedDecoratorParam, method, methodArgs, traceService } = options
-  const autoEndSpan = !! mergedDecoratorParam?.autoEndSpan
+export function afterReturnSync(options: DecoratorExecutorParam): unknown {
+  const { span, traceService } = options
 
-  try {
-    processDecoratorBeforeAfterSync('before', options, span, void 0)
-
-    const resp = method(...methodArgs)
-    assert(! isPromise(resp), 'func return value is a promise')
-    processDecoratorBeforeAfterSync('after', options, span, resp)
-
-    autoEndSpan && traceService && traceService.endSpan(span)
-    return resp
+  if (! span || ! traceService) {
+    return options.methodResult
   }
-  catch (ex) {
-    const err = ex instanceof Error
-      ? ex
-      : new Error(typeof ex === 'string' ? ex : JSON.stringify(ex))
-    traceService && traceService.endSpan(span, { code: SpanStatusCode.ERROR, error: err })
-    throw new Error(err.message, { cause: err.cause ?? err })
-  }
+  processDecoratorBeforeAfterSync('after', options)
+
+  const autoEndSpan = !! options.mergedDecoratorParam?.autoEndSpan
+  autoEndSpan && traceService.endSpan(span)
+
+  return options.methodResult
 }
-
 

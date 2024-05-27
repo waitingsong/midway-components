@@ -5,7 +5,6 @@ export enum AttrNames {
   HTTP_ERROR_CAUSE = 'http.error_cause',
   HTTP_STATUS_TEXT = 'http.status_text',
 
-  Exception_Cause = 'exception.cause',
   ServiceName = 'service.name',
   ServiceVersion = 'service.version',
 
@@ -36,6 +35,9 @@ export enum AttrNames {
 
   Error = 'error',
   Message = 'message',
+  Exception = 'exception',
+  Exception_Cause = 'exception.cause',
+  Exception_Type = 'exception.type',
 
   RequestStartTime = 'request.start.time',
   RequestEndTime = 'request.end.time',

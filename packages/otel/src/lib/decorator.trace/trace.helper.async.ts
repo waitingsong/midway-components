@@ -1,17 +1,11 @@
-import assert from 'assert'
-import { isPromise } from 'node:util/types'
-
-import { Span, SpanStatusCode } from '@opentelemetry/api'
+import { Span } from '@opentelemetry/api'
 
 import { processDecoratorBeforeAfterAsync } from '../decorator.helper.js'
 import type { DecoratorExecutorParam } from '../trace.helper.js'
 
 
-export async function decoratorExecutorAsync(options: DecoratorExecutorParam): Promise<unknown> {
+export async function beforeAsync(options: DecoratorExecutorParam): Promise<void> {
   const {
-    config,
-    method,
-    methodArgs,
     callerAttr,
     spanName,
     startActiveSpan,
@@ -20,54 +14,41 @@ export async function decoratorExecutorAsync(options: DecoratorExecutorParam): P
     traceService,
   } = options
 
-  /* c8 ignore next 3 */
-  if (! config.enable || ! traceService?.isStarted) {
-    return method(...methodArgs)
-  }
+  const type = 'before'
+
+  if (! traceService) { return }
 
   if (startActiveSpan) {
     // 记录开始时间
-    return traceService.startActiveSpan(
+    await traceService.startActiveSpan(
       spanName,
       async (span: Span) => {
-        span.setAttributes(callerAttr)
-        const ret = await runAndEndSpanCb(options, span)
-        return ret
+        options.span = span
+        options.span.setAttributes(callerAttr)
+        await processDecoratorBeforeAfterAsync(type, options)
       },
       spanOptions,
       traceContext,
     )
   }
   else {
-    const span = traceService.startSpan(spanName, spanOptions, traceContext)
-    span.setAttributes(callerAttr)
-    const ret = await runAndEndSpanCb(options, span)
-    return ret
+    options.span = traceService.startSpan(spanName, spanOptions, traceContext)
+    options.span.setAttributes(callerAttr)
+    return processDecoratorBeforeAfterAsync(type, options)
   }
 }
 
+export async function afterReturnAsync(options: DecoratorExecutorParam): Promise<unknown> {
+  const { span, traceService } = options
 
-async function runAndEndSpanCb(options: DecoratorExecutorParam, span: Span): Promise<unknown> {
-  const { mergedDecoratorParam, method, methodArgs, traceService } = options
-  const autoEndSpan = !! mergedDecoratorParam?.autoEndSpan
-
-  try {
-    await processDecoratorBeforeAfterAsync('before', options, span, void 0)
-
-    const resp = method(...methodArgs)
-    assert(isPromise(resp), 'func return value is not a promise')
-    const ret = await resp
-    await processDecoratorBeforeAfterAsync('after', options, span, ret)
-
-    autoEndSpan && traceService && traceService.endSpan(span)
-    return ret
+  if (! span || ! traceService) {
+    return options.methodResult
   }
-  catch (ex) {
-    const err = ex instanceof Error
-      ? ex
-      : new Error(typeof ex === 'string' ? ex : JSON.stringify(ex))
+  await processDecoratorBeforeAfterAsync('after', options)
 
-    traceService && traceService.endSpan(span, { code: SpanStatusCode.ERROR, error: err })
-    throw new Error(err.message, { cause: err.cause ?? err })
-  }
+  const autoEndSpan = !! options.mergedDecoratorParam?.autoEndSpan
+  autoEndSpan && traceService.endSpan(span)
+
+  return options.methodResult
 }
+

@@ -406,20 +406,20 @@ export function addSpanEventWithOutgoingResponseData(
   const attrs: Attributes = {}
 
   const { body } = ctx
+  let value = ''
   if (typeof body === 'object') {
-    const value = truncateString(JSON.stringify(body, null, 2))
-    Object.defineProperty(attrs, AttrNames.Http_Response_Body, {
-      ...defaultProperty,
-      value,
-    })
+    value = truncateString(JSON.stringify(body, null, 2))
   }
-  else {
-    const value = truncateString(JSON.stringify(body, null, 2))
-    Object.defineProperty(attrs, AttrNames.Http_Response_Body, {
-      ...defaultProperty,
-      value,
-    })
+  else if (typeof body === 'string') {
+    value = body ? truncateString(body) : ''
   }
+  // else {
+  //   value = body ? truncateString(body.toString()) : ''
+  // }
+  Object.defineProperty(attrs, AttrNames.Http_Response_Body, {
+    ...defaultProperty,
+    value,
+  })
 
   Object.defineProperty(attrs, AttrNames.Http_Response_Code, {
     ...defaultProperty,

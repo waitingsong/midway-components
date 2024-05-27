@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { Middleware } from '@midwayjs/core'
-import { Context, IMiddleware, NextFunction, shouldEnableMiddleware } from '@mwcp/share'
+import { Context, IMiddleware, NextFunction } from '@mwcp/share'
 import { SpanKind, SpanStatus } from '@opentelemetry/api'
 
 
 import { TraceService } from '##/lib/trace.service.js'
-import { ConfigKey, Config, MiddlewareConfig, middlewareEnableCacheKey } from '##/lib/types.js'
+import { ConfigKey, Config, middlewareEnableCacheKey } from '##/lib/types.js'
 import {
   addSpanEventWithOutgoingResponseData,
   parseResponseStatus,
@@ -29,18 +29,19 @@ export class TraceMiddleware implements IMiddleware<Context, NextFunction> {
     if (! config.enable) {
       return false
     }
-    const mwConfig = ctx.app.getConfig(ConfigKey.middlewareConfig) as MiddlewareConfig
-    if (! mwConfig.enableMiddleware) {
-      return false
-    }
+    // check config.enable only, ignore middleware.enable
+    // const mwConfig = ctx.app.getConfig(ConfigKey.middlewareConfig) as MiddlewareConfig
+    // if (! mwConfig.enableMiddleware) {
+    //   return false
+    // }
 
-    const flag = shouldEnableMiddleware(ctx, mwConfig)
+    // const flag = shouldEnableMiddleware(ctx, mwConfig)
     Object.defineProperty(ctx, middlewareEnableCacheKey, {
       enumerable: true,
       writable: true,
-      value: flag,
+      value: true,
     })
-    return flag
+    return true
   }
 
   resolve() {

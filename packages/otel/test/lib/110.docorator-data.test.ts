@@ -12,8 +12,8 @@ import { AssertsOptions, assertRootSpan, assertsSpan } from './110.helper.js'
 
 describe(fileShortPath(import.meta.url), function () {
 
-  const path1 = `${apiBase.decoratorData}/${apiMethod.async}`
-  const path2 = `${apiBase.decoratorData}/${apiMethod.sync}`
+  const path1 = `${apiBase.decorator_data}/${apiMethod.async}`
+  const path2 = `${apiBase.decorator_data}/${apiMethod.sync}`
 
   it(`Should ${path1} work`, async () => {
     const { httpRequest, testSuffix } = testConfig
@@ -38,8 +38,8 @@ describe(fileShortPath(import.meta.url), function () {
 
     const [rootSpan, span1, span2] = sortSpans(spans)
     assert(rootSpan)
-    assert(span2)
     assert(span1)
+    assert(span2)
 
     assertRootSpan({
       path: path1,
@@ -52,7 +52,13 @@ describe(fileShortPath(import.meta.url), function () {
         rootAttrs: 'rootAttrs',
       },
       logs: [
+        {},
+        {},
+        {},
         { event: 'default', rootAttrs: 'rootAttrs' },
+        false,
+        false,
+        false,
       ],
     })
 
@@ -110,8 +116,8 @@ describe(fileShortPath(import.meta.url), function () {
 
     const [rootSpan, span1, span2] = sortSpans(spans)
     assert(rootSpan)
-    assert(span2)
     assert(span1)
+    assert(span2)
 
     assertRootSpan({
       path: path2,
@@ -124,7 +130,13 @@ describe(fileShortPath(import.meta.url), function () {
         rootAttrs: 'rootAttrs',
       },
       logs: [
+        {},
+        {},
+        {},
         { event: 'default', rootAttrs: 'rootAttrs' },
+        false,
+        false,
+        false,
       ],
     })
 

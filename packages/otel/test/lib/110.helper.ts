@@ -19,13 +19,13 @@ export interface AssertsRootOptions {
 
   operationName?: string
   tags?: Attributes
-  logs?: Attributes[]
+  logs?: (Attributes | false)[]
 }
 
 export function assertRootSpan(options: AssertsRootOptions): void {
   const { path, span, tags } = options
   const operationName = options.operationName ?? `HTTP GET ${path}`
-  const logs = options.logs ?? []
+  const expectLogs = options.logs ?? []
 
   const tags2 = Object.assign({
     [SEMATTRS_HTTP_METHOD]: 'GET',
@@ -37,7 +37,7 @@ export function assertRootSpan(options: AssertsRootOptions): void {
     'span.kind': 'server',
   }, tags)
 
-  const logs2 = [
+  const logBase = [
     { event: AttrNames.RequestBegin },
     { event: AttrNames.Incoming_Request_data },
     { event: AttrNames.PreProcessFinish },
@@ -46,11 +46,26 @@ export function assertRootSpan(options: AssertsRootOptions): void {
     { event: AttrNames.RequestEnd },
   ]
 
+  const logs: Attributes[] = []
+
+  // const logs = logs2.map((log, idx) => {
+  for (let idx = 0; idx < Math.max(logBase.length, expectLogs.length, options.logs?.length ?? 0); idx += 1) {
+    const log = logBase[idx] ?? {}
+    const expectRow = expectLogs[idx]
+    if (expectRow === false) { continue }
+    if (expectRow && Object.keys(expectRow).length) {
+      const row = Object.assign(log, expectRow)
+      logs.push(row)
+      continue
+    }
+    logs.push(log)
+  }
+
   const opt: AssertsOptions = {
     traceId: options.traceId,
     operationName,
     tags: tags2,
-    logs: [...logs2, ...logs],
+    logs,
   }
 
   assertsSpan(span, opt)
@@ -70,13 +85,11 @@ export function assertsSpan(span: JaegerTraceInfoSpan, options: AssertsOptions):
   assert(span.traceID === options.traceId)
   assert(span.operationName === options.operationName, `operationName: ${span.operationName} !== ${options.operationName}`)
 
-  const tags = Object.assign({
-    'otel.status_code': 'OK',
-  }, span.tags)
-
-  // @ts-expect-error
   span.tags.forEach((tag: Attributes) => {
-    const { key, value } = tag
+    const tag2 = Object.assign({
+      'otel.status_code': 'OK',
+    }, tag)
+    const { key, value } = tag2
     if (! key) { return }
 
     // @ts-expect-error
@@ -88,21 +101,26 @@ export function assertsSpan(span: JaegerTraceInfoSpan, options: AssertsOptions):
   })
 
   if (options.logs?.length) {
-    // @ts-expect-error log type
-    span.logs.forEach((log: Attributes, idx) => {
-      const { key, value } = log
-      if (! key) { return }
-      if (! options.logs) { return }
+    span.logs.forEach((log, idx) => {
+      if (! log.fields.length) { return }
+      log.fields.forEach((field) => {
+        const { key, value } = field
+        if (! key) { return }
+        if (! options.logs) { return }
 
-      const expectLog = options.logs[idx]
-      if (! expectLog) { return }
+        const expectLog = options.logs[idx]
+        if (! expectLog) { return }
 
-      // @ts-expect-error
-      if (Object.prototype.hasOwnProperty.call(expectLog, key)) {
-        // @ts-expect-error
-        const expect = options.tags[key]
-        assert(value === expect, `${key.toString()}: ${value?.toString()} !== ${expect}`)
-      }
+        if (Object.prototype.hasOwnProperty.call(expectLog, key)) {
+          const expect = expectLog[key]
+          assert(expect, `${key.toString()} is null`)
+          assert(value === expect, `key: ${key.toString()},
+          value:
+          ${value?.toString()}
+          !== expect value:
+          ${expect.toString()}`)
+        }
+      })
     })
 
   }

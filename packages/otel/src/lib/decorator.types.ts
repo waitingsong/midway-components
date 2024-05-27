@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-invalid-void-type */
 /* c8 ignore start */
-import type { Application, Context } from '@mwcp/share'
+import { type Application, type Context } from '@mwcp/share'
 import type {
   Attributes,
   Context as TraceContext,
-  SpanOptions,
   Span,
+  SpanOptions,
 } from '@opentelemetry/api'
 import type { MethodTypeUnknown } from '@waiting/shared-types'
 
@@ -41,8 +41,8 @@ export interface TraceDecoratorOptions<
    * @default `/`
    */
   spanNameDelimiter: string | undefined
-  before: MethodTypeUnknown<[DecoratorContext, MParamType], DecoratorTraceDataResp | DecoratorTraceDataRespAsync> | undefined
-  after: MethodTypeUnknown<[DecoratorContext, MParamType, Awaited<MResultType>], DecoratorTraceDataResp | DecoratorTraceDataRespAsync> | undefined
+  before: MethodTypeUnknown<[MParamType, DecoratorContext], DecoratorTraceDataResp | DecoratorTraceDataRespAsync> | undefined
+  after: MethodTypeUnknown<[MParamType, Awaited<MResultType>, DecoratorContext], DecoratorTraceDataResp | DecoratorTraceDataRespAsync> | undefined
   /**
    * @default true
    */

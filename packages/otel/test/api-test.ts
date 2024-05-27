@@ -9,7 +9,7 @@ export const apiBase = {
   TraceDecorator: `/_${ConfigKey.namespace}_trace_decorator`,
   util: `/_${ConfigKey.namespace}_util`,
   route: '/route',
-  decoratorData: `/decorator_data`,
+  decorator_data: `/decorator_data`,
 }
 
 export const apiMethod = {
@@ -31,6 +31,6 @@ export const apiMethod = {
   propagateHeader: 'propagateHeader',
   async: 'async',
   sync: 'sync',
-  mixOnAsync: 'mix_on_async',
-  mixOnSync: 'mix_on_sync',
+  mix_on_async: 'mix_on_async',
+  mix_on_sync: 'mix_on_sync',
 }

@@ -12,7 +12,15 @@ const agent = exporterEndpoint.replace(/:\d+$/u, '')
 assert(agent, 'OTEL_EXPORTER_OTLP_ENDPOINT not set')
 
 export async function retrieveTraceInfoFromRemote(traceId: string, expectSpanNumber?: number): Promise<[JaegerTraceInfo]> {
-  const tracePath = `${agent}:16686/api/traces/${traceId}?prettyPrint=true`
+  console.log({ traceId })
+  let id = traceId
+  if (traceId.includes('-')) {
+    const txt = traceId.split('-').at(1)
+    assert(txt)
+    id = txt
+  }
+
+  const tracePath = `${agent}:16686/api/traces/${id}?prettyPrint=true`
   let resp = await makeHttpRequest(tracePath, {
     method: 'GET',
     dataType: 'json',
@@ -23,7 +31,7 @@ export async function retrieveTraceInfoFromRemote(traceId: string, expectSpanNum
     const { data } = resp.data as { data: [JaegerTraceInfo] }
     if (data?.length > 0) { break }
 
-    console.log('retry...')
+    console.log('retry traceId...')
     await sleep(2000)
     resp = await makeHttpRequest(tracePath, {
       method: 'GET',

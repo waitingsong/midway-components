@@ -225,7 +225,7 @@ export interface JaegerTraceInfoSpan {
   references: JaegerTraceInfoReferences[]
   startTime: number
   duration: number
-  tags: Attributes
+  tags: Attributes[]
   logs: JaegerTraceInfoLog[]
   processID: string
   warnings: unknown

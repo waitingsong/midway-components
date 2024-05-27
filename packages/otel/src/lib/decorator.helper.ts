@@ -1,10 +1,10 @@
 import assert from 'node:assert'
 import { isPromise } from 'node:util/types'
 
-import { Span } from '@opentelemetry/api'
+import type { Span } from '@opentelemetry/api'
 
 import type { AbstractOtelComponent, AbstractTraceService } from './abstract.js'
-import type { DecoratorContext, TraceDecoratorOptions, DecoratorTraceDataResp } from './decorator.types.js'
+import type { DecoratorContext, DecoratorTraceDataResp, TraceDecoratorOptions } from './decorator.types.js'
 import { DecoratorExecutorParam } from './trace.helper.js'
 import { AttrNames } from './types.js'
 
@@ -12,11 +12,11 @@ import { AttrNames } from './types.js'
 export async function processDecoratorBeforeAfterAsync(
   type: 'before' | 'after',
   options: DecoratorExecutorParam<TraceDecoratorOptions>,
-  span: Span,
-  resp: unknown,
 ): Promise<void> {
 
-  const { mergedDecoratorParam, otelComponent, traceService } = options
+  const { mergedDecoratorParam, otelComponent, span, traceService } = options
+  // not check traceService due to TraceInit decorator
+  assert(span, 'span is required')
 
   const func = mergedDecoratorParam?.[type]
   if (typeof func === 'function') {
@@ -35,7 +35,16 @@ export async function processDecoratorBeforeAfterAsync(
       traceSpan: span,
     }
 
-    const data = await func(decoratorContext, options.methodArgs, resp)
+    let data
+    if (type === 'before') {
+      const func2 = func as NonNullable<TraceDecoratorOptions['before']>
+      data = await func2(options.methodArgs, decoratorContext)
+    }
+    else {
+      const func2 = func as NonNullable<TraceDecoratorOptions['after']>
+      data = await func2(options.methodArgs, options.methodResult, decoratorContext)
+    }
+
     if (data) {
       const eventName = type
       if (data.events && ! Object.keys(data.events).includes(eventName)) {
@@ -44,19 +53,20 @@ export async function processDecoratorBeforeAfterAsync(
       processDecoratorSpanData(otelComponent, traceService, span, data)
     }
   }
+  return
 }
 
 export function processDecoratorBeforeAfterSync(
   type: 'before' | 'after',
   options: DecoratorExecutorParam<TraceDecoratorOptions>,
-  span: Span,
-  resp: unknown,
 ): void {
 
-  const { mergedDecoratorParam, otelComponent, traceService } = options
+  const { mergedDecoratorParam, otelComponent, span, traceService } = options
+  // not check traceService due to TraceInit decorator
+  assert(span, 'span is required')
 
   const func = mergedDecoratorParam?.[type]
-  if (typeof func === 'function' && traceService) {
+  if (typeof func === 'function') {
     // @ts-expect-error
     if (typeof span.ended === 'function') {
       // @ts-expect-error
@@ -72,10 +82,23 @@ export function processDecoratorBeforeAfterSync(
       traceSpan: span,
     }
 
-    const data = func(decoratorContext, options.methodArgs, resp)
+    let data
+    if (type === 'before') {
+      const func2 = func as NonNullable<TraceDecoratorOptions['before']>
+      data = func2(options.methodArgs, decoratorContext)
+    }
+    else {
+      const func2 = func as NonNullable<TraceDecoratorOptions['after']>
+      data = func2(options.methodArgs, options.methodResult, decoratorContext)
+    }
+
     if (data) {
-      assert(! isPromise(data), `processDecoratorBeforeAfterSync() decorator ${type}() return value is a promise,
+      if (isPromise(data)) {
+        const err = new Error(`processDecoratorBeforeAfterSync() decorator ${type}() return value is a promise,
       class: ${options.callerAttr[AttrNames.CallerClass]}, method: ${options.callerAttr[AttrNames.CallerMethod]}`)
+        console.error(err)
+        return
+      }
 
       const eventName = type
       if (data.events && ! Object.keys(data.events).includes(eventName)) {
@@ -84,6 +107,7 @@ export function processDecoratorBeforeAfterSync(
       processDecoratorSpanData(otelComponent, traceService, span, data)
     }
   }
+  return
 }
 
 function processDecoratorSpanData(

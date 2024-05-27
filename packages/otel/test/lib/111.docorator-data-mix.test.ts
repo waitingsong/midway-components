@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import { SEMATTRS_HTTP_TARGET, SEMATTRS_HTTP_ROUTE } from '@opentelemetry/semantic-conventions'
 import { fileShortPath } from '@waiting/shared-core'
 
+import { HeadersKey, AttrNames } from '##/index.js'
 import { apiBase, apiMethod } from '#@/api-test.js'
 import { retrieveTraceInfoFromRemote, sortSpans } from '#@/helper.test.js'
 import { testConfig } from '#@/root.config.js'
@@ -12,8 +13,8 @@ import { AssertsOptions, assertRootSpan, assertsSpan } from './110.helper.js'
 
 describe(fileShortPath(import.meta.url), function () {
 
-  const path1 = `${apiBase.decoratorData}/${apiMethod.mixOnAsync}`
-  const path2 = `${apiBase.decoratorData}/${apiMethod.mixOnSync}`
+  const path1 = `${apiBase.decorator_data}/${apiMethod.mix_on_async}`
+  const path2 = `${apiBase.decorator_data}/${apiMethod.mix_on_sync}`
 
   it(`Should ${path1} work`, async () => {
     const { httpRequest, testSuffix } = testConfig
@@ -32,15 +33,14 @@ describe(fileShortPath(import.meta.url), function () {
     assert(info)
     console.log('--------------------', { info })
     const { spans } = info
-    assert(spans.length)
     spans.forEach((span, idx) => {
       console.info(idx, { span })
     })
 
     const [rootSpan, span1, span2] = sortSpans(spans)
     assert(rootSpan)
-    assert(span2)
     assert(span1)
+    assert(span2)
 
     assertRootSpan({
       path: path1,
@@ -53,7 +53,13 @@ describe(fileShortPath(import.meta.url), function () {
         rootAttrs: 'rootAttrs',
       },
       logs: [
+        {},
+        {},
+        {},
         { event: 'default', rootAttrs: 'rootAttrs' },
+        false,
+        false,
+        false,
       ],
     })
 
@@ -95,9 +101,75 @@ describe(fileShortPath(import.meta.url), function () {
 
     assert(! resp.ok, resp.text)
     assert(resp.status === 500)
-    assert(resp.text.includes('decorator before() return value is a promise'), resp.text)
+    assert(resp.text.includes('before() is a AsyncFunction'), resp.text)
     assert(resp.text.includes('class: DecoratorDataComponentController'), resp.text)
     assert(resp.text.includes('method: _MixOnSync'), resp.text)
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const headers = new Headers(resp.header)
+    const oid = headers.get(HeadersKey['otelTraceId'])
+    assert(oid)
+
+    const [info] = await retrieveTraceInfoFromRemote(oid, 2)
+    assert(info)
+    const traceId = info.traceID
+    console.log('--------------------', { info })
+    const { spans } = info
+
+    const [rootSpan, span1, span2] = sortSpans(spans)
+    assert(rootSpan)
+    assert(span1)
+
+    const errMsg = '[@mwcp/share] Trace() before() is a AsyncFunction, but decorated method is sync function, class: DecoratorDataComponentController, method: _MixOnSync'
+
+    assertRootSpan({
+      path: path2,
+      span: rootSpan,
+      traceId,
+      operationName: `HTTP GET ${path2}/:id`,
+      tags: {
+        [SEMATTRS_HTTP_TARGET]: `${path2}/${id}`,
+        [SEMATTRS_HTTP_ROUTE]: `${path2}/:id`,
+        [AttrNames.HTTP_ERROR_NAME]: 'AssertionError',
+        [AttrNames.HTTP_ERROR_MESSAGE]: errMsg,
+        [AttrNames.HTTP_STATUS_TEXT]: 'Error',
+        error: true,
+      },
+      logs: [
+        {},
+        {},
+        {},
+        false,
+        {
+          event: `${AttrNames.Outgoing_Response_data}`,
+          [AttrNames.Http_Response_Code]: 500,
+          [AttrNames.Http_Response_Body]: errMsg,
+        },
+      ],
+    })
+
+    const opt1: AssertsOptions = {
+      traceId,
+      operationName: 'DecoratorDataComponentController/mixOnSync',
+      tags: {
+        'caller.class': 'DecoratorDataComponentController',
+        'caller.method': 'mixOnSync',
+        'span.kind': 'client',
+        [AttrNames.HTTP_ERROR_NAME]: 'AssertionError',
+        [AttrNames.HTTP_ERROR_MESSAGE]: errMsg,
+        [AttrNames.HTTP_STATUS_TEXT]: 'Error',
+        error: true,
+      },
+      logs: [
+        {
+          event: `${AttrNames.Exception}`,
+          [AttrNames.Exception_Type]: 'ERR_ASSERTION',
+          [AttrNames.Http_Response_Code]: 500,
+          [AttrNames.Http_Response_Body]: errMsg,
+        },
+      ],
+    }
+    assertsSpan(span1, opt1)
   })
 })
 

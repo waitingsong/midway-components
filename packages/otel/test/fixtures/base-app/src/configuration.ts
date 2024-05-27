@@ -15,7 +15,7 @@ export class AutoConfiguration {
 
   @SRC.TraceInit({
     spanName: 'INIT TEST.onReady',
-    before: async (decoratorContext, args) => {
+    before: async (args, decoratorContext) => {
       assert(decoratorContext.webApp)
       assert(args.length >= 2)
 
@@ -26,7 +26,7 @@ export class AutoConfiguration {
 
       return { attrs, events, rootAttrs, rootEvents }
     },
-    after: (decoratorContext, args, res) => {
+    after: (args, res, decoratorContext) => {
       assert(decoratorContext.webApp)
       assert(args.length >= 2)
       assert(res === 123n)
@@ -47,11 +47,11 @@ export class AutoConfiguration {
 
   @SRC.TraceInit({
     spanName: 'INIT TEST.onServerReady',
-    before: (decoratorContext, args) => {
+    before: (args, decoratorContext) => {
       assert(decoratorContext.webApp)
       assert(args.length >= 2)
     },
-    after: async (decoratorContext, args, res) => {
+    after: async (args, res, decoratorContext) => {
       assert(decoratorContext.webApp)
       assert(args.length >= 2)
       assert(res === 234n)

@@ -64,7 +64,7 @@ export abstract class AbstractOtelComponent {
     options?: AddEventOptions,
   ): void
 
-  abstract addRootSpanEventWithError(span: Span, error?: Error): void
+  abstract addSpanEventWithError(span: Span, error?: Error): void
 
   /**
    * Sets the attributes to the given span.
