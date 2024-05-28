@@ -196,7 +196,7 @@ function aopDispatchSync(
   assert(typeof func === 'function', 'before must be function')
   assert(
     ! isAsyncFunction(func),
-    `[@mwcp/${ConfigKey.namespace}] aopDispatchSync(): ${decoratorHandlerClassName}.${func.name}() must be sync function, due to method ${instanceName}.${methodName}() is sync function`,
+    `[@mwcp/${ConfigKey.namespace}] aopDispatchSync(): ${decoratorHandlerClassName}.${func.name}() must not be AsyncFunction, due to method ${instanceName}.${methodName}() is sync function, you can modify it to SyncFunction or return Promise value`,
   )
 
   const executorParam = prepareOptions(aopName, options, joinPoint, decoratorHandlerInstance, extParam)
