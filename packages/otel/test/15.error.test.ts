@@ -31,7 +31,6 @@ describe(fileShortPath(import.meta.url), function () {
     assert(resp.status === 500, resp.text)
 
     const ret = resp.text
-    // assert(! ret, ret)
     assert(ret.includes('debug for DefaultComponentService.error()'), ret)
   })
 

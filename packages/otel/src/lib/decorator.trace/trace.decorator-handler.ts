@@ -30,15 +30,7 @@ export class DecoratorHandlerTrace extends DecoratorHandlerTraceBase {
     if (options.methodIsAsyncFunction) {
       return beforeAsync(options)
     }
-
-    try {
-      beforeSync(options)
-    }
-    catch (ex) {
-      this.afterThrow(options, ex)
-      console.error(`[@mwcp/${ConfigKey.namespace}] Trace() error not processed`, ex)
-    }
-    return
+    beforeSync(options)
   }
 
   override afterReturn(options: DecoratorExecutorParam): unknown {
@@ -54,13 +46,11 @@ export class DecoratorHandlerTrace extends DecoratorHandlerTraceBase {
 
   override afterThrow(options: DecoratorExecutorParam, errorExt?: unknown): void {
     const error = genError({
-      error: options.error ?? errorExt,
+      error: errorExt ?? options.error,
       throwMessageIfInputUndefined: `[@mwcp/${ConfigKey.namespace}] Trace() afterThrow error is undefined`,
       altMessage: `[@mwcp/${ConfigKey.namespace}] Trace() decorator afterThrow error`,
     })
-    options.error = error
     this.traceError(options, error)
-
     throw error
   }
 

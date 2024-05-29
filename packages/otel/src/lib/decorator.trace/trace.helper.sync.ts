@@ -54,6 +54,9 @@ export function beforeSync(options: DecoratorExecutorParam): void {
 export function afterReturnSync(options: DecoratorExecutorParam): unknown {
   const { span, traceService } = options
 
+  assert(! options.error, `[@mwcp/${ConfigKey.namespace}] options.error is not undefined in afterReturnSync().
+  Error: ${options.error?.message}`)
+
   if (! span || ! traceService) {
     return options.methodResult
   }

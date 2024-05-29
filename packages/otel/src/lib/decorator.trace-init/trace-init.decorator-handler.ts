@@ -50,18 +50,12 @@ export class DecoratorHandlerTraceInit extends DecoratorHandlerBase {
   }
 
   override afterThrow(options: DecoratorExecutorParam): void {
-    // else {
-    //   err = new Error(`[@mwcp/${ConfigKey.namespace}] TraceInit() decorator afterThrow error`, { cause: error })
-    // }
-
     const error = genError({
       error: options.error,
       throwMessageIfInputUndefined: `[@mwcp/${ConfigKey.namespace}] TraceInit() afterThrow error is undefined`,
       altMessage: `[@mwcp/${ConfigKey.namespace}] TraceInit() decorator afterThrow error`,
     })
-    options.error = error
     this.traceError(options, error)
-
     throw error
   }
 

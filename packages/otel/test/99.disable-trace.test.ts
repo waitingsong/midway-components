@@ -30,10 +30,9 @@ describe(fileShortPath(import.meta.url), function () {
   it(`Should ${path} work`, async () => {
     const { httpRequest } = testConfig
 
-    const resp = await httpRequest
-      .get(path)
-
+    const resp = await httpRequest.get(path)
     assert(resp.ok, resp.text)
+
     const traceId = resp.text
     assert(! traceId, 'traceId should empty')
   })
