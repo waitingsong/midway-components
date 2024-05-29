@@ -86,6 +86,16 @@ export function genExecuteDecoratorHandlerSync(
 
   const aopCallback: CustomIMethodAspect = { }
 
+  if (typeof decoratorHandlerInstance.before === 'function') {
+    aopCallback.before = (joinPoint: JoinPoint) => aopDispatchSync(
+      'before',
+      options,
+      decoratorHandlerInstance,
+      joinPoint,
+      {},
+    )
+  }
+
   if (typeof decoratorHandlerInstance.around === 'function') {
     aopCallback.around = (joinPoint: JoinPoint) => aopDispatchSync(
       'around',
@@ -96,15 +106,6 @@ export function genExecuteDecoratorHandlerSync(
     )
   }
 
-  if (typeof decoratorHandlerInstance.before === 'function') {
-    aopCallback.before = (joinPoint: JoinPoint) => aopDispatchSync(
-      'before',
-      options,
-      decoratorHandlerInstance,
-      joinPoint,
-      {},
-    )
-  }
 
   if (typeof decoratorHandlerInstance.afterReturn === 'function') {
     aopCallback.afterReturn = (joinPoint: JoinPoint, result: unknown) => aopDispatchSync(
@@ -231,13 +232,13 @@ function prepareOptions(
 
   switch (aopName) {
     case 'before': {
-      assert(typeof options.methodResult === 'undefined', `methodResult must be undefined on ${aopName}() lifecycle`)
-      assert(typeof extParam.methodResult === 'undefined', `extParam.methodResult must be undefined on beginning of ${aopName}() lifecycle`)
+      assert(typeof options.methodResult === 'undefined', `methodResult must be undefined in ${aopName}() lifecycle`)
+      assert(typeof extParam.methodResult === 'undefined', `extParam.methodResult must be undefined at the beginning of ${aopName}() lifecycle`)
       break
     }
 
     case 'around':
-      assert(typeof extParam.methodResult === 'undefined', `extParam.methodResult must be undefined on beginning of ${aopName}() lifecycle`)
+      assert(typeof extParam.methodResult === 'undefined', `extParam.methodResult must be undefined at the beginning of ${aopName}() lifecycle`)
       break
 
     default:
@@ -259,7 +260,7 @@ function prepareOptions(
         break
     }
     if (['before'].includes(aopName)) {
-      assert(typeof cache.methodResult === 'undefined', `result must be undefined on ${aopName}() lifecycle`)
+      assert(typeof cache.methodResult === 'undefined', `result must be undefined in ${aopName}() lifecycle`)
     }
     return Object.keys(extParam).length ? Object.assign(cache, extParam) : cache
   }
