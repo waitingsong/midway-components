@@ -97,7 +97,7 @@ export class DecoratorHandler43 extends DecoratorHandlerBase {
  * @docs: https://midwayjs.org/docs/aspect
  */
 @Singleton()
-export class DecoratorHandler44 extends DecoratorHandlerBase {
+export class DecoratorHandler2 extends DecoratorHandlerBase {
   readonly foo = 1
 
   override afterThrow(options: DecoratorExecutorParamBase<FooArgs>): unknown {
@@ -145,7 +145,7 @@ export class DecoratorHandler44 extends DecoratorHandlerBase {
  * @docs: https://midwayjs.org/docs/aspect
  */
 @Singleton()
-export class DecoratorHandler45 extends DecoratorHandlerBase {
+export class DecoratorHandler3 extends DecoratorHandlerBase {
   readonly foo = 1
 
   override afterThrow(options: DecoratorExecutorParamBase<FooArgs>): unknown {
@@ -159,12 +159,11 @@ export class DecoratorHandler45 extends DecoratorHandlerBase {
     throw new Error(afterThrowMsgReThrow, { cause: options.error })
   }
 
-  override after(options: DecoratorExecutorParamBase<FooArgs>): unknown {
+  override after(options: DecoratorExecutorParamBase<FooArgs>): void {
     assert(this.foo === 1)
 
     assert(typeof options.methodResult === 'undefined')
     assert(options.error && options.error instanceof Error)
-    return options.methodResult
   }
 }
 

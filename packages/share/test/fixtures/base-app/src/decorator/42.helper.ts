@@ -2,7 +2,7 @@ import assert from 'assert'
 
 import { DecoratorExecutorParamBase, customDecoratorFactory } from '../../../../../src/index.js'
 
-import { DecoratorHandler43, DecoratorHandler44, DecoratorHandler45 } from './43.decorator-handler.js'
+import { DecoratorHandler43, DecoratorHandler2, DecoratorHandler3 } from './43.decorator-handler.js'
 
 
 export const METHOD_KEY_Foo = 'decorator:method_key_foo'
@@ -50,7 +50,7 @@ export function Foo2(options?: Partial<FooArgs>) {
   return customDecoratorFactory({
     decoratorArgs: options,
     decoratorKey: METHOD_KEY_Foo2,
-    decoratorHandlerClass: DecoratorHandler44,
+    decoratorHandlerClass: DecoratorHandler2,
   })
 }
 
@@ -59,6 +59,6 @@ export function Foo3(options?: Partial<FooArgs>) {
   return customDecoratorFactory({
     decoratorArgs: options,
     decoratorKey: METHOD_KEY_Foo3,
-    decoratorHandlerClass: DecoratorHandler45,
+    decoratorHandlerClass: DecoratorHandler3,
   })
 }
