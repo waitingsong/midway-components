@@ -7,14 +7,76 @@ import {
   DecoratorExecutorParamBase,
 } from '../../../../../src/index.js'
 
-import {
-  FooArgs,
-  decoratorExecutorAsync,
-  decoratorExecutorSync,
-  up10,
-  afterThrowMsg,
-  afterThrowMsgReThrow,
-} from './42.helper.js'
+
+
+export const METHOD_KEY_Foo = 'decorator:method_key_foo'
+export const METHOD_KEY_Foo2 = 'decorator:method_key_foo2'
+export const METHOD_KEY_Foo3 = 'decorator:method_key_foo3'
+export const METHOD_KEY_Foo4 = 'decorator:method_key_foo4'
+export const METHOD_KEY_Foo5 = 'decorator:method_key_foo5'
+export const METHOD_KEY_Foo6 = 'decorator:method_key_foo6'
+export const METHOD_KEY_Foo7 = 'decorator:method_key_foo7'
+export const METHOD_KEY_Foo8 = 'decorator:method_key_foo8'
+export const up1 = 1
+export const up10 = 10
+export const afterThrowMsg = 'afterThrow-test'
+export const afterThrowMsgReThrow = 'afterThrow-test2'
+
+export const beforeThrowMsgReThrow = 'beforeThrow-test'
+export const beforeThrowMsgSuppressed = 'beforeThrow-suppressed'
+export const beforeThrowMsgNoReThrow = 'beforeThrow-no-rethrow'
+export const reThrowAtAfter = 'reThrowAtAfter-test'
+export const throwAtAfterReturn = 'reThrowAtAfterReturn-test'
+export const onlyAfterThrow = 'onlyAfterThrow-test'
+
+
+export interface FooArgs {
+  cacheName: string | undefined
+  ttl: number | undefined
+}
+export async function decoratorExecutorAsync(options: DecoratorExecutorParamBase<FooArgs>): Promise<unknown> {
+  assert(options.method)
+  const resp = await options.method(...options.methodArgs)
+  if (typeof resp === 'number') {
+    return new Promise((done) => {
+      done(resp + up1)
+    })
+  }
+  return resp
+}
+export function decoratorExecutorSync(options: DecoratorExecutorParamBase<FooArgs>): unknown {
+  assert(options.method)
+  const resp = options.method(...options.methodArgs)
+  if (typeof resp === 'number') {
+    return resp + up1
+  }
+  return resp
+}
+
+
+/**
+ * Normal aop callback define, suppress error
+ * @docs: https://midwayjs.org/docs/aspect
+ */
+@Singleton()
+export class DecoratorHandler8 extends DecoratorHandlerBase {
+
+  override afterThrow(options: DecoratorExecutorParamBase<FooArgs>): void {
+    assert(options.error instanceof Error)
+    assert(options.error.message === onlyAfterThrow)
+  }
+
+  override after(options: DecoratorExecutorParamBase<FooArgs>): void {
+    if (options.methodResult) {
+      assert(! options.error)
+    }
+    else {
+      assert(options.error instanceof Error)
+      assert(options.error.message === onlyAfterThrow)
+      // no re-throw, so error is suppressed
+    }
+  }
+}
 
 
 /**
@@ -100,7 +162,7 @@ export class DecoratorHandler43 extends DecoratorHandlerBase {
 export class DecoratorHandler2 extends DecoratorHandlerBase {
   readonly foo = 1
 
-  override afterThrow(options: DecoratorExecutorParamBase<FooArgs>): unknown {
+  override afterThrow(options: DecoratorExecutorParamBase<FooArgs>): number { // return type should be void, but for testing purpose
     assert(this.foo === 1)
 
     assert(options.error instanceof Error)
@@ -148,7 +210,7 @@ export class DecoratorHandler2 extends DecoratorHandlerBase {
 export class DecoratorHandler3 extends DecoratorHandlerBase {
   readonly foo = 1
 
-  override afterThrow(options: DecoratorExecutorParamBase<FooArgs>): unknown {
+  override afterThrow(options: DecoratorExecutorParamBase<FooArgs>): void {
     assert(this.foo === 1)
 
     const args = options.methodArgs
@@ -162,9 +224,109 @@ export class DecoratorHandler3 extends DecoratorHandlerBase {
   override after(options: DecoratorExecutorParamBase<FooArgs>): void {
     assert(this.foo === 1)
 
+    if (options.error) {
+      assert(typeof options.methodResult === 'undefined')
+      assert(options.error instanceof Error)
+      assert(options.error.message === afterThrowMsg, `error.message: ${options.error.message}, expect: ${afterThrowMsg}`)
+    }
+    else {
+      assert(typeof options.methodResult !== 'undefined')
+    }
+  }
+}
+
+
+@Singleton()
+export class DecoratorHandler4 extends DecoratorHandlerBase {
+  readonly msg = beforeThrowMsgReThrow
+
+  override before(options: DecoratorExecutorParamBase<FooArgs>) {
+    void options
+    throw new Error(this.msg)
+  }
+
+  override afterThrow(options: DecoratorExecutorParamBase<FooArgs>): void {
+    assert(options.error instanceof Error)
+    assert(options.error.message === this.msg)
+    throw new Error(this.msg, { cause: options.error })
+  }
+
+  override after(options: DecoratorExecutorParamBase<FooArgs>): void {
+    assert(typeof options.methodResult === 'undefined')
+    assert(options.error instanceof Error)
+    assert(options.error.message === this.msg, `error.message: ${options.error.message}, expect: ${afterThrowMsg}`)
+  }
+}
+
+
+@Singleton()
+export class DecoratorHandler5 extends DecoratorHandlerBase {
+  readonly msg = beforeThrowMsgNoReThrow
+
+  override before(options: DecoratorExecutorParamBase<FooArgs>) {
+    void options
+    throw new Error(this.msg)
+  }
+
+  // no re-throw
+  override afterThrow(options: DecoratorExecutorParamBase<FooArgs>): void {
+    assert(options.error instanceof Error)
+    assert(options.error.message === this.msg)
+    // throw options.error
+  }
+
+  override after(options: DecoratorExecutorParamBase<FooArgs>): void {
+    if (options.error) {
+      assert(typeof options.methodResult === 'undefined')
+      assert(options.error && options.error instanceof Error)
+      assert(options.error.message === this.msg, `error.message: ${options.error.message}, expect: ${afterThrowMsg}`)
+    }
+    else { // error from after(), original method not executed, no result
+      assert(typeof options.methodResult === 'undefined')
+    }
+  }
+}
+
+
+@Singleton()
+export class DecoratorHandler6 extends DecoratorHandlerBase {
+  readonly msg = Math.random().toString()
+
+  override before(options: DecoratorExecutorParamBase<FooArgs>) {
+    void options
+    throw new Error(this.msg)
+  }
+
+  // no re-throw
+  override afterThrow(options: DecoratorExecutorParamBase<FooArgs>): void {
+    assert(options.error instanceof Error)
+    assert(options.error.message === this.msg)
+    // throw options.error
+  }
+
+  override after(options: DecoratorExecutorParamBase<FooArgs>): void {
     assert(typeof options.methodResult === 'undefined')
     assert(options.error && options.error instanceof Error)
-    assert(options.error.message === afterThrowMsg)
+    assert(options.error.message === this.msg, `error.message: ${options.error.message}, expect: ${afterThrowMsg}`)
+    throw new Error(reThrowAtAfter)
+  }
+}
+
+
+@Singleton()
+export class DecoratorHandler7 extends DecoratorHandlerBase {
+  readonly msg = throwAtAfterReturn
+
+  override afterReturn(options: DecoratorExecutorParamBase<FooArgs>): void {
+    assert(typeof options.error === 'undefined')
+    throw new Error(this.msg)
+  }
+
+  override after(options: DecoratorExecutorParamBase<FooArgs>): void {
+    assert(typeof options.methodResult === 'number') // original method return value
+    // error from afterReturn(), also error thrown even if no throw in after()
+    assert(options.error && options.error instanceof Error)
+    assert(options.error.message === this.msg, `error.message: ${options.error.message}, expect: ${afterThrowMsg}`)
   }
 }
 
