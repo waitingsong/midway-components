@@ -229,9 +229,19 @@ function prepareOptions(
   extParam: AopDispatchOptions,
 ): DecoratorExecutorParamBase | Promise<DecoratorExecutorParamBase> {
 
-  if (['before', 'around'].includes(aopName)) {
-    assert(typeof options.methodResult === 'undefined', 'methodResult must be undefined on before() and around() lifecycle')
-    assert(typeof extParam.methodResult === 'undefined', 'extParam must be undefined on before() and around() lifecycle')
+  switch (aopName) {
+    case 'before': {
+      assert(typeof options.methodResult === 'undefined', `methodResult must be undefined on ${aopName}() lifecycle`)
+      assert(typeof extParam.methodResult === 'undefined', `extParam.methodResult must be undefined on beginning of ${aopName}() lifecycle`)
+      break
+    }
+
+    case 'around':
+      assert(typeof extParam.methodResult === 'undefined', `extParam.methodResult must be undefined on beginning of ${aopName}() lifecycle`)
+      break
+
+    default:
+      break
   }
 
   const cache = retrieveDecoratorExecutorParam(joinPoint.args) // not use options.methodArgs
@@ -249,9 +259,9 @@ function prepareOptions(
         break
     }
     if (['before'].includes(aopName)) {
-      assert(typeof cache.methodResult === 'undefined', 'ret must be undefined on before() and around() lifecycle')
+      assert(typeof cache.methodResult === 'undefined', `result must be undefined on ${aopName}() lifecycle`)
     }
-    return Object.assign(cache, extParam)
+    return Object.keys(extParam).length ? Object.assign(cache, extParam) : cache
   }
 
   const executorParamBase: DecoratorExecutorParamBase = genExecutorOptionsCommon(
