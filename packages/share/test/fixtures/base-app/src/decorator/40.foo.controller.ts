@@ -86,7 +86,7 @@ export class MethodController {
     }
     catch (ex) {
       assert(ex instanceof Error)
-      assert(ex.message === afterThrowMsgReThrow)
+      assert(ex.message === afterThrowMsgReThrow, ex.message)
 
       try {
         this._simpleSync3(this.idx)

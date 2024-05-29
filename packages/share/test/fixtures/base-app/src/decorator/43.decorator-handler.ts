@@ -164,6 +164,7 @@ export class DecoratorHandler3 extends DecoratorHandlerBase {
 
     assert(typeof options.methodResult === 'undefined')
     assert(options.error && options.error instanceof Error)
+    assert(options.error.message === afterThrowMsg)
   }
 }
 
