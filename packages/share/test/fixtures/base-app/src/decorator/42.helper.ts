@@ -21,19 +21,6 @@ import {
 } from './43.decorator-handler.js'
 
 
-
-/**
- * Normal aop callback define, suppress error
- */
-export function Foo8(options?: Partial<FooArgs>) {
-  return customDecoratorFactory({
-    decoratorArgs: options,
-    decoratorKey: METHOD_KEY_Foo8,
-    decoratorHandlerClass: DecoratorHandler8,
-  })
-}
-
-
 export function Foo(options?: Partial<FooArgs>) {
   return customDecoratorFactory({
     decoratorArgs: options,
@@ -87,6 +74,17 @@ export function Foo7(options?: Partial<FooArgs>) {
     decoratorArgs: options,
     decoratorKey: METHOD_KEY_Foo7,
     decoratorHandlerClass: DecoratorHandler7,
+  })
+}
+
+/**
+ * Normal aop callback define, suppress error
+ */
+export function Foo8(options?: Partial<FooArgs>) {
+  return customDecoratorFactory({
+    decoratorArgs: options,
+    decoratorKey: METHOD_KEY_Foo8,
+    decoratorHandlerClass: DecoratorHandler8,
   })
 }
 

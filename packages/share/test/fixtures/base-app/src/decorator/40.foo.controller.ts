@@ -27,41 +27,6 @@ export class MethodController {
 
   idx = 1
 
-  // #region normal
-
-  /**
-   * Normal aop callback define, suppress error
-   * @docs: https://midwayjs.org/docs/aspect
-   */
-  @Get(`/${apiMethod.normal_aop}`)
-  async normal(): Promise<'OK'> {
-    this.idx = 1
-    await this._simple8(this.idx)
-    this._simpleSync8(this.idx)
-
-    await this._simple8(2)
-    this._simpleSync8(2)
-    return 'OK'
-  }
-
-
-  @Foo8()
-  async _simple8(input: number): Promise<number> {
-    if (input === 1) {
-      throw new Error(onlyAfterThrow)
-    }
-    return input
-  }
-
-  @Foo8()
-  _simpleSync8(input: number): number {
-    if (input === 1) {
-      throw new Error(onlyAfterThrow)
-    }
-    return input
-  }
-
-
   // #region before, around, after
 
   @Get(`/${apiMethod.handler}`)
@@ -332,6 +297,39 @@ export class MethodController {
 
   @Foo7()
   _simpleSync7(input: number): number {
+    return input
+  }
+
+  // #region suppress error
+
+  /**
+   * Normal aop callback define, suppress error
+   * @docs: https://midwayjs.org/docs/aspect
+   */
+  @Get(`/${apiMethod.normal_aop}`)
+  async simple8(): Promise<'OK'> {
+    this.idx = 1
+    await this._simple8(this.idx)
+    this._simpleSync8(this.idx)
+
+    await this._simple8(2)
+    this._simpleSync8(2)
+    return 'OK'
+  }
+
+  @Foo8()
+  async _simple8(input: number): Promise<number> {
+    if (input === 1) {
+      throw new Error(onlyAfterThrow)
+    }
+    return input
+  }
+
+  @Foo8()
+  _simpleSync8(input: number): number {
+    if (input === 1) {
+      throw new Error(onlyAfterThrow)
+    }
     return input
   }
 

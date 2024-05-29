@@ -55,31 +55,6 @@ export function decoratorExecutorSync(options: DecoratorExecutorParamBase<FooArg
 
 
 /**
- * Normal aop callback define, suppress error
- * @docs: https://midwayjs.org/docs/aspect
- */
-@Singleton()
-export class DecoratorHandler8 extends DecoratorHandlerBase {
-
-  override afterThrow(options: DecoratorExecutorParamBase<FooArgs>): void {
-    assert(options.error instanceof Error)
-    assert(options.error.message === onlyAfterThrow)
-  }
-
-  override after(options: DecoratorExecutorParamBase<FooArgs>): void {
-    if (options.methodResult) {
-      assert(! options.error)
-    }
-    else {
-      assert(options.error instanceof Error)
-      assert(options.error.message === onlyAfterThrow)
-      // no re-throw, so error is suppressed
-    }
-  }
-}
-
-
-/**
  * @docs: https://midwayjs.org/docs/aspect
  */
 @Singleton()
@@ -327,6 +302,31 @@ export class DecoratorHandler7 extends DecoratorHandlerBase {
     // error from afterReturn(), also error thrown even if no throw in after()
     assert(options.error && options.error instanceof Error)
     assert(options.error.message === this.msg, `error.message: ${options.error.message}, expect: ${afterThrowMsg}`)
+  }
+}
+
+
+/**
+ * Normal aop callback define, suppress error
+ * @docs: https://midwayjs.org/docs/aspect
+ */
+@Singleton()
+export class DecoratorHandler8 extends DecoratorHandlerBase {
+
+  override afterThrow(options: DecoratorExecutorParamBase<FooArgs>): void {
+    assert(options.error instanceof Error)
+    assert(options.error.message === onlyAfterThrow)
+  }
+
+  override after(options: DecoratorExecutorParamBase<FooArgs>): void {
+    if (options.methodResult) {
+      assert(! options.error)
+    }
+    else {
+      assert(options.error instanceof Error)
+      assert(options.error.message === onlyAfterThrow)
+      // no re-throw, so error is suppressed
+    }
   }
 }
 
