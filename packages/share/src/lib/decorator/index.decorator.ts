@@ -3,6 +3,7 @@ export * from './custom-decorator-factory.js'
 export * from './custom-decorator.helper.js'
 export {
   DecoratorHandlerBase,
+  DecoratorMetaData,
   CustomDecoratorFactoryOptions,
   DecoratorMetaDataPayload,
   DecoratorExecutorParamBase,
