@@ -36,3 +36,5 @@ export const initPathArray = [
 
 export const schemePrefix = 'Bearer'
 
+export const DECORATOR_KEY_Public = 'decorator_key_jwt:public'
+

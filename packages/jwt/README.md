@@ -73,6 +73,29 @@ export const jwtMiddlewareConfig: JwtMiddlewareConfig = {
 }
 ```
 
+## `Public` Decorator
+
+No JWT Authentication
+
+Caution:
+- it works even if the route is in the match list
+- it will cause some latency when first request for each route
+
+```ts
+import { Public } from '@mwcp/jwt'
+
+@Controller('/')
+export class FooController {
+
+  @Inject() readonly svc: FooService
+
+  @Public()
+  async hello(): Promise<string> {
+    return 'hello'
+  }
+
+}
+```
 
 ## License
 [MIT](LICENSE)

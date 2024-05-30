@@ -39,7 +39,8 @@ export class JwtMiddleware implements IMiddleware<Context, NextFunction> {
       }
 
       const mwConfig = ctx.app.getConfig(ConfigKey.middlewareConfig) as MiddlewareConfig
-      const flag = requestPathMatched(ctx.path, mwConfig)
+      const path = ctx._routerInfo?.fullUrl ?? ctx.path
+      const flag = requestPathMatched(path, mwConfig)
       return flag
     }
 

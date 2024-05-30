@@ -13,4 +13,5 @@ export const apiMethod = {
   component: 'component',
   home2: 'home2',
   test: 'test',
+  id: 'id',
 }

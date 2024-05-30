@@ -28,6 +28,7 @@ export const jwtMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
   ignore: [
     ...initPathArray,
     `/_${ConfigKey.namespace}/hello`,
+    `/demo/id/:id`, // for test case 100.test.ts
     // /\/test\/.*/u, // do not add, this path will be used for unit test
   ],
   options: {
