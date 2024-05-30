@@ -20,6 +20,9 @@ export class ControllerRouter {
     const info = await getRouterInfo(ctx, true, 1)
     assert(info)
     await getRouterInfo(ctx, true, 1)
+
+    assert.deepStrictEqual(info, ctx._routerInfo)
+
     return info
   }
 

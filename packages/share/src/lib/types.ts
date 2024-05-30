@@ -51,6 +51,7 @@ export interface MiddlewareOptions {
 export interface Context extends KoaCtx {
   reqId: string
   _internalError?: Error
+  _routerInfo: RouterInfoLite
 }
 
 export type AppConfig = Partial<MidwayConfig>
@@ -100,4 +101,39 @@ export class PagingResult<T> {
   pageSize: number
   rows: T[]
 
+}
+
+export interface RouterInfoLite {
+  /** uuid */
+  id: string
+  /** router prefix from controller */
+  prefix: string
+  /** router alias name */
+  routerName: string
+  /** router path, without prefix */
+  url: string | RegExp
+  /** request method for http, like get/post/delete */
+  requestMethod: string
+  /** router handler function key，for IoC container load */
+  handlerName: string
+  /** serverless func load key, will be override by @ServerlessTrigger and @ServerlessFunction */
+  funcHandlerName: string
+  /** controller provideId */
+  controllerId: string
+  /**
+   * serverless function name, will be override by @ServerlessTrigger and @ServerlessFunction
+   */
+  functionName: string
+  /**
+   * url with prefix
+   */
+  fullUrl: string
+  /**
+   * pattern after path-regexp compile
+   */
+  fullUrlCompiledRegexp: RegExp | undefined
+  /**
+   * url after wildcard and can be path-to-regexp by path-to-regexp v6
+   */
+  fullUrlFlattenString: string
 }

@@ -1,46 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { MidwayWebRouterService, RouterInfo } from '@midwayjs/core'
 
-import type { Context } from './types.js'
+import type { Context, RouterInfoLite } from './types.js'
 
 
 const routerInfoMap = new Map<string, RouterInfoLite>()
 const cacheLimit = 256
-
-export interface RouterInfoLite {
-  /** uuid */
-  id: string
-  /** router prefix from controller */
-  prefix: string
-  /** router alias name */
-  routerName: string
-  /** router path, without prefix */
-  url: string | RegExp
-  /** request method for http, like get/post/delete */
-  requestMethod: string
-  /** router handler function key，for IoC container load */
-  handlerName: string
-  /** serverless func load key, will be override by @ServerlessTrigger and @ServerlessFunction */
-  funcHandlerName: string
-  /** controller provideId */
-  controllerId: string
-  /**
-   * serverless function name, will be override by @ServerlessTrigger and @ServerlessFunction
-   */
-  functionName: string
-  /**
-   * url with prefix
-   */
-  fullUrl: string
-  /**
-   * pattern after path-regexp compile
-   */
-  fullUrlCompiledRegexp: RegExp | undefined
-  /**
-   * url after wildcard and can be path-to-regexp by path-to-regexp v6
-   */
-  fullUrlFlattenString: string
-}
 
 export async function getRouterInfo(ctx: Context, writeCache = true, limit = cacheLimit): Promise<RouterInfoLite | undefined> {
   const key = `${ctx.path}:${ctx.method}`

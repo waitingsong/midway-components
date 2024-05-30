@@ -24,6 +24,7 @@ import {
   MiddlewareOptions,
 } from './lib/types.js'
 // import { JsonRespMiddleware } from './middleware/index.middleware.js'
+import { RouterInfoMiddleware } from './middleware/index.middleware.js'
 import { deleteRouter } from './util/common.js'
 
 
@@ -66,10 +67,12 @@ export class AutoConfiguration implements ILifeCycle {
     void container
     await autoRegisterDecoratorHandlers(this.app, this.decoratorService, true)
 
-    // const isDevelopmentEnvironment = this.environmentService.isDevelopmentEnvironment()
-    // if (isDevelopmentEnvironment && this.enableJsonRespMiddlewareConfig === true) {
-    //   registerMiddleware(this.app, JsonRespMiddleware)
-    // }
+    // @ts-expect-error - types
+    this.app.getMiddleware().insertAfter(RouterInfoMiddleware, 'session')
+
+    // const mwNames = this.app.getMiddleware().getNames()
+    // const mwReady = mwNames.filter(name => ! name.includes('Controller'))
+    // console.info({ mwReady })
 
     this.logger.info(`[${ConfigKey.componentName}] onReady`)
   }
