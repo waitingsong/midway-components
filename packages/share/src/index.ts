@@ -13,6 +13,7 @@ export {
   genCurrentFilename,
   genISO8601String,
 } from '@waiting/shared-core'
+export { MiddlewarePathPattern } from '@waiting/shared-types'
 
 export { deepmerge }
 
