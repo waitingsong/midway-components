@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [29.3.0](https://github.com/waitingsong/midway-components/compare/v29.2.0...v29.3.0) (2024-05-31)
+
+
+### Features
+
+* **jwt:** decorator Public() to skip JWT Authentication ([7f72eb1](https://github.com/waitingsong/midway-components/commit/7f72eb14a5b99d359d5814e65984b490c13aecb3))
+* **share:** add routerInfoConfig.enable to controller use of router-info.middleware.ts ([181b809](https://github.com/waitingsong/midway-components/commit/181b809bf9e98e50b30d91a7c9c968e6b0992ba3))
+* **share:** expose type DecoratorMetaData ([9d8cc31](https://github.com/waitingsong/midway-components/commit/9d8cc317c7813d8204a9544398a83bc48397bcb2))
+* **share:** expose type MiddlewarePathPattern ([def72ea](https://github.com/waitingsong/midway-components/commit/def72ea85359b99d3cc727a2857b356e1c4349cb))
+
+
+
+
+
 # [29.2.0](https://github.com/waitingsong/midway-components/compare/v29.1.0...v29.2.0) (2024-05-30)
 
 
