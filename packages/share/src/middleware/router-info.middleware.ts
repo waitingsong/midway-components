@@ -3,11 +3,11 @@ import { Middleware } from '@midwayjs/core'
 
 import {
   Context,
+  ConfigKey,
   IMiddleware,
   NextFunction,
   getRouterInfo,
 } from '##/lib/index.js'
-
 
 
 /**
@@ -15,6 +15,12 @@ import {
  */
 @Middleware()
 export class RouterInfoMiddleware implements IMiddleware<Context, NextFunction> {
+
+  match(ctx: Context) {
+    const config = ctx.app.getConfig(ConfigKey.routerInfoConfig) as { enable: boolean } | undefined
+    return config?.enable ?? false
+  }
+
   resolve() {
     return middleware
   }

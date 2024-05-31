@@ -25,3 +25,12 @@ export const shareMiddlewareConfig: Readonly<Omit<MiddlewareConfig<MiddlewareOpt
  * @see ../middleware/json-response.middleware.ts
  */
 export const enableJsonRespMiddlewareConfig = true
+
+/**
+ * Enable retrieve router info, and save to `ctx._routerInfo`
+ * @default false
+ */
+export const routerInfoConfig = {
+  enable: true,
+}
+

@@ -28,6 +28,7 @@ export enum ConfigKey {
   componentName = 'shareComponent',
   middlewareName = 'shareMiddleware',
   enableJsonRespMiddlewareConfig = 'enableJsonRespMiddlewareConfig',
+  routerInfoConfig = 'routerInfoConfig',
 }
 
 export enum Msg {
@@ -51,7 +52,7 @@ export interface MiddlewareOptions {
 export interface Context extends KoaCtx {
   reqId: string
   _internalError?: Error
-  _routerInfo: RouterInfoLite
+  _routerInfo?: RouterInfoLite
 }
 
 export type AppConfig = Partial<MidwayConfig>
