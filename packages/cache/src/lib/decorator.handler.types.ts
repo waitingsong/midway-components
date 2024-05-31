@@ -11,20 +11,6 @@ export class DecoratorHandlerCacheBase extends DecoratorHandlerBase {
 
   @Inject() cachingFactory: CachingFactory
 
-
-  // override afterThrow(options: DecoratorExecutorOptions, errorExt?: unknown): void {
-  //   const { cacheKey, error } = options
-
-  //   console.error('cache error', error)
-  //   const ex2Msg = error instanceof Error
-  //     ? error.message
-  //     : typeof error === 'string' ? error : JSON.stringify(error)
-
-  //   const ex3 = new Error(`[@mwcp/cache] cache error with key: "${cacheKey}" >
-  // message: ${ex2Msg}`, { cause: error })
-  //   return Promise.reject(ex3)
-  // }
-
   override afterThrow(options: DecoratorExecutorOptions, errorExt?: unknown): void {
     const { cacheKey } = options
     const op = ConfigKey[options.op as keyof typeof ConfigKey]
