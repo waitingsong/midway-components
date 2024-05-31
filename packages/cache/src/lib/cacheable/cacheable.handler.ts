@@ -24,12 +24,7 @@ export class DecoratorHandlerCacheable extends DecoratorHandlerCacheBase {
   }
 
   override async before(options: DecoratorExecutorOptions<CacheableArgs>) {
-    try {
-      await before(options)
-    }
-    catch (error) {
-      this.afterThrow(options, error)
-    }
+    await before(options)
   }
 
   override around(options: DecoratorExecutorOptions<CacheableArgs>) {

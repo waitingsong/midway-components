@@ -25,12 +25,7 @@ export class DecoratorHandlerCacheEvict extends DecoratorHandlerCacheBase {
   }
 
   override async before(options: DecoratorExecutorOptions<CacheEvictArgs>) {
-    try {
-      await before(options)
-    }
-    catch (error) {
-      this.afterThrow(options, error)
-    }
+    await before(options)
   }
 
   override around(options: DecoratorExecutorOptions<CacheEvictArgs>) {
