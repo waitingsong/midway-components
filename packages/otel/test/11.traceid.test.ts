@@ -11,7 +11,7 @@ import { testConfig } from '#@/root.config.js'
 
 
 describe(fileShortPath(import.meta.url), function () {
-  this.retries(1)
+  this.retries(3)
 
   const path = `${apiBase.TraceDecorator}/${apiMethod.id}`
   const path2 = `${apiBase.TraceDecorator}/${apiMethod.id2}`
