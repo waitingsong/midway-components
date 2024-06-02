@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [30.0.0](https://github.com/waitingsong/midway-components/compare/v29.3.1...v30.0.0) (2024-06-02)
+
+**Note:** Version bump only for package @mwcp/otel
+
+
+
+
+
 ## [29.3.1](https://github.com/waitingsong/midway-components/compare/v29.3.0...v29.3.1) (2024-05-31)
 
 **Note:** Version bump only for package @mwcp/otel

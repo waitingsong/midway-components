@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [30.0.0](https://github.com/waitingsong/midway-components/compare/v29.3.1...v30.0.0) (2024-06-02)
+
+
+### Features
+
+* **cache:** breaking change key generation strategy genCacheKey() ([4ecdc61](https://github.com/waitingsong/midway-components/commit/4ecdc6108b666c8988392b6b944e1961ce0b0051))
+
+
+
+
+
 ## [29.3.1](https://github.com/waitingsong/midway-components/compare/v29.3.0...v29.3.1) (2024-05-31)
 
 **Note:** Version bump only for package midway-components
