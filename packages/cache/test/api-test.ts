@@ -32,4 +32,5 @@ export const apiMethod = {
   simple: 'simple',
   ttl: 'ttl',
   ttlFn: 'ttl_fn',
+  after_throw: 'after_throw',
 }
