@@ -23,6 +23,6 @@ export function validateMeta(
   const meta = retrieveCacheMetaFrom(resp)
 
   assert(meta, 'CacheMetaType is undefined')
-  assert(meta.cacheKey === cacheKey)
+  assert(meta.cacheKey === cacheKey, `cacheKey: ${meta.cacheKey}, expected: ${cacheKey}`)
   assert(meta.ttl === ttl, JSON.stringify({ metaTTL: meta.ttl, ttl }))
 }
