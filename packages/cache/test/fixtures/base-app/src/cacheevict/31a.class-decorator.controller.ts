@@ -63,10 +63,16 @@ export class ClassDecoratorEvictController {
     const ret2 = await this.svc.simple()
     validateMeta(ret2, cacheKey, this.midwayConfig.ttl)
 
+    const ret2a = await this.svc.simple2('hello')
+    assert(! ret2a[ConfigKey.CacheMetaType], JSON.stringify(ret2a[ConfigKey.CacheMetaType]))
+
     await this.svc.evictSimple()
 
     const ret3 = await this.svc.simple2('hello')
-    assert(! ret3[ConfigKey.CacheMetaType], JSON.stringify(ret3[ConfigKey.CacheMetaType]))
+    validateMeta(ret3, `${cacheKey}:hello`, this.midwayConfig.ttl)
+
+    const ret3a = await this.svc.simple()
+    assert(! ret3a[ConfigKey.CacheMetaType], JSON.stringify(ret3a[ConfigKey.CacheMetaType]))
 
     const ret4 = await this.svc.simple()
     validateMeta(ret4, cacheKey, this.midwayConfig.ttl)
@@ -143,91 +149,6 @@ export class ClassDecoratorEvictController {
     validateMeta(ret3a, cacheKey, this.midwayConfig.ttl)
 
     await this.svc.evictResultEven(1) // (1+1) evict
-
-    const ret4 = await this.svc.simple()
-    assert(! ret4[ConfigKey.CacheMetaType])
-
-    const ret4a = await this.svc.simple()
-    validateMeta(ret4a, cacheKey, this.midwayConfig.ttl)
-
-    await this.svc.evictHello()
-    const ret5 = await this.svc.hello()
-    assert(! ret5[ConfigKey.CacheMetaType])
-
-    const ret5a = await this.svc.hello()
-    validateMeta(ret5a, 'ClassDecoratorEvictService.hello', this.midwayConfig.ttl)
-
-    return 'OK'
-  }
-
-
-  @Get(`/${apiMethod.evict_result_even_and_greater_than_zero}`)
-  async evictResultEvenAndGreaterThanZero(): Promise<'OK'> {
-    const cacheKey = cacheNameSimple
-
-    await this.svc.evictHello()
-    await this.svc.evictSimple()
-
-    const ret = await this.svc.simple()
-    assert(ret.value === 'OK')
-    assert(! ret[ConfigKey.CacheMetaType])
-
-    const ret2 = await this.svc.simple()
-    validateMeta(ret2, cacheKey, this.midwayConfig.ttl)
-
-    await this.svc.evictResultEvenAndGreaterThanZero(0) // (even, but not gt zero) not evict
-
-    const ret3 = await this.svc.simple()
-    validateMeta(ret3, cacheKey, this.midwayConfig.ttl)
-
-    await this.svc.evictResultEvenAndGreaterThanZero(1) // (odd) not evict
-
-    const ret3a = await this.svc.simple()
-    validateMeta(ret3a, cacheKey, this.midwayConfig.ttl)
-
-    await this.svc.evictResultEvenAndGreaterThanZero(2) // (even and >0) evict
-
-    const ret4 = await this.svc.simple()
-    assert(! ret4[ConfigKey.CacheMetaType])
-
-    const ret4a = await this.svc.simple()
-    validateMeta(ret4a, cacheKey, this.midwayConfig.ttl)
-
-    await this.svc.evictHello()
-    const ret5 = await this.svc.hello()
-    assert(! ret5[ConfigKey.CacheMetaType])
-
-    const ret5a = await this.svc.hello()
-    validateMeta(ret5a, 'ClassDecoratorEvictService.hello', this.midwayConfig.ttl)
-
-    return 'OK'
-  }
-
-  @Get(`/${apiMethod.evict_generics}`)
-  async evictGenerics(): Promise<'OK'> {
-    const cacheKey = cacheNameSimple
-
-    await this.svc.evictHello()
-    await this.svc.evictSimple()
-
-    const ret = await this.svc.simple()
-    assert(ret.value === 'OK')
-    assert(! ret[ConfigKey.CacheMetaType])
-
-    const ret2 = await this.svc.simple()
-    validateMeta(ret2, cacheKey, this.midwayConfig.ttl)
-
-    await this.svc.evictResultEvenAndGreaterThanZeroGenerics(0) // (even, but not gt zero) not evict
-
-    const ret3 = await this.svc.simple()
-    validateMeta(ret3, cacheKey, this.midwayConfig.ttl)
-
-    await this.svc.evictResultEvenAndGreaterThanZeroGenerics(1) // (odd) not evict
-
-    const ret3a = await this.svc.simple()
-    validateMeta(ret3a, cacheKey, this.midwayConfig.ttl)
-
-    await this.svc.evictResultEvenAndGreaterThanZeroGenerics(2) // (even and >0) evict
 
     const ret4 = await this.svc.simple()
     assert(! ret4[ConfigKey.CacheMetaType])

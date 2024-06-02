@@ -83,7 +83,7 @@ export class ClassDecoratorController {
   @Get(`/${apiMethod.ttlFn}`)
   async ttlFn(): Promise<'OK'> {
 
-    let cacheKey = `${this.controllerName}.ttlFn`
+    const cacheKey = `${this.controllerName}.ttlFn`
 
     const ret = await this.svc.ttlFn('fake')
     assert(ret.value === 'OK')
@@ -99,7 +99,7 @@ export class ClassDecoratorController {
 
     const ret3a = await this.svc.ttlFn('foo')
     assert(ret3a.value === 'OK')
-    validateMeta(ret3a, cacheKey, ttl)
+    validateMeta(ret3a, `${cacheKey}:foo`, ttl)
 
     await sleep(ttl * 1001)
 
@@ -109,11 +109,14 @@ export class ClassDecoratorController {
 
     const ret4a = await this.svc.ttlFn('foo')
     assert(ret4a.value === 'OK')
-    validateMeta(ret4a, cacheKey, ttl)
+    validateMeta(ret4a, `${cacheKey}:foo`, ttl)
 
+    return 'OK'
+  }
 
-    await sleep(ttl * 1001)
-    cacheKey = `${this.controllerName}.ttlFn2`
+  @Get(`/${apiMethod.ttl_fn2}`)
+  async ttlFn2(): Promise<'OK'> {
+    const cacheKey = `${this.controllerName}.ttlFn2`
 
     const ret5 = await this.svc.ttlFn2('fake')
     assert(Number.isNaN(ret5.value))
@@ -149,7 +152,7 @@ export class ClassDecoratorController {
 
     const ret8a = await this.svc.ttlFn2('1')
     assert(ret8a.value === 1)
-    validateMeta(ret8a, cacheKey, 1)
+    validateMeta(ret8a, `${cacheKey}:1`, 1)
 
     await sleep(ttl * 1001)
 
@@ -159,16 +162,13 @@ export class ClassDecoratorController {
 
     const ret9b = await this.svc.ttlFn2('1')
     assert(ret9b.value === 1)
-    validateMeta(ret9b, cacheKey, 1)
+    validateMeta(ret9b, `${cacheKey}:1`, 1)
 
     const ret10 = await this.svc.ttlFn2('2')
-    assert(ret10.value === 1)
-    validateMeta(ret10, cacheKey, 1)
-
-    // await sleep(ttl * 1001)
+    assert(ret10.value === 2)
+    assert(! ret10[ConfigKey.CacheMetaType])
 
     return 'OK'
-
   }
 
 }

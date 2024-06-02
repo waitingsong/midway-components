@@ -68,28 +68,16 @@ Normal [Cache-Docs-EN]
 assert(retrieveCacheMetaFrom(data))
 ```
 
-## Generation rule of Cache entry
-
-- none of cacheName and key: `{className}.{methodName}`
-- cacheName string
-  - key `string | number | bigint`: `{className}.{methodName}:{key.toString()}`
-  - key `undefined`: `{className}.{methodName}`
-  - key `false`: no cache operation
-  - key `KeyGenerator`
-    - `string`: `{className}.{methodName}:{key.toString()}` 
-    - `undefined`: `{className}.{methodName}` 
-    - `false`: no cache operation
-
 
 ## Generation of Cache entry
 
-- none of cacheName and key: `{className}.{methodName}`
+- none of cacheName and key: `{className}.{methodName}` + serialization of method arguments
 - cacheName string
   - key `string | number | bigint`: `{className}.{methodName}:{key.toString()}`
-  - key `undefined`: `{className}.{methodName}`
+  - key `undefined`: `{className}.{methodName}` + serialization of method arguments
   - key `false`: no cache operation
   - key `KeyGenerator`
-    - `undefined`: `{className}.{methodName}` 
+    - `undefined`: `{className}.{methodName}` + serialization of method arguments
     - `string`: `{className}.{methodName}:{key.toString()}` 
     - `false`: no cache operation
 

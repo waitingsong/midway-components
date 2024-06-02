@@ -20,6 +20,7 @@ export enum ConfigKey {
 export enum Msg {
   hello = 'hello world',
   AuthFailed = 'Authentication Failed',
+  paramArrayNeedCustomSerializer = 'Array parameter need to serialize by yourself custom key generator function!',
 }
 
 export interface MiddlewareOptions {

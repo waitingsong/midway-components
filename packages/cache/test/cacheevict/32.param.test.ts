@@ -7,33 +7,32 @@ import { testConfig } from '#@/root.config.js'
 
 
 describe(fileShortPath(import.meta.url), function () {
-  describe('Should @Cacheable decorator work', () => {
-    const prefix = apiBase.class_cacheable
+  describe('Should @CacheEvict decorator work', () => {
+    const prefix = apiBase.method_cacheevict
 
-    it(apiMethod.evict_override, async () => {
+    it(apiMethod.param, async () => {
       const { httpRequest } = testConfig
-      const url = `${prefix}/${apiMethod.evict_override}`
+      const url = `${prefix}/${apiMethod.param}`
 
       const resp = await httpRequest.get(url)
       assert(resp.ok, resp.text)
     })
 
-    it(apiMethod.evict_condition, async () => {
+    it(apiMethod.param_array, async () => {
       const { httpRequest } = testConfig
-      const url = `${prefix}/${apiMethod.evict_condition}`
+      const url = `${prefix}/${apiMethod.param_array}`
 
       const resp = await httpRequest.get(url)
       assert(resp.ok, resp.text)
     })
 
-    it(apiMethod.evict_result, async () => {
+    it(apiMethod.param_mix, async () => {
       const { httpRequest } = testConfig
-      const url = `${prefix}/${apiMethod.evict_result}`
+      const url = `${prefix}/${apiMethod.param_mix}`
 
       const resp = await httpRequest.get(url)
       assert(resp.ok, resp.text)
     })
-
   })
 })
 

@@ -14,11 +14,8 @@ describe(fileShortPath(import.meta.url), function () {
       const { httpRequest } = testConfig
       const url = `${prefix}/${apiMethod.simple}`
 
-      const resp = await httpRequest
-        .get(url)
-        .expect(200)
-
-      assert(resp)
+      const resp = await httpRequest.get(url)
+      assert(resp.ok, resp.text)
     })
 
   })

@@ -70,14 +70,14 @@ assert(retrieveCacheMetaFrom(data))
 
 ## 缓存入口生成规则
 
-- none of cacheName and key: `{className}.{methodName}`
+- none of cacheName and key: `{className}.{methodName}` + 方法入参序列化
 - cacheName string
   - key `string | number | bigint`: `{className}.{methodName}:{key.toString()}`
-  - key `undefined`: `{className}.{methodName}`
+  - key `undefined`: `{className}.{methodName}` + 方法入参序列化
   - key `false`: no cache operation
   - key `KeyGenerator`
     - `string`: `{className}.{methodName}:{key.toString()}` 
-    - `undefined`: `{className}.{methodName}` 
+    - `undefined`: `{className}.{methodName}` + 方法入参序列化
     - `false`: no cache operation
 
 

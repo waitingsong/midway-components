@@ -35,6 +35,13 @@ describe(fileShortPath(import.meta.url), function () {
       assert(resp.ok, resp.text)
     })
 
+    it(apiMethod.ttl_fn2, async () => {
+      const { httpRequest } = testConfig
+      const url = `${prefix}/${apiMethod.ttl_fn2}`
+
+      const resp = await httpRequest.get(url)
+      assert(resp.ok, resp.text)
+    })
   })
 })
 

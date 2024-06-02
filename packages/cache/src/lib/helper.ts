@@ -16,6 +16,7 @@ import {
   DataWithCacheMeta,
   DecoratorExecutorOptions,
   GenDecoratorExecutorOptionsExt,
+  Msg,
 } from './types.js'
 
 
@@ -33,7 +34,7 @@ export function genCacheKey(options: GenCacheKeyOptions): string | false {
 
   switch (typeof key) {
     case 'string':
-      return `${cacheName}:${key}`
+      return key ? `${cacheName}:${key}` : cacheName
 
     case 'number':
       return `${cacheName}:${key.toString()}`
@@ -41,18 +42,22 @@ export function genCacheKey(options: GenCacheKeyOptions): string | false {
     case 'bigint':
       return `${cacheName}:${key.toString()}`
 
-    case 'undefined':
-      return cacheName // without tailing `:`
+    case 'undefined': {
+      const key2 = serializeArgs(methodArgs)
+      return key2 ? `${cacheName}:${key2}` : cacheName
+    }
 
     case 'function': {
       // @ts-expect-error
       const keyStr = key.call(webContext, methodArgs, methodResult)
       switch (typeof keyStr) {
-        case 'undefined':
-          return cacheName
+        case 'undefined': {
+          const key2 = serializeArgs(methodArgs)
+          return key2 ? `${cacheName}:${key2}` : cacheName
+        }
 
         case 'string':
-          return `${cacheName}:${keyStr}`
+          return keyStr ? `${cacheName}:${keyStr}` : cacheName
 
         default:
           // false
@@ -62,6 +67,69 @@ export function genCacheKey(options: GenCacheKeyOptions): string | false {
 
     default:
       return cacheName
+  }
+}
+
+/**
+ * 对方法调用参数数组进行序列化，
+ * 每个参数仅限于基本类型（string, number, bigint, boolean, null, undefined），以及普通对象和数组
+ * - 对于对象则按照属性名排序后进行序列化
+ * - 对于方法则抛出异常
+ */
+function serializeArgs(args: unknown[]): string {
+  let ret = ''
+  args.forEach((arg: unknown) => {
+    const res = _serializeArg(arg)
+    ret += res
+  })
+  return ret
+}
+function _serializeArg(arg: unknown): string {
+  if (arg === null) {
+    return 'null'
+  }
+  else if (arg === void 0) {
+    return 'undefined'
+  }
+
+  switch (typeof arg) {
+    case 'string':
+      return arg
+
+    case 'number':
+      return arg.toString()
+
+    case 'bigint':
+      return arg.toString() + 'n'
+
+    case 'boolean':
+      return arg ? 'true' : 'false'
+
+    case 'object': {
+      if (Array.isArray(arg)) {
+        throw new Error(Msg.paramArrayNeedCustomSerializer)
+      }
+
+      const keys = Object.keys(arg).sort()
+      let ret = ''
+      keys.forEach((key) => {
+        const typeKey = typeof key
+        assert(typeKey === 'string' || typeKey === 'number', `[@mwcp/${ConfigKey.namespace}] serializeArgs() object key is not a string or number`)
+        // @ts-ignore
+        const val = arg[key] as unknown
+        const res = _serializeArg(val)
+        if (ret) {
+          ret += `,${key}:${res}`
+        }
+        else {
+          ret += `${key}:${res}`
+        }
+      })
+      return ret
+    }
+
+    default:
+      throw new Error(`Unsupported type: ${typeof arg}`)
   }
 }
 
