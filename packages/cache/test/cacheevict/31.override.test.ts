@@ -6,7 +6,7 @@ import { apiBase, apiMethod } from '#@/api-test.js'
 import { testConfig } from '#@/root.config.js'
 
 
-describe.only(fileShortPath(import.meta.url), function () {
+describe(fileShortPath(import.meta.url), function () {
   describe('Should @Cacheable decorator work', () => {
     const prefix = apiBase.class_cacheable
 
