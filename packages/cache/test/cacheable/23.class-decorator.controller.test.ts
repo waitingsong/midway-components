@@ -14,22 +14,16 @@ describe(fileShortPath(import.meta.url), function () {
       const { httpRequest } = testConfig
       const url = `${prefix}/${apiMethod.simple}`
 
-      const resp = await httpRequest
-        .get(url)
-        .expect(200)
-
-      assert(resp)
+      const resp = await httpRequest.get(url)
+      assert(resp.ok, resp.text)
     })
 
     it(apiMethod.method_override_class, async () => {
       const { httpRequest } = testConfig
       const url = `${prefix}/${apiMethod.method_override_class}`
 
-      const resp = await httpRequest
-        .get(url)
-        .expect(200)
-
-      assert(resp)
+      const resp = await httpRequest.get(url)
+      assert(resp.ok, resp.text)
     })
 
 
@@ -37,11 +31,8 @@ describe(fileShortPath(import.meta.url), function () {
       const { httpRequest } = testConfig
       const url = `${prefix}/${apiMethod.ttlFn}`
 
-      const resp = await httpRequest
-        .get(url)
-        .expect(200)
-
-      assert(resp)
+      const resp = await httpRequest.get(url)
+      assert(resp.ok, resp.text)
     })
 
   })

@@ -28,6 +28,7 @@ export class DecoratorController {
 
   readonly controllerName = 'DecoratorController'
   private midwayConfig: { ttl: number } // MidwayConfig
+  ttl: number
 
   @Init()
   async init() {
@@ -37,6 +38,8 @@ export class DecoratorController {
     const configOpt = defaultConfig.options as { ttl: number } // MidwayConfig
     assert(configOpt)
     this.midwayConfig = configOpt
+    this.ttl = configOpt.ttl
+    // this.ttl = 30
   }
 
   @Get(`/${apiMethod.simple}`)
@@ -48,10 +51,10 @@ export class DecoratorController {
     assert(! ret[ConfigKey.CacheMetaType])
 
     const ret2 = await this._simple()
-    validateMeta(ret2, cacheKey, this.midwayConfig.ttl)
+    validateMeta(ret2, cacheKey, this.ttl)
 
     const ret2a = await this._simple()
-    validateMeta(ret2a, cacheKey, this.midwayConfig.ttl)
+    validateMeta(ret2a, cacheKey, this.ttl)
 
     await sleep(this.midwayConfig.ttl * 1001)
     const ret3 = await this._simple()
@@ -59,7 +62,7 @@ export class DecoratorController {
     assert(! ret3[ConfigKey.CacheMetaType])
 
     const ret3a = await this._simple()
-    validateMeta(ret3a, cacheKey, this.midwayConfig.ttl)
+    validateMeta(ret3a, cacheKey, this.ttl)
 
 
     const ret4 = await this._simple2()

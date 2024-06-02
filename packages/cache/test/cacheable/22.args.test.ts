@@ -15,10 +15,7 @@ describe(fileShortPath(import.meta.url), function () {
       const { httpRequest } = testConfig
       const url = `${prefix}/${apiMethod.ttl}`
 
-      const resp = await httpRequest
-        .get(url)
-
-      assert(resp)
+      const resp = await httpRequest.get(url)
       assert(resp.ok, resp.text)
     })
 
@@ -26,10 +23,7 @@ describe(fileShortPath(import.meta.url), function () {
       const { httpRequest } = testConfig
       const url = `${prefix}/${apiMethod.cache_name}`
 
-      const resp = await httpRequest
-        .get(url)
-
-      assert(resp)
+      const resp = await httpRequest.get(url)
       assert(resp.ok, resp.text)
     })
 
@@ -37,10 +31,7 @@ describe(fileShortPath(import.meta.url), function () {
       const { httpRequest } = testConfig
       const url = `${prefix}/${apiMethod.condition}`
 
-      const resp = await httpRequest
-        .get(url)
-
-      assert(resp)
+      const resp = await httpRequest.get(url)
       assert(resp.ok, resp.text)
     })
 
