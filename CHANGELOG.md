@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [30.1.0](https://github.com/waitingsong/midway-components/compare/v30.0.0...v30.1.0) (2024-06-03)
+
+
+### Features
+
+* **otel:** manage trace Context on OtelComponent ([dc55f8e](https://github.com/waitingsong/midway-components/commit/dc55f8e7782208227117c7fe82aa9e46ff61f85f))
+
+
+
+
+
 # [30.0.0](https://github.com/waitingsong/midway-components/compare/v29.3.1...v30.0.0) (2024-06-02)
 
 
