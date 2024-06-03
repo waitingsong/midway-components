@@ -58,8 +58,6 @@ export class TraceService extends AbstractTraceService {
   readonly instanceId = Symbol(Date.now())
   readonly startTime = genISO8601String()
 
-  protected readonly traceContextArray: Context[] = []
-
   @Init()
   async init(): Promise<void> {
     if (! this.ctx[middlewareEnableCacheKey]) { return }
@@ -70,34 +68,13 @@ export class TraceService extends AbstractTraceService {
   }
 
   getActiveContext(): Context {
-    const len = this.traceContextArray.length
-    if (len === 0) {
-      return this.rootContext
-    }
-
-    for (let i = len - 1; i >= 0; i -= 1) {
-      if (! this.traceContextArray.length) { break }
-
-      const traceContext = this.traceContextArray.at(-1)
-      if (! traceContext) {
-        this.traceContextArray.pop()
-        continue
-      }
-      const span = getSpan(traceContext)
-      if (span?.spanContext()) {
-        return traceContext
-      }
-    }
-
-    return this.rootContext
+    const ctx = this.otel.getScopeActiveContext(this.ctx)
+    return ctx ? ctx : this.rootContext
   }
 
   setActiveContext(ctx: Context): void {
     if (! this.config.enable) { return }
-
-    const currCtx = this.getActiveContext()
-    if (currCtx === ctx) { return }
-    this.traceContextArray.push(ctx)
+    this.otel.setScopeActiveContext(this.ctx, ctx)
   }
 
   getActiveSpan(): Span | undefined {
@@ -261,7 +238,7 @@ export class TraceService extends AbstractTraceService {
       spanStatusOptions.code = SpanStatusCode.OK
     }
     this.endRootSpan(spanStatusOptions, endTime)
-    this.traceContextArray.length = 0
+    this.otel.delScopeActiveContext(this.ctx)
 
     this.ctx[`_${ConfigKey.serviceName}`] = null
   }

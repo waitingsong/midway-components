@@ -25,6 +25,7 @@ export abstract class AbstractOtelComponent {
   abstract otelLibraryVersion: string
   /* request|response -> Map<lower,norm> */
   readonly abstract captureHeadersMap: Map<string, Map<string, string>>
+  readonly abstract traceContextMap: WeakMap<object, Context[]>
 
   protected abstract traceProvider: node.NodeTracerProvider | undefined
   protected abstract spanProcessors: node.SpanProcessor[]
@@ -126,7 +127,6 @@ export abstract class AbstractTraceService {
   readonly abstract startTime: string
   readonly abstract rootContext: Context
   readonly abstract rootSpan: Span
-  protected readonly abstract traceContextArray: Context[]
 
   abstract getActiveContext(): Context
   abstract setActiveContext(ctx: Context): void

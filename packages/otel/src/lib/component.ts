@@ -50,7 +50,7 @@ import {
   InitTraceOptions,
   SpanStatusOptions,
 } from './types.js'
-import { normalizeHeaderKey, setSpan } from './util.js'
+import { normalizeHeaderKey, getSpan, setSpan } from './util.js'
 
 // eslint-disable-next-line import/max-dependencies
 // eslint-disable-next-line import/max-dependencies
@@ -85,6 +85,7 @@ export class OtelComponent extends AbstractOtelComponent {
   otelLibraryVersion: string
   /* request|response -> Map<lower,norm> */
   readonly captureHeadersMap = new Map<string, Map<string, string>>()
+  readonly traceContextMap = new WeakMap<object, Context[]>()
 
   protected traceProvider: node.NodeTracerProvider | undefined
   protected spanProcessors: node.SpanProcessor[] = []
@@ -449,7 +450,61 @@ export class OtelComponent extends AbstractOtelComponent {
     }
   }
 
+  getScopeActiveContext(scope: object): Context | undefined {
+    if (! this.config.enable) { return }
 
+    assert(typeof scope === 'object', 'scope must be an object')
+    const arr = this.traceContextMap.get(scope)
+    if (arr?.length) {
+      return this.getActiveContextFromArray(arr)
+    }
+  }
+
+  setScopeActiveContext(scope: object, ctx: Context): void {
+    if (! this.config.enable) { return }
+
+    const currCtx = this.getScopeActiveContext(scope)
+    if (currCtx === ctx) { return }
+
+    const arr = this.traceContextMap.get(scope)
+    if (arr) {
+      arr.push(ctx)
+      return
+    }
+    this.traceContextMap.set(scope, [ctx])
+  }
+
+  delScopeActiveContext(scope: object): void {
+    if (! this.config.enable) { return }
+
+    assert(typeof scope === 'object', 'scope must be an object')
+    const arr = this.traceContextMap.get(scope)
+    if (arr) {
+      arr.length = 0
+    }
+    this.traceContextMap.delete(scope)
+  }
+
+  // #region protected
+
+  protected getActiveContextFromArray(input: Context[]): Context | undefined {
+    const len = input.length
+    if (len === 0) { return }
+
+    for (let i = len - 1; i >= 0; i -= 1) {
+      if (! input.length) { break }
+
+      const traceContext = input.at(-1)
+      if (! traceContext) {
+        input.pop()
+        continue
+      }
+      const span = getSpan(traceContext)
+      if (span?.spanContext()) {
+        return traceContext
+      }
+    }
+  }
 
   protected prepareCaptureHeaders(type: 'request' | 'response', headersKey: string[]) {
     const keys = normalizeHeaderKey(headersKey)
