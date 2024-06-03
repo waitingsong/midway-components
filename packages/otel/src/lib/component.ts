@@ -30,7 +30,11 @@ import {
   TimeInput,
 } from '@opentelemetry/api'
 import { node } from '@opentelemetry/sdk-node'
-import { SemanticAttributes } from '@opentelemetry/semantic-conventions'
+import {
+  SEMATTRS_EXCEPTION_MESSAGE,
+  SEMATTRS_EXCEPTION_STACKTRACE,
+  SEMATTRS_EXCEPTION_TYPE,
+} from '@opentelemetry/semantic-conventions'
 import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
 import type { NpmPkg } from '@waiting/shared-types'
 
@@ -286,10 +290,10 @@ export class OtelComponent extends AbstractOtelComponent {
 
     const { name, message, stack } = error
     const attrs: Attributes = {
-      [SemanticAttributes.EXCEPTION_TYPE]: 'exception',
-      [SemanticAttributes.EXCEPTION_MESSAGE]: message,
+      [SEMATTRS_EXCEPTION_TYPE]: 'exception',
+      [SEMATTRS_EXCEPTION_MESSAGE]: message,
     }
-    stack && (attrs[SemanticAttributes.EXCEPTION_STACKTRACE] = stack)
+    stack && (attrs[SEMATTRS_EXCEPTION_STACKTRACE] = stack)
     this.addEvent(span, attrs, {
       eventName: `${name} Cause`,
     }) // Error Cause
@@ -349,7 +353,7 @@ export class OtelComponent extends AbstractOtelComponent {
       if (error.cause instanceof Error || error[AttrNames.IsTraced]) {
         if (rootSpan && span !== rootSpan) {
           // error contains cause, then add events only
-          attrs[SemanticAttributes.EXCEPTION_MESSAGE] = 'skipping'
+          attrs[SEMATTRS_EXCEPTION_MESSAGE] = 'skipping'
           this.addEvent(span, attrs)
         }
       }
