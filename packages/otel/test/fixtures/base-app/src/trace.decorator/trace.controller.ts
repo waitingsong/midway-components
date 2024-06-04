@@ -32,63 +32,6 @@ export class DefaultComponentController {
     assert(true)
   }
 
-  @Get(`/${apiMethod.id}`)
-  async traceId(): Promise<string> {
-    const traceId = this.traceSvc.getTraceId()
-    await this.svc.hello(Msg.hello)
-    this.traceSvc.setAttributes(void 0, { foo: 'foo' })
-    // ensure child span of svc.hello is sent, to keep span order for unit test validation
-    await this.traceSvc.flush()
-    return traceId
-  }
-
-  @Trace()
-  @Get(`/${apiMethod.id2}`)
-  async traceId2(): Promise<string> {
-    const traceId = this.traceSvc.getTraceId()
-    this.traceSvc.setAttributesLater(void 0, { bar: 'bar' })
-    const msg = await this.svc.hello(Msg.hello)
-    assert(msg)
-    await this.traceSvc.flush()
-
-    const msg2 = this.svc.helloSync(Msg.hello)
-    assert(typeof msg2 === 'string')
-    assert(msg2)
-
-    await this.traceSvc.flush()
-    return traceId
-  }
-
-  @Trace()
-  @Get(`/${apiMethod.decorator_arg}`)
-  async arg(): Promise<string> {
-    const traceId = this.traceSvc.getTraceId()
-    const rnd = Math.random()
-    const msg = await this.svc.testArg(rnd)
-    assert(msg)
-    const msg2 = this.svc.helloSync(Msg.hello)
-    assert(msg2)
-
-    // await this.traceSvc.flush()
-    const ret = `${traceId}:${rnd}`
-    return ret
-  }
-
-  @Trace()
-  @Get(`/${apiMethod.decorator_arg2}`)
-  async arg2(): Promise<string> {
-    const traceId = this.traceSvc.getTraceId()
-    const rnd = Math.round(Math.random() * 100)
-    const str = 'bar'
-    const msg = await this.svc.testArg2(rnd, str)
-    assert(msg)
-
-    // await this.traceSvc.flush()
-    const ret = `${traceId}:${rnd}:${str}`
-    return ret
-  }
-
-
   @Trace()
   @Get(`/${apiMethod.disable_trace}`)
   async noTrace(): Promise<string> {
