@@ -132,7 +132,6 @@ export abstract class AbstractTraceService {
   abstract setActiveContext(ctx: Context): void
   abstract getActiveSpan(): Span | undefined
   abstract getTraceId(): string
-
   /**
    * Starts a new {@link Span}. Start the span without setting it on context.
    * This method do NOT modify the current Context.
@@ -142,6 +141,13 @@ export abstract class AbstractTraceService {
     options?: SpanOptions,
     traceContext?: Context,
   ): Span
+
+  /**
+   * Starts a new {@link Span}.
+   * Additionally the new span gets set in context and this context is activated, you must to call `this.endSpan()` manually.
+   * @default options.scope is `this.ctx`
+   */
+  abstract startScopeActiveSpan(options: StartScopeActiveSpanOptions): Span
 
   /**
    * Starts a new {@link Span} and calls the given function passing it the created span as first argument.
@@ -219,3 +225,13 @@ export abstract class AbstractTraceService {
 
 }
 
+
+export interface StartScopeActiveSpanOptions {
+  name: string
+  /**
+   * @default scope is `this.ctx`
+   */
+  scope?: object
+  spanOptions?: SpanOptions | undefined
+  traceContext?: Context | undefined
+}

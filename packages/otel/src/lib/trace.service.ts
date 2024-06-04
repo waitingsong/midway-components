@@ -20,7 +20,7 @@ import {
 } from '@opentelemetry/api'
 import { genISO8601String } from '@waiting/shared-core'
 
-import { AbstractTraceService } from './abstract.js'
+import { AbstractTraceService, StartScopeActiveSpanOptions } from './abstract.js'
 import { OtelComponent } from './component.js'
 import { initSpanStatusOptions } from './config.js'
 import {
@@ -127,6 +127,20 @@ export class TraceService extends AbstractTraceService {
   }
 
   /**
+   * Starts a new {@link Span}.
+   * Additionally the new span gets set in context and this context is activated, you must to call `this.endSpan()` manually.
+   * @default options.scope is `this.ctx`
+   */
+  startScopeActiveSpan(options: StartScopeActiveSpanOptions): Span {
+    const scope = options.scope ?? this.ctx
+    const parentCtx = options.traceContext ?? this.getActiveContext(scope)
+    const span = this.startSpan(options.name, options.spanOptions, parentCtx, scope)
+    const traceCtx = setSpan(parentCtx, span)
+    this.setActiveContext(traceCtx, scope)
+    return span
+  }
+
+  /**
    * Starts a new {@link Span} and calls the given function passing it the created span as first argument.
    * Additionally the new span gets set in context and this context is activated
    * for the duration of the function call.
@@ -146,10 +160,10 @@ export class TraceService extends AbstractTraceService {
 
     const parentCtx = traceContext ?? this.getActiveContext(scope)
     const span = this.startSpan(name, options, parentCtx, scope)
-    const ctxWithSpanSet = setSpan(parentCtx, span)
-    this.setActiveContext(ctxWithSpanSet, scope)
-    const cb = () => callback(span, ctxWithSpanSet)
-    return context.with(ctxWithSpanSet, cb, void 0, span)
+    const traceCtx = setSpan(parentCtx, span)
+    this.setActiveContext(traceCtx, scope)
+    const cb = () => callback(span, traceCtx)
+    return context.with(traceCtx, cb, void 0, span)
   }
 
   /**

@@ -150,6 +150,7 @@ export class OtelComponent extends AbstractOtelComponent {
    * Starts a new {@link Span}. Start the span without setting it on context.
    */
   startSpan2(name: string, options?: SpanOptions, traceContext?: Context): { span: Span, context: Context } {
+    assert(name, 'name must be set')
     const tracer = trace.getTracer(this.otelLibraryName, this.otelLibraryVersion)
     const opts: SpanOptions = {
       kind: SpanKind.CLIENT,
