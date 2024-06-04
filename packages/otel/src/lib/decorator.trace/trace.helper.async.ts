@@ -1,7 +1,5 @@
 import assert from 'node:assert'
 
-import { Span } from '@opentelemetry/api'
-
 import { processDecoratorBeforeAfterAsync } from '../decorator.helper.js'
 import type { DecoratorExecutorParam } from '../trace.helper.js'
 import { ConfigKey } from '../types.js'
@@ -17,24 +15,29 @@ export async function beforeAsync(options: DecoratorExecutorParam): Promise<void
     traceService,
   } = options
 
-  const type = 'before'
-
   if (! traceService) { return }
 
+  const type = 'before'
+
   if (startActiveSpan) {
-    // 记录开始时间
-    await traceService.startActiveSpan(
-      spanName,
-      async (span: Span) => {
-        options.span = span
-        options.span.setAttributes(callerAttr)
-        await processDecoratorBeforeAfterAsync(type, options)
-      },
-      spanOptions,
-      traceContext,
-    )
+    // await traceService.startActiveSpan(
+    //   spanName,
+    //   async (span) => {
+    //     options.span = span
+    //     options.span.setAttributes(callerAttr)
+    //     await processDecoratorBeforeAfterAsync(type, options)
+    //   },
+    //   spanOptions,
+    //   traceContext,
+    // )
+    options.span = traceService.startScopeActiveSpan({ name: spanName, spanOptions, traceContext })
+    options.span.setAttributes(callerAttr)
+    await processDecoratorBeforeAfterAsync(type, options)
   }
   else {
+    // it's necessary to cost a little time to prevent next span.startTime is same as previous span.endTime
+    const rndStr = Math.random().toString(36).substring(7)
+    void rndStr
     options.span = traceService.startSpan(spanName, spanOptions, traceContext)
     options.span.setAttributes(callerAttr)
     return processDecoratorBeforeAfterAsync(type, options)
