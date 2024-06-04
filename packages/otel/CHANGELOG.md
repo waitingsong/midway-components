@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [30.2.0](https://github.com/waitingsong/midway-components/compare/v30.1.1...v30.2.0) (2024-06-04)
+
+
+### Features
+
+* **otel:** add TraceService.delActiveContext() ([bbf3d3b](https://github.com/waitingsong/midway-components/commit/bbf3d3bfd216b6d78b822e14bf7310969bad8ccd))
+* **otel:** TraceService.getActiveContext() accepts optional param scope ([5d8d235](https://github.com/waitingsong/midway-components/commit/5d8d235ad1a43843a21356a2f8c55faf42397d9d))
+* **otel:** TraceService.getActiveSpan()/startSpan()/startActiveSpan() accepts optional param scope ([5013d60](https://github.com/waitingsong/midway-components/commit/5013d60a2653bc2c2122356d6561912347e7b79d))
+* **otel:** TraceService.setActiveContext() accepts 2nd param scope ([3c13781](https://github.com/waitingsong/midway-components/commit/3c137814da5ae37bf64db654f7ed1f0503bbb914))
+
+
+
+
+
 ## [30.1.1](https://github.com/waitingsong/midway-components/compare/v30.1.0...v30.1.1) (2024-06-04)
 
 **Note:** Version bump only for package @mwcp/otel
