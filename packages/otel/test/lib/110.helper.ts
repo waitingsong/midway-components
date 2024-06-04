@@ -83,7 +83,7 @@ export function assertsSpan(span: JaegerTraceInfoSpan, options: AssertsOptions):
   assert(options, 'options is null')
 
   assert(span.traceID === options.traceId)
-  assert(span.operationName === options.operationName, `operationName: ${span.operationName} !== ${options.operationName}`)
+  assert(span.operationName === options.operationName, `operationName: ${span.operationName} !== (expect) ${options.operationName}`)
 
   span.tags.forEach((tag: Attributes) => {
     const tag2 = Object.assign({

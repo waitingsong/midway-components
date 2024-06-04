@@ -13,7 +13,7 @@ import { testConfig } from '#@/root.config.js'
 describe(fileShortPath(import.meta.url), function () {
   this.retries(3)
 
-  const path = `${apiBase.TraceDecorator}/${apiMethod.id}`
+  const path = `${apiBase.TraceDecorator}/${apiMethod.decorator_arg2}`
 
   it(`Should ${path} work`, async () => {
     const { httpRequest, validateSpanInfo } = testConfig
@@ -25,24 +25,28 @@ describe(fileShortPath(import.meta.url), function () {
     const resp = await httpRequest.get(path)
     assert(resp.ok, resp.text)
 
-    const traceId = resp.text
+    const [traceId, rnd, suffix] = resp.text.split(':')
+    assert(traceId)
     assert(traceId.length === 32)
-    console.log({ traceId })
+    assert(rnd)
+    assert(typeof suffix === 'string')
+    console.log({ traceId, rnd, suffix })
+    const int = parseInt(rnd, 10)
+    const opName = `foo-${int + 1}-${suffix}`
 
-    const [info] = await retrieveTraceInfoFromRemote(traceId, 2)
+    const [info] = await retrieveTraceInfoFromRemote(traceId, 3)
     assert(info)
-    // info.spans.forEach((span, idx) => {
-    //   console.info(idx, { span })
-    // })
 
-    const [rootSpan, span1] = sortSpans(info.spans)
+    const [rootSpan, span1, span2] = sortSpans(info.spans)
     assert(rootSpan)
     assert(span1)
+    assert(span2)
 
     assertRootSpan({
       path,
       span: rootSpan,
       traceId,
+      operationName: `HTTP GET ${path}`,
       tags: {
         [SEMATTRS_HTTP_TARGET]: path,
         [SEMATTRS_HTTP_ROUTE]: path,
@@ -51,14 +55,38 @@ describe(fileShortPath(import.meta.url), function () {
 
     const opt1: AssertsOptions = {
       traceId,
-      operationName: 'DefaultComponentService/hello',
+      operationName: 'DefaultComponentController/arg2',
       tags: {
-        'caller.class': 'DefaultComponentService',
-        'caller.method': 'hello',
+        'caller.class': 'DefaultComponentController',
+        'caller.method': 'arg2',
         'span.kind': 'client',
       },
     }
-    assertsSpan(span1, opt1)
+    try {
+      assertsSpan(span1, opt1)
+    }
+    catch (ex) {
+      console.error({ rootSpan, span1, span2 })
+      throw ex
+    }
+
+    const opt2: AssertsOptions = {
+      traceId,
+      operationName: opName,
+      tags: {
+        'caller.class': 'DefaultComponentService',
+        'caller.method': 'testArg2',
+        'span.kind': 'client',
+      },
+    }
+    try {
+      assertsSpan(span2, opt2)
+    }
+    catch (ex) {
+      console.error({ rootSpan, span1, span2 })
+      throw ex
+    }
   })
+
 })
 
