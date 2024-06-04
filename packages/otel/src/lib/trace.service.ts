@@ -67,8 +67,9 @@ export class TraceService extends AbstractTraceService {
     this.start()
   }
 
-  getActiveContext(): Context {
-    const ctx = this.otel.getScopeActiveContext(this.ctx)
+  getActiveContext(scope?: object): Context {
+    const obj = scope ?? this.ctx
+    const ctx = this.otel.getScopeActiveContext(obj)
     return ctx ? ctx : this.rootContext
   }
 
