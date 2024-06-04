@@ -10,6 +10,7 @@
     "jwt",
     "authorization",
     "authentication",
+    "@Public",
     "ts"
   ],
   "type": "module",
