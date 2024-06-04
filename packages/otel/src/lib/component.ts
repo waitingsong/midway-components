@@ -49,7 +49,7 @@ import {
   InitTraceOptions,
   SpanStatusOptions,
 } from './types.js'
-import { normalizeHeaderKey, getSpan, setSpan } from './util.js'
+import { normalizeHeaderKey, getSpan, setSpan, isSpanEnded } from './util.js'
 
 // eslint-disable-next-line import/max-dependencies
 // eslint-disable-next-line import/max-dependencies
@@ -460,9 +460,16 @@ export class OtelComponent extends AbstractOtelComponent {
         continue
       }
       const span = getSpan(traceContext)
-      if (span?.spanContext()) {
+      if (! span) {
+        input.pop()
+        continue
+      }
+      const ended = isSpanEnded(span)
+      if (! ended && span.spanContext()) {
         return traceContext
       }
+
+      input.pop()
     }
   }
 
