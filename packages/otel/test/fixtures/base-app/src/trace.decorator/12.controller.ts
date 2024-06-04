@@ -33,13 +33,12 @@ export class DefaultComponentController {
     this.traceSvc.setAttributesLater(void 0, { bar: 'bar' })
     const msg = await this.svc.hello(Msg.hello)
     assert(msg)
-    await this.traceSvc.flush()
 
     const msg2 = this.svc.helloSync(Msg.hello)
     assert(typeof msg2 === 'string')
     assert(msg2)
 
-    await this.traceSvc.flush()
+    // await this.traceSvc.flush()
     return traceId
   }
 

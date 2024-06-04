@@ -38,7 +38,7 @@ export class DefaultComponentController {
     await this.svc.hello(Msg.hello)
     this.traceSvc.setAttributes(void 0, { foo: 'foo' })
     // ensure child span of svc.hello is sent, to keep span order for unit test validation
-    await this.traceSvc.flush()
+    // await this.traceSvc.flush()
     return traceId
   }
 
