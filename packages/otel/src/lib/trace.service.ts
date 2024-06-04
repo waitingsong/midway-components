@@ -67,16 +67,31 @@ export class TraceService extends AbstractTraceService {
     this.start()
   }
 
+  /**
+   * @default scope is `this.ctx`
+   */
   getActiveContext(scope?: object): Context {
     const obj = scope ?? this.ctx
     const ctx = this.otel.getScopeActiveContext(obj)
     return ctx ? ctx : this.rootContext
   }
 
+  /**
+   * @default scope is `this.ctx`
+   */
   setActiveContext(ctx: Context, scope?: object): void {
     if (! this.config.enable) { return }
     const obj = scope ?? this.ctx
     this.otel.setScopeActiveContext(obj, ctx)
+  }
+
+  /**
+   * @default scope is `this.ctx`
+   */
+  delActiveContext(scope?: object): void {
+    if (! this.config.enable) { return }
+    const obj = scope ?? this.ctx
+    this.otel.delScopeActiveContext(obj)
   }
 
   getActiveSpan(): Span | undefined {
@@ -240,7 +255,7 @@ export class TraceService extends AbstractTraceService {
       spanStatusOptions.code = SpanStatusCode.OK
     }
     this.endRootSpan(spanStatusOptions, endTime)
-    this.otel.delScopeActiveContext(this.ctx)
+    this.delActiveContext()
 
     this.ctx[`_${ConfigKey.serviceName}`] = null
   }
