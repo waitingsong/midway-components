@@ -73,9 +73,10 @@ export class TraceService extends AbstractTraceService {
     return ctx ? ctx : this.rootContext
   }
 
-  setActiveContext(ctx: Context): void {
+  setActiveContext(ctx: Context, scope?: object): void {
     if (! this.config.enable) { return }
-    this.otel.setScopeActiveContext(this.ctx, ctx)
+    const obj = scope ?? this.ctx
+    this.otel.setScopeActiveContext(obj, ctx)
   }
 
   getActiveSpan(): Span | undefined {
