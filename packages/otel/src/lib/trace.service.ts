@@ -94,11 +94,13 @@ export class TraceService extends AbstractTraceService {
     this.otel.delScopeActiveContext(obj)
   }
 
-  getActiveSpan(): Span | undefined {
+  /**
+   * @default scope is `this.ctx`
+   */
+  getActiveSpan(scope?: object): Span | undefined {
     if (! this.config.enable) { return }
-
-    const ctx = this.getActiveContext()
-    const span = getSpan(ctx)
+    const traceCtx = this.getActiveContext(scope)
+    const span = getSpan(traceCtx)
     return span
   }
 
@@ -110,14 +112,16 @@ export class TraceService extends AbstractTraceService {
   /**
    * Starts a new {@link Span}. Start the span without setting it on context.
    * This method do NOT modify the current Context.
+   * @default scope is `this.ctx`
    */
   startSpan(
     name: string,
     options?: SpanOptions,
     traceContext?: Context,
+    scope?: object,
   ): Span {
 
-    const ctx = traceContext ?? this.getActiveContext()
+    const ctx = traceContext ?? this.getActiveContext(scope)
     const span = this.otel.startSpan(name, options, ctx)
     return span
   }
@@ -126,6 +130,8 @@ export class TraceService extends AbstractTraceService {
    * Starts a new {@link Span} and calls the given function passing it the created span as first argument.
    * Additionally the new span gets set in context and this context is activated
    * for the duration of the function call.
+   *
+   * @default scope is `this.ctx`
    * @CAUTION: the span returned by this method is NOT ended automatically,
    *   you must to call `this.endSpan()` manually instead of span.edn() directly.
    */
@@ -135,12 +141,13 @@ export class TraceService extends AbstractTraceService {
     callback: F,
     options?: SpanOptions,
     traceContext?: Context,
+    scope?: object,
   ): ReturnType<F> {
 
-    const parentCtx = traceContext ?? this.getActiveContext()
-    const span = this.startSpan(name, options, parentCtx)
+    const parentCtx = traceContext ?? this.getActiveContext(scope)
+    const span = this.startSpan(name, options, parentCtx, scope)
     const ctxWithSpanSet = setSpan(parentCtx, span)
-    this.setActiveContext(ctxWithSpanSet)
+    this.setActiveContext(ctxWithSpanSet, scope)
     const cb = () => callback(span, ctxWithSpanSet)
     return context.with(ctxWithSpanSet, cb, void 0, span)
   }
