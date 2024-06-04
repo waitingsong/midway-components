@@ -78,6 +78,20 @@ export function deleteSpan(context: Context): Context {
   return context.deleteValue(SPAN_KEY)
 }
 
+export function isSpanEnded(span: Span): boolean {
+  // @ts-expect-error
+  if (typeof span.ended === 'function') {
+    // @ts-expect-error
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    return span.ended() as boolean
+  }
+
+  if (typeof span.isRecording === 'function') {
+    return ! span.isRecording()
+  }
+
+  throw new Error('span.ended() and span.isRecording() are not functions, we cannot determine if the span is ended')
+}
 
 /**
  * Parse status code from HTTP response.
