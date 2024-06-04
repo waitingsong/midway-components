@@ -32,7 +32,7 @@ export async function beforeAsync(options: DecoratorExecutorParam): Promise<void
     // )
     options.span = traceService.startScopeActiveSpan({ name: spanName, spanOptions, traceContext })
     options.span.setAttributes(callerAttr)
-    await processDecoratorBeforeAfterAsync(type, options)
+    return processDecoratorBeforeAfterAsync(type, options)
   }
   else {
     // it's necessary to cost a little time to prevent next span.startTime is same as previous span.endTime
