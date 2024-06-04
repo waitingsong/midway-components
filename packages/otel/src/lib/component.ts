@@ -13,7 +13,6 @@ import {
 } from '@midwayjs/core'
 import { ILogger } from '@midwayjs/logger'
 import {
-  // registerDecoratorHandlers,
   Application,
   MConfig,
 } from '@mwcp/share'
@@ -120,47 +119,7 @@ export class OtelComponent extends AbstractOtelComponent {
     }
 
     await this._init()
-
-    const isDevelopmentEnvironment = this.environmentService.isDevelopmentEnvironment()
-      && ! process.env['CI_BENCHMARK']
-
-    const { processors, provider } = initTrace({
-      otelConfig: this.config,
-      // jaegerExporterConfig: this.jaegerExporterConfig,
-      otlpGrpcExporterConfig: this.otlpGrpcExporterConfig,
-      isDevelopmentEnvironment,
-    })
-    this.traceProvider = provider
-    this.spanProcessors = processors
-
-    const opts: SpanOptions = {
-      root: true,
-      kind: SpanKind.INTERNAL,
-    }
-    const spanName = 'APP INIT'
-    const traceCtx = this.getGlobalCurrentContext()
-
-    // this.appInitProcessSpan = this.startSpan(spanName, opts)
-    this.startActiveSpan(spanName, (span) => {
-      this.appInitProcessSpan = span
-      const ctxWithSpanSet = setSpan(traceCtx, span)
-      this.appInitProcessContext = ctxWithSpanSet
-    }, opts)
-
-    // const span = this.getGlobalCurrentSpan(this.appInitProcessContext)
-    // void traceCtx
-    // void span
-
-    this.prepareCaptureHeaders('request', this.config.captureRequestHeaders)
-    this.prepareCaptureHeaders('response', this.config.captureRequestHeaders)
-
-    this.addAppInitEvent({
-      event: `${ConfigKey.componentName}.init.end`,
-    })
-
-    // setTimeout(() => {
-    //   void registerDecoratorHandlers(this.app, this.decoratorService, [METHOD_KEY_TraceInit])
-    // }, 1)
+    await this._init2()
   }
 
   getGlobalCurrentContext(): Context {
@@ -555,5 +514,43 @@ export class OtelComponent extends AbstractOtelComponent {
     }
   }
 
+  protected async _init2(): Promise<void> {
+    const isDevelopmentEnvironment = this.environmentService.isDevelopmentEnvironment()
+      && ! process.env['CI_BENCHMARK']
+
+    const { processors, provider } = initTrace({
+      otelConfig: this.config,
+      // jaegerExporterConfig: this.jaegerExporterConfig,
+      otlpGrpcExporterConfig: this.otlpGrpcExporterConfig,
+      isDevelopmentEnvironment,
+    })
+    this.traceProvider = provider
+    this.spanProcessors = processors
+
+    const opts: SpanOptions = {
+      root: true,
+      kind: SpanKind.INTERNAL,
+    }
+    const spanName = 'APP INIT'
+    const traceCtx = this.getGlobalCurrentContext()
+
+    // this.appInitProcessSpan = this.startSpan(spanName, opts)
+    this.startActiveSpan(spanName, (span) => {
+      this.appInitProcessSpan = span
+      const ctxWithSpanSet = setSpan(traceCtx, span)
+      this.appInitProcessContext = ctxWithSpanSet
+    }, opts)
+
+    // const span = this.getGlobalCurrentSpan(this.appInitProcessContext)
+    // void traceCtx
+    // void span
+
+    this.prepareCaptureHeaders('request', this.config.captureRequestHeaders)
+    this.prepareCaptureHeaders('response', this.config.captureRequestHeaders)
+
+    this.addAppInitEvent({
+      event: `${ConfigKey.componentName}.init.end`,
+    })
+  }
 }
 
