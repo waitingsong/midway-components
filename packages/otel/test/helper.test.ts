@@ -74,34 +74,42 @@ export function sortSpans(spans: JaegerTraceInfoSpan[]): JaegerTraceInfoSpan[] {
     map.set(span.spanID, span)
   })
 
-  const ret: JaegerTraceInfo['spans'] = []
+  const ret: JaegerTraceInfoSpan[] = []
 
   // find root
-  spans.forEach((span) => {
+  // spans.forEach((span) => {
+  for (const span of spans) {
     const parentSpan = getParentSpan(span, map)
     if (! parentSpan) { // root span
       ret.push(span)
-    }
-  })
-
-  let limit = 0
-
-  while (ret.length < map.size) {
-    const parentSpan = ret.at(-1)
-    assert(parentSpan)
-    const pid = parentSpan.spanID
-    const childSpans = getChildren(pid, spans)
-    if (childSpans.length) {
-      ret.push(...childSpans)
-    }
-
-    limit += 1
-    if (limit > 1000) {
-      assert(false, 'sortSpans() exec limit')
+      break
     }
   }
 
+  const parentSpan = ret.at(-1)
+  assert(parentSpan)
+  mergeSpans(parentSpan, spans, ret)
+
   return ret
+}
+
+function mergeSpans(parentSpan: JaegerTraceInfoSpan, srcSpans: JaegerTraceInfoSpan[], result: JaegerTraceInfoSpan[]): void {
+  assert(parentSpan)
+  const pid = parentSpan.spanID
+  const childSpans = getChildren(pid, srcSpans)
+
+  if (childSpans.length) { // has child node
+    if (parentSpan !== result.at(-1)) {
+      result.push(parentSpan)
+    }
+
+    childSpans.forEach((child) => { // not leaf node
+      mergeSpans(child, srcSpans, result)
+    })
+  }
+  else if (parentSpan !== result.at(-1)) { // leaf node
+    result.push(parentSpan)
+  }
 }
 
 function getParentSpan(
@@ -116,8 +124,6 @@ function getParentSpan(
 
   return map.get(ref.spanID)
 }
-
-
 
 function getChildren(
   parentSpanId: string,
