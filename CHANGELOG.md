@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [30.5.0](https://github.com/waitingsong/midway-components/compare/v30.4.0...v30.5.0) (2024-06-05)
+
+
+### Features
+
+* **otel:** Trace decorator accepts scope ([865bf31](https://github.com/waitingsong/midway-components/commit/865bf31fad008e9cb8871258446e2b6c8c398d00))
+* **share:** expose types InstanceWithDecorator, ClassWithDecorator ([1bed479](https://github.com/waitingsong/midway-components/commit/1bed47955892179505b24b4056d1839eb39af5f9))
+
+
+
+
+
 # [30.4.0](https://github.com/waitingsong/midway-components/compare/v30.3.0...v30.4.0) (2024-06-04)
 
 

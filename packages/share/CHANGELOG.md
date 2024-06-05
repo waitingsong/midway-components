@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [30.5.0](https://github.com/waitingsong/midway-components/compare/v30.4.0...v30.5.0) (2024-06-05)
+
+
+### Features
+
+* **share:** expose types InstanceWithDecorator, ClassWithDecorator ([1bed479](https://github.com/waitingsong/midway-components/commit/1bed47955892179505b24b4056d1839eb39af5f9))
+
+
+
+
+
 # [30.0.0](https://github.com/waitingsong/midway-components/compare/v29.3.1...v30.0.0) (2024-06-02)
 
 **Note:** Version bump only for package @mwcp/share
