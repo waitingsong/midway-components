@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [30.6.0](https://github.com/waitingsong/midway-components/compare/v30.5.0...v30.6.0) (2024-06-05)
+
+
+### Features
+
+* **otel:** expose genTraceScope() ([74cfd8d](https://github.com/waitingsong/midway-components/commit/74cfd8d1d2740b7d843c96d185fabc664ffca61d))
+
+
+
+
+
 # [30.5.0](https://github.com/waitingsong/midway-components/compare/v30.4.0...v30.5.0) (2024-06-05)
 
 
