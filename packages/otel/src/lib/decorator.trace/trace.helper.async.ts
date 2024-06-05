@@ -1,6 +1,6 @@
 import assert from 'node:assert'
 
-import { processDecoratorBeforeAfterAsync } from '../decorator.helper.js'
+import { processDecoratorBeforeAfterAsync, genTraceScopeFrom } from '../decorator.helper.js'
 import type { DecoratorExecutorParam } from '../trace.helper.js'
 import { ConfigKey } from '../types.js'
 
@@ -18,6 +18,7 @@ export async function beforeAsync(options: DecoratorExecutorParam): Promise<void
   if (! traceService) { return }
 
   const type = 'before'
+  const scope = genTraceScopeFrom(options)
 
   if (startActiveSpan) {
     // await traceService.startActiveSpan(
@@ -30,7 +31,7 @@ export async function beforeAsync(options: DecoratorExecutorParam): Promise<void
     //   spanOptions,
     //   traceContext,
     // )
-    options.span = traceService.startScopeActiveSpan({ name: spanName, spanOptions, traceContext })
+    options.span = traceService.startScopeActiveSpan({ name: spanName, spanOptions, traceContext, scope })
     options.span.setAttributes(callerAttr)
     return processDecoratorBeforeAfterAsync(type, options)
   }
@@ -38,7 +39,7 @@ export async function beforeAsync(options: DecoratorExecutorParam): Promise<void
     // it's necessary to cost a little time to prevent next span.startTime is same as previous span.endTime
     const rndStr = Math.random().toString(36).substring(7)
     void rndStr
-    options.span = traceService.startSpan(spanName, spanOptions, traceContext)
+    options.span = traceService.startSpan(spanName, spanOptions, traceContext, scope)
     options.span.setAttributes(callerAttr)
     return processDecoratorBeforeAfterAsync(type, options)
   }

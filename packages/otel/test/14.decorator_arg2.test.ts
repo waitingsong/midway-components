@@ -5,9 +5,11 @@ import { fileShortPath } from '@waiting/shared-core'
 
 import { exporterEndpoint } from '##/lib/config.js'
 import { apiBase, apiMethod } from '#@/api-test.js'
-import { retrieveTraceInfoFromRemote, sortSpans } from '#@/helper.test.js'
-import { AssertsOptions, assertsSpan, assertRootSpan } from '#@/lib/110.helper.js'
 import { testConfig } from '#@/root.config.js'
+import {
+  AssertsOptions, assertsSpan, assertRootSpan,
+  retrieveTraceInfoFromRemote, sortSpans,
+} from '#@/test.helper.js'
 
 
 describe(fileShortPath(import.meta.url), function () {

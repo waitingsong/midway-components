@@ -3,17 +3,19 @@ import assert from 'node:assert/strict'
 import { SEMATTRS_HTTP_TARGET, SEMATTRS_HTTP_ROUTE } from '@opentelemetry/semantic-conventions'
 import { fileShortPath } from '@waiting/shared-core'
 
+import { HeadersKey, AttrNames } from '##/index.js'
 import { apiBase, apiMethod } from '#@/api-test.js'
-import { retrieveTraceInfoFromRemote, sortSpans } from '#@/helper.test.js'
 import { testConfig } from '#@/root.config.js'
-
-import { AssertsOptions, assertRootSpan, assertsSpan } from './110.helper.js'
+import {
+  AssertsOptions, assertsSpan, assertRootSpan,
+  retrieveTraceInfoFromRemote, sortSpans,
+} from '#@/test.helper.js'
 
 
 describe(fileShortPath(import.meta.url), function () {
 
-  const path1 = `${apiBase.decorator_data}/${apiMethod.async}`
-  const path2 = `${apiBase.decorator_data}/${apiMethod.sync}`
+  const path1 = `${apiBase.decorator_data}/${apiMethod.mix_on_async}`
+  const path2 = `${apiBase.decorator_data}/${apiMethod.mix_on_sync}`
 
   it(`Should ${path1} work`, async () => {
     const { httpRequest, testSuffix } = testConfig
@@ -30,8 +32,8 @@ describe(fileShortPath(import.meta.url), function () {
 
     const [info] = await retrieveTraceInfoFromRemote(traceId, 3)
     assert(info)
+    console.log('--------------------', { info })
     const { spans } = info
-    assert(spans.length)
     spans.forEach((span, idx) => {
       console.info(idx, { span })
     })
@@ -64,11 +66,11 @@ describe(fileShortPath(import.meta.url), function () {
 
     const opt1: AssertsOptions = {
       traceId,
-      operationName: 'DecoratorDataComponentController/traceIdAsync',
+      operationName: 'DecoratorDataComponentController/mixOnAsync',
       tags: {
         args0: id,
         'caller.class': 'DecoratorDataComponentController',
-        'caller.method': 'traceIdAsync',
+        'caller.method': 'mixOnAsync',
         'span.kind': 'client',
       },
     }
@@ -76,10 +78,10 @@ describe(fileShortPath(import.meta.url), function () {
 
     const opt2: AssertsOptions = {
       traceId,
-      operationName: 'DecoratorDataComponentController/traceDecoratorDataAsync',
+      operationName: 'DecoratorDataComponentController/_mixOnAsync',
       tags: {
         'caller.class': 'DecoratorDataComponentController',
-        'caller.method': 'traceDecoratorDataAsync',
+        'caller.method': '_mixOnAsync',
         'span.kind': 'client',
         args0: id,
       },
@@ -92,32 +94,34 @@ describe(fileShortPath(import.meta.url), function () {
   })
 
 
-  it(`Should ${path2} work`, async () => {
+  it(`Should ${path2} return error`, async () => {
     const { httpRequest, testSuffix } = testConfig
 
     const id = Math.random().toString(36).slice(2)
     const resp = await httpRequest.get(`${path2}/${id}`)
 
-    assert(resp.ok, resp.text)
-    const ret = resp.text
-    assert(ret)
-    const [traceId, rnd] = ret.split(':')
-    assert(traceId, ret)
-    assert(rnd === id, ret)
+    assert(! resp.ok, resp.text)
+    assert(resp.status === 500)
+    assert(resp.text.includes('before() is a AsyncFunction'), resp.text)
+    assert(resp.text.includes('class: DecoratorDataComponentController'), resp.text)
+    assert(resp.text.includes('method: _MixOnSync'), resp.text)
 
-    const [info] = await retrieveTraceInfoFromRemote(traceId, 3)
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const headers = new Headers(resp.header)
+    const oid = headers.get(HeadersKey['otelTraceId'])
+    assert(oid)
+
+    const [info] = await retrieveTraceInfoFromRemote(oid, 2)
     assert(info)
+    const traceId = info.traceID
     console.log('--------------------', { info })
     const { spans } = info
-    assert(spans.length)
-    spans.forEach((span, idx) => {
-      console.info(idx, { span })
-    })
 
     const [rootSpan, span1, span2] = sortSpans(spans)
     assert(rootSpan)
     assert(span1)
-    assert(span2)
+
+    const errMsg = '[@mwcp/share] Trace() before() is a AsyncFunction, but decorated method is sync function, class: DecoratorDataComponentController, method: _MixOnSync'
 
     assertRootSpan({
       path: path2,
@@ -127,46 +131,46 @@ describe(fileShortPath(import.meta.url), function () {
       tags: {
         [SEMATTRS_HTTP_TARGET]: `${path2}/${id}`,
         [SEMATTRS_HTTP_ROUTE]: `${path2}/:id`,
-        rootAttrs: 'rootAttrs',
+        [AttrNames.HTTP_ERROR_NAME]: 'AssertionError',
+        [AttrNames.HTTP_ERROR_MESSAGE]: errMsg,
+        [AttrNames.HTTP_STATUS_TEXT]: 'Error',
+        error: true,
       },
       logs: [
         {},
         {},
         {},
-        { event: 'default', rootAttrs: 'rootAttrs' },
         false,
-        false,
-        false,
+        {
+          event: `${AttrNames.Outgoing_Response_data}`,
+          [AttrNames.Http_Response_Code]: 500,
+          [AttrNames.Http_Response_Body]: errMsg,
+        },
       ],
     })
 
     const opt1: AssertsOptions = {
       traceId,
-      operationName: 'DecoratorDataComponentController/traceIdSync',
-      tags: {
-        args0: id,
-        'caller.class': 'DecoratorDataComponentController',
-        'caller.method': 'traceIdSync',
-        'span.kind': 'client',
-      },
-    }
-    assertsSpan(span1, opt1)
-
-    const opt2: AssertsOptions = {
-      traceId,
-      operationName: 'DecoratorDataComponentController/traceDecoratorDataSync',
+      operationName: 'DecoratorDataComponentController/mixOnSync',
       tags: {
         'caller.class': 'DecoratorDataComponentController',
-        'caller.method': 'traceDecoratorDataSync',
+        'caller.method': 'mixOnSync',
         'span.kind': 'client',
-        args0: id,
+        [AttrNames.HTTP_ERROR_NAME]: 'AssertionError',
+        [AttrNames.HTTP_ERROR_MESSAGE]: errMsg,
+        [AttrNames.HTTP_STATUS_TEXT]: 'Error',
+        error: true,
       },
       logs: [
-        { event: 'before', args0: id },
-        { event: 'after', args0: id, res: `${id}${testSuffix}` },
+        {
+          event: `${AttrNames.Exception}`,
+          [AttrNames.Exception_Type]: 'ERR_ASSERTION',
+          [AttrNames.Http_Response_Code]: 500,
+          [AttrNames.Http_Response_Body]: errMsg,
+        },
       ],
     }
-    assertsSpan(span2, opt2)
+    assertsSpan(span1, opt1)
   })
 })
 

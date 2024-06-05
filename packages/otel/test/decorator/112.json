@@ -1,0 +1,638 @@
+{
+    "data": [
+        {
+            "traceID": "cc10bc5e7de918a3d211c8c751c57ffc",
+            "spans": [
+                {
+                    "traceID": "cc10bc5e7de918a3d211c8c751c57ffc",
+                    "spanID": "037f6f78e0582c6e",
+                    "operationName": "HTTP GET /decorator_data/scope",
+                    "references": [],
+                    "startTime": 1717564415158000,
+                    "duration": 23088,
+                    "tags": [
+                        {
+                            "key": "http.host",
+                            "type": "string",
+                            "value": "127.0.0.1:61605"
+                        },
+                        {
+                            "key": "http.method",
+                            "type": "string",
+                            "value": "GET"
+                        },
+                        {
+                            "key": "http.route",
+                            "type": "string",
+                            "value": "/decorator_data/scope"
+                        },
+                        {
+                            "key": "http.scheme",
+                            "type": "string",
+                            "value": "http"
+                        },
+                        {
+                            "key": "http.server_name",
+                            "type": "string",
+                            "value": "base-app"
+                        },
+                        {
+                            "key": "http.target",
+                            "type": "string",
+                            "value": "/decorator_data/scope"
+                        },
+                        {
+                            "key": "http.url",
+                            "type": "string",
+                            "value": "http://127.0.0.1:61605/decorator_data/scope"
+                        },
+                        {
+                            "key": "net.host.name",
+                            "type": "string",
+                            "value": "127.0.0.1"
+                        },
+                        {
+                            "key": "service.name",
+                            "type": "string",
+                            "value": "base-app"
+                        },
+                        {
+                            "key": "service.version",
+                            "type": "string",
+                            "value": "1.0.0"
+                        },
+                        {
+                            "key": "http.flavor",
+                            "type": "string",
+                            "value": "1.1"
+                        },
+                        {
+                            "key": "net.transport",
+                            "type": "string",
+                            "value": "ip_tcp"
+                        },
+                        {
+                            "key": "request.start.time",
+                            "type": "string",
+                            "value": "2024-06-05T13:13:35.154+08:00"
+                        },
+                        {
+                            "key": "request.end.time",
+                            "type": "string",
+                            "value": "2024-06-05T13:13:35.181+08:00"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "server"
+                        },
+                        {
+                            "key": "otel.status_code",
+                            "type": "string",
+                            "value": "OK"
+                        },
+                        {
+                            "key": "internal.span.format",
+                            "type": "string",
+                            "value": "otlp"
+                        }
+                    ],
+                    "logs": [
+                        {
+                            "timestamp": 1717564415158254,
+                            "fields": [
+                                {
+                                    "key": "event",
+                                    "type": "string",
+                                    "value": "request.begin"
+                                },
+                                {
+                                    "key": "time",
+                                    "type": "string",
+                                    "value": "2024-06-05T13:13:35.154+08:00"
+                                }
+                            ]
+                        },
+                        {
+                            "timestamp": 1717564415162469,
+                            "fields": [
+                                {
+                                    "key": "event",
+                                    "type": "string",
+                                    "value": "incoming.request.data"
+                                },
+                                {
+                                    "key": "http.request.header.content_length",
+                                    "type": "string",
+                                    "value": ""
+                                },
+                                {
+                                    "key": "http.request.header.content_type",
+                                    "type": "string",
+                                    "value": ""
+                                }
+                            ]
+                        },
+                        {
+                            "timestamp": 1717564415162609,
+                            "fields": [
+                                {
+                                    "key": "event",
+                                    "type": "string",
+                                    "value": "pre.process.finish"
+                                },
+                                {
+                                    "key": "service.memory.usage",
+                                    "type": "string",
+                                    "value": "{\n  \"pid\": 11420,\n  \"rss\": \"605.389 M\",\n  \"heapTotal\": \"89.035 M\",\n  \"heapUsed\": \"57.2 M\",\n  \"external\": \"4.419 M\",\n  \"arrayBuffers\": \"319.514 k\"\n}"
+                                }
+                            ]
+                        },
+                        {
+                            "timestamp": 1717564415177995,
+                            "fields": [
+                                {
+                                    "key": "event",
+                                    "type": "string",
+                                    "value": "post.process.begin"
+                                },
+                                {
+                                    "key": "time",
+                                    "type": "string",
+                                    "value": "2024-06-05T13:13:35.178+08:00"
+                                }
+                            ]
+                        },
+                        {
+                            "timestamp": 1717564415178714,
+                            "fields": [
+                                {
+                                    "key": "event",
+                                    "type": "string",
+                                    "value": "outgoing.response.data"
+                                },
+                                {
+                                    "key": "http.response.body",
+                                    "type": "string",
+                                    "value": "cc10bc5e7de918a3d211c8c751c57ffc"
+                                },
+                                {
+                                    "key": "http.response.code",
+                                    "type": "int64",
+                                    "value": 200
+                                },
+                                {
+                                    "key": "http.response.header.content_length",
+                                    "type": "string",
+                                    "value": "32"
+                                },
+                                {
+                                    "key": "http.response.header.content_type",
+                                    "type": "string",
+                                    "value": "text/plain; charset=utf-8"
+                                }
+                            ]
+                        },
+                        {
+                            "timestamp": 1717564415181003,
+                            "fields": [
+                                {
+                                    "key": "event",
+                                    "type": "string",
+                                    "value": "request.end"
+                                },
+                                {
+                                    "key": "time",
+                                    "type": "string",
+                                    "value": "2024-06-05T13:13:35.181+08:00"
+                                }
+                            ]
+                        }
+                    ],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "cc10bc5e7de918a3d211c8c751c57ffc",
+                    "spanID": "f49f55e1055f36be",
+                    "operationName": "DecoratorDataComponentController/_simple1a",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "cc10bc5e7de918a3d211c8c751c57ffc",
+                            "spanID": "f2346a7bc39a433c"
+                        }
+                    ],
+                    "startTime": 1717564415171000,
+                    "duration": 187,
+                    "tags": [
+                        {
+                            "key": "caller.class",
+                            "type": "string",
+                            "value": "DecoratorDataComponentController"
+                        },
+                        {
+                            "key": "caller.method",
+                            "type": "string",
+                            "value": "_simple1a"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "client"
+                        },
+                        {
+                            "key": "otel.status_code",
+                            "type": "string",
+                            "value": "OK"
+                        },
+                        {
+                            "key": "internal.span.format",
+                            "type": "string",
+                            "value": "otlp"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "cc10bc5e7de918a3d211c8c751c57ffc",
+                    "spanID": "d17c58417777ad46",
+                    "operationName": "DecoratorDataComponentController/_simple2a",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "cc10bc5e7de918a3d211c8c751c57ffc",
+                            "spanID": "aabb5336aed1598f"
+                        }
+                    ],
+                    "startTime": 1717564415171000,
+                    "duration": 750,
+                    "tags": [
+                        {
+                            "key": "caller.class",
+                            "type": "string",
+                            "value": "DecoratorDataComponentController"
+                        },
+                        {
+                            "key": "caller.method",
+                            "type": "string",
+                            "value": "_simple2a"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "client"
+                        },
+                        {
+                            "key": "otel.status_code",
+                            "type": "string",
+                            "value": "OK"
+                        },
+                        {
+                            "key": "internal.span.format",
+                            "type": "string",
+                            "value": "otlp"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "cc10bc5e7de918a3d211c8c751c57ffc",
+                    "spanID": "f2346a7bc39a433c",
+                    "operationName": "DecoratorDataComponentController/_simple1",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "cc10bc5e7de918a3d211c8c751c57ffc",
+                            "spanID": "ee5ca4dbbaba0e0a"
+                        }
+                    ],
+                    "startTime": 1717564415170000,
+                    "duration": 3854,
+                    "tags": [
+                        {
+                            "key": "caller.class",
+                            "type": "string",
+                            "value": "DecoratorDataComponentController"
+                        },
+                        {
+                            "key": "caller.method",
+                            "type": "string",
+                            "value": "_simple1"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "client"
+                        },
+                        {
+                            "key": "otel.status_code",
+                            "type": "string",
+                            "value": "OK"
+                        },
+                        {
+                            "key": "internal.span.format",
+                            "type": "string",
+                            "value": "otlp"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "cc10bc5e7de918a3d211c8c751c57ffc",
+                    "spanID": "607dc8f2afa9de7c",
+                    "operationName": "DecoratorDataComponentController/_simple1a",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "cc10bc5e7de918a3d211c8c751c57ffc",
+                            "spanID": "0754faa7f1bf6c90"
+                        }
+                    ],
+                    "startTime": 1717564415167000,
+                    "duration": 353,
+                    "tags": [
+                        {
+                            "key": "caller.class",
+                            "type": "string",
+                            "value": "DecoratorDataComponentController"
+                        },
+                        {
+                            "key": "caller.method",
+                            "type": "string",
+                            "value": "_simple1a"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "client"
+                        },
+                        {
+                            "key": "otel.status_code",
+                            "type": "string",
+                            "value": "OK"
+                        },
+                        {
+                            "key": "internal.span.format",
+                            "type": "string",
+                            "value": "otlp"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "cc10bc5e7de918a3d211c8c751c57ffc",
+                    "spanID": "0754faa7f1bf6c90",
+                    "operationName": "DecoratorDataComponentController/_simple1",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "cc10bc5e7de918a3d211c8c751c57ffc",
+                            "spanID": "ee5ca4dbbaba0e0a"
+                        }
+                    ],
+                    "startTime": 1717564415166000,
+                    "duration": 2121,
+                    "tags": [
+                        {
+                            "key": "caller.class",
+                            "type": "string",
+                            "value": "DecoratorDataComponentController"
+                        },
+                        {
+                            "key": "caller.method",
+                            "type": "string",
+                            "value": "_simple1"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "client"
+                        },
+                        {
+                            "key": "otel.status_code",
+                            "type": "string",
+                            "value": "OK"
+                        },
+                        {
+                            "key": "internal.span.format",
+                            "type": "string",
+                            "value": "otlp"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "cc10bc5e7de918a3d211c8c751c57ffc",
+                    "spanID": "aabb5336aed1598f",
+                    "operationName": "DecoratorDataComponentController/_simple2",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "cc10bc5e7de918a3d211c8c751c57ffc",
+                            "spanID": "ee5ca4dbbaba0e0a"
+                        }
+                    ],
+                    "startTime": 1717564415170000,
+                    "duration": 4507,
+                    "tags": [
+                        {
+                            "key": "caller.class",
+                            "type": "string",
+                            "value": "DecoratorDataComponentController"
+                        },
+                        {
+                            "key": "caller.method",
+                            "type": "string",
+                            "value": "_simple2"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "client"
+                        },
+                        {
+                            "key": "otel.status_code",
+                            "type": "string",
+                            "value": "OK"
+                        },
+                        {
+                            "key": "internal.span.format",
+                            "type": "string",
+                            "value": "otlp"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                },
+                {
+                    "traceID": "cc10bc5e7de918a3d211c8c751c57ffc",
+                    "spanID": "ee5ca4dbbaba0e0a",
+                    "operationName": "DecoratorDataComponentController/simple",
+                    "references": [
+                        {
+                            "refType": "CHILD_OF",
+                            "traceID": "cc10bc5e7de918a3d211c8c751c57ffc",
+                            "spanID": "037f6f78e0582c6e"
+                        }
+                    ],
+                    "startTime": 1717564415166000,
+                    "duration": 10148,
+                    "tags": [
+                        {
+                            "key": "caller.class",
+                            "type": "string",
+                            "value": "DecoratorDataComponentController"
+                        },
+                        {
+                            "key": "caller.method",
+                            "type": "string",
+                            "value": "simple"
+                        },
+                        {
+                            "key": "span.kind",
+                            "type": "string",
+                            "value": "client"
+                        },
+                        {
+                            "key": "otel.status_code",
+                            "type": "string",
+                            "value": "OK"
+                        },
+                        {
+                            "key": "internal.span.format",
+                            "type": "string",
+                            "value": "otlp"
+                        }
+                    ],
+                    "logs": [],
+                    "processID": "p1",
+                    "warnings": null
+                }
+            ],
+            "processes": {
+                "p1": {
+                    "serviceName": "base-app",
+                    "tags": [
+                        {
+                            "key": "host.arch",
+                            "type": "string",
+                            "value": "amd64"
+                        },
+                        {
+                            "key": "host.id",
+                            "type": "string",
+                            "value": "b1b03cb7-071a-4620-a1a9-69f07a73fefa"
+                        },
+                        {
+                            "key": "host.name",
+                            "type": "string",
+                            "value": "DESKTOP-1V84MBJ"
+                        },
+                        {
+                            "key": "os.type",
+                            "type": "string",
+                            "value": "windows"
+                        },
+                        {
+                            "key": "os.version",
+                            "type": "string",
+                            "value": "10.0.19045"
+                        },
+                        {
+                            "key": "otel.library.name",
+                            "type": "string",
+                            "value": "@mwcp/otel"
+                        },
+                        {
+                            "key": "otel.library.version",
+                            "type": "string",
+                            "value": "30.4.0"
+                        },
+                        {
+                            "key": "process.command",
+                            "type": "string",
+                            "value": "f:\\project\\my\\midway-components\\node_modules\\mocha\\lib\\cli\\cli.js"
+                        },
+                        {
+                            "key": "process.command_args",
+                            "type": "string",
+                            "value": "[\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"--no-warnings\",\"--loader=ts-node/esm\",\"--enable-source-maps\",\"f:\\\\project\\\\my\\\\midway-components\\\\node_modules\\\\mocha\\\\lib\\\\cli\\\\cli.js\",\"test/**/*.test.ts\",\"--no-parallel\",\"--no-config\",\"--no-package\",\"--bail\",\"--full-trace\",\"--require\",\"tsconfig-paths/register.js\",\"--require\",\"test/setup.ts\",\"--timeout\",\"30000\",\"--ui\",\"bdd\",\"--exit\",\"--diff\",\"--extension\",\"js\",\"--extension\",\"cjs\",\"--extension\",\"mjs\",\"--reporter\",\"spec\",\"--slow\",\"75\",\"--watch-ignore\",\"node_modules\",\"--watch-ignore\",\".git\"]"
+                        },
+                        {
+                            "key": "process.executable.name",
+                            "type": "string",
+                            "value": "C:\\Windows\\system32\\cmd.exe "
+                        },
+                        {
+                            "key": "process.executable.path",
+                            "type": "string",
+                            "value": "C:\\Program Files\\nodejs\\node.exe"
+                        },
+                        {
+                            "key": "process.owner",
+                            "type": "string",
+                            "value": "mark"
+                        },
+                        {
+                            "key": "process.pid",
+                            "type": "int64",
+                            "value": 11420
+                        },
+                        {
+                            "key": "process.runtime.description",
+                            "type": "string",
+                            "value": "Node.js"
+                        },
+                        {
+                            "key": "process.runtime.name",
+                            "type": "string",
+                            "value": "nodejs"
+                        },
+                        {
+                            "key": "process.runtime.version",
+                            "type": "string",
+                            "value": "22.1.0"
+                        },
+                        {
+                            "key": "service.version",
+                            "type": "string",
+                            "value": "1.0.0"
+                        },
+                        {
+                            "key": "telemetry.sdk.language",
+                            "type": "string",
+                            "value": "nodejs"
+                        },
+                        {
+                            "key": "telemetry.sdk.name",
+                            "type": "string",
+                            "value": "opentelemetry"
+                        },
+                        {
+                            "key": "telemetry.sdk.version",
+                            "type": "string",
+                            "value": "1.24.1"
+                        }
+                    ]
+                }
+            },
+            "warnings": null
+        }
+    ],
+    "total": 0,
+    "limit": 0,
+    "offset": 0,
+    "errors": null
+}

@@ -140,6 +140,7 @@ export abstract class AbstractTraceService {
     name: string,
     options?: SpanOptions,
     traceContext?: Context,
+    scope?: object | symbol,
   ): Span
 
   /**
@@ -161,6 +162,7 @@ export abstract class AbstractTraceService {
     callback: F,
     options?: SpanOptions,
     traceContext?: Context,
+    scope?: object | symbol,
   ): ReturnType<F>
 
   /**
@@ -231,7 +233,7 @@ export interface StartScopeActiveSpanOptions {
   /**
    * @default scope is `this.ctx`
    */
-  scope?: object
+  scope?: object | symbol | undefined
   spanOptions?: SpanOptions | undefined
   traceContext?: Context | undefined
 }

@@ -100,6 +100,45 @@ export class FooController {
 }
 ```
 
+使用 `scope` 避免异步方法并发请求时调用链混乱
+
+```ts
+import { Trace } from '@mwcp/otel'
+
+@Controller('/')
+export class FooController {
+
+  @Trace()
+  async hello(): Promise<string> {
+    await Promise.all([
+      this._simple1(),
+      this._simple2(),
+    ])
+    return 'OK'
+  }
+
+  @Trace({ scope: 'hello1' })
+  async _hello1(): Promise<string> {
+    return 'world'
+  }
+
+  @Trace({ scope: 'hello2' })
+  async _hello2(): Promise<string> {
+    return 'world'
+  }
+
+  @Trace({ scope: 'hello1' })
+  async _hello1a(): Promise<string> {
+    return 'world'
+  }
+
+  @Trace({ scope: 'hello2' })
+  async _hello2a(): Promise<string> {
+    return 'world'
+  }
+}
+```
+
 ## `TraceInit` 装饰器
 
 ```ts

@@ -84,7 +84,9 @@ export class OtelComponent extends AbstractOtelComponent {
   otelLibraryVersion: string
   /* request|response -> Map<lower,norm> */
   readonly captureHeadersMap = new Map<string, Map<string, string>>()
-  readonly traceContextMap = new WeakMap<object, Context[]>()
+  // ref: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap
+  // @ts-expect-error non-registered symbols can be used as keys
+  readonly traceContextMap = new WeakMap<object | symbol, Context[]>()
 
   protected traceProvider: node.NodeTracerProvider | undefined
   protected spanProcessors: node.SpanProcessor[] = []
@@ -410,17 +412,19 @@ export class OtelComponent extends AbstractOtelComponent {
     }
   }
 
-  getScopeActiveContext(scope: object): Context | undefined {
+  getScopeActiveContext(scope: object | symbol): Context | undefined {
     if (! this.config.enable) { return }
 
-    assert(typeof scope === 'object', 'scope must be an object')
+    const tp = typeof scope
+    assert(tp === 'object' || tp === 'symbol', 'scope must be an object or symbol')
+
     const arr = this.traceContextMap.get(scope)
     if (arr?.length) {
       return this.getActiveContextFromArray(arr)
     }
   }
 
-  setScopeActiveContext(scope: object, ctx: Context): void {
+  setScopeActiveContext(scope: object | symbol, ctx: Context): void {
     if (! this.config.enable) { return }
 
     const currCtx = this.getScopeActiveContext(scope)
@@ -434,10 +438,12 @@ export class OtelComponent extends AbstractOtelComponent {
     this.traceContextMap.set(scope, [ctx])
   }
 
-  delScopeActiveContext(scope: object): void {
+  delScopeActiveContext(scope: object | symbol): void {
     if (! this.config.enable) { return }
 
-    assert(typeof scope === 'object', 'scope must be an object')
+    const tp = typeof scope
+    assert(tp === 'object' || tp === 'symbol', 'scope must be an object or symbol')
+
     const arr = this.traceContextMap.get(scope)
     if (arr) {
       arr.length = 0

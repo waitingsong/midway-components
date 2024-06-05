@@ -33,4 +33,6 @@ export const apiMethod = {
   sync: 'sync',
   mix_on_async: 'mix_on_async',
   mix_on_sync: 'mix_on_sync',
+
+  scope: 'scope',
 }

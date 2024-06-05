@@ -4,9 +4,16 @@ import { isPromise } from 'node:util/types'
 import type { Span } from '@opentelemetry/api'
 
 import type { AbstractOtelComponent, AbstractTraceService } from './abstract.js'
-import type { DecoratorContext, DecoratorTraceDataResp, TraceDecoratorOptions } from './decorator.types.js'
+import type {
+  DecoratorContext,
+  DecoratorContextBase,
+  DecoratorTraceDataResp,
+  ScopeGenerator,
+  TraceDecoratorOptions,
+} from './decorator.types.js'
 import { DecoratorExecutorParam } from './trace.helper.js'
 import { AttrNames } from './types.js'
+import { isSpanEnded } from './util.js'
 
 
 export async function processDecoratorBeforeAfterAsync(
@@ -20,12 +27,7 @@ export async function processDecoratorBeforeAfterAsync(
 
   const func = mergedDecoratorParam?.[type]
   if (typeof func === 'function') {
-    // @ts-expect-error
-    if (typeof span.ended === 'function') {
-      // @ts-expect-error
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      assert(! span.ended(), 'span is ended after method call')
-    }
+    assert(! isSpanEnded(span), 'span is ended after method call')
     const decoratorContext: DecoratorContext = {
       webApp: options.webApp,
       webContext: options.webContext,
@@ -33,6 +35,7 @@ export async function processDecoratorBeforeAfterAsync(
       traceService: options.traceService,
       traceContext: options.traceContext,
       traceSpan: span,
+      // instance: options.instance,
     }
 
     let data
@@ -67,12 +70,7 @@ export function processDecoratorBeforeAfterSync(
 
   const func = mergedDecoratorParam?.[type]
   if (typeof func === 'function') {
-    // @ts-expect-error
-    if (typeof span.ended === 'function') {
-      // @ts-expect-error
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      assert(! span.ended(), 'span is ended after method call')
-    }
+    assert(! isSpanEnded(span), 'span is ended after method call')
     const decoratorContext: DecoratorContext = {
       webApp: options.webApp,
       webContext: options.webContext,
@@ -150,3 +148,76 @@ function processDecoratorSpanData(
     }
   }
 }
+
+export function genTraceScopeFrom(options: DecoratorExecutorParam): object | symbol | undefined {
+  const { mergedDecoratorParam } = options
+
+  let scope
+  if (mergedDecoratorParam?.scope) {
+    const decoratorContextBase: DecoratorContextBase = {
+      webApp: options.webApp,
+      webContext: options.webContext,
+      otelComponent: options.otelComponent,
+      traceService: options.traceService,
+      // instance: options.instance,
+    }
+    scope = genTraceScope({
+      scope: mergedDecoratorParam.scope,
+      methodArgs: options.methodArgs,
+      decoratorContext: decoratorContextBase,
+    })
+  }
+  return scope
+}
+
+const traceScopeStringCache = new Map<string, symbol>()
+function getScopeStringCache(key: string): symbol {
+  let sym = traceScopeStringCache.get(key)
+  if (! sym) {
+    sym = Symbol(key)
+    setScopeStringCache(key, sym)
+  }
+  return sym
+}
+function setScopeStringCache(key: string, sym: symbol): void {
+  /* c8 ignore next 3 */
+  if (traceScopeStringCache.size > 10000) {
+    console.warn('traceScopeStringCache.size > 10000, should clear it')
+  }
+  traceScopeStringCache.set(key, sym)
+}
+
+export interface GenTraceScopeOptions {
+  scope: TraceDecoratorOptions['scope']
+  methodArgs: unknown[]
+  decoratorContext: DecoratorContextBase
+}
+export function genTraceScope(options: GenTraceScopeOptions): object | symbol | undefined {
+  const { scope } = options
+  switch (typeof scope) {
+    case 'string':
+      // Symbol.for() invalid as key of WeakMap
+      return getScopeStringCache(scope)
+
+    case 'object':
+      return scope
+
+    case 'undefined':
+      return
+
+    case 'function': {
+      const res = (scope as ScopeGenerator)(options.methodArgs, options.decoratorContext)
+      assert(typeof res === 'object' || typeof res === 'symbol', 'scope function must return an object or a symbol')
+      return res
+    }
+
+    case 'symbol':
+      return scope
+
+    /* c8 ignore next 2 */
+    default:
+      throw new Error('scope must be a string, an object, a symbol, or a function')
+  }
+
+}
+

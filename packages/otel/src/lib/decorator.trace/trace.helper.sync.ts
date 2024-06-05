@@ -3,7 +3,7 @@ import { isAsyncFunction } from 'util/types'
 
 import { ConfigKey } from '@mwcp/share'
 
-import { processDecoratorBeforeAfterSync } from '../decorator.helper.js'
+import { genTraceScopeFrom, processDecoratorBeforeAfterSync } from '../decorator.helper.js'
 import type { DecoratorExecutorParam } from '../trace.helper.js'
 import { AttrNames } from '../types.js'
 
@@ -28,6 +28,7 @@ export function beforeSync(options: DecoratorExecutorParam): void {
     `[@mwcp/${ConfigKey.namespace}] Trace() ${type}() is a AsyncFunction, but decorated method is sync function, class: ${callerAttr[AttrNames.CallerClass]}, method: ${callerAttr[AttrNames.CallerMethod]}`,
   )
   assert(spanName, 'spanName is empty')
+  const scope = genTraceScopeFrom(options)
 
   if (startActiveSpan) {
     // traceService.startActiveSpan(
@@ -40,7 +41,7 @@ export function beforeSync(options: DecoratorExecutorParam): void {
     //   spanOptions,
     //   traceContext,
     // )
-    options.span = traceService.startScopeActiveSpan({ name: spanName, spanOptions, traceContext })
+    options.span = traceService.startScopeActiveSpan({ name: spanName, spanOptions, traceContext, scope })
     options.span.setAttributes(callerAttr)
     processDecoratorBeforeAfterSync(type, options)
   }
@@ -48,7 +49,7 @@ export function beforeSync(options: DecoratorExecutorParam): void {
     // it's necessary to cost a little time to prevent next span.startTime is same as previous span.endTime
     const rndStr = Math.random().toString(36).substring(7)
     void rndStr
-    options.span = traceService.startSpan(spanName, spanOptions, traceContext)
+    options.span = traceService.startSpan(spanName, spanOptions, traceContext, scope)
     options.span.setAttributes(callerAttr)
     processDecoratorBeforeAfterSync(type, options)
   }

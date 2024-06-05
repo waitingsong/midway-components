@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-invalid-void-type */
 /* c8 ignore start */
-import { type Application, type Context } from '@mwcp/share'
+import type { Application, Context } from '@mwcp/share'
 import type {
   Attributes,
   Context as TraceContext,
@@ -47,6 +47,16 @@ export interface TraceDecoratorOptions<
    * @default true
    */
   autoEndSpan: boolean | undefined
+  /**
+   * 生成唯一标识符，用于确定同一方法的跨度, 避免异步方法并发调用时调用链关系混乱
+   * Generate the unique key for spans determination of the same method,
+   * avoid the confusion of call chain relationship when async methods are called concurrently
+   * @default webContext (traceService.ctx)
+   * @caution symbol must be non-registered symbols, it means Symbol(string) is valid, and Symbol.for(string) is invalid
+   * @note TraceInit not supported
+   * @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap
+   */
+  scope: ScopeGenerator<MParamType> | string | symbol | object | undefined
 }
 
 export interface DecoratorTraceData {
@@ -64,13 +74,24 @@ export type KeyGenerator<ArgsType = unknown[], DContext extends DecoratorContext
   context: DContext,
 ) => string | undefined
 
-export interface DecoratorContext {
+export interface DecoratorContext extends DecoratorContextBase {
+  traceContext: TraceContext | undefined
+  traceSpan: Span | undefined
+}
+
+
+export type ScopeGenerator<ArgsType = unknown[], DContext extends DecoratorContextBase = DecoratorContextBase> = (
+  /** Arguments of the method */
+  args: ArgsType,
+  context: DContext,
+) => object | symbol
+
+export interface DecoratorContextBase {
   webApp: Application | undefined
   webContext: Context | undefined
   otelComponent: AbstractOtelComponent | undefined
   traceService: AbstractTraceService | undefined
-  traceContext: TraceContext | undefined
-  traceSpan: Span | undefined
+  // instance: InstanceWithDecorator
 }
 
 

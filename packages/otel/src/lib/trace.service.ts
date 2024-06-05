@@ -70,16 +70,23 @@ export class TraceService extends AbstractTraceService {
   /**
    * @default scope is `this.ctx`
    */
-  getActiveContext(scope?: object): Context {
+  getActiveContext(scope?: object | symbol): Context {
     const obj = scope ?? this.ctx
-    const ctx = this.otel.getScopeActiveContext(obj)
+    let ctx = this.otel.getScopeActiveContext(obj)
+    if (ctx) {
+      return ctx
+    }
+    else if (scope === this.ctx) {
+      return this.rootContext
+    }
+    ctx = this.otel.getScopeActiveContext(this.ctx)
     return ctx ? ctx : this.rootContext
   }
 
   /**
    * @default scope is `this.ctx`
    */
-  setActiveContext(ctx: Context, scope?: object): void {
+  setActiveContext(ctx: Context, scope?: object | symbol): void {
     if (! this.config.enable) { return }
     const obj = scope ?? this.ctx
     this.otel.setScopeActiveContext(obj, ctx)
@@ -88,7 +95,7 @@ export class TraceService extends AbstractTraceService {
   /**
    * @default scope is `this.ctx`
    */
-  delActiveContext(scope?: object): void {
+  delActiveContext(scope?: object | symbol): void {
     if (! this.config.enable) { return }
     const obj = scope ?? this.ctx
     this.otel.delScopeActiveContext(obj)
@@ -97,7 +104,7 @@ export class TraceService extends AbstractTraceService {
   /**
    * @default scope is `this.ctx`
    */
-  getActiveSpan(scope?: object): Span | undefined {
+  getActiveSpan(scope?: object | symbol): Span | undefined {
     if (! this.config.enable) { return }
     const traceCtx = this.getActiveContext(scope)
     const span = getSpan(traceCtx)
@@ -118,7 +125,7 @@ export class TraceService extends AbstractTraceService {
     name: string,
     options?: SpanOptions,
     traceContext?: Context,
-    scope?: object,
+    scope?: object | symbol,
   ): Span {
 
     const ctx = traceContext ?? this.getActiveContext(scope)
@@ -155,7 +162,7 @@ export class TraceService extends AbstractTraceService {
     callback: F,
     options?: SpanOptions,
     traceContext?: Context,
-    scope?: object,
+    scope?: object | symbol,
   ): ReturnType<F> {
 
     const parentCtx = traceContext ?? this.getActiveContext(scope)
