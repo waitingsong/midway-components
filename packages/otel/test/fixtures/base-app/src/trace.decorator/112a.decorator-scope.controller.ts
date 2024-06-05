@@ -66,7 +66,7 @@ export class DecoratorScopeComponentController {
   })
   private async _simple2(): Promise<string> {
     await sleep(1)
-    this._simple2a()
+    await this._simple2a()
     return 'ok'
   }
 
@@ -82,7 +82,7 @@ export class DecoratorScopeComponentController {
   @Trace<DecoratorScopeComponentController['_simple2a']>({
     scope: scope2,
   })
-  private _simple2a(): string {
+  private async _simple2a(): Promise<string> {
     return 'ok'
   }
 }
