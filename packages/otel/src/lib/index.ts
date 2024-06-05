@@ -59,6 +59,7 @@ export {
 } from './decorator.types.js'
 
 export { genDecoratorExecutorOptions } from './trace.helper.js'
+export { genTraceScope } from './decorator.helper.js'
 
 export { AttrNames } from './attrnames.types.js'
 
