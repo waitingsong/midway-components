@@ -34,11 +34,6 @@ export class DecoratorScopeComponentController {
 
   @Inject() webRouterService: MidwayWebRouterService
 
-  @Init()
-  async init(): Promise<void> {
-    assert(true)
-  }
-
   @Trace()
   @Get(`/${apiMethod.scope}`)
   async simple(): Promise<string> {
@@ -46,7 +41,10 @@ export class DecoratorScopeComponentController {
     await this._simple1()
     await Promise.all([
       this._simple1(),
-      this._simple2(),
+      Promise.resolve().then(async () => {
+        await sleep(1)
+        return this._simple2()
+      }),
     ])
     return traceId
   }
@@ -65,7 +63,6 @@ export class DecoratorScopeComponentController {
     scope: scope2,
   })
   private async _simple2(): Promise<string> {
-    await sleep(1)
     await this._simple2a()
     return 'ok'
   }
