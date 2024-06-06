@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [30.7.0](https://github.com/waitingsong/midway-components/compare/v30.6.1...v30.7.0) (2024-06-06)
+
+
+### Features
+
+* **otel:** add properties of type DecoratorContextBase ([049d0de](https://github.com/waitingsong/midway-components/commit/049d0ded7209c7b1a2cb151cdb0beccdf119c208))
+
+
+
+
+
 ## [30.6.1](https://github.com/waitingsong/midway-components/compare/v30.6.0...v30.6.1) (2024-06-06)
 
 **Note:** Version bump only for package @mwcp/otel
