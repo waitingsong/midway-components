@@ -91,6 +91,9 @@ export interface DecoratorContextBase {
   webContext: Context | undefined
   otelComponent: AbstractOtelComponent | undefined
   traceService: AbstractTraceService | undefined
+  /** Caller Class name */
+  instanceName: string
+  methodName: string
   // instance: InstanceWithDecorator
 }
 

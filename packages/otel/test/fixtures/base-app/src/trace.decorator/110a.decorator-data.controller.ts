@@ -76,6 +76,9 @@ export class DecoratorDataComponentController {
   @Trace<DecoratorDataComponentController['traceDecoratorDataAsync']>({
     before: (args, decoratorContext) => {
       assert(decoratorContext.webApp)
+      assert(decoratorContext.instanceName === 'DecoratorDataComponentController')
+      assert(decoratorContext.methodName === 'traceDecoratorDataAsync')
+
       const attrs: Attributes = {
         args0: args[0],
         traceDecoratorDataAsync: 'foo',
@@ -87,7 +90,9 @@ export class DecoratorDataComponentController {
       return { attrs, events, rootAttrs, rootEvents } as DecoratorTraceDataResp
     },
     after: (args, res, decoratorContext) => {
-      void decoratorContext
+      assert(decoratorContext.instanceName === 'DecoratorDataComponentController')
+      assert(decoratorContext.methodName === 'traceDecoratorDataAsync')
+
       const events = { args0: args[0], res }
       return { events }
     },
@@ -98,7 +103,10 @@ export class DecoratorDataComponentController {
 
 
   @Trace<DecoratorDataComponentController['traceDecoratorDataSync']>({
-    before: (args) => {
+    before: (args, decoratorContext) => {
+      assert(decoratorContext.instanceName === 'DecoratorDataComponentController')
+      assert(decoratorContext.methodName === 'traceDecoratorDataSync')
+
       const attrs: Attributes = {
         args0: args[0],
         traceDecoratorDataAsync: 'foo',

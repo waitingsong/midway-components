@@ -12,6 +12,8 @@ describe(fileShortPath(import.meta.url), function () {
     webContext: void 0,
     otelComponent: void 0,
     traceService: void 0,
+    instanceName: 'DecoratorDataComponentController',
+    methodName: 'traceDecoratorDataAsync',
   }
   const base: GenTraceScopeOptions = {
     scope: void 0,

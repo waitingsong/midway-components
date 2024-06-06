@@ -186,6 +186,10 @@ export function genDecoratorExecutorOptions(
     traceService,
     traceContext: mergedDecoratorParam.traceContext,
     traceSpan: void 0,
+    /** Caller Class name */
+    instanceName: optionsBase.instanceName,
+    /** Caller method name */
+    methodName: optionsBase.methodName,
   }
 
   const keyOpts: GenKeyOptions = {

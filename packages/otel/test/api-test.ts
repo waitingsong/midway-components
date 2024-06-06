@@ -10,6 +10,7 @@ export const apiBase = {
   util: `/_${ConfigKey.namespace}_util`,
   route: '/route',
   decorator_data: `/decorator_data`,
+  trace_log: '/trace_log',
 }
 
 export const apiMethod = {

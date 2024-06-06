@@ -35,6 +35,10 @@ export async function processDecoratorBeforeAfterAsync(
       traceService: options.traceService,
       traceContext: options.traceContext,
       traceSpan: span,
+      /** Caller Class name */
+      instanceName: options.instanceName,
+      /** Caller method name */
+      methodName: options.methodName,
       // instance: options.instance,
     }
 
@@ -78,6 +82,10 @@ export function processDecoratorBeforeAfterSync(
       traceService: options.traceService,
       traceContext: options.traceContext,
       traceSpan: span,
+      /** Caller Class name */
+      instanceName: options.instanceName,
+      /** Caller method name */
+      methodName: options.methodName,
     }
 
     let data
@@ -159,6 +167,10 @@ export function genTraceScopeFrom(options: DecoratorExecutorParam): object | sym
       webContext: options.webContext,
       otelComponent: options.otelComponent,
       traceService: options.traceService,
+      /** Caller Class name */
+      instanceName: options.instanceName,
+      /** Caller method name */
+      methodName: options.methodName,
       // instance: options.instance,
     }
     scope = genTraceScope({
