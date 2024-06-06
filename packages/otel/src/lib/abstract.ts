@@ -128,9 +128,14 @@ export abstract class AbstractTraceService {
   readonly abstract rootContext: Context
   readonly abstract rootSpan: Span
 
-  abstract getActiveContext(): Context
-  abstract setActiveContext(ctx: Context): void
-  abstract getActiveSpan(): Span | undefined
+  abstract getActiveContext(scope?: object | symbol): Context
+  abstract setActiveContext(ctx: Context, scope?: object | symbol): void
+  abstract getActiveSpan(scope?: object | symbol): Span | undefined
+  /**
+   * @default scope is `this.ctx`
+   */
+  abstract delActiveContext(scope?: object | symbol): void
+
   abstract getTraceId(): string
   /**
    * Starts a new {@link Span}. Start the span without setting it on context.
