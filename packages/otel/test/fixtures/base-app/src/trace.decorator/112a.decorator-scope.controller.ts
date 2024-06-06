@@ -42,7 +42,7 @@ export class DecoratorScopeComponentController {
     await Promise.all([
       this._simple1(),
       Promise.resolve().then(async () => {
-        await sleep(1)
+        await sleep(1) // make sure the order of the two methods
         return this._simple2()
       }),
     ])
