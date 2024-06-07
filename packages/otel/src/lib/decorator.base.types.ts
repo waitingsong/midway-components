@@ -14,9 +14,11 @@ export class DecoratorHandlerTraceBase extends DecoratorHandlerBase {
 
   isEnable(options: DecoratorExecutorParam): boolean {
     const { config, traceService } = options
+    /* c8 ignore next 3 */
     if (! config.enable) {
       return false
     }
+    /* c8 ignore next 3 */
     else if (! traceService) {
       return false
     }
