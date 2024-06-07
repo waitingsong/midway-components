@@ -25,12 +25,17 @@ export class DecoratorHandlerTraceBase extends DecoratorHandlerBase {
     return true
   }
 
-  traceError(options: DecoratorExecutorParam, error: Error): void {
+  traceError(options: DecoratorExecutorParam, error: Error, endSpan = true): void {
     const { span, traceService } = options
     if (! this.isEnable(options) || ! span || ! traceService) { return }
     // @ts-ignore - IsTraced
     else if (error[AttrNames.IsTraced] && isSpanEnded(span)) { return }
 
-    traceService.endSpan(span, { code: SpanStatusCode.ERROR, error })
+    if (endSpan) {
+      traceService.endSpan(span, { code: SpanStatusCode.ERROR, error })
+    }
+    else {
+      traceService.setSpanWithError(span, error)
+    }
   }
 }

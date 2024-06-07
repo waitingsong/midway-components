@@ -139,6 +139,71 @@ export class FooController {
 }
 ```
 
+
+## `TraceLog` Decorator
+
+Add trace attribute to the span through decorator before()/after() method return object,
+no new span starting
+- add trace tag/log to current active span
+- add trace tag/log to root span
+
+Note return value of decorated method `before()` and `after()` should be type:
+```ts
+interface DecoratorTraceData {
+  attrs?: Attributes
+  events?: Attributes
+  rootAttrs?: Attributes
+  rootEvents?: Attributes
+}
+```
+
+
+```ts
+import { TraceLog, DecoratorTraceData } from '@mwcp/otel'
+
+@Controller('/')
+export class FooController {
+
+  @Trace()
+  async hello(): Promise<string> {
+    return 'hello'
+  }
+
+  @TraceLog({
+    before: async ([input], { instanceName, methodName }) => {
+      const attrs: Attributes = {
+        args0: input,
+      }
+      const events: Attributes = {
+        ...attrs,
+        instanceName,
+        methodName,
+      }
+      const rootAttrs: Attributes = { rootAttrs: 'rootAttrs' }
+      const rootEvents: Attributes = { ...rootAttrs }
+
+      return { attrs, events, rootAttrs, rootEvents } as DecoratorTraceData
+    },
+    after: ([input], res, { instanceName, methodName }) => {
+      const attrs: Attributes = {
+        args0: input,
+        res,
+      }
+      const events: Attributes = {
+        ...attrs,
+        instanceName,
+        methodName,
+      }
+      return { events }
+    },
+  })
+  async world(): Promise<string> {
+    return 'world'
+  }
+}
+```
+
+
 ## `TraceInit` Decorator
 
 ```ts

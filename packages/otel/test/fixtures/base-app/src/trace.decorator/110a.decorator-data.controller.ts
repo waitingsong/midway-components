@@ -10,7 +10,7 @@ import {
 } from '@midwayjs/core'
 import { MConfig } from '@mwcp/share'
 
-import { Attributes, Trace, TraceService, DecoratorTraceDataResp } from '../../../../../dist/lib/index.js'
+import { Attributes, Trace, TraceService, DecoratorTraceData } from '../../../../../dist/lib/index.js'
 import { TraceLogger, TraceAppLogger } from '../../../../../dist/lib/trace.logger.js'
 import { Config, ConfigKey } from '../../../../../dist/lib/types.js'
 import { apiBase, apiMethod } from '../../../../api-test.js'
@@ -87,7 +87,7 @@ export class DecoratorDataComponentController {
       const rootAttrs: Attributes = { rootAttrs: 'rootAttrs' }
       const rootEvents: Attributes = { ...rootAttrs }
 
-      return { attrs, events, rootAttrs, rootEvents } as DecoratorTraceDataResp
+      return { attrs, events, rootAttrs, rootEvents } as DecoratorTraceData
     },
     after: (args, res, decoratorContext) => {
       assert(decoratorContext.instanceName === 'DecoratorDataComponentController')
@@ -115,7 +115,7 @@ export class DecoratorDataComponentController {
       const rootAttrs: Attributes = { rootAttrs: 'rootAttrs' }
       const rootEvents: Attributes = { ...rootAttrs }
 
-      return { attrs, events, rootAttrs, rootEvents } as DecoratorTraceDataResp
+      return { attrs, events, rootAttrs, rootEvents } as DecoratorTraceData
     },
     after: (args, res) => {
       const events = { args0: args[0], res }

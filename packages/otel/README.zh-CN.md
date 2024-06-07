@@ -139,6 +139,70 @@ export class FooController {
 }
 ```
 
+
+## `TraceLog` 装饰器
+
+通过装饰器的 `before()`/`after()` 方法返回对象给当前Span和根Span添加 tag/log 信息，
+不会新建 Span 
+
+装饰器参数 `before()`  `after()` 返回类型应该是：
+```ts
+interface DecoratorTraceData {
+  attrs?: Attributes
+  events?: Attributes
+  rootAttrs?: Attributes
+  rootEvents?: Attributes
+}
+```
+
+
+```ts
+import { TraceLog, DecoratorTraceData } from '@mwcp/otel'
+
+@Controller('/')
+export class FooController {
+
+  @Trace()
+  async hello(): Promise<string> {
+    return 'hello'
+  }
+
+  @TraceLog({
+    before: async ([input], { instanceName, methodName }) => {
+      const attrs: Attributes = {
+        args0: input,
+      }
+      const events: Attributes = {
+        ...attrs,
+        instanceName,
+        methodName,
+      }
+      const rootAttrs: Attributes = { rootAttrs: 'rootAttrs' }
+      const rootEvents: Attributes = { ...rootAttrs }
+
+      return { attrs, events, rootAttrs, rootEvents } as DecoratorTraceDataResp
+    },
+    after: ([input], res, { instanceName, methodName }) => {
+      const attrs: Attributes = {
+        args0: input,
+        res,
+      }
+      const events: Attributes = {
+        ...attrs,
+        instanceName,
+        methodName,
+      }
+      return { events }
+    },
+  })
+  async world(): Promise<string> {
+    return 'world'
+  }
+}
+```
+
+
+
 ## `TraceInit` 装饰器
 
 ```ts

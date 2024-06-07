@@ -24,6 +24,7 @@ export const apiMethod = {
   decorator_arg2: 'decorator_arg2',
   disable_trace: 'disable_trace',
   error: 'error',
+  error_no_capture: 'error_no_capture',
   trace_error: 'trace_error',
   log: 'log',
   appLog: 'app_log',

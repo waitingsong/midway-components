@@ -41,8 +41,14 @@ export interface TraceDecoratorOptions<
    * @default `/`
    */
   spanNameDelimiter: string | undefined
-  before: MethodTypeUnknown<[MParamType, DecoratorContext], DecoratorTraceDataResp | DecoratorTraceDataRespAsync> | undefined
-  after: MethodTypeUnknown<[MParamType, Awaited<MResultType>, DecoratorContext], DecoratorTraceDataResp | DecoratorTraceDataRespAsync> | undefined
+  before: MethodTypeUnknown<
+    [MParamType, DecoratorContext], // input args
+    DecoratorTraceDataResp | DecoratorTraceDataRespAsync // output data
+    > | undefined
+  after: MethodTypeUnknown<
+    [MParamType, Awaited<MResultType>, DecoratorContext], // input args
+    DecoratorTraceDataResp | DecoratorTraceDataRespAsync // output data
+    > | undefined
   /**
    * @default true
    */
@@ -96,6 +102,5 @@ export interface DecoratorContextBase {
   methodName: string
   // instance: InstanceWithDecorator
 }
-
 
 /* c8 ignore stop */

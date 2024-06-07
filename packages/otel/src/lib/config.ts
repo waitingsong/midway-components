@@ -96,4 +96,5 @@ export const initOtlpGrpcExporterConfig: OTLPGRPCExporterConfigNode = {
 
 export const KEY_Trace = 'decorator:key_Trace'
 export const METHOD_KEY_TraceInit = 'decorator:method_key_TraceInit'
+export const METHOD_KEY_TraceLog = 'decorator:method_key_TraceLog'
 
