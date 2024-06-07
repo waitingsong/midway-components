@@ -138,6 +138,7 @@ export class FooController {
   }
 }
 ```
+![Trace Info](img/trace-scope.png)
 
 
 ## `TraceLog` Decorator
