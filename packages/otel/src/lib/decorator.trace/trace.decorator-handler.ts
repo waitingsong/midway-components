@@ -24,6 +24,7 @@ export class DecoratorHandlerTrace extends DecoratorHandlerTraceBase {
   }
 
   override before(options: DecoratorExecutorParam) {
+    /* c8 ignore next */
     if (! this.isEnable(options)) { return }
 
     // Do NOT use isAsyncFunction(options.method), result may not correct
@@ -34,6 +35,7 @@ export class DecoratorHandlerTrace extends DecoratorHandlerTraceBase {
   }
 
   override afterReturn(options: DecoratorExecutorParam): unknown {
+    /* c8 ignore next 3 */
     if (! this.isEnable(options)) {
       return options.methodResult
     }

@@ -38,6 +38,7 @@ export class DecoratorHandlerTraceInit extends DecoratorHandlerBase {
   }
 
   override async before(options: DecoratorExecutorParam) {
+    /* c8 ignore next */
     if (! this.isEnable(options)) { return }
     return before(options)
   }
