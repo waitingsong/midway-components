@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [30.8.0](https://github.com/waitingsong/midway-components/compare/v30.7.2...v30.8.0) (2024-06-07)
+
+
+### Features
+
+* **otel:** decorator TraceLog() ([e427604](https://github.com/waitingsong/midway-components/commit/e4276040d9e45e9f62abd67f4fa1842114754b9e))
+* **otel:** update DecoratorTraceDataResp, DecoratorTraceDataRespAsync ([b604ca9](https://github.com/waitingsong/midway-components/commit/b604ca9866f3eed313c6680fb254a87325aca9de))
+
+
+
+
+
 ## [30.7.2](https://github.com/waitingsong/midway-components/compare/v30.7.1...v30.7.2) (2024-06-07)
 
 
