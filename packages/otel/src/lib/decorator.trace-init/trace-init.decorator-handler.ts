@@ -6,6 +6,7 @@ import { OtelComponent } from '../component.js'
 import { TraceDecoratorOptions } from '../decorator.types.js'
 import { DecoratorExecutorParam, GenDecoratorExecutorOptions, genDecoratorExecutorOptions } from '../trace.helper.js'
 import { AttrNames, Config, ConfigKey } from '../types.js'
+import { isSpanEnded } from '../util.js'
 
 import { before, afterReturn } from './trace-init.helper.async.js'
 
@@ -68,7 +69,7 @@ export class DecoratorHandlerTraceInit extends DecoratorHandlerBase {
     const { span, otelComponent } = options
     if (! this.isEnable(options) || ! span) { return }
     // @ts-ignore - IsTraced
-    else if (error[AttrNames.IsTraced]) { return }
+    else if (error[AttrNames.IsTraced] && isSpanEnded(span)) { return }
 
     otelComponent.endSpan(otelComponent.appInitProcessSpan, span, { code: SpanStatusCode.ERROR, error })
   }
