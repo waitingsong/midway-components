@@ -50,11 +50,13 @@ export class AutoConfiguration {
     before: (args, decoratorContext) => {
       assert(decoratorContext.webApp)
       assert(args.length >= 2)
+      return void 0
     },
     after: async (args, res, decoratorContext) => {
       assert(decoratorContext.webApp)
       assert(args.length >= 2)
       assert(res === 234n)
+      return void 0
     },
   })
   async onServerReady(): Promise<bigint> {

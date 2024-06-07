@@ -65,8 +65,8 @@ export interface DecoratorTraceData {
   rootAttrs?: Attributes
   rootEvents?: Attributes
 }
-export type DecoratorTraceDataResp = DecoratorTraceData | void
-export type DecoratorTraceDataRespAsync = Promise<DecoratorTraceData | void>
+export type DecoratorTraceDataResp = DecoratorTraceData | undefined
+export type DecoratorTraceDataRespAsync = Promise<DecoratorTraceData | undefined>
 
 export type KeyGenerator<ArgsType = unknown[], DContext extends DecoratorContext = DecoratorContext> = (
   /** Arguments of the method */
