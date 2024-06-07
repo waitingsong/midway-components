@@ -5,6 +5,7 @@ import { SpanStatusCode } from '@opentelemetry/api'
 import { OtelComponent } from './component.js'
 import { DecoratorExecutorParam } from './trace.helper.js'
 import { AttrNames } from './types.js'
+import { isSpanEnded } from './util.js'
 
 
 export class DecoratorHandlerTraceBase extends DecoratorHandlerBase {
@@ -26,7 +27,7 @@ export class DecoratorHandlerTraceBase extends DecoratorHandlerBase {
     const { span, traceService } = options
     if (! this.isEnable(options) || ! span || ! traceService) { return }
     // @ts-ignore - IsTraced
-    else if (error[AttrNames.IsTraced]) { return }
+    else if (error[AttrNames.IsTraced] && isSpanEnded(span)) { return }
 
     traceService.endSpan(span, { code: SpanStatusCode.ERROR, error })
   }
