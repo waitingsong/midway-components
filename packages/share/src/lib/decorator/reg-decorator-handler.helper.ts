@@ -5,6 +5,8 @@ import assert from 'node:assert'
 
 import { JoinPoint, REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
 
+import type { Context as WebContext } from '../types.js'
+
 import type {
   DecoratorExecutorParamBase,
   InstanceWithDecorator,
@@ -29,9 +31,14 @@ export function genExecutorOptionsCommon<TDecoratorParam extends object = object
   // 装饰器所在的类实例
   // instance.constructor === baseOptions.instance, Object.getPrototypeOf(instance) === baseOptions.instance.prototype
   const instance = joinPoint.target as InstanceWithDecorator
-  const webContext = baseOptions.webContext ?? instance[REQUEST_OBJ_CTX_KEY]
   assert(baseOptions.webApp, 'webApp is empty')
   assert(baseOptions.methodName, 'methodName is undefined')
+
+  const webContext = baseOptions.webContext ?? instance[REQUEST_OBJ_CTX_KEY]
+  const methodArgs = joinPoint.args
+  if (! webContext) {
+    baseOptions.webContext = getWebContextFromArgs(methodArgs)
+  }
 
   // eslint-disable-next-line @typescript-eslint/unbound-method
   const method = joinPoint.proceed ?? void 0
@@ -61,12 +68,56 @@ export function genExecutorOptionsCommon<TDecoratorParam extends object = object
     instance,
     method,
     // index:0 may webcontext
-    methodArgs: joinPoint.args,
+    methodArgs,
     webContext,
   }
 
   assert(opts.instance, 'options.instance is undefined')
-
   return opts
 }
 
+type GetWebContextFromArgsOptions = WebContext | { webContext?: WebContext, [key: string]: unknown }
+
+export function getWebContextFromArgs(
+  args: GetWebContextFromArgsOptions[] | undefined,
+): WebContext | undefined {
+
+  if (! args || ! Array.isArray(args)) { return }
+  for (const arg of args) {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (! arg) { continue }
+
+    if (typeof arg === 'object') {
+      // @ts-expect-error arg
+      if (isWebContext(arg)) {
+        return arg
+      }
+    }
+
+    if (typeof arg['webContext'] === 'object') {
+      if (isWebContext(arg['webContext'])) {
+        return arg['webContext']
+      }
+    }
+  }
+}
+
+function isWebContext(ctx: WebContext | undefined): ctx is WebContext {
+  if (! ctx || typeof ctx !== 'object') {
+    return false
+  }
+  if (typeof ctx['app'] !== 'object') {
+    return false
+  }
+  if (typeof ctx['getApp'] !== 'function') {
+    return false
+  }
+  if (typeof ctx['res'] !== 'object') {
+    return false
+  }
+  if (typeof ctx['response'] !== 'object') {
+    return false
+  }
+
+  return true
+}
