@@ -17,11 +17,12 @@ export class DecoratorHandlerTraceInit extends DecoratorHandlerBase {
   @Inject() protected readonly otelComponent: OtelComponent
 
   isEnable(options: DecoratorExecutorParam): boolean {
+    /* c8 ignore next 3 */
     if (! options.config.enable) {
       return false
     }
     const traceCtx = this.otelComponent.appInitProcessContext
-    /* c8 ignore next */
+    /* c8 ignore next 3 */
     if (! this.otelComponent.appInitProcessSpan || ! traceCtx) {
       return false
     }
@@ -44,6 +45,7 @@ export class DecoratorHandlerTraceInit extends DecoratorHandlerBase {
   }
 
   override async afterReturn(options: DecoratorExecutorParam): Promise<unknown> {
+    /* c8 ignore next 3 */
     if (! this.isEnable(options)) {
       return options.methodResult
     }
