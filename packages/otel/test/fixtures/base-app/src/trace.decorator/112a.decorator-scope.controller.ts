@@ -1,9 +1,6 @@
-import assert from 'node:assert'
-
 import {
   Controller,
   Get,
-  Init,
   Inject,
 } from '@midwayjs/core'
 import { MConfig } from '@mwcp/share'
