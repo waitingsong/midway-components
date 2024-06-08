@@ -239,41 +239,32 @@ export function assertsSpan(span: JaegerTraceInfoSpan, options: AssertsOptions):
   assert(span.traceID === options.traceId)
   assert(span.operationName === options.operationName, `operationName: ${span.operationName} !== (expect) ${options.operationName}`)
 
-  span.tags.forEach((tag: Attributes) => {
-    const tag2 = Object.assign({
-      'otel.status_code': 'OK',
-    }, tag)
-    const { key, value } = tag2
-    if (! key) { return }
-
-    // @ts-expect-error
-    if (Object.prototype.hasOwnProperty.call(options.tags, key)) {
-      // @ts-expect-error
-      const expect = options.tags[key]
-      assert(value === expect, `${key.toString()}: ${value?.toString()} !== ${expect}`)
-    }
+  Object.entries(options.tags ?? {}).forEach(([key, value]) => {
+    const flag = span.tags.some((tag) => {
+      const res = tag.key === key && tag.value === value
+      return res
+    })
+    assert(flag, `${key}: ${value?.toString()} not found`)
   })
 
+
   if (options.logs?.length) {
-    span.logs.forEach((log, idx) => {
-      if (! log.fields.length) { return }
-      log.fields.forEach((field) => {
-        const { key, value } = field
-        if (! key) { return }
-        if (! options.logs) { return }
+    options.logs.forEach((expectLog, idx) => {
+      if (! expectLog) { return }
+      const log = span.logs[idx]
+      assert(log, `log[${idx}] is null`)
 
-        const expectLog = options.logs[idx]
-        if (! expectLog) { return }
+      // console.log('================')
+      // console.log('idx:', idx)
+      // console.log('expectLog:', expectLog)
+      // console.log('real log:', log)
 
-        if (Object.prototype.hasOwnProperty.call(expectLog, key)) {
-          const expect = expectLog[key]
-          assert(expect, `${key.toString()} is null`)
-          assert(value === expect, `key: ${key.toString()},
-          value:
-          ${value?.toString()}
-          !== expect value:
-          ${expect.toString()}`)
-        }
+      Object.entries(expectLog).forEach(([key, value]) => {
+        const flag = log.fields.some((field) => {
+          const res = field.key === key && field.value === value
+          return res
+        })
+        assert(flag, `(${idx}) ${key}: ${value?.toString()} not found`)
       })
     })
 
