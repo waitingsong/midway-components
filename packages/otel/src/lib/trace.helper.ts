@@ -150,6 +150,8 @@ export function genDecoratorExecutorOptions(
   optionsExt: GenDecoratorExecutorOptions,
 ): DecoratorExecutorParam<TraceDecoratorOptions> {
 
+  const { methodArgs } = optionsBase
+
   let traceService
   if (optionsBase.webContext) {
     traceService = optionsBase.webContext[`_${ConfigKey.serviceName}`]
@@ -197,7 +199,7 @@ export function genDecoratorExecutorOptions(
     callerClass: optionsBase.instanceName,
     callerMethod: optionsBase.methodName,
     decoratorContext,
-    methodArgs: optionsBase.methodArgs,
+    methodArgs,
   }
   const spanName = genKey(keyOpts)
   assert(spanName, 'spanName is undefined')
@@ -223,5 +225,3 @@ export function genDecoratorExecutorOptions(
 
   return ret
 }
-
-
