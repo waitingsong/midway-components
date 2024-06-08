@@ -67,7 +67,6 @@ describe(fileShortPath(import.meta.url), function () {
       traceId,
       operationName: 'DecoratorDataComponentController/traceIdAsync',
       tags: {
-        args0: id,
         'caller.class': 'DecoratorDataComponentController',
         'caller.method': 'traceIdAsync',
         'span.kind': 'client',
@@ -145,7 +144,6 @@ describe(fileShortPath(import.meta.url), function () {
       traceId,
       operationName: 'DecoratorDataComponentController/traceIdSync',
       tags: {
-        args0: id,
         'caller.class': 'DecoratorDataComponentController',
         'caller.method': 'traceIdSync',
         'span.kind': 'client',

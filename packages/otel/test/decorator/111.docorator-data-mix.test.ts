@@ -68,7 +68,6 @@ describe(fileShortPath(import.meta.url), function () {
       traceId,
       operationName: 'DecoratorDataComponentController/mixOnAsync',
       tags: {
-        args0: id,
         'caller.class': 'DecoratorDataComponentController',
         'caller.method': 'mixOnAsync',
         'span.kind': 'client',
@@ -133,7 +132,7 @@ describe(fileShortPath(import.meta.url), function () {
         [SEMATTRS_HTTP_ROUTE]: `${path2}/:id`,
         [AttrNames.HTTP_ERROR_NAME]: 'AssertionError',
         [AttrNames.HTTP_ERROR_MESSAGE]: errMsg,
-        [AttrNames.HTTP_STATUS_TEXT]: 'Error',
+        [AttrNames.otel_status_code]: 'ERROR',
         error: true,
       },
       logs: [
@@ -158,15 +157,14 @@ describe(fileShortPath(import.meta.url), function () {
         'span.kind': 'client',
         [AttrNames.HTTP_ERROR_NAME]: 'AssertionError',
         [AttrNames.HTTP_ERROR_MESSAGE]: errMsg,
-        [AttrNames.HTTP_STATUS_TEXT]: 'Error',
+        [AttrNames.otel_status_code]: 'ERROR',
         error: true,
       },
       logs: [
         {
           event: `${AttrNames.Exception}`,
           [AttrNames.Exception_Type]: 'ERR_ASSERTION',
-          [AttrNames.Http_Response_Code]: 500,
-          [AttrNames.Http_Response_Body]: errMsg,
+          [AttrNames.exception_message]: errMsg,
         },
       ],
     }
