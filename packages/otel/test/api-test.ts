@@ -11,6 +11,7 @@ export const apiBase = {
   route: '/route',
   decorator_data: `/decorator_data`,
   trace_log: '/trace_log',
+  trace_singleton: '/trace_singleton',
 }
 
 export const apiMethod = {
