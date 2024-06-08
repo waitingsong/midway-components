@@ -1,5 +1,9 @@
 
 export enum AttrNames {
+  otel_status_code = 'otel.status_code',
+  otel_status_description = 'otel.status_description',
+  exception_message = 'exception.message',
+
   HTTP_ERROR_NAME = 'http.error_name',
   HTTP_ERROR_MESSAGE = 'http.error_message',
   HTTP_ERROR_CAUSE = 'http.error_cause',
