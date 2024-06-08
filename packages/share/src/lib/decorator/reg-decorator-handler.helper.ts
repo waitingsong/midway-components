@@ -34,10 +34,10 @@ export function genExecutorOptionsCommon<TDecoratorParam extends object = object
   assert(baseOptions.webApp, 'webApp is empty')
   assert(baseOptions.methodName, 'methodName is undefined')
 
-  const webContext = baseOptions.webContext ?? instance[REQUEST_OBJ_CTX_KEY]
   const methodArgs = joinPoint.args
+  let webContext = baseOptions.webContext ?? instance[REQUEST_OBJ_CTX_KEY]
   if (! webContext) {
-    baseOptions.webContext = getWebContextFromArgs(methodArgs)
+    webContext = getWebContextFromArgs(methodArgs)
   }
 
   // eslint-disable-next-line @typescript-eslint/unbound-method
