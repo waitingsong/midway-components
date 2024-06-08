@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [30.9.1](https://github.com/waitingsong/midway-components/compare/v30.9.0...v30.9.1) (2024-06-08)
+
+
+### Bug Fixes
+
+* **share:** webContext assignment within genExecutorOptionsCommon() ([4569d48](https://github.com/waitingsong/midway-components/commit/4569d48fe8cd38ad5f054b3469511cbc41d51c2b))
+
+
+
+
+
 # [30.9.0](https://github.com/waitingsong/midway-components/compare/v30.8.0...v30.9.0) (2024-06-08)
 
 
