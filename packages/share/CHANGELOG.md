@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [30.9.0](https://github.com/waitingsong/midway-components/compare/v30.8.0...v30.9.0) (2024-06-08)
+
+
+### Features
+
+* **share:** retrieve WebContext from MethodArgs for decorator on Singleton Class ([af5d678](https://github.com/waitingsong/midway-components/commit/af5d67832014245f33ff7f48fde33799bc291ace))
+
+
+
+
+
 # [30.5.0](https://github.com/waitingsong/midway-components/compare/v30.4.0...v30.5.0) (2024-06-05)
 
 
