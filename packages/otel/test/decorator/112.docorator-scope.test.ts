@@ -37,6 +37,10 @@ describe(fileShortPath(import.meta.url), function () {
     assert(span6)
     assert(span7)
 
+    assert(span2.spanID === span3.references[0]?.spanID)
+    assert(span4.spanID === span5.references[0]?.spanID)
+    assert(span6.spanID === span7.references[0]?.spanID)
+
     assertRootSpan({
       path,
       span: rootSpan,
