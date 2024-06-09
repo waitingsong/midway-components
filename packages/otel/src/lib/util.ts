@@ -80,17 +80,18 @@ export function deleteSpan(context: Context): Context {
 
 export function isSpanEnded(span: Span): boolean {
   // @ts-expect-error
-  if (typeof span.ended === 'function') {
+  if (typeof span.ended === 'boolean') {
     // @ts-expect-error
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    return span.ended() as boolean
+    return span.ended as boolean
   }
 
+  /* c8 ignore start */
   if (typeof span.isRecording === 'function') {
     return ! span.isRecording()
   }
-
   throw new Error('span.ended() and span.isRecording() are not functions, we cannot determine if the span is ended')
+  /* c8 ignore stop */
 }
 
 /**
@@ -250,7 +251,7 @@ export async function getIncomingRequestAttributesFromWebContext(
 
 /**
  * Key format `http.{request|response}.header.{name}`
- * @param headersKeyMap Map<lowerkey, normalizedkey>
+ * @param headersKeyMap Map<low-key, normalized-key>
  */
 export function genAttributesFromHeader(
   type: 'request' | 'response',
