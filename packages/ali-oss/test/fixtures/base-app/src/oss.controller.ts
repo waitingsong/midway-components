@@ -10,12 +10,12 @@ import {
 } from '@midwayjs/core'
 import { Context } from '@mwcp/share'
 
+import { apiBase, apiMethod } from './types/api-test.js'
 import {
   AliOssComponent,
   AliOssManager,
-} from '../../../../dist/lib/index.js'
-import { ClientKey } from '../../../../dist/lib/types.js'
-import { apiBase, apiMethod } from '../../../api-test.js'
+} from './types/index.js'
+import { ClientKey } from './types/lib-types.js'
 
 
 @Controller(apiBase.oss)
