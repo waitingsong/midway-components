@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [30.10.0](https://github.com/waitingsong/midway-components/compare/v30.9.1...v30.10.0) (2024-06-09)
+
+
+### Bug Fixes
+
+* **otel:** isSpanEnded() in util.ts ([ba40cca](https://github.com/waitingsong/midway-components/commit/ba40ccaf2ce29181e8b654419f1feeaf50dd1cb2))
+
+
+### Features
+
+* **otel:** retrieve traceScope from methodArgs automatically ([644732d](https://github.com/waitingsong/midway-components/commit/644732d196b985516b72ac428f1c6ce75831800b))
+
+
+
+
+
 ## [30.9.1](https://github.com/waitingsong/midway-components/compare/v30.9.0...v30.9.1) (2024-06-08)
 
 
