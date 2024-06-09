@@ -7,13 +7,13 @@ import {
 } from '@midwayjs/core'
 import { MConfig } from '@mwcp/share'
 
-import { Public } from '../../../../dist/index.js'
+import { apiBase, apiMethod } from './types/api-test.js'
+import { Public } from './types/index.js'
 import {
   Config,
   ConfigKey,
   MiddlewareConfig,
-} from '../../../../dist/lib/types.js'
-import { apiBase, apiMethod } from '../../../api-test.js'
+} from './types/lib-types.js'
 
 
 @Controller(apiBase.demo)
