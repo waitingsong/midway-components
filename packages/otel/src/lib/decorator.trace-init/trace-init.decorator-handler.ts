@@ -53,6 +53,8 @@ export class DecoratorHandlerTraceInit extends DecoratorHandlerBase {
     return afterReturn(options)
   }
 
+  /* c8 ignore start */
+  /* tested via test/../configuration.ts#onConfigLoad() manually */
   override afterThrow(options: DecoratorExecutorParam): void {
     const error = genError({
       error: options.error,
@@ -73,5 +75,6 @@ export class DecoratorHandlerTraceInit extends DecoratorHandlerBase {
 
     otelComponent.endSpan(otelComponent.appInitProcessSpan, span, { code: SpanStatusCode.ERROR, error })
   }
+  /* c8 ignore stop */
 }
 
