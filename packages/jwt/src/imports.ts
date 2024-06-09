@@ -1,10 +1,10 @@
 import * as info from '@midwayjs/info'
 import * as koa from '@midwayjs/koa'
 import * as swagger from '@midwayjs/swagger'
+import * as otel from '@mwcp/otel'
 import * as share from '@mwcp/share'
-// import * as otel from '@mwcp/otel'
 
-/* c8 ignore next 4 */
+/* c8 ignore next 5 */
 const CI = !! (process.env['MIDWAY_SERVER_ENV'] === 'unittest'
   || process.env['MIDWAY_SERVER_ENV'] === 'local'
   || process.env['NODE_ENV'] === 'unittest'
@@ -18,7 +18,7 @@ if (CI) {
   useComponents.push(koa)
   useComponents.push(info)
   useComponents.push(swagger)
-  // useComponents.push(otel) // ! use otel will cause CI fail if otel server not exists
+  useComponents.push(otel)
 }
 
 export interface IComponentInfo {

@@ -44,8 +44,8 @@ describe(fileShortPath(import.meta.url), () => {
       }
 
       // validate 401 without token and passthrough
-      const resp1 = await httpRequest
-        .get(path)
+      const resp1 = await httpRequest.get(path)
+      assert(! resp1.ok, `resp1.ok: ${resp1.ok}`)
       assert(resp1, 'resp1 is empty')
       assert(resp1.status === 401, `resp1.status: ${resp1.status}`)
 
