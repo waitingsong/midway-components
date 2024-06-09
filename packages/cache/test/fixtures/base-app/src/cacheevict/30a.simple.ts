@@ -10,10 +10,10 @@ import {
 } from '@midwayjs/core'
 import { Context, MConfig } from '@mwcp/share'
 
-import { Cacheable, CacheEvict } from '../../../../../dist/index.js'
-import { CachedResponse, Config, ConfigKey } from '../../../../../dist/lib/types.js'
-import { apiBase, apiMethod } from '../../../../api-test.js'
 import { validateMeta } from '../base.helper.js'
+import { apiBase, apiMethod } from '../types/api-test.js'
+import { Cacheable, CacheEvict } from '../types/index.js'
+import { CachedResponse, Config, ConfigKey } from '../types/lib-types.js'
 
 
 const cacheKey = 'CacheEvictController.simple'

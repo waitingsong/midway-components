@@ -8,9 +8,9 @@ import {
 } from '@midwayjs/core'
 import { MConfig } from '@mwcp/share'
 
-import { Cacheable } from '../../../../../dist/index.js'
-import { CachedResponse, Config, ConfigKey } from '../../../../../dist/lib/types.js'
 import { validateMeta } from '../base.helper.js'
+import { Cacheable } from '../types/index.js'
+import { CachedResponse, Config, ConfigKey } from '../types/lib-types.js'
 
 
 @Cacheable()

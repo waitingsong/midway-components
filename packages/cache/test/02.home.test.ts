@@ -14,9 +14,8 @@ describe(fileShortPath(import.meta.url), () => {
   it(`Should ${apiBase.root} work`, async () => {
     const { app, httpRequest } = testConfig
 
-    const resp = await httpRequest
-      .get(apiBase.root)
-      .expect(200)
+    const resp = await httpRequest.get(apiBase.root)
+    assert(resp.ok, resp.text)
 
     const ret = resp.body as TestRespBody | RespData
     assert(typeof ret === 'object', JSON.stringify(ret, null, 2))
@@ -41,9 +40,8 @@ describe(fileShortPath(import.meta.url), () => {
   it(`Should ${helloPath} work`, async () => {
     const { app, httpRequest } = testConfig
 
-    const resp = await httpRequest
-      .get(helloPath)
-      .expect(200)
+    const resp = await httpRequest.get(helloPath)
+    assert(resp.ok, resp.text)
 
     const ret = resp.text
     assert(ret.includes(Msg.hello), JSON.stringify(ret, null, 2))

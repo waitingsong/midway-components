@@ -3,11 +3,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import assert from 'node:assert/strict'
 
-import { retrieveCacheMetaFrom } from '../../../../src/index.js'
-import {
-  CachedResponse,
-  DataWithCacheMeta,
-} from '../../../../src/lib/types.js'
+import { retrieveCacheMetaFrom } from './types/index.js'
+import { CachedResponse, DataWithCacheMeta } from './types/lib-types.js'
 
 
 export function validateMeta(

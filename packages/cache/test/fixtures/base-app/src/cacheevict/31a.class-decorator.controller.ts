@@ -9,9 +9,9 @@ import {
 } from '@midwayjs/core'
 import { MConfig } from '@mwcp/share'
 
-import { ConfigKey, Config } from '../../../../../dist/lib/types.js'
-import { apiBase, apiMethod } from '../../../../api-test.js'
 import { validateMeta } from '../base.helper.js'
+import { apiBase, apiMethod } from '../types/api-test.js'
+import { Config, ConfigKey } from '../types/lib-types.js'
 
 import { ClassDecoratorEvictService, cacheNameSimple } from './31b.class-decorator.service.js'
 
