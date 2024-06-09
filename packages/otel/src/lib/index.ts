@@ -58,10 +58,14 @@ export {
   DecoratorTraceDataResp,
   TraceOptions as TraceDecoratorArg,
   TraceDecoratorOptions,
+  TraceScopeParamType,
+  TraceScopeType,
 } from './decorator.types.js'
 
 export { genDecoratorExecutorOptions } from './trace.helper.js'
-export { genTraceScope } from './decorator.helper.js'
+export {
+  genTraceScope, getScopeStringCache,
+} from './decorator.helper.js'
 
 export { AttrNames } from './attrnames.types.js'
 

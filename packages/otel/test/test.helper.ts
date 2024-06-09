@@ -33,6 +33,7 @@ export async function retrieveTraceInfoFromRemote(traceId: string, expectSpanNum
     id = txt
   }
 
+  await sleep(1000)
   const tracePath = `${agent}:16686/api/traces/${id}?prettyPrint=true`
   let resp = await makeHttpRequest(tracePath, {
     method: 'GET',

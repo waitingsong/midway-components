@@ -13,6 +13,21 @@ export class AutoConfiguration {
 
   @App() readonly app: Application
 
+  // test afterThrow() manually
+  // @SRC.TraceInit({
+  //   spanName: 'INIT TEST.onConfigLoad',
+  // })
+  // async onConfigLoad(): Promise<void> {
+  //   throw new Error('TraceInit test afterThrow() manually')
+  // }
+
+  @SRC.TraceInit({
+    spanName: 'INIT TEST.onConfigLoad',
+  })
+  async onConfigLoad(): Promise<void> {
+    void 0
+  }
+
   @SRC.TraceInit({
     spanName: 'INIT TEST.onReady',
     before: async (args, decoratorContext) => {
@@ -61,6 +76,14 @@ export class AutoConfiguration {
   })
   async onServerReady(): Promise<bigint> {
     return 234n
+  }
+
+
+  @SRC.TraceInit({
+    spanName: 'INIT TEST.onStop',
+  })
+  async onStop(): Promise<void> {
+    return
   }
 
 }

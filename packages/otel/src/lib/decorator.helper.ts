@@ -4,12 +4,14 @@ import { isPromise } from 'node:util/types'
 import type { Span } from '@opentelemetry/api'
 
 import type { AbstractOtelComponent, AbstractTraceService } from './abstract.js'
-import type {
-  DecoratorContext,
-  DecoratorContextBase,
-  DecoratorTraceDataResp,
-  ScopeGenerator,
-  TraceDecoratorOptions,
+import {
+  TraceScopeType,
+  TraceScopeParamType,
+  type DecoratorContext,
+  type DecoratorContextBase,
+  type DecoratorTraceDataResp,
+  type ScopeGenerator,
+  type TraceDecoratorOptions,
 } from './decorator.types.js'
 import { DecoratorExecutorParam } from './trace.helper.js'
 import { AttrNames } from './types.js'
@@ -35,6 +37,7 @@ export async function processDecoratorBeforeAfterAsync(
       traceService: options.traceService,
       traceContext: options.traceContext,
       traceSpan: span,
+      traceScope: options.traceScope,
       /** Caller Class name */
       instanceName: options.instanceName,
       /** Caller method name */
@@ -82,6 +85,7 @@ export function processDecoratorBeforeAfterSync(
       traceService: options.traceService,
       traceContext: options.traceContext,
       traceSpan: span,
+      traceScope: options.traceScope,
       /** Caller Class name */
       instanceName: options.instanceName,
       /** Caller method name */
@@ -157,33 +161,49 @@ function processDecoratorSpanData(
   }
 }
 
-export function genTraceScopeFrom(options: DecoratorExecutorParam): object | symbol | undefined {
-  const { mergedDecoratorParam } = options
+/**
+ * @note
+ * - input options.traceScope will be updated by generated traceScope
+ * - the first object arg of methodArgs will be appended key `traceScope` and set value
+ */
+export function genTraceScopeFrom(options: DecoratorExecutorParam): TraceScopeType | undefined {
+  if (options.traceScope && isTraceScopeParamType(options.traceScope)) {
+    return options.traceScope
+  }
 
-  let scope
-  if (mergedDecoratorParam?.scope) {
-    const decoratorContextBase: DecoratorContextBase = {
-      webApp: options.webApp,
-      webContext: options.webContext,
-      otelComponent: options.otelComponent,
-      traceService: options.traceService,
-      /** Caller Class name */
-      instanceName: options.instanceName,
-      /** Caller method name */
-      methodName: options.methodName,
-      // instance: options.instance,
-    }
-    scope = genTraceScope({
-      scope: mergedDecoratorParam.scope,
+  const decoratorContextBase: DecoratorContextBase = {
+    webApp: options.webApp,
+    webContext: options.webContext,
+    otelComponent: options.otelComponent,
+    traceService: options.traceService,
+    traceScope: options.traceScope,
+    /** Caller Class name */
+    instanceName: options.instanceName,
+    /** Caller method name */
+    methodName: options.methodName,
+    // instance: options.instance,
+  }
+
+  const scopeFromArg = getTraceScopeParamFromArgs(options.methodArgs as GetTraceScopeFromArgsOptions[])
+  let ret = genTraceScope({
+    scope: scopeFromArg,
+    methodArgs: options.methodArgs,
+    decoratorContext: decoratorContextBase,
+  })
+  if (! ret) {
+    const scope: TraceScopeParamType | undefined = options.mergedDecoratorParam?.scope
+    ret = genTraceScope({
+      scope,
       methodArgs: options.methodArgs,
       decoratorContext: decoratorContextBase,
     })
   }
-  return scope
+  options.traceScope = ret
+  return ret
 }
 
 const traceScopeStringCache = new Map<string, symbol>()
-function getScopeStringCache(key: string): symbol {
+export function getScopeStringCache(key: string): symbol {
   let sym = traceScopeStringCache.get(key)
   if (! sym) {
     sym = Symbol(key)
@@ -204,32 +224,90 @@ export interface GenTraceScopeOptions {
   methodArgs: unknown[]
   decoratorContext: DecoratorContextBase
 }
-export function genTraceScope(options: GenTraceScopeOptions): object | symbol | undefined {
-  const { scope } = options
-  switch (typeof scope) {
-    case 'string':
-      // Symbol.for() invalid as key of WeakMap
-      return getScopeStringCache(scope)
+export function genTraceScope(options: GenTraceScopeOptions): TraceScopeType | undefined {
+  const tmp = options.scope
 
-    case 'object':
-      return scope
+  const scope = tmp
+
+  let ret: TraceScopeType | undefined
+  switch (typeof scope) {
+    case 'string': {
+      // Symbol.for() invalid as key of WeakMap
+      ret = getScopeStringCache(scope)
+      break
+    }
+
+    case 'object': {
+      ret = scope
+      break
+    }
 
     case 'undefined':
       return
 
     case 'function': {
-      const res = (scope as ScopeGenerator)(options.methodArgs, options.decoratorContext)
-      assert(typeof res === 'object' || typeof res === 'symbol', 'scope function must return an object or a symbol')
-      return res
+      ret = (scope as ScopeGenerator)(options.methodArgs, options.decoratorContext)
+      assert(typeof ret === 'object' || typeof ret === 'symbol', 'scope function must return an object or a symbol')
+      break
     }
 
-    case 'symbol':
-      return scope
+    case 'symbol': {
+      ret = scope
+      break
+    }
 
     /* c8 ignore next 2 */
     default:
       throw new Error('scope must be a string, an object, a symbol, or a function')
   }
 
+  return ret
+}
+
+// function updateTraceScopeProperty(input: TraceScopeType): void {
+//   assert(typeof input === 'object', 'input must be an object')
+//   if (input.isTraceScope) { return }
+//   Object.defineProperty(input, 'isTraceScope', { value: true })
+// }
+
+type GetTraceScopeFromArgsOptions = TraceScopeParamType | { traceScope?: TraceScopeParamType, [key: string]: unknown }
+
+export function getTraceScopeParamFromArgs(
+  args: GetTraceScopeFromArgsOptions[] | undefined,
+): TraceScopeParamType | undefined {
+
+  const key = 'traceScope'
+
+  if (! args || ! Array.isArray(args)) { return }
+  for (const arg of args) {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (! arg || typeof arg !== 'object') { continue }
+
+    // @ts-ignore
+    const val = arg[key] as TraceScopeParamType | undefined
+    if (val && isTraceScopeParamType(val)) {
+      return val
+    }
+  }
+}
+
+export function isTraceScopeParamType(input: TraceScopeParamType | undefined): input is TraceScopeParamType {
+  if (! input) {
+    return false
+  }
+
+  switch (typeof input) {
+    case 'string':
+      return true
+
+    case 'symbol':
+      return true
+
+    case 'object':
+      return true
+
+    default:
+      return false
+  }
 }
 

@@ -57,13 +57,19 @@ export interface TraceDecoratorOptions<
    * 生成唯一标识符，用于确定同一方法的跨度, 避免异步方法并发调用时调用链关系混乱
    * Generate the unique key for spans determination of the same method,
    * avoid the confusion of call chain relationship when async methods are called concurrently
-   * @default webContext (traceService.ctx)
+   * @default undefined, runtime value rule (priority from high to low):
+   * - passed value in options.traceScope
+   * - generated automatically retrieved from object arg of the method args, that containing key `traceScope`,
+   * - webContext (traceService.ctx)
    * @caution symbol must be non-registered symbols, it means Symbol(string) is valid, and Symbol.for(string) is invalid
-   * @note TraceInit not supported
+   * @note `TraceInit()` not supported
    * @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap
    */
-  scope: ScopeGenerator<MParamType> | string | symbol | object | undefined
+  scope: ScopeGenerator<MParamType> | TraceScopeParamType | undefined
 }
+
+export type TraceScopeParamType = string | TraceScopeType
+export type TraceScopeType = symbol | object
 
 export interface DecoratorTraceData {
   attrs?: Attributes
@@ -97,6 +103,7 @@ export interface DecoratorContextBase {
   webContext: Context | undefined
   otelComponent: AbstractOtelComponent | undefined
   traceService: AbstractTraceService | undefined
+  traceScope: TraceScopeType | undefined
   /** Caller Class name */
   instanceName: string
   methodName: string

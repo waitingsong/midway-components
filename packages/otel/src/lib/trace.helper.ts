@@ -8,6 +8,7 @@ import type { AbstractTraceService, AbstractOtelComponent } from './abstract.js'
 import {
   DecoratorContext,
   TraceDecoratorOptions,
+  TraceScopeType,
 } from './decorator.types.js'
 import {
   AttrNames,
@@ -70,6 +71,7 @@ function genKey(options: GenKeyOptions): string {
       break
     }
 
+    /* c8 ignore next 3 */
     default: {
       assert(false, 'spanName must be a string or a function')
     }
@@ -96,6 +98,7 @@ function genEventKeyWhenSpanNameEmpty(options: GenKeyOptions): string {
 
   if (namespace && configNameList.includes(callerClass)) {
     switch (callerMethod) {
+      /* c8 ignore next 4 */
       case 'onConfigLoad': {
         name = `TraceInit ${namespace}.${options.callerMethod.toString()}`
         break
@@ -111,15 +114,21 @@ function genEventKeyWhenSpanNameEmpty(options: GenKeyOptions): string {
         break
       }
 
+      /* c8 ignore next 4 */
       case 'onStop': {
         name = `TraceInit ${namespace}.${options.callerMethod.toString()}`
         break
       }
 
+      /* c8 ignore next 4 */
       case 'onHealthCheck': {
         name = `TraceInit ${namespace}.${options.callerMethod.toString()}`
         break
       }
+
+      /* c8 ignore next 2 */
+      default:
+        break
     }
   }
 
@@ -137,6 +146,7 @@ export type DecoratorExecutorParam<T extends TraceDecoratorOptions = TraceDecora
     startActiveSpan: boolean,
     traceContext: TraceContext | undefined,
     traceService: AbstractTraceService | undefined,
+    traceScope: TraceScopeType | undefined,
     span: Span | undefined,
   }
 
@@ -176,6 +186,8 @@ export function genDecoratorExecutorOptions(
     mergedDecoratorParam.autoEndSpan = true
   }
 
+  // const traceScope = getTraceScopeFromArgs(methodArgs as GetTraceScopeFromArgsOptions[])
+
   // DO NOT set traceContext
   // if (! mergedDecoratorParam.traceContext) {
   //   mergedDecoratorParam.traceContext = traceService?.getActiveContext()
@@ -188,6 +200,7 @@ export function genDecoratorExecutorOptions(
     traceService,
     traceContext: mergedDecoratorParam.traceContext,
     traceSpan: void 0,
+    traceScope: void 0,
     /** Caller Class name */
     instanceName: optionsBase.instanceName,
     /** Caller method name */
@@ -220,6 +233,7 @@ export function genDecoratorExecutorOptions(
     otelComponent,
     traceContext: mergedDecoratorParam.traceContext,
     traceService,
+    traceScope: void 0,
     span: void 0,
   }
 

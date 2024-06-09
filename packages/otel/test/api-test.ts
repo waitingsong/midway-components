@@ -38,4 +38,6 @@ export const apiMethod = {
   mix_on_sync: 'mix_on_sync',
 
   scope: 'scope',
+  trace_auto_scope: 'trace_auto_scope',
+  scope_priority: 'scope_priority',
 }
