@@ -1,7 +1,7 @@
-import { App, Configuration, Inject, MidwayDecoratorService } from '@midwayjs/core'
-import { Application } from '@mwcp/share'
+import { App, Configuration } from '@midwayjs/core'
+import type { Application } from '@mwcp/share'
 
-import * as SRC from '../../../../src/index.js'
+import * as SRC from './types/index.js'
 
 
 @Configuration({
@@ -10,7 +10,6 @@ import * as SRC from '../../../../src/index.js'
 export class AutoConfiguration {
 
   @App() readonly app: Application
-  @Inject() decoratorService: MidwayDecoratorService
 
   async onReady(): Promise<void> {
     // const foo = this.app.getConfig() as unknown

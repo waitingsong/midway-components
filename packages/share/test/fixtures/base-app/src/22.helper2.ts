@@ -1,8 +1,6 @@
-import { assert } from 'node:console'
+import assert from 'node:assert'
 
 import { MethodTypeUnknown } from '@waiting/shared-types'
-
-import { customDecoratorFactory } from '../../../../src/index.js'
 
 import {
   DecoratorHandler,
@@ -13,6 +11,7 @@ import {
   DecoratorHandlerRequest,
 } from './decorator-handler.js'
 import { CacheableArgs } from './helper.js'
+import { customDecoratorFactory } from './types/index.js'
 
 
 export const METHOD_KEY_Cacheable2 = 'decorator:method_key_cacheable2_test'
@@ -113,12 +112,12 @@ export function CacheableMethodIgnoreIfMethodDecoratorKeys() {
 
 function assertBeforeAfter(target: object | MethodTypeUnknown, propertyName: unknown, descriptor: unknown, opts: unknown): void {
   if (typeof propertyName === 'undefined') { // class decorator
-    assert(target && typeof target === 'function', import.meta.url, `${target.constructor.name} must be a class`)
+    assert(target && typeof target === 'function', import.meta.url + ` ${target.constructor.name} must be a class`)
     assert(typeof descriptor === 'undefined', import.meta.url)
     assert(opts && typeof opts === 'object', import.meta.url)
   }
   else if (typeof propertyName === 'string') { // method decorator
-    assert(target && typeof target === 'object', import.meta.url, `${target.constructor.name} ${propertyName} must be class method (object)`)
+    assert(target && typeof target === 'object', import.meta.url + ` ${target.constructor.name} ${propertyName} must be class method (object)`)
     assert(propertyName && typeof propertyName === 'string', import.meta.url)
     assert(descriptor && typeof descriptor === 'object', import.meta.url)
     assert(opts && typeof opts === 'object', import.meta.url)

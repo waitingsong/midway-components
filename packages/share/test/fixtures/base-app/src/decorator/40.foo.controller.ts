@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import assert from 'node:assert/strict'
 
-import {
-  Controller,
-  Get,
-} from '@midwayjs/core'
+import { Controller, Get } from '@midwayjs/core'
 
-import { apiBase, apiMethod } from '../../../../api-test.js'
+import { apiBase, apiMethod } from '../types/api-test.js'
 
 import {
   Foo, Foo2, Foo3, Foo4, Foo5, Foo6, Foo7, Foo8,

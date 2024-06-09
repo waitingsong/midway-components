@@ -1,4 +1,4 @@
-import { customDecoratorFactory } from '../../../../../src/index.js'
+import { customDecoratorFactory } from '../types/index.js'
 
 import {
   DecoratorHandler43,

@@ -5,8 +5,7 @@ import { Singleton } from '@midwayjs/core'
 import {
   DecoratorHandlerBase,
   DecoratorExecutorParamBase,
-} from '../../../../../src/index.js'
-
+} from '../types/index.js'
 
 
 export const METHOD_KEY_Foo = 'decorator:method_key_foo'

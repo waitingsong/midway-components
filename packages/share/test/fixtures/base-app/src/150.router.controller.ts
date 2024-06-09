@@ -1,14 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import assert from 'node:assert/strict'
 
-import {
-  Controller,
-  Get,
-  Param,
-} from '@midwayjs/core'
+import { Controller, Get, Param } from '@midwayjs/core'
 
-import { Context, getRouterInfo, RouterInfoLite } from '../../../../src/index.js'
-import { apiBase, apiMethod } from '../../../api-test.js'
+import { apiBase, apiMethod } from './types/api-test.js'
+import { Context, getRouterInfo, RouterInfoLite } from './types/index.js'
 
 
 @Controller(apiBase.router)

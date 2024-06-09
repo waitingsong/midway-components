@@ -1,6 +1,6 @@
 import assert from 'node:assert'
 
-import { DecoratorExecutorParamBase } from '../../../../src/index.js'
+import { DecoratorExecutorParamBase } from './types/index.js'
 
 
 export const METHOD_KEY_Cacheable = 'decorator:method_key_cacheable_test'

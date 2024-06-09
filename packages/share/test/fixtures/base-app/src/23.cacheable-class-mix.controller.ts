@@ -1,15 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import assert from 'node:assert/strict'
 
-import {
-  Controller,
-  Get,
-} from '@midwayjs/core'
-
-import { apiBase, apiMethod } from '../../../api-test.js'
+import { Controller, Get } from '@midwayjs/core'
 
 import { CacheableMix } from './22.helper2.js'
 import { ttl10, ttl20, ttl40 } from './helper.js'
+import { apiBase, apiMethod } from './types/api-test.js'
 
 
 @Controller(apiBase.methodCacheable2)

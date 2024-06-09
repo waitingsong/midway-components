@@ -3,11 +3,6 @@ import assert from 'node:assert'
 import { Init, Provide, Singleton } from '@midwayjs/core'
 
 import {
-  DecoratorHandlerBase,
-  DecoratorExecutorParamBase,
-} from '../../../../src/index.js'
-
-import {
   CacheableArgs,
   decoratorExecutorAsync,
   decoratorExecutorSync,
@@ -15,6 +10,10 @@ import {
   ttl20,
   ttl40,
 } from './helper.js'
+import {
+  DecoratorHandlerBase,
+  DecoratorExecutorParamBase,
+} from './types/index.js'
 
 
 @Singleton()
