@@ -83,6 +83,8 @@ export function getWebContextFromArgs(
 ): WebContext | undefined {
 
   if (! args || ! Array.isArray(args)) { return }
+  const key = 'webContext'
+
   for (const arg of args) {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (! arg) { continue }
@@ -92,11 +94,11 @@ export function getWebContextFromArgs(
       if (isWebContext(arg)) {
         return arg
       }
-    }
 
-    if (typeof arg['webContext'] === 'object') {
-      if (isWebContext(arg['webContext'])) {
-        return arg['webContext']
+      if (typeof arg[key] === 'object') {
+        if (isWebContext(arg[key])) {
+          return arg[key]
+        }
       }
     }
   }
