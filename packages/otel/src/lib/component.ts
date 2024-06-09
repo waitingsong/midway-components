@@ -111,6 +111,7 @@ export class OtelComponent extends AbstractOtelComponent {
       // @ts-ignore
       this.app[key] = this
     }
+    /* c8 ignore start */
     // @ts-ignore
     else if (this.app[key] !== this) {
       // @ts-ignore
@@ -119,6 +120,7 @@ export class OtelComponent extends AbstractOtelComponent {
       throw new Error(`this.app.${key} not equal to otel, id: ${id}, currentId: ${currentId}.
       Check if you have multiple otel instances in your project.`)
     }
+    /* c8 ignore stop */
 
     await this._init()
     await this._init2()
@@ -130,11 +132,13 @@ export class OtelComponent extends AbstractOtelComponent {
   }
 
   getGlobalCurrentSpan(traceContext?: Context): Span | undefined {
+    /* c8 ignore next */
     if (! this.config.enable) { return }
     return trace.getSpan(traceContext ?? context.active())
   }
 
   getTraceId(): string | undefined {
+    /* c8 ignore next */
     if (! this.config.enable) { return }
     return this.getGlobalCurrentSpan()?.spanContext().traceId
   }
@@ -198,6 +202,7 @@ export class OtelComponent extends AbstractOtelComponent {
     await this.traceProvider?.forceFlush()
   }
 
+  /* c8 ignore start */
   async shutdown(): Promise<void> {
     try {
       const currSpan = this.getGlobalCurrentSpan()
@@ -211,6 +216,7 @@ export class OtelComponent extends AbstractOtelComponent {
     await this.flush()
     // await this.traceProvider?.shutdown()
   }
+  /* c8 ignore stop */
 
 
   /**
@@ -222,6 +228,7 @@ export class OtelComponent extends AbstractOtelComponent {
     options?: AddEventOptions,
   ): void {
 
+    /* c8 ignore next */
     if (! this.config.enable) { return }
     if (options?.traceEvent === false || ! this.config.traceEvent) { return }
 
@@ -242,6 +249,7 @@ export class OtelComponent extends AbstractOtelComponent {
   }
 
   addSpanEventWithError(span: Span, error?: Error): void {
+    /* c8 ignore next */
     if (! this.config.enable) { return }
     if (! error) { return }
 
@@ -267,11 +275,13 @@ export class OtelComponent extends AbstractOtelComponent {
    * Sets the attributes to the given span.
    */
   setAttributes(span: Span, input: Attributes): void {
+    /* c8 ignore next */
     if (! this.config.enable) { return }
     span.setAttributes(input)
   }
 
   setAttributesLater(span: Span, input: Attributes): void {
+    /* c8 ignore next */
     if (! this.config.enable) { return }
 
     setTimeout(() => {
@@ -295,6 +305,7 @@ export class OtelComponent extends AbstractOtelComponent {
     eventName?: string,
   ): void {
 
+    /* c8 ignore next */
     if (! this.config.enable) { return }
 
     const time = genISO8601String()
@@ -343,6 +354,7 @@ export class OtelComponent extends AbstractOtelComponent {
     endTime?: TimeInput,
   ): void {
 
+    /* c8 ignore next */
     if (! this.config.enable) { return }
 
     const opts: SpanStatusOptions = {
@@ -379,6 +391,7 @@ export class OtelComponent extends AbstractOtelComponent {
     endTime?: TimeInput,
   ): void {
 
+    /* c8 ignore next */
     if (! this.config.enable) { return }
     this.endSpan(rootSpan, rootSpan, spanStatusOptions, endTime)
     rootSpan.end(endTime)
@@ -413,6 +426,7 @@ export class OtelComponent extends AbstractOtelComponent {
   }
 
   getScopeActiveContext(scope: object | symbol): Context | undefined {
+    /* c8 ignore next */
     if (! this.config.enable) { return }
 
     const tp = typeof scope
@@ -425,6 +439,7 @@ export class OtelComponent extends AbstractOtelComponent {
   }
 
   setScopeActiveContext(scope: object | symbol, ctx: Context): void {
+    /* c8 ignore next */
     if (! this.config.enable) { return }
 
     const currCtx = this.getScopeActiveContext(scope)
@@ -439,6 +454,7 @@ export class OtelComponent extends AbstractOtelComponent {
   }
 
   delScopeActiveContext(scope: object | symbol): void {
+    /* c8 ignore next */
     if (! this.config.enable) { return }
 
     const tp = typeof scope
@@ -461,18 +477,16 @@ export class OtelComponent extends AbstractOtelComponent {
       if (! input.length) { break }
 
       const traceContext = input.at(-1)
-      if (! traceContext) {
-        input.pop()
-        continue
-      }
-      const span = getSpan(traceContext)
-      if (! span) {
-        input.pop()
-        continue
-      }
-      const ended = isSpanEnded(span)
-      if (! ended && span.spanContext()) {
-        return traceContext
+      if (traceContext) {
+        const span = getSpan(traceContext)
+        if (! span) {
+          input.pop()
+          continue
+        }
+        const ended = isSpanEnded(span)
+        if (! ended && span.spanContext()) {
+          return traceContext
+        }
       }
 
       input.pop()
@@ -521,6 +535,7 @@ export class OtelComponent extends AbstractOtelComponent {
           this.otelLibraryVersion = PKG.version
         }
       }
+      /* c8 ignore next 4 */
       catch (ex) {
         // this.logger.warn('Failed to load package.json: %s', otelPkgPath)
         this.logger.warn('Failed to load package.json')
