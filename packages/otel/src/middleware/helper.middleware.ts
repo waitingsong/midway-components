@@ -25,9 +25,22 @@ export async function handleTopExceptionAndNext(
 
     traceSvc.setRootSpanWithError(err)
     const { ctx } = traceSvc
-    ctx.status = 500
-    if (typeof ctx.body === 'undefined' && err.message) {
-      ctx.body = err.message
+    /* c8 ignore next 3 */
+    if (typeof ctx.status === 'undefined') {
+      ctx.status = 500
+    }
+    else if (ctx.status >= 200 && ctx.status < 300) {
+      ctx.status = 500
+    }
+
+    if (typeof ctx.body === 'undefined') {
+      if (ctx.status === 404) {
+        ctx.status = 500
+      }
+
+      if (err.message) {
+        ctx.body = err.message
+      }
     }
   }
 }
