@@ -1,16 +1,13 @@
-import assert from 'node:assert'
-
 import {
   Controller,
   Get,
-  Init,
   Inject,
 } from '@midwayjs/core'
 import { MConfig } from '@mwcp/share'
 
 import { Trace, TraceService } from '../../../../../dist/lib/index.js'
 import { TraceLogger, TraceAppLogger } from '../../../../../dist/lib/trace.logger.js'
-import { Config, ConfigKey, Msg } from '../../../../../dist/lib/types.js'
+import { Config, ConfigKey } from '../../../../../dist/lib/types.js'
 import { apiBase, apiMethod } from '../../../../api-test.js'
 
 import { DefaultComponentService } from './trace.service.js'
@@ -26,11 +23,6 @@ export class DefaultComponentController {
 
   @Inject() readonly logger: TraceLogger
   @Inject() readonly appLogger: TraceAppLogger
-
-  @Init()
-  async init(): Promise<void> {
-    assert(true)
-  }
 
   @Trace()
   @Get(`/${apiMethod.disable_trace}`)

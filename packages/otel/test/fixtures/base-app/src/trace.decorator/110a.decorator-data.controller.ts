@@ -3,20 +3,15 @@ import assert from 'node:assert'
 import {
   Controller,
   Get,
-  Init,
   Inject,
-  MidwayWebRouterService,
   Param,
 } from '@midwayjs/core'
 import { MConfig } from '@mwcp/share'
 
 import { Attributes, Trace, TraceService, DecoratorTraceData } from '../../../../../dist/lib/index.js'
-import { TraceLogger, TraceAppLogger } from '../../../../../dist/lib/trace.logger.js'
 import { Config, ConfigKey } from '../../../../../dist/lib/types.js'
 import { apiBase, apiMethod } from '../../../../api-test.js'
 import { testConfig } from '../../../../root.config.js'
-
-import { DefaultComponentService } from './trace.service.js'
 
 
 @Controller(apiBase.decorator_data)
@@ -24,18 +19,7 @@ export class DecoratorDataComponentController {
 
   @MConfig(ConfigKey.config) readonly config: Config
 
-  @Inject() readonly svc: DefaultComponentService
   @Inject() readonly traceSvc: TraceService
-
-  @Inject() readonly logger: TraceLogger
-  @Inject() readonly appLogger: TraceAppLogger
-
-  @Inject() webRouterService: MidwayWebRouterService
-
-  @Init()
-  async init(): Promise<void> {
-    assert(true)
-  }
 
   @Trace()
   @Get(`/${apiMethod.async}/:id`)

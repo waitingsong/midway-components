@@ -8,7 +8,6 @@ import {
 import { MConfig } from '@mwcp/share'
 
 import { Trace, TraceService } from '../../../../../dist/lib/index.js'
-import { TraceLogger, TraceAppLogger } from '../../../../../dist/lib/trace.logger.js'
 import { Config, ConfigKey, Msg } from '../../../../../dist/lib/types.js'
 import { apiBase, apiMethod } from '../../../../api-test.js'
 
@@ -22,9 +21,6 @@ export class DefaultComponentController {
 
   @Inject() readonly svc: DefaultComponentService
   @Inject() readonly traceSvc: TraceService
-
-  @Inject() readonly logger: TraceLogger
-  @Inject() readonly appLogger: TraceAppLogger
 
   @Trace()
   @Get(`/${apiMethod.id2}`)

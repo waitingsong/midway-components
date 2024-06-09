@@ -5,17 +5,13 @@ import {
   Get,
   Init,
   Inject,
-  MidwayWebRouterService,
 } from '@midwayjs/core'
 import { MConfig } from '@mwcp/share'
 import { sleep } from '@waiting/shared-core'
 
 import { Trace, TraceService } from '../../../../../dist/lib/index.js'
-import { TraceLogger, TraceAppLogger } from '../../../../../dist/lib/trace.logger.js'
 import { Config, ConfigKey } from '../../../../../dist/lib/types.js'
 import { apiBase, apiMethod } from '../../../../api-test.js'
-
-import { DefaultComponentService } from './trace.service.js'
 
 
 const scope1 = Symbol('scope1')
@@ -26,13 +22,7 @@ export class DecoratorScopeComponentController {
 
   @MConfig(ConfigKey.config) readonly config: Config
 
-  @Inject() readonly svc: DefaultComponentService
   @Inject() readonly traceSvc: TraceService
-
-  @Inject() readonly logger: TraceLogger
-  @Inject() readonly appLogger: TraceAppLogger
-
-  @Inject() webRouterService: MidwayWebRouterService
 
   @Trace()
   @Get(`/${apiMethod.scope}`)
