@@ -89,7 +89,7 @@ export class FooController {
 
   @Inject() readonly svc: FooService
 
-  @Public()
+  @Public() // <-- Set this route public access without jwt authentication
   async hello(): Promise<string> {
     return 'hello'
   }
