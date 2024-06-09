@@ -6,9 +6,9 @@ import {
 import { MConfig } from '@mwcp/share'
 import { sleep } from '@waiting/shared-core'
 
-import { Trace, TraceService } from '../../../../../dist/lib/index.js'
-import { Config, ConfigKey } from '../../../../../dist/lib/types.js'
-import { apiBase, apiMethod } from '../../../../api-test.js'
+import { Trace, TraceService } from '../types/index.js'
+import { Config, ConfigKey } from '../types/lib-types.js'
+import { apiBase, apiMethod } from '../types/api-test.js'
 
 
 const scope1 = Symbol('scope1')

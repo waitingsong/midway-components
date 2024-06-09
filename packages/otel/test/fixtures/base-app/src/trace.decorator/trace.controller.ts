@@ -5,10 +5,10 @@ import {
 } from '@midwayjs/core'
 import { MConfig } from '@mwcp/share'
 
-import { Trace, TraceService } from '../../../../../dist/lib/index.js'
-import { TraceLogger, TraceAppLogger } from '../../../../../dist/lib/trace.logger.js'
-import { Config, ConfigKey } from '../../../../../dist/lib/types.js'
-import { apiBase, apiMethod } from '../../../../api-test.js'
+import { Trace, TraceService } from '../types/index.js'
+import { TraceLogger, TraceAppLogger } from '../types/lib-index.js'
+import { Config, ConfigKey } from '../types/lib-types.js'
+import { apiBase, apiMethod } from '../types/api-test.js'
 
 import { DefaultComponentService } from './trace.service.js'
 

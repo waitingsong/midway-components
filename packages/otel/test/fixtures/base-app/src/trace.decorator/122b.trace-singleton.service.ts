@@ -4,8 +4,8 @@ import assert from 'assert'
 import { Singleton } from '@midwayjs/core'
 import { MConfig } from '@mwcp/share'
 
-import { Trace } from '../../../../../dist/lib/index.js'
-import { Config, ConfigKey } from '../../../../../dist/lib/types.js'
+import { Trace } from '../types/index.js'
+import { Config, ConfigKey } from '../types/lib-types.js'
 
 
 @Singleton()

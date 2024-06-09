@@ -6,9 +6,9 @@ import {
 import { MConfig } from '@mwcp/share'
 import { sleep } from '@waiting/shared-core'
 
-import { DecoratorTraceData, Trace, TraceLog, TraceService } from '../../../../../dist/lib/index.js'
-import { Attributes, Config, ConfigKey } from '../../../../../dist/lib/types.js'
-import { apiBase, apiMethod } from '../../../../api-test.js'
+import { DecoratorTraceData, Trace, TraceLog, TraceService } from '../types/index.js'
+import { Attributes, Config, ConfigKey } from '../types/lib-types.js'
+import { apiBase, apiMethod } from '../types/api-test.js'
 
 
 @Controller(apiBase.trace_log)

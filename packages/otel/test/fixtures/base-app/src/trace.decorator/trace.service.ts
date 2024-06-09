@@ -4,8 +4,8 @@ import assert from 'assert'
 import { Inject, Provide } from '@midwayjs/core'
 import { MConfig } from '@mwcp/share'
 
-import { Trace, TraceService } from '../../../../../dist/lib/index.js'
-import { Config, ConfigKey } from '../../../../../dist/lib/types.js'
+import { Trace, TraceService } from '../types/index.js'
+import { Config, ConfigKey } from '../types/lib-types.js'
 
 
 @Provide()
