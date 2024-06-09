@@ -125,7 +125,6 @@ function setRequestContentLengthAttribute(
 
   if (isCompressed(request.headers)) {
     attributes[SEMATTRS_HTTP_REQUEST_CONTENT_LENGTH] = length
-
   }
   else {
     attributes[SEMATTRS_HTTP_REQUEST_CONTENT_LENGTH_UNCOMPRESSED] = length
@@ -309,13 +308,7 @@ export function addSpanEventWithIncomingRequestData(
   const { query } = ctx
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (query) {
-    if (typeof query === 'string') {
-      Object.defineProperty(attrs, AttrNames.Http_Request_Query, {
-        ...defaultProperty,
-        value: query,
-      })
-    }
-    else if (typeof query === 'object' && Object.keys(query).length) {
+    if (typeof query === 'object' && Object.keys(query).length) {
       const value = truncateString(JSON.stringify(query, null, 2))
       Object.defineProperty(attrs, AttrNames.Http_Request_Query, {
         ...defaultProperty,
