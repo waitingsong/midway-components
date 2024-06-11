@@ -14,7 +14,7 @@ import {
   type TraceDecoratorOptions,
 } from './decorator.types.js'
 import { DecoratorExecutorParam } from './trace.helper.js'
-import { AttrNames } from './types.js'
+import { AttrNames, Attributes } from './types.js'
 import { isSpanEnded } from './util.js'
 
 
@@ -129,35 +129,45 @@ function processDecoratorSpanData(
 
   if (info && Object.keys(info).length > 0) {
     const { attrs, events, rootAttrs, rootEvents } = info
-    if (events) {
-      if (traceService) {
-        traceService.addEvent(span, events)
-      }
-      else {
-        otelComponent.addEvent(span, events)
-      }
-    }
+    processEvents(otelComponent, traceService, span, events)
+    processEvents(otelComponent, traceService, traceService?.rootSpan, rootEvents)
 
-    if (rootEvents) {
-      if (traceService) {
-        traceService.addEvent(traceService.rootSpan, rootEvents)
-      }
-    }
+    processAttrs(otelComponent, traceService, span, attrs)
+    processAttrs(otelComponent, traceService, traceService?.rootSpan, rootAttrs)
+  }
+}
 
-    if (rootAttrs && Object.keys(rootAttrs).length) {
-      if (traceService) {
-        traceService.setAttributes(traceService.rootSpan, rootAttrs)
-      }
-    }
+function processAttrs(
+  otelComponent: AbstractOtelComponent,
+  traceService: AbstractTraceService | undefined,
+  span: Span | undefined,
+  attrs: Attributes | undefined,
+): void {
 
-    if (attrs && Object.keys(attrs).length) {
-      if (traceService) {
-        traceService.setAttributes(span, attrs)
-      }
-      else {
-        otelComponent.setAttributes(span, attrs)
-      }
-    }
+  if (! attrs || ! span || ! Object.keys(attrs).length) { return }
+
+  if (traceService) {
+    traceService.setAttributes(span, attrs)
+  }
+  else {
+    otelComponent.setAttributes(span, attrs)
+  }
+}
+
+function processEvents(
+  otelComponent: AbstractOtelComponent,
+  traceService: AbstractTraceService | undefined,
+  span: Span | undefined,
+  events: Attributes | undefined,
+): void {
+
+  if (! events || ! span || ! Object.keys(events).length) { return }
+
+  if (traceService) {
+    traceService.addEvent(span, events)
+  }
+  else {
+    otelComponent.addEvent(span, events)
   }
 }
 
