@@ -8,7 +8,6 @@ import {
 
 export { AutoConfiguration as Configuration } from './configuration.js'
 export * from './app/index.controller.js'
-export * from './interface.js'
 export * from './lib/index.js'
 export * from './middleware/index.middleware.js'
 export {
@@ -32,4 +31,13 @@ declare module '@midwayjs/koa/dist/interface' {
     jwtState: JwtState<any>
   }
 } */
+
+
+export {
+  JsonObject,
+  JsonResp,
+  JsonType,
+  NpmPkg,
+} from '@waiting/shared-types'
+
 

@@ -13,14 +13,13 @@ import { MConfig } from '@mwcp/share'
 //   verify,
 //   VerifyOptions,
 // } from 'jsonwebtoken'
+import { JsonObject } from '@waiting/shared-types'
 import JWT from 'jsonwebtoken'
-
 import type {
   DecodeOptions,
-  JsonObject,
   SignOptions,
   Secret,
-} from '##/interface.js'
+} from 'jsonwebtoken'
 
 import {
   ConfigKey,
@@ -38,7 +37,6 @@ import {
   validateTokenString,
   validateVerifySecret,
 } from './util.js'
-
 
 
 const {
