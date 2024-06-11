@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [30.11.0](https://github.com/waitingsong/midway-components/compare/v30.10.2...v30.11.0) (2024-06-11)
+
+
+### Features
+
+* **otel:** expose DecoratorContext ([d7953e9](https://github.com/waitingsong/midway-components/commit/d7953e9efb8e196849b81c0bb5a9d5d7439a933e))
+
+
+
+
+
 ## [30.10.2](https://github.com/waitingsong/midway-components/compare/v30.10.1...v30.10.2) (2024-06-11)
 
 
