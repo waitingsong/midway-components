@@ -86,12 +86,6 @@ export type KeyGenerator<ArgsType = unknown[], DContext extends DecoratorContext
   context: DContext,
 ) => string | undefined
 
-export interface DecoratorContext extends DecoratorContextBase {
-  traceContext: TraceContext | undefined
-  traceSpan: Span | undefined
-}
-
-
 export type ScopeGenerator<ArgsType = unknown[], DContext extends DecoratorContextBase = DecoratorContextBase> = (
   /** Arguments of the method */
   args: ArgsType,
@@ -109,5 +103,10 @@ export interface DecoratorContextBase {
   methodName: string
   // instance: InstanceWithDecorator
 }
+export interface DecoratorContext extends DecoratorContextBase {
+  traceContext: TraceContext | undefined
+  traceSpan: Span | undefined
+}
+
 
 /* c8 ignore stop */
