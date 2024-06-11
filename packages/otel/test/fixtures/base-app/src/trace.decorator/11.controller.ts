@@ -5,9 +5,9 @@ import {
 } from '@midwayjs/core'
 import { MConfig } from '@mwcp/share'
 
+import { apiBase, apiMethod } from '../types/api-test.js'
 import { TraceService } from '../types/index.js'
 import { Config, ConfigKey, Msg } from '../types/lib-types.js'
-import { apiBase, apiMethod } from '../types/api-test.js'
 
 import { DefaultComponentService } from './trace.service.js'
 
