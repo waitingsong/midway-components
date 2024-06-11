@@ -17,6 +17,7 @@ export const apiBase = {
 export const apiMethod = {
   root: '/',
   hello: 'hello',
+  home: 'home',
   component: 'component',
 
   id: 'id',
