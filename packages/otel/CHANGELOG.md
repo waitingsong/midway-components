@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [30.10.2](https://github.com/waitingsong/midway-components/compare/v30.10.1...v30.10.2) (2024-06-11)
+
+
+### Bug Fixes
+
+* **otel:** ctx.status assignment within handleTopExceptionAndNext() in middleware/helper.middleware.ts ([60ce644](https://github.com/waitingsong/midway-components/commit/60ce644278e956ea5499764fb80ed148aaa354b4))
+
+
+
+
+
 ## [30.10.1](https://github.com/waitingsong/midway-components/compare/v30.10.0...v30.10.1) (2024-06-09)
 
 **Note:** Version bump only for package @mwcp/otel
