@@ -54,6 +54,7 @@ export {
 } from './types.js'
 
 export {
+  DecoratorContext,
   DecoratorTraceData,
   DecoratorTraceDataResp,
   TraceOptions as TraceDecoratorArg,
