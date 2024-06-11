@@ -104,7 +104,7 @@ export function getWebContextFromArgs(
   }
 }
 
-function isWebContext(ctx: WebContext | undefined): ctx is WebContext {
+export function isWebContext(ctx: WebContext | undefined): ctx is WebContext {
   if (! ctx || typeof ctx !== 'object') {
     return false
   }

@@ -9,11 +9,13 @@ export const apiBase = {
   methodCacheable2: '/method_cacheable2',
   method: '/method',
   router: '/router',
+  decorator_singleton: '/decorator_singleton',
 }
 
 export const apiMethod = {
   root: '/',
   hello: 'hello',
+  home: 'home',
   component: 'component',
   simple: 'simple',
   simpleNumber: 'simple_number',
