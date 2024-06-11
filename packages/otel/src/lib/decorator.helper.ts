@@ -57,7 +57,7 @@ export async function processDecoratorBeforeAfterAsync(
 
     if (data) {
       const eventName = type
-      if (data.events && ! Object.keys(data.events).includes(eventName)) {
+      if (data.events && ! data.events['event']) {
         data.events['event'] = eventName
       }
       processDecoratorSpanData(otelComponent, traceService, span, data)
@@ -111,7 +111,7 @@ export function processDecoratorBeforeAfterSync(
       }
 
       const eventName = type
-      if (data.events && ! Object.keys(data.events).includes(eventName)) {
+      if (data.events && ! data.events['event']) {
         data.events['event'] = eventName
       }
       processDecoratorSpanData(otelComponent, traceService, span, data)
