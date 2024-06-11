@@ -72,7 +72,9 @@ export type TraceScopeParamType = string | TraceScopeType
 export type TraceScopeType = symbol | object
 
 export interface DecoratorTraceData {
+  /** tags */
   attrs?: Attributes
+  /** logs */
   events?: Attributes
   rootAttrs?: Attributes
   rootEvents?: Attributes
