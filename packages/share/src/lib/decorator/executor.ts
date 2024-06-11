@@ -248,8 +248,8 @@ function prepareOptions(
   const cache = retrieveDecoratorExecutorParam(joinPoint.args) // not use options.methodArgs
   if (cache) {
     switch (aopName) {
+      /* c8 ignore next 2 */
       case 'before':
-        /* c8 ignore next */
         throw new Error('before() should not return value with cache')
 
       case 'after':
@@ -259,6 +259,7 @@ function prepareOptions(
       default:
         break
     }
+    /* c8 ignore next 3 */
     if (['before'].includes(aopName)) {
       assert(typeof cache.methodResult === 'undefined', `result must be undefined in ${aopName}() lifecycle`)
     }
