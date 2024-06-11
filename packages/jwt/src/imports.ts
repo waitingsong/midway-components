@@ -1,7 +1,7 @@
 import * as info from '@midwayjs/info'
 import * as koa from '@midwayjs/koa'
 import * as swagger from '@midwayjs/swagger'
-// import * as otel from '@mwcp/otel'
+import * as otel from '@mwcp/otel'
 import * as share from '@mwcp/share'
 
 /* c8 ignore next 5 */
@@ -18,7 +18,7 @@ if (CI) {
   useComponents.push(koa)
   useComponents.push(info)
   useComponents.push(swagger)
-  // useComponents.push(otel)
+  useComponents.push(otel)
 }
 
 export interface IComponentInfo {

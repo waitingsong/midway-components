@@ -41,6 +41,7 @@
     "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
+    "@mwcp/otel": "^30.10.2",
     "@types/jsonwebtoken": "^9.0.6"
   },
   "engines": {
