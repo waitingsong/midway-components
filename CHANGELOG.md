@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [30.11.1](https://github.com/waitingsong/midway-components/compare/v30.11.0...v30.11.1) (2024-06-11)
+
+
+### Bug Fixes
+
+* **otel:** key of span event name ([3071ea0](https://github.com/waitingsong/midway-components/commit/3071ea068a6cad443acc2dcaf210df19fca3b8d7))
+
+
+
+
+
 # [30.11.0](https://github.com/waitingsong/midway-components/compare/v30.10.2...v30.11.0) (2024-06-11)
 
 
