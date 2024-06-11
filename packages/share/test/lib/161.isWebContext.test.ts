@@ -22,6 +22,21 @@ describe(fileShortPath(import.meta.url), () => {
       assert(ret)
     })
 
+    it('invalid partial', async () => {
+      let arg = {
+        ...ctx,
+        app: {},
+        getApp: 'fake',
+      }
+      assert(! isWebContext(arg))
+
+      arg = { ...ctx, res: 'fake' }
+      assert(! isWebContext(arg))
+
+      arg = { ...ctx, response: 'fake' }
+      assert(! isWebContext(arg))
+    })
+
     it('invalid', async () => {
       const arg = { } as any
       assert(! isWebContext(arg))

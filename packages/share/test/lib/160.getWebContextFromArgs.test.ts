@@ -29,8 +29,9 @@ describe(fileShortPath(import.meta.url), () => {
 
     it('invalid', async () => {
       const arg = { } as any
-      const ret = getWebContextFromArgs([arg, void 0])
-      assert(! ret)
+      assert(! getWebContextFromArgs([arg, void 0]))
+      assert(! getWebContextFromArgs([]))
+      assert(! getWebContextFromArgs(void 0))
     })
   })
 
