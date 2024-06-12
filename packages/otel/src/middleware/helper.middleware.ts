@@ -1,6 +1,6 @@
 import type { NextFunction } from '@mwcp/share'
 import { Attributes } from '@opentelemetry/api'
-import { genISO8601String } from '@waiting/shared-core'
+import { genISO8601String, genError } from '@waiting/shared-core'
 
 import { TraceService } from '##/lib/trace.service.js'
 import { AttrNames } from '##/lib/types.js'
@@ -18,11 +18,8 @@ export async function handleTopExceptionAndNext(
   try {
     await next()
   }
-  catch (ex) {
-    const err = ex instanceof Error
-      ? ex
-      : typeof ex === 'string' ? new Error(ex) : new Error('unknown error')
-
+  catch (error) {
+    const err = genError({ error })
     traceSvc.setRootSpanWithError(err)
     const { ctx } = traceSvc
     /* c8 ignore next 3 */
@@ -48,7 +45,7 @@ export async function handleTopExceptionAndNext(
 
 /**
  * Catch and sample exception,
- * throw catched ex
+ * re-throw ex
  */
 export async function handleAppExceptionAndNext(
   traceSvc: TraceService,
@@ -64,11 +61,8 @@ export async function handleAppExceptionAndNext(
     }
     traceSvc.addEvent(traceSvc.rootSpan, events)
   }
-  catch (ex) {
-    const err = ex instanceof Error
-      ? ex
-      : typeof ex === 'string' ? new Error(ex) : new Error('unknown error')
-
+  catch (error) {
+    const err = genError({ error })
     const currSpan = traceSvc.getActiveSpan()
     if (currSpan) {
       traceSvc.setSpanWithError(currSpan, err)
