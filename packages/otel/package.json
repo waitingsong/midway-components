@@ -79,8 +79,9 @@
     "dev": "cross-env MIDWAY_SERVER_ENV=local mwtsc --watch --run @midwayjs/mock/app",
     "lint": "eslint --fix --cache src test",
     "lint:nofix": "eslint --cache src test",
-    "predev": "npm run build",
-    "pretest": "npm run build:unit",
+    "predev": "npm run build && npm run prepareShare",
+    "pretest": "npm run build:unit && npm run prepareShare",
+    "prepareShare": "tsx test/prepare.mts",
     "start": "cross-env NODE_ENV=production node ./bootstrap.js",
     "test": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json mocha --parallel=false",
     "tsc": "tsc -b"
