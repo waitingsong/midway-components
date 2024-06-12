@@ -62,6 +62,7 @@ function genPropagators(list: PropagatorList[]): TextMapPropagator[] {
 
   list.forEach((propagator) => {
     switch (propagator) {
+      /* c8 ignore next 4 */
       case PropagatorList.jaeger: {
         propagators.push(new JaegerPropagator())
         break
@@ -72,6 +73,7 @@ function genPropagators(list: PropagatorList[]): TextMapPropagator[] {
         break
       }
 
+      /* c8 ignore next 4 */
       default: {
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         throw new Error(`Propagator ${propagator} not implemented. Use registerInstrumentations() manually.`)
