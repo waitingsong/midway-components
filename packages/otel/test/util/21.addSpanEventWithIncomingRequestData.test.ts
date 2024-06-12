@@ -3,13 +3,13 @@ import assert from 'node:assert/strict'
 import { SEMATTRS_HTTP_TARGET, SEMATTRS_HTTP_ROUTE, SEMATTRS_HTTP_METHOD } from '@opentelemetry/semantic-conventions'
 import { fileShortPath } from '@waiting/shared-core'
 
-import { AttrNames } from '##/index.js'
-import { apiBase, apiMethod } from '#@/api-test.js'
-import { testConfig } from '#@/root.config.js'
 import {
+  AttrNames,
   AssertsOptions, assertsSpan, assertRootSpan,
   retrieveTraceInfoFromRemote, sortSpans,
-} from '#@/test.helper.js'
+} from '##/index.js'
+import { apiBase, apiMethod } from '#@/api-test.js'
+import { testConfig } from '#@/root.config.js'
 
 
 describe(fileShortPath(import.meta.url), function () {

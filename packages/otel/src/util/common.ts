@@ -6,25 +6,19 @@ import {
   SEMATTRS_NET_HOST_NAME,
   SEMATTRS_HTTP_METHOD,
   SEMATTRS_HTTP_SCHEME,
-  SEMATTRS_HTTP_TARGET,
   SEMATTRS_HTTP_SERVER_NAME,
-  SEMATTRS_HTTP_ROUTE,
 } from '@opentelemetry/semantic-conventions'
 import { sleep } from '@waiting/shared-core'
 
-import { AttrNames, Attributes, JaegerTraceInfo, JaegerTraceInfoSpan } from '##/index.js'
 import { exporterEndpoint } from '##/lib/config.js'
+import { AttrNames, Attributes, JaegerTraceInfo, JaegerTraceInfoSpan } from '##/lib/index.js'
 
-// function sortSpansByStartTimeDesc(spans: JaegerTraceInfoSpan[]): JaegerTraceInfoSpan[] {
-//   return spans.sort((a, b) => {
-//     return b.startTime - a.startTime
-//   })
-// }
 
 const agent = exporterEndpoint.replace(/:\d+$/u, '')
-assert(agent, 'OTEL_EXPORTER_OTLP_ENDPOINT not set')
 
 export async function retrieveTraceInfoFromRemote(traceId: string, expectSpanNumber?: number): Promise<[JaegerTraceInfo]> {
+  assert(agent, 'OTEL_EXPORTER_OTLP_ENDPOINT not set')
+
   let id = traceId
   if (traceId.includes('-')) {
     const txt = traceId.split('-').at(1)
@@ -33,54 +27,63 @@ export async function retrieveTraceInfoFromRemote(traceId: string, expectSpanNum
   }
 
   await sleep(1000)
-  console.log('retrieveTraceInfoFromRemote: ', { traceId })
+  // console.log('retrieveTraceInfoFromRemote: ', { traceId })
   const tracePath = `${agent}:16686/api/traces/${id}?prettyPrint=true`
   let resp = await makeHttpRequest(tracePath, {
     method: 'GET',
     dataType: 'json',
-  }).catch((err) => {
-    console.error(`retrieve trace info failed, check agent "${agent}" valid or OTEL_EXPORTER_OTLP_ENDPOINT is correct.`)
-    throw err
   })
+  /* c8 ignore next 4 */
+    .catch((err) => {
+      console.error(`retrieve trace info failed, check agent "${agent}" valid or OTEL_EXPORTER_OTLP_ENDPOINT is correct.`)
+      throw err
+    })
 
   for (let i = 0; i < 30; i += 1) {
     assert(resp.status !== 401, `401`)
     assert(resp.status !== 404, `404`)
     assert(resp.status !== 500, `500`)
     if (resp.status === 200 && resp.data) { break }
+    /* c8 ignore start */
     const { data } = resp.data as { data: [JaegerTraceInfo] }
-    if (data?.length > 0) { break }
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (data.length > 0) { break }
 
-    console.log('retry traceId...')
+    // console.log('retry traceId...')
     await sleep(2000)
     resp = await makeHttpRequest(tracePath, {
       method: 'GET',
       dataType: 'json',
     })
+    /* c8 ignore stop */
   }
 
   const { data } = resp.data as { data: [JaegerTraceInfo] }
 
+  /* c8 ignore next 3 */
   if (! expectSpanNumber) {
     return data
   }
 
-  let spans = data[0].spans
+  let { spans } = data[0]
   if (spans.length >= expectSpanNumber) {
     return data
   }
 
+
+  /* c8 ignore start */
   for (let i = 0; i < 30; i += 1) {
-    console.log('retry span... idx:', i)
+    // console.info('retry span... idx:', i)
     await sleep(2000)
     const resp2 = await retrieveTraceInfoFromRemote(traceId)
     spans = resp2[0].spans
-    console.log('spans.length:', spans.length)
+    // console.log('spans.length:', spans.length)
     if (spans.length >= expectSpanNumber) {
       return resp2
     }
   }
   assert(false, `spans.length: ${spans.length}, expectSpanNumber: ${expectSpanNumber}`)
+  /* c8 ignore stop */
 }
 
 
@@ -140,6 +143,7 @@ function getParentSpan(
   if (! span.references.length) { return }
 
   const ref = span.references[0]
+  /* c8 ignore next */
   if (! ref) { return }
 
   return map.get(ref.spanID)
@@ -167,8 +171,8 @@ function getChildren(
 }
 
 function sortSpansByStartTime(spans: JaegerTraceInfoSpan[]): JaegerTraceInfoSpan[] {
-  return spans.sort((a, b) => {
-    return a.startTime - b.startTime
+  return spans.sort((p1, p2) => {
+    return p1.startTime - p2.startTime
   })
 }
 
@@ -249,7 +253,7 @@ export function assertsSpan(span: JaegerTraceInfoSpan, options: AssertsOptions):
 
   Object.entries(options.tags ?? {}).forEach(([key, value]) => {
     const flag = span.tags.some((tag) => {
-      const res = tag.key === key && tag.value === value
+      const res = tag['key'] === key && tag['value'] === value
       return res
     })
     assert(flag, `${key}: ${value?.toString()} not found`)
@@ -258,6 +262,8 @@ export function assertsSpan(span: JaegerTraceInfoSpan, options: AssertsOptions):
 
   if (options.logs?.length) {
     options.logs.forEach((expectLog, idx) => {
+      /* c8 ignore next 2 */
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (! expectLog) { return }
       const log = span.logs[idx]
       assert(log, `log[${idx}] is null`)
@@ -278,3 +284,9 @@ export function assertsSpan(span: JaegerTraceInfoSpan, options: AssertsOptions):
 
   }
 }
+
+// function sortSpansByStartTimeDesc(spans: JaegerTraceInfoSpan[]): JaegerTraceInfoSpan[] {
+//   return spans.sort((a, b) => {
+//     return b.startTime - a.startTime
+//   })
+// }
