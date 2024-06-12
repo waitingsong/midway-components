@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [30.12.0](https://github.com/waitingsong/midway-components/compare/v30.11.2...v30.12.0) (2024-06-12)
+
+
+### Features
+
+* **otel:** pass decorated instance as decorator before/after callback this param ([d9f99a7](https://github.com/waitingsong/midway-components/commit/d9f99a752573bfc9e506ae85faf57110d78764c1))
+
+
+
+
+
 ## [30.11.2](https://github.com/waitingsong/midway-components/compare/v30.11.1...v30.11.2) (2024-06-11)
 
 **Note:** Version bump only for package @mwcp/otel
