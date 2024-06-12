@@ -48,6 +48,7 @@ export async function before(options: DecoratorExecutorParam<TraceDecoratorOptio
 
 export async function afterReturn(options: DecoratorExecutorParam<TraceDecoratorOptions>): Promise<unknown> {
   const { span } = options
+  /* c8 ignore next 3 */
   if (! span) {
     return options.methodResult
   }

@@ -15,7 +15,7 @@ export async function beforeAsync(options: DecoratorExecutorParam): Promise<void
     traceService,
   } = options
 
-  if (! traceService) { return }
+  assert(traceService, 'traceService is required')
 
   const type = 'before'
   const scope = genTraceScopeFrom(options)
@@ -51,6 +51,7 @@ export async function afterReturnAsync(options: DecoratorExecutorParam): Promise
   assert(! options.error, `[@mwcp/${ConfigKey.namespace}] options.error is not undefined in afterReturnAsync().
   Error: ${options.error?.message}`)
 
+  /* c8 ignore next 3 */
   if (! span || ! traceService) {
     return options.methodResult
   }

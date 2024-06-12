@@ -10,7 +10,7 @@ import { AttrNames } from '../types.js'
 
 export function beforeSync(options: DecoratorExecutorParam): void {
   const { callerAttr, spanName, traceService } = options
-  if (! traceService) { return }
+  assert(traceService, 'traceService is required')
 
   const type = 'before'
 
@@ -36,6 +36,7 @@ export function afterReturnSync(options: DecoratorExecutorParam): unknown {
   assert(! options.error, `[@mwcp/${ConfigKey.namespace}] options.error is not undefined in afterReturnSync().
   Error: ${options.error?.message}`)
 
+  /* c8 ignore next 3 */
   if (! span || ! traceService) {
     return options.methodResult
   }

@@ -37,6 +37,7 @@ export class DefaultOtelComponentController {
   }
 
   validateRoute(): void {
+    /* c8 ignore next 3 */
     if (! this.config.enableDefaultRoute) {
       throw new Error('route is not enabled')
     }
