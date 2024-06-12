@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 /* eslint-disable @typescript-eslint/no-invalid-void-type */
 /* c8 ignore start */
-import type { Application, Context, InstanceWithDecorator } from '@mwcp/share'
+import type { Application, Context, ClzInstance } from '@mwcp/share'
 import type {
   Attributes,
   Context as TraceContext,
@@ -22,7 +22,7 @@ export interface TraceDecoratorOptions<
   /** Arguments of decorated method */
   MParamType = M extends MethodTypeUnknown<infer P> ? P : unknown[],
   MResultType = M extends MethodTypeUnknown<any[], infer R> ? R : unknown,
-  MThis = unknown extends ThisParameterType<M> ? InstanceWithDecorator : ThisParameterType<M>,
+  MThis = unknown extends ThisParameterType<M> ? ClzInstance : ThisParameterType<M>,
 > extends SpanOptions {
 
   /** @default `{target.name}/{methodName}` */
@@ -111,7 +111,7 @@ export interface DecoratorContextBase {
   instanceName: string
   methodName: string
 }
-export interface DecoratorContext<T = InstanceWithDecorator> extends DecoratorContextBase {
+export interface DecoratorContext<T = ClzInstance> extends DecoratorContextBase {
   traceContext: TraceContext | undefined
   traceSpan: Span | undefined
   instance: T
