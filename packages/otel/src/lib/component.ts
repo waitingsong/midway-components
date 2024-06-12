@@ -251,6 +251,7 @@ export class OtelComponent extends AbstractOtelComponent {
   addSpanEventWithError(span: Span, error?: Error): void {
     /* c8 ignore next */
     if (! this.config.enable) { return }
+    /* c8 ignore next */
     if (! error) { return }
 
     const { cause } = error
