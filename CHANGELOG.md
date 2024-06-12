@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [30.13.0](https://github.com/waitingsong/midway-components/compare/v30.12.1...v30.13.0) (2024-06-12)
+
+
+### Features
+
+* **otel:** add generics MThis of TraceOptions ([72c59a4](https://github.com/waitingsong/midway-components/commit/72c59a4dbb115d1654471c30118fdb0a2d3eebf5))
+* **otel:** use ClzInstance isntead of InstanceWithDecorator ([0758993](https://github.com/waitingsong/midway-components/commit/0758993e180706a3364c6e28a7fab57971099079))
+* **share:** ClzInstance ([2a8f9a4](https://github.com/waitingsong/midway-components/commit/2a8f9a48ab43b0782176fab974f6e6cc6c0bc6d2))
+
+
+
+
+
 ## [30.12.1](https://github.com/waitingsong/midway-components/compare/v30.12.0...v30.12.1) (2024-06-12)
 
 **Note:** Version bump only for package midway-components
