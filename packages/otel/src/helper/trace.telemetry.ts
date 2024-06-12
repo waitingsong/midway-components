@@ -94,9 +94,10 @@ function genExporterInstrumentation(
     /* c8 ignore start :local test */
     case SpanExporterList.console: {
       const exporter: node.SpanExporter = new node.ConsoleSpanExporter()
-      const processor = isDevelopmentEnvironment
-        ? new node.SimpleSpanProcessor(exporter)
-        : new node.BatchSpanProcessor(exporter)
+      // const processor = isDevelopmentEnvironment
+      //   ? new node.SimpleSpanProcessor(exporter)
+      //   : new node.BatchSpanProcessor(exporter)
+      const processor = new node.BatchSpanProcessor(exporter)
       return processor
     }
     /* c8 ignore stop */
