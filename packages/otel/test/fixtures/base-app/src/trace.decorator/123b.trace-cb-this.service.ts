@@ -8,14 +8,15 @@ import { Trace } from '../types/index.js'
 
 
 @Singleton()
-export class TraceSingletonService {
+export class TraceSingletonThisService {
+  foo = 1
 
-  @Trace<TraceSingletonService['home']>({
+  @Trace<TraceSingletonThisService['home']>({
     before([options], decoratorContext) {
-      assert(decoratorContext)
-      assert(decoratorContext.webContext)
-      assert(typeof decoratorContext.webContext.getApp === 'function')
-      assert(decoratorContext.traceService)
+      assert(this instanceof TraceSingletonThisService)
+      assert(this === decoratorContext.instance)
+      assert(this.foo === 1)
+      this.foo += 1
 
       assert(options)
       assert(options.webContext === decoratorContext.webContext)
@@ -24,11 +25,11 @@ export class TraceSingletonService {
 
       return void 0
     },
-    after: ([options], res, decoratorContext) => {
-      assert(decoratorContext)
-      assert(decoratorContext.webContext)
-      assert(typeof decoratorContext.webContext.getApp === 'function')
-      assert(decoratorContext.traceService)
+    after([options], res, decoratorContext) {
+      assert(this instanceof TraceSingletonThisService)
+      assert(this === decoratorContext.instance)
+      assert(this.foo === 2)
+      this.foo = 1
 
       assert(options)
       assert(options.webContext === decoratorContext.webContext)
@@ -38,7 +39,7 @@ export class TraceSingletonService {
       return void 0
     },
   })
-  async home(options: InputOptions): Promise<string> {
+  async home(this: TraceSingletonThisService, options: InputOptions): Promise<string> {
     assert(typeof options.webContext?.getApp === 'function')
     assert(options.input.endsWith('-modified'), options.input)
     assert(options.webContext.host)
@@ -46,12 +47,11 @@ export class TraceSingletonService {
     return ret
   }
 
-  @Trace<TraceSingletonService['hello2']>({
-    before: ([options, ctx], decoratorContext) => {
-      assert(decoratorContext)
-      assert(decoratorContext.webContext)
-      assert(typeof decoratorContext.webContext.getApp === 'function')
-      assert(decoratorContext.traceService)
+  @Trace<TraceSingletonThisService['hello2']>({
+    before([options, ctx], decoratorContext) {
+      assert(this instanceof TraceSingletonThisService)
+      assert(this === decoratorContext.instance)
+      assert(this.foo === 1)
 
       assert(options)
       assert(! options.webContext)
@@ -62,8 +62,11 @@ export class TraceSingletonService {
 
       return void 0
     },
-    after: ([options, ctx], res, decoratorContext) => {
-      assert(decoratorContext)
+    after([options, ctx], res, decoratorContext) {
+      assert(this instanceof TraceSingletonThisService)
+      assert(this === decoratorContext.instance)
+      assert(this.foo === 1)
+
       assert(decoratorContext.webContext)
       assert(typeof decoratorContext.webContext.getApp === 'function')
       assert(decoratorContext.traceService)
@@ -77,7 +80,7 @@ export class TraceSingletonService {
       return void 0
     },
   })
-  async hello2(options: InputOptions, ctx: Context): Promise<string> {
+  hello2(this: TraceSingletonThisService, options: InputOptions, ctx: Context): string {
     assert(typeof ctx.getApp === 'function')
     assert(options.input.endsWith('-modified'), options.input)
     assert(! options.webContext)

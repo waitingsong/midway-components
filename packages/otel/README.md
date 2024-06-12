@@ -107,7 +107,6 @@ import { Trace } from '@mwcp/otel'
 
 @Controller('/')
 export class FooController {
-
   @Trace()
   async hello(): Promise<string> {
     await Promise.all([
@@ -139,6 +138,36 @@ export class FooController {
 }
 ```
 ![Trace Info](img/trace-scope.png)
+
+
+Use `this` inner `before()` `after()` point to the decorated instance
+
+```ts
+export class FooService {
+  foo = 1
+
+  @Trace<Foo['home']>({
+    before([options], decoratorContext) {
+      assert(this instanceof FooService) // <--- this point to FooService 
+      assert(this === decoratorContext.instance)
+      assert(this.foo === 1)
+
+      return void 0
+    },
+    after([options], res, decoratorContext) {
+      assert(this instanceof FooService)
+      assert(this === decoratorContext.instance)
+      assert(this.foo === 1)
+
+      return void 0
+    },
+  })
+  async home(this: FooService, options: InputOptions): Promise<string> { // <--- pass this type explicitly
+    const ret = await options.input
+    return ret
+  }
+}
+```
 
 
 ## `TraceLog` Decorator

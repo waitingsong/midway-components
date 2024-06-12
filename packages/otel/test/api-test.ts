@@ -12,6 +12,7 @@ export const apiBase = {
   decorator_data: `/decorator_data`,
   trace_log: '/trace_log',
   trace_singleton: '/trace_singleton',
+  trace_this: '/trace_this',
 }
 
 export const apiMethod = {

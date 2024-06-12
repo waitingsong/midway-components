@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 /* eslint-disable @typescript-eslint/no-invalid-void-type */
 /* c8 ignore start */
-import type { Application, Context } from '@mwcp/share'
+import type { Application, Context, InstanceWithDecorator } from '@mwcp/share'
 import type {
   Attributes,
   Context as TraceContext,
@@ -41,14 +42,19 @@ export interface TraceDecoratorOptions<
    * @default `/`
    */
   spanNameDelimiter: string | undefined
+
   before: MethodTypeUnknown<
-    [MParamType, DecoratorContext], // input args
-    DecoratorTraceDataResp | DecoratorTraceDataRespAsync // output data
+    [MParamType, DecoratorContext<ThisParameterType<M>>], // input args
+    DecoratorTraceDataResp | DecoratorTraceDataRespAsync, // output data
+    ThisParameterType<M> // this
     > | undefined
+
   after: MethodTypeUnknown<
-    [MParamType, Awaited<MResultType>, DecoratorContext], // input args
-    DecoratorTraceDataResp | DecoratorTraceDataRespAsync // output data
+    [MParamType, Awaited<MResultType>, DecoratorContext<ThisParameterType<M>>], // input args
+    DecoratorTraceDataResp | DecoratorTraceDataRespAsync, // output data
+    ThisParameterType<M> // this
     > | undefined
+
   /**
    * @default true
    */
@@ -103,11 +109,11 @@ export interface DecoratorContextBase {
   /** Caller Class name */
   instanceName: string
   methodName: string
-  // instance: InstanceWithDecorator
 }
-export interface DecoratorContext extends DecoratorContextBase {
+export interface DecoratorContext<T = InstanceWithDecorator> extends DecoratorContextBase {
   traceContext: TraceContext | undefined
   traceSpan: Span | undefined
+  instance: T
 }
 
 

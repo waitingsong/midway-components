@@ -42,16 +42,16 @@ export async function processDecoratorBeforeAfterAsync(
       instanceName: options.instanceName,
       /** Caller method name */
       methodName: options.methodName,
-      // instance: options.instance,
+      instance: options.instance,
     }
 
     let data
     if (type === 'before') {
-      const func2 = func as NonNullable<TraceDecoratorOptions['before']>
+      const func2 = func.bind(decoratorContext.instance) as NonNullable<TraceDecoratorOptions['before']>
       data = await func2(options.methodArgs, decoratorContext)
     }
     else {
-      const func2 = func as NonNullable<TraceDecoratorOptions['after']>
+      const func2 = func.bind(decoratorContext.instance) as NonNullable<TraceDecoratorOptions['after']>
       data = await func2(options.methodArgs, options.methodResult, decoratorContext)
     }
 
@@ -90,15 +90,16 @@ export function processDecoratorBeforeAfterSync(
       instanceName: options.instanceName,
       /** Caller method name */
       methodName: options.methodName,
+      instance: options.instance,
     }
 
     let data
     if (type === 'before') {
-      const func2 = func as NonNullable<TraceDecoratorOptions['before']>
+      const func2 = func.bind(decoratorContext.instance) as NonNullable<TraceDecoratorOptions['before']>
       data = func2(options.methodArgs, decoratorContext)
     }
     else {
-      const func2 = func as NonNullable<TraceDecoratorOptions['after']>
+      const func2 = func.bind(decoratorContext.instance) as NonNullable<TraceDecoratorOptions['after']>
       data = func2(options.methodArgs, options.methodResult, decoratorContext)
     }
 

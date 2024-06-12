@@ -142,6 +142,35 @@ export class FooController {
 ![Trace Info](img/trace-scope.png)
 
 
+在 `before()` `after()` 内使用指向被装饰类实例的 `this`
+
+```ts
+export class FooService {
+  foo = 1
+
+  @Trace<Foo['home']>({
+    before([options], decoratorContext) {
+      assert(this instanceof FooService) // <--- this point to FooService 
+      assert(this === decoratorContext.instance)
+      assert(this.foo === 1)
+
+      return void 0
+    },
+    after([options], res, decoratorContext) {
+      assert(this instanceof FooService)
+      assert(this === decoratorContext.instance)
+      assert(this.foo === 1)
+
+      return void 0
+    },
+  })
+  async home(this: FooService, options: InputOptions): Promise<string> { // <--- pass this type explicitly
+    const ret = await options.input
+    return ret
+  }
+}
+```
+
 ## `TraceLog` 装饰器
 
 通过装饰器的 `before()`/`after()` 方法返回对象给当前Span和根Span添加 tag/log 信息，

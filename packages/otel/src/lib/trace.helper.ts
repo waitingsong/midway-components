@@ -205,6 +205,7 @@ export function genDecoratorExecutorOptions(
     instanceName: optionsBase.instanceName,
     /** Caller method name */
     methodName: optionsBase.methodName,
+    instance: optionsBase.instance,
   }
 
   const keyOpts: GenKeyOptions = {
