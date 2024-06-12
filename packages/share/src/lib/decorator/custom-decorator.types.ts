@@ -84,7 +84,7 @@ export interface DecoratorExecutorParamBase<TDecoratorParam extends object = obj
   decoratorKey: string
   decoratorHandlerClassName: string
   /** 装饰器所在类实例(包括注入对象) */
-  instance: InstanceWithDecorator
+  instance: ClzInstance
   /** Caller Class name */
   instanceName: string
   /**
@@ -100,6 +100,15 @@ export interface DecoratorExecutorParamBase<TDecoratorParam extends object = obj
   webContext: Context | undefined
 }
 
+/**
+ * 装饰器所在的（注入）实例
+ * - InstanceWithDecorator.constructor === ClassWithDecorator
+ */
+export interface ClzInstance {
+  /** web context */
+  [REQUEST_OBJ_CTX_KEY]?: Context
+  [key: string]: any
+}
 
 /**
  * 装饰器所在的（注入）实例

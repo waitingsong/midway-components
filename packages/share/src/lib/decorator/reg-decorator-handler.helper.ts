@@ -9,7 +9,7 @@ import type { Context as WebContext } from '../types.js'
 
 import type {
   DecoratorExecutorParamBase,
-  InstanceWithDecorator,
+  ClzInstance,
 } from './custom-decorator.types.js'
 
 
@@ -30,7 +30,7 @@ export function genExecutorOptionsCommon<TDecoratorParam extends object = object
 
   // 装饰器所在的类实例
   // instance.constructor === baseOptions.instance, Object.getPrototypeOf(instance) === baseOptions.instance.prototype
-  const instance = joinPoint.target as InstanceWithDecorator
+  const instance = joinPoint.target as ClzInstance
   assert(baseOptions.webApp, 'webApp is empty')
   assert(baseOptions.methodName, 'methodName is undefined')
 
