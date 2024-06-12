@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 /* eslint-disable @typescript-eslint/no-invalid-void-type */
 /* c8 ignore start */
@@ -20,8 +21,8 @@ export interface TraceDecoratorOptions<
   M extends MethodTypeUnknown | undefined = undefined,
   /** Arguments of decorated method */
   MParamType = M extends MethodTypeUnknown<infer P> ? P : unknown[],
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   MResultType = M extends MethodTypeUnknown<any[], infer R> ? R : unknown,
+  MThis = unknown extends ThisParameterType<M> ? InstanceWithDecorator : ThisParameterType<M>,
 > extends SpanOptions {
 
   /** @default `{target.name}/{methodName}` */
@@ -44,13 +45,13 @@ export interface TraceDecoratorOptions<
   spanNameDelimiter: string | undefined
 
   before: MethodTypeUnknown<
-    [MParamType, DecoratorContext<ThisParameterType<M>>], // input args
+    [MParamType, DecoratorContext<MThis>], // input args
     DecoratorTraceDataResp | DecoratorTraceDataRespAsync, // output data
     ThisParameterType<M> // this
     > | undefined
 
   after: MethodTypeUnknown<
-    [MParamType, Awaited<MResultType>, DecoratorContext<ThisParameterType<M>>], // input args
+    [MParamType, Awaited<MResultType>, DecoratorContext<MThis>], // input args
     DecoratorTraceDataResp | DecoratorTraceDataRespAsync, // output data
     ThisParameterType<M> // this
     > | undefined
