@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [30.14.0](https://github.com/waitingsong/midway-components/compare/v30.13.0...v30.14.0) (2024-06-12)
+
+
+### Features
+
+* **otel:** move test.helper.ts to src/util/common.ts ([077e92c](https://github.com/waitingsong/midway-components/commit/077e92cdacd0a2bb929ed813358e6da7b0c6fd3d))
+
+
+
+
+
 # [30.13.0](https://github.com/waitingsong/midway-components/compare/v30.12.1...v30.13.0) (2024-06-12)
 
 
