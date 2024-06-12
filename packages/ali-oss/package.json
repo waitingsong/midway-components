@@ -37,7 +37,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/info": "^3.16.1",
+    "@midwayjs/info": "^3.16.2",
     "@mwcp/otel": "^30.11.2",
     "@mwcp/share": "^30.10.2",
     "@yuntools/ali-oss": "^16.1.5"
