@@ -1,5 +1,5 @@
 # [@mwcp/jwt](https://www.npmjs.com/package/@mwcp/jwt) 
-Siging, verifying and authentication for midway framework.
+Signing, verifying and authentication for midway framework.
 
 
 ## Note

@@ -6,7 +6,8 @@ Declarative Cache Component for [Midway.js]
 [![Version](https://img.shields.io/npm/v/@mwcp/cache.svg)](https://www.npmjs.com/package/midway-components)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![](https://img.shields.io/badge/lang-TypeScript-blue.svg)]()
-[![ci](https://github.com/waitingsong/midway-components/workflows/ci/badge.svg)](https://github.com/waitingsong/midway-components/actions?query=workflow%3A%22ci%22)
+[![ci](https://github.com/waitingsong/midway-components/actions/workflows/nodejs.yml/badge.svg
+)](https://github.com/waitingsong/midway-components/actions)
 [![codecov](https://codecov.io/gh/waitingsong/midway-components/branch/main/graph/badge.svg?token=lbfTIGwu6t)](https://codecov.io/gh/waitingsong/midway-components)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lernajs.io/)
