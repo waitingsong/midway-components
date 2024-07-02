@@ -138,3 +138,6 @@ export interface RouterInfoLite {
    */
   fullUrlFlattenString: string
 }
+
+export type MiddlewareResolve = (ctx: Context, next: NextFunction) => Promise<void>
+
