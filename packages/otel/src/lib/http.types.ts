@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 import type * as http from 'http'
-import type { ClientRequest, get, IncomingMessage, request, ServerResponse, RequestOptions } from 'http'
 import type * as https from 'https'
 import type * as url from 'url'
 
@@ -24,9 +23,9 @@ import type { InstrumentationConfig } from '@opentelemetry/instrumentation'
 
 
 export type IgnoreMatcher = string | RegExp | ((url: string) => boolean)
-export type HttpCallback = (res: IncomingMessage) => void
-export type RequestFunction = typeof request
-export type GetFunction = typeof get
+export type HttpCallback = (res: http.IncomingMessage) => void
+export type RequestFunction = typeof http.request
+export type GetFunction = typeof http.get
 
 export type HttpCallbackOptional = HttpCallback | undefined
 
@@ -50,21 +49,21 @@ export type ResponseEndArgs =
 
 export type HttpCustomAttributeFunction = (
   span: Span,
-  request: ClientRequest | IncomingMessage,
-  response: IncomingMessage | ServerResponse
+  request: http.ClientRequest | http.IncomingMessage,
+  response: http.IncomingMessage | http.ServerResponse
 ) => void
 
-export type IgnoreIncomingRequestFunction = (request: IncomingMessage) => boolean
+export type IgnoreIncomingRequestFunction = (request: http.IncomingMessage) => boolean
 
-export type IgnoreOutgoingRequestFunction = (request: RequestOptions) => boolean
+export type IgnoreOutgoingRequestFunction = (request: http.RequestOptions) => boolean
 
-export type HttpRequestCustomAttributeFunction = (span: Span, request: ClientRequest | IncomingMessage) => void
+export type HttpRequestCustomAttributeFunction = (span: Span, request: http.ClientRequest | http.IncomingMessage) => void
 
-export type HttpResponseCustomAttributeFunction = (span: Span, response: IncomingMessage | ServerResponse) => void
+export type HttpResponseCustomAttributeFunction = (span: Span, response: http.IncomingMessage | http.ServerResponse) => void
 
-export type StartIncomingSpanCustomAttributeFunction = (request: IncomingMessage) => Attributes
+export type StartIncomingSpanCustomAttributeFunction = (request: http.IncomingMessage) => Attributes
 
-export type StartOutgoingSpanCustomAttributeFunction = (request: RequestOptions) => Attributes
+export type StartOutgoingSpanCustomAttributeFunction = (request: http.RequestOptions) => Attributes
 
 /**
  * Options available for the HTTP instrumentation (see [documentation](https://github.com/open-telemetry/opentelemetry-js/tree/main/packages/opentelemetry-instrumentation-http#http-instrumentation-options))
