@@ -41,10 +41,10 @@ export async function retrieveTraceInfoFromRemote(traceId: string, expectSpanNum
     })
 
   for (let i = 0; i < 30; i += 1) {
-    if ([401, 404, 500].includes(resp.status)) {
-      console.warn(`resp.status: ${resp.status}, retry traceId...  "${tracePath}"`)
-      continue
-    }
+    assert(resp.status !== 401, `Expect not 401, trace: "${tracePath}"`)
+    assert(resp.status !== 404, `Expect not 404, trace: "${tracePath}"`)
+    assert(resp.status !== 500, `Expect not 500, trace: "${tracePath}"`)
+
     if (resp.status === 200 && resp.data) { break }
     /* c8 ignore start */
     const { data } = resp.data as { data: [JaegerTraceInfo] }
