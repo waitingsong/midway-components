@@ -58,6 +58,7 @@ jobs:
           locale -a
           netstat -tunpl
           dig jaeger
+          curl http://jaeger:16686/
           export cwd=`pwd`
           git config --global --add safe.directory $cwd
 
