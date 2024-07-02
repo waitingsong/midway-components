@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import assert from 'node:assert/strict'
 
-import { CacheMetaType } from '##/index.js'
+import type { CacheMetaType } from '##/index.js'
 
 
 export function validateRespOK(resp: any): void {

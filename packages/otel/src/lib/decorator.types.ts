@@ -11,7 +11,7 @@ import type {
 } from '@opentelemetry/api'
 import type { MethodTypeUnknown } from '@waiting/shared-types'
 
-import { AbstractOtelComponent, AbstractTraceService } from './abstract.js'
+import type { AbstractOtelComponent, AbstractTraceService } from './abstract.js'
 
 
 export type TraceOptions<M extends MethodTypeUnknown | undefined = undefined> = Partial<TraceDecoratorOptions<M>> | string
@@ -48,13 +48,13 @@ export interface TraceDecoratorOptions<
     [MParamType, DecoratorContext<MThis>], // input args
     DecoratorTraceDataResp | DecoratorTraceDataRespAsync, // output data
     ThisParameterType<M> // this
-    > | undefined
+  > | undefined
 
   after: MethodTypeUnknown<
     [MParamType, Awaited<MResultType>, DecoratorContext<MThis>], // input args
     DecoratorTraceDataResp | DecoratorTraceDataRespAsync, // output data
     ThisParameterType<M> // this
-    > | undefined
+  > | undefined
 
   /**
    * @default true

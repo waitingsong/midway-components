@@ -6,19 +6,19 @@ export { JwtComponent } from './component.js'
 export * from './decorator.public/index.decorator.js'
 
 export {
-  Config as JwtConfig,
+  type Config as JwtConfig,
   ConfigKey as JwtConfigKey,
-  MiddlewareConfig as JwtMiddlewareConfig,
-  MiddlewareOptions as JwtMiddlewareOptions,
+  type MiddlewareConfig as JwtMiddlewareConfig,
+  type MiddlewareOptions as JwtMiddlewareOptions,
   Msg as JwtMsg,
 
-  JwtPayload,
-  JwtResult,
-  JwtState,
-  PassthroughCallback,
-  RedirectURL,
-  VerifySecret,
-  VerifyOpts,
+  type JwtPayload,
+  type JwtResult,
+  type JwtState,
+  type PassthroughCallback,
+  type RedirectURL,
+  type VerifySecret,
+  type VerifyOpts,
 } from './types.js'
 
 

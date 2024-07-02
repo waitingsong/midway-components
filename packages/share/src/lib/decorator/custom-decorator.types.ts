@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
-import {
-  MethodDecoratorOptions,
-  REQUEST_OBJ_CTX_KEY,
-} from '@midwayjs/core'
-import { MethodTypeUnknown } from '@waiting/shared-types'
+import type { MethodDecoratorOptions, REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
+import type { MethodTypeUnknown } from '@waiting/shared-types'
 
-import { Application, Context } from '../types.js'
+import type { Application, Context } from '../types.js'
 
 
 /**

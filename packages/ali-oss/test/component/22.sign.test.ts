@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-import { SignOptions } from '../../src/index.js'
+import type { SignOptions } from '../../src/index.js'
 import { cloudUrlPrefix, src, testConfig } from '../root.config.js'
 
 

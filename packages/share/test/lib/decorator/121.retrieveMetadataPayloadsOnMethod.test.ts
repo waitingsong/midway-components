@@ -2,7 +2,8 @@ import assert from 'node:assert/strict'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-import { DecoratorMetaDataPayload, retrieveMetadataPayloadsOnMethod } from '##/index.js'
+import { retrieveMetadataPayloadsOnMethod } from '##/index.js'
+import type { DecoratorMetaDataPayload } from '##/index.js'
 
 import {
   CacheableArgs,

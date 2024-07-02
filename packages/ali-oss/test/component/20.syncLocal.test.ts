@@ -4,7 +4,7 @@ import { join } from 'node:path'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-import { SyncOptions } from '../../src/index.js'
+import type { SyncOptions } from '../../src/index.js'
 import { assertLocalFileExists } from '../helper.js'
 import { cloudUrlPrefix, files, srcDir, testConfig, testDir } from '../root.config.js'
 

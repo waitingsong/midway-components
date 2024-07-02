@@ -1,16 +1,12 @@
 
-import {
-  Config,
-  ConfigKey,
-  MiddlewareConfig,
-} from './lib/types.js'
+import type { Config, ConfigKey, MiddlewareConfig } from './lib/types.js'
 
 
 export { AutoConfiguration as Configuration } from './configuration.js'
 export * from './app/index.controller.js'
 export * from './lib/index.js'
 export * from './middleware/index.middleware.js'
-export {
+export type {
   DecodeOptions,
   JwtHeader,
   SignOptions,
@@ -33,7 +29,7 @@ declare module '@midwayjs/koa/dist/interface' {
 } */
 
 
-export {
+export type {
   JsonObject,
   JsonResp,
   JsonType,

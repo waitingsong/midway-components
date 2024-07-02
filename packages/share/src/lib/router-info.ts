@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { MidwayWebRouterService, RouterInfo } from '@midwayjs/core'
+import { MidwayWebRouterService } from '@midwayjs/core'
+import type { RouterInfo } from '@midwayjs/core'
 
 import type { Context, RouterInfoLite } from './types.js'
 

@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable max-lines-per-function */
-import { Attributes, AttrNames, SpanStatusCode, TraceService } from '@mwcp/otel'
+import { AttrNames, SpanStatusCode } from '@mwcp/otel'
+import type { Attributes, TraceService } from '@mwcp/otel'
 import type { Context } from '@mwcp/share'
 import { genISO8601String } from '@waiting/shared-core'
-import {
+import { FnKey, OssClient } from '@yuntools/ali-oss'
+import type {
   CpOptions as AliCpOptions,
   BaseOptions,
   Config as OssConfig,
@@ -12,28 +14,21 @@ import {
   DataDownload,
   DataSign,
   DataStat,
-  FnKey,
-  OssClient,
   ProcessRet,
 } from '@yuntools/ali-oss'
 
-import {
-  InstanceConfig,
-  ConfigKey,
-  MkdirOptions,
-  PathExistsOptions,
-  RmOptions,
-  RmrfOptions,
-  StatOptions,
-  UploadOptions,
-  MvOptions,
+import { ConfigKey } from './types.js'
+import type {
   CpOptions,
-  LinkOptions,
-  SignOptions,
-  SyncLocalOptions,
-  SyncRemoteOptions,
-  QuerySpanInfo,
   DownloadOptions,
+  InstanceConfig,
+  LinkOptions,
+  MkdirOptions, MvOptions,
+  PathExistsOptions,
+  QuerySpanInfo,
+  RmOptions, RmrfOptions,
+  UploadOptions,
+  SignOptions, StatOptions, SyncLocalOptions, SyncRemoteOptions,
 } from './types.js'
 
 

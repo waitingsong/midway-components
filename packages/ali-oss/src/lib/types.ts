@@ -1,7 +1,7 @@
 import type { Span } from '@mwcp/otel'
 import type { BaseConfig } from '@mwcp/share'
 import type { MiddlewareConfig as MWConfig } from '@waiting/shared-types'
-import * as Ali from '@yuntools/ali-oss'
+import type * as Ali from '@yuntools/ali-oss'
 import { Msg as _Msg } from '@yuntools/ali-oss'
 
 

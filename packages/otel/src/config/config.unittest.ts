@@ -5,7 +5,8 @@ import {
   initTracerIgnoreArray,
 } from '##/lib/config.js'
 // import { processCustomFailure } from '##/lib/tracer.js'
-import { Config, InitTraceOptions, MiddlewareConfig, PropagatorList, SpanExporterList } from '##/lib/types.js'
+import { PropagatorList, SpanExporterList } from '##/lib/types.js'
+import type { Config, InitTraceOptions, MiddlewareConfig } from '##/lib/types.js'
 
 
 export const keys = Date.now().toString()

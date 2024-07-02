@@ -1,22 +1,19 @@
 
-import {
-  Config,
-  ConfigKey,
-} from './lib/types.js'
+import type { Config, ConfigKey } from './lib/types.js'
 
 
 export { AutoConfiguration as Configuration } from './configuration.js'
 export * from './app/index.controller.js'
 export * from './lib/index.js'
 export {
-  BaseOptions,
+  type BaseOptions,
   OssClient,
-  ProcessRet,
-  DataBase,
-  DataCp,
-  DataSign,
-  DataStat,
-  Config as OssConfig,
+  type ProcessRet,
+  type DataBase,
+  type DataCp,
+  type DataSign,
+  type DataStat,
+  type Config as OssConfig,
   FnKey,
 } from '@yuntools/ali-oss'
 

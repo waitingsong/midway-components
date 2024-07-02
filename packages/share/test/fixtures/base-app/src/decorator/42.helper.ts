@@ -9,7 +9,7 @@ import {
   DecoratorHandler6,
   DecoratorHandler7,
   DecoratorHandler8,
-  FooArgs,
+
   METHOD_KEY_Foo,
   METHOD_KEY_Foo2,
   METHOD_KEY_Foo3,
@@ -19,6 +19,7 @@ import {
   METHOD_KEY_Foo7,
   METHOD_KEY_Foo8,
 } from './43.decorator-handler.js'
+import type { FooArgs } from './43.decorator-handler.js'
 
 
 export function Foo(options?: Partial<FooArgs>) {

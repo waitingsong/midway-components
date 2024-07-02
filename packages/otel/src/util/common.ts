@@ -11,7 +11,8 @@ import {
 import { sleep } from '@waiting/shared-core'
 
 import { exporterEndpoint } from '##/lib/config.js'
-import { AttrNames, Attributes, JaegerTraceInfo, JaegerTraceInfoSpan } from '##/lib/index.js'
+import { AttrNames } from '##/lib/index.js'
+import type { Attributes, JaegerTraceInfo, JaegerTraceInfoSpan } from '##/lib/index.js'
 
 
 const agent = exporterEndpoint.replace(/:\d+$/u, '')

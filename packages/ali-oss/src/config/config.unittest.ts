@@ -1,5 +1,5 @@
 import { initialConfig } from '../lib/config.js'
-import { Config, ClientKey } from '../lib/types.js'
+import type { Config, ClientKey } from '../lib/types.js'
 
 
 export const keys = Date.now().toString()

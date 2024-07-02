@@ -3,7 +3,8 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import assert from 'node:assert'
 
-import { JoinPoint, REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
+import { REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
+import type { JoinPoint } from '@midwayjs/core'
 
 import type { Context as WebContext } from '../types.js'
 

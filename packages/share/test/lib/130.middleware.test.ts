@@ -2,7 +2,8 @@ import assert from 'node:assert/strict'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-import { Context, MiddlewareConfig, shouldEnableMiddleware } from '##/index.js'
+import { shouldEnableMiddleware } from '##/index.js'
+import type { Context, MiddlewareConfig } from '##/index.js'
 import { testConfig } from '#@/root.config.js'
 
 

@@ -11,7 +11,7 @@ import type {
   TimeInput,
 } from '@opentelemetry/api'
 import type { OTLPGRPCExporterConfigNode as OTLPGRPCExporterConfig } from '@opentelemetry/otlp-grpc-exporter-base'
-import { node } from '@opentelemetry/sdk-node'
+import type { node } from '@opentelemetry/sdk-node'
 import type { MiddlewareConfig as MWConfig, KnownKeys } from '@waiting/shared-types'
 
 import { AttrNames } from './attrnames.types.js'
@@ -19,7 +19,7 @@ import { AttrNames } from './attrnames.types.js'
 
 export type NodeTracerConfig = node.TracerConfig
 export {
-  Attributes, AttrNames, TraceContext,
+  type Attributes, AttrNames, type TraceContext,
 }
 
 

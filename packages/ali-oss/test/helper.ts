@@ -1,10 +1,7 @@
 import assert from 'node:assert'
 import { stat } from 'node:fs/promises'
 
-import {
-  AliOssComponent,
-  DataCp,
-} from '../src/index.js'
+import type { AliOssComponent, DataCp } from '../src/index.js'
 
 
 export async function assertFileExists(

@@ -7,14 +7,15 @@ import type { KnownKeys } from '@waiting/shared-types'
 
 import {
   AttrNames,
-  Config,
+
   HeadersKey,
-  MiddlewareConfig,
-  MiddlewareOptions,
+
+
   PropagatorList,
   SpanExporterList,
-  SpanStatusOptions,
+
 } from './types.js'
+import type { Config, MiddlewareConfig, MiddlewareOptions, SpanStatusOptions } from './types.js'
 
 /**
  * Initial config, contains:
@@ -56,7 +57,7 @@ export const initialMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'ignore' |
   enableMiddleware: true,
 }
 
-export const initTracerIgnoreArray: Readonly<(string | RegExp)[]> = [
+export const initTracerIgnoreArray: readonly (string | RegExp)[] = [
   '/favicon.ico',
   '/favicon.png',
   '/ping',

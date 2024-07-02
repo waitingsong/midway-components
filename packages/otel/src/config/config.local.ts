@@ -3,7 +3,8 @@ import {
   initialMiddlewareConfig,
   initTracerIgnoreArray,
 } from '##/lib/config.js'
-import { Config, MiddlewareConfig, SpanExporterList } from '##/lib/types.js'
+import { SpanExporterList } from '##/lib/types.js'
+import type { Config, MiddlewareConfig } from '##/lib/types.js'
 
 
 export const keys = Date.now().toString()

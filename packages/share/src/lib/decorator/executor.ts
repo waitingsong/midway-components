@@ -6,7 +6,7 @@
 import assert from 'node:assert'
 import { isAsyncFunction, isPromise } from 'node:util/types'
 
-import { JoinPoint, IMethodAspect } from '@midwayjs/core'
+import type { JoinPoint, IMethodAspect } from '@midwayjs/core'
 
 import { ConfigKey } from '../types.js'
 

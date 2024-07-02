@@ -1,6 +1,6 @@
-import { Context } from '@midwayjs/koa'
+import type { Context } from '@midwayjs/koa'
 import { isPathMatchRules } from '@waiting/shared-core'
-import { MiddlewareConfig } from '@waiting/shared-types'
+import type { MiddlewareConfig } from '@waiting/shared-types'
 
 
 /**

@@ -4,7 +4,7 @@ import { fileShortPath } from '@waiting/shared-core'
 
 import { apiBase, apiMethod } from '#@/api-test.js'
 
-import { AliOssComponent } from '../../src/index.js'
+import type { AliOssComponent } from '../../src/index.js'
 import { cloudUrlPrefix, testConfig } from '../root.config.js'
 
 

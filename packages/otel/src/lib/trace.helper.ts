@@ -1,22 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import assert from 'node:assert'
 
-import { DecoratorExecutorParamBase } from '@mwcp/share'
-import { Span, SpanOptions } from '@opentelemetry/api'
+import type { DecoratorExecutorParamBase } from '@mwcp/share'
+import type { Span, SpanOptions } from '@opentelemetry/api'
 
 import type { AbstractTraceService, AbstractOtelComponent } from './abstract.js'
-import {
-  DecoratorContext,
-  TraceDecoratorOptions,
-  TraceScopeType,
-} from './decorator.types.js'
+import type { DecoratorContext, TraceDecoratorOptions, TraceScopeType } from './decorator.types.js'
 import {
   AttrNames,
-  Config,
+
   ConfigKey,
-  TraceContext,
+
   middlewareEnableCacheKey,
 } from './types.js'
+import type { Config, TraceContext } from './types.js'
 
 
 const configNameList = [

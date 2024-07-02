@@ -7,10 +7,10 @@ import {
 } from '@midwayjs/core'
 import { MConfig } from '@mwcp/share'
 
+import { apiBase, apiMethod } from '../types/api-test.js'
 import { Trace, TraceService } from '../types/index.js'
 import { Config, ConfigKey, HeadersKey } from '../types/lib-types.js'
 import { propagateHeader } from '../types/util.js'
-import { apiBase, apiMethod } from '../types/api-test.js'
 
 
 @Controller(apiBase.util)

@@ -8,10 +8,10 @@ import {
 } from '@midwayjs/core'
 import { MConfig } from '@mwcp/share'
 
+import { apiBase, apiMethod } from '../types/api-test.js'
 import { Trace, TraceService } from '../types/index.js'
 import { Config, ConfigKey } from '../types/lib-types.js'
 import { isSpanEnded, deleteSpan, getSpan } from '../types/util.js'
-import { apiBase, apiMethod } from '../types/api-test.js'
 
 
 @Controller(apiBase.util)

@@ -1,16 +1,7 @@
-import {
-  Attributes,
-  Context,
-  Span,
-  SpanOptions,
-  TimeInput,
-} from '@opentelemetry/api'
-import { node } from '@opentelemetry/sdk-node'
+import type { Attributes, Context, Span, SpanOptions, TimeInput } from '@opentelemetry/api'
+import type { node } from '@opentelemetry/sdk-node'
 
-import {
-  AddEventOptions,
-  SpanStatusOptions,
-} from './types.js'
+import type { AddEventOptions, SpanStatusOptions } from './types.js'
 
 
 /** OpenTelemetry Component */

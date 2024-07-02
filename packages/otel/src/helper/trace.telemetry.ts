@@ -1,11 +1,12 @@
-import { TextMapPropagator } from '@opentelemetry/api'
+import type { TextMapPropagator } from '@opentelemetry/api'
 import { CompositePropagator, W3CTraceContextPropagator } from '@opentelemetry/core'
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-grpc'
 import { JaegerPropagator } from '@opentelemetry/propagator-jaeger'
 import { node, resources } from '@opentelemetry/sdk-node'
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions'
 
-import { InitTraceOptions, PropagatorList, SpanExporterList } from '##/lib/types.js'
+import { PropagatorList, SpanExporterList } from '##/lib/types.js'
+import type { InitTraceOptions } from '##/lib/types.js'
 
 import { detectorResources } from './resource.detector.js'
 

@@ -4,9 +4,10 @@ import { SEMATTRS_HTTP_TARGET, SEMATTRS_HTTP_ROUTE } from '@opentelemetry/semant
 import { fileShortPath } from '@waiting/shared-core'
 
 import {
-  AssertsOptions, assertsSpan, assertRootSpan,
+  assertsSpan, assertRootSpan,
   retrieveTraceInfoFromRemote, sortSpans,
 } from '##/index.js'
+import type { AssertsOptions } from '##/index.js'
 import { apiBase, apiMethod } from '#@/api-test.js'
 import { testConfig } from '#@/root.config.js'
 

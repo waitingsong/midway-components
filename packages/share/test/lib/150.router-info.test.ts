@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-import { getRouterInfo } from '##/index.js'
+import type { getRouterInfo } from '##/index.js'
 import { apiBase, apiMethod } from '#@/api-test.js'
 import { RespData, TestRespBody, testConfig } from '#@/root.config.js'
 

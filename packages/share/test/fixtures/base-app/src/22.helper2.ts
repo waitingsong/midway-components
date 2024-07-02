@@ -1,6 +1,6 @@
 import assert from 'node:assert'
 
-import { MethodTypeUnknown } from '@waiting/shared-types'
+import type { MethodTypeUnknown } from '@waiting/shared-types'
 
 import {
   DecoratorHandler,
@@ -10,7 +10,7 @@ import {
   DecoratorHandlerNumber,
   DecoratorHandlerRequest,
 } from './decorator-handler.js'
-import { CacheableArgs } from './helper.js'
+import type { CacheableArgs } from './helper.js'
 import { customDecoratorFactory } from './types/index.js'
 
 

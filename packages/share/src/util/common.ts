@@ -1,6 +1,6 @@
-import { MidwayWebRouterService } from '@midwayjs/core'
+import type { MidwayWebRouterService } from '@midwayjs/core'
 import { isPathMatchRules } from '@waiting/shared-core'
-import { MiddlewareConfig } from '@waiting/shared-types'
+import type { MiddlewareConfig } from '@waiting/shared-types'
 
 import type { Application } from '../lib/types.js'
 

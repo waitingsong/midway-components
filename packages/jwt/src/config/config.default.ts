@@ -5,7 +5,7 @@ import {
   initMiddlewareOptions,
   initPathArray,
 } from '##/lib/config.js'
-import { Config, MiddlewareConfig } from '##/lib/types.js'
+import type { Config, MiddlewareConfig } from '##/lib/types.js'
 
 
 export const koa = {

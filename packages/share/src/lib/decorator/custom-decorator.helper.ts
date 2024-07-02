@@ -10,11 +10,7 @@ import {
 } from '@midwayjs/core'
 import deepmerge from 'deepmerge'
 
-import {
-  DecoratorMetaData,
-  DecoratorMetaDataPayload,
-  InstanceWithDecorator,
-} from './custom-decorator.types.js'
+import type { DecoratorMetaData, DecoratorMetaDataPayload, InstanceWithDecorator } from './custom-decorator.types.js'
 
 
 export function methodHasDecorated(

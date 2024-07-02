@@ -3,7 +3,7 @@ import { join } from 'node:path'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-import { SyncOptions } from '../../src/index.js'
+import type { SyncOptions } from '../../src/index.js'
 import { assertFileExists, assertUploadFiles } from '../helper.js'
 import { cloudUrlPrefix, files, src, srcDir, testConfig, TestRespBody } from '../root.config.js'
 

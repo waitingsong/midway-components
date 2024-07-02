@@ -3,7 +3,7 @@ import assert from 'assert/strict'
 import { fileShortPath } from '@waiting/shared-core'
 
 import { JwtComponent } from '##/index.js'
-import { Config } from '##/lib/types.js'
+import type { Config } from '##/lib/types.js'
 import {
   payload1,
   token1,

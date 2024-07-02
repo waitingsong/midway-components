@@ -2,7 +2,8 @@ import assert from 'node:assert/strict'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-import { GenTraceScopeOptions, genTraceScope } from '##/lib/decorator.helper.js'
+import { genTraceScope } from '##/lib/decorator.helper.js'
+import type { GenTraceScopeOptions } from '##/lib/decorator.helper.js'
 
 
 describe(fileShortPath(import.meta.url), function () {

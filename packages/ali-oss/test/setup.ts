@@ -5,14 +5,15 @@ import { rm } from 'node:fs/promises'
 import { join } from 'node:path'
 
 import { createApp, close, createHttpRequest } from '@midwayjs/mock'
-import { Application } from '@mwcp/share'
+import type { Application } from '@mwcp/share'
 import type { Suite } from 'mocha'
 
 
 import { AliOssManager } from '##/index.js'
 import { ClientKey } from '##/lib/types.js'
 
-import { TestConfig, testConfig, cloudUrlPrefix, testDir } from './root.config.js'
+import { testConfig, cloudUrlPrefix, testDir } from './root.config.js'
+import type { TestConfig } from './root.config.js'
 
 
 let app: Application

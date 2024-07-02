@@ -1,19 +1,19 @@
 
 export * from './config.js'
 export {
-  Config as CacheManagerConfig,
+  type Config as CacheManagerConfig,
   ConfigKey as CacheConfigKey,
 
-  KeyGenerator,
-  DataWithCacheMeta,
-  CacheableArgs,
-  CacheEvictArgs,
+  type KeyGenerator,
+  type DataWithCacheMeta,
+  type CacheableArgs,
+  type CacheEvictArgs,
 
-  CacheMetaType,
-  CachedResponse,
-  WriteCacheConditionFn as CacheConditionFn,
+  type CacheMetaType,
+  type CachedResponse,
+  type WriteCacheConditionFn as CacheConditionFn,
 
-  DecoratorExecutorOptions,
+  type DecoratorExecutorOptions,
 } from './types.js'
 
 export * from './cacheable/index.decorator.js'

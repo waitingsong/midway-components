@@ -5,9 +5,10 @@ import { fileShortPath } from '@waiting/shared-core'
 
 import {
   HeadersKey, AttrNames,
-  AssertsOptions, assertsSpan, assertRootSpan,
+  assertsSpan, assertRootSpan,
   retrieveTraceInfoFromRemote, sortSpans,
 } from '##/index.js'
+import type { AssertsOptions } from '##/index.js'
 import { apiBase, apiMethod } from '#@/api-test.js'
 import { testConfig } from '#@/root.config.js'
 

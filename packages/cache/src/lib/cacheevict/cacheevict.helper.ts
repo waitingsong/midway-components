@@ -1,8 +1,9 @@
 import assert from 'assert'
 
 import { initCacheEvictArgs } from '../config.js'
-import { computerWriteConditionValue, deleteData, genCacheKey, GenCacheKeyOptions } from '../helper.js'
-import { CacheEvictArgs, DecoratorExecutorOptions } from '../types.js'
+import { computerWriteConditionValue, deleteData, genCacheKey } from '../helper.js'
+import type { GenCacheKeyOptions } from '../helper.js'
+import type { CacheEvictArgs, DecoratorExecutorOptions } from '../types.js'
 
 
 export async function before(options: DecoratorExecutorOptions<CacheEvictArgs>): Promise<void> {

@@ -9,11 +9,11 @@ import type { Context as KoaCtx, Application } from '@midwayjs/koa'
 import type { MiddlewareConfig as MWConfig } from '@waiting/shared-types'
 
 
-export {
+export type {
   JsonResp, JsonObject, JsonType, PlainJsonValue,
 } from '@waiting/shared-types'
 
-export {
+export type {
   Application,
   IMidwayApplication,
   IMidwayContainer,

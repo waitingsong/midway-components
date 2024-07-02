@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { fileShortPath } from '@waiting/shared-core'
 
 import { methodHasDecorated } from '##/index.js'
-import { DecoratorMetaData } from '##/lib/decorator/custom-decorator.types.js'
+import type { DecoratorMetaData } from '##/lib/decorator/custom-decorator.types.js'
 
 import { METHOD_KEY_Cacheable } from './110.helper.js'
 

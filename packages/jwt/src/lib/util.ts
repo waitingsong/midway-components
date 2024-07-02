@@ -1,12 +1,8 @@
 import assert from 'assert'
 import { KeyObject } from 'crypto'
 
-import {
-  Msg,
-  Config,
-  JwtPayload,
-  JwtToken,
-} from './types.js'
+import { Msg } from './types.js'
+import type { Config, JwtPayload, JwtToken } from './types.js'
 
 
 export function validateTokenString(input: JwtToken): void {

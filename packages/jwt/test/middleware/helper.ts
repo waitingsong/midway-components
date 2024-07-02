@@ -1,10 +1,8 @@
 import assert from 'assert/strict'
 
-import {
-  JwtMsg,
-  JwtState,
-} from '##/index.js'
-import { TestResponse, RespData2 } from '#@/root.config.js'
+import { JwtMsg } from '##/index.js'
+import type { JwtState } from '##/index.js'
+import type { TestResponse, RespData2 } from '#@/root.config.js'
 
 
 export function authShouldPassed(

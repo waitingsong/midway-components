@@ -7,12 +7,13 @@ import {
   computerTTLValue,
   computerWriteConditionValue,
   genCacheKey,
-  GenCacheKeyOptions,
+
   genDataWithCacheMeta,
   getData,
   saveData,
 } from '../helper.js'
-import { CachedResponse, CacheableArgs, DecoratorExecutorOptions } from '../types.js'
+import type { GenCacheKeyOptions } from '../helper.js'
+import type { CachedResponse, CacheableArgs, DecoratorExecutorOptions } from '../types.js'
 
 
 export async function before(options: DecoratorExecutorOptions<CacheableArgs<undefined>>): Promise<void> {

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { fileShortPath } from '@waiting/shared-core'
 
 import { exporterEndpoint } from '##/lib/config.js'
-import { Config } from '##/lib/types.js'
+import type { Config } from '##/lib/types.js'
 import { apiBase, apiMethod } from '#@/api-test.js'
 import { testConfig } from '#@/root.config.js'
 

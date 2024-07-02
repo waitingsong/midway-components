@@ -2,20 +2,14 @@
 import assert from 'node:assert'
 import { isAsyncFunction } from 'node:util/types'
 
-import { IMethodAspect, MidwayDecoratorService } from '@midwayjs/core'
-import { MethodTypeUnknown } from '@waiting/shared-types'
+import type { IMethodAspect, MidwayDecoratorService } from '@midwayjs/core'
+import type { MethodTypeUnknown } from '@waiting/shared-types'
 
-import { Application } from '../types.js'
+import type { Application } from '../types.js'
 
 import { customDecoratorRegMap } from './custom-decorator-factory.js'
 import { mergeDecoratorMetaDataPayload, retrieveMetadataPayloadsOnClass } from './custom-decorator.helper.js'
-import {
-  DecoratorHandlerBase,
-  AopCallbackInputArgsType,
-  DecoratorMetaDataPayload,
-  DecoratorExecutorParamBase,
-  InstanceWithDecorator,
-} from './custom-decorator.types.js'
+import type { DecoratorHandlerBase, AopCallbackInputArgsType, DecoratorMetaDataPayload, DecoratorExecutorParamBase, InstanceWithDecorator } from './custom-decorator.types.js'
 import { genExecuteDecoratorHandlerAsync, genExecuteDecoratorHandlerSync } from './executor.js'
 
 

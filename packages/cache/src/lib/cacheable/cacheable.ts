@@ -6,7 +6,7 @@ import {
   METHOD_KEY_CacheEvict,
   METHOD_KEY_CachePut,
 } from '../config.js'
-import { CacheableArgs } from '../types.js'
+import type { CacheableArgs } from '../types.js'
 
 import { DecoratorHandlerCacheable } from './cacheable.handler.js'
 

@@ -1,9 +1,5 @@
-import {
-  CacheMetaType,
-  CachedResponse,
-  ConfigKey,
-  DataWithCacheMeta,
-} from '##/lib/types.js'
+import { ConfigKey } from '##/lib/types.js'
+import type { CacheMetaType, CachedResponse, DataWithCacheMeta } from '##/lib/types.js'
 
 
 /**

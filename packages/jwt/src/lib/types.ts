@@ -1,12 +1,6 @@
 import type { Context } from '@mwcp/share'
-import { MiddlewareConfig as MWConfig, JsonObject } from '@waiting/shared-types'
-import {
-  DecodeOptions,
-  JwtHeader,
-  SignOptions,
-  Secret,
-  VerifyOptions,
-} from 'jsonwebtoken'
+import type { MiddlewareConfig as MWConfig, JsonObject } from '@waiting/shared-types'
+import type { DecodeOptions, JwtHeader, SignOptions, Secret, VerifyOptions } from 'jsonwebtoken'
 
 
 export enum ConfigKey {

@@ -6,11 +6,12 @@ import { jwtConfig } from '##/config/config.unittest.js'
 import { JwtComponent } from '##/index.js'
 import {
   payload1,
-  PayloadSig1,
-  PayloadExt1,
+
+
   signature1,
   token1,
 } from '#@/mock-data.js'
+import type { PayloadSig1, PayloadExt1 } from '#@/mock-data.js'
 import { testConfig } from '#@/root.config.js'
 
 

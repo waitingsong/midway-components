@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CachingFactory, CacheManagerOptions } from '@midwayjs/cache-manager'
+import type { CachingFactory, CacheManagerOptions } from '@midwayjs/cache-manager'
 import type { AbstractTraceService } from '@mwcp/otel'
-import { Context, DecoratorExecutorParamBase } from '@mwcp/share'
+import type { Context, DecoratorExecutorParamBase } from '@mwcp/share'
 import type { MethodType, MiddlewareConfig as MWConfig } from '@waiting/shared-types'
 
 

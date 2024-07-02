@@ -4,7 +4,7 @@ import {
   initOtlpGrpcExporterConfig,
   initTracerIgnoreArray,
 } from '##/lib/config.js'
-import { Config, InitTraceOptions, MiddlewareConfig } from '##/lib/types.js'
+import type { Config, InitTraceOptions, MiddlewareConfig } from '##/lib/types.js'
 
 
 export const koa = {

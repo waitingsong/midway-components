@@ -30,30 +30,30 @@ export {
 } from './util.js'
 
 export {
-  Config as OtelConfig,
+  type Config as OtelConfig,
   ConfigKey as OtelConfigKey,
-  MiddlewareConfig as OtelMiddlewareConfig,
-  MiddlewareOptions as OtelMiddlewareOptions,
+  type MiddlewareConfig as OtelMiddlewareConfig,
+  type MiddlewareOptions as OtelMiddlewareOptions,
   Msg as TracerMsg,
 
-  Attributes,
-  AddEventOptions,
-  AttributesMap,
+  type Attributes,
+  type AddEventOptions,
+  type AttributesMap,
   HeadersKey,
-  InitTraceOptions,
-  JaegerTraceInfo,
-  JaegerTraceInfoSpan,
-  JaegerTraceInfoReferences,
-  JaegerTraceInfoLog,
-  JaegerTraceInfoLogField,
+  type InitTraceOptions,
+  type JaegerTraceInfo,
+  type JaegerTraceInfoSpan,
+  type JaegerTraceInfoReferences,
+  type JaegerTraceInfoLog,
+  type JaegerTraceInfoLogField,
   SpanExporterList,
-  SpanHeaderInit,
-  SpanStatusOptions,
-  TraceError,
-  TraceLogType as LogInfo,
+  type SpanHeaderInit,
+  type SpanStatusOptions,
+  type TraceError,
+  type TraceLogType as LogInfo,
 } from './types.js'
 
-export {
+export type {
   DecoratorContext,
   DecoratorTraceData,
   DecoratorTraceDataResp,

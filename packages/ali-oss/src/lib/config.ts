@@ -1,8 +1,4 @@
-import {
-  InstanceConfig,
-  MiddlewareConfig,
-  MiddlewareOptions,
-} from './types.js'
+import type { InstanceConfig, MiddlewareConfig, MiddlewareOptions } from './types.js'
 
 
 export const initialConfig: Readonly<InstanceConfig> = {

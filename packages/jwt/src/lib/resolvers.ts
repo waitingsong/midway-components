@@ -3,7 +3,7 @@
 import type { Context } from '@mwcp/share'
 
 import { schemePrefix } from './config.js'
-import { JwtToken, JwtAuthenticateOptions } from './types.js'
+import type { JwtToken, JwtAuthenticateOptions } from './types.js'
 
 
 /**

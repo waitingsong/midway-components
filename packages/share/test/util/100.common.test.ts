@@ -2,7 +2,8 @@ import assert from 'node:assert/strict'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-import { MiddlewareConfig, requestPathMatched } from '##/index.js'
+import { requestPathMatched } from '##/index.js'
+import type { MiddlewareConfig } from '##/index.js'
 
 
 describe(fileShortPath(import.meta.url), () => {

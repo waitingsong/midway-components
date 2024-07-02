@@ -4,7 +4,7 @@
 import assert from 'node:assert/strict'
 
 import { retrieveCacheMetaFrom } from './types/index.js'
-import { CachedResponse, DataWithCacheMeta } from './types/lib-types.js'
+import type { CachedResponse, DataWithCacheMeta } from './types/lib-types.js'
 
 
 export function validateMeta(

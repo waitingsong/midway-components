@@ -1,5 +1,5 @@
 import { initialConfig } from '../lib/config.js'
-import { Config } from '../lib/types.js'
+import type { Config } from '../lib/types.js'
 
 
 export const koa = {

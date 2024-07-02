@@ -1,23 +1,25 @@
 import assert from 'node:assert'
 import { createHash } from 'node:crypto'
 
-import { MidwayUnionCache } from '@midwayjs/cache-manager'
+import type { MidwayUnionCache } from '@midwayjs/cache-manager'
 import { REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
-import { AbstractTraceService, OtelConfigKey } from '@mwcp/otel'
-import { DecoratorExecutorParamBase, PagingDTO, Context as WebContext } from '@mwcp/share'
+import { OtelConfigKey } from '@mwcp/otel'
+import type { AbstractTraceService } from '@mwcp/otel'
+import type { DecoratorExecutorParamBase, PagingDTO, Context as WebContext } from '@mwcp/share'
 
 import { initCacheableArgs, initCacheEvictArgs, initCacheManagerOptions } from './config.js'
 import {
-  CacheableArgs,
-  CachedResponse,
-  CacheEvictArgs,
-  CacheTTLFn,
+
+
+
+
   ConfigKey,
-  DataWithCacheMeta,
-  DecoratorExecutorOptions,
-  GenDecoratorExecutorOptionsExt,
+
+
+
   Msg,
 } from './types.js'
+import type { CacheableArgs, CachedResponse, CacheEvictArgs, CacheTTLFn, DataWithCacheMeta, DecoratorExecutorOptions, GenDecoratorExecutorOptionsExt } from './types.js'
 
 
 export interface GenCacheKeyOptions {

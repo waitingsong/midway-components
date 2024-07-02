@@ -15,22 +15,12 @@
  * limitations under the License.
  */
 import type * as http from 'http'
-import {
-  ClientRequest,
-  get,
-  IncomingMessage,
-  request,
-  ServerResponse,
-  RequestOptions,
-} from 'http'
+import type { ClientRequest, get, IncomingMessage, request, ServerResponse, RequestOptions } from 'http'
 import type * as https from 'https'
-import * as url from 'url'
+import type * as url from 'url'
 
-import {
-  Span,
-  Attributes,
-} from '@opentelemetry/api'
-import { InstrumentationConfig } from '@opentelemetry/instrumentation'
+import type { Span, Attributes } from '@opentelemetry/api'
+import type { InstrumentationConfig } from '@opentelemetry/instrumentation'
 
 
 export type IgnoreMatcher = string | RegExp | ((url: string) => boolean)

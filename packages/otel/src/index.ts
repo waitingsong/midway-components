@@ -1,10 +1,4 @@
-import {
-  Config,
-  ConfigKey,
-  InitTraceOptions,
-  MiddlewareConfig,
-  middlewareEnableCacheKey,
-} from './lib/types.js'
+import type { Config, ConfigKey, InitTraceOptions, MiddlewareConfig, middlewareEnableCacheKey } from './lib/types.js'
 
 
 export { AutoConfiguration as Configuration } from './configuration.js'
@@ -13,14 +7,14 @@ export * from './lib/index.js'
 export * from './middleware/index.middleware.js'
 export * from './util/common.js'
 export {
-  Attributes,
-  AttributeValue,
-  Context,
-  Context as TraceContext,
-  Span,
+  type Attributes,
+  type AttributeValue,
+  type Context,
+  type Context as TraceContext,
+  type Span,
   SpanKind,
-  SpanContext,
-  SpanOptions,
+  type SpanContext,
+  type SpanOptions,
   SpanStatusCode,
 } from '@opentelemetry/api'
 

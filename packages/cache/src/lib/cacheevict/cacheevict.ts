@@ -2,7 +2,7 @@ import { customDecoratorFactory } from '@mwcp/share'
 import type { MethodType } from '@waiting/shared-types'
 
 import { METHOD_KEY_CacheEvict } from '../config.js'
-import { CacheEvictArgs } from '../types.js'
+import type { CacheEvictArgs } from '../types.js'
 
 import { DecoratorHandlerCacheEvict } from './cacheevict.handler.js'
 

@@ -4,17 +4,10 @@ import { isPromise } from 'node:util/types'
 import type { Span } from '@opentelemetry/api'
 
 import type { AbstractOtelComponent, AbstractTraceService } from './abstract.js'
-import {
-  TraceScopeType,
-  TraceScopeParamType,
-  type DecoratorContext,
-  type DecoratorContextBase,
-  type DecoratorTraceDataResp,
-  type ScopeGenerator,
-  type TraceDecoratorOptions,
-} from './decorator.types.js'
-import { DecoratorExecutorParam } from './trace.helper.js'
-import { AttrNames, Attributes } from './types.js'
+import type { TraceScopeType, TraceScopeParamType, DecoratorContext, DecoratorContextBase, DecoratorTraceDataResp, ScopeGenerator, TraceDecoratorOptions } from './decorator.types.js'
+import type { DecoratorExecutorParam } from './trace.helper.js'
+import { AttrNames } from './types.js'
+import type { Attributes } from './types.js'
 import { isSpanEnded } from './util.js'
 
 

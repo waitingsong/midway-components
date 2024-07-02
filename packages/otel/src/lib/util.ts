@@ -6,16 +6,18 @@ import type {
   OutgoingMessage,
 } from 'node:http'
 
-import { Context as WebContext, getRouterInfo } from '@mwcp/share'
+import { getRouterInfo } from '@mwcp/share'
+import type { Context as WebContext } from '@mwcp/share'
 import {
-  Attributes,
-  Span,
+
+
   SpanStatusCode,
   SpanKind,
   propagation,
-  Context,
+
   createContextKey,
 } from '@opentelemetry/api'
+import type { Attributes, Span, Context } from '@opentelemetry/api'
 import {
   NETTRANSPORTVALUES_IP_TCP,
   NETTRANSPORTVALUES_IP_UDP,
@@ -38,7 +40,8 @@ import {
 } from '@opentelemetry/semantic-conventions'
 import type { Headers as UndiciHeaders } from 'undici'
 
-import { AttrNames, Config } from './types.js'
+import { AttrNames } from './types.js'
+import type { Config } from './types.js'
 
 
 const defaultProperty: PropertyDescriptor = {

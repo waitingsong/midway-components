@@ -5,7 +5,7 @@ import { fileShortPath } from '@waiting/shared-core'
 import { apiBase, apiMethod } from '#@/api-test.js'
 import { testConfig } from '#@/root.config.js'
 
-import { CacheRet } from '../decorator.helper.js'
+import type { CacheRet } from '../decorator.helper.js'
 
 
 describe(fileShortPath(import.meta.url), function () {

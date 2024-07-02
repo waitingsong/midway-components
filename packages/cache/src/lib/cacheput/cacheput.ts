@@ -2,7 +2,7 @@ import { customDecoratorFactory } from '@mwcp/share'
 import type { MethodType } from '@waiting/shared-types'
 
 import { METHOD_KEY_CachePut } from '../config.js'
-import { CacheableArgs } from '../types.js'
+import type { CacheableArgs } from '../types.js'
 
 import { DecoratorHandlerCachePut } from './cacheput.handler.js'
 

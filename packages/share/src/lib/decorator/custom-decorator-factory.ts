@@ -10,7 +10,7 @@ import {
   saveModule,
   Provide,
 } from '@midwayjs/core'
-import { MethodTypeUnknown } from '@waiting/shared-types'
+import type { MethodTypeUnknown } from '@waiting/shared-types'
 
 import {
   methodHasDecorated,
