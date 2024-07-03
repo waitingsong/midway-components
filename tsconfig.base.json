@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "${configDir}",
     "declaration": true,
     "declarationMap": true,
     "emitDecoratorMetadata": true,
@@ -9,6 +9,7 @@
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
+    "isolatedDeclarations": true,
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "newLine": "lf",
@@ -27,6 +28,7 @@
     "preserveConstEnums": true,
     "pretty": true,
     "resolveJsonModule": true,
+    "rootDir": "${configDir}/src",
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
@@ -34,17 +36,18 @@
     "stripInternal": true,
     "target": "ES2022",
     "tsBuildInfoFile": ".tsbuildinfo",
-    "types" : ["mocha", "node"]
+    "types" : ["mocha", "node"],
+    "verbatimModuleSyntax": true
   },
   "include": [
-    "src/**/*.ts"
+    "${configDir}/src/**/*.ts"
   ],
   "exclude": [
-    "asset",
-    "app/public",
-    "app/views",
-    "dist",
-    "fixtures",
+    "${configDir}/asset",
+    "${configDir}/app/public",
+    "${configDir}/app/views",
+    "${configDir}/dist",
+    "${configDir}/fixtures",
     "node_modules*",
     "**/*.d.ts",
     "**/*.spec.ts"
