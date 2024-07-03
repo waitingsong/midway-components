@@ -85,7 +85,6 @@ export class OtelComponent extends AbstractOtelComponent {
   /* request|response -> Map<lower,norm> */
   readonly captureHeadersMap = new Map<string, Map<string, string>>()
   // ref: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap
-  // @ts-expect-error non-registered symbols can be used as keys
   readonly traceContextMap = new WeakMap<object | symbol, Context[]>()
 
   protected traceProvider: node.NodeTracerProvider | undefined
