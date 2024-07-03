@@ -5,6 +5,8 @@ import {
   App,
   Configuration,
   Inject,
+  type ILifeCycle,
+  type ILogger,
   Logger,
   MidwayDecoratorService,
   MidwayEnvironmentService,
