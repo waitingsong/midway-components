@@ -3,7 +3,8 @@ import { isAsyncFunction } from 'util/types'
 
 import { ConfigKey } from '@mwcp/share'
 
-import { genTraceScopeFrom, processDecoratorBeforeAfterSync } from '../decorator.helper.js'
+import { genTraceScopeFrom } from '../decorator.helper.js'
+import { processDecoratorBeforeAfterSync } from '../decorator.helper.sync.js'
 import type { DecoratorExecutorParam } from '../trace.helper.js'
 import { AttrNames } from '../types.js'
 
@@ -32,16 +33,6 @@ export function beforeSync(options: DecoratorExecutorParam): void {
   const scope = genTraceScopeFrom(options)
 
   if (startActiveSpan) {
-    // traceService.startActiveSpan(
-    //   spanName,
-    //   (span: Span) => {
-    //     options.span = span
-    //     options.span.setAttributes(callerAttr)
-    //     processDecoratorBeforeAfterSync(type, options)
-    //   },
-    //   spanOptions,
-    //   traceContext,
-    // )
     options.span = traceService.startScopeActiveSpan({ name: spanName, spanOptions, traceContext, scope })
     options.span.setAttributes(callerAttr)
     processDecoratorBeforeAfterSync(type, options)
@@ -56,7 +47,6 @@ export function beforeSync(options: DecoratorExecutorParam): void {
   }
 }
 
-
 export function afterReturnSync(options: DecoratorExecutorParam): unknown {
   const { span, traceService } = options
 
@@ -67,11 +57,21 @@ export function afterReturnSync(options: DecoratorExecutorParam): unknown {
   if (! span || ! traceService) {
     return options.methodResult
   }
-  processDecoratorBeforeAfterSync('after', options)
+  const type = 'after'
+  processDecoratorBeforeAfterSync(type, options)
 
   const autoEndSpan = !! options.mergedDecoratorParam?.autoEndSpan
   autoEndSpan && traceService.endSpan(span)
 
   return options.methodResult
+}
+
+export function afterThrowSync(options: DecoratorExecutorParam): void {
+  const { span, traceService } = options
+  if (! span || ! traceService) { return }
+
+  assert(options.error, `[@mwcp/${ConfigKey.namespace}] options.error is undefined in afterThrowAsync().`)
+  const type = 'afterThrow'
+  processDecoratorBeforeAfterSync(type, options)
 }
 

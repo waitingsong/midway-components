@@ -56,6 +56,13 @@ export interface TraceDecoratorOptions<
     ThisParameterType<M> // this
   > | undefined
 
+  afterThrow: MethodTypeUnknown<
+    [MParamType, Error, DecoratorContext<MThis>], // input args
+    DecoratorTraceDataResp | DecoratorTraceDataRespAsync, // output data
+    ThisParameterType<M> // this
+  > | undefined
+
+
   /**
    * @default true
    */

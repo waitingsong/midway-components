@@ -24,12 +24,12 @@ import { AbstractTraceService, StartScopeActiveSpanOptions } from './abstract.js
 import { OtelComponent } from './component.js'
 import { initSpanStatusOptions } from './config.js'
 import {
-  AddEventOptions,
+  type AddEventOptions,
+  type Config,
+  type MiddlewareConfig,
+  type SpanStatusOptions,
   AttrNames,
   ConfigKey,
-  Config,
-  MiddlewareConfig,
-  SpanStatusOptions,
   middlewareEnableCacheKey,
 } from './types.js'
 import {

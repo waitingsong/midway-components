@@ -3,7 +3,8 @@ import { isAsyncFunction } from 'util/types'
 
 import { ConfigKey } from '@mwcp/share'
 
-import { genTraceScopeFrom, processDecoratorBeforeAfterSync } from '../decorator.helper.js'
+import { genTraceScopeFrom } from '../decorator.helper.js'
+import { processDecoratorBeforeAfterSync } from '../decorator.helper.sync.js'
 import type { DecoratorExecutorParam } from '../trace.helper.js'
 import { AttrNames } from '../types.js'
 
@@ -44,3 +45,12 @@ export function afterReturnSync(options: DecoratorExecutorParam): unknown {
   return options.methodResult
 }
 
+
+export function afterThrowSync(options: DecoratorExecutorParam): void {
+  const { span, traceService } = options
+  if (! span || ! traceService) { return }
+
+  assert(options.error, `[@mwcp/${ConfigKey.namespace}] options.error is undefined in afterThrowAsync().`)
+  const type = 'afterThrow'
+  processDecoratorBeforeAfterSync(type, options)
+}

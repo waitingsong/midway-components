@@ -1,6 +1,7 @@
 import assert from 'node:assert'
 
-import { processDecoratorBeforeAfterAsync, genTraceScopeFrom } from '../decorator.helper.js'
+import { processDecoratorBeforeAfterAsync } from '../decorator.helper.async.js'
+import { genTraceScopeFrom } from '../decorator.helper.js'
 import type { DecoratorExecutorParam } from '../trace.helper.js'
 import { ConfigKey } from '../types.js'
 
@@ -29,5 +30,13 @@ export async function afterReturnAsync(options: DecoratorExecutorParam): Promise
   }
   await processDecoratorBeforeAfterAsync('after', options)
   return options.methodResult
+}
+
+export async function afterThrowAsync(options: DecoratorExecutorParam): Promise<void> {
+  const { span, traceService } = options
+  if (! span || ! traceService) { return }
+
+  assert(options.error, `[@mwcp/${ConfigKey.namespace}] options.error is undefined in afterThrowAsync().`)
+  await processDecoratorBeforeAfterAsync('afterThrow', options)
 }
 

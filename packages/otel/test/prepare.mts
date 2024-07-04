@@ -2,7 +2,8 @@
 import { dirname, join, sep } from 'node:path'
 import { cp, mkdir, rm } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
-import { $, cd } from 'zx'
+import { $ } from '@waiting/shared-core'
+import { cd } from 'zx'
 
 const currentURL = import.meta.url
 const currentPath = fileURLToPath(currentURL)
