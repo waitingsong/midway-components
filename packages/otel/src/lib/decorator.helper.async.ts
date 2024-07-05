@@ -1,5 +1,7 @@
 import assert from 'node:assert'
 
+import { isArrowFunction } from '@waiting/shared-core'
+
 import { processDecoratorSpanData } from './decorator.helper.js'
 import type { DecoratorContext, TraceDecoratorOptions } from './decorator.types.js'
 import type { DecoratorExecutorParam } from './trace.helper.js'
@@ -34,17 +36,19 @@ export async function processDecoratorBeforeAfterAsync(
       instance: options.instance,
     }
 
+    const funcBind = isArrowFunction(func) ? func : func.bind(decoratorContext.instance)
+
     let data
     if (type === 'before') {
-      const func2 = func.bind(decoratorContext.instance) as NonNullable<TraceDecoratorOptions['before']>
+      const func2 = funcBind as NonNullable<TraceDecoratorOptions['before']>
       data = await func2(options.methodArgs, decoratorContext)
     }
     else if (type === 'after') {
-      const func2 = func.bind(decoratorContext.instance) as NonNullable<TraceDecoratorOptions['after']>
+      const func2 = funcBind as NonNullable<TraceDecoratorOptions['after']>
       data = await func2(options.methodArgs, options.methodResult, decoratorContext)
     }
     else {
-      const func2 = func.bind(decoratorContext.instance) as NonNullable<TraceDecoratorOptions['afterThrow']>
+      const func2 = funcBind as NonNullable<TraceDecoratorOptions['afterThrow']>
       assert(options.error, 'options.error is required')
       data = await func2(options.methodArgs, options.error, decoratorContext)
     }

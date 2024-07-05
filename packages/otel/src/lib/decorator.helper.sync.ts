@@ -1,6 +1,8 @@
 import assert from 'node:assert'
 import { isPromise } from 'node:util/types'
 
+import { isArrowFunction } from '@waiting/shared-core'
+
 import { processDecoratorSpanData } from './decorator.helper.js'
 import type { DecoratorContext, TraceDecoratorOptions } from './decorator.types.js'
 import type { DecoratorExecutorParam } from './trace.helper.js'
@@ -37,17 +39,19 @@ export function processDecoratorBeforeAfterSync(
       instance: options.instance,
     }
 
+    const funcBind = isArrowFunction(func) ? func : func.bind(decoratorContext.instance)
+
     let data
     if (type === 'before') {
-      const func2 = func.bind(decoratorContext.instance) as NonNullable<TraceDecoratorOptions['before']>
+      const func2 = funcBind as NonNullable<TraceDecoratorOptions['before']>
       data = func2(options.methodArgs, decoratorContext)
     }
     else if (type === 'after') {
-      const func2 = func.bind(decoratorContext.instance) as NonNullable<TraceDecoratorOptions['after']>
+      const func2 = funcBind as NonNullable<TraceDecoratorOptions['after']>
       data = func2(options.methodArgs, options.methodResult, decoratorContext)
     }
     else {
-      const func2 = func.bind(decoratorContext.instance) as NonNullable<TraceDecoratorOptions['afterThrow']>
+      const func2 = funcBind as NonNullable<TraceDecoratorOptions['afterThrow']>
       assert(options.error, 'options.error is required')
       data = func2(options.methodArgs, options.error, decoratorContext)
     }
