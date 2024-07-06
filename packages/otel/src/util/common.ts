@@ -9,6 +9,7 @@ import {
   SEMATTRS_HTTP_SERVER_NAME,
 } from '@opentelemetry/semantic-conventions'
 import { sleep } from '@waiting/shared-core'
+import type { Headers as UndiciHeaders } from 'undici'
 
 import { exporterEndpoint } from '##/lib/config.js'
 import { AttrNames } from '##/lib/index.js'
@@ -292,3 +293,29 @@ export function assertsSpan(span: JaegerTraceInfoSpan, options: AssertsOptions):
 //     return b.startTime - a.startTime
 //   })
 // }
+
+export interface Traceparent {
+  version: string
+  traceId: string
+  parentId: string
+  traceFlags: string
+}
+
+export function retrieveTraceparentFromHeader(headers: Headers | UndiciHeaders | Record<string, unknown>): Traceparent | undefined {
+  assert(headers, 'headers is null')
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const traceparent: string = typeof headers.get === 'function'
+    ? headers.get('traceparent')
+    // @ts-ignore
+    : headers['traceparent']
+  if (! traceparent) { return }
+
+  const [version, traceId, parentId, traceFlags] = traceparent.split('-')
+  return {
+    version,
+    traceId,
+    parentId,
+    traceFlags,
+  } as Traceparent
+}
+

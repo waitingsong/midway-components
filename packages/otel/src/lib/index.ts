@@ -15,18 +15,18 @@ export * from './decorator.trace-log/trace-log.js'
 export * from './reg-decorator.js'
 export {
   addSpanEventWithOutgoingResponseData,
-  getIncomingRequestAttributesFromWebContext,
+  deleteSpan,
   genAttributesFromHeader,
+  getIncomingRequestAttributesFromWebContext,
   genRequestSpanName,
+  getSpan,
   normalizeHeaderKey,
   parseResponseStatus,
   propagateHeader,
   propagateOutgoingHeader,
+  setSpan,
   setResponseContentLengthAttribute,
   setSpanWithRequestHeaders,
-  getSpan,
-  setSpan,
-  deleteSpan,
 } from './util.js'
 
 export {
@@ -39,18 +39,18 @@ export {
   type Attributes,
   type AddEventOptions,
   type AttributesMap,
-  HeadersKey,
   type InitTraceOptions,
   type JaegerTraceInfo,
   type JaegerTraceInfoSpan,
   type JaegerTraceInfoReferences,
   type JaegerTraceInfoLog,
   type JaegerTraceInfoLogField,
-  SpanExporterList,
   type SpanHeaderInit,
   type SpanStatusOptions,
   type TraceError,
   type TraceLogType as LogInfo,
+  HeadersKey,
+  SpanExporterList,
 } from './types.js'
 
 export type {

@@ -6,7 +6,9 @@ import { fileShortPath } from '@waiting/shared-core'
 import {
   HeadersKey, AttrNames,
   assertsSpan, assertRootSpan,
-  retrieveTraceInfoFromRemote, sortSpans,
+  retrieveTraceInfoFromRemote,
+  retrieveTraceparentFromHeader,
+  sortSpans,
 } from '##/index.js'
 import type { AssertsOptions } from '##/index.js'
 import { apiBase, apiMethod } from '#@/api-test.js'
@@ -106,12 +108,10 @@ describe(fileShortPath(import.meta.url), function () {
     assert(resp.text.includes('class: DecoratorDataComponentController'), resp.text)
     assert(resp.text.includes('method: _MixOnSync'), resp.text)
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const headers = new Headers(resp.header)
-    const oid = headers.get(HeadersKey['TRACE_PARENT_HEADER'])
-    assert(oid)
+    const traceparent = retrieveTraceparentFromHeader(resp.header as Headers)
+    assert(traceparent)
 
-    const [info] = await retrieveTraceInfoFromRemote(oid, 2)
+    const [info] = await retrieveTraceInfoFromRemote(traceparent.traceId, 2)
     assert(info)
     const traceId = info.traceID
     console.log('--------------------', { info })
