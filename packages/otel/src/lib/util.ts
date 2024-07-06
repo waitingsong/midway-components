@@ -9,12 +9,9 @@ import type {
 import { getRouterInfo } from '@mwcp/share'
 import type { Context as WebContext } from '@mwcp/share'
 import {
-
-
   SpanStatusCode,
   SpanKind,
   propagation,
-
   createContextKey,
 } from '@opentelemetry/api'
 import type { Attributes, Span, Context } from '@opentelemetry/api'
@@ -479,4 +476,3 @@ export function genRequestSpanName(options: GenRequestSpanNameOptions, maxLength
   const spanName = `${protocol.toLocaleUpperCase()} ${method.toUpperCase()} ${route}`
   return spanName.slice(0, maxLength)
 }
-
