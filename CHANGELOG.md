@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [30.17.0](https://github.com/waitingsong/midway-components/compare/v30.16.1...v30.17.0) (2024-07-06)
+
+
+### Features
+
+* **otel:** add HeadersKey.TRACE_PARENT_HEADER and TRACE_STATE_HEADER ([bdd1016](https://github.com/waitingsong/midway-components/commit/bdd10162435db729299cc911a8cabb43dee311e3))
+* **otel:** retrieveTraceparentFromHeader() ([e63eca2](https://github.com/waitingsong/midway-components/commit/e63eca25350b41590fb696b916c61eace8d10d16))
+
+
+
+
+
 ## [30.16.1](https://github.com/waitingsong/midway-components/compare/v30.16.0...v30.16.1) (2024-07-05)
 
 **Note:** Version bump only for package midway-components
