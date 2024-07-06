@@ -2,14 +2,13 @@ import assert from 'node:assert/strict'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-import { truncateString } from '##/lib/util.js'
+import { retrieveTraceparentFromHeader, retrieveTraceInfoFromRemote } from '##/index.js'
 import { apiBase, apiMethod } from '#@/api-test.js'
 import { testConfig } from '#@/root.config.js'
 
 
 describe(fileShortPath(import.meta.url), function () {
-
-  describe('should propagateHeader() work', () => {
+  describe('retrieveTraceInfoFromRemote()', () => {
     const path = `${apiBase.util}/${apiMethod.propagateHeader}`
 
     it('common', async () => {
@@ -18,22 +17,14 @@ describe(fileShortPath(import.meta.url), function () {
       const resp = await httpRequest.get(path)
       assert(resp.ok, resp.text)
       assert(resp.text === 'OK')
+
+      const traceparent = retrieveTraceparentFromHeader(resp.headers as Headers)
+      assert(traceparent)
+      const txt = `${traceparent.version}-${traceparent.traceId}-${traceparent.parentId}-${traceparent.traceFlags}`
+      const info = await retrieveTraceInfoFromRemote(txt)
+      assert(info)
     })
+
   })
-
-  describe('should truncateString() work', () => {
-    const str = 'abcdefg'
-
-    it('common', async () => {
-      const ret = truncateString(str)
-      assert(ret === str)
-    })
-
-    it('common', async () => {
-      const ret = truncateString(str, 1)
-      assert(ret === 'a... LENGTH: 7 bytes')
-    })
-  })
-
 })
 
