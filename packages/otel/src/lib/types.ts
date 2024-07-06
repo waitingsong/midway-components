@@ -140,6 +140,12 @@ export enum HeadersKey {
    * format: {trace-id}:{span-id}:{parent-span-id}:{flags}
    */
   traceId = 'uber-trace-id',
+  TRACE_PARENT_HEADER = 'traceparent',
+  TRACE_STATE_HEADER = 'tracestate',
+  /**
+   * @deprecated use HeadersKey.TRACE_PARENT_HEADER
+   */
+  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
   otelTraceId = 'traceparent',
   reqId = 'x-request-id',
   authorization = 'authorization',

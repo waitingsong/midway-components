@@ -108,7 +108,7 @@ describe(fileShortPath(import.meta.url), function () {
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const headers = new Headers(resp.header)
-    const oid = headers.get(HeadersKey['otelTraceId'])
+    const oid = headers.get(HeadersKey['TRACE_PARENT_HEADER'])
     assert(oid)
 
     const [info] = await retrieveTraceInfoFromRemote(oid, 2)

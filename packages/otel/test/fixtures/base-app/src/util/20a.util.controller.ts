@@ -25,7 +25,7 @@ export class UtilController {
   async propagateHeader(): Promise<'OK'> {
     const headers = new Headers()
     assert(headers)
-    assert(! headers.get(HeadersKey.otelTraceId))
+    assert(! headers.get(HeadersKey.TRACE_PARENT_HEADER))
 
     headers.set('a', '1')
     assert(headers.get('a') === '1')
@@ -33,7 +33,7 @@ export class UtilController {
     const traceCtx = this.traceSvc.getActiveContext()
     propagateHeader(traceCtx, headers)
     assert(headers)
-    const traceParent = headers.get(HeadersKey.otelTraceId)
+    const traceParent = headers.get(HeadersKey.TRACE_PARENT_HEADER)
     assert(traceParent)
 
     const traceId = this.traceSvc.getTraceId()
@@ -43,9 +43,9 @@ export class UtilController {
 
     const headers2 = new Headers()
     const txt = 'abc'
-    headers2.set(HeadersKey.otelTraceId, txt)
+    headers2.set(HeadersKey.TRACE_PARENT_HEADER, txt)
     propagateHeader(traceCtx, headers2)
-    const id2 = headers2.get(HeadersKey.otelTraceId)
+    const id2 = headers2.get(HeadersKey.TRACE_PARENT_HEADER)
     assert(id2 === txt)
 
     return 'OK'
