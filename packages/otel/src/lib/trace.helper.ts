@@ -3,9 +3,10 @@ import assert from 'node:assert'
 
 import type { DecoratorExecutorParamBase } from '@mwcp/share'
 import type { Span, SpanOptions } from '@opentelemetry/api'
+import { isArrowFunction } from '@waiting/shared-core'
 
 import type { AbstractTraceService, AbstractOtelComponent } from './abstract.js'
-import type { DecoratorContext, TraceDecoratorOptions, TraceScopeType } from './decorator.types.js'
+import type { DecoratorContext, KeyGenerator, TraceDecoratorOptions, TraceScopeType } from './decorator.types.js'
 import {
   AttrNames,
 
@@ -26,6 +27,7 @@ interface GenKeyOptions extends Partial<TraceDecoratorOptions> {
   decoratorContext: DecoratorContext
   callerClass: string
   callerMethod: string
+  instance: DecoratorExecutorParam['instance']
 }
 
 function genKey(options: GenKeyOptions): string {
@@ -34,6 +36,7 @@ function genKey(options: GenKeyOptions): string {
     decoratorContext,
     spanName,
     spanNameDelimiter,
+    instance,
   } = options
 
   const delimiter = spanNameDelimiter
@@ -57,7 +60,9 @@ function genKey(options: GenKeyOptions): string {
     }
 
     case 'function': {
-      const keyStr = spanName(methodArgs as [], decoratorContext)
+      assert(instance, 'options.instance is required')
+      const funcBind: KeyGenerator = isArrowFunction(spanName) ? spanName : spanName.bind(instance)
+      const keyStr = funcBind(methodArgs as [], decoratorContext)
       assert(
         typeof keyStr === 'string' || typeof keyStr === 'undefined',
         'keyGenerator function must return a string or undefined',
@@ -211,6 +216,7 @@ export function genDecoratorExecutorOptions(
     callerMethod: optionsBase.methodName,
     decoratorContext,
     methodArgs,
+    instance: optionsBase.instance,
   }
   const spanName = genKey(keyOpts)
   assert(spanName, 'spanName is undefined')

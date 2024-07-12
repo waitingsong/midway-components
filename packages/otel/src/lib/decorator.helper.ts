@@ -1,6 +1,7 @@
 import assert from 'node:assert'
 
 import type { Span } from '@opentelemetry/api'
+import { isArrowFunction } from '@waiting/shared-core'
 
 import type { AbstractOtelComponent, AbstractTraceService } from './abstract.js'
 import type {
@@ -94,6 +95,7 @@ export function genTraceScopeFrom(options: DecoratorExecutorParam): TraceScopeTy
     scope: scopeFromArg,
     methodArgs: options.methodArgs,
     decoratorContext: decoratorContextBase,
+    instance: options.instance,
   })
   if (! ret) {
     const scope: TraceScopeParamType | undefined = options.mergedDecoratorParam?.scope
@@ -101,6 +103,7 @@ export function genTraceScopeFrom(options: DecoratorExecutorParam): TraceScopeTy
       scope,
       methodArgs: options.methodArgs,
       decoratorContext: decoratorContextBase,
+      instance: options.instance,
     })
   }
   options.traceScope = ret
@@ -128,6 +131,7 @@ export interface GenTraceScopeOptions {
   scope: TraceDecoratorOptions['scope']
   methodArgs: unknown[]
   decoratorContext: DecoratorContextBase
+  instance: DecoratorExecutorParam['instance']
 }
 export function genTraceScope(options: GenTraceScopeOptions): TraceScopeType | undefined {
   const tmp = options.scope
@@ -151,7 +155,9 @@ export function genTraceScope(options: GenTraceScopeOptions): TraceScopeType | u
       return
 
     case 'function': {
-      ret = (scope as ScopeGenerator)(options.methodArgs, options.decoratorContext)
+      assert(options.instance, 'instance is required')
+      const funcBind = (isArrowFunction(scope as ScopeGenerator) ? scope : scope.bind(options.instance)) as ScopeGenerator
+      ret = funcBind(options.methodArgs, options.decoratorContext)
       assert(typeof ret === 'object' || typeof ret === 'symbol', 'scope function must return an object or a symbol')
       break
     }

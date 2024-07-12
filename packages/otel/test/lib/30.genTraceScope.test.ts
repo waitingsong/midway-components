@@ -21,6 +21,7 @@ describe(fileShortPath(import.meta.url), function () {
     scope: void 0,
     methodArgs: [],
     decoratorContext,
+    instance: {},
   }
 
   describe('Should genTraceScope() work', () => {

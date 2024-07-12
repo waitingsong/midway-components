@@ -26,7 +26,7 @@ export interface TraceDecoratorOptions<
 > extends SpanOptions {
 
   /** @default `{target.name}/{methodName}` */
-  spanName: string | KeyGenerator<MParamType> | undefined
+  spanName: string | KeyGenerator<ThisParameterType<M>, MParamType> | undefined
   /**
    * @default true
    */
@@ -43,6 +43,21 @@ export interface TraceDecoratorOptions<
    * @default `/`
    */
   spanNameDelimiter: string | undefined
+
+  /**
+   * 生成唯一标识符，用于确定同一方法的跨度, 避免异步方法并发调用时调用链关系混乱
+   * Generate the unique key for spans determination of the same method,
+   * avoid the confusion of call chain relationship when async methods are called concurrently
+   * @default undefined, runtime value rule (priority from high to low):
+   * - passed value in options.traceScope
+   * - generated automatically retrieved from object arg of the method args, that containing key `traceScope`,
+   * - webContext (traceService.ctx)
+   * - run before the `before()` method
+   * @caution symbol must be non-registered symbols, it means Symbol(string) is valid, and Symbol.for(string) is invalid
+   * @note `TraceInit()` not supported
+   * @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap
+   */
+  scope: ScopeGenerator<ThisParameterType<M>, MParamType> | TraceScopeParamType | undefined
 
   before: MethodTypeUnknown<
     [MParamType, DecoratorContext<MThis>], // input args
@@ -62,24 +77,10 @@ export interface TraceDecoratorOptions<
     ThisParameterType<M> // this
   > | undefined
 
-
   /**
    * @default true
    */
   autoEndSpan: boolean | undefined
-  /**
-   * 生成唯一标识符，用于确定同一方法的跨度, 避免异步方法并发调用时调用链关系混乱
-   * Generate the unique key for spans determination of the same method,
-   * avoid the confusion of call chain relationship when async methods are called concurrently
-   * @default undefined, runtime value rule (priority from high to low):
-   * - passed value in options.traceScope
-   * - generated automatically retrieved from object arg of the method args, that containing key `traceScope`,
-   * - webContext (traceService.ctx)
-   * @caution symbol must be non-registered symbols, it means Symbol(string) is valid, and Symbol.for(string) is invalid
-   * @note `TraceInit()` not supported
-   * @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap
-   */
-  scope: ScopeGenerator<MParamType> | TraceScopeParamType | undefined
 }
 
 export type TraceScopeParamType = string | TraceScopeType
@@ -96,13 +97,23 @@ export interface DecoratorTraceData {
 export type DecoratorTraceDataResp = DecoratorTraceData | undefined
 export type DecoratorTraceDataRespAsync = Promise<DecoratorTraceData | undefined>
 
-export type KeyGenerator<ArgsType = unknown[], DContext extends DecoratorContext = DecoratorContext> = (
+export type KeyGenerator<
+  TThis = any,
+  ArgsType = unknown[],
+  DContext extends DecoratorContext = DecoratorContext,
+> = (
+  this: TThis,
   /** Arguments of the method */
   args: ArgsType,
   context: DContext,
 ) => string | undefined
 
-export type ScopeGenerator<ArgsType = unknown[], DContext extends DecoratorContextBase = DecoratorContextBase> = (
+export type ScopeGenerator<
+  TThis = any,
+  ArgsType = unknown[],
+  DContext extends DecoratorContextBase = DecoratorContextBase,
+> = (
+  this: TThis,
   /** Arguments of the method */
   args: ArgsType,
   context: DContext,
