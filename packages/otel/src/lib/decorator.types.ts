@@ -26,7 +26,7 @@ export interface TraceDecoratorOptions<
 > extends SpanOptions {
 
   /** @default `{target.name}/{methodName}` */
-  spanName: string | KeyGenerator<ThisParameterType<M>, MParamType> | undefined
+  spanName: string | KeyGenerator<MThis, MParamType> | undefined
   /**
    * @default true
    */
@@ -57,7 +57,7 @@ export interface TraceDecoratorOptions<
    * @note `TraceInit()` not supported
    * @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap
    */
-  scope: ScopeGenerator<ThisParameterType<M>, MParamType> | TraceScopeParamType | undefined
+  scope: ScopeGenerator<MThis, MParamType> | TraceScopeParamType | undefined
 
   before: MethodTypeUnknown<
     [MParamType, DecoratorContext<MThis>], // input args
