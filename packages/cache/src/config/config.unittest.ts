@@ -2,7 +2,7 @@ import type { Config } from '../lib/types.js'
 
 
 export const koa = {
-  port: 7002,
+  port: 7003,
 }
 
 export const keys = 123456
