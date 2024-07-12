@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [30.18.0](https://github.com/waitingsong/midway-components/compare/v30.17.1...v30.18.0) (2024-07-12)
+
+
+### Features
+
+* **otel:** decorator method spanName(), scope() support this param ([a438d22](https://github.com/waitingsong/midway-components/commit/a438d22e6f16394ffa8c11f22b3f8d0cff674737))
+
+
+
+
+
 ## [30.17.1](https://github.com/waitingsong/midway-components/compare/v30.17.0...v30.17.1) (2024-07-12)
 
 **Note:** Version bump only for package @mwcp/otel
