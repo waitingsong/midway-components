@@ -55,7 +55,6 @@
     "bin",
     "database",
     "dist",
-    "src",
     "!**/*.spec.*",
     "!**/*.tsbuildinfo"
   ],
