@@ -19,4 +19,3 @@ export { deepmerge }
 
 export { Config as MConfig } from '@midwayjs/core'
 
-
