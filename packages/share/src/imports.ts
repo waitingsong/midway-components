@@ -1,6 +1,7 @@
 import * as info from '@midwayjs/info'
 import * as koa from '@midwayjs/koa'
 import * as swagger from '@midwayjs/swagger'
+import * as ValidateService from '@midwayjs/validate'
 
 
 /* c8 ignore next 4 */
@@ -15,6 +16,7 @@ if (CI) {
   useComponents.push(koa)
   useComponents.push(info)
   useComponents.push(swagger)
+  useComponents.push(ValidateService)
 }
 
 export interface IComponentInfo {
