@@ -97,9 +97,6 @@ export function DtoFrom<
 
     // @ts-expect-error has(key)
     if (includesSet === '*' || includesSet.has(key)) {
-      // if (typeof rule.optional === 'function') {
-      //   pickedRules[key] = rule.optional()
-      // }
       pickedRules[key] = appendSchemaMethods(rule, schemaMethods)
     }
     else {
