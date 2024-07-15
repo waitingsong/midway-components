@@ -7,8 +7,7 @@ import { ValidateService } from '@midwayjs/validate'
 import type { Application } from '@mwcp/share'
 import type { Suite } from 'mocha'
 
-import { testConfig } from './root.config.js'
-import type { TestConfig } from './root.config.js'
+import { type TestConfig, testConfig } from './root.config.js'
 
 
 let app: Application
