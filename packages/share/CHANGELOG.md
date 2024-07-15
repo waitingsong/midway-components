@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [30.20.0](https://github.com/waitingsong/midway-components/compare/v30.19.0...v30.20.0) (2024-07-15)
+
+
+### Features
+
+* **share:** update return type of DTO functions ([f099f49](https://github.com/waitingsong/midway-components/commit/f099f490a2ab3c8bcf78458db2845a774a849a1e))
+
+
+
+
+
 # [30.19.0](https://github.com/waitingsong/midway-components/compare/v30.18.0...v30.19.0) (2024-07-14)
 
 
