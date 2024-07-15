@@ -11,7 +11,7 @@ export class UserDto {
   userName: string
 
   @Rule(RuleType.number())
-  age: number
+  age?: number
 }
 
 export class UserDto1 extends RequiredDto(UserDto, []) { }

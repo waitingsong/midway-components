@@ -34,7 +34,7 @@ export function OptionalDto<T extends object, KExclusiveKeys extends (keyof T)[]
   dto: Dto<T>,
   exclusiveKeys: KExclusiveKeys,
   inclusiveKeys: KInclusiveKeys | void | '*' = '*',
-): Dto<DtoFromResultType<T, typeof exclusiveKeys, typeof inclusiveKeys> > {
+): Dto<Partial<DtoFromResultType<T, typeof exclusiveKeys, typeof inclusiveKeys>>> {
 
   return DtoFrom(dto, ['optional'], exclusiveKeys, inclusiveKeys)
 }
@@ -51,9 +51,9 @@ export function RequiredDto<T extends object, KExclusiveKeys extends (keyof T)[]
   dto: Dto<T>,
   exclusiveKeys: KExclusiveKeys,
   inclusiveKeys: KInclusiveKeys | void | '*' = '*',
-): Dto<DtoFromResultType<T, typeof exclusiveKeys, typeof inclusiveKeys> > {
+): Dto<Required<DtoFromResultType<T, typeof exclusiveKeys, typeof inclusiveKeys>>> {
 
-  return DtoFrom(dto, ['required'], exclusiveKeys, inclusiveKeys)
+  return DtoFrom(dto, ['required'], exclusiveKeys, inclusiveKeys) as Dto<Required<DtoFromResultType<T, typeof exclusiveKeys, typeof inclusiveKeys>>>
 }
 
 
@@ -74,7 +74,7 @@ export function DtoFrom<
   schemaMethods: SchemaMethod[],
   exclusiveKeys: KExclusiveKeys,
   inclusiveKeys: KInclusiveKeys | void | '*' = '*',
-): Dto<DtoFromResultType<T, typeof exclusiveKeys, typeof inclusiveKeys> > {
+): Dto<DtoFromResultType<T, typeof exclusiveKeys, typeof inclusiveKeys>> {
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   const pickedDto: unknown = function () {}
