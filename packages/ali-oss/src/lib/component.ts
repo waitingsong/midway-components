@@ -2,8 +2,7 @@
 /* eslint-disable max-lines-per-function */
 import { AttrNames, SpanStatusCode } from '@mwcp/otel'
 import type { Attributes, TraceService } from '@mwcp/otel'
-import type { Context } from '@mwcp/share'
-import { genISO8601String } from '@waiting/shared-core'
+import { genISO8601String, genError } from '@waiting/shared-core'
 import { FnKey, OssClient } from '@yuntools/ali-oss'
 import type {
   CpOptions as AliCpOptions,
@@ -35,8 +34,7 @@ import type {
 /** 阿里云 OSS oss-utils 命令行封装组件 */
 export class AliOssComponent {
 
-  ctx: Context | undefined
-  traceService: TraceService | undefined
+  traceService: TraceService
 
   private readonly client: OssClient
   private readonly querySpanMap = new WeakMap<object, QuerySpanInfo>()
@@ -386,7 +384,6 @@ export class AliOssComponent {
   ): Promise<void> {
 
     if (! options.enableTrace) { return }
-    if (! this.ctx) { return }
     if (! this.traceService) { return }
 
     const end = Date.now()
@@ -403,7 +400,10 @@ export class AliOssComponent {
 
     switch (type) {
       case 'start': {
-        const span = this.traceService.startSpan(ConfigKey.componentName)
+        const { span } = this.traceService.startScopeActiveSpan({
+          name: ConfigKey.componentName,
+          scope: id,
+        })
         const spanInfo: QuerySpanInfo = {
           span,
           timestamp: Date.now(),
@@ -464,7 +464,7 @@ export class AliOssComponent {
           this.traceService.addEvent(span, event)
         }
 
-        this.traceService.endSpan(span)
+        this.traceService.endSpan({ span, scope: id })
         break
       }
 
@@ -491,9 +491,16 @@ export class AliOssComponent {
           // [AttrNames.Error]: err,
         }
         this.traceService.addEvent(span, input)
-        this.traceService.endSpan(span, {
-          code: SpanStatusCode.ERROR,
-          error: err ?? new Error('Unknown error.'),
+        this.traceService.endSpan({
+          span,
+          scope: id,
+          spanStatusOptions: {
+            code: SpanStatusCode.ERROR,
+            error: genError({
+              error: err,
+              altMessage: 'Unknown error.',
+            }),
+          },
         })
         break
       }

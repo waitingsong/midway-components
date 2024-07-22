@@ -1,5 +1,4 @@
 import assert from 'node:assert'
-import { isProxy } from 'node:util/types'
 
 import {
   CreateDataSourceInstanceOptions as CreateInstanceOptions,
@@ -7,7 +6,6 @@ import {
   Provide,
 } from '@midwayjs/core'
 import { TraceService } from '@mwcp/otel'
-import type { Context } from '@mwcp/share'
 
 import { AliOssComponent } from './component.js'
 import { AliOssSourceManager } from './source-manager.js'
@@ -15,9 +13,7 @@ import { InstanceConfig, ConfigKey } from './types.js'
 
 
 @Provide()
-export class AliOssManager<SourceName extends string = string, Ctx extends Context = Context> {
-
-  @Inject() readonly ctx: Ctx
+export class AliOssManager<SourceName extends string = string> {
 
   @Inject() readonly traceService: TraceService
 
@@ -59,33 +55,17 @@ export class AliOssManager<SourceName extends string = string, Ctx extends Conte
     const inst = this.sourceManager.getDataSource(dataSourceName)
     assert(inst)
 
-    const db2 = this.createPropertyProxy(inst)
-    this.instCacheMap.set(dataSourceName, db2)
+    this.updateProperties(inst)
+    this.instCacheMap.set(dataSourceName, inst)
 
-    return db2
+    return inst
   }
 
-  protected createPropertyProxy(inst: AliOssComponent): AliOssComponent {
-    assert(this.ctx)
-    if (isProxy(inst)) {
-      return inst
+  protected updateProperties(inst: AliOssComponent): void {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (! inst.traceService) {
+      inst.traceService = this.traceService
     }
-
-    const ret = new Proxy(inst, {
-      get: (target: AliOssComponent, propKey: keyof AliOssComponent) => {
-        switch (propKey) {
-          case 'ctx':
-            return this.ctx
-
-          case 'traceService':
-            return this.traceService
-
-          default:
-            return target[propKey]
-        }
-      },
-    })
-    return ret
   }
 
 }

@@ -46,7 +46,6 @@ export class OssController {
     opts: Parameters<AliOssComponent['mkdir']>[1],
   }): Promise<ReturnType<AliOssComponent['mkdir']>> {
 
-    assert(this.ossClient.ctx === this.ctx)
     const { target, opts } = parm
     assert(target)
     const res = await this.ossClient.mkdir(target, opts)
