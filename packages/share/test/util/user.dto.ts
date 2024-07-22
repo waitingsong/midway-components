@@ -14,11 +14,14 @@ export class UserDto {
   age?: number
 }
 
-export class UserDto1 extends OptionalDto(UserDto, []) { }
+export class UserDto1 extends OptionalDto(UserDto, []) {
+  id: number
+}
 const f1 = new UserDto1()
 f1.uid = 1
 f1.age = 1
 f1.userName = 'foo'
+f1.id = 3
 
 export class UserDto2 extends OptionalDto(UserDto, ['uid']) {}
 const f2 = new UserDto2()

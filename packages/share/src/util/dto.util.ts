@@ -29,6 +29,7 @@ export type DtoFromResultType<
  * - exclusiveKeys high priority then inclusiveKeys
  * @param KInclusiveKeys
  * - if undefined or '*' or empty [], all keys will be included; otherwise this keys will be picked
+ * @requires TypeScript >= 5.3
  */
 export function OptionalDto<T extends object, KExclusiveKeys extends (keyof T)[], KInclusiveKeys extends (keyof T)[]>(
   dto: Dto<T>,
@@ -46,6 +47,7 @@ export function OptionalDto<T extends object, KExclusiveKeys extends (keyof T)[]
  * - exclusiveKeys high priority then inclusiveKeys
  * @param KInclusiveKeys
  * - if undefined or '*' or empty [], all keys will be included; otherwise this keys will be picked
+ * @requires TypeScript >= 5.3
  */
 export function RequiredDto<T extends object, KExclusiveKeys extends (keyof T)[], KInclusiveKeys extends (keyof T)[]>(
   dto: Dto<T>,
