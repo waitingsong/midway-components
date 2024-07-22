@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [30.21.0](https://github.com/waitingsong/midway-components/compare/v30.20.0...v30.21.0) (2024-07-22)
+
+
+### Features
+
+* **otel:** add util function ([df8b66e](https://github.com/waitingsong/midway-components/commit/df8b66e11e0f4a17f223881bf555eaf14914dad2))
+
+
+
+
+
 # [30.20.0](https://github.com/waitingsong/midway-components/compare/v30.19.0...v30.20.0) (2024-07-15)
 
 
