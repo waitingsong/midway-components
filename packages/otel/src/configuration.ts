@@ -2,7 +2,6 @@ import assert from 'node:assert'
 
 import {
   App,
-  Config,
   Configuration,
   ILifeCycle,
   Inject,
@@ -15,6 +14,7 @@ import { ILogger } from '@midwayjs/logger'
 import {
   Application,
   IMidwayContainer,
+  MConfig,
   deleteRouter,
   registerMiddleware,
 } from '@mwcp/share'
@@ -28,7 +28,7 @@ import { OtelComponent } from './lib/component.js'
 import { TraceInit } from './lib/index.js'
 import { AutoRegister } from './lib/reg-decorator.js'
 import {
-  Config as Conf,
+  Config,
   ConfigKey,
   MiddlewareConfig,
 } from './lib/types.js'
@@ -53,8 +53,8 @@ export class AutoConfiguration implements ILifeCycle {
 
   @App() readonly app: Application
 
-  @Config(ConfigKey.config) protected readonly config: Conf
-  @Config(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
+  @MConfig(ConfigKey.config) protected readonly config: Config
+  @MConfig(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
 
   @Inject() protected readonly environmentService: MidwayEnvironmentService
   @Inject() protected readonly informationService: MidwayInformationService

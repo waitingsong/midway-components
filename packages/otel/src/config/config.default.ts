@@ -29,3 +29,8 @@ export const otelMiddlewareConfig: Readonly<Omit<MiddlewareConfig, 'match'>> = {
 export const otlpGrpcExporterConfig: InitTraceOptions['otlpGrpcExporterConfig'] = {
   ...initOtlpGrpcExporterConfig,
 }
+
+export const asyncContextManager = {
+  enable: true,
+}
+

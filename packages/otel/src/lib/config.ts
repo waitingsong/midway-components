@@ -5,16 +5,7 @@ import { CompressionAlgorithm } from '@opentelemetry/otlp-exporter-base'
 import type { OTLPGRPCExporterConfigNode } from '@opentelemetry/otlp-grpc-exporter-base'
 import type { KnownKeys } from '@waiting/shared-types'
 
-import {
-  AttrNames,
-
-  HeadersKey,
-
-
-  PropagatorList,
-  SpanExporterList,
-
-} from './types.js'
+import { AttrNames, HeadersKey, PropagatorList, SpanExporterList } from './types.js'
 import type { Config, MiddlewareConfig, MiddlewareOptions, SpanStatusOptions } from './types.js'
 
 /**

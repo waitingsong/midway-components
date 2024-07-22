@@ -14,7 +14,7 @@ import {
   propagation,
   createContextKey,
 } from '@opentelemetry/api'
-import type { Attributes, Span, Context } from '@opentelemetry/api'
+import type { Attributes, Span, Context as TraceContext } from '@opentelemetry/api'
 import {
   NETTRANSPORTVALUES_IP_TCP,
   NETTRANSPORTVALUES_IP_UDP,
@@ -57,7 +57,7 @@ const SPAN_KEY = createContextKey('OpenTelemetry Context Key SPAN')
  *
  * @param context context to get span from
  */
-export function getSpan(context: Context): Span | undefined {
+export function getSpan(context: TraceContext): Span | undefined {
   return context.getValue(SPAN_KEY) as Span | undefined
 }
 /**
@@ -66,7 +66,7 @@ export function getSpan(context: Context): Span | undefined {
  * @param context context to use as parent
  * @param span span to set active
  */
-export function setSpan(context: Context, span: Span): Context {
+export function setSpan(context: TraceContext, span: Span): TraceContext {
   return context.setValue(SPAN_KEY, span)
 }
 /**
@@ -74,7 +74,7 @@ export function setSpan(context: Context, span: Span): Context {
  *
  * @param context context to delete span from
  */
-export function deleteSpan(context: Context): Context {
+export function deleteSpan(context: TraceContext): TraceContext {
   return context.deleteValue(SPAN_KEY)
 }
 
@@ -342,7 +342,7 @@ export function addSpanEventWithIncomingRequestData(
 }
 
 export function propagateOutgoingHeader(
-  traceContext: Context,
+  traceContext: TraceContext,
   message: OutgoingMessage,
 ): void {
 
@@ -360,7 +360,7 @@ export function propagateOutgoingHeader(
  * Skip if header already exists
  */
 export function propagateHeader<T extends Headers | UndiciHeaders = Headers>(
-  traceContext: Context,
+  traceContext: TraceContext,
   headers: T,
 ): void {
 

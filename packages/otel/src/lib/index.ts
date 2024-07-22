@@ -5,8 +5,17 @@ export { DecoratorHandlerTrace } from './decorator.trace/trace.decorator-handler
 export { DecoratorHandlerTraceInit } from './decorator.trace-init/trace-init.decorator-handler.js'
 export { DecoratorHandlerTraceLog } from './decorator.trace-log/trace-log.decorator-handler.js'
 export {
-  AbstractOtelComponent, AbstractTraceService,
-} from './abstract.js'
+  AbstractTraceService,
+  type DecoratorContext,
+  type DecoratorTraceData,
+  type DecoratorTraceDataResp,
+  type TraceOptions as TraceDecoratorArg,
+  type TraceDecoratorOptions,
+  type TraceScopeParamType,
+  type TraceScopeType,
+} from './abstract.trace-service.js'
+
+export { AbstractOtelComponent } from './abstract.component.js'
 export * from './trace.logger.js'
 export * from './trace.service.js'
 export * from './decorator.trace/trace.js'
@@ -53,20 +62,11 @@ export {
   SpanExporterList,
 } from './types.js'
 
-export type {
-  DecoratorContext,
-  DecoratorTraceData,
-  DecoratorTraceDataResp,
-  TraceOptions as TraceDecoratorArg,
-  TraceDecoratorOptions,
-  TraceScopeParamType,
-  TraceScopeType,
-} from './decorator.types.js'
 
 export { genDecoratorExecutorOptions } from './trace.helper.js'
 export {
   genTraceScope, getScopeStringCache,
-} from './decorator.helper.js'
+} from './decorator.helper.base.js'
 
 export { AttrNames } from './attrnames.types.js'
 

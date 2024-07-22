@@ -1,4 +1,4 @@
-import type { NextFunction } from '@mwcp/share'
+import type { NextFunction, Context as Context } from '@mwcp/share'
 import type { Attributes } from '@opentelemetry/api'
 import { genISO8601String, genError } from '@waiting/shared-core'
 
@@ -11,6 +11,7 @@ import { AttrNames } from '##/lib/types.js'
  * ex will NOT be thrown again
  */
 export async function handleTopExceptionAndNext(
+  ctx: Context,
   traceSvc: TraceService,
   next: NextFunction,
 ): Promise<void> {
@@ -20,8 +21,7 @@ export async function handleTopExceptionAndNext(
   }
   catch (error) {
     const err = genError({ error })
-    traceSvc.setRootSpanWithError(err)
-    const { ctx } = traceSvc
+    traceSvc.setRootSpanWithError(err, void 0, ctx)
     /* c8 ignore next 3 */
     if (typeof ctx.status === 'undefined') {
       ctx.status = 500
@@ -48,6 +48,7 @@ export async function handleTopExceptionAndNext(
  * re-throw ex
  */
 export async function handleAppExceptionAndNext(
+  webCtx: Context,
   traceSvc: TraceService,
   next: NextFunction,
 ): Promise<void> {
@@ -55,20 +56,23 @@ export async function handleAppExceptionAndNext(
   try {
     await next()
 
-    const events: Attributes = {
-      event: AttrNames.PostProcessBegin,
-      time: genISO8601String(),
+    const rootSpan = traceSvc.getRootSpan(webCtx)
+    if (rootSpan) {
+      const events: Attributes = {
+        event: AttrNames.PostProcessBegin,
+        time: genISO8601String(),
+      }
+      traceSvc.addEvent(rootSpan, events)
     }
-    traceSvc.addEvent(traceSvc.rootSpan, events)
   }
   catch (error) {
     const err = genError({ error })
-    const currSpan = traceSvc.getActiveSpan()
+    const currSpan = traceSvc.getActiveSpan(webCtx)
     if (currSpan) {
-      traceSvc.setSpanWithError(currSpan, err)
+      traceSvc.setSpanWithError(currSpan, err, void 0, webCtx)
     }
     else {
-      traceSvc.setRootSpanWithError(err)
+      traceSvc.setRootSpanWithError(err, void 0, webCtx)
     }
     throw err
   }

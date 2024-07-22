@@ -1,9 +1,10 @@
 import { Singleton } from '@midwayjs/core'
 import { MConfig, DecoratorExecutorParamBase, genError } from '@mwcp/share'
 
-import { DecoratorHandlerTraceBase } from '../decorator.base.types.js'
-import { TraceDecoratorOptions } from '../decorator.types.js'
-import { DecoratorExecutorParam, GenDecoratorExecutorOptions, genDecoratorExecutorOptions } from '../trace.helper.js'
+import type { DecoratorExecutorParam, GenDecoratorExecutorOptions } from '../abstract.trace-service.js'
+import { TraceDecoratorOptions } from '../abstract.trace-service.js'
+import { DecoratorHandlerTraceBase } from '../decorator-handler-trace-base.js'
+import { genDecoratorExecutorOptions } from '../trace.helper.js'
 import { Config, ConfigKey } from '../types.js'
 
 import { beforeAsync, afterReturnAsync, afterThrowAsync as afterThrowAsync } from './trace-log.helper.async.js'
@@ -17,7 +18,7 @@ export class DecoratorHandlerTraceLog extends DecoratorHandlerTraceBase {
   override genExecutorParam(options: DecoratorExecutorParamBase<TraceDecoratorOptions>) {
     const optsExt: GenDecoratorExecutorOptions = {
       config: this.config,
-      otelComponent: this.otelComponent,
+      traceService: this.traceService,
     }
     const ret = genDecoratorExecutorOptions(options, optsExt)
     return ret
@@ -26,6 +27,9 @@ export class DecoratorHandlerTraceLog extends DecoratorHandlerTraceBase {
   override before(options: DecoratorExecutorParam) {
     /* c8 ignore next */
     if (! this.isEnable(options)) { return }
+    if (! options.webContext) {
+      options.webContext = this.getWebContext()
+    }
 
     // Do NOT use isAsyncFunction(options.method), result may not correct
     if (options.methodIsAsyncFunction) {

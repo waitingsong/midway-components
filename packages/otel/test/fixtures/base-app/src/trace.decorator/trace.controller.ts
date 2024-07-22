@@ -3,7 +3,7 @@ import {
   Get,
   Inject,
 } from '@midwayjs/core'
-import { MConfig } from '@mwcp/share'
+import { MConfig, Context } from '@mwcp/share'
 
 import { apiBase, apiMethod } from '../types/api-test.js'
 import { Trace, TraceService } from '../types/index.js'
@@ -18,6 +18,7 @@ export class DefaultComponentController {
 
   @MConfig(ConfigKey.config) readonly config: Config
 
+  @Inject() readonly ctx: Context
   @Inject() readonly svc: DefaultComponentService
   @Inject() readonly traceSvc: TraceService
 
@@ -101,7 +102,7 @@ export class DefaultComponentController {
     })
     this.appLogger.log({
       msg: traceId,
-    }, this.traceSvc.rootSpan)
+    }, this.traceSvc.getRootSpan(this.ctx))
     return traceId
   }
 

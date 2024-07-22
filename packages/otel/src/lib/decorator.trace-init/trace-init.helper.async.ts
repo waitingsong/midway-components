@@ -3,9 +3,8 @@ import assert from 'assert'
 import { SpanKind } from '@opentelemetry/api'
 import type { Attributes, SpanOptions } from '@opentelemetry/api'
 
+import type { DecoratorExecutorParam, TraceDecoratorOptions } from '../abstract.trace-service.js'
 import { processDecoratorBeforeAfterAsync } from '../decorator.helper.async.js'
-import type { TraceDecoratorOptions } from '../decorator.types.js'
-import type { DecoratorExecutorParam } from '../trace.helper.js'
 
 
 export async function before(options: DecoratorExecutorParam<TraceDecoratorOptions>): Promise<void> {
@@ -18,17 +17,15 @@ export async function before(options: DecoratorExecutorParam<TraceDecoratorOptio
     spanName,
     spanOptions,
     mergedDecoratorParam,
-    otelComponent,
+    traceService,
   } = options
 
-  assert(otelComponent, 'otelComponent is required')
-
-  const traceCtx = otelComponent.appInitProcessContext
+  const traceCtx = traceService.otel.appInitProcessContext
   const spanOpts: SpanOptions = {
     ...spanOptions,
     kind: SpanKind.INTERNAL,
   }
-  const span = otelComponent.startSpan(spanName, spanOpts, traceCtx)
+  const span = traceService.otel.startSpan(spanName, spanOpts, traceCtx)
   options.span = span
 
   span.setAttributes(callerAttr)
@@ -40,10 +37,10 @@ export async function before(options: DecoratorExecutorParam<TraceDecoratorOptio
     logCpuUsage: true,
     logMemoryUsage: true,
   }
-  otelComponent.addEvent(span, events, addEventOptions)
+  traceService.otel.addEvent(span, events, addEventOptions)
 
   if (mergedDecoratorParam) {
-    await processDecoratorBeforeAfterAsync('before', options)
+    await processDecoratorBeforeAfterAsync(options.webApp, 'before', options)
   }
 }
 
@@ -61,13 +58,11 @@ export async function afterReturn(options: DecoratorExecutorParam<TraceDecorator
   const {
     spanName,
     mergedDecoratorParam,
-    otelComponent,
+    traceService,
   } = options
 
-  assert(otelComponent, 'otelComponent is required')
-
   if (mergedDecoratorParam) {
-    await processDecoratorBeforeAfterAsync('after', options)
+    await processDecoratorBeforeAfterAsync(options.webApp, 'after', options)
   }
 
   const events2: Attributes = {
@@ -78,8 +73,8 @@ export async function afterReturn(options: DecoratorExecutorParam<TraceDecorator
     logCpuUsage: true,
     logMemoryUsage: true,
   }
-  otelComponent.addEvent(span, events2, addEventOptions)
-  otelComponent.endSpan(otelComponent.appInitProcessSpan, span)
+  traceService.otel.addEvent(span, events2, addEventOptions)
+  traceService.otel.endSpan(traceService.otel.appInitProcessSpan, span)
 
   return options.methodResult
 }

@@ -1,70 +1,58 @@
 import assert from 'node:assert'
 
+import type { Application, Context } from '@mwcp/share'
 import type { Span } from '@opentelemetry/api'
 import { isArrowFunction } from '@waiting/shared-core'
 
-import type { AbstractOtelComponent, AbstractTraceService } from './abstract.js'
 import type {
+  AbstractTraceService,
+  DecoratorExecutorParam,
   DecoratorContextBase,
   DecoratorTraceDataResp,
   ScopeGenerator,
   TraceDecoratorOptions,
-  TraceScopeType,
   TraceScopeParamType,
-} from './decorator.types.js'
-import type { DecoratorExecutorParam } from './trace.helper.js'
+  TraceScopeType,
+} from './abstract.trace-service.js'
 import type { Attributes } from './types.js'
 
 
 export function processDecoratorSpanData(
-  otelComponent: AbstractOtelComponent,
-  traceService: AbstractTraceService | undefined,
+  scope: Context | Application,
+  traceService: AbstractTraceService,
   span: Span,
   info: DecoratorTraceDataResp | undefined,
 ): void {
 
   if (info && Object.keys(info).length > 0) {
     const { attrs, events, rootAttrs, rootEvents } = info
-    processEvents(otelComponent, traceService, span, events)
-    processEvents(otelComponent, traceService, traceService?.rootSpan, rootEvents)
+    const rootSpan = traceService.getRootSpan(scope)
+    processEvents(traceService, span, events)
+    processEvents(traceService, rootSpan, rootEvents)
 
-    processAttrs(otelComponent, traceService, span, attrs)
-    processAttrs(otelComponent, traceService, traceService?.rootSpan, rootAttrs)
+    processAttrs(traceService, span, attrs)
+    processAttrs(traceService, rootSpan, rootAttrs)
   }
 }
 
 function processAttrs(
-  otelComponent: AbstractOtelComponent,
-  traceService: AbstractTraceService | undefined,
+  traceService: AbstractTraceService,
   span: Span | undefined,
   attrs: Attributes | undefined,
 ): void {
 
   if (! attrs || ! span || ! Object.keys(attrs).length) { return }
-
-  if (traceService) {
-    traceService.setAttributes(span, attrs)
-  }
-  else {
-    otelComponent.setAttributes(span, attrs)
-  }
+  traceService.setAttributes(span, attrs)
 }
 
 function processEvents(
-  otelComponent: AbstractOtelComponent,
-  traceService: AbstractTraceService | undefined,
+  traceService: AbstractTraceService,
   span: Span | undefined,
   events: Attributes | undefined,
 ): void {
 
   if (! events || ! span || ! Object.keys(events).length) { return }
-
-  if (traceService) {
-    traceService.addEvent(span, events)
-  }
-  else {
-    otelComponent.addEvent(span, events)
-  }
+  traceService.addEvent(span, events)
 }
 
 /**
@@ -80,7 +68,6 @@ export function genTraceScopeFrom(options: DecoratorExecutorParam): TraceScopeTy
   const decoratorContextBase: DecoratorContextBase = {
     webApp: options.webApp,
     webContext: options.webContext,
-    otelComponent: options.otelComponent,
     traceService: options.traceService,
     traceScope: options.traceScope,
     /** Caller Class name */
@@ -134,9 +121,7 @@ export interface GenTraceScopeOptions {
   instance: DecoratorExecutorParam['instance']
 }
 export function genTraceScope(options: GenTraceScopeOptions): TraceScopeType | undefined {
-  const tmp = options.scope
-
-  const scope = tmp
+  const { scope } = options
 
   let ret: TraceScopeType | undefined
   switch (typeof scope) {
@@ -195,7 +180,9 @@ export function getTraceScopeParamFromArgs(
     if (! arg || typeof arg !== 'object') { continue }
 
     // @ts-ignore
-    const val = arg[key] as TraceScopeParamType | undefined
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const val = arg[key]
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     if (val && isTraceScopeParamType(val)) {
       return val
     }

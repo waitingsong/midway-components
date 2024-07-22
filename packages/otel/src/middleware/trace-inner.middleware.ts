@@ -41,17 +41,20 @@ async function middleware(
   next: NextFunction,
 ): Promise<void> {
 
-  const traceSvc = ctx[`_${ConfigKey.serviceName}`] as TraceService
-  // const traceSvc = await ctx.requestContext.getAsync(TraceService)
+  const container = ctx.app.getApplicationContext()
+  const traceSvc = (ctx[`_${ConfigKey.serviceName}`] ?? await container.getAsync(TraceService)) as TraceService
   assert(traceSvc, 'traceSvc is required')
-  addSpanEventWithIncomingRequestData(traceSvc.rootSpan, ctx)
 
-  traceSvc.addEvent(traceSvc.rootSpan, {
-    event: AttrNames.PreProcessFinish,
-    [AttrNames.ServiceMemoryUsage]: JSON.stringify(humanMemoryUsage(), null, 2),
-  })
+  const rootSpan = traceSvc.getRootSpan(ctx)
+  if (rootSpan) {
+    addSpanEventWithIncomingRequestData(rootSpan, ctx)
+    traceSvc.addEvent(rootSpan, {
+      event: AttrNames.PreProcessFinish,
+      [AttrNames.ServiceMemoryUsage]: JSON.stringify(humanMemoryUsage(), null, 2),
+    })
+  }
 
   // const config = getComponentConfig(ctx.app)
-  return handleAppExceptionAndNext(traceSvc, next)
+  return handleAppExceptionAndNext(ctx, traceSvc, next)
 }
 

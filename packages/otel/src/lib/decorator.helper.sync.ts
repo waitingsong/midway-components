@@ -1,11 +1,11 @@
 import assert from 'node:assert'
 import { isPromise } from 'node:util/types'
 
+import type { Application, Context } from '@mwcp/share'
 import { isArrowFunction } from '@waiting/shared-core'
 
-import { processDecoratorSpanData } from './decorator.helper.js'
-import type { DecoratorContext, TraceDecoratorOptions } from './decorator.types.js'
-import type { DecoratorExecutorParam } from './trace.helper.js'
+import type { DecoratorExecutorParam, DecoratorContext, TraceDecoratorOptions } from './abstract.trace-service.js'
+import { processDecoratorSpanData } from './decorator.helper.base.js'
 import { AttrNames } from './types.js'
 import { isSpanEnded } from './util.js'
 
@@ -13,11 +13,12 @@ import { isSpanEnded } from './util.js'
 // #region processDecoratorBeforeAfterSync
 
 export function processDecoratorBeforeAfterSync(
+  scope: Context | Application,
   type: 'before' | 'after' | 'afterThrow',
   options: DecoratorExecutorParam<TraceDecoratorOptions>,
 ): void {
 
-  const { mergedDecoratorParam, otelComponent, span, traceService } = options
+  const { mergedDecoratorParam, span, traceService } = options
   // not check traceService due to TraceInit decorator
   assert(span, 'span is required')
 
@@ -27,7 +28,6 @@ export function processDecoratorBeforeAfterSync(
     const decoratorContext: DecoratorContext = {
       webApp: options.webApp,
       webContext: options.webContext,
-      otelComponent: options.otelComponent,
       traceService: options.traceService,
       traceContext: options.traceContext,
       traceSpan: span,
@@ -68,7 +68,8 @@ export function processDecoratorBeforeAfterSync(
       if (data.events && ! data.events['event']) {
         data.events['event'] = eventName
       }
-      processDecoratorSpanData(otelComponent, traceService, span, data)
+
+      processDecoratorSpanData(scope, traceService, span, data)
     }
   }
 

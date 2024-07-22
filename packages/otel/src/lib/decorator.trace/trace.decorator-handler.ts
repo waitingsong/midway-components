@@ -1,9 +1,9 @@
 import { Singleton } from '@midwayjs/core'
 import { MConfig, DecoratorExecutorParamBase, genError } from '@mwcp/share'
 
-import { DecoratorHandlerTraceBase } from '../decorator.base.types.js'
-import { TraceDecoratorOptions } from '../decorator.types.js'
-import { DecoratorExecutorParam, GenDecoratorExecutorOptions, genDecoratorExecutorOptions } from '../trace.helper.js'
+import type { DecoratorExecutorParam, GenDecoratorExecutorOptions, TraceDecoratorOptions } from '../abstract.trace-service.js'
+import { DecoratorHandlerTraceBase } from '../decorator-handler-trace-base.js'
+import { genDecoratorExecutorOptions } from '../trace.helper.js'
 import { Config, ConfigKey } from '../types.js'
 
 import { beforeAsync, afterReturnAsync, afterThrowAsync } from './trace.helper.async.js'
@@ -17,7 +17,10 @@ export class DecoratorHandlerTrace extends DecoratorHandlerTraceBase {
   override genExecutorParam(options: DecoratorExecutorParamBase<TraceDecoratorOptions>) {
     const optsExt: GenDecoratorExecutorOptions = {
       config: this.config,
-      otelComponent: this.otelComponent,
+      traceService: this.traceService,
+    }
+    if (! options.webContext) {
+      options.webContext = this.getWebContext()
     }
     const ret = genDecoratorExecutorOptions(options, optsExt)
     return ret

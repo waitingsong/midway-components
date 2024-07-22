@@ -4,8 +4,10 @@ import { SEMATTRS_HTTP_TARGET, SEMATTRS_HTTP_ROUTE } from '@opentelemetry/semant
 import { fileShortPath } from '@waiting/shared-core'
 
 import {
+  assertJaegerParentSpanArray,
   assertsSpan, assertRootSpan,
-  retrieveTraceInfoFromRemote, sortSpans,
+  retrieveTraceInfoFromRemote,
+  sortSpans,
 } from '##/index.js'
 import type { AssertsOptions } from '##/index.js'
 import { apiBase, apiMethod } from '#@/api-test.js'
@@ -38,9 +40,13 @@ describe(fileShortPath(import.meta.url), function () {
     assert(span6)
     assert(span7)
 
-    assert(span2.spanID === span3.references[0]?.spanID)
-    assert(span4.spanID === span5.references[0]?.spanID)
-    assert(span6.spanID === span7.references[0]?.spanID)
+    assertJaegerParentSpanArray([
+      { parentSpan: rootSpan, childSpan: span1 },
+      { parentSpan: span1, childSpan: span2 },
+      { parentSpan: span2, childSpan: span3 },
+      { parentSpan: span4, childSpan: span5 },
+      { parentSpan: span6, childSpan: span7 },
+    ])
 
     assertRootSpan({
       path,

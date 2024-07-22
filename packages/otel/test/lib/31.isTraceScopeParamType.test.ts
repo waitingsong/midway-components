@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-import { isTraceScopeParamType } from '##/lib/decorator.helper.js'
+import { isTraceScopeParamType } from '##/lib/decorator.helper.base.js'
 
 
 describe(fileShortPath(import.meta.url), function () {

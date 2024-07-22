@@ -1,3 +1,5 @@
+import assert from 'assert'
+
 import {
   Controller,
   Get,
@@ -31,6 +33,7 @@ export class DefaultOtelComponentController {
   async hello(): Promise<string> {
     this.validateRoute()
     const traceId = this.traceSvc.getTraceId()
+    assert(traceId, 'traceId is empty')
     const msg = await this.svc.hello(Msg.hello)
     const ret = `${msg}: ${traceId}`
     return ret

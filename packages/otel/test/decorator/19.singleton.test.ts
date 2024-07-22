@@ -16,7 +16,7 @@ import { testConfig } from '#@/root.config.js'
 describe(fileShortPath(import.meta.url), function () {
   this.retries(3)
 
-  const path = `${apiBase.TraceDecorator}/${apiMethod.decorator_arg2}`
+  const path = `${apiBase.define_scope}/${apiMethod.hello}`
 
   it(`Should ${path} work`, async () => {
     const { httpRequest, validateSpanInfo } = testConfig
@@ -28,33 +28,31 @@ describe(fileShortPath(import.meta.url), function () {
     const resp = await httpRequest.get(path)
     assert(resp.ok, resp.text)
 
-    const [traceId, rnd, suffix] = resp.text.split(':')
-    assert(traceId)
+    const traceId = resp.text
     assert(traceId.length === 32)
-    assert(rnd)
-    assert(typeof suffix === 'string')
-    console.log({ traceId, rnd, suffix })
-    const int = parseInt(rnd, 10)
-    const opName = `foo-${int + 1}-${suffix}`
 
-    const [info] = await retrieveTraceInfoFromRemote(traceId, 3)
+    const [info] = await retrieveTraceInfoFromRemote(traceId, 4)
     assert(info)
+    // info.spans.forEach((span, idx) => {
+    //   console.info(idx, { span })
+    // })
 
-    const [rootSpan, span1, span2] = sortSpans(info.spans)
+    const [rootSpan, span1, span2, span3] = sortSpans(info.spans)
     assert(rootSpan)
     assert(span1)
     assert(span2)
+    assert(span3)
 
     assertJaegerParentSpanArray([
       { parentSpan: rootSpan, childSpan: span1 },
       { parentSpan: span1, childSpan: span2 },
+      { parentSpan: span1, childSpan: span3 },
     ])
 
     assertRootSpan({
       path,
       span: rootSpan,
       traceId,
-      operationName: `HTTP GET ${path}`,
       tags: {
         [SEMATTRS_HTTP_TARGET]: path,
         [SEMATTRS_HTTP_ROUTE]: path,
@@ -63,38 +61,26 @@ describe(fileShortPath(import.meta.url), function () {
 
     const opt1: AssertsOptions = {
       traceId,
-      operationName: 'DefaultComponentController/arg2',
+      operationName: 'SingletonService/hello',
       tags: {
-        'caller.class': 'DefaultComponentController',
-        'caller.method': 'arg2',
+        'caller.class': 'SingletonService',
+        'caller.method': 'hello',
         'span.kind': 'client',
       },
     }
-    try {
-      assertsSpan(span1, opt1)
-    }
-    catch (ex) {
-      console.error({ rootSpan, span1, span2 })
-      throw ex
-    }
+    assertsSpan(span1, opt1)
 
     const opt2: AssertsOptions = {
       traceId,
-      operationName: opName,
-      tags: {
-        'caller.class': 'DefaultComponentService',
-        'caller.method': 'testArg2',
-        'span.kind': 'client',
-      },
+      operationName: 'SingletonService/helloAsync',
     }
-    try {
-      assertsSpan(span2, opt2)
-    }
-    catch (ex) {
-      console.error({ rootSpan, span1, span2 })
-      throw ex
-    }
-  })
+    assertsSpan(span2, opt2)
 
+    const opt3: AssertsOptions = {
+      traceId,
+      operationName: 'SingletonService/helloSync',
+    }
+    assertsSpan(span3, opt3)
+  })
 })
 

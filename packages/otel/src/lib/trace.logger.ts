@@ -5,9 +5,10 @@ import {
   Singleton,
 } from '@midwayjs/core'
 import { ILogger } from '@midwayjs/logger'
+import { Context } from '@mwcp/share'
 import type { Attributes, Span } from '@opentelemetry/api'
 
-import { AbstractOtelComponent } from './abstract.js'
+import { AbstractOtelComponent } from './abstract.component.js'
 import { OtelComponent } from './component.js'
 import { TraceService } from './trace.service.js'
 import { AttrNames, TraceLogType } from './types.js'
@@ -78,6 +79,7 @@ export class TraceAppLogger implements ILogger {
 @Provide()
 export class TraceLogger implements ILogger {
 
+  @Inject() readonly ctx: Context
   @Inject() protected readonly logger: ILogger
   @Inject() protected readonly traceSvc: TraceService
   @Inject() protected readonly traceAppLogger: TraceAppLogger
@@ -138,14 +140,16 @@ export class TraceLogger implements ILogger {
    *  - false: 仅打印日志，不上报
    */
   log(input: TraceLogType, span?: Span | false): void {
-    if (this.traceSvc.isStarted) {
-      const currSpan = span ?? this.traceSvc.rootSpan
-      this.traceAppLogger.log(input, currSpan, this.logger)
+    const isStarted = this.traceSvc.isStartedMap.get(this.ctx)
+    if (isStarted) {
+      const currSpan = span ?? this.traceSvc.getRootSpan(this.ctx)
+      if (currSpan) {
+        this.traceAppLogger.log(input, currSpan, this.logger)
+        return
+      }
     }
-    else {
-      // log w/o trace
-      this.traceAppLogger.log(input, false, this.logger)
-    }
+    // log w/o trace
+    this.traceAppLogger.log(input, false, this.logger)
   }
 
 }

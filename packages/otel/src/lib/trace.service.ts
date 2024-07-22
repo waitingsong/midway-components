@@ -1,26 +1,37 @@
 import assert from 'node:assert'
 
 import {
-  Init,
+  type AsyncContextManager,
+  App,
+  ApplicationContext,
+  ASYNC_CONTEXT_KEY,
+  ASYNC_CONTEXT_MANAGER_KEY,
   Inject,
-  Provide,
+  Init,
+  IMidwayContainer,
+  Singleton,
 } from '@midwayjs/core'
-import { Context as WebContext, MConfig, getRouterInfo, RouterInfoLite } from '@mwcp/share'
+import { type Context, MConfig, getRouterInfo, RouterInfoLite, Application } from '@mwcp/share'
 import {
   Attributes,
-  Context,
+  Context as TraceContext,
   propagation,
   ROOT_CONTEXT,
   Span,
   SpanKind,
   SpanOptions,
   SpanStatusCode,
-  context,
   TimeInput,
+  context,
 } from '@opentelemetry/api'
 import { genISO8601String } from '@waiting/shared-core'
 
-import { AbstractTraceService, StartScopeActiveSpanOptions } from './abstract.js'
+import {
+  AbstractTraceService,
+  type TraceScopeType,
+  type StartScopeActiveSpanOptions,
+  EndSpanOptions,
+} from './abstract.trace-service.js'
 import { OtelComponent } from './component.js'
 import { initSpanStatusOptions } from './config.js'
 import {
@@ -36,75 +47,186 @@ import {
   genRequestSpanName,
   getIncomingRequestAttributesFromWebContext,
   getSpan,
-  setSpan,
   setSpanWithRequestHeaders,
 } from './util.js'
 
 
-@Provide()
+@Singleton()
 export class TraceService extends AbstractTraceService {
+  @App() readonly app: Application
+  @ApplicationContext() readonly applicationContext: IMidwayContainer
 
   @MConfig(ConfigKey.config) readonly config: Config
   @MConfig(ConfigKey.middlewareConfig) readonly mwConfig: MiddlewareConfig
 
-  @Inject() readonly ctx: WebContext
   @Inject() readonly otel: OtelComponent
 
-  rootContext: Context
-  rootSpan: Span
-  isStarted = false
-  routerInfo: RouterInfoLite | undefined
+  readonly isStartedMap = new WeakMap <TraceScopeType, boolean>()
+  // readonly rootContextMap = new WeakMap<TraceScopeType, TraceContext>()
+  readonly rootSpanMap = new WeakMap<TraceScopeType, Span>()
+
+  // @FIXME
+  readonly routerInfoMap = new WeakMap<TraceScopeType, RouterInfoLite>()
 
   readonly instanceId = Symbol(Date.now())
   readonly startTime = genISO8601String()
 
   @Init()
   async init(): Promise<void> {
-    if (! this.ctx[middlewareEnableCacheKey]) { return }
-
-    const routerInfo = await getRouterInfo(this.ctx)
-    this.routerInfo = routerInfo
-    this.start()
+    await this.startOnInit(this.app)
   }
 
-  /**
-   * @default scope is `this.ctx`
-   */
-  getActiveContext(scope?: object | symbol): Context {
-    const obj = scope ?? this.ctx
-    let ctx = this.otel.getScopeActiveContext(obj)
+  getWebContext(): Context | undefined {
+    try {
+      const contextManager: AsyncContextManager = this.applicationContext.get(
+        ASYNC_CONTEXT_MANAGER_KEY,
+      )
+      const ctx = contextManager.active().getValue(ASYNC_CONTEXT_KEY) as Context | undefined
+      return ctx
+    }
+    catch (ex) {
+      void ex
+      // console.warn(new Error('getWebContext() failed', { cause: ex }))
+      return void 0
+    }
+  }
+
+  getWebContextThenApp(): Context | Application {
+    try {
+      const webContext = this.getWebContext()
+      assert(webContext, 'getActiveContext() webContext should not be null, maybe this calling is not in a request context')
+      return webContext
+    }
+    catch (ex) {
+      console.warn('getWebContextThenApp() failed', ex)
+      return this.app
+    }
+  }
+
+
+  getRootTraceContext(scope: TraceScopeType): TraceContext | undefined {
+    return this.otel.getScopeRootTraceContext(scope)
+  }
+
+  setRootContext(scope: TraceScopeType, traceContext: TraceContext): void {
+    const rootCtx = this.getRootTraceContext(scope)
+    if (rootCtx && rootCtx === traceContext) { return }
+    assert(! rootCtx, 'TraceService.setRootContext() failed, scope root trace context exists already')
+    this.otel.setScopeActiveContext(scope, traceContext)
+  }
+
+  getRootSpan(scope: TraceScopeType): Span | undefined {
+    return this.rootSpanMap.get(scope)
+  }
+
+  setRootSpan(scope: TraceScopeType, span: Span): void {
+    this.rootSpanMap.set(scope, span)
+  }
+
+  async startOnRequest(webCtx: Context): Promise<void> {
+    if (! webCtx[middlewareEnableCacheKey]) { return }
+    if (this.isStartedMap.get(webCtx) === true) { return }
+
+    Object.defineProperty(webCtx, `_${ConfigKey.serviceName}`, {
+      enumerable: true,
+      writable: true,
+      value: this,
+    })
+    if (! this.config.enable) { return }
+
+    await this.addRequestRouterInfo(webCtx)
+
+    this.initRootSpan(webCtx)
+    this.isStartedMap.set(webCtx, true)
+
+    const events: Attributes = {
+      event: AttrNames.RequestBegin,
+      time: this.startTime,
+    }
+    const rootSpan = this.getRootSpan(webCtx)
+    if (rootSpan) {
+      this.addEvent(rootSpan, events)
+      setSpanWithRequestHeaders(
+        rootSpan,
+        this.otel.captureHeadersMap.get('request'),
+        key => webCtx.get(key),
+      )
+    }
+
+    Promise.resolve()
+      .then(async () => {
+        const attrs = await getIncomingRequestAttributesFromWebContext(webCtx, this.config)
+        attrs[AttrNames.RequestStartTime] = this.startTime
+        this.setAttributes(rootSpan, attrs)
+      })
+      .catch((err: Error) => {
+        this.setRootSpanWithError(err, void 0, webCtx)
+        console.error(err)
+      })
+  }
+
+  async addRequestRouterInfo(webCtx: Context): Promise<void> {
+    const routerInfo = await getRouterInfo(webCtx)
+    // assert(routerInfo, new MidwayHttpError(`Path not found: "${webCtx.path}"`, 404))
+    routerInfo && this.routerInfoMap.set(webCtx, routerInfo)
+  }
+
+  getRequestRouterInfo(webCtx: TraceScopeType): RouterInfoLite | undefined {
+    const routerInfo = this.routerInfoMap.get(webCtx)
+    return routerInfo
+  }
+
+  getActiveContext(scope?: TraceScopeType): TraceContext {
+    if (scope) {
+      const ctx = this.otel.getScopeActiveContext(scope)
+      if (ctx) {
+        return ctx
+      }
+      const webContext = this.getWebContext()
+      if (scope === webContext || scope === this.app) {
+        const ctx2 = this.getRootTraceContext(scope as Application | Context)
+        assert(ctx2, 'getActiveContext() trace ctx should not be null with scope value= webContext or app')
+        return ctx2
+      }
+      else if (webContext) {
+        const ctx3 = this.otel.getScopeActiveContext(webContext)
+        assert(ctx3, `getActiveContext() failed with scope value "${typeof scope === 'symbol' ? scope.toString() : ''}", use webContext instead`)
+        return ctx3
+      }
+      else { // create new span and traceContext
+        // const { context: ctx4 } = this.otel.startSpan2('new span', { kind: SpanKind.INTERNAL })
+        const ctx4 = this.otel.getGlobalCurrentContext()
+        return ctx4
+        // assert(false, `getActiveContext() failed with scope value "${typeof scope === 'symbol' ? scope.toString() : ''}"`)
+      }
+    }
+
+    const scope2 = this.getWebContextThenApp()
+    const ctx = this.otel.getScopeActiveContext(scope2)
     if (ctx) {
       return ctx
     }
-    else if (scope === this.ctx) {
-      return this.rootContext
+    const ctx2 = this.getRootTraceContext(scope2)
+    assert(ctx2, 'getActiveContext() get trace ctx failed without scope, you should pass a scope value')
+    return ctx2
+  }
+
+  setActiveContext(traceContext: TraceContext, scope?: TraceScopeType): void {
+    if (! this.config.enable) { return }
+    const obj = scope ?? this.getWebContext()
+    assert(obj, 'setActiveContext() scope should not be null')
+    this.otel.setScopeActiveContext(obj, traceContext)
+  }
+
+  delActiveContext(scope?: TraceScopeType): void {
+    if (! this.config.enable) { return }
+    const obj = scope ?? this.getWebContext()
+    if (obj) {
+      this.otel.delScopeActiveContext(obj)
     }
-    ctx = this.otel.getScopeActiveContext(this.ctx)
-    return ctx ? ctx : this.rootContext
   }
 
-  /**
-   * @default scope is `this.ctx`
-   */
-  setActiveContext(ctx: Context, scope?: object | symbol): void {
-    if (! this.config.enable) { return }
-    const obj = scope ?? this.ctx
-    this.otel.setScopeActiveContext(obj, ctx)
-  }
-
-  /**
-   * @default scope is `this.ctx`
-   */
-  delActiveContext(scope?: object | symbol): void {
-    if (! this.config.enable) { return }
-    const obj = scope ?? this.ctx
-    this.otel.delScopeActiveContext(obj)
-  }
-
-  /**
-   * @default scope is `this.ctx`
-   */
-  getActiveSpan(scope?: object | symbol): Span | undefined {
+  getActiveSpan(scope?: Context | Application): Span | undefined {
     if (! this.config.enable) { return }
     const traceCtx = this.getActiveContext(scope)
     const span = getSpan(traceCtx)
@@ -112,20 +234,26 @@ export class TraceService extends AbstractTraceService {
   }
 
   getTraceId(): string {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    return this.isStarted || this.rootSpan ? this.rootSpan.spanContext().traceId : ''
+    const webCtx = this.getWebContext()
+    if (webCtx) {
+      const rootSpan = this.getRootSpan(webCtx)
+      if (rootSpan) {
+        return rootSpan.spanContext().traceId
+      }
+    }
+    return ''
   }
 
   /**
-   * Starts a new {@link Span}. Start the span without setting it on context.
+   * Starts a new {@link Span}. Start the span **without** setting it on context.
    * This method do NOT modify the current Context.
-   * @default scope is `this.ctx`
+   * @default scope is `request ctx`
    */
   startSpan(
     name: string,
     options?: SpanOptions,
-    traceContext?: Context,
-    scope?: object | symbol,
+    traceContext?: TraceContext,
+    scope?: TraceScopeType,
   ): Span {
 
     const ctx = traceContext ?? this.getActiveContext(scope)
@@ -136,15 +264,16 @@ export class TraceService extends AbstractTraceService {
   /**
    * Starts a new {@link Span}.
    * Additionally the new span gets set in context and this context is activated, you must to call `this.endSpan()` manually.
-   * @default options.scope is `this.ctx`
+   * @default scope is `request ctx`
    */
-  startScopeActiveSpan(options: StartScopeActiveSpanOptions): Span {
-    const scope = options.scope ?? this.ctx
+  startScopeActiveSpan(options: StartScopeActiveSpanOptions): { span: Span, traceContext: TraceContext } {
+    const scope = options.scope ?? this.getWebContext()
+    assert(scope, 'startScopeActiveSpan() scope should not be null')
+
     const parentCtx = options.traceContext ?? this.getActiveContext(scope)
-    const span = this.startSpan(options.name, options.spanOptions, parentCtx, scope)
-    const traceCtx = setSpan(parentCtx, span)
-    this.setActiveContext(traceCtx, scope)
-    return span
+    const ret = this.otel.startSpanContext(options.name, options.spanOptions, parentCtx)
+    this.setActiveContext(ret.traceContext, scope)
+    return ret
   }
 
   /**
@@ -156,47 +285,61 @@ export class TraceService extends AbstractTraceService {
    * @CAUTION: the span returned by this method is NOT ended automatically,
    *   you must to call `this.endSpan()` manually instead of span.edn() directly.
    */
-  startActiveSpan<F extends (
-    ...args: [Span, Context]) => ReturnType<F>>(
+  startActiveSpan<F extends (...args: [Span, TraceContext]) => ReturnType<F>>(
     name: string,
     callback: F,
     options?: SpanOptions,
-    traceContext?: Context,
-    scope?: object | symbol,
+    traceContext?: TraceContext,
+    scope?: Application | Context,
   ): ReturnType<F> {
 
-    const parentCtx = traceContext ?? this.getActiveContext(scope)
-    const span = this.startSpan(name, options, parentCtx, scope)
-    const traceCtx = setSpan(parentCtx, span)
-    this.setActiveContext(traceCtx, scope)
+    const scope2 = scope ?? this.getWebContext()
+    assert(scope2, 'scope should not be null')
+
+    // const parentCtx = traceContext ?? this.getActiveContext(scope2)
+    // const span = this.startSpan(name, options, parentCtx, scope2)
+    // const traceCtx = setSpan(parentCtx, span)
+    // this.setActiveContext(traceCtx, scope2)
+    const { span, traceContext: traceCtx } = this.startScopeActiveSpan({
+      name,
+      spanOptions: options,
+      traceContext,
+      scope: scope2,
+    })
     const cb = () => callback(span, traceCtx)
     return context.with(traceCtx, cb, void 0, span)
   }
 
   /**
+   * Do following steps:
    * - ends the given span
    * - set span with error if error passed in params
    * - set span status
    * - call span.end(), except span is root span
    */
-  endSpan(
-    span: Span,
-    spanStatusOptions: SpanStatusOptions = initSpanStatusOptions,
-    endTime?: TimeInput,
-  ): void {
-
+  endSpan(options: EndSpanOptions): void {
+    const { span, spanStatusOptions, endTime, scope } = options
     if (! this.config.enable) { return }
-    this.otel.endSpan(this.rootSpan, span, spanStatusOptions, endTime)
+
+    const scope2 = scope ?? this.getWebContext()
+    const rootSpan = scope2 ? this.getRootSpan(scope2) : void 0
+    const statusOpts = spanStatusOptions ?? initSpanStatusOptions
+    this.otel.endSpan(rootSpan, span, statusOpts, endTime)
   }
 
   endRootSpan(
     spanStatusOptions: SpanStatusOptions = initSpanStatusOptions,
     endTime?: TimeInput,
+    scope?: TraceScopeType,
   ): void {
 
     if (! this.config.enable) { return }
-    this.otel.endSpan(this.rootSpan, this.rootSpan, spanStatusOptions, endTime)
-    this.rootSpan.end(endTime)
+    assert(scope, 'scope should not be null')
+
+    const rootSpan = this.getRootSpan(scope)
+    assert(rootSpan, 'rootSpan should not be null')
+    this.otel.endSpan(rootSpan, rootSpan, spanStatusOptions, endTime)
+    rootSpan.end(endTime)
   }
 
   /**
@@ -206,10 +349,14 @@ export class TraceService extends AbstractTraceService {
     span: Span,
     error: Error | undefined,
     eventName?: string,
+    scope?: Application | Context,
   ): void {
 
     if (! this.config.enable) { return }
-    this.otel.setSpanWithError(this.rootSpan, span, error, eventName)
+
+    const scope2 = scope ?? this.getWebContext()
+    const rootSpan = scope2 ? this.getRootSpan(scope2) : void 0
+    this.otel.setSpanWithError(rootSpan, span, error, eventName)
   }
 
   /**
@@ -218,24 +365,29 @@ export class TraceService extends AbstractTraceService {
   setRootSpanWithError(
     error: Error | undefined,
     eventName?: string,
+    scope?: Application | Context,
   ): void {
 
     if (! this.config.enable) { return }
-    this.otel.setSpanWithError(this.rootSpan, this.rootSpan, error, eventName)
+
+    const scope2 = scope ?? this.getWebContext()
+    const rootSpan = scope2 ? this.getRootSpan(scope2) : void 0
+    if (rootSpan) {
+      this.otel.setSpanWithError(rootSpan, rootSpan, error, eventName)
+    }
   }
 
   /**
    * Adds an event to the given span.
    */
   addEvent(
-    span: Span | undefined,
+    span: Span,
     input: Attributes,
     options?: AddEventOptions,
   ): void {
 
     if (! this.config.enable) { return }
-    const span2 = span ?? this.rootSpan
-    this.otel.addEvent(span2, input, options)
+    this.otel.addEvent(span, input, options)
   }
 
   /**
@@ -244,14 +396,28 @@ export class TraceService extends AbstractTraceService {
   setAttributes(span: Span | undefined, input: Attributes): void {
     if (! this.config.enable) { return }
 
-    const target = span ?? this.rootSpan
+    let target = span
+    if (! target) {
+      const webCtx = this.getWebContext()
+      assert(webCtx, 'setAttributes() webCtx should not be null, maybe this calling is not in a request context')
+      const rootSpan = this.getRootSpan(webCtx)
+      assert(rootSpan, 'rootSpan should not be null')
+      target = rootSpan
+    }
     this.otel.setAttributes(target, input)
   }
 
   setAttributesLater(span: Span | undefined, input: Attributes): void {
     if (! this.config.enable) { return }
 
-    const target = span ?? this.rootSpan
+    let target = span
+    if (! target) {
+      const webCtx = this.getWebContext()
+      assert(webCtx, 'setAttributesLater() webCtx should not be null, maybe this calling is not in a request context')
+      const rootSpan = this.getRootSpan(webCtx)
+      assert(rootSpan, 'rootSpan should not be null')
+      target = rootSpan
+    }
     this.otel.setAttributesLater(target, input)
   }
 
@@ -259,12 +425,14 @@ export class TraceService extends AbstractTraceService {
    * Finish the root span and clean the context.
    */
   finish(
+    webCtx: Application | Context,
     spanStatusOptions: SpanStatusOptions = initSpanStatusOptions,
     endTime?: TimeInput,
   ): void {
 
-    if (! this.isStarted) { return }
     if (! this.config.enable) { return }
+
+    if (! this.isStartedMap.get(webCtx)) { return }
 
     const time = genISO8601String()
 
@@ -272,20 +440,27 @@ export class TraceService extends AbstractTraceService {
       time,
       event: AttrNames.RequestEnd,
     }
-    this.addEvent(this.rootSpan, events)
+
+    const rootSpan = this.getRootSpan(webCtx)
+    assert(rootSpan, 'rootSpan should not be null')
+
+    this.addEvent(rootSpan, events)
 
     const attr: Attributes = {
       [AttrNames.RequestEndTime]: time,
     }
-    this.setAttributes(this.rootSpan, attr)
+    this.setAttributes(rootSpan, attr)
 
     if (spanStatusOptions.code !== SpanStatusCode.ERROR) {
       spanStatusOptions.code = SpanStatusCode.OK
     }
-    this.endRootSpan(spanStatusOptions, endTime)
-    this.delActiveContext()
+    this.endRootSpan(spanStatusOptions, endTime, webCtx)
 
-    this.ctx[`_${ConfigKey.serviceName}`] = null
+    this.delActiveContext(webCtx)
+    if (webCtx !== this.app) {
+      // @ts-ignore
+      webCtx[`_${ConfigKey.serviceName}`] = null
+    }
   }
 
 
@@ -294,71 +469,57 @@ export class TraceService extends AbstractTraceService {
     await this.otel.flush()
   }
 
-  // #region private methods
+  // #region protected methods
 
-  protected genRootSpanName(): string {
+  protected async startOnInit(webApplication: Application): Promise<void> {
+    if (! this.config.enable) { return }
+    if (this.isStartedMap.get(webApplication) === true) { return }
+
+    this.isStartedMap.set(webApplication, true)
+
+    // const events: Attributes = {
+    //   event: AttrNames.RequestBegin,
+    //   time: this.startTime,
+    // }
+    // const rootSpan = this.getRootSpan(webApplication)
+    // rootSpan && this.addEvent(rootSpan, events)
+  }
+
+
+  protected initRootSpan(scope: Context): void {
+    assert(scope, 'initRootSpan() webCtx should not be null, maybe this calling is not in a request context')
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    const traceCtx = typeof scope.getApp === 'function' && scope.request?.headers
+      ? propagation.extract(ROOT_CONTEXT, scope.request.headers)
+      : ROOT_CONTEXT
+    this.startActiveSpan(
+      this.genRootSpanName(scope),
+      (span, ctx) => {
+        assert(span, 'rootSpan should not be null on init')
+        this.rootSpanMap.set(scope, span)
+        // this.rootContextMap.set(scope, ctx)
+        this.setRootContext(scope, ctx)
+      },
+      { kind: SpanKind.SERVER },
+      traceCtx,
+      scope,
+    )
+  }
+
+  protected genRootSpanName(scope: Context): string {
+    const routerInfo = this.getRequestRouterInfo(scope)
     const opts = {
       /** ctx.request?.protocol */
-      protocol: this.ctx.request.protocol || '',
+      protocol: scope.request.protocol || '',
       /** ctx.method */
-      method: this.ctx.method,
-      route: this.routerInfo?.fullUrl ?? '',
+      method: scope.method,
+      route: routerInfo?.fullUrl ?? scope.path,
     }
     const spanName = this.config.rootSpanName && typeof this.config.rootSpanName === 'function'
-      ? this.config.rootSpanName(this.ctx)
+      ? this.config.rootSpanName(scope)
       : genRequestSpanName(opts)
     return spanName
   }
-
-  protected initRootSpan(): void {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    const traceCtx = this.ctx.request?.headers
-      ? propagation.extract(ROOT_CONTEXT, this.ctx.request.headers)
-      : ROOT_CONTEXT
-    this.startActiveSpan(this.genRootSpanName(), (span, ctx) => {
-      assert(span, 'rootSpan should not be null on init')
-      this.rootSpan = span
-      this.rootContext = ctx
-    }, { kind: SpanKind.SERVER }, traceCtx)
-  }
-
-  protected start(): void {
-    if (this.isStarted) { return }
-
-    Object.defineProperty(this.ctx, `_${ConfigKey.serviceName}`, {
-      enumerable: true,
-      writable: true,
-      value: this,
-    })
-    if (! this.config.enable) { return }
-
-    this.initRootSpan()
-    this.isStarted = true
-
-    const events: Attributes = {
-      event: AttrNames.RequestBegin,
-      time: this.startTime,
-    }
-    this.addEvent(this.rootSpan, events)
-
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    this.ctx.get && setSpanWithRequestHeaders(
-      this.rootSpan,
-      this.otel.captureHeadersMap.get('request'),
-      key => this.ctx.get(key),
-    )
-
-    Promise.resolve()
-      .then(async () => {
-        const attrs = await getIncomingRequestAttributesFromWebContext(this.ctx, this.config)
-        attrs[AttrNames.RequestStartTime] = this.startTime
-        this.setAttributes(this.rootSpan, attrs)
-      })
-      .catch((err: Error) => {
-        this.setRootSpanWithError(err)
-        console.error(err)
-      })
-  }
-
 
 }

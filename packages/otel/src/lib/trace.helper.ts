@@ -2,19 +2,16 @@
 import assert from 'node:assert'
 
 import type { DecoratorExecutorParamBase } from '@mwcp/share'
-import type { Span, SpanOptions } from '@opentelemetry/api'
 import { isArrowFunction } from '@waiting/shared-core'
 
-import type { AbstractTraceService, AbstractOtelComponent } from './abstract.js'
-import type { DecoratorContext, KeyGenerator, TraceDecoratorOptions, TraceScopeType } from './decorator.types.js'
-import {
-  AttrNames,
-
-  ConfigKey,
-
-  middlewareEnableCacheKey,
-} from './types.js'
-import type { Config, TraceContext } from './types.js'
+import type {
+  DecoratorExecutorParam,
+  DecoratorContext,
+  GenDecoratorExecutorOptions,
+  KeyGenerator,
+  TraceDecoratorOptions,
+} from './abstract.trace-service.js'
+import { AttrNames, ConfigKey } from './types.js'
 
 
 const configNameList = [
@@ -137,25 +134,6 @@ function genEventKeyWhenSpanNameEmpty(options: GenKeyOptions): string {
   return name
 }
 
-export type ExecutorParamBase<T extends TraceDecoratorOptions = TraceDecoratorOptions> = DecoratorExecutorParamBase<T>
-
-export type DecoratorExecutorParam<T extends TraceDecoratorOptions = TraceDecoratorOptions> = ExecutorParamBase<T>
-  & GenDecoratorExecutorOptions
-  & {
-    callerAttr: { [AttrNames.CallerClass]: string, [AttrNames.CallerMethod]: string },
-    spanName: string,
-    spanOptions: Partial<SpanOptions>,
-    startActiveSpan: boolean,
-    traceContext: TraceContext | undefined,
-    traceService: AbstractTraceService | undefined,
-    traceScope: TraceScopeType | undefined,
-    span: Span | undefined,
-  }
-
-export interface GenDecoratorExecutorOptions {
-  config: Config
-  otelComponent: AbstractOtelComponent
-}
 
 export function genDecoratorExecutorOptions(
   optionsBase: DecoratorExecutorParamBase<TraceDecoratorOptions>,
@@ -164,18 +142,14 @@ export function genDecoratorExecutorOptions(
 
   const { methodArgs } = optionsBase
 
-  let traceService
+  const { traceService } = optionsExt
+  assert(traceService, 'traceService is required')
   if (optionsBase.webContext) {
-    traceService = optionsBase.webContext[`_${ConfigKey.serviceName}`]
-    // 根据中间件启用状态判断是否校验 TraceService 是否初始化
-    if (optionsBase.webContext[middlewareEnableCacheKey] === true) {
-      assert(traceService, 'TraceService is not initialized. (TraceService 尚未初始化) 路由可能设置为忽略追踪')
+    const traceService2 = optionsBase.webContext[`_${ConfigKey.serviceName}`]
+    if (! traceService2) {
+      optionsBase.webContext[`_${ConfigKey.serviceName}`] = traceService
     }
   }
-
-  // const { otel } = traceService
-  const { otelComponent } = optionsExt
-  assert(otelComponent, 'OtelComponent is not initialized. (OTEL Component 尚未初始化)')
 
   const { mergedDecoratorParam } = optionsBase
   assert(mergedDecoratorParam, 'mergedDecoratorParam is undefined')
@@ -188,8 +162,6 @@ export function genDecoratorExecutorOptions(
     mergedDecoratorParam.autoEndSpan = true
   }
 
-  // const traceScope = getTraceScopeFromArgs(methodArgs as GetTraceScopeFromArgsOptions[])
-
   // DO NOT set traceContext
   // if (! mergedDecoratorParam.traceContext) {
   //   mergedDecoratorParam.traceContext = traceService?.getActiveContext()
@@ -198,7 +170,6 @@ export function genDecoratorExecutorOptions(
   const decoratorContext: DecoratorContext = {
     webApp: optionsBase.webApp,
     webContext: optionsBase.webContext,
-    otelComponent,
     traceService,
     traceContext: mergedDecoratorParam.traceContext,
     traceSpan: void 0,
@@ -234,7 +205,6 @@ export function genDecoratorExecutorOptions(
     spanName,
     spanOptions: mergedDecoratorParam,
     startActiveSpan: mergedDecoratorParam.startActiveSpan,
-    otelComponent,
     traceContext: mergedDecoratorParam.traceContext,
     traceService,
     traceScope: void 0,

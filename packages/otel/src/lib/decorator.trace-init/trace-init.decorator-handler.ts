@@ -2,9 +2,10 @@ import { Inject, Singleton } from '@midwayjs/core'
 import { MConfig, DecoratorExecutorParamBase, DecoratorHandlerBase, genError } from '@mwcp/share'
 import { SpanStatusCode } from '@opentelemetry/api'
 
+import type { DecoratorExecutorParam, GenDecoratorExecutorOptions, TraceDecoratorOptions } from '../abstract.trace-service.js'
 import { OtelComponent } from '../component.js'
-import { TraceDecoratorOptions } from '../decorator.types.js'
-import { DecoratorExecutorParam, GenDecoratorExecutorOptions, genDecoratorExecutorOptions } from '../trace.helper.js'
+import { genDecoratorExecutorOptions } from '../trace.helper.js'
+import { TraceService } from '../trace.service.js'
 import { AttrNames, Config, ConfigKey } from '../types.js'
 import { isSpanEnded } from '../util.js'
 
@@ -16,6 +17,7 @@ export class DecoratorHandlerTraceInit extends DecoratorHandlerBase {
   @MConfig(ConfigKey.config) protected readonly config: Config
 
   @Inject() protected readonly otelComponent: OtelComponent
+  @Inject() protected readonly traceService: TraceService
 
   isEnable(options: DecoratorExecutorParam): boolean {
     /* c8 ignore next 3 */
@@ -33,7 +35,7 @@ export class DecoratorHandlerTraceInit extends DecoratorHandlerBase {
   override genExecutorParam(options: DecoratorExecutorParamBase<TraceDecoratorOptions>) {
     const optsExt: GenDecoratorExecutorOptions = {
       config: this.config,
-      otelComponent: this.otelComponent,
+      traceService: this.traceService,
     }
     const ret = genDecoratorExecutorOptions(options, optsExt)
     return ret
@@ -68,12 +70,12 @@ export class DecoratorHandlerTraceInit extends DecoratorHandlerBase {
   // #region private methods
 
   private traceError(options: DecoratorExecutorParam, error: Error): void {
-    const { span, otelComponent } = options
+    const { span } = options
     if (! this.isEnable(options) || ! span) { return }
     // @ts-ignore - IsTraced
     else if (error[AttrNames.IsTraced] && isSpanEnded(span)) { return }
 
-    otelComponent.endSpan(otelComponent.appInitProcessSpan, span, { code: SpanStatusCode.ERROR, error })
+    this.otelComponent.endSpan(this.otelComponent.appInitProcessSpan, span, { code: SpanStatusCode.ERROR, error })
   }
   /* c8 ignore stop */
 }

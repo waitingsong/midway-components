@@ -6,7 +6,7 @@ import {
   Inject,
   Post,
 } from '@midwayjs/core'
-import { MConfig } from '@mwcp/share'
+import { Context, MConfig } from '@mwcp/share'
 
 import { apiBase, apiMethod } from '../types/api-test.js'
 import { Trace, TraceService } from '../types/index.js'
@@ -19,6 +19,7 @@ export class UtilComponentController {
 
   @MConfig(ConfigKey.config) readonly config: Config
 
+  @Inject() readonly ctx: Context
   @Inject() readonly traceSvc: TraceService
 
   @Trace({
@@ -40,12 +41,13 @@ export class UtilComponentController {
     spanName: () => '',
   })
   private async _simple1(): Promise<string> {
-    const span = this.traceSvc.startScopeActiveSpan({ name: 'simple1' })
+    const { span, traceContext } = this.traceSvc.startScopeActiveSpan({ name: 'simple1', scope: this.ctx })
     assert(span)
     assert(! isSpanEnded(span))
 
-    const traceCtx2 = this.traceSvc.getActiveContext()
+    const traceCtx2 = this.traceSvc.getActiveContext(this.ctx)
     assert(traceCtx2)
+    assert(traceCtx2 === traceContext)
 
     const span2 = getSpan(traceCtx2)
     assert(span2)
@@ -59,7 +61,7 @@ export class UtilComponentController {
     assert(span2a)
     assert(span2a === span)
 
-    const traceCtx5 = this.traceSvc.getActiveContext()
+    const traceCtx5 = this.traceSvc.getActiveContext(this.ctx)
     assert(traceCtx5)
     assert(traceCtx5 === traceCtx2)
 

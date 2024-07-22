@@ -51,9 +51,9 @@ export class AutoConfiguration {
       const rootAttrs = { rootInitAttrsAfter: 'rootInitAttrsAfter' }
       const rootEvents = { ...rootAttrs }
 
-      const { otelComponent, traceSpan } = decoratorContext
+      const { traceService, traceSpan } = decoratorContext
       if (traceSpan) {
-        otelComponent?.addSpanEventWithError(traceSpan, new Error('testInitAfter'))
+        traceService?.otel.addSpanEventWithError(traceSpan, new Error('testInitAfter'))
       }
 
       return { attrs, events, rootAttrs, rootEvents }

@@ -26,6 +26,7 @@ export class DecoratorScopeComponentController {
   async simple(): Promise<string> {
     const traceId = this.traceSvc.getTraceId()
     await this._simple1()
+    await sleep(1)
     await Promise.all([
       this._simple1(),
       Promise.resolve().then(async () => {

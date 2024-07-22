@@ -5,7 +5,7 @@ import {
   Get,
   Inject,
 } from '@midwayjs/core'
-import { MConfig } from '@mwcp/share'
+import { Context, MConfig } from '@mwcp/share'
 
 import { apiBase, apiMethod } from '../types/api-test.js'
 import { Trace, TraceService } from '../types/index.js'
@@ -18,6 +18,7 @@ export class UtilController {
 
   @MConfig(ConfigKey.config) readonly config: Config
 
+  @Inject() readonly ctx: Context
   @Inject() readonly traceSvc: TraceService
 
   @Trace()
@@ -30,7 +31,7 @@ export class UtilController {
     headers.set('a', '1')
     assert(headers.get('a') === '1')
 
-    const traceCtx = this.traceSvc.getActiveContext()
+    const traceCtx = this.traceSvc.getActiveContext(this.ctx)
     propagateHeader(traceCtx, headers)
     assert(headers)
     const traceParent = headers.get(HeadersKey.TRACE_PARENT_HEADER)

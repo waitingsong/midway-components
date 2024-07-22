@@ -13,6 +13,7 @@ export const apiBase = {
   trace_log: '/trace_log',
   trace_singleton: '/trace_singleton',
   trace_this: '/trace_this',
+  define_scope: '/define_scope',
 }
 
 export const apiMethod = {

@@ -2,6 +2,10 @@
 import assert from 'node:assert'
 
 import {
+  type AsyncContextManager,
+  ApplicationContext,
+  ASYNC_CONTEXT_KEY,
+  ASYNC_CONTEXT_MANAGER_KEY,
   App,
   MidwayDecoratorService,
   Init,
@@ -13,12 +17,14 @@ import {
 } from '@midwayjs/core'
 import { ILogger } from '@midwayjs/logger'
 import {
+  type Context as WebContext,
   Application,
+  IMidwayContainer,
   MConfig,
 } from '@mwcp/share'
 import {
   Attributes,
-  Context,
+  Context as TraceContext,
   Span,
   SpanKind,
   SpanOptions,
@@ -39,7 +45,8 @@ import type { NpmPkg } from '@waiting/shared-types'
 
 import { initTrace } from '##/helper/index.opentelemetry.js'
 
-import { AbstractOtelComponent } from './abstract.js'
+import { AbstractOtelComponent } from './abstract.component.js'
+import type { TraceScopeType } from './abstract.trace-service.js'
 import { initSpanStatusOptions } from './config.js'
 import {
   AddEventOptions,
@@ -60,7 +67,8 @@ import PKG from '#package.json' with { type: 'json' }
 @Singleton()
 export class OtelComponent extends AbstractOtelComponent {
 
-  @App() app: Application
+  @App() readonly app: Application
+  @ApplicationContext() readonly applicationContext: IMidwayContainer
 
   @MConfig(ConfigKey.config) protected readonly config: Config
 
@@ -76,7 +84,7 @@ export class OtelComponent extends AbstractOtelComponent {
   @Logger() protected readonly logger: ILogger
 
   /** Active during Midway Lifecycle between onReady and onServerReady */
-  appInitProcessContext: Context | undefined
+  appInitProcessContext: TraceContext | undefined
   /** Active during Midway Lifecycle between onReady and onServerReady */
   appInitProcessSpan: Span | undefined
 
@@ -85,7 +93,7 @@ export class OtelComponent extends AbstractOtelComponent {
   /* request|response -> Map<lower,norm> */
   readonly captureHeadersMap = new Map<string, Map<string, string>>()
   // ref: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap
-  readonly traceContextMap = new WeakMap<object | symbol, Context[]>()
+  readonly traceContextMap = new WeakMap<object | symbol, TraceContext[]>()
 
   protected traceProvider: node.NodeTracerProvider | undefined
   protected spanProcessors: node.SpanProcessor[] = []
@@ -122,15 +130,15 @@ export class OtelComponent extends AbstractOtelComponent {
     /* c8 ignore stop */
 
     await this._init()
-    await this._init2()
+    await this._app_init_start()
   }
 
-  getGlobalCurrentContext(): Context {
+  getGlobalCurrentContext(): TraceContext {
     const traceContext = context.active()
     return traceContext
   }
 
-  getGlobalCurrentSpan(traceContext?: Context): Span | undefined {
+  getGlobalCurrentSpan(traceContext?: TraceContext): Span | undefined {
     /* c8 ignore next */
     if (! this.config.enable) { return }
     return trace.getSpan(traceContext ?? context.active())
@@ -142,19 +150,21 @@ export class OtelComponent extends AbstractOtelComponent {
     return this.getGlobalCurrentSpan()?.spanContext().traceId
   }
 
+  // #region startScopeActiveSpan
+
   /**
    * Starts a new {@link Span}. Start the span without setting it on context.
    * This method do NOT modify the current Context.
    */
-  startSpan(name: string, options?: SpanOptions, traceContext?: Context): Span {
-    const { span } = this.startSpan2(name, options, traceContext)
+  startSpan(name: string, options?: SpanOptions, traceContext?: TraceContext): Span {
+    const { span } = this.startSpanContext(name, options, traceContext)
     return span
   }
 
   /**
    * Starts a new {@link Span}. Start the span without setting it on context.
    */
-  startSpan2(name: string, options?: SpanOptions, traceContext?: Context): { span: Span, context: Context } {
+  startSpanContext(name: string, options?: SpanOptions, traceContext?: TraceContext): { span: Span, traceContext: TraceContext } {
     assert(name, 'name must be set')
     const tracer = trace.getTracer(this.otelLibraryName, this.otelLibraryVersion)
     const opts: SpanOptions = {
@@ -163,8 +173,10 @@ export class OtelComponent extends AbstractOtelComponent {
     }
     const span = tracer.startSpan(name, opts, traceContext)
     const ctx = setSpan(traceContext ?? context.active(), span)
-    return { span, context: ctx }
+    return { span, traceContext: ctx }
   }
+
+  // #region startScopeActiveSpan
 
   /**
    * Starts a new {@link Span} and calls the given function passing it the created span as first argument.
@@ -177,7 +189,7 @@ export class OtelComponent extends AbstractOtelComponent {
     name: string,
     callback: F,
     options?: SpanOptions,
-    traceContext?: Context,
+    traceContext?: TraceContext,
   ): ReturnType<F> {
 
     assert(name, 'name must be set')
@@ -417,6 +429,7 @@ export class OtelComponent extends AbstractOtelComponent {
     }
   }
 
+  /** Called when onServerReady */
   endAppInitEvent(): void {
     if (this.appInitProcessSpan) {
       this.endRootSpan(this.appInitProcessSpan)
@@ -425,7 +438,20 @@ export class OtelComponent extends AbstractOtelComponent {
     }
   }
 
-  getScopeActiveContext(scope: object | symbol): Context | undefined {
+  getScopeRootTraceContext(scope: TraceScopeType): TraceContext | undefined {
+    /* c8 ignore next */
+    if (! this.config.enable) { return }
+
+    const tp = typeof scope
+    assert(tp === 'object' || tp === 'symbol', 'scope must be an object or symbol')
+
+    const arr = this.traceContextMap.get(scope)
+    if (arr?.length) {
+      return arr[0]
+    }
+  }
+
+  getScopeActiveContext(scope: TraceScopeType): TraceContext | undefined {
     /* c8 ignore next */
     if (! this.config.enable) { return }
 
@@ -438,7 +464,7 @@ export class OtelComponent extends AbstractOtelComponent {
     }
   }
 
-  setScopeActiveContext(scope: object | symbol, ctx: Context): void {
+  setScopeActiveContext(scope: object | symbol, ctx: TraceContext): void {
     /* c8 ignore next */
     if (! this.config.enable) { return }
 
@@ -467,9 +493,18 @@ export class OtelComponent extends AbstractOtelComponent {
     this.traceContextMap.delete(scope)
   }
 
+  getWebContext(): WebContext | undefined {
+    const contextManager: AsyncContextManager = this.applicationContext.get(
+      ASYNC_CONTEXT_MANAGER_KEY,
+    )
+    const ctx = contextManager.active().getValue(ASYNC_CONTEXT_KEY) as WebContext | undefined
+    return ctx
+  }
+
+
   // #region protected
 
-  protected getActiveContextFromArray(input: Context[]): Context | undefined {
+  protected getActiveContextFromArray(input: TraceContext[]): TraceContext | undefined {
     const len = input.length
     if (len === 0) { return }
 
@@ -543,7 +578,7 @@ export class OtelComponent extends AbstractOtelComponent {
     }
   }
 
-  protected async _init2(): Promise<void> {
+  protected async _app_init_start(): Promise<void> {
     const isDevelopmentEnvironment = this.environmentService.isDevelopmentEnvironment()
       && ! process.env['CI_BENCHMARK']
 
