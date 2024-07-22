@@ -16,6 +16,8 @@ import { AttrNames } from '##/lib/index.js'
 import type { Attributes, JaegerTraceInfo, JaegerTraceInfoSpan } from '##/lib/index.js'
 
 
+// #region retrieveTraceInfoFromRemote
+
 const agent = exporterEndpoint.replace(/:\d+$/u, '')
 
 export async function retrieveTraceInfoFromRemote(traceId: string, expectSpanNumber?: number): Promise<[JaegerTraceInfo]> {
@@ -89,6 +91,7 @@ export async function retrieveTraceInfoFromRemote(traceId: string, expectSpanNum
   /* c8 ignore stop */
 }
 
+// #region sortSpans
 
 // 对于 JaegerTraceInfo.spans 入参，对于 JaegerTraceInfo.spans 根据 span.reference 的 spanID 依赖关系进行排序
 // 以确保 root span -> span0 -> span1 -> span2 的顺序
@@ -179,6 +182,7 @@ function sortSpansByStartTime(spans: JaegerTraceInfoSpan[]): JaegerTraceInfoSpan
   })
 }
 
+// #region assertRootSpan
 
 export interface AssertsRootOptions {
   path: string
@@ -317,5 +321,35 @@ export function retrieveTraceparentFromHeader(headers: Headers | UndiciHeaders |
     parentId,
     traceFlags,
   } as Traceparent
+}
+
+// #region assertJaegerParentSpanArray
+
+export interface AssertJaegerParentSpanRow {
+  parentSpan: JaegerTraceInfoSpan
+  childSpan: JaegerTraceInfoSpan
+}
+export function assertJaegerParentSpanArray(input: AssertJaegerParentSpanRow[]): void {
+  input.forEach((row) => {
+    assertJaegerParentSpan(row.parentSpan, row.childSpan)
+  })
+}
+
+// #region assertJaegerParentSpan
+
+export function assertJaegerParentSpan(
+  parentSpan: JaegerTraceInfoSpan,
+  childSpan: JaegerTraceInfoSpan,
+): void {
+
+  assert(parentSpan, 'parentSpan is null')
+  assert(childSpan, 'childSpan is null')
+
+  assert(
+    parentSpan.spanID === childSpan.references[0]?.spanID,
+    `parentSpan.spanID: ${parentSpan.spanID},
+      childSpan: ${childSpan.spanID},
+      childSpan.parent spanID: ${childSpan.references[0]?.spanID}`,
+  )
 }
 
