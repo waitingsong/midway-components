@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [32.0.0](https://github.com/waitingsong/midway-components/compare/v31.0.0...v32.0.0) (2024-07-24)
+
+**Note:** Version bump only for package midway-components
+
+
+
+
+
 # [31.0.0](https://github.com/waitingsong/midway-components/compare/v30.21.0...v31.0.0) (2024-07-22)
 
 **Note:** Version bump only for package midway-components
