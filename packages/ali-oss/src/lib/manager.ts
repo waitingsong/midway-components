@@ -3,7 +3,7 @@ import assert from 'node:assert'
 import {
   CreateDataSourceInstanceOptions as CreateInstanceOptions,
   Inject,
-  Provide,
+  Singleton,
 } from '@midwayjs/core'
 import { TraceService } from '@mwcp/otel'
 
@@ -12,7 +12,7 @@ import { AliOssSourceManager } from './source-manager.js'
 import { InstanceConfig, ConfigKey } from './types.js'
 
 
-@Provide()
+@Singleton()
 export class AliOssManager<SourceName extends string = string> {
 
   @Inject() readonly traceService: TraceService
