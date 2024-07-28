@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [33.0.0](https://github.com/waitingsong/midway-components/compare/v32.0.0...v33.0.0) (2024-07-28)
+
+
+### Features
+
+* **cache:** change this of decorator methods from WebContext to the class decorated ([f8d69a8](https://github.com/waitingsong/midway-components/commit/f8d69a83e24b596e682cb4b117e156b488340a94))
+
+
+
+
+
 # [32.0.0](https://github.com/waitingsong/midway-components/compare/v31.0.0...v32.0.0) (2024-07-24)
 
 **Note:** Version bump only for package midway-components
