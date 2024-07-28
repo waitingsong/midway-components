@@ -18,12 +18,11 @@ import type { CachedResponse, CacheableArgs, DecoratorExecutorOptions } from '..
 
 export async function before(options: DecoratorExecutorOptions<CacheableArgs<undefined>>): Promise<void> {
   const {
-    webContext,
     mergedDecoratorParam,
     cachingFactory,
     cachingInstanceId,
+    instance,
   } = options
-  assert(webContext, 'webContext is undefined')
 
   const mergedDecoratorParam2: CacheableArgs = {
     ...initCacheableArgs,
@@ -34,7 +33,7 @@ export async function before(options: DecoratorExecutorOptions<CacheableArgs<und
     cacheName: mergedDecoratorParam2.cacheName,
     methodArgs: options.methodArgs,
     methodResult: options.methodResult,
-    webContext,
+    instance,
   }
   const cacheKey = genCacheKey(opts2)
   options.mergedDecoratorParam = mergedDecoratorParam2
@@ -58,10 +57,8 @@ export async function before(options: DecoratorExecutorOptions<CacheableArgs<und
 
 export async function around(options: DecoratorExecutorOptions<CacheableArgs<undefined>>): Promise<unknown> {
   const {
-    webContext,
     cacheKey,
   } = options
-  assert(webContext, 'webContext is undefined')
 
   if (options.methodResult) {
     return options.methodResult

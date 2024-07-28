@@ -15,8 +15,7 @@ import type { CacheableArgs, CachedResponse, DecoratorExecutorOptions } from '..
 
 
 export async function before(options: DecoratorExecutorOptions<CacheableArgs<undefined>>): Promise<void> {
-  const { webContext, mergedDecoratorParam } = options
-  assert(webContext, 'webContext is undefined')
+  const { instance, mergedDecoratorParam } = options
 
   const mergedDecoratorParam2: CacheableArgs = {
     ...initCachePutArgs,
@@ -28,7 +27,7 @@ export async function before(options: DecoratorExecutorOptions<CacheableArgs<und
     cacheName: mergedDecoratorParam2.cacheName,
     methodArgs: options.methodArgs,
     methodResult: options.methodResult,
-    webContext,
+    instance,
   }
   const cacheKey = genCacheKey(opts2)
   options.mergedDecoratorParam = mergedDecoratorParam2
@@ -37,12 +36,11 @@ export async function before(options: DecoratorExecutorOptions<CacheableArgs<und
 
 export async function decoratorExecutor(options: DecoratorExecutorOptions<CacheableArgs>): Promise<unknown> {
   const {
-    webContext,
+    instance,
     cachingFactory,
     cachingInstanceId,
     cacheKey,
   } = options
-  assert(webContext, 'webContext is undefined')
 
   const { method, methodArgs } = options
   assert(method, 'original method invalid')
@@ -75,7 +73,7 @@ export async function decoratorExecutor(options: DecoratorExecutorOptions<Cachea
     cacheName: mergedDecoratorParam.cacheName,
     methodArgs: options.methodArgs,
     methodResult: options.methodResult,
-    webContext,
+    instance,
   }
   const resp2 = genDataWithCacheMeta(cacheResp, opts2, ttl)
   return resp2

@@ -8,6 +8,7 @@ export const apiBase = {
 
   args: '/args',
   class_cacheable: '/class_cacheable',
+  this_cacheable: '/this_cacheable',
   key_generator: '/key_generator',
   method_cacheable: '/method_cacheable',
   method_cacheevict: '/method_cacheevict',

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { CachingFactory, CacheManagerOptions } from '@midwayjs/cache-manager'
 import type { AbstractTraceService } from '@mwcp/otel'
-import type { Context, DecoratorExecutorParamBase } from '@mwcp/share'
+import type { DecoratorExecutorParamBase, ClzInstance } from '@mwcp/share'
 import type { MethodType, MiddlewareConfig as MWConfig } from '@waiting/shared-types'
 
 
@@ -39,8 +39,11 @@ export interface Config {
  * @param result Result of the method. Only for using `@CacheEvict`
  * @returns if undefined, there is no tailing ":" in cacheName
  */
-export type KeyGenerator<M extends MethodType | undefined = undefined> = (
-  this: Context,
+export type KeyGenerator<
+  M extends MethodType | undefined = undefined,
+  MThis = unknown extends ThisParameterType<M> ? ClzInstance : ThisParameterType<M>,
+> = (
+  this: MThis,
   /** Arguments of the method */
   args: M extends MethodType ? Parameters<M> : any,
   /**
@@ -50,21 +53,30 @@ export type KeyGenerator<M extends MethodType | undefined = undefined> = (
   result: M extends MethodType ? Awaited<ReturnType<M>> : undefined
 ) => string | undefined | false // undefined/false means skip cache
 
-export type WriteCacheConditionFn<M extends MethodType | undefined = undefined> = (
-  this: Context,
+export type WriteCacheConditionFn<
+  M extends MethodType | undefined = undefined,
+  MThis = unknown extends ThisParameterType<M> ? ClzInstance : ThisParameterType<M>,
+> = (
+  this: MThis,
   /** Arguments of the method */
   args: M extends MethodType ? Parameters<M> : any,
   result: M extends MethodType ? Awaited<ReturnType<M>> : any
 ) => boolean | Promise<boolean>
 
-export type ReadCacheConditionFn<M extends MethodType | undefined = undefined> = (
-  this: Context,
+export type ReadCacheConditionFn<
+  M extends MethodType | undefined = undefined,
+  MThis = unknown extends ThisParameterType<M> ? ClzInstance : ThisParameterType<M>,
+> = (
+  this: MThis,
   /** Arguments of the method */
   args: M extends MethodType ? Parameters<M> : any,
 ) => boolean | Promise<boolean>
 
-export type EvictCacheConditionFn<M extends MethodType | undefined = undefined> = (
-  this: Context,
+export type EvictCacheConditionFn<
+  M extends MethodType | undefined = undefined,
+  MThis = unknown extends ThisParameterType<M> ? ClzInstance : ThisParameterType<M>,
+> = (
+  this: MThis,
   /** Arguments of the method */
   args: M extends MethodType ? Parameters<M> : any,
   /**
@@ -75,8 +87,11 @@ export type EvictCacheConditionFn<M extends MethodType | undefined = undefined> 
   result: M extends MethodType ? (Awaited<ReturnType<M>> | undefined) : any
 ) => boolean | Promise<boolean>
 
-export type CacheTTLFn<M extends MethodType | undefined = undefined> = (
-  this: Context,
+export type CacheTTLFn<
+  M extends MethodType | undefined = undefined,
+  MThis = unknown extends ThisParameterType<M> ? ClzInstance : ThisParameterType<M>,
+> = (
+  this: MThis,
   /** Arguments of the method */
   args: M extends MethodType ? Parameters<M> : any,
   /**
@@ -171,7 +186,6 @@ export interface CacheEvictArgs<M extends MethodType | undefined = undefined> {
 export type DecoratorExecutorOptions<T extends CacheableArgs | CacheEvictArgs = any> = DecoratorExecutorParamBase<T>
   & GenDecoratorExecutorOptionsExt
   & {
-    traceService: AbstractTraceService | undefined,
     /**
      * @default 'default'
      */
@@ -183,5 +197,6 @@ export interface GenDecoratorExecutorOptionsExt {
   config: Config
   cachingFactory: CachingFactory
   op: 'cacheable' | 'cacheput' | 'cacheevict'
+  traceService: AbstractTraceService | undefined
 }
 

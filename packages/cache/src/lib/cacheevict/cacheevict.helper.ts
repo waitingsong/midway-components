@@ -8,10 +8,9 @@ import type { CacheEvictArgs, DecoratorExecutorOptions } from '../types.js'
 
 export async function before(options: DecoratorExecutorOptions<CacheEvictArgs>): Promise<void> {
   const {
-    webContext,
+    instance,
     mergedDecoratorParam,
   } = options
-  assert(webContext, 'webContext is undefined')
 
   const mergedDecoratorParam2: CacheEvictArgs = {
     ...initCacheEvictArgs,
@@ -21,7 +20,7 @@ export async function before(options: DecoratorExecutorOptions<CacheEvictArgs>):
     ...mergedDecoratorParam2,
     methodArgs: options.methodArgs,
     methodResult: void 0,
-    webContext,
+    instance,
   }
   const cacheKey = genCacheKey(opts2)
   options.mergedDecoratorParam = mergedDecoratorParam2
@@ -30,13 +29,12 @@ export async function before(options: DecoratorExecutorOptions<CacheEvictArgs>):
 
 export async function around(options: DecoratorExecutorOptions<CacheEvictArgs>): Promise<unknown> {
   const {
-    webContext,
+    instance,
     cachingFactory,
     cachingInstanceId,
     cacheKey,
     mergedDecoratorParam,
   } = options
-  assert(webContext, 'webContext is undefined')
   assert(mergedDecoratorParam, 'mergedDecoratorParam is undefined')
 
   const tmp = computerWriteConditionValue(options)
@@ -72,7 +70,7 @@ export async function around(options: DecoratorExecutorOptions<CacheEvictArgs>):
         ...options.mergedDecoratorParam as CacheEvictArgs,
         methodArgs: options.methodArgs,
         methodResult: options.methodResult,
-        webContext,
+        instance,
       }
       const cacheKey2 = genCacheKey(opts2)
       cacheKey2 && await deleteData(caching, cacheKey2)

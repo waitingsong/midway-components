@@ -2,36 +2,35 @@ import assert from 'node:assert'
 import { createHash } from 'node:crypto'
 
 import type { MidwayUnionCache } from '@midwayjs/cache-manager'
-import { REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
-import { OtelConfigKey } from '@mwcp/otel'
 import type { AbstractTraceService } from '@mwcp/otel'
-import type { DecoratorExecutorParamBase, PagingDTO, Context as WebContext } from '@mwcp/share'
+import type { ClzInstance, DecoratorExecutorParamBase, PagingDTO } from '@mwcp/share'
 
 import { initCacheableArgs, initCacheEvictArgs, initCacheManagerOptions } from './config.js'
 import {
-
-
-
-
   ConfigKey,
-
-
-
   Msg,
 } from './types.js'
-import type { CacheableArgs, CachedResponse, CacheEvictArgs, CacheTTLFn, DataWithCacheMeta, DecoratorExecutorOptions, GenDecoratorExecutorOptionsExt } from './types.js'
+import type {
+  CacheableArgs,
+  CachedResponse,
+  CacheEvictArgs,
+  CacheTTLFn,
+  DataWithCacheMeta,
+  DecoratorExecutorOptions,
+  GenDecoratorExecutorOptionsExt,
+} from './types.js'
 
 
 export interface GenCacheKeyOptions {
   key: CacheableArgs['key']
   cacheName: CacheableArgs['cacheName']
-  webContext: WebContext
+  instance: ClzInstance
   methodArgs: unknown[]
   methodResult?: unknown
 }
 
 export function genCacheKey(options: GenCacheKeyOptions): string | false {
-  const { key, cacheName, webContext, methodArgs, methodResult } = options
+  const { key, cacheName, instance, methodArgs, methodResult } = options
   assert(cacheName, 'cacheName is undefined')
 
   switch (typeof key) {
@@ -51,7 +50,7 @@ export function genCacheKey(options: GenCacheKeyOptions): string | false {
 
     case 'function': {
       // @ts-expect-error
-      const keyStr = key.call(webContext, methodArgs, methodResult)
+      const keyStr = key.call(instance, methodArgs, methodResult)
       switch (typeof keyStr) {
         case 'undefined': {
           const key2 = serializeArgs(methodArgs)
@@ -244,11 +243,8 @@ export async function getData<T = unknown>(
 
 export function computerWriteConditionValue(options: DecoratorExecutorOptions<CacheableArgs | CacheEvictArgs>): boolean | Promise<boolean> {
 
-  const { mergedDecoratorParam: cacheOptions } = options
+  const { mergedDecoratorParam: cacheOptions, instance } = options
   assert(cacheOptions, 'cacheOptions is undefined within computerConditionValue()')
-
-  const webContext = options.instance[REQUEST_OBJ_CTX_KEY]
-  assert(webContext, 'webContext is undefined')
 
   switch (typeof cacheOptions.writeCondition) {
     case 'undefined':
@@ -260,7 +256,7 @@ export function computerWriteConditionValue(options: DecoratorExecutorOptions<Ca
     case 'function': {
       const fn = cacheOptions.writeCondition as (...args: unknown[]) => boolean | Promise<boolean>
       return fn.call(
-        webContext,
+        instance,
         options.methodArgs,
         options.methodResult,
       )
@@ -272,11 +268,8 @@ export function computerWriteConditionValue(options: DecoratorExecutorOptions<Ca
 }
 export function computerReadConditionValue(options: DecoratorExecutorOptions<CacheableArgs>): boolean | Promise<boolean> {
 
-  const { mergedDecoratorParam: cacheOptions } = options
+  const { mergedDecoratorParam: cacheOptions, instance } = options
   assert(cacheOptions, 'cacheOptions is undefined within computerReadConditionValue()')
-
-  const webContext = options.instance[REQUEST_OBJ_CTX_KEY]
-  assert(webContext, 'webContext is undefined')
 
   switch (typeof cacheOptions.condition) {
     case 'undefined':
@@ -288,7 +281,7 @@ export function computerReadConditionValue(options: DecoratorExecutorOptions<Cac
     case 'function': {
       const fn = cacheOptions.condition as (...args: unknown[]) => boolean | Promise<boolean>
       return fn.call(
-        webContext,
+        instance,
         options.methodArgs,
         options.methodResult,
       )
@@ -304,11 +297,8 @@ export function computerTTLValue(
   options: DecoratorExecutorOptions<CacheableArgs>,
 ): number | Promise<number> {
 
-  const { mergedDecoratorParam: cacheOptions } = options
+  const { mergedDecoratorParam: cacheOptions, instance } = options
   assert(cacheOptions, 'cacheOptions is undefined within computerTTLValue()')
-
-  const webContext = options.instance[REQUEST_OBJ_CTX_KEY]
-  assert(webContext, 'webContext is undefined')
 
   let ttl = 10 // second
 
@@ -325,7 +315,7 @@ export function computerTTLValue(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const fn = cacheOptions.ttl as CacheTTLFn<any>
       return fn.call(
-        webContext,
+        instance,
         options.methodArgs,
         result,
       )
@@ -380,16 +370,11 @@ export function genDecoratorExecutorOptions<T extends object>(
     cacheOptions.cacheName = cacheName
   }
 
-  let traceService
-  if (optionsBase.webContext) {
-    traceService = optionsBase.webContext[`_${OtelConfigKey.serviceName}`] as AbstractTraceService | undefined
-    assert(traceService, 'TraceService is not initialized. (TraceService 尚未初始化)')
-  }
+  assert(optionsExt.traceService, 'genDecoratorExecutorOptions(): traceService is undefined')
 
   const ret: DecoratorExecutorOptions = {
     ...optionsBase,
     ...optionsExt,
-    traceService,
     mergedDecoratorParam: cacheOptions,
   }
   return ret

@@ -1,4 +1,5 @@
-import { Singleton } from '@midwayjs/core'
+import { Singleton, Inject } from '@midwayjs/core'
+import { TraceService } from '@mwcp/otel'
 import { DecoratorExecutorParamBase } from '@mwcp/share'
 
 import { DecoratorHandlerCacheBase } from '../decorator.handler.types.js'
@@ -13,11 +14,14 @@ import { before, around } from './cacheable.helper.js'
  */
 @Singleton()
 export class DecoratorHandlerCacheable extends DecoratorHandlerCacheBase {
+  @Inject() readonly traceService: TraceService
+
   override genExecutorParam(options: DecoratorExecutorParamBase): DecoratorExecutorOptions {
     const optsExt: GenDecoratorExecutorOptionsExt = {
       config: this.cacheConfig,
       cachingFactory: this.cachingFactory,
       op: 'cacheable',
+      traceService: this.traceService,
     }
     const ret = genDecoratorExecutorOptions(options, optsExt)
     return ret
