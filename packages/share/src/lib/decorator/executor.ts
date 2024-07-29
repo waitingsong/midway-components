@@ -245,7 +245,7 @@ function prepareOptions(
       break
   }
 
-  const cache = retrieveDecoratorExecutorParam(joinPoint.args) // not use options.methodArgs
+  let cache = retrieveDecoratorExecutorParam(joinPoint.args) // not use options.methodArgs
   if (cache) {
     switch (aopName) {
       /* c8 ignore next 2 */
@@ -263,7 +263,10 @@ function prepareOptions(
     if (['before'].includes(aopName)) {
       assert(typeof cache.methodResult === 'undefined', `result must be undefined in ${aopName}() lifecycle`)
     }
-    return Object.keys(extParam).length ? Object.assign(cache, extParam) : cache
+    if (Object.keys(extParam).length) {
+      cache = Object.assign(cache, extParam) // update cache item
+    }
+    return cache
   }
 
   const executorParamBase: DecoratorExecutorParamBase = genExecutorOptionsCommon(
@@ -276,9 +279,9 @@ function prepareOptions(
     /* c8 ignore next */
     : executorParamBase
 
-  if (aopName !== 'after') {
-    saveDecoratorExecutorParam(joinPoint.args, executorParam)
-  }
+  // if (aopName !== 'after') {
+  saveDecoratorExecutorParam(joinPoint.args, executorParam)
+  // }
   return executorParam
 }
 
