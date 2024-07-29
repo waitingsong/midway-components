@@ -9,8 +9,15 @@ import type { Application } from '../types.js'
 
 import { customDecoratorRegMap } from './custom-decorator-factory.js'
 import { mergeDecoratorMetaDataPayload, retrieveMetadataPayloadsOnClass } from './custom-decorator.helper.js'
-import type { DecoratorHandlerBase, AopCallbackInputArgsType, DecoratorMetaDataPayload, DecoratorExecutorParamBase, InstanceWithDecorator } from './custom-decorator.types.js'
-import { genExecuteDecoratorHandlerAsync, genExecuteDecoratorHandlerSync } from './executor.js'
+import type {
+  AopCallbackInputArgsType,
+  DecoratorHandlerBase,
+  DecoratorMetaDataPayload,
+  DecoratorExecutorParamBase,
+  InstanceWithDecorator,
+} from './custom-decorator.types.js'
+import { genExecuteDecoratorHandlerAsync } from './executor.async.js'
+import { genExecuteDecoratorHandlerSync } from './executor.sync.js'
 
 
 export async function autoRegisterDecoratorHandlers(
