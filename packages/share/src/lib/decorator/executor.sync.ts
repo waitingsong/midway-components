@@ -14,6 +14,7 @@ import {
   type CustomIMethodAspect,
   type AopDispatchOptions,
   prepareOptions,
+  removeDecoratorExecutorParamCache,
 } from './executor.helper.js'
 
 
@@ -54,16 +55,6 @@ export function genExecuteDecoratorHandlerSync(
     )
   }
 
-  if (typeof decoratorHandlerInstance.afterThrow === 'function') {
-    aopCallback.afterThrow = (joinPoint: JoinPoint, error: Error) => aopDispatchSync(
-      'afterThrow',
-      options,
-      decoratorHandlerInstance as DecoratorHandlerInternal,
-      joinPoint,
-      { error },
-    )
-  }
-
   if (typeof decoratorHandlerInstance.after === 'function') {
     aopCallback.after = (joinPoint: JoinPoint, result: unknown, error: Error | undefined) => aopDispatchSync(
       'after',
@@ -71,6 +62,16 @@ export function genExecuteDecoratorHandlerSync(
       decoratorHandlerInstance as DecoratorHandlerInternal,
       joinPoint,
       { methodResult: result, error },
+    )
+  }
+
+  if (typeof decoratorHandlerInstance.afterThrow === 'function') {
+    aopCallback.afterThrow = (joinPoint: JoinPoint, error: Error) => aopDispatchSync(
+      'afterThrow',
+      options,
+      decoratorHandlerInstance as DecoratorHandlerInternal,
+      joinPoint,
+      { error },
     )
   }
 
@@ -97,12 +98,17 @@ export function aopDispatchSync(
   )
 
   let executorParam: DecoratorExecutorParamBase | Promise<DecoratorExecutorParamBase> | undefined = void 0
-  try {
-    executorParam = prepareOptions(aopName, options, joinPoint, decoratorHandlerInstance, extParam)
-    // assert(executorParam.methodIsAsyncFunction === true, 'methodIsAsyncFunction must be true')
+  if (options.errorProcessed && options.error) {
+    throw options.error
   }
-  catch (ex) {
-    processAllErrorSync(decoratorHandlerInstance, options, ex)
+  else {
+    try {
+      executorParam = prepareOptions(aopName, options, joinPoint, decoratorHandlerInstance, extParam)
+    // assert(executorParam.methodIsAsyncFunction === true, 'methodIsAsyncFunction must be true')
+    }
+    catch (ex) {
+      processAllErrorSync(decoratorHandlerInstance, options, ex)
+    }
   }
   assert(executorParam, 'executorParam undefined')
   assert(! isPromise(executorParam), 'aopDispatchSync() executorParam must not be Promise value')
@@ -122,26 +128,45 @@ export function aopDispatchSync(
     }
 
     case 'around': {
-      const res = decoratorHandlerInstance[aopName](executorParam)
-      assert(! isPromise(res), `[@mwcp/${ConfigKey.namespace}] aopDispatchSync() result must not be Promise value`)
-      executorParam.methodResult = res
-      return res
-    }
-
-    case 'afterReturn': {
-      const res = decoratorHandlerInstance[aopName](executorParam)
-      assert(! isPromise(res), `[@mwcp/${ConfigKey.namespace}] aopDispatchSync() result must not be Promise value`)
-      executorParam.methodResult = res
-      return res
-    }
-
-    case 'after': {
       if (executorParam.errorProcessed && executorParam.error) {
         throw executorParam.error
       }
       try {
-        const resp = fn(executorParam)
-        return resp
+        const res = decoratorHandlerInstance[aopName](executorParam)
+        assert(! isPromise(res), `[@mwcp/${ConfigKey.namespace}] aopDispatchSync() result must not be Promise value`)
+        executorParam.methodResult = res
+        return res
+      }
+      catch (ex) {
+        processAllErrorSync(decoratorHandlerInstance, executorParam, ex)
+      }
+      break
+    }
+
+    case 'afterReturn': {
+      if (executorParam.errorProcessed && executorParam.error) {
+        throw executorParam.error
+      }
+      try {
+        const res = decoratorHandlerInstance[aopName](executorParam)
+        assert(! isPromise(res), `[@mwcp/${ConfigKey.namespace}] aopDispatchSync() result must not be Promise value`)
+        executorParam.methodResult = res
+        return res
+      }
+      catch (ex) {
+        processAllErrorSync(decoratorHandlerInstance, executorParam, ex)
+      }
+      break
+    }
+
+    case 'after': {
+      if (executorParam.errorProcessed && executorParam.error) {
+        removeDecoratorExecutorParamCache(joinPoint.args)
+        throw executorParam.error
+      }
+      try {
+        fn(executorParam)
+        removeDecoratorExecutorParamCache(joinPoint.args)
       }
       catch (ex) {
         processAllErrorSync(decoratorHandlerInstance, executorParam, ex)
@@ -160,7 +185,6 @@ export function aopDispatchSync(
       break
     }
 
-
     default: {
       throw new Error('Unknown aopName')
     }
@@ -176,6 +200,7 @@ function processAllErrorSync(
 ): void {
 
   executorParam.error = genError({ error })
+  executorParam.methodResult = void 0
 
   const afterThrow = decoratorHandlerInstance['afterThrow'] as MethodTypeUnknown
 

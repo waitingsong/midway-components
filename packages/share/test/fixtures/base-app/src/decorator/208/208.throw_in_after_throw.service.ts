@@ -1,18 +1,18 @@
 import { Singleton } from '@midwayjs/core'
 
-import { ThrowInBefore, InputOptions } from './130.throw_in_before.helper.js'
+import { ThrowInAfterThrow, InputOptions } from './208.throw_in_after_throw.helper.js'
 
 
 @Singleton()
 export class FullService {
 
-  @ThrowInBefore()
+  @ThrowInAfterThrow()
   async hello(options: InputOptions): Promise<number> {
     const ret = options.input
     return ret
   }
 
-  @ThrowInBefore()
+  @ThrowInAfterThrow()
   helloSync(options: InputOptions): number {
     const ret = options.input
     return ret

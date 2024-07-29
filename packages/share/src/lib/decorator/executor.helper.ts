@@ -33,10 +33,14 @@ export interface AopDispatchOptions {
   error?: DecoratorExecutorParamBase['error']
 }
 
-
 const decoratorExecutorParamCache = new WeakMap<DecoratorExecutorParamBase['methodArgs'], DecoratorExecutorParamBase>()
 
-export function saveDecoratorExecutorParam(
+export function removeDecoratorExecutorParamCache(src: DecoratorExecutorParamBase['methodArgs']): void {
+  assert(typeof src === 'object', 'src must be object')
+  decoratorExecutorParamCache.delete(src)
+}
+
+function saveDecoratorExecutorParamCache(
   src: DecoratorExecutorParamBase['methodArgs'],
   data: DecoratorExecutorParamBase | Promise<DecoratorExecutorParamBase>,
 ): void {
@@ -52,10 +56,11 @@ export function saveDecoratorExecutorParam(
   decoratorExecutorParamCache.set(src, data)
 }
 
-export function retrieveDecoratorExecutorParam(src: DecoratorExecutorParamBase['methodArgs'] | undefined): DecoratorExecutorParamBase | undefined {
+function retrieveDecoratorExecutorParam(src: DecoratorExecutorParamBase['methodArgs'] | undefined): DecoratorExecutorParamBase | undefined {
   return src ? decoratorExecutorParamCache.get(src) : void 0
 }
 
+// #region prepareOptions
 
 /**
  * @description decoratorHandlerInstance will be add property `ctx` to itself
@@ -117,8 +122,7 @@ export function prepareOptions(
     /* c8 ignore next */
     : executorParamBase
 
-  // if (aopName !== 'after') {
-  saveDecoratorExecutorParam(joinPoint.args, executorParam)
+  saveDecoratorExecutorParamCache(joinPoint.args, executorParam)
   return executorParam
 }
 

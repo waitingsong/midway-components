@@ -8,7 +8,7 @@
 | before      |    ✔ ️    |     ✔      |            |            |          |    ✔     |
 | around      |    ✔     |     ✔      |     ✔      |     ✔      |    ✔     |    ✔     |
 | afterReturn |          |            |     ✔      |     ✔      |          |    ✔     |
-| after       |          |            |     ✔      |            |  ✔ (1)   |    ✔     |
+| after       |          |            |     ✔      |            |  ✔ `*1`  |    ✔     |
 | afterThrow  |          |            |            |            |    ✔     |    ✔     |
 
 
@@ -18,4 +18,4 @@
 - 方法通过入参 `options.error` 变量获取异常
 - Boolean `options.errorProcessed` 变量标识异常是否被 `afterThrow` 处理过
 
-- (1) 当获得异常时 `options.errorProcessed` 为 `true`
+- `*1` 当获得异常时 `options.errorProcessed` 为 `true`
