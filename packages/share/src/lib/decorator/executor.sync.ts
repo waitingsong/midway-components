@@ -2,6 +2,8 @@ import assert from 'node:assert'
 import { isAsyncFunction, isPromise } from 'node:util/types'
 
 import type { JoinPoint, IMethodAspect } from '@midwayjs/core'
+import { genError } from '@waiting/shared-core'
+import type { MethodTypeUnknown } from '@waiting/shared-types'
 
 import { ConfigKey } from '../types.js'
 
@@ -94,18 +96,105 @@ export function aopDispatchSync(
     `[@mwcp/${ConfigKey.namespace}] aopDispatchSync(): ${decoratorHandlerClassName}.${func.name}() must not be AsyncFunction, due to method ${instanceName}.${methodName}() is sync function, you can modify it to SyncFunction or return Promise value`,
   )
 
-  const executorParam = prepareOptions(aopName, options, joinPoint, decoratorHandlerInstance, extParam)
-  assert(! isPromise(executorParam), 'aopDispatchSync() executorParam must not be Promise value')
-  // assert(executorParam.methodIsAsyncFunction === true, 'methodIsAsyncFunction must be true')
-
-  if (aopName === 'around' || aopName === 'afterReturn') {
-    const res = decoratorHandlerInstance[aopName](executorParam)
-    assert(! isPromise(res), `[@mwcp/${ConfigKey.namespace}] aopDispatchSync() result must not be Promise value`)
-    executorParam.methodResult = res
-    return res
+  let executorParam: DecoratorExecutorParamBase | Promise<DecoratorExecutorParamBase> | undefined = void 0
+  try {
+    executorParam = prepareOptions(aopName, options, joinPoint, decoratorHandlerInstance, extParam)
+    // assert(executorParam.methodIsAsyncFunction === true, 'methodIsAsyncFunction must be true')
   }
+  catch (ex) {
+    processAllErrorSync(decoratorHandlerInstance, options, ex)
+  }
+  assert(executorParam, 'executorParam undefined')
+  assert(! isPromise(executorParam), 'aopDispatchSync() executorParam must not be Promise value')
 
-  return decoratorHandlerInstance[aopName](executorParam)
+  const fn = decoratorHandlerInstance[aopName].bind(decoratorHandlerInstance) as MethodTypeUnknown
+  assert(typeof fn === 'function', `decoratorHandlerInstance[${aopName}] must be function`)
+
+  switch (aopName) {
+    case 'before': {
+      try {
+        return fn(executorParam)
+      }
+      catch (ex) {
+        processAllErrorSync(decoratorHandlerInstance, executorParam, ex)
+      }
+      break
+    }
+
+    case 'around': {
+      const res = decoratorHandlerInstance[aopName](executorParam)
+      assert(! isPromise(res), `[@mwcp/${ConfigKey.namespace}] aopDispatchSync() result must not be Promise value`)
+      executorParam.methodResult = res
+      return res
+    }
+
+    case 'afterReturn': {
+      const res = decoratorHandlerInstance[aopName](executorParam)
+      assert(! isPromise(res), `[@mwcp/${ConfigKey.namespace}] aopDispatchSync() result must not be Promise value`)
+      executorParam.methodResult = res
+      return res
+    }
+
+    case 'after': {
+      if (executorParam.errorProcessed && executorParam.error) {
+        throw executorParam.error
+      }
+      try {
+        const resp = fn(executorParam)
+        return resp
+      }
+      catch (ex) {
+        processAllErrorSync(decoratorHandlerInstance, executorParam, ex)
+      }
+      break
+    }
+
+    case 'afterThrow': {
+      if (executorParam.errorProcessed && executorParam.error) {
+        throw executorParam.error
+      }
+      fn(executorParam)
+      // if afterThrow eat the error, then reset it
+      executorParam.errorProcessed = void 0
+      executorParam.error = void 0
+      break
+    }
+
+
+    default: {
+      throw new Error('Unknown aopName')
+    }
+  }
 }
 
 
+
+function processAllErrorSync(
+  decoratorHandlerInstance: DecoratorHandlerInternal,
+  executorParam: DecoratorExecutorParamBase,
+  error: unknown,
+): void {
+
+  executorParam.error = genError({ error })
+
+  const afterThrow = decoratorHandlerInstance['afterThrow'] as MethodTypeUnknown
+
+  if (typeof afterThrow !== 'function') {
+    throw error
+  }
+
+  try {
+    Reflect.apply(afterThrow, decoratorHandlerInstance, [executorParam])
+    // if afterThrow eat the error, then reset it
+    executorParam.errorProcessed = void 0
+    executorParam.error = void 0
+  }
+  finally {
+    if (executorParam.error) {
+      executorParam.errorProcessed = true
+    }
+    else {
+      executorParam.errorProcessed = void 0
+    }
+  }
+}

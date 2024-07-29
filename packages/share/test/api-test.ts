@@ -10,6 +10,7 @@ export const apiBase = {
   method: '/method',
   router: '/router',
   decorator_singleton: '/decorator_singleton',
+  decorator_error: '/decorator_error',
 }
 
 export const apiMethod = {
@@ -34,6 +35,8 @@ export const apiMethod = {
 
   /** normal aop callback define */
   normal_aop: 'normal_aop',
+
+  throw_in_before: 'throw_in_before',
 
   // throw in before, re-throw in afterThrow
   before_throw_re_throw: 'before_throw_re_throw',

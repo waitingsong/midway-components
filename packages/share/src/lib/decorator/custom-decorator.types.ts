@@ -92,6 +92,7 @@ export interface DecoratorExecutorParamBase<TDecoratorParam extends object = obj
   methodName: string
   methodResult?: unknown
   error?: Error | undefined
+  errorProcessed?: boolean | undefined
   methodIsAsyncFunction?: boolean
   webApp: Application
   webContext: Context | undefined

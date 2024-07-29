@@ -1,6 +1,9 @@
 import assert from 'node:assert'
+import { isPromise } from 'node:util/types'
 
 import type { JoinPoint, IMethodAspect } from '@midwayjs/core'
+import { genError } from '@waiting/shared-core'
+import type { AsyncMethodType } from '@waiting/shared-types'
 
 import type { DecoratorHandlerBase, DecoratorExecutorParamBase } from './custom-decorator.types.js'
 import {
@@ -39,7 +42,6 @@ export function genExecuteDecoratorHandlerAsync(
     )
   }
 
-
   if (typeof decoratorHandlerInstance.afterReturn === 'function') {
     aopCallback.afterReturn = (joinPoint: JoinPoint, result: unknown) => aopDispatchAsync(
       'afterReturn',
@@ -74,7 +76,6 @@ export function genExecuteDecoratorHandlerAsync(
 }
 
 
-
 async function aopDispatchAsync(
   aopName: AopName,
   options: DecoratorExecutorParamBase,
@@ -91,19 +92,114 @@ async function aopDispatchAsync(
   //   `${decoratorHandlerClassName}.${func.name}() must be async function, due to method ${instanceName}.${methodName}() is async function`,
   // )
 
-  const executorParam = await prepareOptions(aopName, options, joinPoint, decoratorHandlerInstance, extParam)
-  // assert(executorParam.methodIsAsyncFunction === true, 'methodIsAsyncFunction must be true')
-
-  if (aopName === 'around' || aopName === 'afterReturn') {
-    const res = await decoratorHandlerInstance[aopName](executorParam)
-    executorParam.methodResult = res
-    return res
+  let executorParam: DecoratorExecutorParamBase | undefined = void 0
+  try {
+    executorParam = await prepareOptions(aopName, options, joinPoint, decoratorHandlerInstance, extParam)
   }
-  else if (aopName === 'afterThrow') {
-    decoratorHandlerInstance[aopName](executorParam); return
+  catch (ex) {
+    await processAllErrorAsync(decoratorHandlerInstance, options, ex)
+  }
+  assert(executorParam, 'executorParam undefined')
+
+  const fn = decoratorHandlerInstance[aopName].bind(decoratorHandlerInstance) as AsyncMethodType
+  assert(typeof fn === 'function', `decoratorHandlerInstance[${aopName}] must be function`)
+
+  switch (aopName) {
+    case 'before': {
+      try {
+        const resp = fn(executorParam)
+        if (isPromise(resp)) {
+          // eslint-disable-next-line @typescript-eslint/return-await
+          return resp.catch((ex: Error) => {
+            // let midway aop to handle it if afterThrow throw error again
+            return processAllErrorAsync(decoratorHandlerInstance, executorParam, ex)
+          })
+        }
+        return resp
+      }
+      catch (ex) {
+        await processAllErrorAsync(decoratorHandlerInstance, executorParam, ex)
+      }
+      break
+    }
+
+    case 'around': {
+      const res = await fn(executorParam)
+      executorParam.methodResult = res
+      return res
+    }
+
+    case 'afterReturn': {
+      const res = await fn(executorParam)
+      executorParam.methodResult = res
+      return res
+    }
+
+    case 'after': {
+      if (executorParam.errorProcessed && executorParam.error) {
+        throw executorParam.error
+      }
+      try {
+        const resp = fn(executorParam)
+        if (isPromise(resp)) {
+          // eslint-disable-next-line @typescript-eslint/return-await
+          return resp.catch((ex: Error) => {
+            // let midway aop to handle it if afterThrow throw error again
+            return processAllErrorAsync(decoratorHandlerInstance, executorParam, ex)
+          })
+        }
+        return resp
+      }
+      catch (ex) {
+        await processAllErrorAsync(decoratorHandlerInstance, executorParam, ex)
+      }
+      break
+    }
+
+    case 'afterThrow': {
+      if (executorParam.errorProcessed && executorParam.error) {
+        throw executorParam.error
+      }
+      await fn(executorParam)
+      // if afterThrow eat the error, then reset it
+      executorParam.errorProcessed = void 0
+      executorParam.error = void 0
+      break
+    }
+
+    default: {
+      throw new Error('Unknown aopName')
+    }
+  }
+}
+
+async function processAllErrorAsync(
+  decoratorHandlerInstance: DecoratorHandlerInternal,
+  executorParam: DecoratorExecutorParamBase,
+  error: unknown,
+): Promise<void> {
+
+  executorParam.error = genError({ error })
+
+  const afterThrow = decoratorHandlerInstance['afterThrow'] as AsyncMethodType
+
+  if (typeof afterThrow !== 'function') {
+    throw error
   }
 
-  const resp = decoratorHandlerInstance[aopName](executorParam)
-  return resp
+  try {
+    await Reflect.apply(afterThrow, decoratorHandlerInstance, [executorParam])
+    // if afterThrow eat the error, then reset it
+    executorParam.errorProcessed = void 0
+    executorParam.error = void 0
+  }
+  finally {
+    if (executorParam.error) {
+      executorParam.errorProcessed = true
+    }
+    else {
+      executorParam.errorProcessed = void 0
+    }
+  }
 }
 

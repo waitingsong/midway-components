@@ -61,7 +61,7 @@ export function retrieveDecoratorExecutorParam(src: DecoratorExecutorParamBase['
  * @description decoratorHandlerInstance will be add property `ctx` to itself
  */
 export function prepareOptions(
-  aopName: 'before' | 'around' | 'afterReturn' | 'afterThrow' | 'after',
+  aopName: AopName,
   options: DecoratorExecutorParamBase,
   joinPoint: JoinPoint,
   decoratorHandlerInstance: DecoratorHandlerBase,
