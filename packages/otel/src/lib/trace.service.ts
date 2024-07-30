@@ -207,7 +207,11 @@ export class TraceService extends AbstractTraceService {
       return ctx
     }
     const ctx2 = this.getRootTraceContext(scope2)
-    assert(ctx2, 'getActiveContext() get trace ctx failed without scope, you should pass a scope value')
+    assert(
+      ctx2,
+      'getActiveContext() get trace ctx failed without scope, you should pass a scope value. Or current WebContext/Application has no trace context',
+    )
+
     return ctx2
   }
 
