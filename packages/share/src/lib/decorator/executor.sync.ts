@@ -78,8 +78,6 @@ export function genExecuteDecoratorHandlerSync(
   return aopCallback
 }
 
-
-// eslint-disable-next-line max-lines-per-function
 export function aopDispatchSync(
   aopName: AopLifeCycle,
   options: DecoratorExecutorParamBase,
@@ -98,26 +96,7 @@ export function aopDispatchSync(
     `[@mwcp/${ConfigKey.namespace}] aopDispatchSync(): ${decoratorHandlerClassName}.${func.name}() must not be AsyncFunction, due to method ${instanceName}.${methodName}() is sync function, you can modify it to SyncFunction or return Promise value`,
   )
 
-  let executorParam: DecoratorExecutorParamBase | Promise<DecoratorExecutorParamBase> | undefined = void 0
-  if (options.errorProcessed.includes(AopLifeCycle.genExecutorParam)) {
-    if (options.error) {
-      throw options.error
-    }
-    throw new Error('aopDispatchSync(): options.errorProcessed is true, but options.error is undefined. The error should be thrown in apo.getExecutorParam()')
-  }
-  else {
-    try {
-      executorParam = prepareOptions(aopName, options, joinPoint, decoratorHandlerInstance, extParam)
-      // assert(executorParam.methodIsAsyncFunction === true, 'methodIsAsyncFunction must be true')
-    }
-    catch (ex) {
-      options.errorProcessed.push(AopLifeCycle.genExecutorParam) // set before call afterThrow
-      processAllErrorSync(decoratorHandlerInstance, options, ex)
-    }
-  }
-  assert(executorParam, 'executorParam undefined')
-  assert(! isPromise(executorParam), 'aopDispatchSync() executorParam must not be Promise value')
-
+  const executorParam = runPrepareOptions(aopName, options, decoratorHandlerInstance, joinPoint, extParam)
   const fn = decoratorHandlerInstance[aopName].bind(decoratorHandlerInstance) as MethodTypeUnknown
   assert(typeof fn === 'function', `decoratorHandlerInstance[${aopName}] must be function`)
 
@@ -199,4 +178,35 @@ export function aopDispatchSync(
   }
 }
 
+
+function runPrepareOptions(
+  aopName: AopLifeCycle,
+  options: DecoratorExecutorParamBase,
+  decoratorHandlerInstance: DecoratorHandlerInternal,
+  joinPoint: JoinPoint,
+  extParam: AopDispatchOptions,
+): DecoratorExecutorParamBase {
+
+  let executorParam: DecoratorExecutorParamBase | Promise<DecoratorExecutorParamBase> | undefined = void 0
+  if (options.errorProcessed.includes(AopLifeCycle.genExecutorParam)) {
+    if (options.error) {
+      throw options.error
+    }
+    throw new Error('aopDispatchSync(): options.errorProcessed is true, but options.error is undefined. The error should be thrown in apo.getExecutorParam()')
+  }
+  else {
+    try {
+      executorParam = prepareOptions(aopName, options, joinPoint, decoratorHandlerInstance, extParam)
+      // assert(executorParam.methodIsAsyncFunction === true, 'methodIsAsyncFunction must be true')
+    }
+    catch (ex) {
+      options.errorProcessed.push(AopLifeCycle.genExecutorParam) // set before call afterThrow
+      processAllErrorSync(decoratorHandlerInstance, options, ex)
+    }
+  }
+
+  assert(executorParam, 'executorParam undefined')
+  assert(! isPromise(executorParam), 'aopDispatchSync() executorParam must not be Promise value')
+  return executorParam
+}
 

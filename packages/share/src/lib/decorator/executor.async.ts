@@ -76,7 +76,6 @@ export function genExecuteDecoratorHandlerAsync(
 }
 
 
-// eslint-disable-next-line max-lines-per-function
 async function aopDispatchAsync(
   aopName: AopLifeCycle,
   options: DecoratorExecutorParamBase,
@@ -93,24 +92,7 @@ async function aopDispatchAsync(
   //   `${decoratorHandlerClassName}.${func.name}() must be async function, due to method ${instanceName}.${methodName}() is async function`,
   // )
 
-  let executorParam: DecoratorExecutorParamBase | undefined = void 0
-  if (options.errorProcessed.includes(AopLifeCycle.genExecutorParam)) {
-    if (options.error) {
-      throw options.error
-    }
-    throw new Error('aopDispatchAsync(): options.errorProcessed is true, but options.error is undefined. The error should be thrown in apo.getExecutorParam()')
-  }
-  else {
-    try {
-      executorParam = await prepareOptions(aopName, options, joinPoint, decoratorHandlerInstance, extParam)
-    }
-    catch (ex) {
-      options.errorProcessed.push(AopLifeCycle.genExecutorParam) // set before call afterThrow
-      await processAllErrorAsync(decoratorHandlerInstance, options, ex)
-    }
-  }
-  assert(executorParam, 'executorParam undefined')
-
+  const executorParam = await runPrepareOptions(aopName, options, decoratorHandlerInstance, joinPoint, extParam)
   const fn = decoratorHandlerInstance[aopName].bind(decoratorHandlerInstance) as AsyncMethodType
 
   switch (aopName) {
@@ -188,3 +170,33 @@ async function aopDispatchAsync(
     }
   }
 }
+
+async function runPrepareOptions(
+  aopName: AopLifeCycle,
+  options: DecoratorExecutorParamBase,
+  decoratorHandlerInstance: DecoratorHandlerInternal,
+  joinPoint: JoinPoint,
+  extParam: AopDispatchOptions,
+): Promise<DecoratorExecutorParamBase> {
+
+  let executorParam: DecoratorExecutorParamBase | undefined = void 0
+  if (options.errorProcessed.includes(AopLifeCycle.genExecutorParam)) {
+    if (options.error) {
+      throw options.error
+    }
+    throw new Error('aopDispatchAsync(): options.errorProcessed is true, but options.error is undefined. The error should be thrown in apo.getExecutorParam()')
+  }
+  else {
+    try {
+      executorParam = await prepareOptions(aopName, options, joinPoint, decoratorHandlerInstance, extParam)
+    }
+    catch (ex) {
+      options.errorProcessed.push(AopLifeCycle.genExecutorParam) // set before call afterThrow
+      await processAllErrorAsync(decoratorHandlerInstance, options, ex)
+    }
+  }
+  assert(executorParam, 'executorParam undefined')
+  return executorParam
+}
+
+
