@@ -4,9 +4,8 @@ import type { JoinPoint, IMethodAspect } from '@midwayjs/core'
 import { genError } from '@waiting/shared-core'
 import type { AsyncMethodType } from '@waiting/shared-types'
 
-import type { DecoratorHandlerBase, DecoratorExecutorParamBase } from './custom-decorator.types.js'
+import type { AopLifeCycle, DecoratorHandlerBase, DecoratorExecutorParamBase } from './custom-decorator.types.js'
 import {
-  type AopLifeCycle,
   type DecoratorHandlerInternal,
   type CustomIMethodAspect,
   type AopDispatchOptions,

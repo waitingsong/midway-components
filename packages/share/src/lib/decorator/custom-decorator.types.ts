@@ -98,6 +98,8 @@ export interface DecoratorExecutorParamBase<TDecoratorParam extends object = obj
   webContext: Context | undefined
 }
 
+export type AopLifeCycle = 'before' | 'around' | 'afterReturn' | 'afterThrow' | 'after'
+
 /**
  * 装饰器所在的（注入）实例
  * - InstanceWithDecorator.constructor === ClassWithDecorator

@@ -7,9 +7,8 @@ import type { MethodTypeUnknown } from '@waiting/shared-types'
 
 import { ConfigKey } from '../types.js'
 
-import type { DecoratorHandlerBase, DecoratorExecutorParamBase } from './custom-decorator.types.js'
+import type { AopLifeCycle, DecoratorHandlerBase, DecoratorExecutorParamBase } from './custom-decorator.types.js'
 import {
-  type AopLifeCycle,
   type DecoratorHandlerInternal,
   type CustomIMethodAspect,
   type AopDispatchOptions,

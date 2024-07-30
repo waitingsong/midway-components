@@ -5,11 +5,9 @@ import type { JoinPoint } from '@midwayjs/core'
 
 import { type Application } from '../types.js'
 
-import type { DecoratorExecutorParamBase, DecoratorHandlerBase } from './custom-decorator.types.js'
+import type { AopLifeCycle, DecoratorExecutorParamBase, DecoratorHandlerBase } from './custom-decorator.types.js'
 import { genExecutorOptionsCommon } from './reg-decorator-handler.helper.js'
 
-
-export type AopLifeCycle = 'before' | 'around' | 'afterReturn' | 'afterThrow' | 'after'
 
 export interface DecoratorHandlerInternal {
   readonly app: Application
