@@ -195,6 +195,7 @@ async function runPrepareOptions(
       await processAllErrorAsync(decoratorHandlerInstance, options, ex)
     }
   }
+
   assert(executorParam, 'executorParam undefined')
   return executorParam
 }

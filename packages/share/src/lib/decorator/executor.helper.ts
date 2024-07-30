@@ -96,10 +96,6 @@ export function prepareOptions(
       case AopLifeCycle.before:
         throw new Error('before() should not return value with cache')
 
-      case AopLifeCycle.after:
-        decoratorExecutorParamCache.delete(joinPoint.args)
-        break
-
       default:
         break
     }
