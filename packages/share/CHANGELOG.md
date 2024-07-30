@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [35.0.0](https://github.com/waitingsong/midway-components/compare/v34.0.1...v35.0.0) (2024-07-30)
+
+
+### Features
+
+* **share:** update custom decorator ([2f06741](https://github.com/waitingsong/midway-components/commit/2f06741099bfa212e6a71e537326700fadd81d8e))
+
+
+
+
+
 # [34.0.0](https://github.com/waitingsong/midway-components/compare/v33.0.0...v34.0.0) (2024-07-30)
 
 
