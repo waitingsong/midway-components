@@ -2,6 +2,8 @@ import assert from 'node:assert'
 import { isPromise } from 'node:util/types'
 
 import type { JoinPoint } from '@midwayjs/core'
+import { genError } from '@waiting/shared-core'
+import type { AsyncMethodType, MethodTypeUnknown } from '@waiting/shared-types'
 
 import { type Application } from '../types.js'
 
@@ -125,3 +127,70 @@ export function prepareOptions(
   return executorParam
 }
 
+// #region processAllErrorAsync
+
+export async function processAllErrorAsync(
+  decoratorHandlerInstance: DecoratorHandlerInternal,
+  executorParam: DecoratorExecutorParamBase,
+  error: unknown,
+): Promise<void> {
+
+  executorParam.error = genError({ error })
+  executorParam.methodResult = void 0
+
+  const afterThrow = decoratorHandlerInstance['afterThrow'] as AsyncMethodType
+
+  if (typeof afterThrow !== 'function') {
+    executorParam.errorProcessed.push(AopLifeCycle.afterThrow)
+    throw error
+  }
+
+  try {
+    await Reflect.apply(afterThrow, decoratorHandlerInstance, [executorParam])
+    // if afterThrow eat the error, then reset it
+    executorParam.errorProcessed = []
+    executorParam.error = void 0
+  }
+  finally {
+    if (executorParam.error) {
+      executorParam.errorProcessed.push(AopLifeCycle.afterThrow)
+    }
+    else {
+      executorParam.errorProcessed = []
+    }
+  }
+}
+
+// #region processAllErrorSync
+
+export function processAllErrorSync(
+  decoratorHandlerInstance: DecoratorHandlerInternal,
+  executorParam: DecoratorExecutorParamBase,
+  error: unknown,
+): void {
+
+  executorParam.error = genError({ error })
+  executorParam.methodResult = void 0
+
+  const afterThrow = decoratorHandlerInstance['afterThrow'] as MethodTypeUnknown
+
+  if (typeof afterThrow !== 'function') {
+    executorParam.errorProcessed.push(AopLifeCycle.afterThrow)
+    throw error
+  }
+
+  try {
+    Reflect.apply(afterThrow, decoratorHandlerInstance, [executorParam])
+    // if afterThrow eat the error, then reset it
+    executorParam.errorProcessed = []
+    executorParam.error = void 0
+  }
+  finally {
+    if (executorParam.error) {
+      executorParam.errorProcessed.push(AopLifeCycle.afterThrow)
+    }
+    else {
+      executorParam.errorProcessed = []
+    }
+  }
+}

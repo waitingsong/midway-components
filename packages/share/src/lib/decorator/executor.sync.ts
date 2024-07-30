@@ -2,7 +2,6 @@ import assert from 'node:assert'
 import { isAsyncFunction, isPromise } from 'node:util/types'
 
 import type { JoinPoint, IMethodAspect } from '@midwayjs/core'
-import { genError } from '@waiting/shared-core'
 import type { MethodTypeUnknown } from '@waiting/shared-types'
 
 import { ConfigKey } from '../types.js'
@@ -15,6 +14,7 @@ import {
   type AopDispatchOptions,
   prepareOptions,
   removeDecoratorExecutorParamCache,
+  processAllErrorSync,
 } from './executor.helper.js'
 
 
@@ -199,37 +199,4 @@ export function aopDispatchSync(
   }
 }
 
-
-
-function processAllErrorSync(
-  decoratorHandlerInstance: DecoratorHandlerInternal,
-  executorParam: DecoratorExecutorParamBase,
-  error: unknown,
-): void {
-
-  executorParam.error = genError({ error })
-  executorParam.methodResult = void 0
-
-  const afterThrow = decoratorHandlerInstance['afterThrow'] as MethodTypeUnknown
-
-  if (typeof afterThrow !== 'function') {
-    executorParam.errorProcessed.push(AopLifeCycle.afterThrow)
-    throw error
-  }
-
-  try {
-    Reflect.apply(afterThrow, decoratorHandlerInstance, [executorParam])
-    // if afterThrow eat the error, then reset it
-    executorParam.errorProcessed = []
-    executorParam.error = void 0
-  }
-  finally {
-    if (executorParam.error) {
-      executorParam.errorProcessed.push(AopLifeCycle.afterThrow)
-    }
-    else {
-      executorParam.errorProcessed = []
-    }
-  }
-}
 
