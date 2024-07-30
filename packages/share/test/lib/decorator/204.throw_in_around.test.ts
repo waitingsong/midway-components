@@ -8,7 +8,7 @@ import { testConfig } from '#@/root.config.js'
 
 describe(fileShortPath(import.meta.url), function () {
 
-  const path = `${apiBase.decorator_error}/${apiMethod.throw_in_after}`
+  const path = `${apiBase.decorator_error}/${apiMethod.throw_in_around}`
 
   it(`Should ${path} work`, async () => {
     const { httpRequest } = testConfig

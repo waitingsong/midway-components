@@ -23,7 +23,7 @@ export class DecoratorHandlerThrowInAfter extends DecoratorHandlerBase {
   override afterThrow(options: DecoratorExecutorParamBase): void | Promise<void> {
     assert(options.error, 'options.error not exists')
     assert(options.error.message === KEY_throw_in_after, options.error.message)
-    assert(! options.errorProcessed, 'options.errorProcessed exists')
+    assert(! options.errorProcessed.length, 'options.errorProcessed has value')
     if (options.methodIsAsyncFunction) {
       return Promise.reject(options.error)
     }
@@ -32,7 +32,7 @@ export class DecoratorHandlerThrowInAfter extends DecoratorHandlerBase {
 
   override after(options: DecoratorExecutorParamBase<InputOptions>): void | Promise<void> {
     if (options.error) {
-      assert(options.errorProcessed, 'options.errorProcessed not true')
+      assert(options.errorProcessed.length, 'options.errorProcessed has no value')
     }
     else {
       const err = new Error(KEY_throw_in_after)

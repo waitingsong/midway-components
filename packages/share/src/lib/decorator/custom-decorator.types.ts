@@ -92,13 +92,20 @@ export interface DecoratorExecutorParamBase<TDecoratorParam extends object = obj
   methodName: string
   methodResult?: unknown
   error?: Error | undefined
-  errorProcessed?: boolean | undefined
+  errorProcessed: AopLifeCycle[]
   methodIsAsyncFunction?: boolean
   webApp: Application
   webContext: Context | undefined
 }
 
-export type AopLifeCycle = 'before' | 'around' | 'afterReturn' | 'afterThrow' | 'after'
+export enum AopLifeCycle {
+  genExecutorParam = 'genExecutorParam',
+  before = 'before',
+  around = 'around',
+  afterReturn = 'afterReturn',
+  afterThrow = 'afterThrow',
+  after = 'after',
+}
 
 /**
  * 装饰器所在的（注入）实例

@@ -2,7 +2,7 @@ import assert from 'assert'
 
 import { Singleton } from '@midwayjs/core'
 
-import { type DecoratorExecutorParamBase, DecoratorHandlerBase, customDecoratorFactory } from '../../types/index.js'
+import { type DecoratorExecutorParamBase, AopLifeCycle, DecoratorHandlerBase, customDecoratorFactory } from '../../types/index.js'
 
 
 export const KEY_throw_in_gen_executor_param = 'decorator:method_key_throw_in_gen_executor_param'
@@ -36,7 +36,10 @@ export class DecoratorHandlerThrowInGenExecutorParam extends DecoratorHandlerBas
   override afterThrow(options: DecoratorExecutorParamBase): void | Promise<void> {
     assert(options.error, 'options.error not exists')
     assert(options.error.message === KEY_throw_in_gen_executor_param, options.error.message)
-    assert(! options.errorProcessed, 'options.errorProcessed exists')
+    assert(
+      ! options.errorProcessed.length || (options.errorProcessed.length === 1 && options.errorProcessed.includes(AopLifeCycle.genExecutorParam)),
+      `options.errorProcessed should empty or contains ${AopLifeCycle.genExecutorParam} only`,
+    )
     if (options.methodIsAsyncFunction) {
       return Promise.reject(options.error)
     }
@@ -45,7 +48,7 @@ export class DecoratorHandlerThrowInGenExecutorParam extends DecoratorHandlerBas
 
   override after(options: DecoratorExecutorParamBase<InputOptions>): void | Promise<void> {
     assert(options.error, 'options.error not exists, error thrown in before()')
-    assert(options.errorProcessed, 'options.errorProcessed not true')
+    assert(options.errorProcessed.length, 'options.errorProcessed has no value')
   }
 }
 

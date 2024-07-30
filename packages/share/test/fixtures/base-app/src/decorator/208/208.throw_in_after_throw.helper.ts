@@ -22,7 +22,7 @@ export class DecoratorHandlerThrowInAfterThrow extends DecoratorHandlerBase {
   // this lifecycle method will NOT be called as no error thrown in any lifecycle method
   override afterThrow(options: DecoratorExecutorParamBase): void | Promise<void> {
     assert(! options.error, 'options.error exists')
-    assert(! options.errorProcessed, 'options.errorProcessed exists')
+    assert(! options.errorProcessed.length, 'options.errorProcessed has value')
 
     const err = new Error(KEY_throw_in_after_throw)
     if (options.methodIsAsyncFunction) {
@@ -33,7 +33,7 @@ export class DecoratorHandlerThrowInAfterThrow extends DecoratorHandlerBase {
 
   override after(options: DecoratorExecutorParamBase<InputOptions>): void | Promise<void> {
     assert(! options.error, 'options.error exists')
-    assert(! options.errorProcessed, 'options.errorProcessed exists')
+    assert(! options.errorProcessed.length, 'options.errorProcessed has value')
     assert(typeof options.methodResult === 'number', 'options.methodResult is not number')
   }
 }

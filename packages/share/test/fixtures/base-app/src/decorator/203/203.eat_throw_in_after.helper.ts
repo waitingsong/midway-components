@@ -23,13 +23,13 @@ export class DecoratorHandlerEatThrowInAfter extends DecoratorHandlerBase {
   override afterThrow(options: DecoratorExecutorParamBase): void | Promise<void> {
     assert(options.error, 'options.error not exists')
     assert(options.error.message === KEY_eat_throw_in_after, options.error.message)
-    assert(! options.errorProcessed, 'options.errorProcessed exists')
+    assert(! options.errorProcessed.length, 'options.errorProcessed has value')
     // not re-throw
   }
 
   override after(options: DecoratorExecutorParamBase<InputOptions>): void | Promise<void> {
     if (options.error) {
-      assert(options.errorProcessed, 'options.errorProcessed not true')
+      assert(options.errorProcessed.length, 'options.errorProcessed has no value')
     }
     else {
       const err = new Error(KEY_eat_throw_in_after)

@@ -151,6 +151,7 @@ function registerMethodHandlerCallback<TDecoratorParam extends object = object>(
     mergedDecoratorParam,
     methodIsAsyncFunction: isAsyncFunc,
     webApp: app,
+    errorProcessed: [],
 
     method,
     methodArgs: [],

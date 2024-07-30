@@ -34,7 +34,7 @@ export class DecoratorHandlerEatThrowInAround extends DecoratorHandlerBase {
   override afterThrow(options: DecoratorExecutorParamBase): void | Promise<void> {
     assert(options.error, 'options.error not exists')
     assert(options.error.message === KEY_eat_throw_in_around, options.error.message)
-    assert(! options.errorProcessed, 'options.errorProcessed exists')
+    assert(! options.errorProcessed.length, 'options.errorProcessed has value')
     // not re-throw
   }
 
@@ -42,7 +42,6 @@ export class DecoratorHandlerEatThrowInAround extends DecoratorHandlerBase {
     assert(! options.error, 'options.error exists')
     assert(typeof options.methodResult === 'undefined', 'options.methodResult should undefined, as error thrown in around() and return none')
     // assert(options.error, 'options.error not exists, error thrown in around()')
-    // assert(options.errorProcessed, 'options.errorProcessed not true')
   }
 }
 

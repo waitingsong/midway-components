@@ -7,7 +7,8 @@ import type { MethodTypeUnknown } from '@waiting/shared-types'
 
 import { ConfigKey } from '../types.js'
 
-import type { AopLifeCycle, DecoratorHandlerBase, DecoratorExecutorParamBase } from './custom-decorator.types.js'
+import type { DecoratorHandlerBase, DecoratorExecutorParamBase } from './custom-decorator.types.js'
+import { AopLifeCycle } from './custom-decorator.types.js'
 import {
   type DecoratorHandlerInternal,
   type CustomIMethodAspect,
@@ -26,7 +27,7 @@ export function genExecuteDecoratorHandlerSync(
 
   if (typeof decoratorHandlerInstance.before === 'function') {
     aopCallback.before = (joinPoint: JoinPoint) => aopDispatchSync(
-      'before',
+      AopLifeCycle.before,
       options,
       decoratorHandlerInstance as DecoratorHandlerInternal,
       joinPoint,
@@ -36,7 +37,7 @@ export function genExecuteDecoratorHandlerSync(
 
   if (typeof decoratorHandlerInstance.around === 'function') {
     aopCallback.around = (joinPoint: JoinPoint) => aopDispatchSync(
-      'around',
+      AopLifeCycle.around,
       options,
       decoratorHandlerInstance as DecoratorHandlerInternal,
       joinPoint,
@@ -46,7 +47,7 @@ export function genExecuteDecoratorHandlerSync(
 
   if (typeof decoratorHandlerInstance.afterReturn === 'function') {
     aopCallback.afterReturn = (joinPoint: JoinPoint, result: unknown) => aopDispatchSync(
-      'afterReturn',
+      AopLifeCycle.afterReturn,
       options,
       decoratorHandlerInstance as DecoratorHandlerInternal,
       joinPoint,
@@ -56,7 +57,7 @@ export function genExecuteDecoratorHandlerSync(
 
   if (typeof decoratorHandlerInstance.after === 'function') {
     aopCallback.after = (joinPoint: JoinPoint, result: unknown, error: Error | undefined) => aopDispatchSync(
-      'after',
+      AopLifeCycle.after,
       options,
       decoratorHandlerInstance as DecoratorHandlerInternal,
       joinPoint,
@@ -66,7 +67,7 @@ export function genExecuteDecoratorHandlerSync(
 
   if (typeof decoratorHandlerInstance.afterThrow === 'function') {
     aopCallback.afterThrow = (joinPoint: JoinPoint, error: Error) => aopDispatchSync(
-      'afterThrow',
+      AopLifeCycle.afterThrow,
       options,
       decoratorHandlerInstance as DecoratorHandlerInternal,
       joinPoint,
@@ -78,6 +79,7 @@ export function genExecuteDecoratorHandlerSync(
 }
 
 
+// eslint-disable-next-line max-lines-per-function
 export function aopDispatchSync(
   aopName: AopLifeCycle,
   options: DecoratorExecutorParamBase,
@@ -97,15 +99,19 @@ export function aopDispatchSync(
   )
 
   let executorParam: DecoratorExecutorParamBase | Promise<DecoratorExecutorParamBase> | undefined = void 0
-  if (options.errorProcessed && options.error) {
-    throw options.error
+  if (options.errorProcessed.includes(AopLifeCycle.genExecutorParam)) {
+    if (options.error) {
+      throw options.error
+    }
+    throw new Error('aopDispatchSync(): options.errorProcessed is true, but options.error is undefined. The error should be thrown in apo.getExecutorParam()')
   }
   else {
     try {
       executorParam = prepareOptions(aopName, options, joinPoint, decoratorHandlerInstance, extParam)
-    // assert(executorParam.methodIsAsyncFunction === true, 'methodIsAsyncFunction must be true')
+      // assert(executorParam.methodIsAsyncFunction === true, 'methodIsAsyncFunction must be true')
     }
     catch (ex) {
+      options.errorProcessed.push(AopLifeCycle.genExecutorParam) // set before call afterThrow
       processAllErrorSync(decoratorHandlerInstance, options, ex)
     }
   }
@@ -116,7 +122,10 @@ export function aopDispatchSync(
   assert(typeof fn === 'function', `decoratorHandlerInstance[${aopName}] must be function`)
 
   switch (aopName) {
-    case 'before': {
+    case AopLifeCycle.before: {
+      if (executorParam.errorProcessed.length && executorParam.error) {
+        throw executorParam.error
+      }
       try {
         return fn(executorParam)
       }
@@ -126,8 +135,8 @@ export function aopDispatchSync(
       break
     }
 
-    case 'around': {
-      if (executorParam.errorProcessed && executorParam.error) {
+    case AopLifeCycle.around: {
+      if (executorParam.errorProcessed.length && executorParam.error) {
         throw executorParam.error
       }
       try {
@@ -142,8 +151,8 @@ export function aopDispatchSync(
       break
     }
 
-    case 'afterReturn': {
-      if (executorParam.errorProcessed && executorParam.error) {
+    case AopLifeCycle.afterReturn: {
+      if (executorParam.errorProcessed.length && executorParam.error) {
         throw executorParam.error
       }
       try {
@@ -158,8 +167,8 @@ export function aopDispatchSync(
       break
     }
 
-    case 'after': {
-      if (executorParam.errorProcessed && executorParam.error) {
+    case AopLifeCycle.after: {
+      if (executorParam.errorProcessed.length && executorParam.error) {
         removeDecoratorExecutorParamCache(joinPoint.args)
         throw executorParam.error
       }
@@ -173,13 +182,13 @@ export function aopDispatchSync(
       break
     }
 
-    case 'afterThrow': {
-      if (executorParam.errorProcessed && executorParam.error) {
+    case AopLifeCycle.afterThrow: {
+      if (executorParam.errorProcessed.includes(AopLifeCycle.afterThrow) && executorParam.error) {
         throw executorParam.error
       }
       fn(executorParam)
       // if afterThrow eat the error, then reset it
-      executorParam.errorProcessed = void 0
+      executorParam.errorProcessed = []
       executorParam.error = void 0
       break
     }
@@ -204,21 +213,23 @@ function processAllErrorSync(
   const afterThrow = decoratorHandlerInstance['afterThrow'] as MethodTypeUnknown
 
   if (typeof afterThrow !== 'function') {
+    executorParam.errorProcessed.push(AopLifeCycle.afterThrow)
     throw error
   }
 
   try {
     Reflect.apply(afterThrow, decoratorHandlerInstance, [executorParam])
     // if afterThrow eat the error, then reset it
-    executorParam.errorProcessed = void 0
+    executorParam.errorProcessed = []
     executorParam.error = void 0
   }
   finally {
     if (executorParam.error) {
-      executorParam.errorProcessed = true
+      executorParam.errorProcessed.push(AopLifeCycle.afterThrow)
     }
     else {
-      executorParam.errorProcessed = void 0
+      executorParam.errorProcessed = []
     }
   }
 }
+

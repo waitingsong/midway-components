@@ -5,18 +5,19 @@ import type { JoinPoint } from '@midwayjs/core'
 
 import { type Application } from '../types.js'
 
-import type { AopLifeCycle, DecoratorExecutorParamBase, DecoratorHandlerBase } from './custom-decorator.types.js'
+import type { DecoratorExecutorParamBase, DecoratorHandlerBase } from './custom-decorator.types.js'
+import { AopLifeCycle } from './custom-decorator.types.js'
 import { genExecutorOptionsCommon } from './reg-decorator-handler.helper.js'
 
 
 export interface DecoratorHandlerInternal {
   readonly app: Application
-  genExecutorParam(options: DecoratorExecutorParamBase): DecoratorExecutorParamBase | Promise<DecoratorExecutorParamBase>
-  before(options: DecoratorExecutorParamBase): void | Promise<void>
-  around(options: DecoratorExecutorParamBase): unknown
-  afterReturn(options: DecoratorExecutorParamBase): unknown
-  afterThrow(options: DecoratorExecutorParamBase): void
-  after(options: DecoratorExecutorParamBase): void
+  [AopLifeCycle.genExecutorParam](options: DecoratorExecutorParamBase): DecoratorExecutorParamBase | Promise<DecoratorExecutorParamBase>
+  [AopLifeCycle.before](options: DecoratorExecutorParamBase): void | Promise<void>
+  [AopLifeCycle.around](options: DecoratorExecutorParamBase): unknown
+  [AopLifeCycle.afterReturn](options: DecoratorExecutorParamBase): unknown
+  [AopLifeCycle.afterThrow](options: DecoratorExecutorParamBase): void
+  [AopLifeCycle.after](options: DecoratorExecutorParamBase): void
 }
 
 export interface CustomIMethodAspect {
@@ -72,13 +73,13 @@ export function prepareOptions(
 ): DecoratorExecutorParamBase | Promise<DecoratorExecutorParamBase> {
 
   switch (aopName) {
-    case 'before': {
+    case AopLifeCycle.before: {
       assert(typeof options.methodResult === 'undefined', `methodResult must be undefined in ${aopName}() lifecycle`)
       assert(typeof extParam.methodResult === 'undefined', `extParam.methodResult must be undefined at the beginning of ${aopName}() lifecycle`)
       break
     }
 
-    case 'around':
+    case AopLifeCycle.around:
       assert(typeof extParam.methodResult === 'undefined', `extParam.methodResult must be undefined at the beginning of ${aopName}() lifecycle`)
       break
 
@@ -90,10 +91,10 @@ export function prepareOptions(
   if (cache) {
     switch (aopName) {
       /* c8 ignore next 2 */
-      case 'before':
+      case AopLifeCycle.before:
         throw new Error('before() should not return value with cache')
 
-      case 'after':
+      case AopLifeCycle.after:
         decoratorExecutorParamCache.delete(joinPoint.args)
         break
 
@@ -101,7 +102,7 @@ export function prepareOptions(
         break
     }
     /* c8 ignore next 3 */
-    if (['before'].includes(aopName)) {
+    if ([AopLifeCycle.before].includes(aopName)) {
       assert(typeof cache.methodResult === 'undefined', `result must be undefined in ${aopName}() lifecycle`)
     }
     if (Object.keys(extParam).length) {

@@ -2,6 +2,7 @@
 export * from './custom-decorator-factory.js'
 export * from './custom-decorator.helper.js'
 export {
+  AopLifeCycle,
   DecoratorHandlerBase,
   type DecoratorMetaData,
   type CustomDecoratorFactoryOptions,

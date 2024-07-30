@@ -28,7 +28,7 @@ export class DecoratorHandlerThrowInBeforeDefaultAfterThrow extends DecoratorHan
 
   override after(options: DecoratorExecutorParamBase<InputOptions>): void | Promise<void> {
     assert(options.error, 'options.error not exists, error thrown in before()')
-    assert(! options.errorProcessed, 'options.errorProcessed should be false or undefined')
+    assert(! options.errorProcessed.length, 'options.errorProcessed has value')
   }
 }
 
