@@ -142,7 +142,12 @@ async function aopDispatchAsync(
     case AopLifeCycle.after: {
       if (executorParam.errorProcessed.length && executorParam.error) {
         removeDecoratorExecutorParamCache(joinPoint.args)
-        throw executorParam.error
+        const ex = executorParam.error
+        delete executorParam.error
+        delete executorParam.methodResult
+        delete options.error
+        delete options.methodResult
+        throw ex
       }
       try {
         await fn(executorParam)
@@ -161,7 +166,7 @@ async function aopDispatchAsync(
       await fn(executorParam)
       // if afterThrow eat the error, then reset it
       executorParam.errorProcessed = []
-      executorParam.error = void 0
+      delete executorParam.error
       break
     }
 

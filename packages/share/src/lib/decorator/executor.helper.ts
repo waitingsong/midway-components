@@ -74,6 +74,11 @@ export function prepareOptions(
   extParam: AopDispatchOptions,
 ): DecoratorExecutorParamBase | Promise<DecoratorExecutorParamBase> {
 
+  // avoid result.error has been overwritten by extParam.error(undefined)
+  if ('error' in extParam && typeof extParam.error === 'undefined') {
+    delete extParam.error
+  }
+
   switch (aopName) {
     case AopLifeCycle.before: {
       assert(typeof options.methodResult === 'undefined', `methodResult must be undefined in ${aopName}() lifecycle`)
@@ -132,7 +137,7 @@ export async function processAllErrorAsync(
 ): Promise<void> {
 
   executorParam.error = genError({ error })
-  executorParam.methodResult = void 0
+  delete executorParam.methodResult
 
   const afterThrow = decoratorHandlerInstance['afterThrow'] as AsyncMethodType
 
@@ -145,7 +150,7 @@ export async function processAllErrorAsync(
     await Reflect.apply(afterThrow, decoratorHandlerInstance, [executorParam])
     // if afterThrow eat the error, then reset it
     executorParam.errorProcessed = []
-    executorParam.error = void 0
+    delete executorParam.error
   }
   finally {
     if (executorParam.error) {
@@ -166,7 +171,7 @@ export function processAllErrorSync(
 ): void {
 
   executorParam.error = genError({ error })
-  executorParam.methodResult = void 0
+  delete executorParam.methodResult
 
   const afterThrow = decoratorHandlerInstance['afterThrow'] as MethodTypeUnknown
 
@@ -179,7 +184,7 @@ export function processAllErrorSync(
     Reflect.apply(afterThrow, decoratorHandlerInstance, [executorParam])
     // if afterThrow eat the error, then reset it
     executorParam.errorProcessed = []
-    executorParam.error = void 0
+    delete executorParam.error
   }
   finally {
     if (executorParam.error) {
