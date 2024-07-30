@@ -9,7 +9,7 @@ import { ConfigKey } from '../types.js'
 
 import type { DecoratorHandlerBase, DecoratorExecutorParamBase } from './custom-decorator.types.js'
 import {
-  type AopName,
+  type AopLifeCycle,
   type DecoratorHandlerInternal,
   type CustomIMethodAspect,
   type AopDispatchOptions,
@@ -80,7 +80,7 @@ export function genExecuteDecoratorHandlerSync(
 
 
 export function aopDispatchSync(
-  aopName: AopName,
+  aopName: AopLifeCycle,
   options: DecoratorExecutorParamBase,
   decoratorHandlerInstance: DecoratorHandlerInternal,
   joinPoint: JoinPoint,

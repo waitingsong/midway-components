@@ -9,7 +9,7 @@ import type { DecoratorExecutorParamBase, DecoratorHandlerBase } from './custom-
 import { genExecutorOptionsCommon } from './reg-decorator-handler.helper.js'
 
 
-export type AopName = 'before' | 'around' | 'afterReturn' | 'afterThrow' | 'after'
+export type AopLifeCycle = 'before' | 'around' | 'afterReturn' | 'afterThrow' | 'after'
 
 export interface DecoratorHandlerInternal {
   readonly app: Application
@@ -66,7 +66,7 @@ function retrieveDecoratorExecutorParam(src: DecoratorExecutorParamBase['methodA
  * @description decoratorHandlerInstance will be add property `ctx` to itself
  */
 export function prepareOptions(
-  aopName: AopName,
+  aopName: AopLifeCycle,
   options: DecoratorExecutorParamBase,
   joinPoint: JoinPoint,
   decoratorHandlerInstance: DecoratorHandlerBase,

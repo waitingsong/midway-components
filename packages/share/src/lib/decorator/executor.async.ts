@@ -6,7 +6,7 @@ import type { AsyncMethodType } from '@waiting/shared-types'
 
 import type { DecoratorHandlerBase, DecoratorExecutorParamBase } from './custom-decorator.types.js'
 import {
-  type AopName,
+  type AopLifeCycle,
   type DecoratorHandlerInternal,
   type CustomIMethodAspect,
   type AopDispatchOptions,
@@ -77,7 +77,7 @@ export function genExecuteDecoratorHandlerAsync(
 
 
 async function aopDispatchAsync(
-  aopName: AopName,
+  aopName: AopLifeCycle,
   options: DecoratorExecutorParamBase,
   decoratorHandlerInstance: DecoratorHandlerInternal,
   joinPoint: JoinPoint,
