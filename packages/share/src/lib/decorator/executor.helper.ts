@@ -141,8 +141,9 @@ export async function processAllErrorAsync(
 
   const afterThrow = decoratorHandlerInstance['afterThrow'] as AsyncMethodType
 
+  executorParam.errorProcessed.push(AopLifeCycle.afterThrow) // set first
+
   if (typeof afterThrow !== 'function') {
-    executorParam.errorProcessed.push(AopLifeCycle.afterThrow)
     throw error
   }
 
@@ -153,10 +154,7 @@ export async function processAllErrorAsync(
     delete executorParam.error
   }
   finally {
-    if (executorParam.error) {
-      executorParam.errorProcessed.push(AopLifeCycle.afterThrow)
-    }
-    else {
+    if (! executorParam.error) {
       executorParam.errorProcessed = []
     }
   }

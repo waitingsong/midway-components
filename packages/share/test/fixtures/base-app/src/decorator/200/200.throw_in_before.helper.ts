@@ -2,7 +2,12 @@ import assert from 'assert'
 
 import { Singleton } from '@midwayjs/core'
 
-import { type DecoratorExecutorParamBase, DecoratorHandlerBase, customDecoratorFactory } from '../../types/index.js'
+import {
+  type DecoratorExecutorParamBase,
+  AopLifeCycle,
+  DecoratorHandlerBase,
+  customDecoratorFactory,
+} from '../../types/index.js'
 
 
 export const KEY_throw_in_before = 'decorator:method_key_throw_in_before'
@@ -29,7 +34,11 @@ export class DecoratorHandlerThrowInBefore extends DecoratorHandlerBase {
   override afterThrow(options: DecoratorExecutorParamBase): void | Promise<void> {
     assert(options.error, 'options.error not exists')
     assert(options.error.message === KEY_throw_in_before, options.error.message)
-    assert(! options.errorProcessed.length, 'options.errorProcessed has value')
+    const { errorProcessed } = options
+    assert(
+      ! errorProcessed.length || (errorProcessed.length === 1 && errorProcessed[0] === AopLifeCycle.afterThrow),
+      'options.errorProcessed has value (except AopLifeCycle.afterThrow)',
+    )
     if (options.methodIsAsyncFunction) {
       return Promise.reject(options.error)
     }

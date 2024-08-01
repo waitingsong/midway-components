@@ -21,14 +21,8 @@ export class DecoratorHandlerThrowInAfterThrow extends DecoratorHandlerBase {
 
   // this lifecycle method will NOT be called as no error thrown in any lifecycle method
   override afterThrow(options: DecoratorExecutorParamBase): void | Promise<void> {
-    assert(! options.error, 'options.error exists')
-    assert(! options.errorProcessed.length, 'options.errorProcessed has value')
-
-    const err = new Error(KEY_throw_in_after_throw)
-    if (options.methodIsAsyncFunction) {
-      return Promise.reject(err)
-    }
-    throw err
+    void options
+    assert(false, 'should not run here afterThrow')
   }
 
   override after(options: DecoratorExecutorParamBase<InputOptions>): void | Promise<void> {

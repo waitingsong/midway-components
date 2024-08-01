@@ -2,6 +2,7 @@ import assert from 'node:assert'
 import { isAsyncFunction, isPromise } from 'node:util/types'
 
 import type { JoinPoint, IMethodAspect } from '@midwayjs/core'
+import { genError } from '@waiting/shared-core'
 import type { MethodTypeUnknown } from '@waiting/shared-types'
 
 import { ConfigKey } from '../types.js'
@@ -109,6 +110,7 @@ export function aopDispatchSync(
         return fn(executorParam)
       }
       catch (ex) {
+        options.error = genError({ error: ex })
         processAllErrorSync(decoratorHandlerInstance, executorParam, ex)
       }
       break
@@ -131,8 +133,9 @@ export function aopDispatchSync(
     }
 
     case AopLifeCycle.afterReturn: {
-      if (executorParam.errorProcessed.length && executorParam.error) {
-        throw executorParam.error
+      if (executorParam.errorProcessed.length) {
+        const error = executorParam.error ?? options.error ?? new Error('Unknown error from AopLifeCycle.afterReturn')
+        throw error
       }
       try {
         const res = decoratorHandlerInstance[aopName](executorParam)
@@ -147,14 +150,14 @@ export function aopDispatchSync(
     }
 
     case AopLifeCycle.after: {
-      if (executorParam.errorProcessed.length && executorParam.error) {
+      if (executorParam.errorProcessed.length) {
         removeDecoratorExecutorParamCache(joinPoint.args)
-        const ex = executorParam.error
+        const error = executorParam.error ?? options.error ?? new Error('Unknown error from AopLifeCycle.after')
         delete executorParam.error
         delete executorParam.methodResult
         delete options.error
         delete options.methodResult
-        throw ex
+        throw error
       }
       try {
         fn(executorParam)
