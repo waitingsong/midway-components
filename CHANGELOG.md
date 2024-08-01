@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [35.1.0](https://github.com/waitingsong/midway-components/compare/v35.0.1...v35.1.0) (2024-08-01)
+
+
+### Features
+
+* **share:** type ScopeType ([1271e1f](https://github.com/waitingsong/midway-components/commit/1271e1f6425ebd7db04a8f9c047e191b89b67156))
+
+
+
+
+
 ## [35.0.1](https://github.com/waitingsong/midway-components/compare/v35.0.0...v35.0.1) (2024-07-30)
 
 
