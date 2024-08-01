@@ -207,3 +207,6 @@ export interface AopCallbackInputArgsType<TDecoratorParam extends object = objec
   metadata: DecoratorMetaDataPayload<TDecoratorParam>
 }
 
+
+export type ScopeType = Context | Application | symbol | object
+

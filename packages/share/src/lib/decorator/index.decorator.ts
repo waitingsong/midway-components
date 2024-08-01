@@ -14,6 +14,7 @@ export {
   /** 被装饰的类（原型，不包括注入的属性）或者类方法 */
   type ClassWithDecorator,
   type ClzInstance,
+  type ScopeType,
 } from './custom-decorator.types.js'
 export { registerDecoratorHandlers } from './reg-decorator-handler.js'
 
