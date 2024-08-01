@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Application, Context, DecoratorExecutorParamBase, ClzInstance } from '@mwcp/share'
+import type { Application, Context, DecoratorExecutorParamBase, ClzInstance, ScopeType } from '@mwcp/share'
 import type { Attributes, Context as TraceContext, Span, SpanOptions, TimeInput } from '@opentelemetry/api'
 import type { MethodTypeUnknown } from '@waiting/shared-types'
 
@@ -161,8 +161,8 @@ export type DecoratorExecutorParam<T extends TraceDecoratorOptions = TraceDecora
     span: Span | undefined,
   }
 
-export type TraceScopeParamType = string | TraceScopeType
-export type TraceScopeType = Context | Application | object | symbol
+export type TraceScopeParamType = string | ScopeType
+export type TraceScopeType = ScopeType
 
 
 export type TraceOptions<M extends MethodTypeUnknown | undefined = undefined> = Partial<TraceDecoratorOptions<M>> | string
