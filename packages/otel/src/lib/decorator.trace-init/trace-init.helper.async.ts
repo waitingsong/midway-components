@@ -3,8 +3,8 @@ import assert from 'assert'
 import { SpanKind } from '@opentelemetry/api'
 import type { Attributes, SpanOptions } from '@opentelemetry/api'
 
-import type { DecoratorExecutorParam, TraceDecoratorOptions } from '../abstract.trace-service.js'
 import { processDecoratorBeforeAfterAsync } from '../decorator.helper.async.js'
+import type { DecoratorExecutorParam, TraceDecoratorOptions } from '../trace.service.js'
 
 
 export async function before(options: DecoratorExecutorParam<TraceDecoratorOptions>): Promise<void> {

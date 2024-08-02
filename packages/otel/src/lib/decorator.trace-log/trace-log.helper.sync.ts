@@ -3,9 +3,9 @@ import { isAsyncFunction } from 'util/types'
 
 import { ConfigKey } from '@mwcp/share'
 
-import type { DecoratorExecutorParam } from '../abstract.trace-service.js'
 import { genTraceScopeFrom } from '../decorator.helper.base.js'
 import { processDecoratorBeforeAfterSync } from '../decorator.helper.sync.js'
+import type { DecoratorExecutorParam } from '../trace.service.js'
 import { AttrNames } from '../types.js'
 
 

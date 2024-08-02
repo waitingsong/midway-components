@@ -46,8 +46,8 @@ import type { NpmPkg } from '@waiting/shared-types'
 import { initTrace } from '##/helper/index.opentelemetry.js'
 
 import { AbstractOtelComponent } from './abstract.component.js'
-import type { TraceScopeType } from './abstract.trace-service.js'
 import { initSpanStatusOptions } from './config.js'
+import type { TraceScopeType } from './trace.service.js'
 import {
   AddEventOptions,
   AttrNames,

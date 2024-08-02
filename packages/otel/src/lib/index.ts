@@ -4,16 +4,7 @@ export { OtelComponent } from './component.js'
 export { DecoratorHandlerTrace } from './decorator.trace/trace.decorator-handler.js'
 export { DecoratorHandlerTraceInit } from './decorator.trace-init/trace-init.decorator-handler.js'
 export { DecoratorHandlerTraceLog } from './decorator.trace-log/trace-log.decorator-handler.js'
-export {
-  AbstractTraceService,
-  type DecoratorContext,
-  type DecoratorTraceData,
-  type DecoratorTraceDataResp,
-  type TraceOptions as TraceDecoratorArg,
-  type TraceDecoratorOptions,
-  type TraceScopeParamType,
-  type TraceScopeType,
-} from './abstract.trace-service.js'
+export type { TraceOptions as TraceDecoratorArg } from './trace.service.js'
 
 export { AbstractOtelComponent } from './abstract.component.js'
 export * from './trace.logger.js'

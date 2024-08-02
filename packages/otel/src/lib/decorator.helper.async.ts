@@ -3,8 +3,8 @@ import assert from 'node:assert'
 import type { Application, Context } from '@mwcp/share'
 import { isArrowFunction } from '@waiting/shared-core'
 
-import type { DecoratorExecutorParam, DecoratorContext, TraceDecoratorOptions } from './abstract.trace-service.js'
 import { processDecoratorSpanData } from './decorator.helper.base.js'
+import type { DecoratorExecutorParam, DecoratorContext, TraceDecoratorOptions } from './trace.service.js'
 import { isSpanEnded } from './util.js'
 
 // #region processDecoratorBeforeAfterAsync
@@ -40,16 +40,19 @@ export async function processDecoratorBeforeAfterAsync(
 
     let data
     if (type === 'before') {
-      const func2 = funcBind as NonNullable<TraceDecoratorOptions['before']>
+      const func2 = funcBind
+      // @ts-expect-error param type
       data = await func2(options.methodArgs, decoratorContext)
     }
     else if (type === 'after') {
-      const func2 = funcBind as NonNullable<TraceDecoratorOptions['after']>
+      const func2 = funcBind
+      // @ts-expect-error param type
       data = await func2(options.methodArgs, options.methodResult, decoratorContext)
     }
     else {
-      const func2 = funcBind as NonNullable<TraceDecoratorOptions['afterThrow']>
+      const func2 = funcBind
       assert(options.error, 'options.error is required')
+      // @ts-expect-error param type
       data = await func2(options.methodArgs, options.error, decoratorContext)
     }
 

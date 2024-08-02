@@ -5,7 +5,7 @@ import type { Span } from '@opentelemetry/api'
 import { isArrowFunction } from '@waiting/shared-core'
 
 import type {
-  AbstractTraceService,
+  TraceService,
   DecoratorExecutorParam,
   DecoratorContextBase,
   DecoratorTraceDataResp,
@@ -13,13 +13,13 @@ import type {
   TraceDecoratorOptions,
   TraceScopeParamType,
   TraceScopeType,
-} from './abstract.trace-service.js'
+} from './trace.service.js'
 import type { Attributes } from './types.js'
 
 
 export function processDecoratorSpanData(
   scope: Context | Application,
-  traceService: AbstractTraceService,
+  traceService: TraceService,
   span: Span,
   info: DecoratorTraceDataResp | undefined,
 ): void {
@@ -36,7 +36,7 @@ export function processDecoratorSpanData(
 }
 
 function processAttrs(
-  traceService: AbstractTraceService,
+  traceService: TraceService,
   span: Span | undefined,
   attrs: Attributes | undefined,
 ): void {
@@ -46,7 +46,7 @@ function processAttrs(
 }
 
 function processEvents(
-  traceService: AbstractTraceService,
+  traceService: TraceService,
   span: Span | undefined,
   events: Attributes | undefined,
 ): void {

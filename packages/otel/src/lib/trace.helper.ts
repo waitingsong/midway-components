@@ -10,7 +10,7 @@ import type {
   GenDecoratorExecutorOptions,
   KeyGenerator,
   TraceDecoratorOptions,
-} from './abstract.trace-service.js'
+} from './trace.service.js'
 import { AttrNames, ConfigKey } from './types.js'
 
 

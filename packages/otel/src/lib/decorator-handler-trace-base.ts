@@ -11,8 +11,7 @@ import {
 import { DecoratorHandlerBase, type Context } from '@mwcp/share'
 import { SpanStatusCode } from '@opentelemetry/api'
 
-import { DecoratorExecutorParam } from './abstract.trace-service.js'
-import { TraceService } from './trace.service.js'
+import { type DecoratorExecutorParam, TraceService } from './trace.service.js'
 import { AttrNames } from './types.js'
 import { isSpanEnded } from './util.js'
 
