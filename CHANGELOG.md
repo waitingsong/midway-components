@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [35.2.1](https://github.com/waitingsong/midway-components/compare/v35.2.0...v35.2.1) (2024-08-02)
+
+
+### Bug Fixes
+
+* **otel:** param inner DecoratorHandlerTraceBase.traceError() ([30a26fd](https://github.com/waitingsong/midway-components/commit/30a26fdb677a48b749eb4e0355e8ec2162057070))
+
+
+
+
+
 # [35.2.0](https://github.com/waitingsong/midway-components/compare/v35.1.0...v35.2.0) (2024-08-01)
 
 

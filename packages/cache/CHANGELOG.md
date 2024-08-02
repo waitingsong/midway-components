@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [35.2.1](https://github.com/waitingsong/midway-components/compare/v35.2.0...v35.2.1) (2024-08-02)
+
+**Note:** Version bump only for package @mwcp/cache
+
+
+
+
+
 # [35.2.0](https://github.com/waitingsong/midway-components/compare/v35.1.0...v35.2.0) (2024-08-01)
 
 **Note:** Version bump only for package @mwcp/cache
