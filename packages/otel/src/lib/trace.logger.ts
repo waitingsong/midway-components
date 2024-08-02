@@ -8,7 +8,6 @@ import { ILogger } from '@midwayjs/logger'
 import { Context } from '@mwcp/share'
 import type { Attributes, Span } from '@opentelemetry/api'
 
-import { AbstractOtelComponent } from './abstract.component.js'
 import { OtelComponent } from './component.js'
 import { TraceService } from './trace.service.js'
 import { AttrNames, TraceLogType } from './types.js'
@@ -156,7 +155,7 @@ export class TraceLogger implements ILogger {
 
 function traceAppLogger(
   input: TraceLogType,
-  otel: AbstractOtelComponent,
+  otel: OtelComponent,
   span: Span | undefined,
 ): void {
 

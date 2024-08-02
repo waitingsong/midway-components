@@ -45,7 +45,6 @@ import type { NpmPkg } from '@waiting/shared-types'
 
 import { initTrace } from '##/helper/index.opentelemetry.js'
 
-import { AbstractOtelComponent } from './abstract.component.js'
 import { initSpanStatusOptions } from './config.js'
 import type { TraceScopeType } from './trace.service.js'
 import {
@@ -65,7 +64,7 @@ import PKG from '#package.json' with { type: 'json' }
 
 /** OpenTelemetry Component */
 @Singleton()
-export class OtelComponent extends AbstractOtelComponent {
+export class OtelComponent {
 
   @App() readonly app: Application
   @ApplicationContext() readonly applicationContext: IMidwayContainer

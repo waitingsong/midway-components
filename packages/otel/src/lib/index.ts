@@ -6,7 +6,6 @@ export { DecoratorHandlerTraceInit } from './decorator.trace-init/trace-init.dec
 export { DecoratorHandlerTraceLog } from './decorator.trace-log/trace-log.decorator-handler.js'
 export type { TraceOptions as TraceDecoratorArg } from './trace.service.js'
 
-export { AbstractOtelComponent } from './abstract.component.js'
 export * from './trace.logger.js'
 export * from './trace.service.js'
 export * from './decorator.trace/trace.js'
