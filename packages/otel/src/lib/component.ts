@@ -46,7 +46,6 @@ import type { NpmPkg } from '@waiting/shared-types'
 import { initTrace } from '##/helper/index.opentelemetry.js'
 
 import { initSpanStatusOptions } from './config.js'
-import type { TraceScopeType } from './trace.service.js'
 import {
   AddEventOptions,
   AttrNames,
@@ -54,6 +53,7 @@ import {
   ConfigKey,
   InitTraceOptions,
   SpanStatusOptions,
+  TraceScopeType,
 } from './types.js'
 import { normalizeHeaderKey, getSpan, setSpan, isSpanEnded } from './util.js'
 

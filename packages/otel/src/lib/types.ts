@@ -2,7 +2,7 @@
 import type { IncomingHttpHeaders } from 'http'
 
 import type { ILogger } from '@midwayjs/logger'
-import type { BaseConfig, Context } from '@mwcp/share'
+import type { BaseConfig, Context, ScopeType } from '@mwcp/share'
 import type {
   Attributes,
   AttributeValue,
@@ -275,3 +275,7 @@ export interface AddEventOptions {
   eventName?: string
   startTime?: TimeInput
 }
+
+export type TraceScopeParamType = string | ScopeType
+export type TraceScopeType = ScopeType
+

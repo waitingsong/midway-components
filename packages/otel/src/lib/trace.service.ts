@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import assert from 'node:assert'
 
 import {
@@ -16,7 +17,6 @@ import {
   type Context,
   type DecoratorExecutorParamBase,
   type RouterInfoLite,
-  type ScopeType,
   Application,
   MConfig,
   getRouterInfo,
@@ -46,6 +46,8 @@ import {
   AttrNames,
   ConfigKey,
   middlewareEnableCacheKey,
+  TraceScopeParamType,
+  TraceScopeType,
 } from './types.js'
 import {
   genRequestSpanName,
@@ -571,10 +573,6 @@ export type DecoratorExecutorParam<T extends TraceDecoratorOptions = TraceDecora
     traceScope: TraceScopeType | undefined,
     span: Span | undefined,
   }
-
-export type TraceScopeParamType = string | ScopeType
-export type TraceScopeType = ScopeType
-
 
 export type TraceOptions<M extends MethodTypeUnknown | undefined = undefined> = Partial<TraceDecoratorOptions<M>> | string
 

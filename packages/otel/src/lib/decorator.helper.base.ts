@@ -11,10 +11,8 @@ import type {
   DecoratorTraceDataResp,
   ScopeGenerator,
   TraceDecoratorOptions,
-  TraceScopeParamType,
-  TraceScopeType,
 } from './trace.service.js'
-import type { Attributes } from './types.js'
+import type { Attributes, TraceScopeParamType, TraceScopeType } from './types.js'
 
 
 export function processDecoratorSpanData(

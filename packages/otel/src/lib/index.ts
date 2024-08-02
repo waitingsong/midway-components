@@ -48,6 +48,8 @@ export {
   type SpanStatusOptions,
   type TraceError,
   type TraceLogType as LogInfo,
+  type TraceScopeParamType,
+  type TraceScopeType,
   HeadersKey,
   SpanExporterList,
 } from './types.js'
