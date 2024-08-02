@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import { createHash } from 'node:crypto'
 
 import type { MidwayUnionCache } from '@midwayjs/cache-manager'
-import type { AbstractTraceService } from '@mwcp/otel'
+import type { TraceService } from '@mwcp/otel'
 import type { ClzInstance, DecoratorExecutorParamBase, PagingDTO } from '@mwcp/share'
 
 import { initCacheableArgs, initCacheEvictArgs, initCacheManagerOptions } from './config.js'
@@ -222,7 +222,7 @@ export async function deleteData(caching: MidwayUnionCache, cacheKey: string): P
 export async function getData<T = unknown>(
   caching: MidwayUnionCache,
   cacheKey: string,
-  traceService?: AbstractTraceService | undefined,
+  traceService?: TraceService | undefined,
   traceLogCacheHit?: boolean | undefined,
 ): Promise<CachedResponse<T>> {
 
@@ -230,8 +230,9 @@ export async function getData<T = unknown>(
 
   const ret = await caching.get(keys.cacheKeyHash ?? keys.cacheKey)
   // @ts-expect-error
-  if (traceService?.isStarted && ret?.CacheMetaType && traceLogCacheHit) {
-    traceService.addEvent(void 0, {
+  if (traceService && ret?.CacheMetaType && traceLogCacheHit) {
+    const span = traceService.getActiveSpan()
+    span && traceService.addEvent(span, {
       event: 'cache.hit',
       library: '@mwcp/cache',
       // @ts-expect-error

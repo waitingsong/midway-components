@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { CachingFactory, CacheManagerOptions } from '@midwayjs/cache-manager'
-import type { AbstractTraceService } from '@mwcp/otel'
+import type { TraceService } from '@mwcp/otel'
 import type { DecoratorExecutorParamBase, ClzInstance } from '@mwcp/share'
 import type { MethodType, MiddlewareConfig as MWConfig } from '@waiting/shared-types'
 
@@ -197,6 +197,6 @@ export interface GenDecoratorExecutorOptionsExt {
   config: Config
   cachingFactory: CachingFactory
   op: 'cacheable' | 'cacheput' | 'cacheevict'
-  traceService: AbstractTraceService | undefined
+  traceService: TraceService | undefined
 }
 
