@@ -50,18 +50,18 @@ export class DecoratorHandlerTraceBase extends DecoratorHandlerBase {
     // @ts-ignore - IsTraced
     else if (error[AttrNames.IsTraced] && isSpanEnded(span)) { return }
 
-    const ctx = options.webContext ?? this.getWebContext()
-    assert(ctx, 'webContext is required')
+    const webCtx = options.webContext ?? this.getWebContext()
+    assert(webCtx, 'webContext is required')
 
     if (endSpan) {
       traceService.endSpan({
         span,
         spanStatusOptions: { code: SpanStatusCode.ERROR, error },
-        scope: options.traceContext ?? ctx,
+        scope: options.traceScope ?? webCtx,
       })
     }
     else {
-      traceService.setSpanWithError(span, error, void 0, options.traceContext ?? ctx)
+      traceService.setSpanWithError(span, error, void 0, options.traceScope ?? webCtx)
     }
   }
 }
