@@ -11,6 +11,7 @@ export const apiBase = {
   router: '/router',
   decorator_singleton: '/decorator_singleton',
   decorator_error: '/decorator_error',
+  get_web_context: '/get_web_context',
 }
 
 export const apiMethod = {

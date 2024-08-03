@@ -34,3 +34,6 @@ export const routerInfoConfig = {
   enable: true,
 }
 
+export const asyncContextManager = {
+  enable: true,
+}
