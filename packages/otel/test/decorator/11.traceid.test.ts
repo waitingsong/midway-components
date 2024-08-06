@@ -61,6 +61,12 @@ describe(fileShortPath(import.meta.url), function () {
       },
     }
     assertsSpan(span1, opt1)
+
+    await Promise.all([
+      httpRequest.get(path),
+      httpRequest.get(path),
+      httpRequest.get(path),
+    ])
   })
 })
 
