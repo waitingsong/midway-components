@@ -30,14 +30,14 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/bootstrap": "^3.16.2",
+    "@midwayjs/bootstrap": "^3.16.6",
     "@midwayjs/core": "^3.16.2",
-    "@midwayjs/info": "^3.16.2",
-    "@midwayjs/koa": "^3.16.2",
-    "@midwayjs/logger": "^3.4.0",
-    "@midwayjs/swagger": "^3.16.2",
-    "@midwayjs/validate": "^3.16.2",
-    "@waiting/shared-core": "^23.12.0",
+    "@midwayjs/info": "^3.16.8",
+    "@midwayjs/koa": "^3.16.8",
+    "@midwayjs/logger": "^3.4.2",
+    "@midwayjs/swagger": "^3.16.8",
+    "@midwayjs/validate": "^3.16.8",
+    "@waiting/shared-core": "^23.20.2",
     "deepmerge": "^4.3.1"
   },
   "devDependencies": {
