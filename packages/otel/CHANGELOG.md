@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [36.1.1](https://github.com/waitingsong/midway-components/compare/v36.1.0...v36.1.1) (2024-08-06)
+
+
+### Bug Fixes
+
+* **otel:** trace scope ([47b7cef](https://github.com/waitingsong/midway-components/commit/47b7cef8bfd1df6f30cbf4c64eafd0133598492b))
+
+
+
+
+
 # [36.1.0](https://github.com/waitingsong/midway-components/compare/v36.0.0...v36.1.0) (2024-08-03)
 
 **Note:** Version bump only for package @mwcp/otel
