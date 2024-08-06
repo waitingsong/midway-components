@@ -28,22 +28,22 @@ export function beforeSync(options: DecoratorExecutorParam): void {
     `[@mwcp/${ConfigKey.namespace}] Trace() ${type}() is a AsyncFunction, but decorated method is sync function, class: ${callerAttr[AttrNames.CallerClass]}, method: ${callerAttr[AttrNames.CallerMethod]}`,
   )
   assert(spanName, 'spanName is empty')
-  const scope = genTraceScopeFrom(options) ?? options.webContext
-  assert(scope, 'beforeSync() scope is required')
-  assert(options.webContext, 'webContext is required')
+  options.traceScope = genTraceScopeFrom(options) ?? options.webContext
+  assert(options.traceScope, 'beforeSync() options.traceScope is required')
+  // assert(options.webContext, 'webContext is required')
 
   if (startActiveSpan) {
-    options.span = traceService.startScopeActiveSpan({ name: spanName, spanOptions, traceContext, scope }).span
+    options.span = traceService.startScopeActiveSpan({ name: spanName, spanOptions, traceContext, scope: options.traceScope }).span
     options.span.setAttributes(callerAttr)
-    processDecoratorBeforeAfterSync(options.webContext, type, options)
+    processDecoratorBeforeAfterSync(options.traceScope, type, options)
   }
   else {
     // it's necessary to cost a little time to prevent next span.startTime is same as previous span.endTime
     const rndStr = Math.random().toString(36).substring(7)
     void rndStr
-    options.span = traceService.startSpan(spanName, spanOptions, traceContext, scope)
+    options.span = traceService.startSpan(spanName, spanOptions, traceContext, options.traceScope)
     options.span.setAttributes(callerAttr)
-    processDecoratorBeforeAfterSync(options.webContext, type, options)
+    processDecoratorBeforeAfterSync(options.traceScope, type, options)
   }
 }
 
@@ -58,8 +58,9 @@ export function afterReturnSync(options: DecoratorExecutorParam): unknown {
     return options.methodResult
   }
   const type = 'after'
-  assert(options.webContext, 'webContext is required')
-  processDecoratorBeforeAfterSync(options.webContext, type, options)
+  // assert(options.webContext, 'webContext is required')
+  assert(options.traceScope, 'afterThrowAsync(): traceScope is required')
+  processDecoratorBeforeAfterSync(options.traceScope, type, options)
 
   const autoEndSpan = !! options.mergedDecoratorParam?.autoEndSpan
   autoEndSpan && traceService.endSpan({ span, scope: options.traceScope })
@@ -73,7 +74,8 @@ export function afterThrowSync(options: DecoratorExecutorParam): void {
 
   assert(options.error, `[@mwcp/${ConfigKey.namespace}] options.error is undefined in afterThrowAsync().`)
   const type = 'afterThrow'
-  assert(options.webContext, 'webContext is required')
-  processDecoratorBeforeAfterSync(options.webContext, type, options)
+  // assert(options.webContext, 'webContext is required')
+  assert(options.traceScope, 'afterThrowAsync(): traceScope is required')
+  processDecoratorBeforeAfterSync(options.traceScope, type, options)
 }
 

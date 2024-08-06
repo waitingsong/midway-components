@@ -1,6 +1,5 @@
 import assert from 'node:assert'
 
-import type { Application, Context } from '@mwcp/share'
 import type { Span } from '@opentelemetry/api'
 import { isArrowFunction } from '@waiting/shared-core'
 
@@ -16,7 +15,7 @@ import type { Attributes, TraceScopeParamType, TraceScopeType } from './types.js
 
 
 export function processDecoratorSpanData(
-  scope: Context | Application,
+  scope: TraceScopeType,
   traceService: TraceService,
   span: Span,
   info: DecoratorTraceDataResp | undefined,
@@ -91,7 +90,6 @@ export function genTraceScopeFrom(options: DecoratorExecutorParam): TraceScopeTy
       instance: options.instance,
     })
   }
-  options.traceScope = ret
   return ret
 }
 

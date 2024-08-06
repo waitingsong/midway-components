@@ -17,22 +17,22 @@ export async function beforeAsync(options: DecoratorExecutorParam): Promise<void
   } = options
 
   const type = 'before'
-  const scope = genTraceScopeFrom(options) ?? options.webContext
-  assert(scope, 'beforeAsync() scope is required')
-  assert(options.webContext, 'beforeAsync() webContext is required')
+  options.traceScope = genTraceScopeFrom(options) ?? options.webContext
+  assert(options.traceScope, 'beforeAsync() options.traceScope is required')
+  // assert(options.webContext, 'beforeAsync() webContext is required')
 
   if (startActiveSpan) {
-    options.span = traceService.startScopeActiveSpan({ name: spanName, spanOptions, traceContext, scope }).span
+    options.span = traceService.startScopeActiveSpan({ name: spanName, spanOptions, traceContext, scope: options.traceScope }).span
     options.span.setAttributes(callerAttr)
-    return processDecoratorBeforeAfterAsync(options.webContext, type, options)
+    return processDecoratorBeforeAfterAsync(options.traceScope, type, options)
   }
   else {
     // it's necessary to cost a little time to prevent next span.startTime is same as previous span.endTime
     const rndStr = Math.random().toString(36).substring(7)
     void rndStr
-    options.span = traceService.startSpan(spanName, spanOptions, traceContext, scope)
+    options.span = traceService.startSpan(spanName, spanOptions, traceContext, options.traceScope)
     options.span.setAttributes(callerAttr)
-    return processDecoratorBeforeAfterAsync(options.webContext, type, options)
+    return processDecoratorBeforeAfterAsync(options.traceScope, type, options)
   }
 }
 
@@ -47,8 +47,9 @@ export async function afterReturnAsync(options: DecoratorExecutorParam): Promise
     return options.methodResult
   }
   const type = 'after'
-  assert(options.webContext, 'webContext is required')
-  await processDecoratorBeforeAfterAsync(options.webContext, type, options)
+  // assert(options.webContext, 'webContext is required')
+  assert(options.traceScope, 'afterReturnAsync(): traceScope is required')
+  await processDecoratorBeforeAfterAsync(options.traceScope, type, options)
 
   const autoEndSpan = !! options.mergedDecoratorParam?.autoEndSpan
   autoEndSpan && traceService.endSpan({ span, scope: options.traceScope })
@@ -62,7 +63,8 @@ export async function afterThrowAsync(options: DecoratorExecutorParam): Promise<
 
   assert(options.error, `[@mwcp/${ConfigKey.namespace}] options.error is undefined in afterThrowAsync().`)
   const type = 'afterThrow'
-  assert(options.webContext, 'webContext is required')
-  await processDecoratorBeforeAfterAsync(options.webContext, type, options)
+  // assert(options.webContext, 'webContext is required')
+  assert(options.traceScope, 'afterThrowAsync(): traceScope is required')
+  await processDecoratorBeforeAfterAsync(options.traceScope, type, options)
 }
 

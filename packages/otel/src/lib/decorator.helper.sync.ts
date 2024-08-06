@@ -1,11 +1,11 @@
 import assert from 'node:assert'
 import { isPromise } from 'node:util/types'
 
-import type { Application, Context } from '@mwcp/share'
 import { isArrowFunction } from '@waiting/shared-core'
 
 import { processDecoratorSpanData } from './decorator.helper.base.js'
 import type { DecoratorExecutorParam, DecoratorContext, TraceDecoratorOptions } from './trace.service.js'
+import type { TraceScopeType } from './types.js'
 import { AttrNames } from './types.js'
 import { isSpanEnded } from './util.js'
 
@@ -13,7 +13,7 @@ import { isSpanEnded } from './util.js'
 // #region processDecoratorBeforeAfterSync
 
 export function processDecoratorBeforeAfterSync(
-  scope: Context | Application,
+  scope: TraceScopeType,
   type: 'before' | 'after' | 'afterThrow',
   options: DecoratorExecutorParam<TraceDecoratorOptions>,
 ): void {
