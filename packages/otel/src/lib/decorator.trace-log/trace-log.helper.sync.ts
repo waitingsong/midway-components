@@ -27,8 +27,7 @@ export function beforeSync(options: DecoratorExecutorParam): void {
   if (! options.span) {
     options.span = traceService.getActiveSpan(options.traceScope)
   }
-  // assert(options.webContext, 'beforeSync() webContext is required')
-  processDecoratorBeforeAfterSync(options.traceScope, type, options)
+  processDecoratorBeforeAfterSync(type, options)
 }
 
 
@@ -42,9 +41,7 @@ export function afterReturnSync(options: DecoratorExecutorParam): unknown {
   if (! span) {
     return options.methodResult
   }
-  // assert(options.webContext, 'webContext is required')
-  assert(options.traceScope, 'afterReturnSync(): traceScope is required')
-  processDecoratorBeforeAfterSync(options.traceScope, 'after', options)
+  processDecoratorBeforeAfterSync('after', options)
   return options.methodResult
 }
 
@@ -55,8 +52,6 @@ export function afterThrowSync(options: DecoratorExecutorParam): void {
 
   assert(options.error, `[@mwcp/${ConfigKey.namespace}] options.error is undefined in afterThrowAsync().`)
   const type = 'afterThrow'
-  // assert(options.webContext, 'webContext is required')
-  assert(options.traceScope, 'afterThrowSync(): traceScope is required')
-  processDecoratorBeforeAfterSync(options.traceScope, type, options)
+  processDecoratorBeforeAfterSync(type, options)
 }
 

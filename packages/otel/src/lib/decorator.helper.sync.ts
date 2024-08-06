@@ -5,7 +5,6 @@ import { isArrowFunction } from '@waiting/shared-core'
 
 import { processDecoratorSpanData } from './decorator.helper.base.js'
 import type { DecoratorExecutorParam, DecoratorContext, TraceDecoratorOptions } from './trace.service.js'
-import type { TraceScopeType } from './types.js'
 import { AttrNames } from './types.js'
 import { isSpanEnded } from './util.js'
 
@@ -13,7 +12,6 @@ import { isSpanEnded } from './util.js'
 // #region processDecoratorBeforeAfterSync
 
 export function processDecoratorBeforeAfterSync(
-  scope: TraceScopeType,
   type: 'before' | 'after' | 'afterThrow',
   options: DecoratorExecutorParam<TraceDecoratorOptions>,
 ): void {
@@ -72,7 +70,8 @@ export function processDecoratorBeforeAfterSync(
         data.events['event'] = eventName
       }
 
-      processDecoratorSpanData(scope, traceService, span, data)
+      assert(options.traceScope, 'processDecoratorBeforeAfterSync(): traceScope is required')
+      processDecoratorSpanData(options.traceScope, traceService, span, data)
     }
   }
 

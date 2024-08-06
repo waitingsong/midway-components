@@ -20,6 +20,8 @@ export async function before(options: DecoratorExecutorParam<TraceDecoratorOptio
     traceService,
   } = options
 
+  options.traceScope = options.webApp
+
   const traceCtx = traceService.otel.appInitProcessContext
   const spanOpts: SpanOptions = {
     ...spanOptions,
@@ -40,7 +42,7 @@ export async function before(options: DecoratorExecutorParam<TraceDecoratorOptio
   traceService.otel.addEvent(span, events, addEventOptions)
 
   if (mergedDecoratorParam) {
-    await processDecoratorBeforeAfterAsync(options.webApp, 'before', options)
+    await processDecoratorBeforeAfterAsync('before', options)
   }
 }
 
@@ -62,7 +64,7 @@ export async function afterReturn(options: DecoratorExecutorParam<TraceDecorator
   } = options
 
   if (mergedDecoratorParam) {
-    await processDecoratorBeforeAfterAsync(options.webApp, 'after', options)
+    await processDecoratorBeforeAfterAsync('after', options)
   }
 
   const events2: Attributes = {

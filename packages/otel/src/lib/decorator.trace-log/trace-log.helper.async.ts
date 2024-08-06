@@ -16,8 +16,7 @@ export async function beforeAsync(options: DecoratorExecutorParam): Promise<void
   if (! options.span) {
     options.span = traceService.getActiveSpan(options.traceScope)
   }
-  assert(options.webContext, 'beforeAsync() webContext is required')
-  return processDecoratorBeforeAfterAsync(options.webContext, type, options)
+  return processDecoratorBeforeAfterAsync(type, options)
 }
 
 export async function afterReturnAsync(options: DecoratorExecutorParam): Promise<unknown> {
@@ -30,9 +29,7 @@ export async function afterReturnAsync(options: DecoratorExecutorParam): Promise
   if (! span) {
     return options.methodResult
   }
-  // assert(options.webContext, 'webContext is required')
-  assert(options.traceScope, 'afterReturnAsync(): traceScope is required')
-  await processDecoratorBeforeAfterAsync(options.traceScope, 'after', options)
+  await processDecoratorBeforeAfterAsync('after', options)
   return options.methodResult
 }
 
@@ -41,8 +38,6 @@ export async function afterThrowAsync(options: DecoratorExecutorParam): Promise<
   if (! span) { return }
 
   assert(options.error, `[@mwcp/${ConfigKey.namespace}] options.error is undefined in afterThrowAsync().`)
-  // assert(options.webContext, 'webContext is required')
-  assert(options.traceScope, 'afterThrowAsync(): traceScope is required')
-  await processDecoratorBeforeAfterAsync(options.traceScope, 'afterThrow', options)
+  await processDecoratorBeforeAfterAsync('afterThrow', options)
 }
 

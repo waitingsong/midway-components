@@ -30,12 +30,11 @@ export function beforeSync(options: DecoratorExecutorParam): void {
   assert(spanName, 'spanName is empty')
   options.traceScope = genTraceScopeFrom(options) ?? options.webContext
   assert(options.traceScope, 'beforeSync() options.traceScope is required')
-  // assert(options.webContext, 'webContext is required')
 
   if (startActiveSpan) {
     options.span = traceService.startScopeActiveSpan({ name: spanName, spanOptions, traceContext, scope: options.traceScope }).span
     options.span.setAttributes(callerAttr)
-    processDecoratorBeforeAfterSync(options.traceScope, type, options)
+    processDecoratorBeforeAfterSync(type, options)
   }
   else {
     // it's necessary to cost a little time to prevent next span.startTime is same as previous span.endTime
@@ -43,7 +42,7 @@ export function beforeSync(options: DecoratorExecutorParam): void {
     void rndStr
     options.span = traceService.startSpan(spanName, spanOptions, traceContext, options.traceScope)
     options.span.setAttributes(callerAttr)
-    processDecoratorBeforeAfterSync(options.traceScope, type, options)
+    processDecoratorBeforeAfterSync(type, options)
   }
 }
 
@@ -58,9 +57,7 @@ export function afterReturnSync(options: DecoratorExecutorParam): unknown {
     return options.methodResult
   }
   const type = 'after'
-  // assert(options.webContext, 'webContext is required')
-  assert(options.traceScope, 'afterThrowAsync(): traceScope is required')
-  processDecoratorBeforeAfterSync(options.traceScope, type, options)
+  processDecoratorBeforeAfterSync(type, options)
 
   const autoEndSpan = !! options.mergedDecoratorParam?.autoEndSpan
   autoEndSpan && traceService.endSpan({ span, scope: options.traceScope })
@@ -74,8 +71,6 @@ export function afterThrowSync(options: DecoratorExecutorParam): void {
 
   assert(options.error, `[@mwcp/${ConfigKey.namespace}] options.error is undefined in afterThrowAsync().`)
   const type = 'afterThrow'
-  // assert(options.webContext, 'webContext is required')
-  assert(options.traceScope, 'afterThrowAsync(): traceScope is required')
-  processDecoratorBeforeAfterSync(options.traceScope, type, options)
+  processDecoratorBeforeAfterSync(type, options)
 }
 
