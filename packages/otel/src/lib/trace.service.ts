@@ -229,7 +229,7 @@ export class TraceService {
     if (! this.config.enable) { return }
     const obj = scope ?? this.getWebContext()
     if (obj) {
-      this.otel.delScopeActiveContext(obj)
+      this.otel.emptyScopeActiveContext(obj)
     }
   }
 

@@ -480,8 +480,7 @@ export class OtelComponent {
     this.traceContextMap.set(scope, [ctx])
   }
 
-  // @FIXME
-  delScopeActiveContext(scope: object | symbol): void {
+  emptyScopeActiveContext(scope: object | symbol): void {
     /* c8 ignore next */
     if (! this.config.enable) { return }
 
