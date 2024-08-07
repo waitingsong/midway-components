@@ -23,6 +23,8 @@ export function processDecoratorSpanData(
 
   if (info && Object.keys(info).length > 0) {
     const { attrs, events, rootAttrs, rootEvents } = info
+    if (! attrs && ! events && ! rootAttrs && ! rootEvents) { return }
+
     const rootSpan = traceService.getRootSpan(scope)
     processEvents(traceService, span, events)
     processEvents(traceService, rootSpan, rootEvents)
