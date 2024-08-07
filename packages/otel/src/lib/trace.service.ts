@@ -193,7 +193,10 @@ export class TraceService {
       }
       else if (webContext) {
         const ctx3 = this.otel.getScopeActiveContext(webContext)
-        assert(ctx3, `getActiveContext() failed with scope value "${typeof scope === 'symbol' ? scope.toString() : ''}", use webContext instead`)
+        assert(ctx3, `getActiveContext() failed with scope value "${typeof scope === 'symbol' ? scope.toString() : ''}",
+        - use webContext instead
+        - change to 'await' instead of return Promise directly
+        `)
         return ctx3
       }
       else { // create new span and traceContext

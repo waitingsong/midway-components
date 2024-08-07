@@ -47,6 +47,9 @@ export class DecoratorHandlerTraceInit extends DecoratorHandlerBase {
     return before(options)
   }
 
+  /**
+   * Span will be ended if `autoEndSpan` is true when afterReturn() or afterThrow()
+   */
   override async afterReturn(options: DecoratorExecutorParam): Promise<unknown> {
     /* c8 ignore next 3 */
     if (! this.isEnable(options)) {

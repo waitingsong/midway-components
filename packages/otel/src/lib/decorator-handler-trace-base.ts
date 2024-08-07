@@ -15,7 +15,9 @@ import { type DecoratorExecutorParam, TraceService } from './trace.service.js'
 import { AttrNames } from './types.js'
 import { isSpanEnded } from './util.js'
 
-
+/**
+ * Span will be ended if `autoEndSpan` is true when afterReturn() or afterThrow()
+ */
 export class DecoratorHandlerTraceBase extends DecoratorHandlerBase {
 
   @ApplicationContext() readonly applicationContext: IMidwayContainer
