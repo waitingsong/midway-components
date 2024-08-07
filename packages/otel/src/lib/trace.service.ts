@@ -68,8 +68,6 @@ export class TraceService {
   @Inject() readonly otel: OtelComponent
 
   readonly isStartedMap = new WeakMap <TraceScopeType, boolean>()
-  // readonly rootContextMap = new WeakMap<TraceScopeType, TraceContext>()
-  readonly rootSpanMap = new WeakMap<TraceScopeType, Span>()
 
   // @FIXME
   readonly routerInfoMap = new WeakMap<TraceScopeType, RouterInfoLite>()
@@ -122,12 +120,11 @@ export class TraceService {
   }
 
   getRootSpan(scope: TraceScopeType): Span | undefined {
-    return this.rootSpanMap.get(scope)
+    const rootTraceContext = this.getRootTraceContext(scope)
+    if (! rootTraceContext) { return }
+    return getSpan(rootTraceContext)
   }
 
-  setRootSpan(scope: TraceScopeType, span: Span): void {
-    this.rootSpanMap.set(scope, span)
-  }
 
   async startOnRequest(webCtx: Context): Promise<void> {
     if (! webCtx[middlewareEnableCacheKey]) { return }
@@ -507,8 +504,6 @@ export class TraceService {
       this.genRootSpanName(scope),
       (span, ctx) => {
         assert(span, 'rootSpan should not be null on init')
-        this.rootSpanMap.set(scope, span)
-        // this.rootContextMap.set(scope, ctx)
         this.setRootContext(scope, ctx)
       },
       { kind: SpanKind.SERVER },
