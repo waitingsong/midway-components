@@ -27,7 +27,7 @@ export async function before(options: DecoratorExecutorParam<TraceDecoratorOptio
     ...spanOptions,
     kind: SpanKind.INTERNAL,
   }
-  const span = traceService.otel.startSpan(spanName, spanOpts, traceCtx)
+  const { span } = traceService.otel.startSpan(spanName, spanOpts, traceCtx)
   options.span = span
 
   span.setAttributes(callerAttr)

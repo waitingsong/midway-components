@@ -155,9 +155,9 @@ export class OtelComponent {
    * Starts a new {@link Span}. Start the span without setting it on context.
    * This method do NOT modify the current Context.
    */
-  startSpan(name: string, options?: SpanOptions, traceContext?: TraceContext): Span {
-    const { span } = this.startSpanContext(name, options, traceContext)
-    return span
+  startSpan(name: string, options?: SpanOptions, traceContext?: TraceContext): { span: Span, traceContext: TraceContext } {
+    const ret = this.startSpanContext(name, options, traceContext)
+    return ret
   }
 
   /**
@@ -471,13 +471,16 @@ export class OtelComponent {
     if (currCtx === ctx) { return }
 
     const arr = this.traceContextMap.get(scope)
-    if (arr) {
-      arr.push(ctx)
+    if (arr?.length) {
+      if (arr.at(-1) !== currCtx) {
+        arr.push(ctx)
+      }
       return
     }
     this.traceContextMap.set(scope, [ctx])
   }
 
+  // @FIXME
   delScopeActiveContext(scope: object | symbol): void {
     /* c8 ignore next */
     if (! this.config.enable) { return }

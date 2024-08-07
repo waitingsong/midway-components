@@ -40,7 +40,7 @@ export function beforeSync(options: DecoratorExecutorParam): void {
     // it's necessary to cost a little time to prevent next span.startTime is same as previous span.endTime
     const rndStr = Math.random().toString(36).substring(7)
     void rndStr
-    options.span = traceService.startSpan(spanName, spanOptions, traceContext, options.traceScope)
+    options.span = traceService.startSpan(spanName, spanOptions, traceContext, options.traceScope).span
     options.span.setAttributes(callerAttr)
     processDecoratorBeforeAfterSync(type, options)
   }

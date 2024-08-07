@@ -261,11 +261,11 @@ export class TraceService {
     options?: SpanOptions,
     traceContext?: TraceContext,
     scope?: TraceScopeType,
-  ): Span {
+  ): { span: Span, traceContext: TraceContext } {
 
-    const ctx = traceContext ?? this.getActiveContext(scope)
-    const span = this.otel.startSpan(name, options, ctx)
-    return span
+    const traceCtx = traceContext ?? this.getActiveContext(scope)
+    const ret = this.otel.startSpan(name, options, traceCtx)
+    return ret
   }
 
   /**
@@ -303,10 +303,6 @@ export class TraceService {
     const scope2 = scope ?? this.getWebContext()
     assert(scope2, 'scope should not be null')
 
-    // const parentCtx = traceContext ?? this.getActiveContext(scope2)
-    // const span = this.startSpan(name, options, parentCtx, scope2)
-    // const traceCtx = setSpan(parentCtx, span)
-    // this.setActiveContext(traceCtx, scope2)
     const { span, traceContext: traceCtx } = this.startScopeActiveSpan({
       name,
       spanOptions: options,
