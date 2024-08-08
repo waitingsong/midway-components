@@ -386,12 +386,8 @@ export class OtelComponent {
       span.setStatus(status)
     }
 
-    if (rootSpan) {
-      if (span !== rootSpan) {
-        span.end(endTime)
-      }
-    }
-    else {
+    // root span not end here
+    if (! rootSpan || span !== rootSpan) {
       span.end(endTime)
     }
   }
@@ -437,6 +433,8 @@ export class OtelComponent {
     }
   }
 
+  // #region traceContextMap
+
   getScopeRootTraceContext(scope: TraceScopeType): TraceContext | undefined {
     /* c8 ignore next */
     if (! this.config.enable) { return }
@@ -463,7 +461,7 @@ export class OtelComponent {
     }
   }
 
-  setScopeActiveContext(scope: object | symbol, ctx: TraceContext): void {
+  setScopeActiveContext(scope: TraceScopeType, ctx: TraceContext): void {
     /* c8 ignore next */
     if (! this.config.enable) { return }
 
@@ -472,7 +470,7 @@ export class OtelComponent {
 
     const arr = this.traceContextMap.get(scope)
     if (arr?.length) {
-      if (arr.at(-1) !== currCtx) {
+      if (arr.at(-1) !== ctx) {
         arr.push(ctx)
       }
       return
@@ -480,7 +478,7 @@ export class OtelComponent {
     this.traceContextMap.set(scope, [ctx])
   }
 
-  emptyScopeActiveContext(scope: object | symbol): void {
+  emptyScopeActiveContext(scope: TraceScopeType): void {
     /* c8 ignore next */
     if (! this.config.enable) { return }
 
@@ -493,6 +491,18 @@ export class OtelComponent {
     }
     this.traceContextMap.delete(scope)
   }
+
+  getRootSpan(scope: TraceScopeType): Span | undefined {
+    const rootTraceContext = this.getScopeRootTraceContext(scope)
+    if (! rootTraceContext) { return }
+    return getSpan(rootTraceContext)
+  }
+
+  spanIsRootSpan(scope: TraceScopeType, span: Span): boolean {
+    const rootSpan = this.getRootSpan(scope)
+    return rootSpan === span
+  }
+
 
   getWebContext(): WebContext | undefined {
     const contextManager: AsyncContextManager = this.applicationContext.get(

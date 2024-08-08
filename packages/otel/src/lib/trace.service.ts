@@ -120,9 +120,8 @@ export class TraceService {
   }
 
   getRootSpan(scope: TraceScopeType): Span | undefined {
-    const rootTraceContext = this.getRootTraceContext(scope)
-    if (! rootTraceContext) { return }
-    return getSpan(rootTraceContext)
+    const rootSpan = this.otel.getRootSpan(scope)
+    return rootSpan
   }
 
 
@@ -330,7 +329,13 @@ export class TraceService {
     const scope2 = scope ?? this.getWebContext()
     const rootSpan = scope2 ? this.getRootSpan(scope2) : void 0
     const statusOpts = spanStatusOptions ?? initSpanStatusOptions
-    this.otel.endSpan(rootSpan, span, statusOpts, endTime)
+    const isRootSpan = scope2 ? this.otel.spanIsRootSpan(scope2, span) : true // true?
+    if (isRootSpan) {
+      this.otel.endRootSpan(span, spanStatusOptions, endTime)
+    }
+    else {
+      this.otel.endSpan(rootSpan, span, statusOpts, endTime)
+    }
   }
 
   endRootSpan(
@@ -343,10 +348,10 @@ export class TraceService {
     assert(scope, 'scope should not be null')
 
     const rootSpan = this.getRootSpan(scope)
-    assert(rootSpan, 'rootSpan should not be null')
-    this.otel.endSpan(rootSpan, rootSpan, spanStatusOptions, endTime)
-    rootSpan.end(endTime)
+    assert(rootSpan, 'traceService.endRootSpan(): rootSpan should not be null')
+    this.otel.endRootSpan(rootSpan, spanStatusOptions, endTime)
   }
+
 
   /**
    * Sets the span with the error passed in params, note span not ended.
