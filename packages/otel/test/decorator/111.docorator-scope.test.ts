@@ -1,0 +1,97 @@
+import assert from 'node:assert/strict'
+
+import { SEMATTRS_HTTP_TARGET, SEMATTRS_HTTP_ROUTE } from '@opentelemetry/semantic-conventions'
+import { fileShortPath } from '@waiting/shared-core'
+
+import {
+  assertJaegerParentSpanArray,
+  assertsSpan, assertRootSpan,
+  retrieveTraceInfoFromRemote,
+  sortSpans,
+} from '##/index.js'
+import type { AssertsOptions } from '##/index.js'
+import { apiBase, apiMethod } from '#@/api-test.js'
+import { testConfig } from '#@/root.config.js'
+
+
+describe(fileShortPath(import.meta.url), function () {
+
+  const path = `${apiBase.decorator_data}/${apiMethod.simple_scope}`
+
+  it(`Should ${path} work`, async () => {
+    const { httpRequest, testSuffix } = testConfig
+
+    const resp = await httpRequest.get(path)
+
+    assert(resp.ok, resp.text)
+    const traceId = resp.text
+    assert(traceId)
+
+    const [info] = await retrieveTraceInfoFromRemote(traceId, 4)
+    assert(info)
+    const { spans } = info
+    const [rootSpan, span1, span2, span3] = sortSpans(spans)
+    assert(rootSpan)
+    assert(span1)
+    assert(span2)
+    assert(span3)
+
+    assertJaegerParentSpanArray([
+      { parentSpan: rootSpan, childSpan: span1 },
+      { parentSpan: span1, childSpan: span2 },
+      { parentSpan: span2, childSpan: span3 },
+    ])
+
+    assertRootSpan({
+      path,
+      span: rootSpan,
+      traceId,
+      operationName: `HTTP GET ${path}`,
+      tags: {
+        [SEMATTRS_HTTP_TARGET]: `${path}`,
+        [SEMATTRS_HTTP_ROUTE]: `${path}`,
+      },
+    })
+
+    const opt1: AssertsOptions = {
+      traceId,
+      operationName: 'DecoratorScopeComponentController/simple',
+      tags: {
+        'caller.class': 'DecoratorScopeComponentController',
+        'caller.method': 'simple',
+        'span.kind': 'client',
+      },
+    }
+    assertsSpan(span1, opt1)
+
+    const opt2: AssertsOptions = {
+      traceId,
+      operationName: 'DecoratorScopeComponentController/_simple1',
+      tags: {
+        'caller.class': 'DecoratorScopeComponentController',
+        'caller.method': '_simple1',
+        'span.kind': 'client',
+      },
+    }
+    assertsSpan(span2, opt2)
+
+    const opt3: AssertsOptions = {
+      traceId,
+      operationName: 'DecoratorScopeComponentController/_simple1a',
+      tags: {
+        'caller.class': 'DecoratorScopeComponentController',
+        'caller.method': '_simple1a',
+        'span.kind': 'client',
+      },
+    }
+    assertsSpan(span3, opt3)
+
+  })
+
+  it(`Should ${path} work again`, async () => {
+    const { httpRequest, testSuffix } = testConfig
+    await httpRequest.get(path)
+  })
+})
+
+
