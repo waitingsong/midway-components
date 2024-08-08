@@ -10,9 +10,11 @@ export async function beforeAsync(options: DecoratorExecutorParam): Promise<void
   const { traceService } = options
 
   const type = 'before'
-  options.traceScope = genTraceScopeFrom(options) ?? options.webContext
+  options.traceScope = genTraceScopeFrom(options)
+  if (! options.traceScope) {
+    options.traceScope = options.webContext ?? options.webApp
+  }
 
-  assert(options.traceScope, 'beforeAsync() options.traceScope is required')
   if (! options.span) {
     options.span = traceService.getActiveSpan(options.traceScope)
   }
@@ -21,14 +23,14 @@ export async function beforeAsync(options: DecoratorExecutorParam): Promise<void
 
 export async function afterReturnAsync(options: DecoratorExecutorParam): Promise<unknown> {
   const { span } = options
-
-  assert(! options.error, `[@mwcp/${ConfigKey.namespace}] options.error is not undefined in afterReturnAsync().
-  Error: ${options.error?.message}`)
-
   /* c8 ignore next 3 */
   if (! span) {
     return options.methodResult
   }
+
+  assert(! options.error, `[@mwcp/${ConfigKey.namespace}] options.error is not undefined in afterReturnAsync().
+  Error: ${options.error?.message}`)
+
   await processDecoratorBeforeAfterAsync('after', options)
   return options.methodResult
 }

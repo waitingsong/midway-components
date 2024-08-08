@@ -21,8 +21,10 @@ export function beforeSync(options: DecoratorExecutorParam): void {
   )
   assert(spanName, 'spanName is empty')
 
-  options.traceScope = genTraceScopeFrom(options) ?? options.webContext
-  assert(options.traceScope, 'beforeSync() options.traceScope is required')
+  options.traceScope = genTraceScopeFrom(options)
+  if (! options.traceScope) {
+    options.traceScope = options.webContext ?? options.webApp
+  }
 
   if (! options.span) {
     options.span = traceService.getActiveSpan(options.traceScope)
@@ -33,14 +35,14 @@ export function beforeSync(options: DecoratorExecutorParam): void {
 
 export function afterReturnSync(options: DecoratorExecutorParam): unknown {
   const { span } = options
-
-  assert(! options.error, `[@mwcp/${ConfigKey.namespace}] options.error is not undefined in afterReturnSync().
-  Error: ${options.error?.message}`)
-
   /* c8 ignore next 3 */
   if (! span) {
     return options.methodResult
   }
+
+  assert(! options.error, `[@mwcp/${ConfigKey.namespace}] options.error is not undefined in afterReturnSync().
+  Error: ${options.error?.message}`)
+
   processDecoratorBeforeAfterSync('after', options)
   return options.methodResult
 }

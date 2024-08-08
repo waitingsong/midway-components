@@ -1,5 +1,3 @@
-import assert from 'assert'
-
 import {
   type AsyncContextManager,
   ApplicationContext,
@@ -51,8 +49,7 @@ export class DecoratorHandlerTraceBase extends DecoratorHandlerBase {
     // @ts-ignore - IsTraced
     else if (error[AttrNames.IsTraced] && isSpanEnded(span)) { return }
 
-    const webCtx = options.webContext ?? this.getWebContext()
-    assert(webCtx, 'webContext is required')
+    const webCtx = options.webContext ?? this.getWebContext() ?? this.app
 
     if (endSpan) {
       traceService.endSpan({
@@ -64,6 +61,7 @@ export class DecoratorHandlerTraceBase extends DecoratorHandlerBase {
     else {
       traceService.setSpanWithError(span, error, void 0, options.traceScope ?? webCtx)
     }
+    // traceService.setRootSpanWithError(error, 'DecoratorHandlerTraceBase.traceError()', webCtx)
   }
 }
 
