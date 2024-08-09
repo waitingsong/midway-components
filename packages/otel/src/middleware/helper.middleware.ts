@@ -67,7 +67,7 @@ export async function handleAppExceptionAndNext(
   }
   catch (error) {
     const err = genError({ error })
-    const currSpan = traceSvc.getActiveSpan(webCtx)
+    const currSpan = traceSvc.getActiveSpanOnlyScope(webCtx)
     if (currSpan) {
       traceSvc.setSpanWithError(currSpan, err, void 0, webCtx)
     }

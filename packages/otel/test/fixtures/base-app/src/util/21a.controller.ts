@@ -61,7 +61,7 @@ export class UtilComponentController {
     assert(span2a)
     assert(span2a === span)
 
-    const traceCtx5 = this.traceSvc.getActiveContext(this.ctx)
+    const traceCtx5 = this.traceSvc.getActiveContextOnlyScope(this.ctx)
     assert(traceCtx5)
     assert(traceCtx5 === traceCtx2)
 

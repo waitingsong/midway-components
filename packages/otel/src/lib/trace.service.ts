@@ -107,24 +107,6 @@ export class TraceService {
     }
   }
 
-
-  getRootTraceContext(scope: TraceScopeType): TraceContext | undefined {
-    return this.otel.getScopeRootTraceContext(scope)
-  }
-
-  setRootContext(scope: TraceScopeType, traceContext: TraceContext): void {
-    const rootCtx = this.getRootTraceContext(scope)
-    if (rootCtx && rootCtx === traceContext) { return }
-    assert(! rootCtx, 'TraceService.setRootContext() failed, scope root trace context exists already')
-    this.otel.setScopeActiveContext(scope, traceContext)
-  }
-
-  getRootSpan(scope: TraceScopeType): Span | undefined {
-    const rootSpan = this.otel.getRootSpan(scope)
-    return rootSpan
-  }
-
-
   async startOnRequest(webCtx: Context): Promise<void> {
     if (! webCtx[middlewareEnableCacheKey]) { return }
     if (this.isStartedMap.get(webCtx) === true) { return }
@@ -178,52 +160,41 @@ export class TraceService {
     return routerInfo
   }
 
-  getActiveContext(scope?: TraceScopeType): TraceContext {
-    if (scope) {
-      const ctx = this.otel.getScopeActiveContext(scope)
-      if (ctx) {
-        return ctx
-      }
-      const webContext = this.getWebContext()
-      if (scope === webContext || scope === this.app) {
-        const ctx2 = this.getRootTraceContext(scope as Application | Context)
-        assert(ctx2, 'getActiveContext() trace ctx should not be null with scope value= webContext or app')
-        return ctx2
-      }
-      else if (webContext) {
-        const ctx3 = this.otel.getScopeActiveContext(webContext)
-        assert(ctx3, `getActiveContext() failed with scope value "${typeof scope === 'symbol' ? scope.toString() : ''}",
-        - use webContext instead
-        - change to 'await' instead of return Promise directly
-        `)
-        return ctx3
-      }
-      else { // create new span and traceContext
-        // const { context: ctx4 } = this.otel.startSpan2('new span', { kind: SpanKind.INTERNAL })
-        const ctx4 = this.otel.getGlobalCurrentContext()
-        return ctx4
-        // assert(false, `getActiveContext() failed with scope value "${typeof scope === 'symbol' ? scope.toString() : ''}"`)
-      }
+  // #region context methods
+
+  getActiveContext(scope: TraceScopeType): TraceContext {
+    const traceContext = this.getActiveContextOnlyScope(scope)
+    if (traceContext) {
+      return traceContext
     }
 
-    const scope2 = this.getWebContextThenApp()
-    const ctx = this.otel.getScopeActiveContext(scope2)
+    const webAppCtx = this.getWebContextThenApp()
+    const traceCtx = this.otel.getScopeActiveContext(webAppCtx)
+    if (traceCtx) {
+      return traceCtx
+    }
+    // create new span and traceContext
+    const ctx4 = this.otel.getGlobalCurrentContext()
+    return ctx4
+  }
+
+  getActiveContextOnlyScope(scope: TraceScopeType): TraceContext | undefined {
+    assert(scope, 'getActiveContext() scope should not be null')
+    const ctx = this.otel.getScopeActiveContext(scope)
     if (ctx) {
       return ctx
     }
-    const ctx2 = this.getRootTraceContext(scope2)
-    assert(
-      ctx2,
-      'getActiveContext() get trace ctx failed without scope, you should pass a scope value. Or current WebContext/Application has no trace context',
-    )
-
-    return ctx2
+    const webContext = this.getWebContext()
+    if (scope === webContext || scope === this.app) {
+      const ctx2 = this.getRootTraceContext(scope as Application | Context)
+      assert(ctx2, 'getActiveContext() trace ctx should not be null with scope value= webContext or app')
+      return ctx2
+    }
   }
 
-  setActiveContext(traceContext: TraceContext, scope?: TraceScopeType): void {
+  setActiveContext(traceContext: TraceContext, scope: TraceScopeType): void {
     if (! this.config.enable) { return }
-    const obj = scope ?? this.getWebContext()
-    assert(obj, 'setActiveContext() scope should not be null')
+    const obj = scope
     this.otel.setScopeActiveContext(obj, traceContext)
   }
 
@@ -235,12 +206,49 @@ export class TraceService {
     }
   }
 
+  // #region span methods
+
+  getRootTraceContext(scope: TraceScopeType): TraceContext | undefined {
+    return this.otel.getScopeRootTraceContext(scope)
+  }
+
+  setRootContext(scope: TraceScopeType, traceContext: TraceContext): void {
+    const rootCtx = this.getRootTraceContext(scope)
+    if (rootCtx && rootCtx === traceContext) { return }
+    assert(! rootCtx, 'TraceService.setRootContext() failed, scope root trace context exists already')
+    this.otel.setScopeActiveContext(scope, traceContext)
+  }
+
+  getRootSpan(scope: TraceScopeType): Span | undefined {
+    const rootSpan = this.otel.getRootSpan(scope)
+    return rootSpan
+  }
+
+
+  /**
+   * Get span from the given scope, if not exists, get span from the request context or application.
+   */
   getActiveSpan(scope?: TraceScopeType): Span | undefined {
     if (! this.config.enable) { return }
-    const traceCtx = this.getActiveContext(scope)
+    const scope2 = scope ?? this.getWebContext()
+    assert(scope2, 'getActiveSpan() scope should not be null')
+    const traceCtx = this.getActiveContext(scope2)
     const span = getSpan(traceCtx)
     return span
   }
+
+  /**
+   * Get span from the given scope
+   */
+  getActiveSpanOnlyScope(scope: TraceScopeType): Span | undefined {
+    if (! this.config.enable) { return }
+    assert(scope, 'getActiveSpanOnlyScope() scope should not be null')
+    const traceCtx = this.getActiveContextOnlyScope(scope)
+    if (! traceCtx) { return }
+    const span = getSpan(traceCtx)
+    return span
+  }
+
 
   getTraceId(): string {
     const webCtx = this.getWebContext()
@@ -265,7 +273,13 @@ export class TraceService {
     scope?: TraceScopeType,
   ): { span: Span, traceContext: TraceContext } {
 
-    const traceCtx = traceContext ?? this.getActiveContext(scope)
+    let traceCtx = traceContext
+    if (! traceCtx) {
+      const scope2 = scope ?? this.getWebContext()
+      assert(scope2, 'startSpan() scope should not be null')
+      traceCtx = this.getActiveContext(scope2)
+    }
+
     const ret = this.otel.startSpan(name, options, traceCtx)
     return ret
   }

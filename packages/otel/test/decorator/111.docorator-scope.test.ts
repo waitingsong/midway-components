@@ -26,6 +26,7 @@ describe(fileShortPath(import.meta.url), function () {
     assert(resp.ok, resp.text)
     const traceId = resp.text
     assert(traceId)
+    console.log(`traceId: ${traceId}`)
 
     const [info] = await retrieveTraceInfoFromRemote(traceId, 4)
     assert(info)
