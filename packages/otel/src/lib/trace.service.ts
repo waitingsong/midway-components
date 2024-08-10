@@ -664,8 +664,8 @@ export interface DecoratorTraceData {
   rootAttrs?: Attributes
   rootEvents?: Attributes
 }
-export type DecoratorTraceDataResp = DecoratorTraceData | undefined
-export type DecoratorTraceDataRespAsync = Promise<DecoratorTraceData | undefined>
+export type DecoratorTraceDataResp = DecoratorTraceData | undefined | null
+export type DecoratorTraceDataRespAsync = Promise<DecoratorTraceData | undefined | null>
 
 export type KeyGenerator<
   TThis = any,
