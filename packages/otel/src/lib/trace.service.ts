@@ -168,10 +168,12 @@ export class TraceService {
       return traceContext
     }
 
-    const webAppCtx = this.getWebContextThenApp()
-    const traceCtx = this.otel.getScopeActiveContext(webAppCtx)
-    if (traceCtx) {
-      return traceCtx
+    const webAppCtx = this.getWebContext()
+    if (webAppCtx) {
+      const traceCtx = this.otel.getScopeActiveContext(webAppCtx)
+      if (traceCtx) {
+        return traceCtx
+      }
     }
     // create new span and traceContext
     const ctx4 = this.otel.getGlobalCurrentContext()
