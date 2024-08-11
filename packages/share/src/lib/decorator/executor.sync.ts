@@ -122,7 +122,7 @@ export function aopDispatchSync(
       }
       try {
         const res = decoratorHandlerInstance[aopName](executorParam)
-        assert(! isPromise(res), `[@mwcp/${ConfigKey.namespace}] aopDispatchSync() result must not be Promise value`)
+        assert(! isPromise(res), `[@mwcp/${ConfigKey.namespace}] aopDispatchSync() result must not be Promise value, aopName: "${aopName}"`)
         executorParam.methodResult = res
         return res
       }
@@ -139,7 +139,7 @@ export function aopDispatchSync(
       }
       try {
         const res = decoratorHandlerInstance[aopName](executorParam)
-        assert(! isPromise(res), `[@mwcp/${ConfigKey.namespace}] aopDispatchSync() result must not be Promise value`)
+        assert(! isPromise(res), `[@mwcp/${ConfigKey.namespace}] aopDispatchSync() result must not be Promise value, aopName: "${aopName}`)
         executorParam.methodResult = res
         return res
       }
