@@ -42,7 +42,7 @@ export function beforeSync(options: DecoratorExecutorParam): void {
 }
 
 
-export async function afterReturnSync(options: DecoratorExecutorParam): Promise<unknown> {
+export function afterReturnSync(options: DecoratorExecutorParam): unknown {
   const { span, traceService } = options
   /* c8 ignore next 3 */
   if (! span) {
