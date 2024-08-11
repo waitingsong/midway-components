@@ -29,11 +29,20 @@ export function beforeSync(options: DecoratorExecutorParam): void {
   if (! options.span) {
     options.span = traceService.getActiveSpan(options.traceScope)
   }
-  processDecoratorBeforeAfterSync(type, options)
+  const res: DecoratorTraceDataResp = processDecoratorBeforeAfterSync(type, options)
+  if (res?.endSpanAfterTraceLog) {
+    assert(options.span, 'span is required')
+    if (res.spanStatusOptions) {
+      traceService.endSpan({ span: options.span, spanStatusOptions: res.spanStatusOptions })
+    }
+    else {
+      traceService.endSpan({ span: options.span })
+    }
+  }
 }
 
 
-export function afterReturnSync(options: DecoratorExecutorParam): unknown {
+export async function afterReturnSync(options: DecoratorExecutorParam): Promise<unknown> {
   const { span, traceService } = options
   /* c8 ignore next 3 */
   if (! span) {
@@ -45,8 +54,14 @@ export function afterReturnSync(options: DecoratorExecutorParam): unknown {
 
   const res: DecoratorTraceDataResp = processDecoratorBeforeAfterSync('after', options)
   if (res?.endSpanAfterTraceLog) {
-    traceService.endSpan({ span })
+    if (res.spanStatusOptions) {
+      traceService.endSpan({ span, spanStatusOptions: res.spanStatusOptions })
+    }
+    else {
+      traceService.endSpan({ span })
+    }
   }
+
   return options.methodResult
 }
 

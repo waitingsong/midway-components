@@ -659,18 +659,23 @@ export interface TraceDecoratorOptions<
 }
 
 export interface DecoratorTraceData {
-  /**
-   * End then span after method `before()` or `after()` called
-   * used by TraceLog decorator, ignored by TraceInit/Trace decorator
-   * @default false
-   */
-  endSpanAfterTraceLog?: boolean
   /** tags */
   attrs?: Attributes
   /** logs */
   events?: Attributes
   rootAttrs?: Attributes
   rootEvents?: Attributes
+
+  /**
+   * End then span after method `before()` or `after()` called
+   * used by TraceLog decorator, ignored by TraceInit/Trace decorator
+   * @default false
+   */
+  endSpanAfterTraceLog?: boolean
+  /**
+   * Used by TraceLog decorator and endSpanAfterTraceLog:true, ignored by TraceInit/Trace decorator
+   */
+  spanStatusOptions?: SpanStatusOptions
 }
 export type DecoratorTraceDataResp = DecoratorTraceData | undefined | null
 export type DecoratorTraceDataRespAsync = Promise<DecoratorTraceData | undefined | null>
