@@ -23,7 +23,8 @@ export async function beforeAsync(options: DecoratorExecutorParam): Promise<void
   if (startActiveSpan) {
     options.span = traceService.startScopeActiveSpan({ name: spanName, spanOptions, traceContext, scope: options.traceScope }).span
     options.span.setAttributes(callerAttr)
-    return processDecoratorBeforeAfterAsync(type, options)
+    await processDecoratorBeforeAfterAsync(type, options)
+    return
   }
   else {
     // it's necessary to cost a little time to prevent next span.startTime is same as previous span.endTime
@@ -31,7 +32,8 @@ export async function beforeAsync(options: DecoratorExecutorParam): Promise<void
     void rndStr
     options.span = traceService.startSpan(spanName, spanOptions, traceContext, options.traceScope).span
     options.span.setAttributes(callerAttr)
-    return processDecoratorBeforeAfterAsync(type, options)
+    await processDecoratorBeforeAfterAsync(type, options)
+    return
   }
 }
 

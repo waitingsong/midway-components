@@ -4,7 +4,7 @@ import { isPromise } from 'node:util/types'
 import { isArrowFunction } from '@waiting/shared-core'
 
 import { processDecoratorSpanData } from './decorator.helper.base.js'
-import type { DecoratorExecutorParam, DecoratorContext, TraceDecoratorOptions } from './trace.service.js'
+import type { DecoratorExecutorParam, DecoratorContext, TraceDecoratorOptions, DecoratorTraceDataResp } from './trace.service.js'
 import { AttrNames } from './types.js'
 import { isSpanEnded } from './util.js'
 
@@ -14,7 +14,7 @@ import { isSpanEnded } from './util.js'
 export function processDecoratorBeforeAfterSync(
   type: 'before' | 'after' | 'afterThrow',
   options: DecoratorExecutorParam<TraceDecoratorOptions>,
-): void {
+): DecoratorTraceDataResp {
 
   const { mergedDecoratorParam, span, traceService } = options
   // not check traceService due to TraceInit decorator
@@ -39,7 +39,7 @@ export function processDecoratorBeforeAfterSync(
 
     const funcBind = isArrowFunction(func) ? func : func.bind(decoratorContext.instance)
 
-    let data
+    let data: DecoratorTraceDataResp
     if (type === 'before') {
       const func2 = funcBind
       // @ts-expect-error param type
@@ -73,6 +73,8 @@ export function processDecoratorBeforeAfterSync(
       assert(options.traceScope, 'processDecoratorBeforeAfterSync(): traceScope is required')
       processDecoratorSpanData(options.traceScope, traceService, span, data)
     }
+
+    return data
   }
 
 }

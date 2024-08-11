@@ -2,7 +2,7 @@ import assert from 'node:assert'
 
 import { processDecoratorBeforeAfterAsync } from '../decorator.helper.async.js'
 import { genTraceScopeFrom } from '../decorator.helper.base.js'
-import type { DecoratorExecutorParam } from '../trace.service.js'
+import type { DecoratorExecutorParam, DecoratorTraceDataResp } from '../trace.service.js'
 import { ConfigKey } from '../types.js'
 
 
@@ -18,11 +18,16 @@ export async function beforeAsync(options: DecoratorExecutorParam): Promise<void
   if (! options.span) {
     options.span = traceService.getActiveSpan(options.traceScope)
   }
-  return processDecoratorBeforeAfterAsync(type, options)
+  const res: DecoratorTraceDataResp = await processDecoratorBeforeAfterAsync(type, options)
+  if (res?.endSpanAfterTraceLog) {
+    assert(options.span, 'span is required')
+    traceService.endSpan({ span: options.span })
+  }
+  return
 }
 
 export async function afterReturnAsync(options: DecoratorExecutorParam): Promise<unknown> {
-  const { span } = options
+  const { span, traceService } = options
   /* c8 ignore next 3 */
   if (! span) {
     return options.methodResult
@@ -31,7 +36,10 @@ export async function afterReturnAsync(options: DecoratorExecutorParam): Promise
   assert(! options.error, `[@mwcp/${ConfigKey.namespace}] options.error is not undefined in afterReturnAsync().
   Error: ${options.error?.message}`)
 
-  await processDecoratorBeforeAfterAsync('after', options)
+  const res: DecoratorTraceDataResp = await processDecoratorBeforeAfterAsync('after', options)
+  if (res?.endSpanAfterTraceLog) {
+    traceService.endSpan({ span })
+  }
   return options.methodResult
 }
 

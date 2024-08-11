@@ -659,6 +659,12 @@ export interface TraceDecoratorOptions<
 }
 
 export interface DecoratorTraceData {
+  /**
+   * End then span after method `before()` or `after()` called
+   * used by TraceLog decorator, ignored by TraceInit/Trace decorator
+   * @default false
+   */
+  endSpanAfterTraceLog?: boolean
   /** tags */
   attrs?: Attributes
   /** logs */

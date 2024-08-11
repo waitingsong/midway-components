@@ -5,7 +5,7 @@ import { ConfigKey } from '@mwcp/share'
 
 import { genTraceScopeFrom } from '../decorator.helper.base.js'
 import { processDecoratorBeforeAfterSync } from '../decorator.helper.sync.js'
-import type { DecoratorExecutorParam } from '../trace.service.js'
+import type { DecoratorExecutorParam, DecoratorTraceDataResp } from '../trace.service.js'
 import { AttrNames } from '../types.js'
 
 
@@ -34,7 +34,7 @@ export function beforeSync(options: DecoratorExecutorParam): void {
 
 
 export function afterReturnSync(options: DecoratorExecutorParam): unknown {
-  const { span } = options
+  const { span, traceService } = options
   /* c8 ignore next 3 */
   if (! span) {
     return options.methodResult
@@ -43,7 +43,10 @@ export function afterReturnSync(options: DecoratorExecutorParam): unknown {
   assert(! options.error, `[@mwcp/${ConfigKey.namespace}] options.error is not undefined in afterReturnSync().
   Error: ${options.error?.message}`)
 
-  processDecoratorBeforeAfterSync('after', options)
+  const res: DecoratorTraceDataResp = processDecoratorBeforeAfterSync('after', options)
+  if (res?.endSpanAfterTraceLog) {
+    traceService.endSpan({ span })
+  }
   return options.methodResult
 }
 
