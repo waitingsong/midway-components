@@ -23,7 +23,7 @@ export function getWebContext(applicationContext: IMidwayContainer): Context | u
     return ctx
   }
   catch (ex) {
-    console.warn('getWebContext() error:', ex)
+    // console.warn('getWebContext() error:', ex)
     return void 0
   }
 }
