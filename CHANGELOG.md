@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [37.0.0](https://github.com/waitingsong/midway-components/compare/v36.1.3...v37.0.0) (2024-08-12)
+
+
+### Bug Fixes
+
+* **otel:** wrong type of afterReturnSync() ([0006dfd](https://github.com/waitingsong/midway-components/commit/0006dfd18e8f50b751dc4cf39a8d1183999227da))
+
+
+### Features
+
+* **otel:** add TraceService methods ([e7c3346](https://github.com/waitingsong/midway-components/commit/e7c3346132839948e272ca66d8dbaa0f04718c95))
+* **otel:** breaking change return type of startSpan() ([0f3943d](https://github.com/waitingsong/midway-components/commit/0f3943d410f251caa0ae67e30d4d852d94cb0de6))
+* **otel:** DecoratorTraceData['spanStatusOptions'] ([cb6d479](https://github.com/waitingsong/midway-components/commit/cb6d479bf7ee0e00438fd30a7394159ee4e962e6))
+* **otel:** DecoratorTraceDataResp accepts null ([9c54840](https://github.com/waitingsong/midway-components/commit/9c5484001fd7ffddb60e005aa5882c178341d5a9))
+* **otel:** getRootSpan() ([93372b3](https://github.com/waitingsong/midway-components/commit/93372b3f5d0e849f775c9368091482518825033f))
+* **otel:** remove TraceService.rootSpanMap and TraceService.setRootSpan() ([0c10347](https://github.com/waitingsong/midway-components/commit/0c103474a1dd3a1d6d1f0a003f7b56ff9fb52b73))
+* **otel:** rename OtelComponent.delScopeActiveContext() to emptyScopeActiveContext() ([8286b2b](https://github.com/waitingsong/midway-components/commit/8286b2b221ff9fc9d7245a2cc6fb11731ef2cbca))
+* **otel:** TraceLog supports end span ([0978a0c](https://github.com/waitingsong/midway-components/commit/0978a0ccf83b910d4e6f8f843bb67438774a3d25))
+* **otel:** update TraceService.getActiveContext() ([6124291](https://github.com/waitingsong/midway-components/commit/6124291929874c4ebdfa34feb2dc9b32519495a7))
+
+
+
+
+
 ## [36.1.3](https://github.com/waitingsong/midway-components/compare/v36.1.2...v36.1.3) (2024-08-06)
 
 **Note:** Version bump only for package midway-components
