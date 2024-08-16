@@ -12,11 +12,6 @@ export const commonValidSchemas = {
   int: RuleType.number().integer(),
   /** 自然数 */
   naturalNumber: RuleType.number().min(0).max(Number.MAX_SAFE_INTEGER),
-  /**
-   * 大于等于0的正整数
-   * @deprecated use naturalNumber instead
-   */
-  nonNegativeInteger: RuleType.number().min(0).max(Number.MAX_SAFE_INTEGER),
 
   /** 正整数 */
   positiveInt: RuleType.number().min(1).max(Number.MAX_SAFE_INTEGER),
