@@ -82,6 +82,7 @@
     "pretest": "npm run build && npm run build:unit",
     "start": "cross-env NODE_ENV=production node ./bootstrap.js",
     "test": "cross-env MIDWAY_SERVER_ENV=unittest TS_NODE_PROJECT=test/tsconfig.json mocha --parallel=false",
+    "test:deb": "npm run test",
     "tsc": "tsc -b"
   }
 }
