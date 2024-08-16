@@ -29,8 +29,6 @@ export const commonValidSchemas = {
 
   id: RuleType.number().min(1).max(Number.MAX_SAFE_INTEGER),
 
-  name50: RuleType.string().trim().min(1).max(50),
-
   bigintString: RuleType.string().trim().min(1).max(30),
 
   dateString: RuleType.date(),
@@ -43,8 +41,13 @@ export const commonValidSchemas = {
   /** 分页查询字段排序规则 */
   pageOrderBy: pageOrderByArraySchema,
 
+  name50: RuleType.string().trim().min(1).max(50),
+  stringMax32: RuleType.string().trim().min(1).max(32),
+  stringMax64: RuleType.string().trim().min(1).max(64),
   stringMax100: RuleType.string().trim().min(1).max(100),
   stringMax255: RuleType.string().trim().min(1).max(255),
+  stringMax1k: RuleType.string().trim().min(1).max(1024),
+  stringMax2k: RuleType.string().trim().min(1).max(2048),
 
   string: RuleType.string().trim(),
 }
