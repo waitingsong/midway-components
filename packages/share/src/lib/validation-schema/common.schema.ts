@@ -2,11 +2,8 @@ import { RuleType } from '@midwayjs/validate'
 
 
 const pageOrderBySchema = RuleType.object().keys({
-  column: RuleType.string().trim()
-    .min(1)
-    .max(50),
-  order: RuleType.string().trim()
-    .valid('ASC', 'DESC', 'asc', 'desc'),
+  column: RuleType.string().trim().min(1).max(50),
+  order: RuleType.string().trim().valid('ASC', 'DESC', 'asc', 'desc'),
 })
 const pageOrderByArraySchema = RuleType.array().items(pageOrderBySchema)
 

@@ -61,10 +61,10 @@ export async function registerDecoratorHandlers(
     if (ignoreDecoratorKeyNotExistsError && ! DecoratorHandler) { continue }
     assert(
       DecoratorHandler,
-        `customDecoratorRegMap does not have key: ${key}.
-        maybe the decorator handler is registered by autoRegisterDecoratorHandlers() early.
-        you can ignore this error by setting ignoreDecoratorKeyNotExistsError = true.
-        `,
+      `customDecoratorRegMap does not have key: ${key}.
+      maybe the decorator handler is registered by autoRegisterDecoratorHandlers() early.
+      you can ignore this error by setting ignoreDecoratorKeyNotExistsError = true.
+      `,
     )
 
     const decoratorHandlerInst = await container.getAsync<DecoratorHandlerBase>(DecoratorHandler)
