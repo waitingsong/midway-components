@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [37.2.0](https://github.com/waitingsong/midway-components/compare/v37.1.0...v37.2.0) (2024-08-17)
+
+
+### Features
+
+* **share:** update commonValidSchemas ([69387fe](https://github.com/waitingsong/midway-components/commit/69387fedfb954f943511ab41979a094e2b96abed))
+* **share:** update commonValidSchemas.name50 ([1f42b39](https://github.com/waitingsong/midway-components/commit/1f42b39f9ae975975cedabc513ee896803ce2115))
+
+
+
+
+
 # [37.1.0](https://github.com/waitingsong/midway-components/compare/v37.0.0...v37.1.0) (2024-08-16)
 
 
