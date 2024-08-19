@@ -54,13 +54,4 @@ export const apiMethod = {
 
   throw_in_before_default_after_thrown: 'throw_in_before_default_after_thrown',
 
-  // // throw in before, re-throw in afterThrow
-  // before_throw_re_throw: 'before_throw_re_throw',
-  // // throw in before, no re-throw in afterThrow
-  // before_throw_no_re_throw: 'before_throw_no_re_throw',
-  // after_throw: 'after_throw',
-  // after_throw_re_throw: 'after_throw_re_throw',
-  // re_throw_at_after: 're_throw_at_after',
-  // throw_at_after_return: 'throw_at_after_return',
-  // // only afterThrow() and no re-throw
 }
