@@ -54,4 +54,5 @@ export const apiMethod = {
 
   throw_in_before_default_after_thrown: 'throw_in_before_default_after_thrown',
 
+  multi_decorate: 'multi_decorate',
 }
