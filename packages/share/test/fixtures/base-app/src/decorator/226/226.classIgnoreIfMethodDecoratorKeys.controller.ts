@@ -3,28 +3,32 @@ import assert from 'node:assert/strict'
 
 import { Controller, Get } from '@midwayjs/core'
 
-import { Cacheable2 } from './22.helper2.js'
-import { apiBase, apiMethod } from './types/api-test.js'
+import { apiBase, apiMethod } from '../../types/api-test.js'
+
+import { Cacheable2 } from './221.helper.js'
+import { CacheableClassIgnoreIfMethodDecoratorKeys } from './226.helper.js'
 
 
 @Controller(apiBase.methodCacheable2)
+@CacheableClassIgnoreIfMethodDecoratorKeys()
 @Cacheable2()
-export class CacheControllerClassOnly2 {
+export class CacheControllerClassIgnoreIfMethodDecoratorKeys {
 
   idx = 1
 
-  @Get(`/${apiMethod.simpleClassOnly2}`)
+  @Get(`/${apiMethod.classIgnoreIfMethodDecoratorKeys}`)
   async simple(): Promise<number> {
+    this.idx = 1
     const ret = await this._simpleAsync(this.idx)
-    assert(ret === this.idx + 1)
+    assert(ret === this.idx + 2)
 
     this.idx += 1
 
     const ret2 = this._simpleSync(this.idx)
-    assert(ret2 === this.idx + 1)
+    assert(ret2 === this.idx + 2)
 
     this.idx = 1
-    return ret
+    return ret2
   }
 
   // #region private methods

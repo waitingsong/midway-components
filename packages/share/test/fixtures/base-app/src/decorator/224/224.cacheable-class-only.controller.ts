@@ -1,18 +1,19 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import assert from 'node:assert/strict'
 
 import { Controller, Get } from '@midwayjs/core'
 
-import { Cacheable2, CacheableMethodIgnoreIfMethodDecoratorKeys } from './22.helper2.js'
-import { apiBase, apiMethod } from './types/api-test.js'
+import { apiBase, apiMethod } from '../../types/api-test.js'
+
+import { CacheableRequest } from './224.helper.js'
 
 
 @Controller(apiBase.methodCacheable2)
-export class CacheControllerMethodIgnoreIfMethodDecoratorKeys2 {
+@CacheableRequest()
+export class CacheControllerClassOnly {
 
   idx = 1
 
-  @Get(`/${apiMethod.methodIgnoreIfMethodDecoratorKeys2}`)
+  @Get(`/${apiMethod.simpleClassOnly}`)
   async simple(): Promise<number> {
     const ret = await this._simpleAsync(this.idx)
     assert(ret === this.idx + 1)
@@ -23,18 +24,14 @@ export class CacheControllerMethodIgnoreIfMethodDecoratorKeys2 {
     assert(ret2 === this.idx + 1)
 
     this.idx = 1
-    return ret2
+    return ret
   }
 
   // #region private methods
-
-  @CacheableMethodIgnoreIfMethodDecoratorKeys()
-  @Cacheable2()
   async _simpleAsync(input: number): Promise<number> {
     return input
   }
 
-  @CacheableMethodIgnoreIfMethodDecoratorKeys()
   _simpleSync(input: number): number {
     return input
   }

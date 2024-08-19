@@ -3,8 +3,9 @@ import assert from 'node:assert/strict'
 
 import { Controller, Get } from '@midwayjs/core'
 
-import { Multi1, Multi2 } from './22.helper2.js'
-import { apiBase, apiMethod } from './types/api-test.js'
+import { apiBase, apiMethod } from '../../types/api-test.js'
+
+import { Multi1, Multi2 } from './230.helper.js'
 
 
 @Controller(apiBase.methodCacheable2)

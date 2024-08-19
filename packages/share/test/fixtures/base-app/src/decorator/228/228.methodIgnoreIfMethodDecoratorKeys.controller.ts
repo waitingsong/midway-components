@@ -1,10 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import assert from 'node:assert/strict'
+import assert from 'node:assert'
 
 import { Controller, Get } from '@midwayjs/core'
 
-import { Cacheable2, CacheableMethodIgnoreIfMethodDecoratorKeys } from './22.helper2.js'
-import { apiBase, apiMethod } from './types/api-test.js'
+import { apiBase, apiMethod } from '../../types/api-test.js'
+
+import { Cacheable2 } from './221.helper.js'
+import { CacheableMethodIgnoreIfMethodDecoratorKeys } from './228.helper.js'
 
 
 @Controller(apiBase.methodCacheable2)
