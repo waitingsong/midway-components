@@ -38,11 +38,11 @@
   "dependencies": {
     "@mwcp/share": "^37.2.0",
     "@opentelemetry/resource-detector-alibaba-cloud": "^0.29.0",
-    "@opentelemetry/resource-detector-aws": "^1.5.2",
-    "@opentelemetry/resource-detector-container": "^0.3.11",
+    "@opentelemetry/resource-detector-aws": "^1.6.0",
+    "@opentelemetry/resource-detector-container": "^0.4.0",
     "@opentelemetry/resource-detector-gcp": "^0.29.10",
-    "@opentelemetry/sdk-node": "^0.52.1",
-    "@waiting/shared-core": "^23.20.2",
+    "@opentelemetry/sdk-node": "^0.53.0",
+    "@waiting/shared-core": "^23.21.0",
     "undici": "*"
   },
   "engines": {
