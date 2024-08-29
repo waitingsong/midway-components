@@ -9,6 +9,7 @@
     "noImplicitThis": false,
     "noPropertyAccessFromIndexSignature": false,
     "noUnusedLocals": false,
+    "rootDir": "..",
     "sourceMap": false
   },
   "include": [

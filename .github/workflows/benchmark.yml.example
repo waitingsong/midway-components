@@ -97,15 +97,7 @@ jobs:
         env:
           CI: true
 
-      # - name: Benchmark demo
-      #   timeout-minutes: 10
-      #   run: |
-      #     .scripts/benchmark/start-benchmark.mjs --qps=2800 --api=demo/hello --p=mw-demo
-      #   env:
-      #     CI: true
-      #     OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
-
-      - name: Benchmark otel no trace
+      - name: Benchmark demo
         timeout-minutes: 10
         run: |
           pwd
@@ -113,25 +105,7 @@ jobs:
           # .benchmark.mjs --api=demo/hello
         env:
           CI: true
-          DISABLE_OTEL_TRACE: true
-
-      - name: Benchmark otel
-        timeout-minutes: 10
-        run: |
-          .scripts/benchmark/start-benchmark.mjs --wait=30000 --qps=500 --api=_otel/hello --p=otel
-        env:
-          CI: true
-          CI_BENCHMARK: true
           OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
-
-      - name: Benchmark boot
-        timeout-minutes: 10
-        run: |
-          .scripts/benchmark/start-benchmark.mjs --wait=30000 --qps=500 --api=_boot/hello --p=boot
-        env:
-          CI: true
-          OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4317
-
 
     services:
       postgres:
