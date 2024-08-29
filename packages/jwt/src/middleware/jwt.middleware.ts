@@ -115,7 +115,7 @@ export async function middleware(
         ctx.throw(401, msg, { originalError: ex })
       }
       else {
-        throw new Error(msg)
+        throw new TypeError(msg)
       }
     }
   }

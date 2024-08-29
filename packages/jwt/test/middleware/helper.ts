@@ -1,4 +1,4 @@
-import assert from 'assert/strict'
+import assert from 'node:assert/strict'
 
 import { JwtMsg } from '##/index.js'
 import type { JwtState } from '##/index.js'

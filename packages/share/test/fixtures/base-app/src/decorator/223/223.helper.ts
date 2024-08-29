@@ -81,7 +81,7 @@ function assertBeforeAfter(target: object | MethodTypeUnknown, propertyName: unk
     assert(opts && typeof opts === 'object', import.meta.url)
   }
   else {
-    throw new Error(`4 invalid propertyName` + import.meta.url)
+    throw new TypeError(`4 invalid propertyName` + import.meta.url)
   }
 }
 

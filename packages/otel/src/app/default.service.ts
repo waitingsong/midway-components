@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 
 import { Provide } from '@midwayjs/core'
 import { MConfig } from '@mwcp/share'

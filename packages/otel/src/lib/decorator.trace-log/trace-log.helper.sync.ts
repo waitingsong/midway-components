@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import { isAsyncFunction } from 'util/types'
+import { isAsyncFunction } from 'node:util/types'
 
 import { ConfigKey } from '@mwcp/share'
 

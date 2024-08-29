@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 
 import { SpanKind } from '@opentelemetry/api'
 import type { Attributes, SpanOptions } from '@opentelemetry/api'

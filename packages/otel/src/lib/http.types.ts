@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type * as http from 'http'
-import type * as https from 'https'
-import type * as url from 'url'
+import type * as http from 'node:http'
+import type * as https from 'node:https'
+import type * as url from 'node:url'
 
 import type { Span, Attributes } from '@opentelemetry/api'
 import type { InstrumentationConfig } from '@opentelemetry/instrumentation'

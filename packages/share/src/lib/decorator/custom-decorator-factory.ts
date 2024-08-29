@@ -127,7 +127,7 @@ function regCustomDecorator<TDecoratorParam extends object>(
   }
   /* c8 ignore next 3 */
   else {
-    throw new Error('invalid target type')
+    throw new TypeError('invalid target type')
   }
 
   if (typeof options.afterRegister === 'function') {

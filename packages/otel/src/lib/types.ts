@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { IncomingHttpHeaders } from 'http'
+import type { IncomingHttpHeaders } from 'node:http'
 
 import type { ILogger } from '@midwayjs/logger'
 import type { BaseConfig, Context, ScopeType } from '@mwcp/share'

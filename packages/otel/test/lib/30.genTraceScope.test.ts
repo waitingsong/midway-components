@@ -28,14 +28,14 @@ describe(fileShortPath(import.meta.url), function () {
       const opt: GenTraceScopeOptions = {
         ...base,
       }
-      opt.scope = Math.random().toString(36).substring(7)
+      opt.scope = Math.random().toString(36).slice(7)
       const ret1 = genTraceScope(opt)
       assert(typeof ret1 === 'symbol')
 
       const ret2 = genTraceScope(opt)
       assert(ret1 === ret2)
 
-      opt.scope = Math.random().toString(36).substring(7)
+      opt.scope = Math.random().toString(36).slice(7)
       const ret3 = genTraceScope(opt)
       assert(ret1 !== ret3)
     })
