@@ -1,5 +1,5 @@
-import assert from 'assert'
-import { KeyObject } from 'crypto'
+import assert from 'node:assert'
+import { KeyObject } from 'node:crypto'
 
 import { Msg } from './types.js'
 import type { Config, JwtPayload, JwtToken } from './types.js'

@@ -108,7 +108,7 @@ function _serializeArg(arg: unknown): string {
 
     case 'object': {
       if (Array.isArray(arg)) {
-        throw new Error(Msg.paramArrayNeedCustomSerializer)
+        throw new TypeError(Msg.paramArrayNeedCustomSerializer)
       }
 
       const keys = Object.keys(arg).sort()

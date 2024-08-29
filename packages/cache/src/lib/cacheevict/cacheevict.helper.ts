@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert'
 
 import { initCacheEvictArgs } from '../config.js'
 import { computerWriteConditionValue, deleteData, genCacheKey } from '../helper.js'

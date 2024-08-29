@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import assert from 'assert'
+import assert from 'node:assert'
 
 import {
   DataSourceManager,

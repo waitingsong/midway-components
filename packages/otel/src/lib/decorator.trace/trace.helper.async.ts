@@ -28,7 +28,7 @@ export async function beforeAsync(options: DecoratorExecutorParam): Promise<void
   }
   else {
     // it's necessary to cost a little time to prevent next span.startTime is same as previous span.endTime
-    const rndStr = Math.random().toString(36).substring(7)
+    const rndStr = Math.random().toString(36).slice(7)
     void rndStr
     options.span = traceService.startSpan(spanName, spanOptions, traceContext, options.traceScope).span
     options.span.setAttributes(callerAttr)

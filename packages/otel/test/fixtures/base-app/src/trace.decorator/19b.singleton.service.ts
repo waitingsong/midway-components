@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/await-thenable */
-import assert from 'assert'
+import assert from 'node:assert'
 
 import { Inject, Singleton } from '@midwayjs/core'
 import { MConfig } from '@mwcp/share'

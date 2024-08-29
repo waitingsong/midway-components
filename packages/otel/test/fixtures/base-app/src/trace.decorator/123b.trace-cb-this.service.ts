@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/await-thenable */
-import assert from 'assert'
+import assert from 'node:assert'
 
 import { Singleton } from '@midwayjs/core'
 import { Context } from '@mwcp/share'

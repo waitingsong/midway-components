@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { relative } from 'path'
+import { relative } from 'node:path'
 
 import { fileShortPath } from '@waiting/shared-core'
 
