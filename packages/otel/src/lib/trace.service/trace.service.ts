@@ -48,12 +48,12 @@ import {
   setSpanWithRequestHeaders,
 } from '../util.js'
 
-import { TraceServiceBase } from './trace.service.base.js'
+import { TraceServiceSpan } from './trace.service.span.js'
 import type { DecoratorTraceDataResp, DecoratorTraceDataRespAsync } from './trace.service.types.js'
 
 
 @Singleton()
-export class TraceService extends TraceServiceBase {
+export class TraceService extends TraceServiceSpan {
   @App() declare readonly app: Application
   @ApplicationContext() declare readonly applicationContext: IMidwayContainer
 
