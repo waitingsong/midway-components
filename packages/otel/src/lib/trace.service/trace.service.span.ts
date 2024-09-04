@@ -21,6 +21,17 @@ import type { EndSpanOptions, StartScopeActiveSpanOptions } from './trace.servic
 
 export class TraceServiceSpan extends TraceServiceBase {
 
+  getTraceId(): string {
+    const webCtx = this.getWebContext()
+    if (webCtx) {
+      const rootSpan = this.getRootSpan(webCtx)
+      if (rootSpan) {
+        return rootSpan.spanContext().traceId
+      }
+    }
+    return ''
+  }
+
   getRootSpan(scope: TraceScopeType): Span | undefined {
     const rootSpan = this.otel.getRootSpan(scope)
     return rootSpan
@@ -51,17 +62,6 @@ export class TraceServiceSpan extends TraceServiceBase {
     return span
   }
 
-
-  getTraceId(): string {
-    const webCtx = this.getWebContext()
-    if (webCtx) {
-      const rootSpan = this.getRootSpan(webCtx)
-      if (rootSpan) {
-        return rootSpan.spanContext().traceId
-      }
-    }
-    return ''
-  }
 
   /**
    * Starts a new {@link Span}. Start the span **without** setting it on context.
