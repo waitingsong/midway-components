@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [37.3.0](https://github.com/waitingsong/midway-components/compare/v37.2.4...v37.3.0) (2024-09-04)
+
+
+### Features
+
+* **otel:** TraceService.retrieveContextBySpanId() ([55bbe5b](https://github.com/waitingsong/midway-components/commit/55bbe5b1c142da6a206d70c2abfbe1623d07c3cd))
+* **otel:** TraceService.retrieveParentTraceInfoBySpan() and retrieveTraceInfoBySpanId() ([e96ea2f](https://github.com/waitingsong/midway-components/commit/e96ea2f683a5c18ddcbe12039152d97669467d98))
+* **otel:** type TraceInfo ([5690552](https://github.com/waitingsong/midway-components/commit/56905524eb70af940e2ceafd614e26b484177a98))
+
+
+
+
+
 ## [37.2.4](https://github.com/waitingsong/midway-components/compare/v37.2.3...v37.2.4) (2024-09-04)
 
 **Note:** Version bump only for package midway-components
