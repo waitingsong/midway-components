@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/jwt",
   "author": "waiting",
-  "version": "37.2.3",
+  "version": "37.2.4",
   "description": "midway component jwt",
   "keywords": [
     "midway",
@@ -41,7 +41,7 @@
     "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
-    "@mwcp/otel": "^37.2.3",
+    "@mwcp/otel": "^37.2.4",
     "@types/jsonwebtoken": "^9.0.6"
   },
   "engines": {
