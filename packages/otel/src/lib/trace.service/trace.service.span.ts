@@ -73,7 +73,7 @@ export class TraceServiceSpan extends TraceServiceBase {
     options?: SpanOptions,
     traceContext?: TraceContext,
     scope?: TraceScopeType,
-  ): { span: Span, traceContext: TraceContext } {
+  ): TraceInfo {
 
     let traceCtx = traceContext
     if (! traceCtx) {
@@ -91,7 +91,7 @@ export class TraceServiceSpan extends TraceServiceBase {
    * Additionally the new span gets set in context and this context is activated, you must to call `this.endSpan()` manually.
    * @default scope is `request ctx`
    */
-  startScopeActiveSpan(options: StartScopeActiveSpanOptions): { span: Span, traceContext: TraceContext } {
+  startScopeActiveSpan(options: StartScopeActiveSpanOptions): TraceInfo {
     const scope = options.scope ?? this.getWebContext()
     assert(scope, 'startScopeActiveSpan() scope should not be null')
 
@@ -248,5 +248,11 @@ export class TraceServiceSpan extends TraceServiceBase {
     this.otel.setAttributesLater(target, input)
   }
 
+}
+
+
+export interface TraceInfo {
+  span: Span
+  traceContext: TraceContext
 }
 
