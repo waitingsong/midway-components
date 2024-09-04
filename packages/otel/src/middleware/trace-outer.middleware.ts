@@ -4,7 +4,7 @@ import { Middleware } from '@midwayjs/core'
 import { Context, IMiddleware, NextFunction } from '@mwcp/share'
 import { SpanKind, SpanStatus } from '@opentelemetry/api'
 
-import { TraceService } from '##/lib/trace.service.js'
+import { TraceService } from '##/lib/index.js'
 import { ConfigKey, Config, middlewareEnableCacheKey } from '##/lib/types.js'
 import {
   addSpanEventWithOutgoingResponseData,

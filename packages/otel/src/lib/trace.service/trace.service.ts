@@ -30,10 +30,8 @@ import {
 import { genISO8601String } from '@waiting/shared-core'
 import type { MethodTypeUnknown } from '@waiting/shared-types'
 
-import { OtelComponent } from './component.js'
-import { initSpanStatusOptions } from './config.js'
-import { TraceServiceBase } from './trace.service.base.js'
-import type { DecoratorTraceDataResp, DecoratorTraceDataRespAsync } from './trace.service.types.js'
+import { OtelComponent } from '../component.js'
+import { initSpanStatusOptions } from '../config.js'
 import {
   type Config,
   type MiddlewareConfig,
@@ -43,12 +41,15 @@ import {
   middlewareEnableCacheKey,
   TraceScopeParamType,
   TraceScopeType,
-} from './types.js'
+} from '../types.js'
 import {
   genRequestSpanName,
   getIncomingRequestAttributesFromWebContext,
   setSpanWithRequestHeaders,
-} from './util.js'
+} from '../util.js'
+
+import { TraceServiceBase } from './trace.service.base.js'
+import type { DecoratorTraceDataResp, DecoratorTraceDataRespAsync } from './trace.service.types.js'
 
 
 @Singleton()

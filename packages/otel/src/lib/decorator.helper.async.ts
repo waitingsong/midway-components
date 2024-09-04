@@ -3,8 +3,12 @@ import assert from 'node:assert'
 import { isArrowFunction } from '@waiting/shared-core'
 
 import { processDecoratorSpanData } from './decorator.helper.base.js'
-import type { DecoratorExecutorParam, DecoratorContext, TraceDecoratorOptions } from './trace.service.js'
-import type { DecoratorTraceDataResp } from './trace.service.types.js'
+import type {
+  DecoratorContext,
+  DecoratorExecutorParam,
+  DecoratorTraceDataResp,
+  TraceDecoratorOptions,
+} from './trace.service/index.trace.service.js'
 import { isSpanEnded } from './util.js'
 
 // #region processDecoratorBeforeAfterAsync

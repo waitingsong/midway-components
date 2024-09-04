@@ -4,8 +4,8 @@ import { SpanStatusCode } from '@opentelemetry/api'
 
 import { OtelComponent } from '../component.js'
 import { genDecoratorExecutorOptions } from '../trace.helper.js'
-import type { DecoratorExecutorParam, GenDecoratorExecutorOptions, TraceDecoratorOptions } from '../trace.service.js'
-import { TraceService } from '../trace.service.js'
+import type { DecoratorExecutorParam, GenDecoratorExecutorOptions, TraceDecoratorOptions } from '../trace.service/index.trace.service.js'
+import { TraceService } from '../trace.service/index.trace.service.js'
 import { AttrNames, Config, ConfigKey } from '../types.js'
 import { isSpanEnded } from '../util.js'
 

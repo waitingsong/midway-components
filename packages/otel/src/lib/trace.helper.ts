@@ -5,12 +5,12 @@ import type { DecoratorExecutorParamBase } from '@mwcp/share'
 import { isArrowFunction } from '@waiting/shared-core'
 
 import type {
-  DecoratorExecutorParam,
   DecoratorContext,
+  DecoratorExecutorParam,
   GenDecoratorExecutorOptions,
   KeyGenerator,
   TraceDecoratorOptions,
-} from './trace.service.js'
+} from './trace.service/index.trace.service.js'
 import { AttrNames, ConfigKey } from './types.js'
 
 

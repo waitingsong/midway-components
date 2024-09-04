@@ -2,7 +2,7 @@ import assert from 'node:assert'
 
 import { processDecoratorBeforeAfterAsync } from '../decorator.helper.async.js'
 import { genTraceScopeFrom } from '../decorator.helper.base.js'
-import type { DecoratorExecutorParam } from '../trace.service.js'
+import type { DecoratorExecutorParam } from '../trace.service/index.trace.service.js'
 import { ConfigKey } from '../types.js'
 
 

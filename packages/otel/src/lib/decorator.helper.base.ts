@@ -4,13 +4,13 @@ import type { Span } from '@opentelemetry/api'
 import { isArrowFunction } from '@waiting/shared-core'
 
 import type {
-  TraceService,
-  DecoratorExecutorParam,
   DecoratorContextBase,
+  DecoratorExecutorParam,
+  DecoratorTraceDataResp,
   ScopeGenerator,
   TraceDecoratorOptions,
-} from './trace.service.js'
-import type { DecoratorTraceDataResp } from './trace.service.types.js'
+  TraceService,
+} from './trace.service/index.trace.service.js'
 import type { Attributes, TraceScopeParamType, TraceScopeType } from './types.js'
 
 

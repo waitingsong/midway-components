@@ -3,7 +3,7 @@ import { MConfig, DecoratorExecutorParamBase, genError } from '@mwcp/share'
 
 import { DecoratorHandlerTraceBase } from '../decorator-handler-trace-base.js'
 import { genDecoratorExecutorOptions } from '../trace.helper.js'
-import type { DecoratorExecutorParam, GenDecoratorExecutorOptions, TraceDecoratorOptions } from '../trace.service.js'
+import type { DecoratorExecutorParam, GenDecoratorExecutorOptions, TraceDecoratorOptions } from '../trace.service/index.trace.service.js'
 import { Config, ConfigKey } from '../types.js'
 
 import { beforeAsync, afterReturnAsync, afterThrowAsync } from './trace.helper.async.js'

@@ -9,7 +9,7 @@ import { Context } from '@mwcp/share'
 import type { Attributes, Span } from '@opentelemetry/api'
 
 import { OtelComponent } from './component.js'
-import { TraceService } from './trace.service.js'
+import { TraceService } from './trace.service/index.trace.service.js'
 import { AttrNames, TraceLogType } from './types.js'
 
 

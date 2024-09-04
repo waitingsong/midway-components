@@ -6,7 +6,7 @@ import { Context, IMiddleware, NextFunction } from '@mwcp/share'
 import { humanMemoryUsage } from '@waiting/shared-core'
 
 
-import { TraceService } from '##/lib/trace.service.js'
+import { TraceService } from '##/lib/index.js'
 import { AttrNames, ConfigKey, middlewareEnableCacheKey } from '##/lib/types.js'
 import { addSpanEventWithIncomingRequestData } from '##/lib/util.js'
 

@@ -2,7 +2,7 @@ import { customDecoratorFactory } from '@mwcp/share'
 import type { MethodTypeUnknown } from '@waiting/shared-types'
 
 import { METHOD_KEY_TraceLog } from '../config.js'
-import type { TraceOptions } from '../trace.service.js'
+import type { TraceOptions } from '../trace.service/index.trace.service.js'
 
 import { DecoratorHandlerTraceLog } from './trace-log.decorator-handler.js'
 

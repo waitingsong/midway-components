@@ -7,7 +7,7 @@ import type {
   TimeInput,
 } from '@opentelemetry/api'
 
-import type { SpanStatusOptions, TraceScopeType } from './types.js'
+import type { SpanStatusOptions, TraceScopeType } from '../types.js'
 
 
 export interface StartScopeActiveSpanOptions {

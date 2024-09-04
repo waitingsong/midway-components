@@ -23,11 +23,12 @@ import type {
 } from '@opentelemetry/api'
 import { context as contextFunc } from '@opentelemetry/api'
 
-import type { OtelComponent } from './component.js'
-import { initSpanStatusOptions } from './config.js'
+import type { OtelComponent } from '../component.js'
+import { initSpanStatusOptions } from '../config.js'
+import type { TraceScopeType, AddEventOptions, Config, SpanStatusOptions } from '../types.js'
+import { getSpan } from '../util.js'
+
 import type { EndSpanOptions, StartScopeActiveSpanOptions } from './trace.service.types.js'
-import type { TraceScopeType, AddEventOptions, Config, SpanStatusOptions } from './types.js'
-import { getSpan } from './util.js'
 
 
 export class TraceServiceBase {
