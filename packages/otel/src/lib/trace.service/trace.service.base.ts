@@ -18,6 +18,7 @@ import type { Context as TraceContext } from '@opentelemetry/api'
 
 import type { OtelComponent } from '../component.js'
 import type { TraceScopeType, Config } from '../types.js'
+import { getSpan } from '../util.js'
 
 
 export class TraceServiceBase {
@@ -129,6 +130,26 @@ export class TraceServiceBase {
     const obj = scope ?? this.getWebContext()
     if (obj) {
       this.otel.emptyScopeActiveContext(obj)
+    }
+  }
+
+  retrieveContextBySpanId(scope: TraceScopeType, spanId: string): TraceContext | undefined {
+    assert(scope, 'getActiveContext() scope should not be null')
+    assert(spanId, 'retrieveContextBySpanId() spanId should not be empty')
+
+    const arr = this.otel.traceContextMap.get(scope)
+    const len = arr?.length
+    if (! len) { return }
+
+    for (let i = len - 1; i >= 0; i -= 1) {
+      const traceContext = arr.at(i)
+      if (traceContext) {
+        const span = getSpan(traceContext)
+        if (span && span.spanContext().spanId === spanId) {
+          return traceContext
+        }
+      }
+      continue
     }
   }
 
