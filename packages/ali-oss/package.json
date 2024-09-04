@@ -1,8 +1,8 @@
 {
   "name": "@mwcp/ali-oss",
   "author": "waiting",
-  "version": "37.2.2",
-  "description": "°¢ÀïÔÆ OSS ÃüÁîÐÐ¹¤¾ß ossutil ·â×° midway.js ×é¼þ£¬Ìá¹© TypeScript ÀàÐÍ¶¨Òå",
+  "version": "37.2.3",
+  "description": "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ OSS ï¿½ï¿½ï¿½ï¿½ï¿½Ð¹ï¿½ï¿½ï¿½ ossutil ï¿½ï¿½×° midway.js ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½á¹© TypeScript ï¿½ï¿½ï¿½Í¶ï¿½ï¿½ï¿½",
   "keywords": [
     "midway",
     "IoC",
@@ -38,8 +38,8 @@
   "license": "MIT",
   "dependencies": {
     "@midwayjs/info": "^3.16.2",
-    "@mwcp/otel": "^37.2.2",
-    "@mwcp/share": "^37.2.1",
+    "@mwcp/otel": "^37.2.3",
+    "@mwcp/share": "^37.2.3",
     "@yuntools/ali-oss": "^16.1.5"
   },
   "engines": {
