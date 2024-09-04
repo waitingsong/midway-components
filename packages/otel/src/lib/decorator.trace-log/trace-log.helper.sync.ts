@@ -5,7 +5,8 @@ import { ConfigKey } from '@mwcp/share'
 
 import { genTraceScopeFrom } from '../decorator.helper.base.js'
 import { processDecoratorBeforeAfterSync } from '../decorator.helper.sync.js'
-import type { DecoratorExecutorParam, DecoratorTraceDataResp } from '../trace.service.js'
+import type { DecoratorExecutorParam } from '../trace.service.js'
+import type { DecoratorTraceDataResp } from '../trace.service.types.js'
 import { AttrNames } from '../types.js'
 
 

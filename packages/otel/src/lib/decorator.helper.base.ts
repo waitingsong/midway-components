@@ -7,10 +7,10 @@ import type {
   TraceService,
   DecoratorExecutorParam,
   DecoratorContextBase,
-  DecoratorTraceDataResp,
   ScopeGenerator,
   TraceDecoratorOptions,
 } from './trace.service.js'
+import type { DecoratorTraceDataResp } from './trace.service.types.js'
 import type { Attributes, TraceScopeParamType, TraceScopeType } from './types.js'
 
 

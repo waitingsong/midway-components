@@ -8,6 +8,7 @@ export type { TraceOptions as TraceDecoratorArg } from './trace.service.js'
 
 export * from './trace.logger.js'
 export * from './trace.service.js'
+export * from './trace.service.types.js'
 export * from './decorator.trace/trace.js'
 export * from './decorator.trace-init/trace-init.js'
 export * from './decorator.trace-log/trace-log.js'

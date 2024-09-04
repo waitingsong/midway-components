@@ -38,6 +38,12 @@ import type { MethodTypeUnknown } from '@waiting/shared-types'
 
 import { OtelComponent } from './component.js'
 import { initSpanStatusOptions } from './config.js'
+import type {
+  DecoratorTraceDataResp,
+  DecoratorTraceDataRespAsync,
+  EndSpanOptions,
+  StartScopeActiveSpanOptions,
+} from './trace.service.types.js'
 import {
   type AddEventOptions,
   type Config,
@@ -557,24 +563,6 @@ export interface GenDecoratorExecutorOptions {
   traceService: TraceService
 }
 
-
-export interface StartScopeActiveSpanOptions {
-  name: string
-  /**
-   * @default scope is request context
-   */
-  scope?: TraceScopeType | undefined
-  spanOptions?: SpanOptions | undefined
-  traceContext?: TraceContext | undefined
-}
-
-export interface EndSpanOptions {
-  span: Span
-  scope?: TraceScopeType | undefined
-  spanStatusOptions?: SpanStatusOptions
-  endTime?: TimeInput
-}
-
 export type ExecutorParamBase<T extends TraceDecoratorOptions = TraceDecoratorOptions> = DecoratorExecutorParamBase<T>
 
 export type DecoratorExecutorParam<T extends TraceDecoratorOptions = TraceDecoratorOptions> = ExecutorParamBase<T>
@@ -590,6 +578,8 @@ export type DecoratorExecutorParam<T extends TraceDecoratorOptions = TraceDecora
   }
 
 export type TraceOptions<M extends MethodTypeUnknown | undefined = undefined> = Partial<TraceDecoratorOptions<M>> | string
+
+// #region TraceDecoratorOptions
 
 export interface TraceDecoratorOptions<
   /** Decorated method */
@@ -657,28 +647,6 @@ export interface TraceDecoratorOptions<
    */
   autoEndSpan: boolean | undefined
 }
-
-export interface DecoratorTraceData {
-  /** tags */
-  attrs?: Attributes
-  /** logs */
-  events?: Attributes
-  rootAttrs?: Attributes
-  rootEvents?: Attributes
-
-  /**
-   * End then span after method `before()` or `after()` called
-   * used by TraceLog decorator, ignored by TraceInit/Trace decorator
-   * @default false
-   */
-  endSpanAfterTraceLog?: boolean
-  /**
-   * Used by TraceLog decorator and endSpanAfterTraceLog:true, ignored by TraceInit/Trace decorator
-   */
-  spanStatusOptions?: SpanStatusOptions
-}
-export type DecoratorTraceDataResp = DecoratorTraceData | undefined | null
-export type DecoratorTraceDataRespAsync = Promise<DecoratorTraceData | undefined | null>
 
 export type KeyGenerator<
   TThis = any,
