@@ -515,6 +515,9 @@ export class OtelComponent {
 
   // #region protected
 
+  /**
+   * Inactive context will be removed from the array
+   */
   protected getActiveContextFromArray(input: TraceContext[]): TraceContext | undefined {
     const len = input.length
     if (len === 0) { return }
