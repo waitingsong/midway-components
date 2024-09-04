@@ -88,5 +88,36 @@ describe(fileShortPath(import.meta.url), () => {
       }
       assert(false, 'should throw Error')
     })
+
+    it('retrieveParentTraceInfoBySpan()', async () => {
+      const { container } = testConfig
+      const traceService = await container.getAsync(TraceService)
+      assert(traceService, 'traceService not found')
+
+      const scope = Symbol('not-request-2')
+      const { span, traceContext } = traceService.startScopeActiveSpan({
+        name: 'foo3',
+        scope,
+      })
+      assert(span)
+
+      const { span: span2 } = traceService.startScopeActiveSpan({
+        name: 'foo4',
+        scope,
+      })
+      assert(span2)
+
+      try {
+        const info = traceService.retrieveParentTraceInfoBySpan(span2, scope)
+        assert(info)
+        const { traceContext: ctx3, span: span3 } = info
+        assert(ctx3 === traceContext)
+        assert(span3 === span)
+      }
+      finally {
+        traceService.endSpan({ span: span2, scope })
+        traceService.endSpan({ span, scope })
+      }
+    })
   })
 })

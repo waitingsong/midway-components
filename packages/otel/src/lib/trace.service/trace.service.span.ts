@@ -248,6 +248,28 @@ export class TraceServiceSpan extends TraceServiceBase {
     this.otel.setAttributesLater(target, input)
   }
 
+  retrieveTraceInfoBySpanId(spanId: string, scope: TraceScopeType | undefined): TraceInfo | undefined {
+    const scope2 = scope ?? this.getWebContext()
+    assert(scope2, 'retrieveTraceInfoBySpanId() scope should not be null')
+
+    const traceContext = this.retrieveContextBySpanId(scope2, spanId)
+    if (traceContext) {
+      const span = getSpan(traceContext)
+      assert(span, 'retrieveTraceInfoBySpanId() span should not be null')
+      return { span, traceContext }
+    }
+  }
+
+  retrieveParentTraceInfoBySpan(span: Span, scope?: TraceScopeType): TraceInfo | undefined {
+    // @ts-expect-error
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unsafe-assignment
+    const pid = span.parentSpanId
+    assert(pid, 'retrieveParentTraceInfoBySpan() parentSpanId should not be null')
+    assert(typeof pid === 'string', 'retrieveParentTraceInfoBySpan() parentSpanId should be string')
+    const info = this.retrieveTraceInfoBySpanId(pid, scope)
+    return info
+  }
+
 }
 
 
