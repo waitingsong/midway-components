@@ -42,12 +42,17 @@ export class TraceServiceSpan extends TraceServiceBase {
    * Get span from the given scope, if not exists, get span from the request context or application.
    */
   getActiveSpan(scope?: TraceScopeType): Span | undefined {
+    return this.getActiveTraceInfo(scope)?.span
+  }
+
+  getActiveTraceInfo(scope?: TraceScopeType): TraceInfo | undefined {
     if (! this.config.enable) { return }
     const scope2 = scope ?? this.getWebContext()
     assert(scope2, 'getActiveSpan() scope should not be null')
     const traceCtx = this.getActiveContext(scope2)
     const span = getSpan(traceCtx)
-    return span
+    assert(span, 'getActiveTraceInfo() span should not be null')
+    return { span, traceContext: traceCtx }
   }
 
   /**
