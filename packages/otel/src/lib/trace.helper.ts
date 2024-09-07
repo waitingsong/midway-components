@@ -2,9 +2,10 @@
 import assert from 'node:assert'
 
 import type { DecoratorExecutorParamBase } from '@mwcp/share'
+import type { Span } from '@opentelemetry/api'
 import { isArrowFunction } from '@waiting/shared-core'
 
-import type { Span, SpanStatusOptions } from '##/index.js'
+import type { SpanStatusOptions } from '##/lib/types.js'
 
 import type {
   DecoratorContext,
