@@ -11,7 +11,7 @@ import type {
   TraceDecoratorOptions,
 } from './trace.service/index.trace.service.js'
 import { AttrNames } from './types.js'
-import { isSpanEnded } from './util.js'
+import { getSpan, isSpanEnded } from './util.js'
 
 
 // #region processDecoratorBeforeAfterSync
@@ -62,7 +62,7 @@ export function processDecoratorBeforeAfterSync(
       data = func2(options.methodArgs, options.error, decoratorContext)
     }
 
-    if (data) {
+    if (data && Object.keys(data).length) {
       if (isPromise(data)) {
         const err = new Error(`processDecoratorBeforeAfterSync() decorator ${type}() return value is a promise,
       class: ${options.callerAttr[AttrNames.CallerClass]}, method: ${options.callerAttr[AttrNames.CallerMethod]}`)
@@ -75,11 +75,18 @@ export function processDecoratorBeforeAfterSync(
         data.events['event'] = eventName
       }
 
+      if (data.traceContext) {
+        options.traceContext = data.traceContext
+        options.span = getSpan(options.traceContext)
+      }
+      assert(options.span, `processDecoratorBeforeAfterSync(): span is required with new traceContext returned by "${type}()"`)
+
       assert(options.traceScope, 'processDecoratorBeforeAfterSync(): traceScope is required')
-      processDecoratorSpanData(options.traceScope, traceService, span, data)
+      processDecoratorSpanData(options.traceScope, traceService, options.span, data)
+      return data
     }
 
-    return data
+    return null
   }
 
 }

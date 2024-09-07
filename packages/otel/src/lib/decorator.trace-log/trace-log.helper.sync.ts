@@ -5,6 +5,7 @@ import { ConfigKey } from '@mwcp/share'
 
 import { genTraceScopeFrom } from '../decorator.helper.base.js'
 import { processDecoratorBeforeAfterSync } from '../decorator.helper.sync.js'
+import { endTraceSpan } from '../trace.helper.js'
 import type { DecoratorExecutorParam, DecoratorTraceDataResp } from '../trace.service/index.trace.service.js'
 import { AttrNames } from '../types.js'
 
@@ -27,16 +28,29 @@ export function beforeSync(options: DecoratorExecutorParam): void {
   }
 
   if (! options.span) {
-    options.span = traceService.getActiveSpan(options.traceScope)
+    const info = traceService.getActiveTraceInfo(options.traceScope)
+    if (info) {
+      options.span = info.span
+      options.traceContext = info.traceContext
+    }
   }
+
   const res: DecoratorTraceDataResp = processDecoratorBeforeAfterSync(type, options)
   if (res?.endSpanAfterTraceLog) {
     assert(options.span, 'span is required')
-    if (res.spanStatusOptions) {
-      traceService.endSpan({ span: options.span, spanStatusOptions: res.spanStatusOptions })
+    endTraceSpan(traceService, options.span, res.spanStatusOptions)
+  }
+
+  if (res?.endParentSpan) {
+    assert(options.span, 'span is required')
+
+    if (! res.endSpanAfterTraceLog) {
+      endTraceSpan(traceService, options.span, res.spanStatusOptions)
     }
-    else {
-      traceService.endSpan({ span: options.span })
+
+    const parentSpan = traceService.retrieveParentTraceInfoBySpan(options.span, options.traceScope)?.span
+    if (parentSpan) {
+      endTraceSpan(traceService, parentSpan, res.spanStatusOptions)
     }
   }
 }
@@ -54,14 +68,19 @@ export function afterReturnSync(options: DecoratorExecutorParam): unknown {
 
   const res: DecoratorTraceDataResp = processDecoratorBeforeAfterSync('after', options)
   if (res?.endSpanAfterTraceLog) {
-    if (res.spanStatusOptions) {
-      traceService.endSpan({ span, spanStatusOptions: res.spanStatusOptions })
-    }
-    else {
-      traceService.endSpan({ span })
-    }
+    endTraceSpan(traceService, span, res.spanStatusOptions)
   }
 
+  if (res?.endParentSpan) {
+    if (! res.endSpanAfterTraceLog) {
+      endTraceSpan(traceService, span, res.spanStatusOptions)
+    }
+
+    const parentSpan = traceService.retrieveParentTraceInfoBySpan(span, options.traceScope)?.span
+    if (parentSpan) {
+      endTraceSpan(traceService, parentSpan, res.spanStatusOptions)
+    }
+  }
   return options.methodResult
 }
 

@@ -9,10 +9,13 @@ import type {
   DecoratorTraceDataResp,
   TraceDecoratorOptions,
 } from './trace.service/index.trace.service.js'
-import { isSpanEnded } from './util.js'
+import { getSpan, isSpanEnded } from './util.js'
 
 // #region processDecoratorBeforeAfterAsync
 
+/**
+ * @description options.{traceContext|span} may be modified with `traceContext` returned by `before()` or `after()`
+ */
 export async function processDecoratorBeforeAfterAsync(
   type: 'before' | 'after' | 'afterThrow',
   options: DecoratorExecutorParam<TraceDecoratorOptions>,
@@ -59,17 +62,24 @@ export async function processDecoratorBeforeAfterAsync(
       data = await func2(options.methodArgs, options.error, decoratorContext)
     }
 
-    if (data) {
+    if (data && Object.keys(data).length) {
       const eventName = type
       if (data.events && ! data.events['event']) {
         data.events['event'] = eventName
       }
 
+      if (data.traceContext) {
+        options.traceContext = data.traceContext
+        options.span = getSpan(options.traceContext)
+      }
+      assert(options.span, `processDecoratorBeforeAfterAsync(): span is required with new traceContext returned by "${type}()"`)
+
       assert(options.traceScope, 'processDecoratorBeforeAfterAsync(): traceScope is required')
-      processDecoratorSpanData(options.traceScope, traceService, span, data)
+      processDecoratorSpanData(options.traceScope, traceService, options.span, data)
+      return data
     }
 
-    return data
+    return null
   }
 }
 

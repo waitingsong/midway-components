@@ -4,6 +4,8 @@ import assert from 'node:assert'
 import type { DecoratorExecutorParamBase } from '@mwcp/share'
 import { isArrowFunction } from '@waiting/shared-core'
 
+import type { Span, SpanStatusOptions } from '##/index.js'
+
 import type {
   DecoratorContext,
   DecoratorExecutorParam,
@@ -11,6 +13,7 @@ import type {
   KeyGenerator,
   TraceDecoratorOptions,
 } from './trace.service/index.trace.service.js'
+import type { TraceServiceSpan } from './trace.service/trace.service.span.js'
 import { AttrNames, ConfigKey } from './types.js'
 
 
@@ -212,4 +215,14 @@ export function genDecoratorExecutorOptions(
   }
 
   return ret
+}
+
+
+export function endTraceSpan(traceService: TraceServiceSpan, span: Span, spanStatusOptions: SpanStatusOptions | undefined): void {
+  if (spanStatusOptions) {
+    traceService.endSpan({ span, spanStatusOptions })
+  }
+  else {
+    traceService.endSpan({ span })
+  }
 }

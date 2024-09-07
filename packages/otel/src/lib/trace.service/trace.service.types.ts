@@ -37,15 +37,27 @@ export interface DecoratorTraceData {
   rootEvents?: Attributes
 
   /**
-   * End then span after method `before()` or `after()` called
+   * End the span after method `before()` or `after()` called
    * used by TraceLog decorator, ignored by TraceInit/Trace decorator
+   * @description Current span also will be ended if endParentSpan:true, regardless of this value
    * @default false
    */
   endSpanAfterTraceLog?: boolean
   /**
+   * End the parent span after method `before()` or `after()` called
+   * used by TraceLog decorator, ignored by TraceInit/Trace decorator
+   * @description Current span also will be ended if endParentSpan:true, regardless of endSpanAfterTraceLog
+   * @default false
+   */
+  endParentSpan?: boolean
+  /**
    * Used by TraceLog decorator and endSpanAfterTraceLog:true, ignored by TraceInit/Trace decorator
    */
   spanStatusOptions?: SpanStatusOptions
+  /**
+   * options.traceContext will be overwritten by this value, and options.span also will be updated
+   */
+  traceContext?: TraceContext
 }
 export type DecoratorTraceDataResp = DecoratorTraceData | undefined | null
 export type DecoratorTraceDataRespAsync = Promise<DecoratorTraceData | undefined | null>
