@@ -32,16 +32,20 @@ export function beforeSync(options: DecoratorExecutorParam): void {
   assert(options.traceScope, 'beforeSync() options.traceScope is required')
 
   if (startActiveSpan) {
-    options.span = traceService.startScopeActiveSpan({ name: spanName, spanOptions, traceContext, scope: options.traceScope }).span
+    const info = traceService.startScopeActiveSpan({ name: spanName, spanOptions, traceContext, scope: options.traceScope })
+    options.span = info.span
     options.span.setAttributes(callerAttr)
+    options.traceContext = info.traceContext
     processDecoratorBeforeAfterSync(type, options)
   }
   else {
     // it's necessary to cost a little time to prevent next span.startTime is same as previous span.endTime
     const rndStr = Math.random().toString(36).slice(7)
     void rndStr
-    options.span = traceService.startSpan(spanName, spanOptions, traceContext, options.traceScope).span
+    const info = traceService.startSpan(spanName, spanOptions, traceContext, options.traceScope)
+    options.span = info.span
     options.span.setAttributes(callerAttr)
+    options.traceContext = info.traceContext
     processDecoratorBeforeAfterSync(type, options)
   }
 }

@@ -21,8 +21,10 @@ export async function beforeAsync(options: DecoratorExecutorParam): Promise<void
   assert(options.traceScope, 'beforeAsync() options.traceScope is required')
 
   if (startActiveSpan) {
-    options.span = traceService.startScopeActiveSpan({ name: spanName, spanOptions, traceContext, scope: options.traceScope }).span
+    const info = traceService.startScopeActiveSpan({ name: spanName, spanOptions, traceContext, scope: options.traceScope })
+    options.span = info.span
     options.span.setAttributes(callerAttr)
+    options.traceContext = info.traceContext
     await processDecoratorBeforeAfterAsync(type, options)
     return
   }
@@ -30,8 +32,10 @@ export async function beforeAsync(options: DecoratorExecutorParam): Promise<void
     // it's necessary to cost a little time to prevent next span.startTime is same as previous span.endTime
     const rndStr = Math.random().toString(36).slice(7)
     void rndStr
-    options.span = traceService.startSpan(spanName, spanOptions, traceContext, options.traceScope).span
+    const info = traceService.startSpan(spanName, spanOptions, traceContext, options.traceScope)
+    options.span = info.span
     options.span.setAttributes(callerAttr)
+    options.traceContext = info.traceContext
     await processDecoratorBeforeAfterAsync(type, options)
     return
   }
