@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [37.4.0](https://github.com/waitingsong/midway-components/compare/v37.3.0...v37.4.0) (2024-09-07)
+
+
+### Bug Fixes
+
+* **otel:** assign traceContext for Trace() ([fa00c3b](https://github.com/waitingsong/midway-components/commit/fa00c3bf88de10df4218b2b44688d98ec1ba86fe))
+
+
+### Features
+
+* **otel:** add properties of DecoratorTraceData for TraceLog() ([ba26cc6](https://github.com/waitingsong/midway-components/commit/ba26cc65ad4653ec53d77b7dc5d2a3233cb81600))
+* **otel:** TraceServiceSpan.getActiveTraceInfo() ([5802b1c](https://github.com/waitingsong/midway-components/commit/5802b1c3eb9abaf2a7cce89fba2e5069116dc9b2))
+
+
+
+
+
 # [37.3.0](https://github.com/waitingsong/midway-components/compare/v37.2.4...v37.3.0) (2024-09-04)
 
 
