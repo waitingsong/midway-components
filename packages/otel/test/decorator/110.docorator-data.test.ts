@@ -5,8 +5,8 @@ import { fileShortPath } from '@waiting/shared-core'
 
 import {
   assertsSpan, assertRootSpan,
-  retrieveTraceInfoFromRemote, sortSpans,
   assertJaegerParentSpanArray,
+  retrieveTraceInfoFromRemote, sortSpans,
 } from '##/index.js'
 import type { AssertsOptions } from '##/index.js'
 import { apiBase, apiMethod } from '#@/api-test.js'

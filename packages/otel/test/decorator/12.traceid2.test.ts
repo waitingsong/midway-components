@@ -5,6 +5,7 @@ import { fileShortPath } from '@waiting/shared-core'
 
 import {
   assertsSpan, assertRootSpan,
+  assertJaegerParentSpanArray,
   retrieveTraceInfoFromRemote, sortSpans,
 } from '##/index.js'
 import type { AssertsOptions } from '##/index.js'
@@ -42,6 +43,13 @@ describe(fileShortPath(import.meta.url), function () {
     assert(span1)
     assert(span2)
     assert(span3)
+
+    assertJaegerParentSpanArray([
+      { parentSpan: rootSpan, childSpan: span1 },
+
+      { parentSpan: span1, childSpan: span2 },
+      { parentSpan: span1, childSpan: span3 },
+    ])
 
     assertRootSpan({
       path,
