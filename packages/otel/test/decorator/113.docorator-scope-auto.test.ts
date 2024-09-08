@@ -61,6 +61,10 @@ describe(fileShortPath(import.meta.url), function () {
         'caller.method': 'simple',
         'span.kind': 'client',
       },
+      // logs: [
+      //   { event: 'before', args0: id },
+      //   { event: 'after', args0: id, res: `${id}${testSuffix}` },
+      // ],
     }
     assertsSpan(span1, opt1)
 
