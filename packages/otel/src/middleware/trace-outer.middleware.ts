@@ -61,6 +61,7 @@ export async function middleware(
 
   const container = ctx.app.getApplicationContext()
   const traceSvc = (ctx[`_${ConfigKey.serviceName}`] ?? await container.getAsync(TraceService)) as TraceService
+  if (! traceSvc.config.enable) { return }
   await traceSvc.startOnRequest(ctx)
 
   ctx.res.once('finish', () => { finishCallback(ctx, traceSvc) })

@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { assert } from 'node:console'
-
 import { Middleware } from '@midwayjs/core'
 import { Context, IMiddleware, NextFunction } from '@mwcp/share'
 import { humanMemoryUsage } from '@waiting/shared-core'
-
 
 import { TraceService } from '##/lib/index.js'
 import { AttrNames, ConfigKey, middlewareEnableCacheKey } from '##/lib/types.js'
@@ -43,7 +40,7 @@ async function middleware(
 
   const container = ctx.app.getApplicationContext()
   const traceSvc = (ctx[`_${ConfigKey.serviceName}`] ?? await container.getAsync(TraceService)) as TraceService
-  assert(traceSvc, 'traceSvc is required')
+  if (! traceSvc.config.enable) { return }
 
   const rootSpan = traceSvc.getRootSpan(ctx)
   if (rootSpan) {
