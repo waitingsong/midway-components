@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [37.4.1](https://github.com/waitingsong/midway-components/compare/v37.4.0...v37.4.1) (2024-09-10)
+
+**Note:** Version bump only for package midway-components
+
+
+
+
+
 # [37.4.0](https://github.com/waitingsong/midway-components/compare/v37.3.0...v37.4.0) (2024-09-07)
 
 

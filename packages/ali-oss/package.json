@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/ali-oss",
   "author": "waiting",
-  "version": "37.4.0",
+  "version": "37.4.1",
   "description": "������ OSS �����й��� ossutil ��װ midway.js ������ṩ TypeScript ���Ͷ���",
   "keywords": [
     "midway",
@@ -38,7 +38,7 @@
   "license": "MIT",
   "dependencies": {
     "@midwayjs/info": "^3.16.2",
-    "@mwcp/otel": "^37.4.0",
+    "@mwcp/otel": "^37.4.1",
     "@mwcp/share": "^37.2.3",
     "@yuntools/ali-oss": "^16.1.5"
   },
