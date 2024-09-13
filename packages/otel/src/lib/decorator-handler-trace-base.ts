@@ -30,7 +30,8 @@ export class DecoratorHandlerTraceBase extends DecoratorHandlerBase {
       return ctx
     }
     catch (ex) {
-      throw new Error('DecoratorHandlerTraceBase.getWebContext() failed. The trigger may not a request (eg. TraceInit())', { cause: ex })
+      // throw new Error('DecoratorHandlerTraceBase.getWebContext() failed. The trigger may not a request (eg. TraceInit())', { cause: ex })
+      void ex
     }
   }
 
