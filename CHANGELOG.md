@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [38.0.0](https://github.com/waitingsong/midway-components/compare/v37.4.1...v38.0.0) (2024-09-14)
+
+
+### Features
+
+* **otel:** breaking change DecoratorHandlerTraceBase.getWebContext() eat error ([8b8c509](https://github.com/waitingsong/midway-components/commit/8b8c509950730bcd679f0d6d57a6c949a6f5c63a))
+
+
+
+
+
 ## [37.4.1](https://github.com/waitingsong/midway-components/compare/v37.4.0...v37.4.1) (2024-09-10)
 
 **Note:** Version bump only for package midway-components
