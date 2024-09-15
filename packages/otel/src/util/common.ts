@@ -185,7 +185,7 @@ function sortSpansByStartTime(spans: JaegerTraceInfoSpan[]): JaegerTraceInfoSpan
 
 // #region assertRootSpan
 
-type ExpectAttributes = Record<string, AttributeValue>
+type ExpectAttributes = Record<string, AttributeValue | RegExp>
 
 export interface AssertsRootOptions {
   path: string
@@ -282,18 +282,24 @@ export function assertsSpan(span: JaegerTraceInfoSpan, options: AssertsOptions):
   assert(span.traceID === options.traceId)
   assert(span.operationName === options.operationName, `operationName: ${span.operationName} !== (expect) ${options.operationName}`)
 
-  Object.entries(options.tags ?? {}).forEach(([key, value]) => {
+  Object.entries(options.tags ?? {}).forEach(([key, expectValue]) => {
     const flag = span.tags.some((tag) => {
-      if (tag['key'] === key) {
-        const tagVal = tag['value']
-        assert(tagVal, `${key}: tagVal from span is null`)
-        const res = tagVal === value
-        assert(res, `${key}: ${tagVal.toString()} !== (expect) ${value.toString()}`)
-        return true
+      if (tag['key'] !== key) {
+        return false
       }
-      return false
+      const tagVal = tag['value']
+      assert(tagVal, `${key}: tagVal from span is null`)
+
+      if (expectValue instanceof RegExp) {
+        assert(expectValue.test(tagVal.toString()), `${key}: ${tagVal.toString()} !== (expect) ${expectValue.toString()}`)
+      }
+      else {
+        const res = tagVal === expectValue
+        assert(res, `${key}: ${tagVal.toString()} !== (expect) ${expectValue.toString()}`)
+      }
+      return true
     })
-    assert(flag, `${key}: ${value.toString()} not found`)
+    assert(flag, `${key}: ${expectValue.toString()} not found`)
   })
 
 
@@ -310,12 +316,25 @@ export function assertsSpan(span: JaegerTraceInfoSpan, options: AssertsOptions):
       // console.log('expectLog:', expectLog)
       // console.log('real log:', log)
 
-      Object.entries(expectLog).forEach(([key, value]) => {
+      Object.entries(expectLog).forEach(([key, expectValue]) => {
         const flag = log.fields.some((field) => {
-          const res = field.key === key && field.value === value
-          return res
+          if (field.key !== key) {
+            return false
+          }
+
+          const fieldVal = field.value
+          assert(fieldVal, `${key}: fieldVal from span is null`)
+
+          if (expectValue instanceof RegExp) {
+            assert(expectValue.test(fieldVal.toString()), `${key}: ${expectValue.toString()} !== (expect) ${fieldVal.toString()}`)
+          }
+          else {
+            const res = fieldVal === expectValue
+            assert(res, `${key}: ${fieldVal.toString()} !== (expect) ${expectValue.toString()}`)
+          }
+          return true
         })
-        assert(flag, `(${idx}) ${key}: ${value.toString()} not found`)
+        assert(flag, `(${idx}) ${key}: ${expectValue.toString()} not found`)
       })
     })
 
