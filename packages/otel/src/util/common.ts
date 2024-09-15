@@ -319,7 +319,7 @@ export function assertsSpan(span: JaegerTraceInfoSpan, options: AssertsOptions):
 
 export function assertJaegerTagItem(tag: Attributes, key: string, expectValue: AttributeValue | RegExp): void {
   const tagVal = tag['value']
-  assert(tagVal, `${key}: tagVal from span is null`)
+  assert(typeof tagVal !== 'undefined', `${key}: tagVal from span is null`)
 
   if (expectValue instanceof RegExp) {
     assert(expectValue.test(tagVal.toString()), `${key}: ${tagVal.toString()} !== (expect) ${expectValue.toString()}`)
@@ -332,7 +332,7 @@ export function assertJaegerTagItem(tag: Attributes, key: string, expectValue: A
 
 export function assertJaegerLogField(field: JaegerTraceInfoLogField, key: string, expectValue: AttributeValue | RegExp): void {
   const fieldVal = field.value
-  assert(fieldVal, `${key}: fieldVal from span is null`)
+  assert(typeof fieldVal !== 'undefined', `${key}: fieldVal from span is null`)
 
   if (expectValue instanceof RegExp) {
     assert(expectValue.test(fieldVal.toString()), `${key}: ${expectValue.toString()} !== (expect) ${fieldVal.toString()}`)
