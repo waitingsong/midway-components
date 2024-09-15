@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [38.1.0](https://github.com/waitingsong/midway-components/compare/v38.0.0...v38.1.0) (2024-09-15)
+
+
+### Features
+
+* **otel:** update type AssertsRootOp for assertRootSpan() ([382e6a3](https://github.com/waitingsong/midway-components/commit/382e6a385f2fb108bd0959da8dc9104d9ca85471))
+
+
+
+
+
 # [38.0.0](https://github.com/waitingsong/midway-components/compare/v37.4.1...v38.0.0) (2024-09-14)
 
 
