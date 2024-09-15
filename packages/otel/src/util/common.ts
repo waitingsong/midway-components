@@ -1,7 +1,8 @@
 /* eslint-disable no-await-in-loop */
-import assert from 'node:assert/strict'
+import assert from 'node:assert'
 
 import { makeHttpRequest } from '@midwayjs/core'
+import type { AttributeValue } from '@opentelemetry/api'
 import {
   SEMATTRS_NET_HOST_NAME,
   SEMATTRS_HTTP_METHOD,
@@ -11,9 +12,9 @@ import {
 import { sleep } from '@waiting/shared-core'
 import type { Headers as UndiciHeaders } from 'undici'
 
+import { AttrNames } from '##/lib/attrnames.types.js'
 import { exporterEndpoint } from '##/lib/config.js'
-import { AttrNames } from '##/lib/index.js'
-import type { Attributes, JaegerTraceInfo, JaegerTraceInfoSpan } from '##/lib/index.js'
+import type { JaegerTraceInfo, JaegerTraceInfoSpan } from '##/lib/index.js'
 
 
 // #region retrieveTraceInfoFromRemote
@@ -184,14 +185,16 @@ function sortSpansByStartTime(spans: JaegerTraceInfoSpan[]): JaegerTraceInfoSpan
 
 // #region assertRootSpan
 
+type ExpectAttributes = Record<string, AttributeValue>
+
 export interface AssertsRootOptions {
   path: string
   span: JaegerTraceInfoSpan
   traceId: string
 
   operationName?: string
-  tags?: Attributes
-  logs?: (Attributes | false)[]
+  tags?: ExpectAttributes
+  logs?: (ExpectAttributes | false)[]
   /**
    * @default true
    */
@@ -232,7 +235,7 @@ export function assertRootSpan(options: AssertsRootOptions): void {
     { event: AttrNames.RequestEnd },
   ]
 
-  const logs: Attributes[] = []
+  const logs: ExpectAttributes[] = []
 
   if (mergeDefaultLogs) {
     for (let idx = 0; idx < Math.max(logBase.length, expectLogs.length, options.logs?.length ?? 0); idx += 1) {
@@ -268,8 +271,8 @@ export function assertRootSpan(options: AssertsRootOptions): void {
 export interface AssertsOptions {
   traceId: string
   operationName: string
-  tags?: Attributes
-  logs?: Attributes[]
+  tags?: ExpectAttributes
+  logs?: ExpectAttributes[]
 }
 
 export function assertsSpan(span: JaegerTraceInfoSpan, options: AssertsOptions): void {
@@ -285,12 +288,12 @@ export function assertsSpan(span: JaegerTraceInfoSpan, options: AssertsOptions):
         const tagVal = tag['value']
         assert(tagVal, `${key}: tagVal from span is null`)
         const res = tagVal === value
-        assert(res, `${key}: ${tagVal.toString()} !== (expect) ${value?.toString()}`)
+        assert(res, `${key}: ${tagVal.toString()} !== (expect) ${value.toString()}`)
         return true
       }
       return false
     })
-    assert(flag, `${key}: ${value?.toString()} not found`)
+    assert(flag, `${key}: ${value.toString()} not found`)
   })
 
 
@@ -312,7 +315,7 @@ export function assertsSpan(span: JaegerTraceInfoSpan, options: AssertsOptions):
           const res = field.key === key && field.value === value
           return res
         })
-        assert(flag, `(${idx}) ${key}: ${value?.toString()} not found`)
+        assert(flag, `(${idx}) ${key}: ${value.toString()} not found`)
       })
     })
 
