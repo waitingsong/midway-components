@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [38.2.1](https://github.com/waitingsong/midway-components/compare/v38.2.0...v38.2.1) (2024-09-15)
+
+
+### Bug Fixes
+
+* **otel:** assertJaegerTagItem(), assertJaegerLogField() ([e981248](https://github.com/waitingsong/midway-components/commit/e981248ce5e5ad38ea87ff08442353ebb45a3560))
+
+
+
+
+
 # [38.2.0](https://github.com/waitingsong/midway-components/compare/v38.1.0...v38.2.0) (2024-09-15)
 
 
