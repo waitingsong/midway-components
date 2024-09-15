@@ -18,8 +18,7 @@ export {
 } from '@yuntools/ali-oss'
 
 
-// @ts-ignore
-declare module '@midwayjs/core/dist/interface' {
+declare module '@midwayjs/core/dist/interface.js' {
   interface MidwayConfig {
     [ConfigKey.config]?: Config
   }

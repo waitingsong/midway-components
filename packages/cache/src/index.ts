@@ -1,5 +1,5 @@
 
-import type { Config, ConfigKey, MiddlewareConfig } from './lib/types.js'
+import type { ConfigKey, MiddlewareConfig } from './lib/types.js'
 
 
 export { AutoConfiguration as Configuration } from './configuration.js'
@@ -14,10 +14,9 @@ export {
   type MidwayMultiCache,
 } from '@midwayjs/cache-manager'
 
-// @ts-ignore
-declare module '@midwayjs/core/dist/interface' {
+declare module '@midwayjs/core/dist/interface.js' {
   interface MidwayConfig {
-    [ConfigKey.config]?: Config
+    // [ConfigKey.config]?: Config
     [ConfigKey.middlewareConfig]?: MiddlewareConfig
   }
 }

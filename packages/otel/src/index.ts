@@ -21,16 +21,14 @@ export {
 export { SemanticAttributes } from '@opentelemetry/semantic-conventions'
 
 
-// @ts-ignore
-declare module '@midwayjs/core/dist/interface' {
+declare module '@midwayjs/core/dist/interface.js' {
   interface MidwayConfig {
     [ConfigKey.config]?: Partial<Config>
     [ConfigKey.middlewareConfig]?: Partial<MiddlewareConfig>
     [ConfigKey.otlpGrpcExporterConfig]?: Partial<InitTraceOptions['otlpGrpcExporterConfig']>
   }
 }
-// @ts-ignore
-declare module '@midwayjs/koa/dist/interface' {
+declare module '@midwayjs/koa/dist/interface.js' {
   interface Context {
     [middlewareEnableCacheKey]?: true
   }
