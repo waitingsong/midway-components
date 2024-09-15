@@ -192,6 +192,14 @@ export interface AssertsRootOptions {
   operationName?: string
   tags?: Attributes
   logs?: (Attributes | false)[]
+  /**
+   * @default true
+   */
+  mergeDefaultTags?: boolean
+  /**
+   * @default true
+   */
+  mergeDefaultLogs?: boolean
 }
 
 export function assertRootSpan(options: AssertsRootOptions): void {
@@ -200,15 +208,20 @@ export function assertRootSpan(options: AssertsRootOptions): void {
   const httpMethod = operationName.includes('GET') ? 'GET' : 'POST'
   const expectLogs = options.logs ?? []
 
-  const tags2 = Object.assign({
-    [SEMATTRS_HTTP_METHOD]: httpMethod,
-    [SEMATTRS_HTTP_SCHEME]: 'http',
-    [SEMATTRS_HTTP_SERVER_NAME]: 'base-app',
-    [SEMATTRS_NET_HOST_NAME]: '127.0.0.1',
-    [AttrNames.ServiceName]: 'base-app',
-    [AttrNames.ServiceVersion]: '1.0.0',
-    'span.kind': 'server',
-  }, tags)
+  const mergeDefaultTags = options.mergeDefaultTags ?? true
+  const mergeDefaultLogs = options.mergeDefaultLogs ?? true
+
+  const tags2 = mergeDefaultTags
+    ? Object.assign({
+      [SEMATTRS_HTTP_METHOD]: httpMethod,
+      [SEMATTRS_HTTP_SCHEME]: 'http',
+      [SEMATTRS_HTTP_SERVER_NAME]: 'base-app',
+      [SEMATTRS_NET_HOST_NAME]: '127.0.0.1',
+      [AttrNames.ServiceName]: 'base-app',
+      [AttrNames.ServiceVersion]: '1.0.0',
+      'span.kind': 'server',
+    }, tags)
+    : Object.assign({}, tags)
 
   const logBase = [
     { event: AttrNames.RequestBegin },
@@ -221,17 +234,25 @@ export function assertRootSpan(options: AssertsRootOptions): void {
 
   const logs: Attributes[] = []
 
-  // const logs = logs2.map((log, idx) => {
-  for (let idx = 0; idx < Math.max(logBase.length, expectLogs.length, options.logs?.length ?? 0); idx += 1) {
-    const log = logBase[idx] ?? {}
-    const expectRow = expectLogs[idx]
-    if (expectRow === false) { continue }
-    if (expectRow && Object.keys(expectRow).length) {
-      const row = Object.assign(log, expectRow)
-      logs.push(row)
-      continue
+  if (mergeDefaultLogs) {
+    for (let idx = 0; idx < Math.max(logBase.length, expectLogs.length, options.logs?.length ?? 0); idx += 1) {
+      const log = logBase[idx] ?? {}
+      const expectRow = expectLogs[idx]
+      if (expectRow === false) { continue }
+      if (expectRow && Object.keys(expectRow).length) {
+        const row = Object.assign(log, expectRow)
+        logs.push(row)
+        continue
+      }
+      logs.push(log)
     }
-    logs.push(log)
+  }
+  else {
+    options.logs?.forEach((log) => {
+      if (log) {
+        logs.push(log)
+      }
+    })
   }
 
   const opt: AssertsOptions = {
