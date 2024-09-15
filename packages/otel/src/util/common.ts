@@ -281,8 +281,14 @@ export function assertsSpan(span: JaegerTraceInfoSpan, options: AssertsOptions):
 
   Object.entries(options.tags ?? {}).forEach(([key, value]) => {
     const flag = span.tags.some((tag) => {
-      const res = tag['key'] === key && tag['value'] === value
-      return res
+      if (tag['key'] === key) {
+        const tagVal = tag['value']
+        assert(tagVal, `${key}: tagVal from span is null`)
+        const res = tagVal === value
+        assert(res, `${key}: ${tagVal.toString()} !== (expect) ${value?.toString()}`)
+        return true
+      }
+      return false
     })
     assert(flag, `${key}: ${value?.toString()} not found`)
   })
