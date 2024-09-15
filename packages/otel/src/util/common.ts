@@ -14,7 +14,7 @@ import type { Headers as UndiciHeaders } from 'undici'
 
 import { AttrNames } from '##/lib/attrnames.types.js'
 import { exporterEndpoint } from '##/lib/config.js'
-import type { JaegerTraceInfo, JaegerTraceInfoSpan } from '##/lib/index.js'
+import type { Attributes, JaegerTraceInfo, JaegerTraceInfoLogField, JaegerTraceInfoSpan } from '##/lib/index.js'
 
 
 // #region retrieveTraceInfoFromRemote
@@ -287,16 +287,7 @@ export function assertsSpan(span: JaegerTraceInfoSpan, options: AssertsOptions):
       if (tag['key'] !== key) {
         return false
       }
-      const tagVal = tag['value']
-      assert(tagVal, `${key}: tagVal from span is null`)
-
-      if (expectValue instanceof RegExp) {
-        assert(expectValue.test(tagVal.toString()), `${key}: ${tagVal.toString()} !== (expect) ${expectValue.toString()}`)
-      }
-      else {
-        const res = tagVal === expectValue
-        assert(res, `${key}: ${tagVal.toString()} !== (expect) ${expectValue.toString()}`)
-      }
+      assertJaegerTagItem(tag, key, expectValue)
       return true
     })
     assert(flag, `${key}: ${expectValue.toString()} not found`)
@@ -311,35 +302,47 @@ export function assertsSpan(span: JaegerTraceInfoSpan, options: AssertsOptions):
       const log = span.logs[idx]
       assert(log, `log[${idx}] is null`)
 
-      // console.log('================')
-      // console.log('idx:', idx)
-      // console.log('expectLog:', expectLog)
-      // console.log('real log:', log)
-
       Object.entries(expectLog).forEach(([key, expectValue]) => {
         const flag = log.fields.some((field) => {
           if (field.key !== key) {
             return false
           }
 
-          const fieldVal = field.value
-          assert(fieldVal, `${key}: fieldVal from span is null`)
-
-          if (expectValue instanceof RegExp) {
-            assert(expectValue.test(fieldVal.toString()), `${key}: ${expectValue.toString()} !== (expect) ${fieldVal.toString()}`)
-          }
-          else {
-            const res = fieldVal === expectValue
-            assert(res, `${key}: ${fieldVal.toString()} !== (expect) ${expectValue.toString()}`)
-          }
+          assertJaegerLogField(field, key, expectValue)
           return true
         })
         assert(flag, `(${idx}) ${key}: ${expectValue.toString()} not found`)
       })
     })
-
   }
 }
+
+export function assertJaegerTagItem(tag: Attributes, key: string, expectValue: AttributeValue | RegExp): void {
+  const tagVal = tag['value']
+  assert(tagVal, `${key}: tagVal from span is null`)
+
+  if (expectValue instanceof RegExp) {
+    assert(expectValue.test(tagVal.toString()), `${key}: ${tagVal.toString()} !== (expect) ${expectValue.toString()}`)
+  }
+  else {
+    const res = tagVal === expectValue
+    assert(res, `${key}: ${tagVal.toString()} !== (expect) ${expectValue.toString()}`)
+  }
+}
+
+export function assertJaegerLogField(field: JaegerTraceInfoLogField, key: string, expectValue: AttributeValue | RegExp): void {
+  const fieldVal = field.value
+  assert(fieldVal, `${key}: fieldVal from span is null`)
+
+  if (expectValue instanceof RegExp) {
+    assert(expectValue.test(fieldVal.toString()), `${key}: ${expectValue.toString()} !== (expect) ${fieldVal.toString()}`)
+  }
+  else {
+    const res = fieldVal === expectValue
+    assert(res, `${key}: ${fieldVal.toString()} !== (expect) ${expectValue.toString()}`)
+  }
+}
+
 
 // function sortSpansByStartTimeDesc(spans: JaegerTraceInfoSpan[]): JaegerTraceInfoSpan[] {
 //   return spans.sort((a, b) => {
