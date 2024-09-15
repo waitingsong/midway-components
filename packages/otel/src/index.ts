@@ -12,9 +12,9 @@ export {
   type Context,
   type Context as TraceContext,
   type Span,
-  SpanKind,
   type SpanContext,
   type SpanOptions,
+  SpanKind,
   SpanStatusCode,
 } from '@opentelemetry/api'
 
