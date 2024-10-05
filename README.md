@@ -28,7 +28,7 @@ ESM build only, requires `@midwayjs >= 3.15` and set `"type": "module"` in `pack
 
 ## Initialize and install dependencies
 
-## 安装全局依赖
+## Install global deps for development
 ```sh
 npm i -g c8 lerna madge rollup tsx zx
 ```
