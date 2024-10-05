@@ -1,7 +1,6 @@
-
+/* eslint-disable @typescript-eslint/no-unsafe-function-type */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/ban-types */
 import assert from 'node:assert'
 
 import {
@@ -51,8 +50,7 @@ export function methodHasDecorated(
  * @returns Set<value of decoratorKeys>
  */
 export function isMethodDecoratedWith(
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  target: {}, // class
+  target: object, // class
   propertyName: string, // method name
   decoratorKeys: string[], // ['decorator:method_key_cacheable']
 ): Set<string> {
@@ -222,7 +220,7 @@ export function retrieveMetadataPayloadsOnClass<TDecoratorParam extends object =
   return ret
 }
 
-export function retrieveMetadataPayloadsOnMethod<TDecoratorParam extends {} = {}>(
+export function retrieveMetadataPayloadsOnMethod<TDecoratorParam extends object = object>(
   target: InstanceWithDecorator | Function,
   decoratorKey: string,
   methodName: string,

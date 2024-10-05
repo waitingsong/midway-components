@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-type-parameters */
 import { ApiProperty } from '@midwayjs/swagger'
 import { Rule } from '@midwayjs/validate'
 

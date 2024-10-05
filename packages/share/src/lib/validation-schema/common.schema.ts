@@ -115,7 +115,7 @@ function bigintValidator(value: string, helpers: RuleType.CustomHelpers): string
       throw new Error('Invalid BigInt format')
     }
   }
-  catch (ex) {
+  catch {
     return helpers.error('not a valid BigInt string')
   }
   return value

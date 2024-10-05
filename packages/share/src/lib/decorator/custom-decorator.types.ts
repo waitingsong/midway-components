@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-function-type */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/ban-types */
 import type { MethodDecoratorOptions, REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
 import type { MethodTypeUnknown } from '@waiting/shared-types'
 
@@ -121,6 +121,7 @@ export interface ClzInstance {
  * 装饰器所在的（注入）实例
  * - InstanceWithDecorator.constructor === ClassWithDecorator
  */
+
 export type InstanceWithDecorator = Function & {
   /** web context */
   [REQUEST_OBJ_CTX_KEY]?: Context,
@@ -155,6 +156,7 @@ export interface DecoratorMetaData<T extends object = object> {
 
 export interface RegClassDecoratorOptions<TDecoratorParam extends object> {
   decoratorKey: string
+
   target: Function
   args: Partial<TDecoratorParam> | PropertyKey | undefined
   /**

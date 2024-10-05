@@ -1,6 +1,4 @@
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/ban-types */
 import assert from 'node:assert'
 
 import { REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'

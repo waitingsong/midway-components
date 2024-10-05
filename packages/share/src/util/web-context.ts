@@ -22,7 +22,7 @@ export function getWebContext(applicationContext: IMidwayContainer): Context | u
     const ctx = contextManager.active().getValue(ASYNC_CONTEXT_KEY) as Context | undefined
     return ctx
   }
-  catch (ex) {
+  catch {
     // console.warn('getWebContext() error:', ex)
     return void 0
   }
