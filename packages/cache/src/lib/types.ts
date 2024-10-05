@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { CacheManagerOptions, CachingFactory } from '@midwayjs/cache-manager'
 import type { TraceService } from '@mwcp/otel'
