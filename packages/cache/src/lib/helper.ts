@@ -5,16 +5,16 @@ import type { MidwayUnionCache } from '@midwayjs/cache-manager'
 import type { TraceService } from '@mwcp/otel'
 import type { ClzInstance, DecoratorExecutorParamBase, PagingDTO } from '@mwcp/share'
 
-import { initCacheableArgs, initCacheEvictArgs, initCacheManagerOptions } from './config.js'
+import { initCacheEvictArgs, initCacheManagerOptions, initCacheableArgs } from './config.js'
 import {
   ConfigKey,
   Msg,
 } from './types.js'
 import type {
-  CacheableArgs,
-  CachedResponse,
   CacheEvictArgs,
   CacheTTLFn,
+  CacheableArgs,
+  CachedResponse,
   DataWithCacheMeta,
   DecoratorExecutorOptions,
   GenDecoratorExecutorOptionsExt,
@@ -222,8 +222,8 @@ export async function deleteData(caching: MidwayUnionCache, cacheKey: string): P
 export async function getData<T = unknown>(
   caching: MidwayUnionCache,
   cacheKey: string,
-  traceService?: TraceService | undefined,
-  traceLogCacheHit?: boolean | undefined,
+  traceService?: TraceService,
+  traceLogCacheHit?: boolean,
 ): Promise<CachedResponse<T>> {
 
   const keys = hashCacheKey(cacheKey)

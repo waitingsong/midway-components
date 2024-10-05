@@ -5,8 +5,8 @@ import {
   App,
   ApplicationContext,
   IMidwayContainer,
-  Inject,
   Init,
+  Inject,
   Singleton,
 } from '@midwayjs/core'
 import {
@@ -19,13 +19,13 @@ import {
 import {
   Attributes,
   Context as TraceContext,
-  propagation,
   ROOT_CONTEXT,
   Span,
   SpanKind,
   SpanOptions,
   SpanStatusCode,
   TimeInput,
+  propagation,
 } from '@opentelemetry/api'
 import { genISO8601String } from '@waiting/shared-core'
 import type { MethodTypeUnknown } from '@waiting/shared-types'
@@ -38,9 +38,9 @@ import {
   type SpanStatusOptions,
   AttrNames,
   ConfigKey,
-  middlewareEnableCacheKey,
   TraceScopeParamType,
   TraceScopeType,
+  middlewareEnableCacheKey,
 } from '../types.js'
 import {
   genRequestSpanName,

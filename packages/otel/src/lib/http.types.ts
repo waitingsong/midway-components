@@ -18,7 +18,7 @@ import type * as http from 'node:http'
 import type * as https from 'node:https'
 import type * as url from 'node:url'
 
-import type { Span, Attributes } from '@opentelemetry/api'
+import type { Attributes, Span } from '@opentelemetry/api'
 import type { InstrumentationConfig } from '@opentelemetry/instrumentation'
 
 

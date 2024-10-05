@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-import { initialMiddlewareConfig, initPathArray } from '##/lib/config.js'
+import { initPathArray, initialMiddlewareConfig } from '##/lib/config.js'
 import { ConfigKey } from '##/lib/types.js'
 import type { MiddlewareConfig } from '##/lib/types.js'
 import { apiBase, apiMethod } from '#@/api-test.js'

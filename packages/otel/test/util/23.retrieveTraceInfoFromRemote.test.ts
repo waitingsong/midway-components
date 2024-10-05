@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 
 import { fileShortPath } from '@waiting/shared-core'
 
-import { retrieveTraceparentFromHeader, retrieveTraceInfoFromRemote } from '##/index.js'
+import { retrieveTraceInfoFromRemote, retrieveTraceparentFromHeader } from '##/index.js'
 import { apiBase, apiMethod } from '#@/api-test.js'
 import { testConfig } from '#@/root.config.js'
 

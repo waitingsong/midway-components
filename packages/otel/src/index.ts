@@ -7,8 +7,8 @@ export * from './lib/index.js'
 export * from './middleware/index.middleware.js'
 export * from './util/common.js'
 export {
-  type Attributes,
   type AttributeValue,
+  type Attributes,
   type Context,
   type Context as TraceContext,
   type Span,

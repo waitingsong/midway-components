@@ -1,7 +1,7 @@
 import {
+  initTracerIgnoreArray,
   initialConfig,
   initialMiddlewareConfig,
-  initTracerIgnoreArray,
 } from '##/lib/config.js'
 import { SpanExporterList } from '##/lib/types.js'
 import type { Config, MiddlewareConfig } from '##/lib/types.js'

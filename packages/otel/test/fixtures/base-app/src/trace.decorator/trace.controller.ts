@@ -3,11 +3,11 @@ import {
   Get,
   Inject,
 } from '@midwayjs/core'
-import { MConfig, Context } from '@mwcp/share'
+import { Context, MConfig } from '@mwcp/share'
 
 import { apiBase, apiMethod } from '../types/api-test.js'
 import { Trace, TraceService } from '../types/index.js'
-import { TraceLogger, TraceAppLogger } from '../types/lib-index.js'
+import { TraceAppLogger, TraceLogger } from '../types/lib-index.js'
 import { Config, ConfigKey } from '../types/lib-types.js'
 
 import { DefaultComponentService } from './trace.service.js'

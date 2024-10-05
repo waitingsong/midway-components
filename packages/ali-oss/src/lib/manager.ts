@@ -9,7 +9,7 @@ import { TraceService } from '@mwcp/otel'
 
 import { AliOssComponent } from './component.js'
 import { AliOssSourceManager } from './source-manager.js'
-import { InstanceConfig, ConfigKey } from './types.js'
+import { ConfigKey, InstanceConfig } from './types.js'
 
 
 @Singleton()

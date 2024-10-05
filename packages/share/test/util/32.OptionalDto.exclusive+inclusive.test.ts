@@ -4,7 +4,7 @@ import { fileShortPath } from '@waiting/shared-core'
 
 import { testConfig } from '#@/root.config.js'
 
-import { UserDto7, UserDto8, Dto9 } from './user.dto.js'
+import { Dto9, UserDto7, UserDto8 } from './user.dto.js'
 
 
 describe(fileShortPath(import.meta.url), () => {

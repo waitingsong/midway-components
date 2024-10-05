@@ -3,10 +3,10 @@ import assert from 'node:assert'
 import { Init, Singleton } from '@midwayjs/core'
 import type { MethodTypeUnknown } from '@waiting/shared-types'
 
-import { decoratorExecutorAsync, decoratorExecutorSync, type CacheableArgs } from '../../helper.js'
+import { type CacheableArgs, decoratorExecutorAsync, decoratorExecutorSync } from '../../helper.js'
 import {
-  DecoratorHandlerBase,
   DecoratorExecutorParamBase,
+  DecoratorHandlerBase,
   customDecoratorFactory,
 } from '../../types/index.js'
 
@@ -30,7 +30,7 @@ export class DecoratorHandler extends DecoratorHandlerBase {
     assert(this.app.getApplicationContext())
     assert(this.app === options.webApp)
     assert(options.webContext)
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+
     const app = options.webContext.getApp() as unknown
     assert(app === this.app)
     return options

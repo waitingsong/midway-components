@@ -1,4 +1,4 @@
-import { Singleton, ApplicationContext, IMidwayContainer } from '@midwayjs/core'
+import { ApplicationContext, IMidwayContainer, Singleton } from '@midwayjs/core'
 
 import { type Context, getWebContext } from '../../types/index.js'
 

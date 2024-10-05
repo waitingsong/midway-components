@@ -1,5 +1,5 @@
 import { Inject, Singleton } from '@midwayjs/core'
-import { MConfig, DecoratorExecutorParamBase, DecoratorHandlerBase, genError } from '@mwcp/share'
+import { DecoratorExecutorParamBase, DecoratorHandlerBase, MConfig, genError } from '@mwcp/share'
 import { SpanStatusCode } from '@opentelemetry/api'
 
 import { OtelComponent } from '../component.js'
@@ -9,7 +9,7 @@ import { TraceService } from '../trace.service/index.trace.service.js'
 import { AttrNames, Config, ConfigKey } from '../types.js'
 import { isSpanEnded } from '../util.js'
 
-import { before, afterReturn } from './trace-init.helper.async.js'
+import { afterReturn, before } from './trace-init.helper.async.js'
 
 
 @Singleton()

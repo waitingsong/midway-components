@@ -1,17 +1,17 @@
 import {
   App,
   Autoload,
-  MidwayDecoratorService,
   Init,
   Inject,
+  MidwayDecoratorService,
   Singleton,
 } from '@midwayjs/core'
 import {
-  registerDecoratorHandlers,
   Application,
+  registerDecoratorHandlers,
 } from '@mwcp/share'
 
-import { METHOD_KEY_TraceInit, KEY_Trace } from './config.js'
+import { KEY_Trace, METHOD_KEY_TraceInit } from './config.js'
 
 
 /** Auto register trace decorator */

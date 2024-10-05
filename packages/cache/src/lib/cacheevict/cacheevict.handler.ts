@@ -1,4 +1,4 @@
-import { Singleton, Inject } from '@midwayjs/core'
+import { Inject, Singleton } from '@midwayjs/core'
 import { TraceService } from '@mwcp/otel'
 import type { DecoratorExecutorParamBase } from '@mwcp/share'
 

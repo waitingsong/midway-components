@@ -26,7 +26,7 @@ export class DecoratorHandlerBase {
    * @Caution It's necessary to run original method in `around` method manually,
    * the return value of original method is set to `options.methodResult`
    */
-  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+
   before?(options: DecoratorExecutorParamBase): void
   around?(options: DecoratorExecutorParamBase): unknown
   /**

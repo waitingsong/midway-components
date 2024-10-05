@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { fileShortPath } from '@waiting/shared-core'
 
 import { Msg } from '../../src/lib/types.js'
-import { cloudUrlPrefix, src, testConfig, TestRespBody } from '../root.config.js'
+import { TestRespBody, cloudUrlPrefix, src, testConfig } from '../root.config.js'
 
 
 describe(fileShortPath(import.meta.url), function () {

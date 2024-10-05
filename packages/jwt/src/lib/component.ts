@@ -17,19 +17,19 @@ import { JsonObject } from '@waiting/shared-types'
 import JWT from 'jsonwebtoken'
 import type {
   DecodeOptions,
-  SignOptions,
   Secret,
+  SignOptions,
 } from 'jsonwebtoken'
 
 import {
-  ConfigKey,
-  Msg,
   Config,
-  JwtToken,
-  VerifySecret,
+  ConfigKey,
   JwtPayload,
-  VerifyOpts,
   JwtResult,
+  JwtToken,
+  Msg,
+  VerifyOpts,
+  VerifySecret,
 } from './types.js'
 import {
   validatePayload,

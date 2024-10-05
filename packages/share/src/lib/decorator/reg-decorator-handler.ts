@@ -1,4 +1,4 @@
-/* eslint-disable no-await-in-loop */
+
 import assert from 'node:assert'
 import { isAsyncFunction } from 'node:util/types'
 
@@ -11,9 +11,9 @@ import { customDecoratorRegMap } from './custom-decorator-factory.js'
 import { mergeDecoratorMetaDataPayload, retrieveMetadataPayloadsOnClass } from './custom-decorator.helper.js'
 import type {
   AopCallbackInputArgsType,
+  DecoratorExecutorParamBase,
   DecoratorHandlerBase,
   DecoratorMetaDataPayload,
-  DecoratorExecutorParamBase,
   InstanceWithDecorator,
 } from './custom-decorator.types.js'
 import { genExecuteDecoratorHandlerAsync } from './executor.async.js'
@@ -131,9 +131,9 @@ function registerMethodHandlerCallback<TDecoratorParam extends object = object>(
   const target = aopCallbackInputOptions.target as InstanceWithDecorator
   const { propertyName } = aopCallbackInputOptions
   // const instanceName = target.name ?? target.constructor.name ?? 'anonymous'
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
   const instanceName = target.name
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   const method = target.prototype[propertyName] as MethodTypeUnknown
   assert(typeof method === 'function', 'method is not a function')
 

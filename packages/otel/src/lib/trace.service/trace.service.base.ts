@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import assert from 'node:assert'
 
 import {
-  type IMidwayContainer,
   type AsyncContextManager,
+  type IMidwayContainer,
   ASYNC_CONTEXT_KEY,
   ASYNC_CONTEXT_MANAGER_KEY,
 } from '@midwayjs/core'
@@ -17,7 +17,7 @@ import {
 import type { Context as TraceContext } from '@opentelemetry/api'
 
 import type { OtelComponent } from '../component.js'
-import type { TraceScopeType, Config } from '../types.js'
+import type { Config, TraceScopeType } from '../types.js'
 import { getSpan } from '../util.js'
 
 

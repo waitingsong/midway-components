@@ -1,4 +1,4 @@
-import { Singleton, Inject } from '@midwayjs/core'
+import { Inject, Singleton } from '@midwayjs/core'
 import { TraceService } from '@mwcp/otel'
 import { DecoratorExecutorParamBase } from '@mwcp/share'
 
@@ -6,7 +6,7 @@ import { DecoratorHandlerCacheBase } from '../decorator.handler.types.js'
 import { genDecoratorExecutorOptions } from '../helper.js'
 import { CacheableArgs, DecoratorExecutorOptions, GenDecoratorExecutorOptionsExt } from '../types.js'
 
-import { before, around } from './cacheable.helper.js'
+import { around, before } from './cacheable.helper.js'
 
 /**
  * Cacheable decorator handler

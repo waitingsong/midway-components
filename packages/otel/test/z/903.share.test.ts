@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 
-import { getNpmPkgViewFromRegistry, fileShortPath } from '@waiting/shared-core'
+import { fileShortPath, getNpmPkgViewFromRegistry } from '@waiting/shared-core'
 
 
 describe(fileShortPath(import.meta.url), function () {

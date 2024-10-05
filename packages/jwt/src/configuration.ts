@@ -2,11 +2,11 @@
 import assert from 'node:assert'
 
 import {
+  type ILifeCycle,
+  type ILogger,
   App,
   Configuration,
   Inject,
-  type ILifeCycle,
-  type ILogger,
   Logger,
   MidwayDecoratorService,
   MidwayEnvironmentService,

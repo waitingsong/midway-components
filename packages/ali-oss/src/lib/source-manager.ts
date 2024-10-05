@@ -2,8 +2,8 @@
 import assert from 'node:assert'
 
 import {
-  DataSourceManager,
   CreateDataSourceInstanceOptions as CreateInstanceOptions,
+  DataSourceManager,
   Init,
   Inject,
   Singleton,
@@ -11,7 +11,7 @@ import {
 import { MConfig } from '@mwcp/share'
 
 import { AliOssComponent } from './component.js'
-import { InstanceConfig, ConfigKey, Config } from './types.js'
+import { Config, ConfigKey, InstanceConfig } from './types.js'
 
 
 @Singleton()

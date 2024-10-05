@@ -1,6 +1,6 @@
 import type { CacheManagerOptions } from '@midwayjs/cache-manager'
 
-import type { CacheableArgs, CacheEvictArgs, MiddlewareConfig, MiddlewareOptions } from './types.js'
+import type { CacheEvictArgs, CacheableArgs, MiddlewareConfig, MiddlewareOptions } from './types.js'
 
 
 export const initCacheManagerOptions = {

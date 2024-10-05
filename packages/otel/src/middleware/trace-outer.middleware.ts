@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
+
 import { Middleware } from '@midwayjs/core'
 import { Context, IMiddleware, NextFunction } from '@mwcp/share'
 import { SpanKind, SpanStatus } from '@opentelemetry/api'
 
 import { TraceService } from '##/lib/index.js'
-import { ConfigKey, Config, middlewareEnableCacheKey } from '##/lib/types.js'
+import { Config, ConfigKey, middlewareEnableCacheKey } from '##/lib/types.js'
 import {
   addSpanEventWithOutgoingResponseData,
   parseResponseStatus,

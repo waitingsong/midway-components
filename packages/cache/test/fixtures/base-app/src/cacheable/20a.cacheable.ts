@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
+
 import assert from 'node:assert/strict'
 
 import { CachingFactory, MidwayCache, SingleCacheOptions } from '@midwayjs/cache-manager'

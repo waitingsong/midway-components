@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 import type { Context } from '@mwcp/share'
 
 import { schemePrefix } from './config.js'
-import type { JwtToken, JwtAuthenticateOptions } from './types.js'
+import type { JwtAuthenticateOptions, JwtToken } from './types.js'
 
 
 /**
@@ -81,9 +81,9 @@ export function resolveFromCookies(
     return ''
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+
   const token = cookies && typeof cookies.get === 'function'
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+
     ? cookies.get(cookieKey)
     : ''
   return token

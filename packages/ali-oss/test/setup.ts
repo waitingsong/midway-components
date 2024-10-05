@@ -4,7 +4,7 @@ import assert from 'node:assert/strict'
 import { rm } from 'node:fs/promises'
 import { join } from 'node:path'
 
-import { createApp, close, createHttpRequest } from '@midwayjs/mock'
+import { close, createApp, createHttpRequest } from '@midwayjs/mock'
 import type { Application } from '@mwcp/share'
 import type { Suite } from 'mocha'
 
@@ -12,7 +12,7 @@ import type { Suite } from 'mocha'
 import { AliOssManager } from '##/index.js'
 import { ClientKey } from '##/lib/types.js'
 
-import { testConfig, cloudUrlPrefix, testDir } from './root.config.js'
+import { cloudUrlPrefix, testConfig, testDir } from './root.config.js'
 import type { TestConfig } from './root.config.js'
 
 

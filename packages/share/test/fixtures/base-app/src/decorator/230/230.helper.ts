@@ -2,8 +2,8 @@ import assert from 'node:assert'
 
 import { Singleton } from '@midwayjs/core'
 
-import { decoratorExecutorAsync, decoratorExecutorSync, type CacheableArgs } from '../../helper.js'
-import { customDecoratorFactory, DecoratorExecutorParamBase, DecoratorHandlerBase } from '../../types/index.js'
+import { type CacheableArgs, decoratorExecutorAsync, decoratorExecutorSync } from '../../helper.js'
+import { DecoratorExecutorParamBase, DecoratorHandlerBase, customDecoratorFactory } from '../../types/index.js'
 
 
 export const METHOD_KEY_Multi1 = 'decorator:method_key_multi_1'

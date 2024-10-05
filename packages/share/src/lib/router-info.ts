@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { MidwayWebRouterService } from '@midwayjs/core'
 import type { RouterInfo } from '@midwayjs/core'
 

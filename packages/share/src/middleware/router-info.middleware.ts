@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 import { Middleware } from '@midwayjs/core'
 
 import {
-  Context,
   ConfigKey,
+  Context,
   IMiddleware,
   NextFunction,
   getRouterInfo,

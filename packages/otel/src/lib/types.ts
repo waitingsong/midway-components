@@ -1,25 +1,25 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import type { IncomingHttpHeaders } from 'node:http'
 
 import type { ILogger } from '@midwayjs/logger'
 import type { BaseConfig, Context, ScopeType } from '@mwcp/share'
 import type {
-  Attributes,
   AttributeValue,
+  Attributes,
   Context as TraceContext,
   SpanStatusCode,
   TimeInput,
 } from '@opentelemetry/api'
 import type { OTLPGRPCExporterConfigNode as OTLPGRPCExporterConfig } from '@opentelemetry/otlp-grpc-exporter-base'
 import type { node } from '@opentelemetry/sdk-node'
-import type { MiddlewareConfig as MWConfig, KnownKeys } from '@waiting/shared-types'
+import type { KnownKeys, MiddlewareConfig as MWConfig } from '@waiting/shared-types'
 
 import { AttrNames } from './attrnames.types.js'
 
 
 export type NodeTracerConfig = node.TracerConfig
 export {
-  type Attributes, AttrNames, type TraceContext,
+  type Attributes, type TraceContext, AttrNames,
 }
 
 
@@ -130,7 +130,7 @@ export enum PropagatorList {
 
 
 /** Options for middleware */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+
 export interface MiddlewareOptions {
 }
 export type MiddlewareConfig = MWConfig<MiddlewareOptions>

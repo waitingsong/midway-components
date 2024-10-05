@@ -9,8 +9,8 @@ export * from './middleware/index.middleware.js'
 export type {
   DecodeOptions,
   JwtHeader,
-  SignOptions,
   Secret,
+  SignOptions,
 } from 'jsonwebtoken'
 
 declare module '@midwayjs/core/dist/interface.js' {

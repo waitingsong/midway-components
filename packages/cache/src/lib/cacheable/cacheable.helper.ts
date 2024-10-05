@@ -13,7 +13,7 @@ import {
   saveData,
 } from '../helper.js'
 import type { GenCacheKeyOptions } from '../helper.js'
-import type { CachedResponse, CacheableArgs, DecoratorExecutorOptions } from '../types.js'
+import type { CacheableArgs, CachedResponse, DecoratorExecutorOptions } from '../types.js'
 
 
 export async function before(options: DecoratorExecutorOptions<CacheableArgs<undefined>>): Promise<void> {

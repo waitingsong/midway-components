@@ -1,5 +1,5 @@
 import { Singleton } from '@midwayjs/core'
-import { MConfig, DecoratorExecutorParamBase, genError } from '@mwcp/share'
+import { DecoratorExecutorParamBase, MConfig, genError } from '@mwcp/share'
 
 import { DecoratorHandlerTraceBase } from '../decorator-handler-trace-base.js'
 import { genDecoratorExecutorOptions } from '../trace.helper.js'
@@ -7,8 +7,8 @@ import type { DecoratorExecutorParam, GenDecoratorExecutorOptions } from '../tra
 import { TraceDecoratorOptions } from '../trace.service/index.trace.service.js'
 import { Config, ConfigKey } from '../types.js'
 
-import { beforeAsync, afterReturnAsync, afterThrowAsync as afterThrowAsync } from './trace-log.helper.async.js'
-import { beforeSync, afterReturnSync, afterThrowSync } from './trace-log.helper.sync.js'
+import { afterReturnAsync, afterThrowAsync as afterThrowAsync, beforeAsync } from './trace-log.helper.async.js'
+import { afterReturnSync, afterThrowSync, beforeSync } from './trace-log.helper.sync.js'
 
 
 @Singleton()

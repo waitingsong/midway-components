@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { fileShortPath } from '@waiting/shared-core'
 
 import type { MkdirOptions } from '../../src/index.js'
-import { cloudUrlPrefix, testConfig, TestRespBody } from '../root.config.js'
+import { TestRespBody, cloudUrlPrefix, testConfig } from '../root.config.js'
 
 
 describe(fileShortPath(import.meta.url), function () {

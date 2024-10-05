@@ -3,14 +3,14 @@ import assert from 'node:assert'
 
 import {
   type AsyncContextManager,
-  ApplicationContext,
   ASYNC_CONTEXT_KEY,
   ASYNC_CONTEXT_MANAGER_KEY,
   App,
-  MidwayDecoratorService,
+  ApplicationContext,
   Init,
   Inject,
   Logger,
+  MidwayDecoratorService,
   MidwayEnvironmentService,
   MidwayInformationService,
   Singleton,
@@ -28,11 +28,11 @@ import {
   Span,
   SpanKind,
   SpanOptions,
+  SpanStatus,
+  SpanStatusCode,
+  TimeInput,
   context,
   trace,
-  SpanStatusCode,
-  SpanStatus,
-  TimeInput,
 } from '@opentelemetry/api'
 import { node } from '@opentelemetry/sdk-node'
 import {
@@ -55,10 +55,10 @@ import {
   SpanStatusOptions,
   TraceScopeType,
 } from './types.js'
-import { normalizeHeaderKey, getSpan, setSpan, isSpanEnded } from './util.js'
+import { getSpan, isSpanEnded, normalizeHeaderKey, setSpan } from './util.js'
 
-// eslint-disable-next-line import/max-dependencies
-// eslint-disable-next-line import/max-dependencies
+
+
 import PKG from '#package.json' with { type: 'json' }
 
 
@@ -555,7 +555,7 @@ export class OtelComponent {
 
     let pkg: NpmPkg | undefined
     const informationService = await this.app.getApplicationContext().getAsync(MidwayInformationService)
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
     if (informationService) {
       pkg = informationService.getPkg() as NpmPkg
     }

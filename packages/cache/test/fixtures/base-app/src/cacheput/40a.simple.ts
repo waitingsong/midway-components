@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
+
 import assert from 'node:assert/strict'
 
 import { SingleCacheOptions } from '@midwayjs/cache-manager'
@@ -13,7 +13,7 @@ import { sleep } from '@waiting/shared-core'
 
 import { validateMeta } from '../base.helper.js'
 import { apiBase, apiMethod } from '../types/api-test.js'
-import { Cacheable, CachePut } from '../types/index.js'
+import { CachePut, Cacheable } from '../types/index.js'
 import { CachedResponse, Config, ConfigKey } from '../types/lib-types.js'
 
 

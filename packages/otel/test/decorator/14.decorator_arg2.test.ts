@@ -1,12 +1,13 @@
 import assert from 'node:assert/strict'
 
-import { SEMATTRS_HTTP_TARGET, SEMATTRS_HTTP_ROUTE } from '@opentelemetry/semantic-conventions'
+import { SEMATTRS_HTTP_ROUTE, SEMATTRS_HTTP_TARGET } from '@opentelemetry/semantic-conventions'
 import { fileShortPath } from '@waiting/shared-core'
 
 import {
-  assertsSpan, assertRootSpan,
-  retrieveTraceInfoFromRemote, sortSpans,
   assertJaegerParentSpanArray,
+  assertRootSpan,
+  assertsSpan,
+  retrieveTraceInfoFromRemote, sortSpans,
 } from '##/index.js'
 import type { AssertsOptions } from '##/index.js'
 import { apiBase, apiMethod } from '#@/api-test.js'

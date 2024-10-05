@@ -7,14 +7,14 @@ export * from './app/index.controller.js'
 export * from './lib/index.js'
 export {
   type BaseOptions,
-  OssClient,
-  type ProcessRet,
+  type Config as OssConfig,
   type DataBase,
   type DataCp,
   type DataSign,
   type DataStat,
-  type Config as OssConfig,
+  type ProcessRet,
   FnKey,
+  OssClient,
 } from '@yuntools/ali-oss'
 
 

@@ -23,7 +23,7 @@ export function beforeSync(options: DecoratorExecutorParam): void {
 
   const func = options.mergedDecoratorParam?.[type]
   assert(
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+
     ! func || ! isAsyncFunction(func),
     `[@mwcp/${ConfigKey.namespace}] Trace() ${type}() is a AsyncFunction, but decorated method is sync function, class: ${callerAttr[AttrNames.CallerClass]}, method: ${callerAttr[AttrNames.CallerMethod]}`,
   )

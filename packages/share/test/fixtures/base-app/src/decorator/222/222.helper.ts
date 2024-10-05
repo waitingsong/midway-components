@@ -3,8 +3,8 @@ import assert from 'node:assert'
 import { Provide } from '@midwayjs/core'
 import type { MethodTypeUnknown } from '@waiting/shared-types'
 
-import { decoratorExecutorAsync, decoratorExecutorSync, type CacheableArgs } from '../../helper.js'
-import { customDecoratorFactory, DecoratorExecutorParamBase, DecoratorHandlerBase } from '../../types/index.js'
+import { type CacheableArgs, decoratorExecutorAsync, decoratorExecutorSync } from '../../helper.js'
+import { DecoratorExecutorParamBase, DecoratorHandlerBase, customDecoratorFactory } from '../../types/index.js'
 
 
 export const METHOD_KEY_Cacheable_request = 'decorator:method_key_cacheable_request_test'
@@ -19,7 +19,7 @@ export class DecoratorHandlerRequest extends DecoratorHandlerBase {
     assert(this.app.getApplicationContext())
     assert(this.app === options.webApp)
     assert(options.webContext)
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+
     const app = options.webContext.getApp() as unknown
     assert(app === this.app)
     return options

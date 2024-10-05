@@ -1,4 +1,4 @@
-/* eslint-disable import/max-dependencies */
+
 import assert from 'node:assert'
 
 import { CachingFactory } from '@midwayjs/cache-manager'

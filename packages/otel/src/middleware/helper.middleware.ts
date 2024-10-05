@@ -1,6 +1,6 @@
-import type { NextFunction, Context as Context } from '@mwcp/share'
+import type { Context as Context, NextFunction } from '@mwcp/share'
 import type { Attributes } from '@opentelemetry/api'
-import { genISO8601String, genError } from '@waiting/shared-core'
+import { genError, genISO8601String } from '@waiting/shared-core'
 
 import type { TraceService } from '##/lib/index.js'
 import { AttrNames } from '##/lib/types.js'

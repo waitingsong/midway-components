@@ -1,9 +1,9 @@
 
 import {
-  initialConfig,
-  initialMiddlewareConfig,
   initMiddlewareOptions,
   initPathArray,
+  initialConfig,
+  initialMiddlewareConfig,
 } from '##/lib/config.js'
 import type { Config, MiddlewareConfig } from '##/lib/types.js'
 

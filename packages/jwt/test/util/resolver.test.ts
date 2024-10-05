@@ -4,9 +4,9 @@ import { relative } from 'node:path'
 import { fileShortPath } from '@waiting/shared-core'
 
 import {
-  schemePrefix,
   resolveFromAuthorizationHeader,
   resolveFromCookies,
+  schemePrefix,
 } from '##/index.js'
 import { token1 } from '#@/mock-data.js'
 

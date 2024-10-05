@@ -4,17 +4,17 @@
 import assert from 'node:assert'
 
 import {
-  Init,
   CONTROLLER_KEY,
+  Init,
   Singleton,
   WEB_ROUTER_KEY,
-  listModule,
   getClassMetadata,
+  listModule,
 } from '@midwayjs/core'
 import {
   ConfigKey as ShareConfigKey,
-  MConfig,
   DecoratorHandlerBase,
+  MConfig,
   MiddlewarePathPattern,
   instanceMethodHasMethodDecorator,
 } from '@mwcp/share'

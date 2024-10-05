@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
+
 import assert from 'node:assert/strict'
 
 import { SingleCacheOptions } from '@midwayjs/cache-manager'
@@ -12,7 +12,7 @@ import { Context, MConfig } from '@mwcp/share'
 
 import { validateMeta } from '../base.helper.js'
 import { apiBase, apiMethod } from '../types/api-test.js'
-import { Cacheable, CacheEvict } from '../types/index.js'
+import { CacheEvict, Cacheable } from '../types/index.js'
 import { CachedResponse, Config, ConfigKey, Msg } from '../types/lib-types.js'
 
 

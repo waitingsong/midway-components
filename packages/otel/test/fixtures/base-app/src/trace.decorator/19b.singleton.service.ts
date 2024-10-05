@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/await-thenable */
+
 import assert from 'node:assert'
 
 import { Inject, Singleton } from '@midwayjs/core'

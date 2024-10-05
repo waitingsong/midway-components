@@ -9,31 +9,31 @@ import type {
 import { getRouterInfo } from '@mwcp/share'
 import type { Context as WebContext } from '@mwcp/share'
 import {
-  SpanStatusCode,
   SpanKind,
-  propagation,
+  SpanStatusCode,
   createContextKey,
+  propagation,
 } from '@opentelemetry/api'
-import type { Attributes, Span, Context as TraceContext } from '@opentelemetry/api'
+import type { Attributes, Context as TraceContext, Span } from '@opentelemetry/api'
 import {
   NETTRANSPORTVALUES_IP_TCP,
   NETTRANSPORTVALUES_IP_UDP,
-  SEMATTRS_NET_TRANSPORT,
-  SEMATTRS_HTTP_FLAVOR,
   SEMATTRS_HTTP_CLIENT_IP,
-  SEMATTRS_HTTP_USER_AGENT,
+  SEMATTRS_HTTP_FLAVOR,
+  SEMATTRS_HTTP_HOST,
+  SEMATTRS_HTTP_METHOD,
   SEMATTRS_HTTP_REQUEST_CONTENT_LENGTH,
   SEMATTRS_HTTP_REQUEST_CONTENT_LENGTH_UNCOMPRESSED,
   SEMATTRS_HTTP_RESPONSE_CONTENT_LENGTH,
   SEMATTRS_HTTP_RESPONSE_CONTENT_LENGTH_UNCOMPRESSED,
-  SEMATTRS_HTTP_URL,
-  SEMATTRS_HTTP_HOST,
-  SEMATTRS_NET_HOST_NAME,
-  SEMATTRS_HTTP_METHOD,
-  SEMATTRS_HTTP_SCHEME,
-  SEMATTRS_HTTP_TARGET,
-  SEMATTRS_HTTP_SERVER_NAME,
   SEMATTRS_HTTP_ROUTE,
+  SEMATTRS_HTTP_SCHEME,
+  SEMATTRS_HTTP_SERVER_NAME,
+  SEMATTRS_HTTP_TARGET,
+  SEMATTRS_HTTP_URL,
+  SEMATTRS_HTTP_USER_AGENT,
+  SEMATTRS_NET_HOST_NAME,
+  SEMATTRS_NET_TRANSPORT,
 } from '@opentelemetry/semantic-conventions'
 import type { Headers as UndiciHeaders } from 'undici'
 
@@ -82,7 +82,7 @@ export function isSpanEnded(span: Span): boolean {
   // @ts-expect-error
   if (typeof span.ended === 'boolean') {
     // @ts-expect-error
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+
     return span.ended as boolean
   }
 

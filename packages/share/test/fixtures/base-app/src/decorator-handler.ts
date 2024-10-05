@@ -8,8 +8,8 @@ import {
   decoratorExecutorSync,
 } from './helper.js'
 import {
-  DecoratorHandlerBase,
   DecoratorExecutorParamBase,
+  DecoratorHandlerBase,
 } from './types/index.js'
 
 
@@ -27,7 +27,7 @@ export class DecoratorHandler extends DecoratorHandlerBase {
     assert(this.app.getApplicationContext())
     assert(this.app === options.webApp)
     assert(options.webContext)
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+
     const app = options.webContext.getApp() as unknown
     assert(app === this.app)
     return options

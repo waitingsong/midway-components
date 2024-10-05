@@ -1,13 +1,13 @@
-/* eslint-disable no-await-in-loop */
+
 import assert from 'node:assert'
 
 import { makeHttpRequest } from '@midwayjs/core'
 import type { AttributeValue } from '@opentelemetry/api'
 import {
-  SEMATTRS_NET_HOST_NAME,
   SEMATTRS_HTTP_METHOD,
   SEMATTRS_HTTP_SCHEME,
   SEMATTRS_HTTP_SERVER_NAME,
+  SEMATTRS_NET_HOST_NAME,
 } from '@opentelemetry/semantic-conventions'
 import { sleep } from '@waiting/shared-core'
 import type { Headers as UndiciHeaders } from 'undici'

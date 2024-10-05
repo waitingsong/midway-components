@@ -11,7 +11,7 @@ import { Context, MConfig } from '@mwcp/share'
 import { apiBase, apiMethod } from '../types/api-test.js'
 import { Trace, TraceService } from '../types/index.js'
 import { Config, ConfigKey } from '../types/lib-types.js'
-import { isSpanEnded, deleteSpan, getSpan } from '../types/util.js'
+import { deleteSpan, getSpan, isSpanEnded } from '../types/util.js'
 
 
 @Controller(apiBase.util)

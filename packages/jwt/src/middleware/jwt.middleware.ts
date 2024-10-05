@@ -12,10 +12,10 @@ import {
   ConfigKey,
   JwtAuthenticateOptions,
   JwtState,
-  Msg,
-  VerifySecret,
-  RedirectURL,
   MiddlewareConfig,
+  Msg,
+  RedirectURL,
+  VerifySecret,
 } from '##/lib/types.js'
 
 
@@ -84,8 +84,8 @@ export async function middleware(
     ctx['jwtState'].header = decoded.header
     ctx['jwtState'].signature = decoded.signature
     ctx['jwtState'].user = decoded.payload
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+
+
     ctx.state['user'] = decoded.payload
     if (typeof ctx.status === 'undefined') {
       ctx.status = 200
@@ -97,8 +97,8 @@ export async function middleware(
       // lets downstream middlewares handle JWT exceptions
       // lets downstream middlewares handle JWT exceptions
       ctx['jwtState'].jwtOriginalError = ex as Error
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+
+
       ctx.state['jwtOriginalError'] = ex as Error
       if (typeof ctx.status === 'undefined') {
         ctx.status = 200

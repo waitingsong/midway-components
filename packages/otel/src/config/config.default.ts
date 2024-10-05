@@ -1,8 +1,8 @@
 import {
-  initialConfig,
-  initialMiddlewareConfig,
   initOtlpGrpcExporterConfig,
   initTracerIgnoreArray,
+  initialConfig,
+  initialMiddlewareConfig,
 } from '##/lib/config.js'
 import type { Config, InitTraceOptions, MiddlewareConfig } from '##/lib/types.js'
 

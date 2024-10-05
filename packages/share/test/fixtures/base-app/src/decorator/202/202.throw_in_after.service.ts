@@ -1,6 +1,6 @@
 import { Singleton } from '@midwayjs/core'
 
-import { ThrowInAfter, InputOptions } from './202.throw_in_after.helper.js'
+import { InputOptions, ThrowInAfter } from './202.throw_in_after.helper.js'
 
 
 @Singleton()

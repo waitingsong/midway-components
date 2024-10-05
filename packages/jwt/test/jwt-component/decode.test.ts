@@ -11,7 +11,7 @@ import {
   signature1,
   token1,
 } from '#@/mock-data.js'
-import type { PayloadSig1, PayloadExt1 } from '#@/mock-data.js'
+import type { PayloadExt1, PayloadSig1 } from '#@/mock-data.js'
 import { testConfig } from '#@/root.config.js'
 
 

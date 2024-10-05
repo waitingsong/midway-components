@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
 /* eslint-disable @typescript-eslint/no-invalid-void-type */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { getClassExtendedMetadata, saveClassMetadata } from '@midwayjs/core'

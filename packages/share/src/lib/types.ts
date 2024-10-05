@@ -1,23 +1,24 @@
 import type {
+  IMiddleware,
   IMidwayApplication,
   IMidwayContainer,
-  IMiddleware,
   MidwayConfig,
   NextFunction,
 } from '@midwayjs/core'
-import type { Context as KoaCtx, Application } from '@midwayjs/koa'
+import type { Application, Context as KoaCtx } from '@midwayjs/koa'
 import type { MiddlewareConfig as MWConfig } from '@waiting/shared-types'
 
 
 export type {
-  JsonResp, JsonObject, JsonType, PlainJsonValue,
+  JsonObject,
+  JsonResp, JsonType, PlainJsonValue,
 } from '@waiting/shared-types'
 
 export type {
   Application,
+  IMiddleware,
   IMidwayApplication,
   IMidwayContainer,
-  IMiddleware,
   NextFunction,
 }
 

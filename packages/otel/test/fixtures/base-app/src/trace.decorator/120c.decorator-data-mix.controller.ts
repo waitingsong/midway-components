@@ -9,7 +9,7 @@ import {
 import { MConfig } from '@mwcp/share'
 
 import { apiBase, apiMethod } from '../types/api-test.js'
-import { Attributes, Trace, TraceService, DecoratorTraceData } from '../types/index.js'
+import { Attributes, DecoratorTraceData, Trace, TraceService } from '../types/index.js'
 import { Config, ConfigKey } from '../types/lib-types.js'
 import { testConfig } from '../types/root.config.js'
 

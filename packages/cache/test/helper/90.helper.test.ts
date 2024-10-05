@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { CachingFactory } from '@midwayjs/cache-manager'
 import { fileShortPath } from '@waiting/shared-core'
 
-import { hashCacheKey, saveData, getData, deleteData } from '##/lib/helper.js'
+import { deleteData, getData, hashCacheKey, saveData } from '##/lib/helper.js'
 import { testConfig } from '#@/root.config.js'
 
 

@@ -1,8 +1,8 @@
 import {
-  initialConfig,
-  initialMiddlewareConfig,
   initOtlpGrpcExporterConfig,
   initTracerIgnoreArray,
+  initialConfig,
+  initialMiddlewareConfig,
 } from '##/lib/config.js'
 // import { processCustomFailure } from '##/lib/tracer.js'
 import { PropagatorList, SpanExporterList } from '##/lib/types.js'

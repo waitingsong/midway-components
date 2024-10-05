@@ -5,7 +5,7 @@ import { fileShortPath } from '@waiting/shared-core'
 
 import type { SyncOptions } from '../../src/index.js'
 import { assertFileExists, assertUploadFiles } from '../helper.js'
-import { cloudUrlPrefix, files, src, srcDir, testConfig, TestRespBody } from '../root.config.js'
+import { TestRespBody, cloudUrlPrefix, files, src, srcDir, testConfig } from '../root.config.js'
 
 
 describe(fileShortPath(import.meta.url), function () {

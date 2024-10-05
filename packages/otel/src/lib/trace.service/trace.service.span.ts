@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import assert from 'node:assert'
 
 import type { Application, Context } from '@mwcp/share'
@@ -12,7 +12,7 @@ import type {
 import { context as contextFunc } from '@opentelemetry/api'
 
 import { initSpanStatusOptions } from '../config.js'
-import type { TraceScopeType, AddEventOptions, SpanStatusOptions } from '../types.js'
+import type { AddEventOptions, SpanStatusOptions, TraceScopeType } from '../types.js'
 import { getSpan } from '../util.js'
 
 import { TraceServiceBase } from './trace.service.base.js'
@@ -267,7 +267,7 @@ export class TraceServiceSpan extends TraceServiceBase {
 
   retrieveParentTraceInfoBySpan(span: Span, scope?: TraceScopeType): TraceInfo | undefined {
     // @ts-expect-error
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unsafe-assignment
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const pid = span.parentSpanId
     assert(pid, 'retrieveParentTraceInfoBySpan() parentSpanId should not be null')
     assert(typeof pid === 'string', 'retrieveParentTraceInfoBySpan() parentSpanId should be string')

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
 import assert from 'node:assert'
@@ -9,8 +9,8 @@ import type { JoinPoint } from '@midwayjs/core'
 import type { Context as WebContext } from '../types.js'
 
 import type {
-  DecoratorExecutorParamBase,
   ClzInstance,
+  DecoratorExecutorParamBase,
 } from './custom-decorator.types.js'
 
 
@@ -22,7 +22,7 @@ export function genExecutorOptionsCommon<TDecoratorParam extends object = object
 
   assert(baseOptions, 'baseOptions is required')
   assert(typeof baseOptions === 'object', 'baseOptions is not object')
-  // eslint-disable-next-line @typescript-eslint/unbound-method
+
   // assert(joinPoint.proceed, 'joinPoint.proceed is undefined')
   // assert(typeof joinPoint.proceed === 'function', 'joinPoint.proceed is not function')
 

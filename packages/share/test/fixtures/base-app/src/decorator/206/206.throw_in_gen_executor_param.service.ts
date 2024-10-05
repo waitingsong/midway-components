@@ -1,6 +1,6 @@
 import { Singleton } from '@midwayjs/core'
 
-import { ThrowInGenExecutorParam, InputOptions } from './206.throw_in_gen_executor_param.helper.js'
+import { InputOptions, ThrowInGenExecutorParam } from './206.throw_in_gen_executor_param.helper.js'
 
 
 @Singleton()

@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import { Cacheable, CacheEvict } from '../types/index.js'
+
+import { CacheEvict, Cacheable } from '../types/index.js'
 import { CachedResponse } from '../types/lib-types.js'
 
 

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
+
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/ban-types */
@@ -98,7 +98,7 @@ export function instanceMethodHasMethodDecorator(
 
     if (row.propertyName === methodName) {
       assert(row.metadata, 'row.metadata is undefined')
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
       if (row.metadata && typeof row.metadata === 'object') {
         if (typeof row.metadata.decoratedType === 'undefined' || row.metadata.decoratedType === 'method') {
           return true
@@ -130,7 +130,7 @@ export function instanceHasClassDecorator(
 
   for (const row of metaDataArr) {
     if (row.key !== decoratorKey) { continue }
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
     if (row.metadata && typeof row.metadata === 'object') {
       if (row.metadata.decoratedType === 'class') {
         return true

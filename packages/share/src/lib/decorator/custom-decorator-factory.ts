@@ -4,11 +4,11 @@ import assert from 'node:assert'
 
 import {
   INJECT_CUSTOM_METHOD,
+  Provide,
   attachClassMetadata,
   getClassMetadata,
   saveClassMetadata,
   saveModule,
-  Provide,
 } from '@midwayjs/core'
 import type { MethodTypeUnknown } from '@waiting/shared-types'
 
@@ -17,16 +17,16 @@ import {
   setImplToFalseIfDecoratedWithBothClassAndMethod,
 } from './custom-decorator.helper.js'
 import type {
-  DecoratorHandlerBase,
   ClassWithDecorator,
   CustomDecoratorFactoryOptions,
+  DecoratorHandlerBase,
   DecoratorMetaData,
   RegClassDecoratorOptions,
   RegMethodDecoratorOptions,
 } from './custom-decorator.types.js'
 
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export const customDecoratorRegMap = new Map<string, typeof DecoratorHandlerBase>()
 export const INJECT_CUSTOM_DecoratorHandlerClass = 'mwcp-share:inject_custom_decorator_handler_class'
 
@@ -45,7 +45,7 @@ export function customDecoratorFactory(options: CustomDecoratorFactoryOptions): 
   const DecoratorFactory = (
     target: ClassWithDecorator,
     propertyName: string,
-    descriptor?: TypedPropertyDescriptor<unknown> | undefined,
+    descriptor?: TypedPropertyDescriptor<unknown>,
   ) => { regCustomDecorator(target, propertyName, descriptor, options) }
 
   // @ts-expect-error
@@ -211,7 +211,7 @@ function regClassDecorator<TDecoratorParam extends object>(options: RegClassDeco
 
   decoratorAllClassMethodsOnPrototype(options)
   // @ts-ignore
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+
   setImplToFalseIfDecoratedWithBothClassAndMethod(target, decoratorKey, ignoreIfMethodDecoratorKeys)
   // const foo4 = getClassMetadata(INJECT_CUSTOM_METHOD, target)
   // void foo4
@@ -232,7 +232,7 @@ function decoratorAllClassMethodsOnPrototype<TDecoratorParam extends object>(opt
     const descriptor = Object.getOwnPropertyDescriptor(prot, propertyName)
     if (typeof descriptor?.value === 'function') {
       // if (! isAsyncFunction(descriptor.value)) { continue }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+
       // if (descriptor.value.constructor.name !== 'AsyncFunction') { continue }
 
       regMethodDecorator<TDecoratorParam>({

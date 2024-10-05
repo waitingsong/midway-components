@@ -174,7 +174,7 @@ export function getTraceScopeParamFromArgs(
 
   if (! args || ! Array.isArray(args)) { return }
   for (const arg of args) {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+
     if (! arg || typeof arg !== 'object') { continue }
 
     // @ts-ignore

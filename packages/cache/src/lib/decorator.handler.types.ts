@@ -1,6 +1,6 @@
 import { CachingFactory } from '@midwayjs/cache-manager'
 import { Inject } from '@midwayjs/core'
-import { MConfig, DecoratorHandlerBase, genError } from '@mwcp/share'
+import { DecoratorHandlerBase, MConfig, genError } from '@mwcp/share'
 
 import { Config, ConfigKey, DecoratorExecutorOptions } from './types.js'
 

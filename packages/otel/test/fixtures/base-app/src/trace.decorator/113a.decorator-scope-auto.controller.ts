@@ -9,7 +9,7 @@ import { MConfig } from '@mwcp/share'
 import { sleep } from '@waiting/shared-core'
 
 import { apiBase, apiMethod } from '../types/api-test.js'
-import { Trace, TraceService, getScopeStringCache, TraceScopeParamType } from '../types/index.js'
+import { Trace, TraceScopeParamType, TraceService, getScopeStringCache } from '../types/index.js'
 import { Config, ConfigKey } from '../types/lib-types.js'
 
 

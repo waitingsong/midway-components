@@ -33,8 +33,8 @@ import {
   MiddlewareConfig,
 } from './lib/types.js'
 import {
-  TraceMiddlewareInner,
   TraceMiddleware,
+  TraceMiddlewareInner,
 } from './middleware/index.middleware.js'
 
 

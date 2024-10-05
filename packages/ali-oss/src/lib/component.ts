@@ -2,12 +2,12 @@
 /* eslint-disable max-lines-per-function */
 import { AttrNames, SpanStatusCode } from '@mwcp/otel'
 import type { Attributes, TraceService } from '@mwcp/otel'
-import { genISO8601String, genError } from '@waiting/shared-core'
+import { genError, genISO8601String } from '@waiting/shared-core'
 import { FnKey, OssClient } from '@yuntools/ali-oss'
 import type {
-  CpOptions as AliCpOptions,
   BaseOptions,
   Config as OssConfig,
+  CpOptions as AliCpOptions,
   DataBase,
   DataCp,
   DataDownload,
@@ -26,8 +26,8 @@ import type {
   PathExistsOptions,
   QuerySpanInfo,
   RmOptions, RmrfOptions,
-  UploadOptions,
   SignOptions, StatOptions, SyncLocalOptions, SyncRemoteOptions,
+  UploadOptions,
 } from './types.js'
 
 
