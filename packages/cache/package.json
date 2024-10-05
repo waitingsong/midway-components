@@ -34,8 +34,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/cache-manager": "^3.16.5",
-    "@midwayjs/info": "^3.16.8",
+    "@midwayjs/cache-manager": "^3.18.1",
+    "@midwayjs/info": "^3.18.0",
     "@midwayjs/logger": "^3.4.2",
     "@mwcp/otel": "^38.2.1",
     "@mwcp/share": "^38.0.0",
