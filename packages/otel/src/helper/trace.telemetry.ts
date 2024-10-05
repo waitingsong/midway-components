@@ -3,7 +3,10 @@ import { CompositePropagator, W3CTraceContextPropagator } from '@opentelemetry/c
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-grpc'
 import { JaegerPropagator } from '@opentelemetry/propagator-jaeger'
 import { node, resources } from '@opentelemetry/sdk-node'
-import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions'
+import {
+  ATTR_SERVICE_NAME,
+  ATTR_SERVICE_VERSION,
+} from '@opentelemetry/semantic-conventions'
 
 import { PropagatorList, SpanExporterList } from '##/lib/types.js'
 import type { InitTraceOptions } from '##/lib/types.js'
@@ -21,8 +24,8 @@ export function initTrace(options: InitTraceOptions): InitTraceReturnType {
   const { otelConfig } = options
 
   const resource = new resources.Resource({
-    [SemanticResourceAttributes.SERVICE_NAME]: otelConfig.serviceName,
-    [SemanticResourceAttributes.SERVICE_VERSION]: otelConfig.serviceVersion,
+    [ATTR_SERVICE_NAME]: otelConfig.serviceName,
+    [ATTR_SERVICE_VERSION]: otelConfig.serviceVersion,
   })
   const resourceDefault = resources.Resource.default()
   const resourceFull = resourceDefault.merge(resource).merge(detectorResources)

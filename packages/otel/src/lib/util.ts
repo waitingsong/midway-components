@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-type-parameters */
 import assert from 'node:assert'
 import type {
   IncomingHttpHeaders,
@@ -15,26 +16,7 @@ import {
   propagation,
 } from '@opentelemetry/api'
 import type { Attributes, Context as TraceContext, Span } from '@opentelemetry/api'
-import {
-  NETTRANSPORTVALUES_IP_TCP,
-  NETTRANSPORTVALUES_IP_UDP,
-  SEMATTRS_HTTP_CLIENT_IP,
-  SEMATTRS_HTTP_FLAVOR,
-  SEMATTRS_HTTP_HOST,
-  SEMATTRS_HTTP_METHOD,
-  SEMATTRS_HTTP_REQUEST_CONTENT_LENGTH,
-  SEMATTRS_HTTP_REQUEST_CONTENT_LENGTH_UNCOMPRESSED,
-  SEMATTRS_HTTP_RESPONSE_CONTENT_LENGTH,
-  SEMATTRS_HTTP_RESPONSE_CONTENT_LENGTH_UNCOMPRESSED,
-  SEMATTRS_HTTP_ROUTE,
-  SEMATTRS_HTTP_SCHEME,
-  SEMATTRS_HTTP_SERVER_NAME,
-  SEMATTRS_HTTP_TARGET,
-  SEMATTRS_HTTP_URL,
-  SEMATTRS_HTTP_USER_AGENT,
-  SEMATTRS_NET_HOST_NAME,
-  SEMATTRS_NET_TRANSPORT,
-} from '@opentelemetry/semantic-conventions'
+import { ATTR_HTTP_ROUTE } from '@opentelemetry/semantic-conventions'
 import type { Headers as UndiciHeaders } from 'undici'
 
 import { AttrNames } from './types.js'
@@ -124,10 +106,10 @@ function setRequestContentLengthAttribute(
   if (length === null) { return }
 
   if (isCompressed(request.headers)) {
-    attributes[SEMATTRS_HTTP_REQUEST_CONTENT_LENGTH] = length
+    attributes['http.request_content_length'] = length
   }
   else {
-    attributes[SEMATTRS_HTTP_REQUEST_CONTENT_LENGTH_UNCOMPRESSED] = length
+    attributes['http.request_content_length_uncompressed'] = length
   }
 }
 
@@ -145,12 +127,10 @@ export function setResponseContentLengthAttribute(
   if (length === null) { return }
 
   if (isCompressed(response.headers)) {
-    attributes[SEMATTRS_HTTP_RESPONSE_CONTENT_LENGTH] = length
+    attributes['http.response_content_length'] = length
   }
   else {
-    attributes[
-      SEMATTRS_HTTP_RESPONSE_CONTENT_LENGTH_UNCOMPRESSED
-    ] = length
+    attributes['http.response_content_length_uncompressed'] = length
   }
 }
 
@@ -178,12 +158,12 @@ function isCompressed(headers: OutgoingHttpHeaders | IncomingHttpHeaders): boole
 function getAttributesFromHttpKind(kind?: string): Attributes {
   const attributes: Attributes = {}
   if (kind) {
-    attributes[SEMATTRS_HTTP_FLAVOR] = kind
+    attributes['http.flavor'] = kind
     if (kind.toUpperCase() === 'QUIC') {
-      attributes[SEMATTRS_NET_TRANSPORT] = NETTRANSPORTVALUES_IP_UDP
+      attributes['net.transport'] = 'ip_udp'
     }
     else {
-      attributes[SEMATTRS_NET_TRANSPORT] = NETTRANSPORTVALUES_IP_TCP
+      attributes['net.transport'] = 'ip_tcp'
     }
   }
   return attributes
@@ -201,14 +181,14 @@ export async function getIncomingRequestAttributesFromWebContext(
   const routerInfo = await getRouterInfo(ctx)
 
   const attrs: Attributes = {
-    [SEMATTRS_HTTP_HOST]: ctx.host,
-    [SEMATTRS_HTTP_METHOD]: ctx.method || 'GET',
-    [SEMATTRS_HTTP_ROUTE]: routerInfo?.fullUrl ?? 'unknown',
-    [SEMATTRS_HTTP_SCHEME]: ctx.protocol,
-    [SEMATTRS_HTTP_SERVER_NAME]: config.serviceName ?? 'unknown',
-    [SEMATTRS_HTTP_TARGET]: ctx.path || '/',
-    [SEMATTRS_HTTP_URL]: ctx.href,
-    [SEMATTRS_NET_HOST_NAME]: ctx.hostname,
+    ['http.host']: ctx.host,
+    ['http.method']: ctx.method || 'GET',
+    [ATTR_HTTP_ROUTE]: routerInfo?.fullUrl ?? 'unknown',
+    ['http.scheme']: ctx.protocol,
+    ['http.server_name']: config.serviceName ?? 'unknown',
+    ['http.target']: ctx.path || '/',
+    ['http.url']: ctx.href,
+    ['net.host.name']: ctx.hostname,
     [AttrNames.ServiceName]: config.serviceName ?? 'unknown',
     [AttrNames.ServiceVersion]: config.serviceVersion ?? 'unknown',
     // [AttrNames.ServicePid]: process.pid,
@@ -227,11 +207,11 @@ export async function getIncomingRequestAttributesFromWebContext(
     const ips = req.headers['x-forwarded-for']
 
     if (typeof ips === 'string') {
-      attrs[SEMATTRS_HTTP_CLIENT_IP] = ips.split(',')[0]
+      attrs['http.client_ip'] = ips.split(',')[0]
     }
 
     if (typeof userAgent !== 'undefined') {
-      attrs[SEMATTRS_HTTP_USER_AGENT] = userAgent
+      attrs['http.user_agent'] = userAgent
     }
 
     // Object.defineProperty(attrs, 'http.request.header.content_type', {

@@ -361,6 +361,7 @@ export function retrieveTraceparentFromHeader(headers: Headers | UndiciHeaders |
   assert(headers, 'headers is null')
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const traceparent: string = typeof headers.get === 'function'
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     ? headers.get('traceparent')
     // @ts-ignore
     : headers['traceparent']

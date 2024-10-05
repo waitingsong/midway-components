@@ -131,8 +131,7 @@ export enum PropagatorList {
 
 /** Options for middleware */
 
-export interface MiddlewareOptions {
-}
+export type MiddlewareOptions = object
 export type MiddlewareConfig = MWConfig<MiddlewareOptions>
 
 export enum HeadersKey {

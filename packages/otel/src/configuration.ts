@@ -95,7 +95,7 @@ export class AutoConfiguration implements ILifeCycle {
     void container
     if (this.config.enable) {
       registerMiddleware(this.app, TraceMiddleware, 'first')
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+
       void setTimeout(async () => {
         const mwNames = this.app.getMiddleware().getNames()
         this.otel.addAppInitEvent({

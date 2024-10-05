@@ -35,11 +35,7 @@ import {
   trace,
 } from '@opentelemetry/api'
 import { node } from '@opentelemetry/sdk-node'
-import {
-  SEMATTRS_EXCEPTION_MESSAGE,
-  SEMATTRS_EXCEPTION_STACKTRACE,
-  SEMATTRS_EXCEPTION_TYPE,
-} from '@opentelemetry/semantic-conventions'
+import { ATTR_EXCEPTION_MESSAGE, ATTR_EXCEPTION_STACKTRACE, ATTR_EXCEPTION_TYPE } from '@opentelemetry/semantic-conventions'
 import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
 import type { NpmPkg } from '@waiting/shared-types'
 
@@ -56,8 +52,6 @@ import {
   TraceScopeType,
 } from './types.js'
 import { getSpan, isSpanEnded, normalizeHeaderKey, setSpan } from './util.js'
-
-
 
 import PKG from '#package.json' with { type: 'json' }
 
@@ -272,10 +266,12 @@ export class OtelComponent {
 
     const { name, message, stack } = error
     const attrs: Attributes = {
-      [SEMATTRS_EXCEPTION_TYPE]: 'exception',
-      [SEMATTRS_EXCEPTION_MESSAGE]: message,
+      [ATTR_EXCEPTION_TYPE]: 'exception',
+      [ATTR_EXCEPTION_MESSAGE]: message,
     }
-    stack && (attrs[SEMATTRS_EXCEPTION_STACKTRACE] = stack)
+    if (stack) {
+      attrs[ATTR_EXCEPTION_STACKTRACE] = stack
+    }
     this.addEvent(span, attrs, {
       eventName: `${name} Cause`,
     }) // Error Cause
@@ -338,7 +334,7 @@ export class OtelComponent {
       if (error.cause instanceof Error || error[AttrNames.IsTraced]) {
         if (rootSpan && span !== rootSpan) {
           // error contains cause, then add events only
-          attrs[SEMATTRS_EXCEPTION_MESSAGE] = 'skipping'
+          attrs[ATTR_EXCEPTION_MESSAGE] = 'skipping'
           this.addEvent(span, attrs)
         }
       }
@@ -585,7 +581,7 @@ export class OtelComponent {
         }
       }
       /* c8 ignore next 4 */
-      catch (ex) {
+      catch {
         // this.logger.warn('Failed to load package.json: %s', otelPkgPath)
         this.logger.warn('Failed to load package.json')
       }
