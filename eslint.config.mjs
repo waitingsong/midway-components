@@ -19,11 +19,23 @@ const srcRules = {
     ],
   }],
   '@typescript-eslint/no-dynamic-delete': 0,
+  "@typescript-eslint/no-misused-promises": [
+    "error",
+    {
+      "checksVoidReturn": false
+    }
+  ],
 }
 const testRules = {
   '@typescript-eslint/no-explicit-any': 0,
   '@typescript-eslint/dot-notation': 0,
   '@typescript-eslint/no-unsafe-assignment': 0,
+  "@typescript-eslint/no-misused-promises": [
+    "error",
+    {
+      "checksVoidReturn": false
+    }
+  ],
 }
 
 const languageOptions = {
