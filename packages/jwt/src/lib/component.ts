@@ -7,12 +7,6 @@ import {
   ScopeEnum,
 } from '@midwayjs/core'
 import { MConfig } from '@mwcp/share'
-// import {
-//   decode,
-//   sign,
-//   verify,
-//   VerifyOptions,
-// } from 'jsonwebtoken'
 import { JsonObject } from '@waiting/shared-types'
 import JWT from 'jsonwebtoken'
 import type {
@@ -156,7 +150,7 @@ export class JwtComponent {
         ret.push(decoded)
         return true
       }
-      catch (ex) {
+      catch {
         const ss = typeof secret === 'string' ? secret : secret.toString()
         const start = ss.slice(0, 2)
         let end = ss
