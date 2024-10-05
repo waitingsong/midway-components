@@ -1,4 +1,5 @@
-import assert from 'node:assert/strict'
+/* eslint-disable no-await-in-loop */
+import assert from 'node:assert'
 import { mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
 
@@ -27,7 +28,7 @@ describe(fileShortPath(import.meta.url), function () {
       const ret = await ossClient.syncLocal(target, localDir, opts)
       CI || console.log(ret)
 
-      for await (const file of files) {
+      for (const file of files) {
         const d2 = join(localDir, file)
 
         if (file.endsWith('.txt')) {
@@ -55,7 +56,7 @@ describe(fileShortPath(import.meta.url), function () {
       const ret = await ossClient.syncLocal(target, localDir)
       CI || console.log(ret)
 
-      for await (const file of files) {
+      for (const file of files) {
         const d2 = join(localDir, file)
         await assertLocalFileExists(d2)
       }

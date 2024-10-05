@@ -1,4 +1,5 @@
-import assert from 'node:assert/strict'
+/* eslint-disable no-await-in-loop */
+import assert from 'node:assert'
 import { join } from 'node:path'
 
 import { fileShortPath } from '@waiting/shared-core'
@@ -23,7 +24,7 @@ describe(fileShortPath(import.meta.url), function () {
       assert(! ret.exitCode, `upload ${srcDir} ${target} failed, ${ret.stderr}`)
       assertUploadFiles(ret.data, 5, 1, 4, ret.stderr)
 
-      for await (const file of files) {
+      for (const file of files) {
         const d2 = join(target, file)
 
         if (file.endsWith('.txt')) {
@@ -49,7 +50,7 @@ describe(fileShortPath(import.meta.url), function () {
       assert(! ret.exitCode, `upload ${srcDir} ${target} failed, ${ret.stderr}`)
       assertUploadFiles(ret.data, 10, 1, 9, ret.stderr)
 
-      for await (const file of files) {
+      for (const file of files) {
         const d2 = join(target, file)
         await assertFileExists(ossClient, d2)
       }

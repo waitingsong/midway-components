@@ -6,7 +6,6 @@ import { MConfig } from '@mwcp/share'
 import type { Context } from '@mwcp/share'
 
 import { apiBase, apiMethod } from './types/api-test.js'
-import { Demo2Component, DemoComponent } from './types/lib-index.js'
 import { ConfigKey } from './types/lib-types.js'
 import type { Config, MiddlewareConfig } from './types/lib-types.js'
 import type { RespData } from './types/root.config.js'
