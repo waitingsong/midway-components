@@ -35,14 +35,14 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/info": "^3.16.8",
+    "@midwayjs/info": "^3.18.0",
     "@mwcp/share": "^38.0.0",
     "@waiting/shared-core": "^23.21.0",
     "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "@mwcp/otel": "^38.2.1",
-    "@types/jsonwebtoken": "^9.0.6"
+    "@types/jsonwebtoken": "^9.0.7"
   },
   "engines": {
     "node": ">=18.12.0",
