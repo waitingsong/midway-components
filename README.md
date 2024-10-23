@@ -72,22 +72,22 @@ npm run purge
 [Midway.js]: https://midwayjs.org/
 
 [`ali-oss`]: https://github.com/waitingsong/midway-components/tree/main/packages/ali-oss
-[ali-oss-svg]: https://img.shields.io/npm/v/@mwcp/ali-oss.svg?maxAge=7200
+[ali-oss-svg]: https://img.shields.io/npm/v/@mwcp/ali-oss.svg?maxAge=300
 [ali-oss-ch]: https://github.com/waitingsong/midway-components/tree/main/packages/ali-oss/CHANGELOG.md
 
 [`cache`]: https://github.com/waitingsong/midway-components/tree/main/packages/cache
-[cache-svg]: https://img.shields.io/npm/v/@mwcp/cache.svg?maxAge=7200
+[cache-svg]: https://img.shields.io/npm/v/@mwcp/cache.svg?maxAge=300
 [cache-ch]: https://github.com/waitingsong/midway-components/tree/main/packages/cache/CHANGELOG.md
 
 [`jwt`]: https://github.com/waitingsong/midway-components/tree/main/packages/jwt
-[jwt-svg]: https://img.shields.io/npm/v/@mwcp/jwt.svg?maxAge=7200
+[jwt-svg]: https://img.shields.io/npm/v/@mwcp/jwt.svg?maxAge=300
 [jwt-ch]: https://github.com/waitingsong/midway-components/tree/main/packages/jwt/CHANGELOG.md
 
 [`otel`]: https://github.com/waitingsong/midway-components/tree/main/packages/otel
-[otel-svg]: https://img.shields.io/npm/v/@mwcp/otel.svg?maxAge=7200
+[otel-svg]: https://img.shields.io/npm/v/@mwcp/otel.svg?maxAge=300
 [otel-ch]: https://github.com/waitingsong/midway-components/tree/main/packages/otel/CHANGELOG.md
 
 [`share`]: https://github.com/waitingsong/midway-components/tree/main/packages/share
-[share-svg]: https://img.shields.io/npm/v/@mwcp/share.svg?maxAge=7200
+[share-svg]: https://img.shields.io/npm/v/@mwcp/share.svg?maxAge=300
 [share-ch]: https://github.com/waitingsong/midway-components/tree/main/packages/share/CHANGELOG.md
 
