@@ -40,8 +40,8 @@
     "@opentelemetry/resource-detector-alibaba-cloud": "^0.29.3",
     "@opentelemetry/resource-detector-aws": "^1.6.2",
     "@opentelemetry/resource-detector-container": "^0.4.4",
-    "@opentelemetry/resource-detector-gcp": "^0.29.11",
-    "@opentelemetry/sdk-node": "^0.53.0",
+    "@opentelemetry/resource-detector-gcp": "^0.29.12",
+    "@opentelemetry/sdk-node": "^0.54.0",
     "@waiting/shared-core": "^23.22.0",
     "undici": "*"
   },
