@@ -146,10 +146,6 @@ export class TraceService extends TraceServiceSpan {
     this.endRootSpan(spanStatusOptions, endTime, webCtx)
 
     this.delActiveContext(webCtx)
-    if (webCtx !== this.app) {
-      // @ts-ignore
-      webCtx[`_${ConfigKey.serviceName}`] = null
-    }
   }
 
 

@@ -39,7 +39,8 @@ async function middleware(
 ): Promise<void> {
 
   const container = ctx.app.getApplicationContext()
-  const traceSvc = (ctx[`_${ConfigKey.serviceName}`] ?? await container.getAsync(TraceService)) as TraceService
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const traceSvc = container.get(TraceService) ?? await container.getAsync(TraceService)
   if (! traceSvc.config.enable) { return }
 
   const rootSpan = traceSvc.getRootSpan(ctx)
