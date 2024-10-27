@@ -23,6 +23,11 @@ export class TraceMiddleware implements IMiddleware<Context, NextFunction> {
   }
 
   match(ctx: Context) {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (! ctx.app) { // false when ctx is a grpc instance
+      // @ts-expect-error
+      ctx.app = ctx.getApp()
+    }
     const config = ctx.app.getConfig(ConfigKey.config) as Config
     if (! config.enable) {
       return false
