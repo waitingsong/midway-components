@@ -78,7 +78,12 @@ export async function middleware(
 
   const rootSpan = traceSvc.getRootSpan(ctx)
   if (rootSpan) {
-    addSpanEventWithOutgoingResponseData(rootSpan, ctx)
+    addSpanEventWithOutgoingResponseData({
+      body: ctx.body,
+      headers: ctx.response.headers,
+      span: rootSpan,
+      status: ctx.status,
+    })
   }
 }
 

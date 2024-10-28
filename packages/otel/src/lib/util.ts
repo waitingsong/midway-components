@@ -383,17 +383,22 @@ export function setSpanWithRequestHeaders(
   }
 }
 
+export interface AddSpanEventWithOutgoingResponseDataOptions {
+  /** return data */
+  body: unknown
+  headers?: Headers | OutgoingHttpHeaders | UndiciHeaders
+  span: Span
+  /** response status code */
+  status: number
+}
 /**
  * String of JSON.stringify limited to 2048 characters
  */
-export function addSpanEventWithOutgoingResponseData(
-  span: Span,
-  ctx: WebContext,
-): void {
+export function addSpanEventWithOutgoingResponseData(options: AddSpanEventWithOutgoingResponseDataOptions): void {
+  const { span, body, headers, status } = options
 
   const attrs: Attributes = {}
 
-  const { body } = ctx
   let value = ''
   if (typeof body === 'object') {
     value = truncateString(JSON.stringify(body, null, 2))
@@ -411,18 +416,19 @@ export function addSpanEventWithOutgoingResponseData(
 
   Object.defineProperty(attrs, AttrNames.Http_Response_Code, {
     ...defaultProperty,
-    value: ctx.status,
+    value: status,
   })
 
-  const { headers } = ctx.response
-  Object.defineProperty(attrs, 'http.response.header.content_length', {
-    ...defaultProperty,
-    value: headers['content-length'],
-  })
-  Object.defineProperty(attrs, 'http.response.header.content_type', {
-    ...defaultProperty,
-    value: headers['content-type'],
-  })
+  if (headers && typeof headers.get === 'function') {
+    Object.defineProperty(attrs, 'http.response.header.content_length', {
+      ...defaultProperty,
+      value: headers.get('content-length'),
+    })
+    Object.defineProperty(attrs, 'http.response.header.content_type', {
+      ...defaultProperty,
+      value: headers.get('content-type'),
+    })
+  }
 
   if (Object.keys(attrs).length) {
     span.addEvent(AttrNames.Outgoing_Response_data, attrs)
