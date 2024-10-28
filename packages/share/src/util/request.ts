@@ -27,6 +27,7 @@ export interface GrpcContext {
   writableEnded: boolean
   writableFinished: boolean
   writableLength: number
+  status?: number
 }
 
 /**
