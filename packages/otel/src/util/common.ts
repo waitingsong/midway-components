@@ -188,6 +188,10 @@ function sortSpansByStartTime(spans: JaegerTraceInfoSpan[]): JaegerTraceInfoSpan
 type ExpectAttributes = Record<string, AttributeValue | RegExp>
 
 export interface AssertsRootOptions {
+  /**
+   * @default 'http'
+   */
+  scheme?: 'http' | 'grpc'
   path: string
   span: JaegerTraceInfoSpan
   traceId: string
@@ -207,8 +211,11 @@ export interface AssertsRootOptions {
 
 export function assertRootSpan(options: AssertsRootOptions): void {
   const { path, span, tags } = options
+  const scheme = options.scheme ?? 'http'
   const operationName = options.operationName ?? `HTTP GET ${path}`
-  const httpMethod = operationName.includes('GET') ? 'GET' : 'POST'
+  const httpMethod = scheme === 'http'
+    ? operationName.includes('GET') ? 'GET' : 'POST'
+    : 'RPC'
   const expectLogs = options.logs ?? []
 
   const mergeDefaultTags = options.mergeDefaultTags ?? true
@@ -217,7 +224,7 @@ export function assertRootSpan(options: AssertsRootOptions): void {
   const tags2 = mergeDefaultTags
     ? Object.assign({
       [SEMATTRS_HTTP_METHOD]: httpMethod,
-      [SEMATTRS_HTTP_SCHEME]: 'http',
+      [SEMATTRS_HTTP_SCHEME]: scheme,
       [SEMATTRS_HTTP_SERVER_NAME]: 'base-app',
       [SEMATTRS_NET_HOST_NAME]: '127.0.0.1',
       [AttrNames.ServiceName]: 'base-app',
