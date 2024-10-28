@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [38.4.0](https://github.com/waitingsong/midway-components/compare/v38.3.0...v38.4.0) (2024-10-28)
+
+
+### Features
+
+* **share:** add property GrpcContext.status ([3085d78](https://github.com/waitingsong/midway-components/commit/3085d78386d161f2b6c5a32335d3a51aecc4a36f))
+
+
+
+
+
 # [38.3.0](https://github.com/waitingsong/midway-components/compare/v38.2.3...v38.3.0) (2024-10-28)
 
 
