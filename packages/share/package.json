@@ -35,6 +35,7 @@
     "@midwayjs/info": "^3.18.2",
     "@midwayjs/koa": "^3.18.2",
     "@midwayjs/logger": "^3.4.2",
+    "@midwayjs/grpc": "^3.4.2",
     "@midwayjs/swagger": "^3.18.2",
     "@midwayjs/validate": "^3.18.2",
     "@waiting/shared-core": "^23.22.0",
