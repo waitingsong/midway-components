@@ -21,10 +21,10 @@ import type { EndSpanOptions, StartScopeActiveSpanOptions } from './trace.servic
 
 export class TraceServiceSpan extends TraceServiceBase {
 
-  getTraceId(): string {
-    const webCtx = this.getWebContext()
-    if (webCtx) {
-      const rootSpan = this.getRootSpan(webCtx)
+  getTraceId(scope?: TraceScopeType): string {
+    const ctx = scope ?? this.getWebContext()
+    if (ctx) {
+      const rootSpan = this.getRootSpan(ctx)
       if (rootSpan) {
         return rootSpan.spanContext().traceId
       }
