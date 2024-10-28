@@ -66,7 +66,6 @@ export async function middleware(
   const container = ctx.app.getApplicationContext()
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const traceSvc = container.get(TraceService) ?? await container.getAsync(TraceService)
-  if (! traceSvc.config.enable) { return }
   await traceSvc.startOnRequest(ctx)
 
   ctx.res.once('finish', () => { finishCallback(ctx, traceSvc) })
