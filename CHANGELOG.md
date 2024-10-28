@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [38.3.0](https://github.com/waitingsong/midway-components/compare/v38.2.3...v38.3.0) (2024-10-28)
+
+
+### Features
+
+* **share:** util/request.ts ([e6ee04f](https://github.com/waitingsong/midway-components/commit/e6ee04f0b08a3524753d4b8663c5698282d32f07))
+
+
+
+
+
 ## [38.2.3](https://github.com/waitingsong/midway-components/compare/v38.2.2...v38.2.3) (2024-10-25)
 
 **Note:** Version bump only for package midway-components
