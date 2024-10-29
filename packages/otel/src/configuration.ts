@@ -87,20 +87,6 @@ export class AutoConfiguration implements ILifeCycle {
       this.app,
       'this.app undefined. If start for development, please set env first like `export MIDWAY_SERVER_ENV=local`',
     )
-
-    // const otel = await this.app.getApplicationContext().getAsync(OtelComponent, [ { name, version } ])
-    // assert(otel, 'otel must be set')
-
-    if (this.config.enable) {
-      registerMiddleware(this.app, TraceMiddlewareInner, 'last')
-
-      const grpcFramework = this.frameworkService.getFramework('gRPC')
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (grpcFramework) {
-        const rpcApp = grpcFramework.getApplication() as unknown as Application
-        registerMiddleware(rpcApp, TraceMiddlewareInnerGRpc, 'last')
-      }
-    }
   }
 
   @TraceInit({ namespace: ConfigKey.componentName })
@@ -108,12 +94,16 @@ export class AutoConfiguration implements ILifeCycle {
     void container
     if (this.config.enable) {
       registerMiddleware(this.app, TraceMiddleware, 'first')
+      registerMiddleware(this.app, TraceMiddlewareInner, 'last')
 
       const grpcFramework = this.frameworkService.getFramework('gRPC')
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (grpcFramework) {
-        const rpcApp = grpcFramework.getApplication() as unknown as Application
-        registerMiddleware(rpcApp, TraceMiddlewareGRpc, 'first')
+        const rpcApp = grpcFramework.getApplication() as unknown as Application | undefined
+        if (rpcApp) {
+          registerMiddleware(rpcApp, TraceMiddlewareGRpc, 'first')
+          registerMiddleware(rpcApp, TraceMiddlewareInnerGRpc, 'last')
+        }
       }
 
       void setTimeout(async () => {
