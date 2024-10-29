@@ -1,6 +1,5 @@
 import { Middleware } from '@midwayjs/core'
 import { type GrpcContext, Context, IMiddleware, NextFunction } from '@mwcp/share'
-import { humanMemoryUsage } from '@waiting/shared-core'
 
 import { TraceService } from '##/lib/index.js'
 import { AttrNames, ConfigKey, middlewareEnableCacheKey } from '##/lib/types.js'
@@ -50,7 +49,6 @@ async function middleware(
     })
     traceSvc.addEvent(rootSpan, {
       event: AttrNames.PreProcessFinish,
-      [AttrNames.ServiceMemoryUsage]: JSON.stringify(humanMemoryUsage(), null, 2),
     })
   }
 
