@@ -114,7 +114,7 @@ export class TraceServiceBase {
     const webContext = this.getWebContext()
     if (scope === webContext || scope === this.app) {
       const ctx2 = this.getRootTraceContext(scope as Application | Context)
-      assert(ctx2, 'getActiveContext() trace ctx should not be null with scope value= webContext or app')
+      // assert(ctx2, 'getActiveContext() trace ctx should not be null with scope value= webContext or app')
       return ctx2
     }
   }

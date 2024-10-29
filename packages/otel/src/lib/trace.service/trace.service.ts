@@ -72,12 +72,6 @@ export class TraceService extends TraceServiceSpan {
     if (webCtx.getAttr(middlewareEnableCacheKey) !== 'true') { return }
     if (this.isStartedMap.get(webCtx) === true) { return }
 
-    Object.defineProperty(webCtx, `_${ConfigKey.serviceName}`, {
-      enumerable: true,
-      writable: true,
-      value: this,
-    })
-
     await this.addRequestRouterInfo(webCtx)
 
     this.initRootSpan(webCtx)

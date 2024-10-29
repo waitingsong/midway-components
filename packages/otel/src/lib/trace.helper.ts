@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import assert from 'node:assert'
 
 import type { DecoratorExecutorParamBase } from '@mwcp/share'
@@ -15,7 +14,7 @@ import type {
   TraceDecoratorOptions,
 } from './trace.service/index.trace.service.js'
 import type { TraceServiceSpan } from './trace.service/trace.service.span.js'
-import { AttrNames, ConfigKey } from './types.js'
+import { AttrNames } from './types.js'
 
 
 const configNameList = [
@@ -148,12 +147,6 @@ export function genDecoratorExecutorOptions(
 
   const { traceService } = optionsExt
   assert(traceService, 'traceService is required')
-  if (optionsBase.webContext) {
-    const traceService2 = optionsBase.webContext[`_${ConfigKey.serviceName}`]
-    if (! traceService2) {
-      optionsBase.webContext[`_${ConfigKey.serviceName}`] = traceService
-    }
-  }
 
   const { mergedDecoratorParam } = optionsBase
   assert(mergedDecoratorParam, 'mergedDecoratorParam is undefined')
