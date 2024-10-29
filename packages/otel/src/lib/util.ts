@@ -319,9 +319,9 @@ export function addSpanEventWithIncomingRequestData(options: AddSpanEventWithInc
     })
   }
 
-  // if (Object.keys(attrs).length) {
-  span.addEvent(AttrNames.Incoming_Request_data, attrs)
-  // }
+  if (Object.keys(attrs).length) {
+    span.addEvent(AttrNames.Incoming_Request_data, attrs)
+  }
 }
 
 export function propagateOutgoingHeader(
