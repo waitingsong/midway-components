@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/ali-oss",
   "author": "waiting",
-  "version": "38.4.0",
+  "version": "39.0.0",
   "description": "Ali OSS Component for midway.js",
   "keywords": [
     "midway",
@@ -38,8 +38,8 @@
   "license": "MIT",
   "dependencies": {
     "@midwayjs/info": "^3.18.0",
-    "@mwcp/otel": "^38.4.0",
-    "@mwcp/share": "^38.4.0",
+    "@mwcp/otel": "^39.0.0",
+    "@mwcp/share": "^39.0.0",
     "@yuntools/ali-oss": "^16.1.5"
   },
   "engines": {

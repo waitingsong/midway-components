@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [39.0.0](https://github.com/waitingsong/midway-components/compare/v38.4.0...v39.0.0) (2024-10-29)
+
+
+### Features
+
+* **otel:** add property of parameter of AssertsRootOptions() ([9897828](https://github.com/waitingsong/midway-components/commit/9897828e022eb18157f56e510cabcb70f249ea9f))
+* **otel:** addSpanEventWithIncomingRequestData() always log AttrNames.Incoming_Request_data ([cd120b9](https://github.com/waitingsong/midway-components/commit/cd120b9b58172dd0938b0a8b55a2941181a15c46))
+* **otel:** supports RPC request by @midwayjs/grpc ([c4e1333](https://github.com/waitingsong/midway-components/commit/c4e1333d8fbdc55d103b84049ddf4328b1af831f))
+* **otel:** TraceServiceSpan.getTraceId() accepts optional param scope ([bb05a60](https://github.com/waitingsong/midway-components/commit/bb05a60065f4fcd8256e74c773a18b3e52fcb1b3))
+
+
+
+
+
 # [38.4.0](https://github.com/waitingsong/midway-components/compare/v38.3.0...v38.4.0) (2024-10-28)
 
 
