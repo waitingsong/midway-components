@@ -19,7 +19,7 @@ export class TraceMiddlewareInner implements IMiddleware<Context, NextFunction> 
   }
 
   match(ctx: Context) {
-    return !! ctx[middlewareEnableCacheKey]
+    return ctx.getAttr(middlewareEnableCacheKey) === 'true'
   }
 
   resolve() {
@@ -36,13 +36,11 @@ export class TraceMiddlewareInner implements IMiddleware<Context, NextFunction> 
 async function middleware(
   ctx: Context,
   next: NextFunction,
-): Promise<void> {
+): Promise<unknown> {
 
   const container = ctx.app.getApplicationContext()
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const traceSvc = container.get(TraceService) ?? await container.getAsync(TraceService)
-  if (! traceSvc.config.enable) { return }
-
   const rootSpan = traceSvc.getRootSpan(ctx)
   if (rootSpan) {
     addSpanEventWithIncomingRequestData(rootSpan, ctx)
@@ -52,7 +50,6 @@ async function middleware(
     })
   }
 
-  // const config = getComponentConfig(ctx.app)
   return handleAppExceptionAndNext(ctx, traceSvc, next)
 }
 

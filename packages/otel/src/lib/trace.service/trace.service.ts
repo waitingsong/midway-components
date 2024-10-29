@@ -68,7 +68,8 @@ export class TraceService extends TraceServiceSpan {
   }
 
   async startOnRequest(webCtx: Context): Promise<void> {
-    if (! webCtx[middlewareEnableCacheKey]) { return }
+    if (! this.config.enable) { return }
+    if (webCtx.getAttr(middlewareEnableCacheKey) !== 'true') { return }
     if (this.isStartedMap.get(webCtx) === true) { return }
 
     Object.defineProperty(webCtx, `_${ConfigKey.serviceName}`, {
@@ -76,7 +77,6 @@ export class TraceService extends TraceServiceSpan {
       writable: true,
       value: this,
     })
-    if (! this.config.enable) { return }
 
     await this.addRequestRouterInfo(webCtx)
 
