@@ -275,18 +275,21 @@ export function normalizeHeaderKey(inputKeys: string[]): NormalizedKeyMap {
 }
 
 
+interface AddSpanEventWithIncomingRequestDataOptions {
+  headers?: Headers | OutgoingHttpHeaders | UndiciHeaders
+  query?: object
+  /** request data */
+  requestBody: unknown
+  span: Span
+}
 /**
  * String of JSON.stringify limited to 2048 characters
  */
-export function addSpanEventWithIncomingRequestData(
-  span: Span,
-  ctx: WebContext,
-): void {
+export function addSpanEventWithIncomingRequestData(options: AddSpanEventWithIncomingRequestDataOptions): void {
+  const { span, requestBody: data, headers, query } = options
 
   const attrs: Attributes = {}
 
-  const { query } = ctx
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (query) {
     if (typeof query === 'object' && Object.keys(query).length) {
       const value = truncateString(JSON.stringify(query, null, 2))
@@ -297,7 +300,6 @@ export function addSpanEventWithIncomingRequestData(
     }
   }
 
-  const data = ctx.request.body
   if (data && Object.keys(data).length) {
     const value = truncateString(JSON.stringify(data, null, 2))
     Object.defineProperty(attrs, AttrNames.Http_Request_Body, {
@@ -306,15 +308,16 @@ export function addSpanEventWithIncomingRequestData(
     })
   }
 
-  const { headers } = ctx.request
-  Object.defineProperty(attrs, 'http.request.header.content_length', {
-    ...defaultProperty,
-    value: headers['content-length'],
-  })
-  Object.defineProperty(attrs, 'http.request.header.content_type', {
-    ...defaultProperty,
-    value: headers['content-type'],
-  })
+  if (headers && typeof headers.get === 'function') {
+    Object.defineProperty(attrs, 'http.request.header.content_length', {
+      ...defaultProperty,
+      value: headers.get('content-length'),
+    })
+    Object.defineProperty(attrs, 'http.request.header.content_type', {
+      ...defaultProperty,
+      value: headers.get('content-type'),
+    })
+  }
 
   if (Object.keys(attrs).length) {
     span.addEvent(AttrNames.Incoming_Request_data, attrs)
@@ -452,13 +455,20 @@ export interface GenRequestSpanNameOptions {
 
 /**
  * Generate span name from request
- * @description no leading slash
- * @example 'HTTP GET - api/v1/user'
+ * @example
+ * - 'HTTP GET /api/v1/user'
+ * - 'RPC /helloworld.Greeter/SayHello'
  */
 export function genRequestSpanName(options: GenRequestSpanNameOptions, maxLength = 128): string {
   const { protocol, method, route } = options
   assert(protocol, 'protocol is required')
   assert(method, 'method is required')
+
+  if (protocol === 'grpc') {
+    const spanName = `RPC ${route}`
+    return spanName.slice(0, maxLength)
+  }
   const spanName = `${protocol.toLocaleUpperCase()} ${method.toUpperCase()} ${route}`
   return spanName.slice(0, maxLength)
 }
+

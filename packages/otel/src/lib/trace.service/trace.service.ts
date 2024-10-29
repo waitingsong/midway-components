@@ -15,6 +15,7 @@ import {
   type DecoratorExecutorParamBase,
   Application,
   MConfig,
+  retrieveRequestProtocolFromCtx,
 } from '@mwcp/share'
 import {
   Attributes,
@@ -45,6 +46,7 @@ import {
 import {
   genRequestSpanName,
   getIncomingRequestAttributesFromWebContext,
+  getSpan,
   setSpanWithRequestHeaders,
 } from '../util.js'
 
@@ -67,27 +69,35 @@ export class TraceService extends TraceServiceSpan {
     await this.startOnInit(this.app)
   }
 
-  async startOnRequest(webCtx: Context): Promise<void> {
+  async startOnRequest(webCtx: Context): Promise<TraceContext | undefined> {
     if (! this.config.enable) { return }
     if (webCtx.getAttr(middlewareEnableCacheKey) !== 'true') { return }
-    if (this.isStartedMap.get(webCtx) === true) { return }
+    if (this.isStartedMap.get(webCtx) === true) {
+      return this.getActiveContext(webCtx)
+    }
 
     await this.addRequestRouterInfo(webCtx)
 
-    this.initRootSpan(webCtx)
+    const traceContext = this.initRootSpan(webCtx)
     this.isStartedMap.set(webCtx, true)
 
     const events: Attributes = {
       event: AttrNames.RequestBegin,
       time: this.startTime,
     }
-    const rootSpan = this.getRootSpan(webCtx)
+    const rootSpan = getSpan(traceContext)
+    // const rootSpan = this.getRootSpan(webCtx)
+    // assert(rootSpan === rootSpan, 'span should be equal to rootSpan')
     if (rootSpan) {
       this.addEvent(rootSpan, events)
       setSpanWithRequestHeaders(
         rootSpan,
         this.otel.captureHeadersMap.get('request'),
-        key => webCtx.get(key),
+        (key) => {
+          if (typeof webCtx.get === 'function') {
+            return webCtx.get(key)
+          }
+        },
       )
     }
 
@@ -101,6 +111,8 @@ export class TraceService extends TraceServiceSpan {
         this.setRootSpanWithError(err, void 0, webCtx)
         console.error(err)
       })
+
+    return traceContext
   }
 
 
@@ -160,8 +172,10 @@ export class TraceService extends TraceServiceSpan {
   }
 
 
-  protected initRootSpan(scope: Context): void {
+  protected initRootSpan(scope: Context): TraceContext {
     assert(scope, 'initRootSpan() webCtx should not be null, maybe this calling is not in a request context')
+
+    let ret: TraceContext | undefined = void 0
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const traceCtx = typeof scope.getApp === 'function' && scope.request?.headers
@@ -172,19 +186,21 @@ export class TraceService extends TraceServiceSpan {
       (span, ctx) => {
         assert(span, 'rootSpan should not be null on init')
         this.setRootContext(scope, ctx)
+        ret = ctx
       },
       { kind: SpanKind.SERVER },
       traceCtx,
       scope,
     )
+    assert(ret, 'initRootSpan() failed')
+    return ret
   }
 
   protected genRootSpanName(scope: Context): string {
     const routerInfo = this.getRequestRouterInfo(scope)
+    const protocol = retrieveRequestProtocolFromCtx(scope) || 'unknown'
     const opts = {
-      /** ctx.request?.protocol */
-      protocol: scope.request.protocol || '',
-      /** ctx.method */
+      protocol,
       method: scope.method,
       route: routerInfo?.fullUrl ?? scope.path,
     }

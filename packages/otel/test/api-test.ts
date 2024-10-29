@@ -14,6 +14,7 @@ export const apiBase = {
   trace_singleton: '/trace_singleton',
   trace_this: '/trace_this',
   define_scope: '/define_scope',
+  grpc: '/grpc',
 }
 
 export const apiMethod = {

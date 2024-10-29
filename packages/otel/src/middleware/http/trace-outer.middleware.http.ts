@@ -1,4 +1,3 @@
-
 import { Middleware } from '@midwayjs/core'
 import { Context, IMiddleware, NextFunction } from '@mwcp/share'
 import { SpanKind, SpanStatus } from '@opentelemetry/api'
@@ -11,7 +10,7 @@ import {
   propagateOutgoingHeader,
 } from '##/lib/util.js'
 
-import { handleTopExceptionAndNext } from './helper.middleware.js'
+import { handleTopExceptionAndNext } from './helper.middleware.http.js'
 
 
 @Middleware()
@@ -23,11 +22,6 @@ export class TraceMiddleware implements IMiddleware<Context, NextFunction> {
   }
 
   match(ctx: Context) {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (! ctx.app) { // false when ctx is a grpc instance
-      // @ts-expect-error
-      ctx.app = ctx.getApp()
-    }
     const config = ctx.app.getConfig(ConfigKey.config) as Config
     if (! config.enable) {
       return false
@@ -84,8 +78,7 @@ export async function middleware(
 }
 
 
-function finishCallback(ctx: Context, traceSvc: TraceService | undefined): void {
-  if (! traceSvc) { return }
+function finishCallback(ctx: Context, traceSvc: TraceService): void {
   const code = parseResponseStatus(SpanKind.CLIENT, ctx.status)
   const spanStatus: SpanStatus = { code }
   traceSvc.finish(ctx, spanStatus)

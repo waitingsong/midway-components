@@ -1,3 +1,4 @@
+import * as grpc from '@midwayjs/grpc'
 import * as info from '@midwayjs/info'
 import * as koa from '@midwayjs/koa'
 import * as swagger from '@midwayjs/swagger'
@@ -13,13 +14,10 @@ const CI = !! (process.env['MIDWAY_SERVER_ENV'] === 'unittest'
 
 export const useComponents: IComponentInfo[] = []
 if (CI) {
-  if (! useComponents.includes(koa)) {
-    useComponents.push(koa)
-    useComponents.push(info)
-  }
-  if (! useComponents.includes(swagger)) {
-    useComponents.push(swagger)
-  }
+  useComponents.push(koa)
+  useComponents.push(info)
+  useComponents.push(swagger)
+  useComponents.push(grpc)
 }
 
 useComponents.push(share)

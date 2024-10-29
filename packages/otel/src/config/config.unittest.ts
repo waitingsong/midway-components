@@ -1,3 +1,7 @@
+import { join } from 'node:path'
+
+import { retrieveDirname } from '@waiting/shared-core'
+
 import {
   initOtlpGrpcExporterConfig,
   initTracerIgnoreArray,
@@ -38,4 +42,20 @@ export const otlpGrpcExporterConfig: InitTraceOptions['otlpGrpcExporterConfig'] 
   ...initOtlpGrpcExporterConfig,
 }
 console.info({ otlpGrpcExporterConfig })
+
+
+const configDir = retrieveDirname(import.meta)
+export const APP_BASE_DIR = join(configDir, '../..')
+// 调试、单测时指向src目录，其余指向dist目录
+export const APP_DIST_DIR = join(configDir, '../')
+console.info({ APP_BASE_DIR, APP_DIST_DIR })
+
+export const grpcServer = {
+  services: [
+    {
+      protoPath: join(APP_BASE_DIR, 'test/grpc', 'helloworld.proto'),
+      package: 'helloworld',
+    },
+  ],
+}
 

@@ -3,6 +3,8 @@
 import type { MethodDecoratorOptions, REQUEST_OBJ_CTX_KEY } from '@midwayjs/core'
 import type { MethodTypeUnknown } from '@waiting/shared-types'
 
+import type { GrpcContext } from '##/util/request.js'
+
 import type { Application, Context } from '../types.js'
 
 
@@ -210,5 +212,5 @@ export interface AopCallbackInputArgsType<TDecoratorParam extends object = objec
 }
 
 
-export type ScopeType = Context | Application | symbol | object
+export type ScopeType = Context | Application | GrpcContext | symbol | object
 

@@ -14,10 +14,14 @@ export async function handleTopExceptionAndNext(
   ctx: Context,
   traceSvc: TraceService,
   next: NextFunction,
-): Promise<void> {
+): Promise<unknown> {
 
   try {
-    await next()
+    const res = await next() as unknown
+    if (typeof ctx.status === 'undefined' && res) { // for gRPC
+      ctx.status = 200
+    }
+    return res
   }
   catch (error) {
     const err = genError({ error })
@@ -39,6 +43,8 @@ export async function handleTopExceptionAndNext(
         ctx.body = err.message
       }
     }
+
+    return void 0
   }
 }
 

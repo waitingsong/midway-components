@@ -1,4 +1,4 @@
 
-export * from './trace-inner.middleware.js'
-export * from './trace-outer.middleware.js'
+export * from './grpc/index.middleware.grpc.js'
+export * from './http/index.middleware.http.js'
 

@@ -7,7 +7,7 @@ import { TraceService } from '##/lib/index.js'
 import { AttrNames, ConfigKey, middlewareEnableCacheKey } from '##/lib/types.js'
 import { addSpanEventWithIncomingRequestData } from '##/lib/util.js'
 
-import { handleAppExceptionAndNext } from './helper.middleware.js'
+import { handleAppExceptionAndNext } from './helper.middleware.http.js'
 
 
 @Middleware()
@@ -43,7 +43,12 @@ async function middleware(
   const traceSvc = container.get(TraceService) ?? await container.getAsync(TraceService)
   const rootSpan = traceSvc.getRootSpan(ctx)
   if (rootSpan) {
-    addSpanEventWithIncomingRequestData(rootSpan, ctx)
+    addSpanEventWithIncomingRequestData({
+      headers: ctx.headers,
+      query: ctx.query,
+      requestBody: ctx.request.body,
+      span: rootSpan,
+    })
     traceSvc.addEvent(rootSpan, {
       event: AttrNames.PreProcessFinish,
       [AttrNames.ServiceMemoryUsage]: JSON.stringify(humanMemoryUsage(), null, 2),

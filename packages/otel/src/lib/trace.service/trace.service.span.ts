@@ -1,7 +1,7 @@
 
 import assert from 'node:assert'
 
-import type { Application, Context } from '@mwcp/share'
+import type { Application, Context, GrpcContext } from '@mwcp/share'
 import type {
   Attributes,
   Context as TraceContext,
@@ -197,7 +197,7 @@ export class TraceServiceSpan extends TraceServiceBase {
   setRootSpanWithError(
     error: Error | undefined,
     eventName?: string,
-    scope?: Application | Context,
+    scope?: Application | Context | GrpcContext,
   ): void {
 
     if (! this.config.enable) { return }

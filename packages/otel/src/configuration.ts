@@ -7,9 +7,11 @@ import {
   Inject,
   Logger,
   MidwayEnvironmentService,
+  MidwayFrameworkService,
   MidwayInformationService,
   MidwayWebRouterService,
 } from '@midwayjs/core'
+import { Application as RpcApp } from '@midwayjs/grpc'
 import { ILogger } from '@midwayjs/logger'
 import {
   Application,
@@ -34,7 +36,9 @@ import {
 } from './lib/types.js'
 import {
   TraceMiddleware,
+  TraceMiddlewareGRpc,
   TraceMiddlewareInner,
+  TraceMiddlewareInnerGRpc,
 } from './middleware/index.middleware.js'
 
 
@@ -52,6 +56,7 @@ import {
 export class AutoConfiguration implements ILifeCycle {
 
   @App() readonly app: Application
+  @App('gRPC') readonly grpcApp: RpcApp | undefined
 
   @MConfig(ConfigKey.config) protected readonly config: Config
   @MConfig(ConfigKey.middlewareConfig) protected readonly mwConfig: MiddlewareConfig
@@ -59,6 +64,7 @@ export class AutoConfiguration implements ILifeCycle {
   @Inject() protected readonly environmentService: MidwayEnvironmentService
   @Inject() protected readonly informationService: MidwayInformationService
   @Inject() protected readonly webRouterService: MidwayWebRouterService
+  @Inject() protected readonly frameworkService: MidwayFrameworkService
 
   @Inject() Reg: AutoRegister
   @Inject() otel: OtelComponent
@@ -87,6 +93,13 @@ export class AutoConfiguration implements ILifeCycle {
 
     if (this.config.enable) {
       registerMiddleware(this.app, TraceMiddlewareInner, 'last')
+      // registerMiddleware(this.grpcApp as unknown as Application, TraceMiddlewareInnerGRpc, 'last')
+
+      const grpcFramework = this.frameworkService.getFramework('gRPC')
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (grpcFramework) {
+        registerMiddleware(grpcFramework.getApplication() as unknown as Application, TraceMiddlewareInnerGRpc, 'first')
+      }
     }
   }
 
@@ -95,6 +108,13 @@ export class AutoConfiguration implements ILifeCycle {
     void container
     if (this.config.enable) {
       registerMiddleware(this.app, TraceMiddleware, 'first')
+
+      const grpcFramework = this.frameworkService.getFramework('gRPC')
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (grpcFramework) {
+        const rpcApp = grpcFramework.getApplication() as unknown as Application
+        registerMiddleware(rpcApp, TraceMiddlewareGRpc, 'first')
+      }
 
       void setTimeout(async () => {
         const mwNames = this.app.getMiddleware().getNames()
