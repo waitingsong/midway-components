@@ -1,6 +1,6 @@
 import { join } from 'node:path'
 
-import { retrieveDirname } from '@waiting/shared-core'
+import { isFileExists, retrieveDirname } from '@waiting/shared-core'
 
 import {
   initOtlpGrpcExporterConfig,
@@ -50,12 +50,13 @@ export const APP_BASE_DIR = join(configDir, '../..')
 export const APP_DIST_DIR = join(configDir, '../')
 console.info({ APP_BASE_DIR, APP_DIST_DIR })
 
+
+const protoPath = join(APP_BASE_DIR, 'test/grpc', 'helloworld.proto')
 export const grpcServer = {
-  services: [
-    {
-      protoPath: join(APP_BASE_DIR, 'test/grpc', 'helloworld.proto'),
-      package: 'helloworld',
-    },
-  ],
+  services: [],
+}
+if (await isFileExists(protoPath)) {
+  // @ts-expect-error
+  grpcServer.services.push({ protoPath, package: 'helloworld' })
 }
 
