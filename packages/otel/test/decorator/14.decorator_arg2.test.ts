@@ -15,7 +15,7 @@ import { testConfig } from '#@/root.config.js'
 
 
 describe(fileShortPath(import.meta.url), function () {
-  this.retries(3)
+  this.retries(2)
 
   const path = `${apiBase.TraceDecorator}/${apiMethod.decorator_arg2}`
 
@@ -60,6 +60,7 @@ describe(fileShortPath(import.meta.url), function () {
         [SEMATTRS_HTTP_TARGET]: path,
         [SEMATTRS_HTTP_ROUTE]: path,
       },
+      mergeDefaultLogs: false,
     })
 
     const opt1: AssertsOptions = {

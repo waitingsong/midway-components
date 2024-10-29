@@ -4,6 +4,7 @@ import { SEMATTRS_HTTP_ROUTE, SEMATTRS_HTTP_TARGET } from '@opentelemetry/semant
 import { fileShortPath } from '@waiting/shared-core'
 
 import {
+  AttrNames,
   assertRootSpan,
   assertsSpan,
   retrieveTraceInfoFromRemote, sortSpans,
@@ -14,7 +15,7 @@ import { testConfig } from '#@/root.config.js'
 
 
 describe(fileShortPath(import.meta.url), function () {
-  this.retries(3)
+  this.retries(2)
 
   const path = `${apiBase.TraceDecorator}/${apiMethod.id}`
 
@@ -50,6 +51,14 @@ describe(fileShortPath(import.meta.url), function () {
         [SEMATTRS_HTTP_TARGET]: path,
         [SEMATTRS_HTTP_ROUTE]: path,
       },
+      mergeDefaultLogs: false,
+      logs: [
+        { event: AttrNames.RequestBegin },
+        { event: AttrNames.PreProcessFinish },
+        { event: AttrNames.PostProcessBegin },
+        { event: AttrNames.Outgoing_Response_data, [AttrNames.Http_Response_Code]: 200 },
+        { event: AttrNames.RequestEnd },
+      ],
     })
 
     const opt1: AssertsOptions = {

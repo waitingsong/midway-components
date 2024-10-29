@@ -1,4 +1,4 @@
-// import * as grpc from '@midwayjs/grpc'
+import * as grpc from '@midwayjs/grpc'
 import * as info from '@midwayjs/info'
 import * as koa from '@midwayjs/koa'
 import * as swagger from '@midwayjs/swagger'
@@ -17,7 +17,7 @@ if (CI) {
   useComponents.push(koa)
   useComponents.push(info)
   useComponents.push(swagger)
-  // useComponents.push(grpc)
+  useComponents.push(grpc)
 }
 
 useComponents.push(share)

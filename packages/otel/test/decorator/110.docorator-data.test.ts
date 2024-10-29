@@ -62,7 +62,7 @@ describe(fileShortPath(import.meta.url), function () {
       },
       logs: [
         {},
-        {},
+        false,
         {},
         { event: 'default', rootAttrs: 'rootAttrs' },
         false,
@@ -139,7 +139,7 @@ describe(fileShortPath(import.meta.url), function () {
       },
       logs: [
         {},
-        {},
+        false,
         {},
         { event: 'default', rootAttrs: 'rootAttrs' },
         false,

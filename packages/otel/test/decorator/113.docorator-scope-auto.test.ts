@@ -62,6 +62,14 @@ describe(fileShortPath(import.meta.url), function () {
         [SEMATTRS_HTTP_TARGET]: `${path}`,
         [SEMATTRS_HTTP_ROUTE]: `${path}`,
       },
+      logs: [
+        {},
+        false,
+        {},
+        {},
+        {},
+        {},
+      ],
     })
 
     const opt1: AssertsOptions = {
