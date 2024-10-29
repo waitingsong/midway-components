@@ -1,3 +1,5 @@
+import assert from 'node:assert'
+
 import {
   Controller,
   Get,
@@ -59,6 +61,7 @@ export class DefaultComponentController {
   @Get(`/${apiMethod.log}`)
   async log(): Promise<string> {
     const traceId = this.traceSvc.getTraceId()
+    assert(traceId, 'traceId should not be empty')
     this.logger.log({
       msg: traceId,
     })
