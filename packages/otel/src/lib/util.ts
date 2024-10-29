@@ -275,55 +275,6 @@ export function normalizeHeaderKey(inputKeys: string[]): NormalizedKeyMap {
 }
 
 
-interface AddSpanEventWithIncomingRequestDataOptions {
-  headers?: Headers | OutgoingHttpHeaders | UndiciHeaders
-  query?: object
-  /** request data */
-  requestBody: unknown
-  span: Span
-}
-/**
- * String of JSON.stringify limited to 2048 characters
- */
-export function addSpanEventWithIncomingRequestData(options: AddSpanEventWithIncomingRequestDataOptions): void {
-  const { span, requestBody: data, headers, query } = options
-
-  const attrs: Attributes = {}
-
-  if (query) {
-    if (typeof query === 'object' && Object.keys(query).length) {
-      const value = truncateString(JSON.stringify(query, null, 2))
-      Object.defineProperty(attrs, AttrNames.Http_Request_Query, {
-        ...defaultProperty,
-        value,
-      })
-    }
-  }
-
-  if (data && Object.keys(data).length) {
-    const value = truncateString(JSON.stringify(data, null, 2))
-    Object.defineProperty(attrs, AttrNames.Http_Request_Body, {
-      ...defaultProperty,
-      value,
-    })
-  }
-
-  if (headers && typeof headers.get === 'function') {
-    Object.defineProperty(attrs, 'http.request.header.content_length', {
-      ...defaultProperty,
-      value: headers.get('content-length'),
-    })
-    Object.defineProperty(attrs, 'http.request.header.content_type', {
-      ...defaultProperty,
-      value: headers.get('content-type'),
-    })
-  }
-
-  if (Object.keys(attrs).length) {
-    span.addEvent(AttrNames.Incoming_Request_data, attrs)
-  }
-}
-
 export function propagateOutgoingHeader(
   traceContext: TraceContext,
   message: OutgoingMessage,
@@ -383,6 +334,55 @@ export function setSpanWithRequestHeaders(
   const attrs = genAttributesFromHeader('request', keyMap, getHeader)
   if (attrs) {
     span.setAttributes(attrs)
+  }
+}
+
+interface AddSpanEventWithIncomingRequestDataOptions {
+  headers?: Headers | OutgoingHttpHeaders | UndiciHeaders
+  query?: object
+  /** request data */
+  requestBody: unknown
+  span: Span
+}
+/**
+ * String of JSON.stringify limited to 2048 characters
+ */
+export function addSpanEventWithIncomingRequestData(options: AddSpanEventWithIncomingRequestDataOptions): void {
+  const { span, requestBody: data, headers, query } = options
+
+  const attrs: Attributes = {}
+
+  if (query) {
+    if (typeof query === 'object' && Object.keys(query).length) {
+      const value = truncateString(JSON.stringify(query, null, 2))
+      Object.defineProperty(attrs, AttrNames.Http_Request_Query, {
+        ...defaultProperty,
+        value,
+      })
+    }
+  }
+
+  if (data && Object.keys(data).length) {
+    const value = truncateString(JSON.stringify(data, null, 2))
+    Object.defineProperty(attrs, AttrNames.Http_Request_Body, {
+      ...defaultProperty,
+      value,
+    })
+  }
+
+  if (headers && typeof headers.get === 'function') {
+    Object.defineProperty(attrs, 'http.request.header.content_length', {
+      ...defaultProperty,
+      value: headers.get('content-length'),
+    })
+    Object.defineProperty(attrs, 'http.request.header.content_type', {
+      ...defaultProperty,
+      value: headers.get('content-type'),
+    })
+  }
+
+  if (Object.keys(attrs).length) {
+    span.addEvent(AttrNames.Incoming_Request_data, attrs)
   }
 }
 
