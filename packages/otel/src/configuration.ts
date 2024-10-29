@@ -87,6 +87,16 @@ export class AutoConfiguration implements ILifeCycle {
       this.app,
       'this.app undefined. If start for development, please set env first like `export MIDWAY_SERVER_ENV=local`',
     )
+    registerMiddleware(this.app, TraceMiddlewareInner, 'last')
+
+    const grpcFramework = this.frameworkService.getFramework('gRPC')
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (grpcFramework) {
+      const rpcApp = grpcFramework.getApplication() as unknown as Application | undefined
+      if (rpcApp) {
+        registerMiddleware(rpcApp, TraceMiddlewareInnerGRpc, 'last')
+      }
+    }
   }
 
   @TraceInit({ namespace: ConfigKey.componentName })
@@ -94,7 +104,6 @@ export class AutoConfiguration implements ILifeCycle {
     void container
     if (this.config.enable) {
       registerMiddleware(this.app, TraceMiddleware, 'first')
-      registerMiddleware(this.app, TraceMiddlewareInner, 'last')
 
       const grpcFramework = this.frameworkService.getFramework('gRPC')
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -102,7 +111,6 @@ export class AutoConfiguration implements ILifeCycle {
         const rpcApp = grpcFramework.getApplication() as unknown as Application | undefined
         if (rpcApp) {
           registerMiddleware(rpcApp, TraceMiddlewareGRpc, 'first')
-          registerMiddleware(rpcApp, TraceMiddlewareInnerGRpc, 'last')
         }
       }
 
