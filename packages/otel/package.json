@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/otel",
   "author": "waiting",
-  "version": "39.0.1",
+  "version": "39.0.2",
   "description": "midway component for open telemetry",
   "keywords": [
     "midway",

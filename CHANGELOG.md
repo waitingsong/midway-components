@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [39.0.2](https://github.com/waitingsong/midway-components/compare/v39.0.1...v39.0.2) (2024-10-29)
+
+
+### Bug Fixes
+
+* **otel:** fix src/configuration.ts using middleware ([e965166](https://github.com/waitingsong/midway-components/commit/e9651663c7c0e5c9a2e365c36164a9328ce3dccf))
+* **otel:** order of using TraceMiddlewareInnerGRpc ([3e56a14](https://github.com/waitingsong/midway-components/commit/3e56a14a3f515ff8d4201c186d0042ea53af7d30))
+
+
+
+
+
 ## [39.0.1](https://github.com/waitingsong/midway-components/compare/v39.0.0...v39.0.1) (2024-10-29)
 
 **Note:** Version bump only for package midway-components
