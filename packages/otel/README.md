@@ -15,7 +15,12 @@ Open Telemetry Component for Midway.js
 
 ## Note
 
-ESM build only, requires `@midwayjs >= 3.15` and set `"type": "module"` in `packages.json`
+ESM build only, requires `@midwayjs >= 3.16` and set `"type": "module"` in `packages.json`
+
+## Support Schemes
+
+- HTTP
+- [gRPC]
 
 ## Install
 
@@ -298,4 +303,6 @@ export class FooService {
 [Exporter]: https://opentelemetry.io/docs/instrumentation/js/exporters/
 [Exporter Configuration]: https://opentelemetry.io/docs/reference/specification/protocol/exporter/#configuration-options
 [Jaeger]: https://www.jaegertracing.io/
+
+[gRPC]: https://github.com/midwayjs/midway/tree/main/packages/grpc
 
