@@ -93,12 +93,12 @@ export class AutoConfiguration implements ILifeCycle {
 
     if (this.config.enable) {
       registerMiddleware(this.app, TraceMiddlewareInner, 'last')
-      // registerMiddleware(this.grpcApp as unknown as Application, TraceMiddlewareInnerGRpc, 'last')
 
       const grpcFramework = this.frameworkService.getFramework('gRPC')
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (grpcFramework) {
-        registerMiddleware(grpcFramework.getApplication() as unknown as Application, TraceMiddlewareInnerGRpc, 'first')
+        const rpcApp = grpcFramework.getApplication() as unknown as Application
+        registerMiddleware(rpcApp, TraceMiddlewareInnerGRpc, 'last')
       }
     }
   }
