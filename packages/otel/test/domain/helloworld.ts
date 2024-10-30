@@ -11,7 +11,8 @@ export namespace helloworld {
   export interface Greeter {
     // Sends a greeting
     sayHello(data: HelloRequest): Promise<HelloReply>
-    sayHello2(data: HelloRequest): Promise<HelloReply>
+    sayError(data: HelloRequest): Promise<HelloReply>
+    sayHello3(data: HelloRequest): Promise<HelloReply>
   }
   /**
    * Greeter client interface
@@ -19,7 +20,8 @@ export namespace helloworld {
   export interface GreeterClient {
     // Sends a greeting
     sayHello(options?: grpc.IClientOptions): grpc.IClientUnaryService<HelloRequest, HelloReply>
-    sayHello2(options?: grpc.IClientOptions): grpc.IClientUnaryService<HelloRequest, HelloReply>
+    sayError(options?: grpc.IClientOptions): grpc.IClientUnaryService<HelloRequest, HelloReply>
+    sayHello3(options?: grpc.IClientOptions): grpc.IClientUnaryService<HelloRequest, HelloReply>
   }
   export interface HelloRequest {
     id?: number

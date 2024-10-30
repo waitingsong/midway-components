@@ -5,7 +5,8 @@ package helloworld;
 service Greeter {
   // Sends a greeting
   rpc SayHello (HelloRequest) returns (HelloReply) {}
-  rpc SayHello2 (HelloRequest) returns (HelloReply) {}
+  rpc SayError (HelloRequest) returns (HelloReply) {}
+  rpc SayHello3 (HelloRequest) returns (HelloReply) {}
 }
 
 message HelloRequest {

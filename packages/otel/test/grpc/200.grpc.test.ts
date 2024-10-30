@@ -12,6 +12,7 @@ import { testConfig } from '#@/root.config.js'
 describe(fileShortPath(import.meta.url), () => {
   describe('should create grpc service in one server', () => {
     const id = 1
+    const id2 = 2
     const name = 'harry'
 
     const options = {
@@ -48,7 +49,6 @@ describe(fileShortPath(import.meta.url), () => {
 
     it('parallel request with same client', async () => {
       const service = await createGRPCConsumer<helloworld.GreeterClient>(options)
-      const id2 = 2
       const pms1 = service.sayHello().sendMessage({ id, name })
       const pms2 = service.sayHello().sendMessage({ id: id2, name })
 
@@ -68,7 +68,6 @@ describe(fileShortPath(import.meta.url), () => {
       const service = await createGRPCConsumer<helloworld.GreeterClient>(options)
       const service2 = await createGRPCConsumer<helloworld.GreeterClient>(options)
 
-      const id2 = 2
       const pms1 = service.sayHello().sendMessage({ id, name })
       const pms2 = service2.sayHello().sendMessage({ id: id2, name })
 
@@ -87,7 +86,7 @@ describe(fileShortPath(import.meta.url), () => {
     it('error', async () => {
       const service = await createGRPCConsumer<helloworld.GreeterClient>(options)
       try {
-        await service.sayHello2().sendMessage({ id, name })
+        await service.sayError().sendMessage({ id, name })
       }
       catch (ex) {
         assert(ex instanceof Error)
@@ -95,6 +94,17 @@ describe(fileShortPath(import.meta.url), () => {
         return
       }
       assert(false, 'should throw Error')
+    })
+
+    it('request grpc server', async () => {
+      const service = await createGRPCConsumer<helloworld.GreeterClient>(options)
+      const res = await service.sayHello3().sendMessage({ id: id2, name })
+
+      console.info({ res })
+      assert(res.id === id2)
+      assert(res.message === `Hello ${name}`)
+
+      await assert3(res.traceId)
     })
 
   })
@@ -130,6 +140,52 @@ async function assertAll(traceId?: string): Promise<void> {
     },
     mergeDefaultTags: false,
     mergeDefaultLogs: false,
+  })
+
+}
+
+
+async function assert3(traceId?: string): Promise<void> {
+  assert(traceId && traceId.length === 32, `traceId: ${traceId}`)
+
+  const [info] = await retrieveTraceInfoFromRemote(traceId, 3)
+  assert(info)
+  const [rootSpan, span1, span2] = sortSpans(info.spans)
+  assert(rootSpan)
+  assert(span1)
+  assert(span2)
+
+  assertJaegerParentSpanArray([
+    { parentSpan: rootSpan, childSpan: span1 },
+    { parentSpan: span1, childSpan: span2 },
+  ])
+
+  const path = '/helloworld.Greeter/SayHello3'
+  assertRootSpan({
+    scheme: 'grpc',
+    operationName: `RPC ${path}`,
+    path,
+    span: rootSpan,
+    traceId,
+    tags: {
+      'http.method': 'SayHello3',
+      'http.target': path,
+      'http.route': 'unknown',
+      'span.kind': 'server',
+      'otel.status_code': 'OK',
+    },
+    mergeDefaultTags: false,
+    logs: [
+      {},
+      { event: 'incoming.request.data', 'http.request.body': JSON.stringify({ id: 2, name: 'harry' }, null, 2) },
+      {},
+      {},
+      {
+        event: 'outgoing.response.data',
+        'http.response.body': JSON.stringify({ id: 2, message: 'Hello harry', traceId }, null, 2),
+        'http.response.code': 200,
+      },
+    ],
   })
 
 }

@@ -52,11 +52,14 @@ console.info({ APP_BASE_DIR, APP_DIST_DIR })
 
 
 const protoPath = join(APP_BASE_DIR, 'test/grpc', 'helloworld.proto')
-export const grpcServer = {
-  services: [],
-}
+export const grpcServer = { services: [] }
+export const grpc = { services: [] }
+
 if (await isFileExists(protoPath)) {
   // @ts-expect-error
-  grpcServer.services.push({ protoPath, package: 'helloworld' })
+  grpcServer.services.push({ url: 'localhost:6565', protoPath, package: 'helloworld' })
+  // @ts-expect-error
+  grpc.services.push({ url: 'localhost:6565', protoPath, package: 'helloworld' })
 }
+
 
