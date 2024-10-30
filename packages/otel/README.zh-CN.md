@@ -21,7 +21,7 @@ ESM build only, requires `@midwayjs >= 3.16` and set `"type": "module"` in `pack
 ## 支持协议
 
 - HTTP
-- [gRPC]
+- [gRPC (Unary)]
 
 ## 安装依赖
 
@@ -308,5 +308,5 @@ export class FooService {
 [Exporter Configuration]: https://opentelemetry.io/docs/reference/specification/protocol/exporter/#configuration-options
 [Jaeger]: https://www.jaegertracing.io/
 
-[gRPC]: https://github.com/midwayjs/midway/tree/main/packages/grpc
+[gRPC (Unary)]: https://github.com/midwayjs/midway/tree/main/packages/grpc
 
