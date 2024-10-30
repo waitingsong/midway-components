@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [39.1.0](https://github.com/waitingsong/midway-components/compare/v39.0.2...v39.1.0) (2024-10-30)
+
+
+### Bug Fixes
+
+* **otel:** middlewares using order ([ed07659](https://github.com/waitingsong/midway-components/commit/ed076594dd345a2cb8b22483758caa38950b0fec))
+
+
+### Features
+
+* **otel:** addSpanEventWithIncomingRequestData() skip log if none ([73b536c](https://github.com/waitingsong/midway-components/commit/73b536ce403979a02cc1b7c6cd63968daf95e40b))
+
+
+
+
+
 ## [39.0.2](https://github.com/waitingsong/midway-components/compare/v39.0.1...v39.0.2) (2024-10-29)
 
 
