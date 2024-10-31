@@ -1,5 +1,6 @@
 import { join } from 'node:path'
 
+import type { DefaultConfig as GClientConfig, IMidwayGRPFrameworkOptions } from '@midwayjs/grpc'
 import { isFileExists, retrieveDirname } from '@waiting/shared-core'
 
 import {
@@ -52,14 +53,15 @@ console.info({ APP_BASE_DIR, APP_DIST_DIR })
 
 
 const protoPath = join(APP_BASE_DIR, 'test/grpc', 'helloworld.proto')
-export const grpcServer = { services: [] }
-export const grpc = { services: [] }
+export const grpcServer: IMidwayGRPFrameworkOptions = {
+  // url: 'localhost:6565',
+}
+export const grpc: GClientConfig = { services: [] }
+const rpcBaseConfig = { protoPath, package: 'helloworld' }
 
 if (await isFileExists(protoPath)) {
-  // @ts-expect-error
-  grpcServer.services.push({ url: 'localhost:6565', protoPath, package: 'helloworld' })
-  // @ts-expect-error
-  grpc.services.push({ url: 'localhost:6565', protoPath, package: 'helloworld' })
+  grpcServer.services = [{ ...rpcBaseConfig }]
+  grpc.services.push({ ...rpcBaseConfig, url: 'localhost:6565' })
 }
 
 
