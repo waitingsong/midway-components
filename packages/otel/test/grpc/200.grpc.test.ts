@@ -23,7 +23,7 @@ describe(fileShortPath(import.meta.url), () => {
 
     it('normal', async () => {
       const service = await createGRPCConsumer<helloworld.GreeterClient>(options)
-      const res = await service.sayHello().sendMessage({ id, name })
+      const res = await service.sayHello({ timeout: 3000 }).sendMessage({ id, name })
 
       console.info({ res })
       assert(res.id === id)
@@ -34,13 +34,13 @@ describe(fileShortPath(import.meta.url), () => {
 
     it('req2', async () => {
       const service = await createGRPCConsumer<helloworld.GreeterClient>(options)
-      const res = await service.sayHello().sendMessage({ id, name })
+      const res = await service.sayHello({ timeout: 3000 }).sendMessage({ id, name })
       console.info({ res })
       assert(res.id === id)
       assert(res.message === `Hello ${name}`)
       await assertAll(res.traceId)
 
-      const res2 = await service.sayHello().sendMessage({ id, name })
+      const res2 = await service.sayHello({ timeout: 3000 }).sendMessage({ id, name })
       console.info({ res2 })
       assert(res2.id === id)
       assert(res2.message === `Hello ${name}`)
@@ -49,8 +49,8 @@ describe(fileShortPath(import.meta.url), () => {
 
     it('parallel request with same client', async () => {
       const service = await createGRPCConsumer<helloworld.GreeterClient>(options)
-      const pms1 = service.sayHello().sendMessage({ id, name })
-      const pms2 = service.sayHello().sendMessage({ id: id2, name })
+      const pms1 = service.sayHello({ timeout: 3000 }).sendMessage({ id, name })
+      const pms2 = service.sayHello({ timeout: 3000 }).sendMessage({ id: id2, name })
 
       await Promise.all([pms1, pms2]).then(async ([res1, res2]) => {
         console.info({ res1, res2 })
@@ -68,8 +68,8 @@ describe(fileShortPath(import.meta.url), () => {
       const service = await createGRPCConsumer<helloworld.GreeterClient>(options)
       const service2 = await createGRPCConsumer<helloworld.GreeterClient>(options)
 
-      const pms1 = service.sayHello().sendMessage({ id, name })
-      const pms2 = service2.sayHello().sendMessage({ id: id2, name })
+      const pms1 = service.sayHello({ timeout: 3000 }).sendMessage({ id, name })
+      const pms2 = service2.sayHello({ timeout: 3000 }).sendMessage({ id: id2, name })
 
       await Promise.all([pms1, pms2]).then(async ([res1, res2]) => {
         console.info({ res1, res2 })
