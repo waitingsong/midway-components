@@ -354,7 +354,13 @@ export function addSpanEventWithIncomingRequestData(options: AddSpanEventWithInc
 
   if (query) {
     if (typeof query === 'object' && Object.keys(query).length) {
-      const value = truncateString(JSON.stringify(query, null, 2))
+      let value = 'object could not be stringified to JSON'
+      try {
+        value = truncateString(JSON.stringify(query, null, 2))
+      }
+      catch (err) {
+        void err
+      }
       Object.defineProperty(attrs, AttrNames.Http_Request_Query, {
         ...defaultProperty,
         value,
@@ -363,7 +369,13 @@ export function addSpanEventWithIncomingRequestData(options: AddSpanEventWithInc
   }
 
   if (data && Object.keys(data).length) {
-    const value = truncateString(JSON.stringify(data, null, 2))
+    let value = 'object could not be stringified to JSON'
+    try {
+      value = truncateString(JSON.stringify(data, null, 2))
+    }
+    catch (err) {
+      void err
+    }
     Object.defineProperty(attrs, AttrNames.Http_Request_Body, {
       ...defaultProperty,
       value,
@@ -404,7 +416,12 @@ export function addSpanEventWithOutgoingResponseData(options: AddSpanEventWithOu
 
   let value = ''
   if (typeof body === 'object') {
-    value = truncateString(JSON.stringify(body, null, 2))
+    try {
+      value = truncateString(JSON.stringify(body, null, 2))
+    }
+    catch {
+      value = 'object could not be stringified to JSON'
+    }
   }
   else if (typeof body === 'string') {
     value = body ? truncateString(body) : ''
