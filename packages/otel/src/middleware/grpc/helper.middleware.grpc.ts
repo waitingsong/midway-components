@@ -1,5 +1,6 @@
 import type { Metadata } from '@midwayjs/grpc'
 import type { Context as Context, GrpcContext, NextFunction } from '@mwcp/share'
+import { RpcMethodType } from '@mwcp/share'
 import type { Attributes, TextMapGetter, TextMapSetter } from '@opentelemetry/api'
 import { genError, genISO8601String } from '@waiting/shared-core'
 
@@ -113,3 +114,16 @@ export const metadataGetter: TextMapGetter<Metadata> = {
   },
 }
 
+
+export function detectRpcMethodType(ctx: GrpcContext): RpcMethodType.unary | RpcMethodType.bidi {
+  if (ctx['readable']) {
+    return RpcMethodType.bidi
+  }
+  return RpcMethodType.unary
+}
+
+
+export function isGrpcContextFinished(ctx: GrpcContext): boolean {
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  return !! (ctx['closed'] || ctx['cancelled'] || ctx['errored'] || ctx['destroyed'])
+}

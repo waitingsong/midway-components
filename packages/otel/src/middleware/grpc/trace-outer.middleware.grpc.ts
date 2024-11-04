@@ -1,7 +1,8 @@
 import { Middleware } from '@midwayjs/core'
-import { type Context, type GrpcContext, IMiddleware, NextFunction } from '@mwcp/share'
+import { type Context, type GrpcContext, IMiddleware, NextFunction, RpcMethodType } from '@mwcp/share'
 import { SpanKind, SpanStatus, propagation } from '@opentelemetry/api'
 
+import type { Span } from '##/index.js'
 import { TraceService } from '##/lib/index.js'
 import { Config, ConfigKey, middlewareEnableCacheKey } from '##/lib/types.js'
 import {
@@ -10,7 +11,7 @@ import {
   parseResponseStatus,
 } from '##/lib/util.js'
 
-import { handleTopExceptionAndNext, metadataGetter } from './helper.middleware.grpc.js'
+import { detectRpcMethodType, handleTopExceptionAndNext, isGrpcContextFinished, metadataGetter } from './helper.middleware.grpc.js'
 
 
 @Middleware()
@@ -54,6 +55,12 @@ async function middleware(
 
   const container = ctx.app.getApplicationContext()
 
+  const ctx2 = ctx as unknown as GrpcContext
+  const rpcMethodType = detectRpcMethodType(ctx2)
+  if (rpcMethodType !== RpcMethodType.unary) {
+    return next()
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const traceSvc = container.get(TraceService) ?? await container.getAsync(TraceService)
   const rootTraceContext = await traceSvc.startOnRequest(ctx)
@@ -62,7 +69,6 @@ async function middleware(
     return next()
   }
 
-  const ctx2 = ctx as unknown as GrpcContext
   const { metadata } = ctx2
   if (metadata) {
     propagation.extract(rootTraceContext, metadata, metadataGetter)
@@ -73,16 +79,30 @@ async function middleware(
     return next()
   }
 
+  ctx.setAttr('rootTraceContext', rootTraceContext)
+  ctx.setAttr('rootSpan', rootSpan)
+
+
   const res = await handleTopExceptionAndNext(ctx2, traceSvc, next)
   addSpanEventWithOutgoingResponseData({
     body: res,
     span: rootSpan,
     status: ctx.status,
   })
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (rpcMethodType === RpcMethodType.unary) {
+    if (isGrpcContextFinished(ctx2)) { // unary
+      finishCallback(ctx2, traceSvc)
+      return
+    }
 
-  setTimeout(() => {
-    finishCallback(ctx, traceSvc)
-  }, 0)
+    setImmediate(() => {
+      if (isGrpcContextFinished(ctx2)) { // unary
+        finishCallback(ctx2, traceSvc)
+        return
+      }
+    })
+  }
 
   if (res instanceof Error) {
     throw res
@@ -93,7 +113,9 @@ async function middleware(
 }
 
 
-function finishCallback(ctx: Context, traceSvc: TraceService): void {
+function finishCallback(ctx: GrpcContext, traceSvc: TraceService): void {
+  const rootSpan = ctx.getAttr<Span | undefined>('rootSpan')
+  if (! rootSpan?.isRecording()) { return }
   const code = parseResponseStatus(SpanKind.CLIENT, ctx.status)
   const spanStatus: SpanStatus = { code }
   traceSvc.finish(ctx, spanStatus)

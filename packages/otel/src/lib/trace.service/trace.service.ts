@@ -13,6 +13,7 @@ import {
   type ClzInstance,
   type Context,
   type DecoratorExecutorParamBase,
+  type GrpcContext,
   Application,
   MConfig,
   retrieveRequestProtocolFromCtx,
@@ -120,7 +121,7 @@ export class TraceService extends TraceServiceSpan {
    * Finish the root span and clean the context.
    */
   finish(
-    webCtx: Application | Context,
+    webCtx: Application | Context | GrpcContext,
     spanStatusOptions: SpanStatusOptions = initSpanStatusOptions,
     endTime?: TimeInput,
   ): void {
