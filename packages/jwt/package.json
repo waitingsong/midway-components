@@ -1,7 +1,7 @@
 {
   "name": "@mwcp/jwt",
   "author": "waiting",
-  "version": "39.1.2",
+  "version": "39.2.0",
   "description": "midway component jwt",
   "keywords": [
     "midway",
@@ -36,12 +36,12 @@
   "license": "MIT",
   "dependencies": {
     "@midwayjs/info": "^3.18.2",
-    "@mwcp/share": "^39.0.0",
+    "@mwcp/share": "^39.2.0",
     "@waiting/shared-core": "^23.22.0",
     "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
-    "@mwcp/otel": "^39.1.2",
+    "@mwcp/otel": "^39.2.0",
     "@types/jsonwebtoken": "^9.0.7"
   },
   "engines": {
