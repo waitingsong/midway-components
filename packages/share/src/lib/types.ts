@@ -142,3 +142,11 @@ export interface RouterInfoLite {
 
 export type MiddlewareResolve = (ctx: Context, next: NextFunction) => Promise<void>
 
+
+export enum RpcMethodType {
+  unary = 'unary',
+  serverStream = 'serverStream',
+  clientStream = 'clientStream',
+  bidi = 'bidi',
+}
+
