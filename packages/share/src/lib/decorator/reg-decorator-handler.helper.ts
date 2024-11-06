@@ -70,6 +70,10 @@ export function genExecutorOptionsCommon<TDecoratorParam extends object = object
     methodArgs,
     webContext,
   }
+  if (! opts.scheme && webContext && typeof webContext.getAttr === 'function') {
+    const scheme = webContext.getAttr('scheme')
+    opts.scheme = scheme && typeof scheme === 'string' ? scheme : ''
+  }
 
   assert(opts.instance, 'options.instance is undefined')
   return opts

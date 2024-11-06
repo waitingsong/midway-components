@@ -141,6 +141,7 @@ function registerMethodHandlerCallback<TDecoratorParam extends object = object>(
 
   const isAsyncFunc = isAsyncFunction(method)
   const options: DecoratorExecutorParamBase = {
+    scheme: '',
     argsFromClassDecorator: argsFromClassDecoratorArray[0],
     argsFromMethodDecorator,
     decoratorKey,

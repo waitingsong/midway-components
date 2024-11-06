@@ -76,6 +76,10 @@ export interface CustomDecoratorFactoryOptions<TDecoratorParam extends object = 
 }
 
 export interface DecoratorExecutorParamBase<TDecoratorParam extends object = object> {
+  /**
+   * @example http|grpc
+   */
+  scheme: string
   argsFromClassDecorator: DecoratorMetaDataPayload<Partial<TDecoratorParam>> | undefined
   argsFromMethodDecorator: DecoratorMetaDataPayload<Partial<TDecoratorParam>> | undefined
   /** Merged from argsFromClassDecorator and argsFromMethodDecorator */
