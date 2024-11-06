@@ -47,6 +47,11 @@ export function initTrace(options: InitTraceOptions): InitTraceReturnType {
   const propagators = genPropagators(otelConfig.propagators)
   provider.register({
     propagator: new CompositePropagator({ propagators }),
+  });
+  ['SIGINT', 'SIGTERM'].forEach((signal) => {
+    process.on(signal, () => {
+      provider.shutdown().catch(console.error)
+    })
   })
 
   // const globalProvider = trace.getTracerProvider()
