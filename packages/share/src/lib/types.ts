@@ -145,8 +145,8 @@ export type MiddlewareResolve = (ctx: Context, next: NextFunction) => Promise<vo
 
 export enum RpcMethodType {
   unary = 'unary',
-  serverStream = 'serverStream',
-  clientStream = 'clientStream',
+  serverStreaming = 'serverStreaming',
+  clientStreaming = 'clientStreaming',
   bidi = 'bidi',
 }
 
