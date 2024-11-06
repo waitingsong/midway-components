@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [39.3.0](https://github.com/waitingsong/midway-components/compare/v39.2.0...v39.3.0) (2024-11-06)
+
+
+### Features
+
+* **share:** update enum RpcMethodType ([93e0399](https://github.com/waitingsong/midway-components/commit/93e039903a61aa5eb4fbc11d1e21ec41d0c22c6c))
+
+
+
+
+
 # [39.2.0](https://github.com/waitingsong/midway-components/compare/v39.1.2...v39.2.0) (2024-11-04)
 
 
