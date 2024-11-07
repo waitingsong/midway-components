@@ -132,8 +132,7 @@ export class TraceServiceSpan extends TraceServiceBase {
       traceContext,
       scope: scope2,
     })
-    const cb = () => callback(span, traceCtx)
-    return contextFunc.with(traceCtx, cb, void 0, span)
+    return contextFunc.with(traceCtx, callback, void 0, span, traceCtx)
   }
 
   /**
