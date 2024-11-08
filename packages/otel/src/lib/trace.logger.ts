@@ -159,7 +159,7 @@ function traceAppLogger(
   span: Span | undefined,
 ): void {
 
-  const currSpan = span ?? otel.getGlobalCurrentSpan()
+  const currSpan = span ?? otel.getActiveSpan()
   if (! currSpan) { return }
 
   const { msg, args } = input
