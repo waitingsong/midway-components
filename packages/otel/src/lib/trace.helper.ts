@@ -1,10 +1,11 @@
 import assert from 'node:assert'
 
 import type { DecoratorExecutorParamBase } from '@mwcp/share'
+import { context } from '@opentelemetry/api'
 import type { Span } from '@opentelemetry/api'
 import { isArrowFunction } from '@waiting/shared-core'
 
-import type { SpanStatusOptions } from '##/lib/types.js'
+import type { SpanStatusOptions, TraceContext } from '##/lib/types.js'
 
 import type {
   DecoratorContext,
@@ -194,8 +195,19 @@ export function genDecoratorExecutorOptions(
     [AttrNames.CallerMethod]: optionsBase.methodName,
   }
 
+  let rootTraceContext: TraceContext
+  if (optionsBase.webContext) {
+    rootTraceContext = optionsBase.webContext.getAttr('rootTraceContext')
+  }
+  else {
+    rootTraceContext = context.active()
+  }
+  if (optionsExt.config.enable) {
+    assert(rootTraceContext, 'rootTraceContext is undefined')
+  }
 
   const ret: DecoratorExecutorParam<TraceDecoratorOptions> = {
+    rootTraceContext,
     ...optionsBase,
     ...optionsExt,
     callerAttr,

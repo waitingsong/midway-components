@@ -1,7 +1,8 @@
 import assert from 'node:assert'
 
+import { context } from '@opentelemetry/api'
+
 import { processDecoratorBeforeAfterAsync } from '../decorator.helper.async.js'
-import { genTraceScopeFrom } from '../decorator.helper.base.js'
 import { endTraceSpan } from '../trace.helper.js'
 import type { DecoratorExecutorParam, DecoratorTraceDataResp } from '../trace.service/index.trace.service.js'
 import { ConfigKey } from '../types.js'
@@ -11,37 +12,30 @@ export async function beforeAsync(options: DecoratorExecutorParam): Promise<void
   const { traceService } = options
 
   const type = 'before'
-  options.traceScope = genTraceScopeFrom(options)
-  if (! options.traceScope) {
-    options.traceScope = options.webContext ?? options.webApp
-  }
+  const info = traceService.getActiveTraceInfo()
+  options.span = info.span
+  options.traceContext = info.traceContext
 
-  if (! options.span) {
-    const info = traceService.getActiveTraceInfo(options.traceScope)
-    if (info) {
-      options.span = info.span
-      options.traceContext = info.traceContext
-    }
-  }
-
-  const res: DecoratorTraceDataResp = await processDecoratorBeforeAfterAsync(type, options)
-  if (res?.endSpanAfterTraceLog) {
-    assert(options.span, 'span is required')
-    endTraceSpan(traceService, options.span, res.spanStatusOptions)
-  }
-
-  if (res?.endParentSpan) {
-    assert(options.span, 'span is required')
-
-    if (! res.endSpanAfterTraceLog) {
+  await context.with(info.traceContext, async () => {
+    const res: DecoratorTraceDataResp = await processDecoratorBeforeAfterAsync(type, options)
+    if (res?.endSpanAfterTraceLog) {
+      assert(options.span, 'span is required')
       endTraceSpan(traceService, options.span, res.spanStatusOptions)
     }
 
-    const parentSpan = traceService.retrieveParentTraceInfoBySpan(options.span, options.traceScope)?.span
-    if (parentSpan) {
-      endTraceSpan(traceService, parentSpan, res.spanStatusOptions)
+    if (res?.endParentSpan) {
+      assert(options.span, 'span is required')
+
+      if (! res.endSpanAfterTraceLog) {
+        endTraceSpan(traceService, options.span, res.spanStatusOptions)
+      }
+
+      const parentSpan = traceService.retrieveParentTraceInfoBySpan(options.span, options.traceScope)?.span
+      if (parentSpan) {
+        endTraceSpan(traceService, parentSpan, res.spanStatusOptions)
+      }
     }
-  }
+  })
 }
 
 export async function afterReturnAsync(options: DecoratorExecutorParam): Promise<unknown> {
@@ -78,6 +72,9 @@ export async function afterThrowAsync(options: DecoratorExecutorParam): Promise<
   if (! span) { return }
 
   assert(options.error, `[@mwcp/${ConfigKey.namespace}] options.error is undefined in afterThrowAsync().`)
-  await processDecoratorBeforeAfterAsync('afterThrow', options)
+  const traceContext = options.traceService.getActiveContext()
+  await context.with(traceContext, async () => {
+    await processDecoratorBeforeAfterAsync('afterThrow', options)
+  })
 }
 

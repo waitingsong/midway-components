@@ -74,7 +74,7 @@ export class TraceService extends TraceServiceSpan {
     if (! this.config.enable) { return }
     if (webCtx.getAttr(middlewareEnableCacheKey) !== 'true') { return }
     if (this.isStartedMap.get(webCtx) === true) {
-      return this.getActiveContext(webCtx)
+      return this.getActiveContext()
     }
 
     await this.addRequestRouterInfo(webCtx)
@@ -226,6 +226,7 @@ export type ExecutorParamBase<T extends TraceDecoratorOptions = TraceDecoratorOp
 export type DecoratorExecutorParam<T extends TraceDecoratorOptions = TraceDecoratorOptions> = ExecutorParamBase<T>
   & GenDecoratorExecutorOptions
   & {
+    rootTraceContext: TraceContext,
     callerAttr: { [AttrNames.CallerClass]: string, [AttrNames.CallerMethod]: string },
     spanName: string,
     spanOptions: Partial<SpanOptions>,
