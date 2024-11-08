@@ -101,7 +101,7 @@ export class TraceServiceBase {
       }
     }
     // create new span and traceContext
-    const ctx4 = this.otel.getGlobalCurrentContext()
+    const ctx4 = this.otel.getActiveContext()
     return ctx4
   }
 
