@@ -30,7 +30,8 @@ export class UtilComponentController {
   async simple(): Promise<string> {
     const traceId = this.traceSvc.getTraceId()
     const traceId2 = this.traceSvc.otel.getTraceId()
-    assert(! traceId2)
+    assert(traceId, 'traceId should not be empty')
+    assert(traceId2, 'traceId2 should not be empty')
     await this._simple1()
     return traceId
   }
