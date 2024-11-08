@@ -1,5 +1,6 @@
 import assert from 'node:assert'
 
+
 import {
   Controller,
   Get,
@@ -7,6 +8,7 @@ import {
   Param,
 } from '@midwayjs/core'
 import { MConfig } from '@mwcp/share'
+import { context } from '@opentelemetry/api'
 
 import { apiBase, apiMethod } from '../types/api-test.js'
 import { Attributes, DecoratorTraceData, Trace, TraceService } from '../types/index.js'
@@ -25,6 +27,10 @@ export class DecoratorDataComponentController {
   @Get(`/${apiMethod.async}/:id`)
   async traceIdAsync(@Param('id') id: string): Promise<`${string}:${string}`> {
     const traceId = this.traceSvc.getTraceId()
+    const ctx2 = context.active()
+    void ctx2
+    const traceCtx = this.traceSvc.getActiveContext()
+    void traceCtx
     await this.traceDecoratorDataAsync(id)
     // ensure child span is sent, to keep span order for unit test validation
     // await this.traceSvc.flush()
@@ -48,6 +54,10 @@ export class DecoratorDataComponentController {
       assert(decoratorContext.instanceName === 'DecoratorDataComponentController')
       assert(decoratorContext.methodName === 'traceDecoratorDataAsync')
 
+      assert(decoratorContext.traceService)
+      const traceCtx = decoratorContext.traceService.getActiveContext()
+      void traceCtx
+
       const attrs: Attributes = {
         args0: args[0],
         traceDecoratorDataAsync: 'foo',
@@ -67,6 +77,8 @@ export class DecoratorDataComponentController {
     },
   })
   private async traceDecoratorDataAsync(id: string): Promise<string> {
+    const traceCtx = this.traceSvc.getActiveContext()
+    void traceCtx
     return id + testConfig.testSuffix
   }
 
