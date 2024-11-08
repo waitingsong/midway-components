@@ -98,6 +98,9 @@ export function genTraceScopeFrom(options: DecoratorExecutorParam): TraceScopeTy
 }
 
 const traceScopeStringCache = new Map<string, symbol>()
+/**
+ * @deprecated
+ */
 export function getScopeStringCache(key: string): symbol {
   let sym = traceScopeStringCache.get(key)
   if (! sym) {

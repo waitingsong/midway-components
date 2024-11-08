@@ -1,3 +1,5 @@
+import assert from 'node:assert'
+
 import {
   type AsyncContextManager,
   ASYNC_CONTEXT_KEY,
@@ -7,7 +9,7 @@ import {
   Inject,
 } from '@midwayjs/core'
 import { type Context, DecoratorHandlerBase } from '@mwcp/share'
-import { SpanStatusCode } from '@opentelemetry/api'
+import { SpanStatusCode, context } from '@opentelemetry/api'
 
 import { type DecoratorExecutorParam, TraceService } from './trace.service/index.trace.service.js'
 import { AttrNames } from './types.js'
@@ -33,6 +35,17 @@ export class DecoratorHandlerTraceBase extends DecoratorHandlerBase {
       // throw new Error('DecoratorHandlerTraceBase.getWebContext() failed. The trigger may not a request (eg. TraceInit())', { cause: ex })
       void ex
     }
+  }
+
+  override around(options: DecoratorExecutorParam): unknown {
+    if (options.traceContext) {
+      return context.with(options.traceContext, () => {
+        assert(typeof options.method === 'function', 'options.method should be a function')
+        return options.method(...options.methodArgs)
+      })
+    }
+    assert(typeof options.method === 'function', 'options.method should be a function')
+    return options.method(...options.methodArgs)
   }
 
   isEnable(options: DecoratorExecutorParam): boolean {

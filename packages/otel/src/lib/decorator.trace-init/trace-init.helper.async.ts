@@ -1,6 +1,6 @@
 import assert from 'node:assert'
 
-import { SpanKind } from '@opentelemetry/api'
+import { SpanKind, context } from '@opentelemetry/api'
 import type { Attributes, SpanOptions } from '@opentelemetry/api'
 
 import { processDecoratorBeforeAfterAsync } from '../decorator.helper.async.js'
@@ -27,8 +27,9 @@ export async function before(options: DecoratorExecutorParam<TraceDecoratorOptio
     ...spanOptions,
     kind: SpanKind.INTERNAL,
   }
-  const { span } = traceService.otel.startSpan(spanName, spanOpts, traceCtx)
+  const { span, traceContext } = traceService.otel.startSpan(spanName, spanOpts, traceCtx)
   options.span = span
+  options.traceContext = traceContext
 
   span.setAttributes(callerAttr)
   const events: Attributes = {
@@ -42,7 +43,9 @@ export async function before(options: DecoratorExecutorParam<TraceDecoratorOptio
   traceService.otel.addEvent(span, events, addEventOptions)
 
   if (mergedDecoratorParam) {
-    await processDecoratorBeforeAfterAsync('before', options)
+    await context.with(traceContext, async () => {
+      await processDecoratorBeforeAfterAsync('before', options)
+    })
   }
 }
 
@@ -64,7 +67,10 @@ export async function afterReturn(options: DecoratorExecutorParam<TraceDecorator
   } = options
 
   if (mergedDecoratorParam) {
-    await processDecoratorBeforeAfterAsync('after', options)
+    const traceContext = traceService.getActiveContext()
+    await context.with(traceContext, async () => {
+      await processDecoratorBeforeAfterAsync('after', options)
+    })
   }
 
   const events2: Attributes = {

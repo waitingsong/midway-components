@@ -1,4 +1,3 @@
-
 import assert from 'node:assert'
 
 import {
@@ -87,37 +86,11 @@ export class TraceServiceBase {
   }
 
 
-  getActiveContext(scope: TraceScopeType): TraceContext {
-    const traceContext = this.getActiveContextOnlyScope(scope)
-    if (traceContext) {
-      return traceContext
-    }
-
-    const webAppCtx = this.getWebContext()
-    if (webAppCtx) {
-      const traceCtx = this.otel.getScopeActiveContext(webAppCtx)
-      if (traceCtx) {
-        return traceCtx
-      }
-    }
-    // create new span and traceContext
-    const ctx4 = this.otel.getActiveContext()
-    return ctx4
+  getActiveContext(): TraceContext {
+    const traceCtx = this.otel.getActiveContext()
+    return traceCtx
   }
 
-  getActiveContextOnlyScope(scope: TraceScopeType): TraceContext | undefined {
-    assert(scope, 'getActiveContext() scope should not be null')
-    const ctx = this.otel.getScopeActiveContext(scope)
-    if (ctx) {
-      return ctx
-    }
-    const webContext = this.getWebContext()
-    if (scope === webContext || scope === this.app) {
-      const ctx2 = this.getRootTraceContext(scope as Application | Context)
-      // assert(ctx2, 'getActiveContext() trace ctx should not be null with scope value= webContext or app')
-      return ctx2
-    }
-  }
 
   setActiveContext(traceContext: TraceContext, scope: TraceScopeType): void {
     if (! this.config.enable) { return }

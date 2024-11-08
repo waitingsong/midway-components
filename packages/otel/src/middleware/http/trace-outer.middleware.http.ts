@@ -62,6 +62,7 @@ export async function middleware(
     await next()
     return
   }
+  ctx.setAttr('rootTraceContext', rootContext)
 
   ctx.res.once('finish', () => { finishCallback(ctx, traceSvc) })
 

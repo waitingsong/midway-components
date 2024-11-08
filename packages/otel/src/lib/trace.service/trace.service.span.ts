@@ -20,15 +20,8 @@ import type { EndSpanOptions, StartScopeActiveSpanOptions } from './trace.servic
 
 export class TraceServiceSpan extends TraceServiceBase {
 
-  getTraceId(scope?: TraceScopeType): string {
-    const ctx = scope ?? this.getWebContext()
-    if (ctx) {
-      const rootSpan = this.getRootSpan(ctx)
-      if (rootSpan) {
-        return rootSpan.spanContext().traceId
-      }
-    }
-    return ''
+  getTraceId(): string {
+    return this.otel.getTraceId() ?? ''
   }
 
   getRootSpan(scope: TraceScopeType): Span | undefined {
@@ -40,15 +33,12 @@ export class TraceServiceSpan extends TraceServiceBase {
   /**
    * Get span from the given scope, if not exists, get span from the request context or application.
    */
-  getActiveSpan(scope?: TraceScopeType): Span | undefined {
-    return this.getActiveTraceInfo(scope)?.span
+  getActiveSpan(): Span | undefined {
+    return this.getActiveTraceInfo().span
   }
 
-  getActiveTraceInfo(scope?: TraceScopeType): TraceInfo | undefined {
-    if (! this.config.enable) { return }
-    const scope2 = scope ?? this.getWebContext()
-    assert(scope2, 'getActiveSpan() scope should not be null')
-    const traceCtx = this.getActiveContext(scope2)
+  getActiveTraceInfo(): TraceInfo {
+    const traceCtx = this.getActiveContext()
     const span = getSpan(traceCtx)
     assert(span, 'getActiveTraceInfo() span should not be null')
     return { span, traceContext: traceCtx }
@@ -57,14 +47,14 @@ export class TraceServiceSpan extends TraceServiceBase {
   /**
    * Get span from the given scope
    */
-  getActiveSpanOnlyScope(scope: TraceScopeType): Span | undefined {
-    if (! this.config.enable) { return }
-    assert(scope, 'getActiveSpanOnlyScope() scope should not be null')
-    const traceCtx = this.getActiveContextOnlyScope(scope)
-    if (! traceCtx) { return }
-    const span = getSpan(traceCtx)
-    return span
-  }
+  // getActiveSpanOnlyScope(scope: TraceScopeType): Span | undefined {
+  //   if (! this.config.enable) { return }
+  //   assert(scope, 'getActiveSpanOnlyScope() scope should not be null')
+  //   const traceCtx = this.getActiveContextOnlyScope(scope)
+  //   if (! traceCtx) { return }
+  //   const span = getSpan(traceCtx)
+  //   return span
+  // }
 
 
   /**
@@ -83,7 +73,7 @@ export class TraceServiceSpan extends TraceServiceBase {
     if (! traceCtx) {
       const scope2 = scope ?? this.getWebContext()
       assert(scope2, 'startSpan() scope should not be null')
-      traceCtx = this.getActiveContext(scope2)
+      traceCtx = this.getActiveContext()
     }
 
     const ret = this.otel.startSpan(name, options, traceCtx)
@@ -92,17 +82,16 @@ export class TraceServiceSpan extends TraceServiceBase {
 
   /**
    * Starts a new {@link Span}.
-   * Additionally the new span gets set in context and this context is activated, you must to call `this.endSpan()` manually.
    * @default scope is `request ctx`
    */
-  startScopeActiveSpan(options: StartScopeActiveSpanOptions): TraceInfo {
+  startScopeSpan(options: StartScopeActiveSpanOptions): TraceInfo {
     const scope = options.scope ?? this.getWebContext()
     assert(scope, 'startScopeActiveSpan() scope should not be null')
 
-    const parentCtx = options.traceContext ?? this.getActiveContext(scope)
-    // const ret = this.otel.startSpanContext(options.name, options.spanOptions, parentCtx)
-    const cb = (span: Span, ctx: TraceContext) => { return { span, traceContext: ctx } }
-    const ret: TraceInfo = this.otel.startActiveSpan(options.name, cb, options.spanOptions, parentCtx)
+    const parentCtx = options.traceContext ?? this.getActiveContext()
+    const ret = this.otel.startSpanContext(options.name, options.spanOptions, parentCtx)
+    // const cb = (span: Span, ctx: TraceContext) => { return { span, traceContext: ctx } }
+    // const ret: TraceInfo = this.otel.startActiveSpan(options.name, cb, options.spanOptions, parentCtx)
     assert(ret, 'startScopeActiveSpan() ret should not be null')
 
     this.setActiveContext(ret.traceContext, scope)
@@ -129,7 +118,7 @@ export class TraceServiceSpan extends TraceServiceBase {
     const scope2 = scope ?? this.getWebContext()
     assert(scope2, 'scope should not be null')
 
-    const { span, traceContext: traceCtx } = this.startScopeActiveSpan({
+    const { span, traceContext: traceCtx } = this.startScopeSpan({
       name,
       spanOptions: options,
       traceContext,
@@ -271,7 +260,7 @@ export class TraceServiceSpan extends TraceServiceBase {
     // @ts-expect-error
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const pid = span.parentSpanId
-    assert(pid, 'retrieveParentTraceInfoBySpan() parentSpanId should not be null')
+    assert(pid, 'retrieveParentTraceInfoBySpan() span.parentSpanId should not be null')
     assert(typeof pid === 'string', 'retrieveParentTraceInfoBySpan() parentSpanId should be string')
     const info = this.retrieveTraceInfoBySpanId(pid, scope)
     return info
