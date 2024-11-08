@@ -130,9 +130,8 @@ export class OtelComponent {
     await this._app_init_start()
   }
 
-  getGlobalCurrentContext(): TraceContext {
-    const traceContext = context.active()
-    return traceContext
+  getActiveContext(): TraceContext {
+    return context.active()
   }
 
   getActiveSpan(traceContext?: TraceContext): Span | undefined {
@@ -614,7 +613,7 @@ export class OtelComponent {
       kind: SpanKind.INTERNAL,
     }
     const spanName = 'APP INIT'
-    const traceCtx = this.getGlobalCurrentContext()
+    const traceCtx = this.getActiveContext()
 
     // this.appInitProcessSpan = this.startSpan(spanName, opts)
     this.startActiveSpan(spanName, (span) => {
