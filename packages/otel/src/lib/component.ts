@@ -135,7 +135,7 @@ export class OtelComponent {
     return traceContext
   }
 
-  getGlobalCurrentSpan(traceContext?: TraceContext): Span | undefined {
+  getActiveSpan(traceContext?: TraceContext): Span | undefined {
     /* c8 ignore next */
     if (! this.config.enable) { return }
     return trace.getSpan(traceContext ?? context.active())
@@ -144,7 +144,7 @@ export class OtelComponent {
   getTraceId(): string | undefined {
     /* c8 ignore next */
     if (! this.config.enable) { return }
-    return this.getGlobalCurrentSpan()?.spanContext().traceId
+    return this.getActiveSpan()?.spanContext().traceId
   }
 
   // #region startScopeActiveSpan
@@ -217,7 +217,7 @@ export class OtelComponent {
   /* c8 ignore start */
   async shutdown(): Promise<void> {
     try {
-      const currSpan = this.getGlobalCurrentSpan()
+      const currSpan = this.getActiveSpan()
       if (currSpan) {
         currSpan.end()
       }
