@@ -1,4 +1,3 @@
-
 import assert from 'node:assert'
 
 import type { Application, Context, GrpcContext } from '@mwcp/share'
@@ -101,7 +100,11 @@ export class TraceServiceSpan extends TraceServiceBase {
     assert(scope, 'startScopeActiveSpan() scope should not be null')
 
     const parentCtx = options.traceContext ?? this.getActiveContext(scope)
-    const ret = this.otel.startSpanContext(options.name, options.spanOptions, parentCtx)
+    // const ret = this.otel.startSpanContext(options.name, options.spanOptions, parentCtx)
+    const cb = (span: Span, ctx: TraceContext) => { return { span, traceContext: ctx } }
+    const ret: TraceInfo = this.otel.startActiveSpan(options.name, cb, options.spanOptions, parentCtx)
+    assert(ret, 'startScopeActiveSpan() ret should not be null')
+
     this.setActiveContext(ret.traceContext, scope)
     return ret
   }
