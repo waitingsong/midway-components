@@ -1,6 +1,6 @@
 import { Middleware } from '@midwayjs/core'
 import { type Context, type GrpcContext, IMiddleware, NextFunction, RpcMethodType } from '@mwcp/share'
-import { SpanKind, SpanStatus, propagation } from '@opentelemetry/api'
+import { SpanKind, SpanStatus, context, propagation } from '@opentelemetry/api'
 
 import type { Span } from '##/index.js'
 import { TraceService } from '##/lib/index.js'
@@ -63,27 +63,27 @@ async function middleware(
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const traceSvc = container.get(TraceService) ?? await container.getAsync(TraceService)
-  const rootTraceContext = await traceSvc.startOnRequest(ctx)
-
-  if (! rootTraceContext) {
+  const rootContext = await traceSvc.startOnRequest(ctx)
+  if (! rootContext) {
     return next()
   }
 
   const { metadata } = ctx2
   if (metadata) {
-    propagation.extract(rootTraceContext, metadata, metadataGetter)
+    propagation.extract(rootContext, metadata, metadataGetter)
   }
 
-  const rootSpan = getSpan(rootTraceContext)
+  const rootSpan = getSpan(rootContext)
   if (! rootSpan) {
     return next()
   }
 
-  ctx.setAttr('rootTraceContext', rootTraceContext)
+  ctx.setAttr('rootTraceContext', rootContext)
   ctx.setAttr('rootSpan', rootSpan)
 
-
-  const res = await handleTopExceptionAndNext(ctx2, traceSvc, next)
+  const res = await context.with(rootContext, async () => {
+    return handleTopExceptionAndNext(ctx2, traceSvc, next)
+  })
   addSpanEventWithOutgoingResponseData({
     body: res,
     span: rootSpan,
