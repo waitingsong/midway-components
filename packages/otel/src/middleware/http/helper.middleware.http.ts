@@ -1,5 +1,5 @@
 import type { Context as Context, NextFunction } from '@mwcp/share'
-import type { Attributes } from '@opentelemetry/api'
+import { type Attributes } from '@opentelemetry/api'
 import { genError, genISO8601String } from '@waiting/shared-core'
 
 import type { TraceService } from '##/lib/index.js'
