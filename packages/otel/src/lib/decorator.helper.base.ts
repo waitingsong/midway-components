@@ -11,11 +11,12 @@ import type {
   TraceDecoratorOptions,
   TraceService,
 } from './trace.service/index.trace.service.js'
-import type { Attributes, TraceScopeParamType, TraceScopeType } from './types.js'
+import type { Attributes, TraceContext, TraceScopeParamType, TraceScopeType } from './types.js'
+import { getSpan } from './util.js'
 
 
 export function processDecoratorSpanData(
-  scope: TraceScopeType,
+  rootTraceContext: TraceContext,
   traceService: TraceService,
   span: Span,
   info: DecoratorTraceDataResp | undefined,
@@ -25,7 +26,7 @@ export function processDecoratorSpanData(
     const { attrs, events, rootAttrs, rootEvents } = info
     if (! attrs && ! events && ! rootAttrs && ! rootEvents) { return }
 
-    const rootSpan = traceService.getRootSpan(scope)
+    const rootSpan = getSpan(rootTraceContext)
     processEvents(traceService, span, events)
     processEvents(traceService, rootSpan, rootEvents)
 
@@ -55,6 +56,7 @@ function processEvents(
 }
 
 /**
+ * @deprecated
  * @note
  * - input options.traceScope will be updated by generated traceScope
  * - the first object arg of methodArgs will be appended key `traceScope` and set value
