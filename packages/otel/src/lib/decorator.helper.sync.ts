@@ -81,8 +81,7 @@ export function processDecoratorBeforeAfterSync(
       }
       assert(options.span, `processDecoratorBeforeAfterSync(): span is required with new traceContext returned by "${type}()"`)
 
-      assert(options.traceScope, 'processDecoratorBeforeAfterSync(): traceScope is required')
-      processDecoratorSpanData(options.traceScope, traceService, options.span, data)
+      processDecoratorSpanData(options.rootTraceContext, traceService, options.span, data)
       return data
     }
 
