@@ -34,6 +34,7 @@ import {
   context,
   trace,
 } from '@opentelemetry/api'
+import { AsyncHooksContextManager } from '@opentelemetry/context-async-hooks'
 import { node } from '@opentelemetry/sdk-node'
 import { ATTR_EXCEPTION_MESSAGE, ATTR_EXCEPTION_STACKTRACE, ATTR_EXCEPTION_TYPE } from '@opentelemetry/semantic-conventions'
 import { genISO8601String, humanMemoryUsage } from '@waiting/shared-core'
@@ -104,7 +105,6 @@ export class OtelComponent {
 
   @Init()
   async init(): Promise<void> {
-
     const key = `_${ConfigKey.componentName}`
     // @ts-ignore
     if (typeof this.app[key] === 'undefined') {
@@ -121,6 +121,10 @@ export class OtelComponent {
       Check if you have multiple otel instances in your project.`)
     }
     /* c8 ignore stop */
+
+    const contextManager = new AsyncHooksContextManager()
+    contextManager.enable()
+    context.setGlobalContextManager(contextManager) // it seems no effect
 
     await this._init()
     await this._app_init_start()
@@ -177,7 +181,7 @@ export class OtelComponent {
    * for the duration of the function call.
    */
   startActiveSpan<F extends (
-    ...args: [Span]
+    ...args: [Span, TraceContext]
   ) => ReturnType<F>>(
     name: string,
     callback: F,
@@ -193,9 +197,13 @@ export class OtelComponent {
       // startTime: Date.now(),
       ...options,
     }
+    const cb = (span: Span) => {
+      const activeCtx = context.active()
+      return callback(span, activeCtx)
+    }
     const ret = traceContext
-      ? tracer.startActiveSpan(name, opts, traceContext, callback)
-      : tracer.startActiveSpan(name, opts, callback)
+      ? tracer.startActiveSpan(name, opts, traceContext, cb)
+      : tracer.startActiveSpan(name, opts, cb)
     return ret
   }
 
