@@ -9,13 +9,9 @@ import { MConfig } from '@mwcp/share'
 import { sleep } from '@waiting/shared-core'
 
 import { apiBase, apiMethod } from '../types/api-test.js'
-import { Trace, TraceScopeParamType, TraceService, getScopeStringCache } from '../types/index.js'
+import { type TraceContext, Trace, TraceService, getScopeStringCache } from '../types/index.js'
 import { Config, ConfigKey } from '../types/lib-types.js'
 
-
-const scope1 = Symbol('scope1')
-const scope1a = Symbol('scope1a')
-const scopeString = 'scope2'
 
 @Controller(apiBase.decorator_data)
 export class DecoratorScopeComponentController {
@@ -44,35 +40,29 @@ export class DecoratorScopeComponentController {
   // #region private methods
 
   @Trace<DecoratorScopeComponentController['_simple1']>({
-    scope: scope1,
     before: ([input], ctx) => {
-      const { traceScope } = ctx
-      assert(traceScope)
-      assert(traceScope === scope1, 'traceScope !== scope1')
-      input.traceScope = traceScope
-      return void 0
+      const { traceContext } = ctx
+      assert(traceContext)
+      input.traceContext = traceContext
+      return null
     },
   })
   private async _simple1(input: InputOptions): Promise<string> {
-    assert(input.traceScope, 'input.traceScope not assigned by before()')
-    assert(input.traceScope === scope1, 'input.traceScope !== scope1')
+    assert(input.traceContext, 'input.traceScope not assigned by before()')
     await this._simple1a(input)
     return 'ok'
   }
 
   @Trace<DecoratorScopeComponentController['_simple2']>({
-    scope: scopeString,
     before: ([input], ctx) => {
-      const { traceScope } = ctx
-      assert(traceScope)
-      const traceScope2 = getScopeStringCache(scopeString)
-      assert(traceScope === traceScope2, 'traceScope !== symbol from scopeString')
-      input.traceScope = traceScope
-      return void 0
+      const { traceContext } = ctx
+      assert(traceContext)
+      input.traceContext = traceContext
+      return null
     },
   })
   private async _simple2(input: InputOptions): Promise<string> {
-    assert(input.traceScope, 'input.traceScope not assigned by before()')
+    assert(input.traceContext, 'input.traceScope not assigned by before()')
     await this._simple2a(input)
     return 'ok'
   }
@@ -80,50 +70,45 @@ export class DecoratorScopeComponentController {
   // #region private methods sub
 
   @Trace<DecoratorScopeComponentController['_simple1a']>({
-    scope: scope1a, // will be override by input.traceScope in parent call's before()
     before: ([input], ctx) => {
-      const { traceScope } = ctx
-      assert(traceScope)
-      assert(input.traceScope = traceScope)
-      return void 0
+      const { traceContext } = ctx
+      assert(traceContext)
+      input.traceContext = traceContext
+      return null
     },
     after: ([input], _res, ctx) => {
-      const { traceScope } = ctx
-      assert(traceScope)
-      assert(input.traceScope = traceScope)
+      const { traceContext } = ctx
+      assert(input.traceContext = traceContext)
       return void 0
     },
   })
   private async _simple1a(input: InputOptions): Promise<string> {
-    assert(input.traceScope, 'input.traceScope not assigned by before()')
-    assert(input.traceScope === scope1, 'input.traceScope !== scope1')
+    assert(input.traceContext, 'input.traceScope not assigned by before()')
     return 'ok'
   }
 
   @Trace<DecoratorScopeComponentController['_simple2a']>({
-    scope: scope1a, // will be override by input.traceScope in parent call's before()
     before: ([input], ctx) => {
-      const { traceScope } = ctx
-      assert(traceScope)
-      assert(input.traceScope = traceScope)
-      return void 0
+      const { traceContext } = ctx
+      assert(traceContext)
+      input.traceContext = traceContext
+      return null
     },
     after: ([input], _res, ctx) => {
-      const { traceScope } = ctx
-      assert(traceScope)
-      assert(input.traceScope = traceScope)
+      const { traceContext } = ctx
+      assert(input.traceContext = traceContext)
       return void 0
     },
   })
   private async _simple2a(input: InputOptions): Promise<string> {
-    assert(input.traceScope, 'input.traceScope not assigned by before()')
+    assert(input.traceContext, 'input.traceScope not assigned by before()')
     return 'ok'
   }
 }
 
 
 interface InputOptions {
-  traceScope?: TraceScopeParamType | undefined
+  traceContext?: TraceContext | undefined
   [key: PropertyKey]: unknown
 }
 

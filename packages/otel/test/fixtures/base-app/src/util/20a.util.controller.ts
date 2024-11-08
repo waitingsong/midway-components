@@ -31,7 +31,7 @@ export class UtilController {
     headers.set('a', '1')
     assert(headers.get('a') === '1')
 
-    const traceCtx = this.traceSvc.getActiveContext(this.ctx)
+    const traceCtx = this.traceSvc.getActiveContext()
     propagateHeader(traceCtx, headers)
     assert(headers)
     const traceParent = headers.get(HeadersKey.TRACE_PARENT_HEADER)

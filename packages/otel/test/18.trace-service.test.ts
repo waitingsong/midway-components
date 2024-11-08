@@ -16,7 +16,7 @@ describe(fileShortPath(import.meta.url), () => {
       assert(traceService, 'traceService not found')
 
       const scope = Symbol('not-request')
-      const { span, traceContext } = traceService.startScopeActiveSpan({
+      const { span, traceContext } = traceService.startScopeSpan({
         name: 'foo',
         scope,
       })
@@ -52,7 +52,7 @@ describe(fileShortPath(import.meta.url), () => {
       assert(traceService, 'traceService not found')
 
       const scope = Symbol('not-request')
-      const { span, traceContext } = traceService.startScopeActiveSpan({
+      const { span, traceContext } = traceService.startScopeSpan({
         name: 'foo1',
         scope,
       })
@@ -68,7 +68,7 @@ describe(fileShortPath(import.meta.url), () => {
       const traceContext3 = traceService.getRootTraceContext(scope)
       assert(traceContext3 === traceContext)
 
-      const { span: span2 } = traceService.startScopeActiveSpan({
+      const { span: span2 } = traceService.startScopeSpan({
         name: 'foo2',
         scope,
       })
@@ -95,17 +95,19 @@ describe(fileShortPath(import.meta.url), () => {
       assert(traceService, 'traceService not found')
 
       const scope = Symbol('not-request-2')
-      const { span, traceContext } = traceService.startScopeActiveSpan({
+      const { span, traceContext } = traceService.startScopeSpan({
         name: 'foo3',
         scope,
       })
       assert(span)
 
-      const { span: span2 } = traceService.startScopeActiveSpan({
+      const { span: span2, traceContext: ctx2 } = traceService.startScopeSpan({
         name: 'foo4',
         scope,
+        traceContext,
       })
       assert(span2)
+      void ctx2
 
       try {
         const info = traceService.retrieveParentTraceInfoBySpan(span2, scope)
