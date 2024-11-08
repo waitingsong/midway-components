@@ -1,11 +1,12 @@
 import { Middleware } from '@midwayjs/core'
 import { Context, IMiddleware, NextFunction } from '@mwcp/share'
-import { SpanKind, SpanStatus } from '@opentelemetry/api'
+import { type Span, SpanKind, SpanStatus, context } from '@opentelemetry/api'
 
 import { TraceService } from '##/lib/index.js'
 import { Config, ConfigKey, middlewareEnableCacheKey } from '##/lib/types.js'
 import {
   addSpanEventWithOutgoingResponseData,
+  getSpan,
   parseResponseStatus,
   propagateOutgoingHeader,
 } from '##/lib/util.js'
@@ -56,18 +57,23 @@ export async function middleware(
   const container = ctx.app.getApplicationContext()
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const traceSvc = container.get(TraceService) ?? await container.getAsync(TraceService)
-  await traceSvc.startOnRequest(ctx)
-
-  ctx.res.once('finish', () => { finishCallback(ctx, traceSvc) })
-  await handleTopExceptionAndNext(ctx, traceSvc, next)
-
-  const rootContext = traceSvc.getRootTraceContext(ctx)
-  if (rootContext) {
-    propagateOutgoingHeader(rootContext, ctx.res)
+  const rootContext = await traceSvc.startOnRequest(ctx)
+  if (! rootContext) {
+    await next()
+    return
   }
 
-  const rootSpan = traceSvc.getRootSpan(ctx)
+  ctx.res.once('finish', () => { finishCallback(ctx, traceSvc) })
+
+  await context.with(rootContext, async () => {
+    await handleTopExceptionAndNext(ctx, traceSvc, next)
+  })
+
+  propagateOutgoingHeader(rootContext, ctx.res)
+
+  const rootSpan = getSpan(rootContext)
   if (rootSpan) {
+    ctx.setAttr('rootSpan', rootSpan)
     addSpanEventWithOutgoingResponseData({
       body: ctx.body,
       headers: ctx.response.headers,
@@ -79,6 +85,8 @@ export async function middleware(
 
 
 function finishCallback(ctx: Context, traceSvc: TraceService): void {
+  const rootSpan = ctx.getAttr<Span | undefined>('rootSpan')
+  if (! rootSpan?.isRecording()) { return }
   const code = parseResponseStatus(SpanKind.CLIENT, ctx.status)
   const spanStatus: SpanStatus = { code }
   traceSvc.finish(ctx, spanStatus)
