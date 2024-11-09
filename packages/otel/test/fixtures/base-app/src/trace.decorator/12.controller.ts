@@ -26,7 +26,7 @@ export class DefaultComponentController {
   @Get(`/${apiMethod.id2}`)
   async traceId2(): Promise<string> {
     const traceId = this.traceSvc.getTraceId()
-    this.traceSvc.setAttributesLater(void 0, { bar: 'bar' })
+    this.traceSvc.setAttributes(void 0, { bar: 'bar' })
     const msg = await this.svc.hello(Msg.hello)
     assert(msg)
 
