@@ -230,20 +230,6 @@ export class TraceServiceSpan extends TraceServiceBase {
     this.otel.setAttributes(target, input)
   }
 
-  setAttributesLater(span: Span | undefined, input: Attributes): void {
-    if (! this.config.enable) { return }
-
-    let target = span
-    if (! target) {
-      const webCtx = this.getWebContext()
-      assert(webCtx, 'setAttributesLater() webCtx should not be null, maybe this calling is not in a request context')
-      const rootSpan = this.getRootSpan(webCtx)
-      assert(rootSpan, 'rootSpan should not be null')
-      target = rootSpan
-    }
-    this.otel.setAttributesLater(target, input)
-  }
-
   retrieveTraceInfoBySpanId(spanId: string, scope: TraceScopeType | undefined): TraceInfo | undefined {
     const scope2 = scope ?? this.getWebContext()
     assert(scope2, 'retrieveTraceInfoBySpanId() scope should not be null')
