@@ -35,9 +35,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/info": "^3.18.2",
+    "@midwayjs/info": "^3.19.0",
     "@mwcp/share": "^39.3.0",
-    "@waiting/shared-core": "^23.22.0",
+    "@waiting/shared-core": "^23.23.0",
     "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {

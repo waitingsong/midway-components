@@ -13,5 +13,5 @@
 
 ## Note
 
-ESM build only, requires `@midwayjs >= 3.15` and set `"type": "module"` in `packages.json`
+ESM build only, requires `@midwayjs >= 3.16` and set `"type": "module"` in `packages.json`
 

@@ -30,20 +30,20 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/bootstrap": "^3.18.2",
-    "@midwayjs/core": "^3.18.0",
-    "@midwayjs/grpc": "^3.4.2",
-    "@midwayjs/info": "^3.18.2",
-    "@midwayjs/koa": "^3.18.2",
+    "@midwayjs/bootstrap": "^3.19.0",
+    "@midwayjs/core": "^3.19.0",
+    "@midwayjs/grpc": "^3.19.0",
+    "@midwayjs/info": "^3.19.0",
+    "@midwayjs/koa": "^3.19.0",
     "@midwayjs/logger": "^3.4.2",
-    "@midwayjs/swagger": "^3.18.2",
-    "@midwayjs/validate": "^3.18.2",
-    "@waiting/shared-core": "^23.22.0",
+    "@midwayjs/swagger": "^3.19.0",
+    "@midwayjs/validate": "^3.19.0",
+    "@waiting/shared-core": "^23.23.0",
     "deepmerge": "^4.3.1"
   },
   "devDependencies": {
     "@opentelemetry/api": "*",
-    "swagger-ui-dist": "^5.17.14"
+    "swagger-ui-dist": "^5.18.2"
   },
   "engines": {
     "node": ">=18.12.0",
