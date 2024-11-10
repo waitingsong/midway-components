@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [40.0.0](https://github.com/waitingsong/midway-components/compare/v39.3.0...v40.0.0) (2024-11-10)
+
+
+### Features
+
+* **share:** update DecoratorExecutorParamBase add property scheme: string ([0e19aca](https://github.com/waitingsong/midway-components/commit/0e19aca47952c590d8ef911f99648971ba9985f6))
+
+
+
+
+
 # [39.3.0](https://github.com/waitingsong/midway-components/compare/v39.2.0...v39.3.0) (2024-11-06)
 
 

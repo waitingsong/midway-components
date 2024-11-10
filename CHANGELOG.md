@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [40.0.0](https://github.com/waitingsong/midway-components/compare/v39.3.0...v40.0.0) (2024-11-10)
+
+
+### Features
+
+* **otel:** breaking changes for using context.active() inner method or function ([8403238](https://github.com/waitingsong/midway-components/commit/84032388ce3bf3a05ebafab6ce5cdfd50d362cfc))
+* **otel:** rename OtelComponent.getGlobalCurrentContext() to getActiveContext() ([c8e5463](https://github.com/waitingsong/midway-components/commit/c8e54630df86f6a30aa4bdf22a74860f6a2e5025))
+* **otel:** rename OtelComponent.getGlobalCurrentSpan() to getActiveSpan() ([1d3a6f9](https://github.com/waitingsong/midway-components/commit/1d3a6f9967e02897a3b4696595c181891d4d2d2f))
+* **otel:** update TraceServiceSpan.startScopeActiveSpan() ([666f11a](https://github.com/waitingsong/midway-components/commit/666f11a1cf1ce432784dad1f27ffcb0edf9eca08))
+* remove TraceServiceSpan.setAttributesLater() ([90ed626](https://github.com/waitingsong/midway-components/commit/90ed6269420fe83084dfaada0d5e4cedb62f84b6))
+* **share:** update DecoratorExecutorParamBase add property scheme: string ([0e19aca](https://github.com/waitingsong/midway-components/commit/0e19aca47952c590d8ef911f99648971ba9985f6))
+
+
+
+
+
 # [39.3.0](https://github.com/waitingsong/midway-components/compare/v39.2.0...v39.3.0) (2024-11-06)
 
 
