@@ -207,9 +207,9 @@ export function genDecoratorExecutorOptions(
   }
 
   const ret: DecoratorExecutorParam<TraceDecoratorOptions> = {
-    rootTraceContext,
     ...optionsBase,
     ...optionsExt,
+    rootTraceContext,
     callerAttr,
     spanName,
     spanOptions: mergedDecoratorParam,
@@ -219,6 +219,10 @@ export function genDecoratorExecutorOptions(
     traceScope: void 0,
     span: void 0,
   }
+  Object.defineProperty(ret, 'rootTraceContext', {
+    writable: false,
+    value: rootTraceContext,
+  })
 
   return ret
 }
