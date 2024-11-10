@@ -226,7 +226,7 @@ export type ExecutorParamBase<T extends TraceDecoratorOptions = TraceDecoratorOp
 export type DecoratorExecutorParam<T extends TraceDecoratorOptions = TraceDecoratorOptions> = ExecutorParamBase<T>
   & GenDecoratorExecutorOptions
   & {
-    rootTraceContext: TraceContext,
+    readonly rootTraceContext: TraceContext,
     callerAttr: { [AttrNames.CallerClass]: string, [AttrNames.CallerMethod]: string },
     spanName: string,
     spanOptions: Partial<SpanOptions>,
