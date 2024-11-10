@@ -55,7 +55,7 @@ export async function afterReturnAsync(options: DecoratorExecutorParam): Promise
     return options.methodResult
   }
   const type = 'after'
-  const traceContext = traceService.getActiveContext()
+  const traceContext = options.traceContext ?? traceService.getActiveContext()
   await context.with(traceContext, async () => {
     await processDecoratorBeforeAfterAsync(type, options)
   })
@@ -72,7 +72,7 @@ export async function afterThrowAsync(options: DecoratorExecutorParam): Promise<
 
   assert(options.error, `[@mwcp/${ConfigKey.namespace}] options.error is undefined in afterThrowAsync().`)
   const type = 'afterThrow'
-  const traceContext = options.traceService.getActiveContext()
+  const traceContext = options.traceContext ?? options.traceService.getActiveContext()
   await context.with(traceContext, async () => {
     await processDecoratorBeforeAfterAsync(type, options)
   })
