@@ -400,7 +400,7 @@ export class AliOssComponent {
 
     switch (type) {
       case 'start': {
-        const { span } = this.traceService.startScopeActiveSpan({
+        const { span } = this.traceService.startScopeSpan({
           name: ConfigKey.componentName,
           scope: id,
         })
