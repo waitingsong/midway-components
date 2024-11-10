@@ -2,9 +2,6 @@
 import assert from 'node:assert'
 
 import {
-  type AsyncContextManager,
-  ASYNC_CONTEXT_KEY,
-  ASYNC_CONTEXT_MANAGER_KEY,
   App,
   ApplicationContext,
   Init,
@@ -17,7 +14,6 @@ import {
 } from '@midwayjs/core'
 import { ILogger } from '@midwayjs/logger'
 import {
-  type Context as WebContext,
   Application,
   IMidwayContainer,
   MConfig,
@@ -504,15 +500,6 @@ export class OtelComponent {
   spanIsRootSpan(scope: TraceScopeType, span: Span): boolean {
     const rootSpan = this.getRootSpan(scope)
     return rootSpan === span
-  }
-
-
-  getWebContext(): WebContext | undefined {
-    const contextManager: AsyncContextManager = this.applicationContext.get(
-      ASYNC_CONTEXT_MANAGER_KEY,
-    )
-    const ctx = contextManager.active().getValue(ASYNC_CONTEXT_KEY) as WebContext | undefined
-    return ctx
   }
 
 
