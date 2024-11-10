@@ -40,7 +40,6 @@ import {
   type SpanStatusOptions,
   AttrNames,
   ConfigKey,
-  TraceScopeParamType,
   TraceScopeType,
   middlewareEnableCacheKey,
 } from '../types.js'
@@ -267,21 +266,6 @@ export interface TraceDecoratorOptions<
    * @default `/`
    */
   spanNameDelimiter: string | undefined
-
-  /**
-   * 生成唯一标识符，用于确定同一方法的跨度, 避免异步方法并发调用时调用链关系混乱
-   * Generate the unique key for spans determination of the same method,
-   * avoid the confusion of call chain relationship when async methods are called concurrently
-   * @default undefined, runtime value rule (priority from high to low):
-   * - passed value in options.traceScope
-   * - generated automatically retrieved from object arg of the method args, that containing key `traceScope`,
-   * - webContext (traceService.ctx)
-   * - run before the `before()` method
-   * @caution symbol must be non-registered symbols, it means Symbol(string) is valid, and Symbol.for(string) is invalid
-   * @note `TraceInit()` not supported
-   * @link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap
-   */
-  scope: ScopeGenerator<MThis, MParamType> | TraceScopeParamType | undefined
 
   before: MethodTypeUnknown<
     [MParamType, DecoratorContext<MThis>], // input args

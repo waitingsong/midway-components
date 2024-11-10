@@ -11,9 +11,6 @@ import { Trace, TraceService } from '../types/index.js'
 import { Config, ConfigKey } from '../types/lib-types.js'
 
 
-const scope1 = Symbol('scope1')
-const scope2 = 'scope2'
-
 @Controller(apiBase.decorator_data)
 export class DecoratorScopeComponentController {
 
@@ -39,17 +36,13 @@ export class DecoratorScopeComponentController {
 
   // #region private methods
 
-  @Trace<DecoratorScopeComponentController['_simple1']>({
-    scope: scope1,
-  })
+  @Trace<DecoratorScopeComponentController['_simple1']>()
   private async _simple1(): Promise<string> {
     await this._simple1a()
     return 'ok'
   }
 
-  @Trace<DecoratorScopeComponentController['_simple2']>({
-    scope: scope2,
-  })
+  @Trace<DecoratorScopeComponentController['_simple2']>()
   private async _simple2(): Promise<string> {
     await this._simple2a()
     return 'ok'
@@ -57,16 +50,12 @@ export class DecoratorScopeComponentController {
 
   // #region private methods sub
 
-  @Trace<DecoratorScopeComponentController['_simple1a']>({
-    scope: () => scope1,
-  })
+  @Trace<DecoratorScopeComponentController['_simple1a']>()
   private async _simple1a(): Promise<string> {
     return 'ok'
   }
 
-  @Trace<DecoratorScopeComponentController['_simple2a']>({
-    scope: scope2,
-  })
+  @Trace<DecoratorScopeComponentController['_simple2a']>()
   private async _simple2a(): Promise<string> {
     return 'ok'
   }
