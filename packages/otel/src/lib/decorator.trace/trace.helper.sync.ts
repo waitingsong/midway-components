@@ -62,7 +62,7 @@ export function afterReturnSync(options: DecoratorExecutorParam): unknown {
     return options.methodResult
   }
   const type = 'after'
-  const traceContext = traceService.getActiveContext()
+  const traceContext = options.traceContext ?? options.traceService.getActiveContext()
   context.with(traceContext, () => {
     processDecoratorBeforeAfterSync(type, options)
   })
@@ -79,7 +79,7 @@ export function afterThrowSync(options: DecoratorExecutorParam): void {
 
   assert(options.error, `[@mwcp/${ConfigKey.namespace}] options.error is undefined in afterThrowAsync().`)
   const type = 'afterThrow'
-  const traceContext = options.traceService.getActiveContext()
+  const traceContext = options.traceContext ?? options.traceService.getActiveContext()
   context.with(traceContext, () => {
     processDecoratorBeforeAfterSync(type, options)
   })

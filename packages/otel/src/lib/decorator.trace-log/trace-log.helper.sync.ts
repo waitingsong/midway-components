@@ -21,11 +21,13 @@ export function beforeSync(options: DecoratorExecutorParam): void {
   )
   assert(spanName, 'spanName is empty')
 
-  const info = traceService.getActiveTraceInfo()
-  options.span = info.span
-  options.traceContext = info.traceContext
+  if (! options.traceContext) {
+    const info = traceService.getActiveTraceInfo()
+    options.span = info.span
+    options.traceContext = info.traceContext
+  }
 
-  context.with(info.traceContext, () => {
+  context.with(options.traceContext, () => {
     const res: DecoratorTraceDataResp = processDecoratorBeforeAfterSync(type, options)
     if (res?.endSpanAfterTraceLog) {
       assert(options.span, 'span is required')
@@ -84,7 +86,7 @@ export function afterThrowSync(options: DecoratorExecutorParam): void {
 
   assert(options.error, `[@mwcp/${ConfigKey.namespace}] options.error is undefined in afterThrowAsync().`)
   const type = 'afterThrow'
-  const traceContext = options.traceService.getActiveContext()
+  const traceContext = options.traceContext ?? options.traceService.getActiveContext()
   context.with(traceContext, () => {
     processDecoratorBeforeAfterSync(type, options)
   })

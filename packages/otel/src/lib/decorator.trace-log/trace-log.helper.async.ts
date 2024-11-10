@@ -12,11 +12,13 @@ export async function beforeAsync(options: DecoratorExecutorParam): Promise<void
   const { traceService } = options
 
   const type = 'before'
-  const info = traceService.getActiveTraceInfo()
-  options.span = info.span
-  options.traceContext = info.traceContext
+  if (! options.traceContext) {
+    const info = traceService.getActiveTraceInfo()
+    options.span = info.span
+    options.traceContext = info.traceContext
+  }
 
-  await context.with(info.traceContext, async () => {
+  await context.with(options.traceContext, async () => {
     const res: DecoratorTraceDataResp = await processDecoratorBeforeAfterAsync(type, options)
     if (res?.endSpanAfterTraceLog) {
       assert(options.span, 'span is required')
@@ -72,7 +74,7 @@ export async function afterThrowAsync(options: DecoratorExecutorParam): Promise<
   if (! span) { return }
 
   assert(options.error, `[@mwcp/${ConfigKey.namespace}] options.error is undefined in afterThrowAsync().`)
-  const traceContext = options.traceService.getActiveContext()
+  const traceContext = options.traceContext ?? options.traceService.getActiveContext()
   await context.with(traceContext, async () => {
     await processDecoratorBeforeAfterAsync('afterThrow', options)
   })
