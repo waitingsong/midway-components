@@ -4,14 +4,11 @@ import {
   Inject,
 } from '@midwayjs/core'
 import { MConfig } from '@mwcp/share'
-import { sleep } from '@waiting/shared-core'
 
 import { apiBase, apiMethod } from '../types/api-test.js'
 import { Trace, TraceService } from '../types/index.js'
 import { Config, ConfigKey } from '../types/lib-types.js'
 
-
-const scope1 = Symbol('scope1')
 
 @Controller(apiBase.decorator_data)
 export class DecoratorScopeComponentController {
@@ -30,9 +27,7 @@ export class DecoratorScopeComponentController {
 
   // #region private methods
 
-  @Trace<DecoratorScopeComponentController['_simple1']>({
-    scope: scope1,
-  })
+  @Trace<DecoratorScopeComponentController['_simple1']>()
   private async _simple1(): Promise<string> {
     await this._simple1a()
     return 'ok'
@@ -40,9 +35,7 @@ export class DecoratorScopeComponentController {
 
   // #region private methods sub
 
-  @Trace<DecoratorScopeComponentController['_simple1a']>({
-    scope: () => scope1,
-  })
+  @Trace<DecoratorScopeComponentController['_simple1a']>()
   private async _simple1a(): Promise<string> {
     return 'ok'
   }

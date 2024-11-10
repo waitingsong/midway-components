@@ -1,17 +1,10 @@
-import assert from 'node:assert'
-
 import type { Span } from '@opentelemetry/api'
-import { isArrowFunction } from '@waiting/shared-core'
 
 import type {
-  DecoratorContextBase,
-  DecoratorExecutorParam,
   DecoratorTraceDataResp,
-  ScopeGenerator,
-  TraceDecoratorOptions,
   TraceService,
 } from './trace.service/index.trace.service.js'
-import type { Attributes, TraceContext, TraceScopeParamType, TraceScopeType } from './types.js'
+import type { Attributes, TraceContext, TraceScopeParamType } from './types.js'
 import { getSpan } from './util.js'
 
 
@@ -53,143 +46,6 @@ function processEvents(
 
   if (! events || ! span || ! Object.keys(events).length) { return }
   traceService.addEvent(span, events)
-}
-
-/**
- * @deprecated
- * @note
- * - input options.traceScope will be updated by generated traceScope
- * - the first object arg of methodArgs will be appended key `traceScope` and set value
- */
-export function genTraceScopeFrom(options: DecoratorExecutorParam): TraceScopeType | undefined {
-  if (options.traceScope && isTraceScopeParamType(options.traceScope)) {
-    return options.traceScope
-  }
-
-  const decoratorContextBase: DecoratorContextBase = {
-    webApp: options.webApp,
-    webContext: options.webContext,
-    traceService: options.traceService,
-    traceScope: options.traceScope,
-    /** Caller Class name */
-    instanceName: options.instanceName,
-    /** Caller method name */
-    methodName: options.methodName,
-    // instance: options.instance,
-  }
-
-  const scopeFromArg = getTraceScopeParamFromArgs(options.methodArgs as GetTraceScopeFromArgsOptions[])
-  let ret = genTraceScope({
-    scope: scopeFromArg,
-    methodArgs: options.methodArgs,
-    decoratorContext: decoratorContextBase,
-    instance: options.instance,
-  })
-  if (! ret) {
-    const scope: TraceScopeParamType | undefined = options.mergedDecoratorParam?.scope
-    ret = genTraceScope({
-      scope,
-      methodArgs: options.methodArgs,
-      decoratorContext: decoratorContextBase,
-      instance: options.instance,
-    })
-  }
-  return ret
-}
-
-const traceScopeStringCache = new Map<string, symbol>()
-/**
- * @deprecated
- */
-export function getScopeStringCache(key: string): symbol {
-  let sym = traceScopeStringCache.get(key)
-  if (! sym) {
-    sym = Symbol(key)
-    setScopeStringCache(key, sym)
-  }
-  return sym
-}
-function setScopeStringCache(key: string, sym: symbol): void {
-  /* c8 ignore next 3 */
-  if (traceScopeStringCache.size > 10000) {
-    console.warn('traceScopeStringCache.size > 10000, should clear it')
-  }
-  traceScopeStringCache.set(key, sym)
-}
-
-export interface GenTraceScopeOptions {
-  scope: TraceDecoratorOptions['scope']
-  methodArgs: unknown[]
-  decoratorContext: DecoratorContextBase
-  instance: DecoratorExecutorParam['instance']
-}
-export function genTraceScope(options: GenTraceScopeOptions): TraceScopeType | undefined {
-  const { scope } = options
-
-  let ret: TraceScopeType | undefined
-  switch (typeof scope) {
-    case 'string': {
-      // Symbol.for() invalid as key of WeakMap
-      ret = getScopeStringCache(scope)
-      break
-    }
-
-    case 'object': {
-      ret = scope
-      break
-    }
-
-    case 'undefined':
-      return
-
-    case 'function': {
-      assert(options.instance, 'instance is required')
-      const funcBind = (isArrowFunction(scope as ScopeGenerator) ? scope : scope.bind(options.instance)) as ScopeGenerator
-      ret = funcBind(options.methodArgs, options.decoratorContext)
-      assert(typeof ret === 'object' || typeof ret === 'symbol', 'scope function must return an object or a symbol')
-      break
-    }
-
-    case 'symbol': {
-      ret = scope
-      break
-    }
-
-    /* c8 ignore next 2 */
-    default:
-      throw new Error('scope must be a string, an object, a symbol, or a function')
-  }
-
-  return ret
-}
-
-// function updateTraceScopeProperty(input: TraceScopeType): void {
-//   assert(typeof input === 'object', 'input must be an object')
-//   if (input.isTraceScope) { return }
-//   Object.defineProperty(input, 'isTraceScope', { value: true })
-// }
-
-type GetTraceScopeFromArgsOptions = TraceScopeParamType | { traceScope?: TraceScopeParamType, [key: string]: unknown }
-
-export function getTraceScopeParamFromArgs(
-  args: GetTraceScopeFromArgsOptions[] | undefined,
-): TraceScopeParamType | undefined {
-
-  const key = 'traceScope'
-
-  if (! args || ! Array.isArray(args)) { return }
-  for (const arg of args) {
-
-    if (! arg || typeof arg !== 'object') { continue }
-
-    // @ts-ignore
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const val = arg[key]
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    if (val && isTraceScopeParamType(val)) {
-      return val
-    }
-  }
 }
 
 export function isTraceScopeParamType(input: TraceScopeParamType | undefined): input is TraceScopeParamType {

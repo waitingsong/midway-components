@@ -44,7 +44,6 @@ export const apiMethod = {
   scope: 'scope',
   simple_scope: 'simple_scope',
   trace_auto_scope: 'trace_auto_scope',
-  scope_priority: 'scope_priority',
 
   after_throw: 'after_throw',
 }

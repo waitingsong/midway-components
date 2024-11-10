@@ -55,9 +55,5 @@ export {
 
 
 export { genDecoratorExecutorOptions } from './trace.helper.js'
-export {
-  genTraceScope, getScopeStringCache,
-} from './decorator.helper.base.js'
-
 export { AttrNames } from './attrnames.types.js'
 
