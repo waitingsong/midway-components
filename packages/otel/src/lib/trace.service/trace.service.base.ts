@@ -13,7 +13,7 @@ import {
   genISO8601String,
   getRouterInfo,
 } from '@mwcp/share'
-import type { Context as TraceContext } from '@opentelemetry/api'
+import type { Context as TraceContext, Span } from '@opentelemetry/api'
 
 import type { OtelComponent } from '../component.js'
 import type { Config, TraceScopeType } from '../types.js'
@@ -126,11 +126,38 @@ export class TraceServiceBase {
     }
   }
 
+  retrieveTraceInfoBySpanId(spanId: string, scope: TraceScopeType | undefined): TraceInfo | undefined {
+    const scope2 = scope ?? this.getWebContext()
+    assert(scope2, 'retrieveTraceInfoBySpanId() scope should not be null')
+
+    const traceContext = this.retrieveContextBySpanId(scope2, spanId)
+    if (traceContext) {
+      const span = getSpan(traceContext)
+      assert(span, 'retrieveTraceInfoBySpanId() span should not be null')
+      return { span, traceContext }
+    }
+  }
+
+  retrieveParentTraceInfoBySpan(span: Span, scope?: TraceScopeType): TraceInfo | undefined {
+    // @ts-expect-error
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const pid = span.parentSpanId
+    assert(pid, 'retrieveParentTraceInfoBySpan() span.parentSpanId should not be null')
+    assert(typeof pid === 'string', 'retrieveParentTraceInfoBySpan() parentSpanId should be string')
+    const info = this.retrieveTraceInfoBySpanId(pid, scope)
+    return info
+  }
+
+
   async flush(): Promise<void> {
     if (! this.config.enable) { return }
     await this.otel.flush()
   }
 
-
 }
 
+
+export interface TraceInfo {
+  span: Span
+  traceContext: TraceContext
+}

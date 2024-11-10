@@ -14,7 +14,7 @@ import { initSpanStatusOptions } from '../config.js'
 import type { AddEventOptions, SpanStatusOptions, TraceScopeType } from '../types.js'
 import { getSpan } from '../util.js'
 
-import { TraceServiceBase } from './trace.service.base.js'
+import { type TraceInfo, TraceServiceBase } from './trace.service.base.js'
 import type { EndSpanOptions, StartScopeActiveSpanOptions } from './trace.service.types.js'
 
 
@@ -45,19 +45,6 @@ export class TraceServiceSpan extends TraceServiceBase {
   }
 
   /**
-   * Get span from the given scope
-   */
-  // getActiveSpanOnlyScope(scope: TraceScopeType): Span | undefined {
-  //   if (! this.config.enable) { return }
-  //   assert(scope, 'getActiveSpanOnlyScope() scope should not be null')
-  //   const traceCtx = this.getActiveContextOnlyScope(scope)
-  //   if (! traceCtx) { return }
-  //   const span = getSpan(traceCtx)
-  //   return span
-  // }
-
-
-  /**
    * Starts a new {@link Span}. Start the span **without** setting it on context.
    * This method do NOT modify the current Context.
    * @default scope is `request ctx`
@@ -81,7 +68,7 @@ export class TraceServiceSpan extends TraceServiceBase {
   }
 
   /**
-   * Starts a new {@link Span}.
+   * Starts a new {@link Span}. Start the span **without** setting it on context.
    * @default scope is `request ctx`
    */
   startScopeSpan(options: StartScopeActiveSpanOptions): TraceInfo {
@@ -230,33 +217,6 @@ export class TraceServiceSpan extends TraceServiceBase {
     this.otel.setAttributes(target, input)
   }
 
-  retrieveTraceInfoBySpanId(spanId: string, scope: TraceScopeType | undefined): TraceInfo | undefined {
-    const scope2 = scope ?? this.getWebContext()
-    assert(scope2, 'retrieveTraceInfoBySpanId() scope should not be null')
-
-    const traceContext = this.retrieveContextBySpanId(scope2, spanId)
-    if (traceContext) {
-      const span = getSpan(traceContext)
-      assert(span, 'retrieveTraceInfoBySpanId() span should not be null')
-      return { span, traceContext }
-    }
-  }
-
-  retrieveParentTraceInfoBySpan(span: Span, scope?: TraceScopeType): TraceInfo | undefined {
-    // @ts-expect-error
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const pid = span.parentSpanId
-    assert(pid, 'retrieveParentTraceInfoBySpan() span.parentSpanId should not be null')
-    assert(typeof pid === 'string', 'retrieveParentTraceInfoBySpan() parentSpanId should be string')
-    const info = this.retrieveTraceInfoBySpanId(pid, scope)
-    return info
-  }
-
 }
 
-
-export interface TraceInfo {
-  span: Span
-  traceContext: TraceContext
-}
 
