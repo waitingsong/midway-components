@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [40.1.0](https://github.com/waitingsong/midway-components/compare/v40.0.0...v40.1.0) (2024-11-10)
+
+
+### Features
+
+* **otel:** do not validate scope during create new span ([3702536](https://github.com/waitingsong/midway-components/commit/3702536be34a4df433b232bcd7108c17c3ea1b46))
+
+
+
+
+
 # [40.0.0](https://github.com/waitingsong/midway-components/compare/v39.3.0...v40.0.0) (2024-11-10)
 
 
