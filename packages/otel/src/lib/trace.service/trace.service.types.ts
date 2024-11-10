@@ -1,4 +1,4 @@
-
+/* c8 ignore start */
 import type {
   Attributes,
   Context as TraceContext,
@@ -61,3 +61,5 @@ export interface DecoratorTraceData {
 }
 export type DecoratorTraceDataResp = DecoratorTraceData | undefined | null
 export type DecoratorTraceDataRespAsync = Promise<DecoratorTraceData | undefined | null>
+
+/* c8 ignore stop */
