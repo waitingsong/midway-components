@@ -72,16 +72,17 @@ export class TraceServiceSpan extends TraceServiceBase {
    * @default scope is `request ctx`
    */
   startScopeSpan(options: StartScopeActiveSpanOptions): TraceInfo {
-    const scope = options.scope ?? this.getWebContext()
-    assert(scope, 'startScopeSpan() scope should not be null')
-
     const parentCtx = options.traceContext ?? this.getActiveContext()
     const ret = this.otel.startSpanContext(options.name, options.spanOptions, parentCtx)
     // const cb = (span: Span, ctx: TraceContext) => { return { span, traceContext: ctx } }
     // const ret: TraceInfo = this.otel.startActiveSpan(options.name, cb, options.spanOptions, parentCtx)
     assert(ret, 'startScopeActiveSpan() ret should not be null')
 
-    this.setActiveContext(ret.traceContext, scope)
+    const scope = options.scope ?? this.getWebContext()
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (scope) {
+      this.setActiveContext(ret.traceContext, scope)
+    }
     return ret
   }
 
@@ -103,8 +104,6 @@ export class TraceServiceSpan extends TraceServiceBase {
   ): ReturnType<F> {
 
     const scope2 = scope ?? this.getWebContext()
-    assert(scope2, 'scope should not be null')
-
     const { span, traceContext: traceCtx } = this.startScopeSpan({
       name,
       spanOptions: options,
