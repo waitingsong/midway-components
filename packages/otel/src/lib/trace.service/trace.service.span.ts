@@ -73,7 +73,7 @@ export class TraceServiceSpan extends TraceServiceBase {
    */
   startScopeSpan(options: StartScopeActiveSpanOptions): TraceInfo {
     const scope = options.scope ?? this.getWebContext()
-    assert(scope, 'startScopeActiveSpan() scope should not be null')
+    assert(scope, 'startScopeSpan() scope should not be null')
 
     const parentCtx = options.traceContext ?? this.getActiveContext()
     const ret = this.otel.startSpanContext(options.name, options.spanOptions, parentCtx)
