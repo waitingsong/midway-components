@@ -99,7 +99,7 @@ export class TraceServiceSpan extends TraceServiceBase {
     callback: F,
     options?: SpanOptions,
     traceContext?: TraceContext,
-    scope?: Application | Context,
+    scope?: TraceScopeType,
   ): ReturnType<F> {
 
     const scope2 = scope ?? this.getWebContext()

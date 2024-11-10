@@ -13,7 +13,7 @@ import type { SpanStatusOptions, TraceScopeType } from '../types.js'
 export interface StartScopeActiveSpanOptions {
   name: string
   /**
-   * @default scope is request context
+   * @default scope is request context, grpc stream should be root trace context
    */
   scope?: TraceScopeType | undefined
   spanOptions?: SpanOptions | undefined
