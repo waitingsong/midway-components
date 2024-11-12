@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [40.1.1](https://github.com/waitingsong/midway-components/compare/v40.1.0...v40.1.1) (2024-11-12)
+
+
+### Bug Fixes
+
+* **otel:** afterReturnSync(), afterReturnAsync() of TraceLog() missing trace context ([b1e8c3f](https://github.com/waitingsong/midway-components/commit/b1e8c3fa931a1970f3dc1f81a6e0126f57c1856a))
+
+
+
+
+
 # [40.1.0](https://github.com/waitingsong/midway-components/compare/v40.0.0...v40.1.0) (2024-11-10)
 
 
