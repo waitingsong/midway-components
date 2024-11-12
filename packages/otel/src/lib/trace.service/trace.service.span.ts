@@ -79,7 +79,6 @@ export class TraceServiceSpan extends TraceServiceBase {
     assert(ret, 'startScopeActiveSpan() ret should not be null')
 
     const scope = options.scope ?? this.getWebContext()
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (scope) {
       this.setActiveContext(ret.traceContext, scope)
     }

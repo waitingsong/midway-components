@@ -21,7 +21,7 @@ export function beforeSync(options: DecoratorExecutorParam): void {
   )
   assert(spanName, 'spanName is empty')
 
-  if (! options.traceContext) {
+  if (! options.traceContext || ! options.span) {
     const info = traceService.getActiveTraceInfo()
     options.span = info.span
     options.traceContext = info.traceContext
@@ -61,21 +61,29 @@ export function afterReturnSync(options: DecoratorExecutorParam): unknown {
   assert(! options.error, `[@mwcp/${ConfigKey.namespace}] options.error is not undefined in afterReturnSync().
   Error: ${options.error?.message}`)
 
-  const res: DecoratorTraceDataResp = processDecoratorBeforeAfterSync('after', options)
-  if (res?.endSpanAfterTraceLog) {
-    endTraceSpan(traceService, span, res.spanStatusOptions)
+  if (! options.traceContext || ! options.span) {
+    const info = traceService.getActiveTraceInfo()
+    options.span = info.span
+    options.traceContext = info.traceContext
   }
-
-  if (res?.endParentSpan) {
-    if (! res.endSpanAfterTraceLog) {
+  context.with(options.traceContext, () => {
+    const res: DecoratorTraceDataResp = processDecoratorBeforeAfterSync('after', options)
+    if (res?.endSpanAfterTraceLog) {
       endTraceSpan(traceService, span, res.spanStatusOptions)
     }
 
-    const parentSpan = traceService.retrieveParentTraceInfoBySpan(span, options.traceScope)?.span
-    if (parentSpan) {
-      endTraceSpan(traceService, parentSpan, res.spanStatusOptions)
+    if (res?.endParentSpan) {
+      if (! res.endSpanAfterTraceLog) {
+        endTraceSpan(traceService, span, res.spanStatusOptions)
+      }
+
+      const parentSpan = traceService.retrieveParentTraceInfoBySpan(span, options.traceScope)?.span
+      if (parentSpan) {
+        endTraceSpan(traceService, parentSpan, res.spanStatusOptions)
+      }
     }
-  }
+  })
+
   return options.methodResult
 }
 

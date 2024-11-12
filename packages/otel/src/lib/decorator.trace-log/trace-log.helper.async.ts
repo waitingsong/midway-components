@@ -12,7 +12,7 @@ export async function beforeAsync(options: DecoratorExecutorParam): Promise<void
   const { traceService } = options
 
   const type = 'before'
-  if (! options.traceContext) {
+  if (! options.traceContext || ! options.span) {
     const info = traceService.getActiveTraceInfo()
     options.span = info.span
     options.traceContext = info.traceContext
@@ -50,21 +50,28 @@ export async function afterReturnAsync(options: DecoratorExecutorParam): Promise
   assert(! options.error, `[@mwcp/${ConfigKey.namespace}] options.error is not undefined in afterReturnAsync().
   Error: ${options.error?.message}`)
 
-  const res: DecoratorTraceDataResp = await processDecoratorBeforeAfterAsync('after', options)
-  if (res?.endSpanAfterTraceLog) {
-    endTraceSpan(traceService, span, res.spanStatusOptions)
+  if (! options.traceContext || ! options.span) {
+    const info = traceService.getActiveTraceInfo()
+    options.span = info.span
+    options.traceContext = info.traceContext
   }
-
-  if (res?.endParentSpan) {
-    if (! res.endSpanAfterTraceLog) {
+  await context.with(options.traceContext, async () => {
+    const res: DecoratorTraceDataResp = await processDecoratorBeforeAfterAsync('after', options)
+    if (res?.endSpanAfterTraceLog) {
       endTraceSpan(traceService, span, res.spanStatusOptions)
     }
 
-    const parentSpan = traceService.retrieveParentTraceInfoBySpan(span, options.traceScope)?.span
-    if (parentSpan) {
-      endTraceSpan(traceService, parentSpan, res.spanStatusOptions)
+    if (res?.endParentSpan) {
+      if (! res.endSpanAfterTraceLog) {
+        endTraceSpan(traceService, span, res.spanStatusOptions)
+      }
+
+      const parentSpan = traceService.retrieveParentTraceInfoBySpan(span, options.traceScope)?.span
+      if (parentSpan) {
+        endTraceSpan(traceService, parentSpan, res.spanStatusOptions)
+      }
     }
-  }
+  })
 
   return options.methodResult
 }
