@@ -46,4 +46,5 @@ export const apiMethod = {
   trace_auto_scope: 'trace_auto_scope',
 
   after_throw: 'after_throw',
+  mix: 'mix',
 }
