@@ -22,7 +22,12 @@ export async function beforeAsync(options: DecoratorExecutorParam): Promise<void
     const res: DecoratorTraceDataResp = await processDecoratorBeforeAfterAsync(type, options)
     if (res?.endSpanAfterTraceLog) {
       assert(options.span, 'span is required')
-      endTraceSpan(traceService, options.span, res.spanStatusOptions)
+      if (Array.isArray(res.endSpanAfterTraceLog)) {
+        endTraceSpan(traceService, res.endSpanAfterTraceLog, res.spanStatusOptions)
+      }
+      else {
+        endTraceSpan(traceService, [options.span], res.spanStatusOptions)
+      }
     }
 
     // if (res?.endParentSpan) {
@@ -58,7 +63,12 @@ export async function afterReturnAsync(options: DecoratorExecutorParam): Promise
   await context.with(options.traceContext, async () => {
     const res: DecoratorTraceDataResp = await processDecoratorBeforeAfterAsync('after', options)
     if (res?.endSpanAfterTraceLog) {
-      endTraceSpan(traceService, span, res.spanStatusOptions)
+      if (Array.isArray(res.endSpanAfterTraceLog)) {
+        endTraceSpan(traceService, res.endSpanAfterTraceLog, res.spanStatusOptions)
+      }
+      else {
+        endTraceSpan(traceService, [span], res.spanStatusOptions)
+      }
     }
 
     // if (res?.endParentSpan) {

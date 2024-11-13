@@ -228,7 +228,13 @@ export function genDecoratorExecutorOptions(
 }
 
 
-export function endTraceSpan(traceService: TraceServiceSpan, span: Span, spanStatusOptions: SpanStatusOptions | undefined): void {
+export function endTraceSpan(traceService: TraceServiceSpan, span: Span[], spanStatusOptions: SpanStatusOptions | undefined): void {
+  const revertArr = span.slice().reverse()
+  revertArr.forEach((span) => {
+    _endTraceSpan(traceService, span, spanStatusOptions)
+  })
+}
+function _endTraceSpan(traceService: TraceServiceSpan, span: Span, spanStatusOptions: SpanStatusOptions | undefined): void {
   if (spanStatusOptions) {
     traceService.endSpan({ span, spanStatusOptions })
   }

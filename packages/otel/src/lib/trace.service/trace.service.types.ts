@@ -40,8 +40,9 @@ export interface DecoratorTraceData {
    * End the span after method `before()` or `after()` called
    * used by TraceLog decorator, ignored by TraceInit/Trace decorator
    * @default false
+   * @description if Array<Span>, end all spans in the array, and leaf span will be the last one
    */
-  endSpanAfterTraceLog?: boolean
+  endSpanAfterTraceLog?: boolean | Span[]
   /**
    * Used by TraceLog decorator and endSpanAfterTraceLog:true, ignored by TraceInit/Trace decorator
    */
