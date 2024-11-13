@@ -1,8 +1,6 @@
 import assert from 'node:assert'
 import { isPromise } from 'node:util/types'
 
-import { isArrowFunction } from '@waiting/shared-core'
-
 import { processDecoratorSpanData } from './decorator.helper.base.js'
 import type {
   DecoratorContext,
@@ -42,7 +40,8 @@ export function processDecoratorBeforeAfterSync(
       instance: options.instance,
     }
 
-    const funcBind = isArrowFunction(func) ? func : func.bind(decoratorContext.instance)
+    // const funcBind = isArrowFunction(func) ? func : func.bind(decoratorContext.instance) // sometimes not work detect arrow function
+    const funcBind = func.bind(decoratorContext.instance)
 
     let data: DecoratorTraceDataResp
     if (type === 'before') {
