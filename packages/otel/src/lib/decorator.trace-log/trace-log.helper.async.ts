@@ -25,18 +25,18 @@ export async function beforeAsync(options: DecoratorExecutorParam): Promise<void
       endTraceSpan(traceService, options.span, res.spanStatusOptions)
     }
 
-    if (res?.endParentSpan) {
-      assert(options.span, 'span is required')
+    // if (res?.endParentSpan) {
+    //   assert(options.span, 'span is required')
 
-      if (! res.endSpanAfterTraceLog) {
-        endTraceSpan(traceService, options.span, res.spanStatusOptions)
-      }
+    //   if (! res.endSpanAfterTraceLog) {
+    //     endTraceSpan(traceService, options.span, res.spanStatusOptions)
+    //   }
 
-      const parentSpan = traceService.retrieveParentTraceInfoBySpan(options.span, options.traceScope)?.span
-      if (parentSpan) {
-        endTraceSpan(traceService, parentSpan, res.spanStatusOptions)
-      }
-    }
+    //   const parentSpan = traceService.retrieveParentTraceInfoBySpan(options.span, options.traceScope)?.span
+    //   if (parentSpan) {
+    //     endTraceSpan(traceService, parentSpan, res.spanStatusOptions)
+    //   }
+    // }
   })
 }
 
@@ -61,16 +61,16 @@ export async function afterReturnAsync(options: DecoratorExecutorParam): Promise
       endTraceSpan(traceService, span, res.spanStatusOptions)
     }
 
-    if (res?.endParentSpan) {
-      if (! res.endSpanAfterTraceLog) {
-        endTraceSpan(traceService, span, res.spanStatusOptions)
-      }
+    // if (res?.endParentSpan) {
+    //   if (! res.endSpanAfterTraceLog) {
+    //     endTraceSpan(traceService, span, res.spanStatusOptions)
+    //   }
 
-      const parentSpan = traceService.retrieveParentTraceInfoBySpan(span, options.traceScope)?.span
-      if (parentSpan) {
-        endTraceSpan(traceService, parentSpan, res.spanStatusOptions)
-      }
-    }
+    //   const parentSpan = traceService.retrieveParentTraceInfoBySpan(span, options.traceScope)?.span
+    //   if (parentSpan) {
+    //     endTraceSpan(traceService, parentSpan, res.spanStatusOptions)
+    //   }
+    // }
   })
 
   return options.methodResult

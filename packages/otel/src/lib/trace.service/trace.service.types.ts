@@ -39,17 +39,9 @@ export interface DecoratorTraceData {
   /**
    * End the span after method `before()` or `after()` called
    * used by TraceLog decorator, ignored by TraceInit/Trace decorator
-   * @description Current span also will be ended if endParentSpan:true, regardless of this value
    * @default false
    */
   endSpanAfterTraceLog?: boolean
-  /**
-   * End the parent span after method `before()` or `after()` called
-   * used by TraceLog decorator, ignored by TraceInit/Trace decorator
-   * @description Current span also will be ended if endParentSpan:true, regardless of endSpanAfterTraceLog
-   * @default false
-   */
-  endParentSpan?: boolean
   /**
    * Used by TraceLog decorator and endSpanAfterTraceLog:true, ignored by TraceInit/Trace decorator
    */
