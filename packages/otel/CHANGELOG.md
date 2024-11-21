@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [41.0.0](https://github.com/waitingsong/midway-components/compare/v40.1.1...v41.0.0) (2024-11-21)
+
+
+### Bug Fixes
+
+* **otel:** arrow function detecting ([472675f](https://github.com/waitingsong/midway-components/commit/472675fbac14bd478890048dff87b15ce8ffc679))
+
+
+### Features
+
+* **otel:** DecoratorTraceData['endSpanAfterTraceLog'] supports Span[] ([1e8e26c](https://github.com/waitingsong/midway-components/commit/1e8e26c16c0dd04638db739d27ee66317c27764b))
+
+
+
+
+
 ## [40.1.1](https://github.com/waitingsong/midway-components/compare/v40.1.0...v40.1.1) (2024-11-12)
 
 
