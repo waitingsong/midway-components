@@ -38,7 +38,7 @@
     "@midwayjs/logger": "^3.4.2",
     "@midwayjs/swagger": "^3.19.0",
     "@midwayjs/validate": "^3.19.0",
-    "@waiting/shared-core": "^23.23.0",
+    "@waiting/shared-core": "^23.25.3",
     "deepmerge": "^4.3.1"
   },
   "devDependencies": {

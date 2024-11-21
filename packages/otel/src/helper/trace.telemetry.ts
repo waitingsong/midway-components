@@ -30,18 +30,19 @@ export function initTrace(options: InitTraceOptions): InitTraceReturnType {
   const resourceDefault = resources.Resource.default()
   const resourceFull = resourceDefault.merge(resource).merge(detectorResources)
 
-  const provider = new node.NodeTracerProvider({
-    resource: resourceFull,
-    spanLimits: {
-      linkCountLimit: 127,
-    },
-  })
 
   const processors: node.SpanProcessor[] = []
   otelConfig.exporters.forEach((exporter) => {
     const processor = genExporterInstrumentation(options, exporter, options.isDevelopmentEnvironment)
     processors.push(processor)
-    provider.addSpanProcessor(processor)
+  })
+
+  const provider = new node.NodeTracerProvider({
+    resource: resourceFull,
+    spanLimits: {
+      linkCountLimit: 127,
+    },
+    spanProcessors: processors,
   })
 
   const propagators = genPropagators(otelConfig.propagators)
