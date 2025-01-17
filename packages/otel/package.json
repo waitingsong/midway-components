@@ -37,16 +37,16 @@
   "license": "MIT",
   "dependencies": {
     "@mwcp/share": "^41.0.0",
-    "@opentelemetry/resource-detector-alibaba-cloud": "^0.29.5",
-    "@opentelemetry/resource-detector-aws": "^1.8.0",
-    "@opentelemetry/resource-detector-container": "^0.5.1",
-    "@opentelemetry/resource-detector-gcp": "^0.30.0",
-    "@opentelemetry/sdk-node": "^0.55.0",
-    "@waiting/shared-core": "^23.25.3",
+    "@opentelemetry/resource-detector-alibaba-cloud": "^0.29.7",
+    "@opentelemetry/resource-detector-aws": "^1.10.0",
+    "@opentelemetry/resource-detector-container": "^0.5.3",
+    "@opentelemetry/resource-detector-gcp": "^0.32.0",
+    "@opentelemetry/sdk-node": "^0.57.1",
+    "@waiting/shared-core": "^23.25.5",
     "undici": "*"
   },
   "devDependencies": {
-    "@midwayjs/grpc": "^3.19.0",
+    "@midwayjs/grpc": "^3.20.0",
     "@midwayjs/grpc-helper": "^1.1.0"
   },
   "engines": {
