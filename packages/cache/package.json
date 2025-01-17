@@ -34,12 +34,12 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@midwayjs/cache-manager": "^3.19.0",
-    "@midwayjs/info": "^3.19.0",
+    "@midwayjs/cache-manager": "^3.20.0",
+    "@midwayjs/info": "^3.20.0",
     "@midwayjs/logger": "^3.4.2",
     "@mwcp/otel": "^41.0.0",
     "@mwcp/share": "^41.0.0",
-    "@waiting/shared-core": "^23.25.3"
+    "@waiting/shared-core": "^23.25.5"
   },
   "engines": {
     "node": ">=18.12.0",
