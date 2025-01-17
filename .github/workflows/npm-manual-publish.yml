@@ -80,10 +80,7 @@ jobs:
           npm whoami
           psql -V
           dig postgres
-          echo "\l" | psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U$POSTGRES_USER -d postgres
           psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U$POSTGRES_USER -d $POSTGRES_DB -c "SELECT version();"
-          psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U$POSTGRES_USER -d $POSTGRES_DB -c "\d+"
-          psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U$POSTGRES_USER -d $POSTGRES_DB -c "SHOW TIMEZONE;"
         env:
           CI: true
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -91,14 +88,13 @@ jobs:
           POSTGRES_PORT: 5432
           POSTGRES_DB: db_ci_test
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
           PGPASSWORD: postgres
 
       - name: Install Dependencies
         timeout-minutes: 15
         run: |
           export cwd=`pwd`
-          npm i --no-audit -g lerna rollup tsx zx madge
+          npm i --no-audit -g lerna madge tsx zx rollup
           npm i --no-audit
         env:
           CI: true
@@ -135,8 +131,10 @@ jobs:
           POSTGRES_PORT: 5432
           POSTGRES_DB: db_ci_test
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PWD: postgres
           PGPASSWORD: postgres
+          DBUSER: dbuser
+          DBUSER_PWD: dbuser
 
       - name: Testing
         run: |
@@ -153,9 +151,8 @@ jobs:
           POSTGRES_HOST: postgres
           POSTGRES_PORT: 5432
           POSTGRES_DB: db_ci_test
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          PGPASSWORD: postgres
+          POSTGRES_USER: dbuser
+          POSTGRES_PWD: dbuser
           # redis
           REDIS_HOST: redis
           REDIS_PORT: 6379

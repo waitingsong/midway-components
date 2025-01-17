@@ -43,7 +43,7 @@
     "@yuntools/ali-oss": "^16.1.5"
   },
   "engines": {
-    "node": ">=18.12.0",
+    "node": ">=20.11.0",
     "@midwayjs/core": ">=3.16.0"
   },
   "files": [

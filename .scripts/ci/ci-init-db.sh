@@ -5,16 +5,15 @@ psql -V
 # netstat -tunpl
 # dig postgres
 
-psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U$POSTGRES_USER -d $POSTGRES_DB -c "SELECT version();"
-psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U$POSTGRES_USER -d $POSTGRES_DB -c "SHOW TIMEZONE;"
-psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U$POSTGRES_USER -d $POSTGRES_DB -c "SELECT extname, extversion FROM pg_extension;"
-
+export PGPASSWORD="$POSTGRES_PWD"
+psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U$POSTGRES_USER -d $POSTGRES_DB -bq -f $cwd/.scripts/ci/init-pre.sql
 echo -e "\n"
 
-# SQL_DIR='./packages/demo/database/'
+SQL_DIR="$cwd/packages/demo/database/"
+cd "$SQL_DIR"
+. ./init-db.sh
 
-# cd "$SQL_DIR"
-# pwd
-# . ./init-db.sh
-# cd -
+echo -e "\nInit post"
+export PGPASSWORD="$POSTGRES_PWD"
+psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U$POSTGRES_USER -d $POSTGRES_DB -f $cwd/.scripts/ci/init-post.sql
 
